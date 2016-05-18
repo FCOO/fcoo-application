@@ -1,0 +1,46 @@
+{
+  "name": "fcoo-application",
+  "version": "0.0.1",
+  "homepage": "https://github.com/FCOO/fcoo-application",
+  "authors": [
+    "Niels Holt"
+  ],
+  "description": "",
+  "main": [
+    "dist/fcoo-application.js",
+    "dist/fcoo-application.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/FCOO/fcoo-application.git"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "moduleType": [
+    "es6"
+  ],
+  "devDependencies": {
+    "bourbon": "latest",
+    "modernizr-mixin": "latest",
+    "mathsass": "latest"
+  },
+  "dependencies": {
+    "jquery": "1.12.*",
+    "javascript-utilities": "fcoo/javascript-utilities#latest",
+    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#1.*",
+    "fcoo-polyfill": "fcoo/fcoo-polyfill#latest",
+    "fcoo-language": "fcoo/fcoo-language#0.1.*"
+  },
+  "overrides": {},
+  "resolutions": {
+    "jquery": "1.12.*",
+    "fcoo-modernizr-mediaquery-device": "1.*",
+    "fcoo-language": "0.1.*"
+  }
+}
