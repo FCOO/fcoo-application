@@ -47,6 +47,9 @@ In [version](#version) the specific versions of the different packages are liste
 ### [javascript-utilities](http://github.com/fcoo/javascript-utilities)
 
 --
+### [fcoo-fontawesome](http://github.com/fcoo/fcoo-fontawesome)
+
+--
 ### [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-mediaquery-device)
 
 Sets the breakpoints as:
@@ -73,6 +76,7 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 
 - **`1.12.*`**: jQuery
 - **`latest`**: javascript-utilities
+- **`latest`**: fcoo-fontawesome
 - **`1.*`**	: fcoo-modernizr-mediaquery-device
 - **`latest`**: fcoo-polyfill
 - **`0.1.*`**	: fcoo-language

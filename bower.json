@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -33,6 +33,7 @@
   "dependencies": {
     "jquery": "1.12.*",
     "javascript-utilities": "fcoo/javascript-utilities#latest",
+    "fcoo-fontawesome": "fcoo/fcoo-fontawesome#latest",
     "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#1.*",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#latest",
     "fcoo-language": "fcoo/fcoo-language#0.1.*"
