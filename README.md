@@ -79,7 +79,7 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 - **`latest`**: fcoo-fontawesome
 - **`1.*`**	: fcoo-modernizr-mediaquery-device
 - **`latest`**: fcoo-polyfill
-- **`0.1.*`**	: fcoo-language
+- **`0.*`**	: fcoo-language
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-leaflet/LICENSE).
