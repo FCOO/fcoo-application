@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -36,7 +36,8 @@
     "fcoo-fontawesome": "fcoo/fcoo-fontawesome#latest",
     "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#1.*",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#latest",
-    "fcoo-language": "fcoo/fcoo-language#0.*"
+    "fcoo-language": "fcoo/fcoo-language#0.*",
+    "normalize-css": "latest"
   },
   "overrides": {},
   "resolutions": {

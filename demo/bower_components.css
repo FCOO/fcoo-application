@@ -2252,313 +2252,47 @@
 .lang-flag-icon-lang-modernizr {
   font-family: daenfokl; }
 
-html.flag-dk .show-for-flag-dk {
-  display: inherit !important; }
-
 html.flag-dk .hide-for-flag-dk {
-  display: none								!important; }
-
-html.flag-dk table.show-for-flag-dk {
-  display: table							!important; }
-
-html.flag-dk thead.show-for-flag-dk {
-  display: table-header-group !important; }
-
-html.flag-dk tbody.show-for-flag-dk {
-  display: table-row-group		!important; }
-
-html.flag-dk tr.show-for-flag-dk {
-  display: table-row					!important; }
-
-html.flag-dk td.show-for-flag-dk,
-html.flag-dk th.show-for-flag-dk {
-  display: table-cell					!important; }
-
-html.no-flag-dk .hide-for-flag-dk {
-  display: inherit !important; }
+  display: none !important; }
 
 html.no-flag-dk .show-for-flag-dk {
-  display: none								!important; }
-
-html.no-flag-dk table.hide-for-flag-dk {
-  display: table							!important; }
-
-html.no-flag-dk thead.hide-for-flag-dk {
-  display: table-header-group !important; }
-
-html.no-flag-dk tbody.hide-for-flag-dk {
-  display: table-row-group		!important; }
-
-html.no-flag-dk tr.hide-for-flag-dk {
-  display: table-row					!important; }
-
-html.no-flag-dk td.hide-for-flag-dk,
-html.no-flag-dk th.hide-for-flag-dk {
-  display: table-cell					!important; }
-
-html.flag-fo .show-for-flag-fo {
-  display: inherit !important; }
+  display: none !important; }
 
 html.flag-fo .hide-for-flag-fo {
-  display: none								!important; }
-
-html.flag-fo table.show-for-flag-fo {
-  display: table							!important; }
-
-html.flag-fo thead.show-for-flag-fo {
-  display: table-header-group !important; }
-
-html.flag-fo tbody.show-for-flag-fo {
-  display: table-row-group		!important; }
-
-html.flag-fo tr.show-for-flag-fo {
-  display: table-row					!important; }
-
-html.flag-fo td.show-for-flag-fo,
-html.flag-fo th.show-for-flag-fo {
-  display: table-cell					!important; }
-
-html.no-flag-fo .hide-for-flag-fo {
-  display: inherit !important; }
+  display: none !important; }
 
 html.no-flag-fo .show-for-flag-fo {
-  display: none								!important; }
-
-html.no-flag-fo table.hide-for-flag-fo {
-  display: table							!important; }
-
-html.no-flag-fo thead.hide-for-flag-fo {
-  display: table-header-group !important; }
-
-html.no-flag-fo tbody.hide-for-flag-fo {
-  display: table-row-group		!important; }
-
-html.no-flag-fo tr.hide-for-flag-fo {
-  display: table-row					!important; }
-
-html.no-flag-fo td.hide-for-flag-fo,
-html.no-flag-fo th.hide-for-flag-fo {
-  display: table-cell					!important; }
-
-html.flag-gl .show-for-flag-gl {
-  display: inherit !important; }
+  display: none !important; }
 
 html.flag-gl .hide-for-flag-gl {
-  display: none								!important; }
-
-html.flag-gl table.show-for-flag-gl {
-  display: table							!important; }
-
-html.flag-gl thead.show-for-flag-gl {
-  display: table-header-group !important; }
-
-html.flag-gl tbody.show-for-flag-gl {
-  display: table-row-group		!important; }
-
-html.flag-gl tr.show-for-flag-gl {
-  display: table-row					!important; }
-
-html.flag-gl td.show-for-flag-gl,
-html.flag-gl th.show-for-flag-gl {
-  display: table-cell					!important; }
-
-html.no-flag-gl .hide-for-flag-gl {
-  display: inherit !important; }
+  display: none !important; }
 
 html.no-flag-gl .show-for-flag-gl {
-  display: none								!important; }
-
-html.no-flag-gl table.hide-for-flag-gl {
-  display: table							!important; }
-
-html.no-flag-gl thead.hide-for-flag-gl {
-  display: table-header-group !important; }
-
-html.no-flag-gl tbody.hide-for-flag-gl {
-  display: table-row-group		!important; }
-
-html.no-flag-gl tr.hide-for-flag-gl {
-  display: table-row					!important; }
-
-html.no-flag-gl td.hide-for-flag-gl,
-html.no-flag-gl th.hide-for-flag-gl {
-  display: table-cell					!important; }
-
-html.lang-da .show-for-lang-da {
-  display: inherit !important; }
+  display: none !important; }
 
 html.lang-da .hide-for-lang-da {
-  display: none								!important; }
-
-html.lang-da table.show-for-lang-da {
-  display: table							!important; }
-
-html.lang-da thead.show-for-lang-da {
-  display: table-header-group !important; }
-
-html.lang-da tbody.show-for-lang-da {
-  display: table-row-group		!important; }
-
-html.lang-da tr.show-for-lang-da {
-  display: table-row					!important; }
-
-html.lang-da td.show-for-lang-da,
-html.lang-da th.show-for-lang-da {
-  display: table-cell					!important; }
-
-html.no-lang-da .hide-for-lang-da {
-  display: inherit !important; }
+  display: none !important; }
 
 html.no-lang-da .show-for-lang-da {
-  display: none								!important; }
-
-html.no-lang-da table.hide-for-lang-da {
-  display: table							!important; }
-
-html.no-lang-da thead.hide-for-lang-da {
-  display: table-header-group !important; }
-
-html.no-lang-da tbody.hide-for-lang-da {
-  display: table-row-group		!important; }
-
-html.no-lang-da tr.hide-for-lang-da {
-  display: table-row					!important; }
-
-html.no-lang-da td.hide-for-lang-da,
-html.no-lang-da th.hide-for-lang-da {
-  display: table-cell					!important; }
-
-html.lang-en .show-for-lang-en {
-  display: inherit !important; }
+  display: none !important; }
 
 html.lang-en .hide-for-lang-en {
-  display: none								!important; }
-
-html.lang-en table.show-for-lang-en {
-  display: table							!important; }
-
-html.lang-en thead.show-for-lang-en {
-  display: table-header-group !important; }
-
-html.lang-en tbody.show-for-lang-en {
-  display: table-row-group		!important; }
-
-html.lang-en tr.show-for-lang-en {
-  display: table-row					!important; }
-
-html.lang-en td.show-for-lang-en,
-html.lang-en th.show-for-lang-en {
-  display: table-cell					!important; }
-
-html.no-lang-en .hide-for-lang-en {
-  display: inherit !important; }
+  display: none !important; }
 
 html.no-lang-en .show-for-lang-en {
-  display: none								!important; }
-
-html.no-lang-en table.hide-for-lang-en {
-  display: table							!important; }
-
-html.no-lang-en thead.hide-for-lang-en {
-  display: table-header-group !important; }
-
-html.no-lang-en tbody.hide-for-lang-en {
-  display: table-row-group		!important; }
-
-html.no-lang-en tr.hide-for-lang-en {
-  display: table-row					!important; }
-
-html.no-lang-en td.hide-for-lang-en,
-html.no-lang-en th.hide-for-lang-en {
-  display: table-cell					!important; }
-
-html.lang-fo .show-for-lang-fo {
-  display: inherit !important; }
+  display: none !important; }
 
 html.lang-fo .hide-for-lang-fo {
-  display: none								!important; }
-
-html.lang-fo table.show-for-lang-fo {
-  display: table							!important; }
-
-html.lang-fo thead.show-for-lang-fo {
-  display: table-header-group !important; }
-
-html.lang-fo tbody.show-for-lang-fo {
-  display: table-row-group		!important; }
-
-html.lang-fo tr.show-for-lang-fo {
-  display: table-row					!important; }
-
-html.lang-fo td.show-for-lang-fo,
-html.lang-fo th.show-for-lang-fo {
-  display: table-cell					!important; }
-
-html.no-lang-fo .hide-for-lang-fo {
-  display: inherit !important; }
+  display: none !important; }
 
 html.no-lang-fo .show-for-lang-fo {
-  display: none								!important; }
-
-html.no-lang-fo table.hide-for-lang-fo {
-  display: table							!important; }
-
-html.no-lang-fo thead.hide-for-lang-fo {
-  display: table-header-group !important; }
-
-html.no-lang-fo tbody.hide-for-lang-fo {
-  display: table-row-group		!important; }
-
-html.no-lang-fo tr.hide-for-lang-fo {
-  display: table-row					!important; }
-
-html.no-lang-fo td.hide-for-lang-fo,
-html.no-lang-fo th.hide-for-lang-fo {
-  display: table-cell					!important; }
-
-html.lang-kl .show-for-lang-kl {
-  display: inherit !important; }
+  display: none !important; }
 
 html.lang-kl .hide-for-lang-kl {
-  display: none								!important; }
-
-html.lang-kl table.show-for-lang-kl {
-  display: table							!important; }
-
-html.lang-kl thead.show-for-lang-kl {
-  display: table-header-group !important; }
-
-html.lang-kl tbody.show-for-lang-kl {
-  display: table-row-group		!important; }
-
-html.lang-kl tr.show-for-lang-kl {
-  display: table-row					!important; }
-
-html.lang-kl td.show-for-lang-kl,
-html.lang-kl th.show-for-lang-kl {
-  display: table-cell					!important; }
-
-html.no-lang-kl .hide-for-lang-kl {
-  display: inherit !important; }
+  display: none !important; }
 
 html.no-lang-kl .show-for-lang-kl {
-  display: none								!important; }
-
-html.no-lang-kl table.hide-for-lang-kl {
-  display: table							!important; }
-
-html.no-lang-kl thead.hide-for-lang-kl {
-  display: table-header-group !important; }
-
-html.no-lang-kl tbody.hide-for-lang-kl {
-  display: table-row-group		!important; }
-
-html.no-lang-kl tr.hide-for-lang-kl {
-  display: table-row					!important; }
-
-html.no-lang-kl td.hide-for-lang-kl,
-html.no-lang-kl th.hide-for-lang-kl {
-  display: table-cell					!important; }
+  display: none !important; }
 
 /***********************************************
 	fcoo-modernizr-mediaquery-device.scss, 
@@ -2579,93 +2313,17 @@ html.no-lang-kl th.hide-for-lang-kl {
 	https://github.com/FCOO
 
 ************************************************/
-html.ie8 .show-for-ie8 {
-  display: inherit !important; }
+.ie8 .hide-for-ie8 {
+  display: none !important; }
 
-html.ie8 .hide-for-ie8 {
-  display: none								!important; }
+.ie8 .show-for-no-ie8 {
+  display: none !important; }
 
-html.ie8 .hide-for-no-ie8 {
-  display: inherit !important; }
+.no-ie8 .show-for-ie8 {
+  display: none !important; }
 
-html.ie8 .show-for-no-ie8 {
-  display: none								!important; }
-
-html.ie8 table.show-for-ie8 {
-  display: table							!important; }
-
-html.ie8 thead.show-for-ie8 {
-  display: table-header-group !important; }
-
-html.ie8 tbody.show-for-ie8 {
-  display: table-row-group		!important; }
-
-html.ie8 tr.show-for-ie8 {
-  display: table-row					!important; }
-
-html.ie8 td.show-for-ie8,
-html.ie8 th.show-for-ie8 {
-  display: table-cell					!important; }
-
-html.ie8 table.hide-for-no-ie8 {
-  display: table							!important; }
-
-html.ie8 thead.hide-for-no-ie8 {
-  display: table-header-group !important; }
-
-html.ie8 tbody.hide-for-no-ie8 {
-  display: table-row-group		!important; }
-
-html.ie8 tr.hide-for-no-ie8 {
-  display: table-row					!important; }
-
-html.ie8 td.hide-for-no-ie8,
-html.ie8 th.hide-for-no-ie8 {
-  display: table-cell					!important; }
-
-html.no-ie8 .hide-for-ie8 {
-  display: inherit !important; }
-
-html.no-ie8 .show-for-ie8 {
-  display: none								!important; }
-
-html.no-ie8 .show-for-no-ie8 {
-  display: inherit !important; }
-
-html.no-ie8 .hide-for-no-ie8 {
-  display: none								!important; }
-
-html.no-ie8 table.hide-for-ie8 {
-  display: table							!important; }
-
-html.no-ie8 thead.hide-for-ie8 {
-  display: table-header-group !important; }
-
-html.no-ie8 tbody.hide-for-ie8 {
-  display: table-row-group		!important; }
-
-html.no-ie8 tr.hide-for-ie8 {
-  display: table-row					!important; }
-
-html.no-ie8 td.hide-for-ie8,
-html.no-ie8 th.hide-for-ie8 {
-  display: table-cell					!important; }
-
-html.no-ie8 table.show-for-no-ie8 {
-  display: table							!important; }
-
-html.no-ie8 thead.show-for-no-ie8 {
-  display: table-header-group !important; }
-
-html.no-ie8 tbody.show-for-no-ie8 {
-  display: table-row-group		!important; }
-
-html.no-ie8 tr.show-for-no-ie8 {
-  display: table-row					!important; }
-
-html.no-ie8 td.show-for-no-ie8,
-html.no-ie8 th.show-for-no-ie8 {
-  display: table-cell					!important; }
+.no-ie8 .hide-for-no-ie8 {
+  display: none !important; }
 
 /***********************************************
 	modernizr-mediaquery.scss, 
@@ -2676,23 +2334,6 @@ html.no-ie8 th.show-for-no-ie8 {
 	https://github.com/FCOO
 
 ************************************************/
-/* Default
-$html-font-size		: 16px !default;
-$create-FOR-NO		: true !default; //When true the display-classes for show-for-no-NAME / hide-for-no-NAME is also created. show-for-NAME and hide-for-NAME is always created
-
-$create-FIRST-up	: false !default; //When true the media query FIRST-up (allway display) and no-FIRST-up (allways hidden) are created
-$create-LAST-down	: false !default;	//When true the media query LAST-down (allway display) and no-LAST-down (allways hidden) are created
-
-
-//Breakpoints taken from uikit
-$breakpoints: (
-  mini		:    0px,	//Phone portrait
-  small		:  480px,	//Phone landscape
-  medium	:  768px,	//Tablets portrait
-  large		:  960px,	//Table landscape + desttop
-  xlarge	: 1200px	//Large desttop
-) !default;
-*/
 /***********************************************
 	modernizr-mediaquery-variables.scss, 
 
@@ -2719,109 +2360,33 @@ $breakpoints: (
   display: block !important; }
 
 .hide-for-landscape {
-  display: none								!important; }
-
-table.show-for-landscape {
-  display: table							!important; }
-
-thead.show-for-landscape {
-  display: table-header-group !important; }
-
-tbody.show-for-landscape {
-  display: table-row-group		!important; }
-
-tr.show-for-landscape {
-  display: table-row					!important; }
-
-td.show-for-landscape,
-th.show-for-landscape {
-  display: table-cell					!important; }
+  display: none !important; }
 
 .hide-for-portrait {
   display: block !important; }
 
 .show-for-portrait {
-  display: none								!important; }
-
-table.hide-for-portrait {
-  display: table							!important; }
-
-thead.hide-for-portrait {
-  display: table-header-group !important; }
-
-tbody.hide-for-portrait {
-  display: table-row-group		!important; }
-
-tr.hide-for-portrait {
-  display: table-row					!important; }
-
-td.hide-for-portrait,
-th.hide-for-portrait {
-  display: table-cell					!important; }
+  display: none !important; }
 
 @media screen and (orientation: landscape) {
   .show-for-landscape {
     display: block !important; }
   .hide-for-landscape {
-    display: none								!important; }
-  table.show-for-landscape {
-    display: table							!important; }
-  thead.show-for-landscape {
-    display: table-header-group !important; }
-  tbody.show-for-landscape {
-    display: table-row-group		!important; }
-  tr.show-for-landscape {
-    display: table-row					!important; }
-  td.show-for-landscape,
-  th.show-for-landscape {
-    display: table-cell					!important; }
+    display: none !important; }
   .hide-for-portrait {
     display: block !important; }
   .show-for-portrait {
-    display: none								!important; }
-  table.hide-for-portrait {
-    display: table							!important; }
-  thead.hide-for-portrait {
-    display: table-header-group !important; }
-  tbody.hide-for-portrait {
-    display: table-row-group		!important; }
-  tr.hide-for-portrait {
-    display: table-row					!important; }
-  td.hide-for-portrait,
-  th.hide-for-portrait {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media screen and (orientation: portrait) {
   .hide-for-landscape {
     display: block !important; }
   .show-for-landscape {
-    display: none								!important; }
-  table.hide-for-landscape {
-    display: table							!important; }
-  thead.hide-for-landscape {
-    display: table-header-group !important; }
-  tbody.hide-for-landscape {
-    display: table-row-group		!important; }
-  tr.hide-for-landscape {
-    display: table-row					!important; }
-  td.hide-for-landscape,
-  th.hide-for-landscape {
-    display: table-cell					!important; }
+    display: none !important; }
   .show-for-portrait {
     display: block !important; }
   .hide-for-portrait {
-    display: none								!important; }
-  table.show-for-portrait {
-    display: table							!important; }
-  thead.show-for-portrait {
-    display: table-header-group !important; }
-  tbody.show-for-portrait {
-    display: table-row-group		!important; }
-  tr.show-for-portrait {
-    display: table-row					!important; }
-  td.show-for-portrait,
-  th.show-for-portrait {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 .show-for-print {
   display: none !important; }
@@ -2830,440 +2395,109 @@ th.hide-for-portrait {
   .show-for-print {
     display: block !important; }
   .hide-for-print {
-    display: none								!important; }
-  table.show-for-print {
-    display: table							!important; }
-  thead.show-for-print {
-    display: table-header-group !important; }
-  tbody.show-for-print {
-    display: table-row-group		!important; }
-  tr.show-for-print {
-    display: table-row					!important; }
-  td.show-for-print,
-  th.show-for-print {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.mini .show-for-mini {
-    display: inherit !important; }
   html.mini .hide-for-mini {
-    display: none								!important; }
-  html.mini table.show-for-mini {
-    display: table							!important; }
-  html.mini thead.show-for-mini {
-    display: table-header-group !important; }
-  html.mini tbody.show-for-mini {
-    display: table-row-group		!important; }
-  html.mini tr.show-for-mini {
-    display: table-row					!important; }
-  html.mini td.show-for-mini,
-  html.mini th.show-for-mini {
-    display: table-cell					!important; }
-  html.no-mini .hide-for-mini {
-    display: inherit !important; }
+    display: none !important; }
   html.no-mini .show-for-mini {
-    display: none								!important; }
-  html.no-mini table.hide-for-mini {
-    display: table							!important; }
-  html.no-mini thead.hide-for-mini {
-    display: table-header-group !important; }
-  html.no-mini tbody.hide-for-mini {
-    display: table-row-group		!important; }
-  html.no-mini tr.hide-for-mini {
-    display: table-row					!important; }
-  html.no-mini td.hide-for-mini,
-  html.no-mini th.hide-for-mini {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.mini-down .show-for-mini-down {
-    display: inherit !important; }
   html.mini-down .hide-for-mini-down {
-    display: none								!important; }
-  html.mini-down table.show-for-mini-down {
-    display: table							!important; }
-  html.mini-down thead.show-for-mini-down {
-    display: table-header-group !important; }
-  html.mini-down tbody.show-for-mini-down {
-    display: table-row-group		!important; }
-  html.mini-down tr.show-for-mini-down {
-    display: table-row					!important; }
-  html.mini-down td.show-for-mini-down,
-  html.mini-down th.show-for-mini-down {
-    display: table-cell					!important; }
-  html.no-mini-down .hide-for-mini-down {
-    display: inherit !important; }
+    display: none !important; }
   html.no-mini-down .show-for-mini-down {
-    display: none								!important; }
-  html.no-mini-down table.hide-for-mini-down {
-    display: table							!important; }
-  html.no-mini-down thead.hide-for-mini-down {
-    display: table-header-group !important; }
-  html.no-mini-down tbody.hide-for-mini-down {
-    display: table-row-group		!important; }
-  html.no-mini-down tr.hide-for-mini-down {
-    display: table-row					!important; }
-  html.no-mini-down td.hide-for-mini-down,
-  html.no-mini-down th.hide-for-mini-down {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.small .show-for-small {
-    display: inherit !important; }
   html.small .hide-for-small {
-    display: none								!important; }
-  html.small table.show-for-small {
-    display: table							!important; }
-  html.small thead.show-for-small {
-    display: table-header-group !important; }
-  html.small tbody.show-for-small {
-    display: table-row-group		!important; }
-  html.small tr.show-for-small {
-    display: table-row					!important; }
-  html.small td.show-for-small,
-  html.small th.show-for-small {
-    display: table-cell					!important; }
-  html.no-small .hide-for-small {
-    display: inherit !important; }
+    display: none !important; }
   html.no-small .show-for-small {
-    display: none								!important; }
-  html.no-small table.hide-for-small {
-    display: table							!important; }
-  html.no-small thead.hide-for-small {
-    display: table-header-group !important; }
-  html.no-small tbody.hide-for-small {
-    display: table-row-group		!important; }
-  html.no-small tr.hide-for-small {
-    display: table-row					!important; }
-  html.no-small td.hide-for-small,
-  html.no-small th.hide-for-small {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.small-down .show-for-small-down {
-    display: inherit !important; }
   html.small-down .hide-for-small-down {
-    display: none								!important; }
-  html.small-down table.show-for-small-down {
-    display: table							!important; }
-  html.small-down thead.show-for-small-down {
-    display: table-header-group !important; }
-  html.small-down tbody.show-for-small-down {
-    display: table-row-group		!important; }
-  html.small-down tr.show-for-small-down {
-    display: table-row					!important; }
-  html.small-down td.show-for-small-down,
-  html.small-down th.show-for-small-down {
-    display: table-cell					!important; }
-  html.no-small-down .hide-for-small-down {
-    display: inherit !important; }
+    display: none !important; }
   html.no-small-down .show-for-small-down {
-    display: none								!important; }
-  html.no-small-down table.hide-for-small-down {
-    display: table							!important; }
-  html.no-small-down thead.hide-for-small-down {
-    display: table-header-group !important; }
-  html.no-small-down tbody.hide-for-small-down {
-    display: table-row-group		!important; }
-  html.no-small-down tr.hide-for-small-down {
-    display: table-row					!important; }
-  html.no-small-down td.hide-for-small-down,
-  html.no-small-down th.hide-for-small-down {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.small-up .show-for-small-up {
-    display: inherit !important; }
   html.small-up .hide-for-small-up {
-    display: none								!important; }
-  html.small-up table.show-for-small-up {
-    display: table							!important; }
-  html.small-up thead.show-for-small-up {
-    display: table-header-group !important; }
-  html.small-up tbody.show-for-small-up {
-    display: table-row-group		!important; }
-  html.small-up tr.show-for-small-up {
-    display: table-row					!important; }
-  html.small-up td.show-for-small-up,
-  html.small-up th.show-for-small-up {
-    display: table-cell					!important; }
-  html.no-small-up .hide-for-small-up {
-    display: inherit !important; }
+    display: none !important; }
   html.no-small-up .show-for-small-up {
-    display: none								!important; }
-  html.no-small-up table.hide-for-small-up {
-    display: table							!important; }
-  html.no-small-up thead.hide-for-small-up {
-    display: table-header-group !important; }
-  html.no-small-up tbody.hide-for-small-up {
-    display: table-row-group		!important; }
-  html.no-small-up tr.hide-for-small-up {
-    display: table-row					!important; }
-  html.no-small-up td.hide-for-small-up,
-  html.no-small-up th.hide-for-small-up {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.medium .show-for-medium {
-    display: inherit !important; }
   html.medium .hide-for-medium {
-    display: none								!important; }
-  html.medium table.show-for-medium {
-    display: table							!important; }
-  html.medium thead.show-for-medium {
-    display: table-header-group !important; }
-  html.medium tbody.show-for-medium {
-    display: table-row-group		!important; }
-  html.medium tr.show-for-medium {
-    display: table-row					!important; }
-  html.medium td.show-for-medium,
-  html.medium th.show-for-medium {
-    display: table-cell					!important; }
-  html.no-medium .hide-for-medium {
-    display: inherit !important; }
+    display: none !important; }
   html.no-medium .show-for-medium {
-    display: none								!important; }
-  html.no-medium table.hide-for-medium {
-    display: table							!important; }
-  html.no-medium thead.hide-for-medium {
-    display: table-header-group !important; }
-  html.no-medium tbody.hide-for-medium {
-    display: table-row-group		!important; }
-  html.no-medium tr.hide-for-medium {
-    display: table-row					!important; }
-  html.no-medium td.hide-for-medium,
-  html.no-medium th.hide-for-medium {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.medium-down .show-for-medium-down {
-    display: inherit !important; }
   html.medium-down .hide-for-medium-down {
-    display: none								!important; }
-  html.medium-down table.show-for-medium-down {
-    display: table							!important; }
-  html.medium-down thead.show-for-medium-down {
-    display: table-header-group !important; }
-  html.medium-down tbody.show-for-medium-down {
-    display: table-row-group		!important; }
-  html.medium-down tr.show-for-medium-down {
-    display: table-row					!important; }
-  html.medium-down td.show-for-medium-down,
-  html.medium-down th.show-for-medium-down {
-    display: table-cell					!important; }
-  html.no-medium-down .hide-for-medium-down {
-    display: inherit !important; }
+    display: none !important; }
   html.no-medium-down .show-for-medium-down {
-    display: none								!important; }
-  html.no-medium-down table.hide-for-medium-down {
-    display: table							!important; }
-  html.no-medium-down thead.hide-for-medium-down {
-    display: table-header-group !important; }
-  html.no-medium-down tbody.hide-for-medium-down {
-    display: table-row-group		!important; }
-  html.no-medium-down tr.hide-for-medium-down {
-    display: table-row					!important; }
-  html.no-medium-down td.hide-for-medium-down,
-  html.no-medium-down th.hide-for-medium-down {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.medium-up .show-for-medium-up {
-    display: inherit !important; }
   html.medium-up .hide-for-medium-up {
-    display: none								!important; }
-  html.medium-up table.show-for-medium-up {
-    display: table							!important; }
-  html.medium-up thead.show-for-medium-up {
-    display: table-header-group !important; }
-  html.medium-up tbody.show-for-medium-up {
-    display: table-row-group		!important; }
-  html.medium-up tr.show-for-medium-up {
-    display: table-row					!important; }
-  html.medium-up td.show-for-medium-up,
-  html.medium-up th.show-for-medium-up {
-    display: table-cell					!important; }
-  html.no-medium-up .hide-for-medium-up {
-    display: inherit !important; }
+    display: none !important; }
   html.no-medium-up .show-for-medium-up {
-    display: none								!important; }
-  html.no-medium-up table.hide-for-medium-up {
-    display: table							!important; }
-  html.no-medium-up thead.hide-for-medium-up {
-    display: table-header-group !important; }
-  html.no-medium-up tbody.hide-for-medium-up {
-    display: table-row-group		!important; }
-  html.no-medium-up tr.hide-for-medium-up {
-    display: table-row					!important; }
-  html.no-medium-up td.hide-for-medium-up,
-  html.no-medium-up th.hide-for-medium-up {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.large .show-for-large {
-    display: inherit !important; }
   html.large .hide-for-large {
-    display: none								!important; }
-  html.large table.show-for-large {
-    display: table							!important; }
-  html.large thead.show-for-large {
-    display: table-header-group !important; }
-  html.large tbody.show-for-large {
-    display: table-row-group		!important; }
-  html.large tr.show-for-large {
-    display: table-row					!important; }
-  html.large td.show-for-large,
-  html.large th.show-for-large {
-    display: table-cell					!important; }
-  html.no-large .hide-for-large {
-    display: inherit !important; }
+    display: none !important; }
   html.no-large .show-for-large {
-    display: none								!important; }
-  html.no-large table.hide-for-large {
-    display: table							!important; }
-  html.no-large thead.hide-for-large {
-    display: table-header-group !important; }
-  html.no-large tbody.hide-for-large {
-    display: table-row-group		!important; }
-  html.no-large tr.hide-for-large {
-    display: table-row					!important; }
-  html.no-large td.hide-for-large,
-  html.no-large th.hide-for-large {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.large-down .show-for-large-down {
-    display: inherit !important; }
   html.large-down .hide-for-large-down {
-    display: none								!important; }
-  html.large-down table.show-for-large-down {
-    display: table							!important; }
-  html.large-down thead.show-for-large-down {
-    display: table-header-group !important; }
-  html.large-down tbody.show-for-large-down {
-    display: table-row-group		!important; }
-  html.large-down tr.show-for-large-down {
-    display: table-row					!important; }
-  html.large-down td.show-for-large-down,
-  html.large-down th.show-for-large-down {
-    display: table-cell					!important; }
-  html.no-large-down .hide-for-large-down {
-    display: inherit !important; }
+    display: none !important; }
   html.no-large-down .show-for-large-down {
-    display: none								!important; }
-  html.no-large-down table.hide-for-large-down {
-    display: table							!important; }
-  html.no-large-down thead.hide-for-large-down {
-    display: table-header-group !important; }
-  html.no-large-down tbody.hide-for-large-down {
-    display: table-row-group		!important; }
-  html.no-large-down tr.hide-for-large-down {
-    display: table-row					!important; }
-  html.no-large-down td.hide-for-large-down,
-  html.no-large-down th.hide-for-large-down {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.large-up .show-for-large-up {
-    display: inherit !important; }
   html.large-up .hide-for-large-up {
-    display: none								!important; }
-  html.large-up table.show-for-large-up {
-    display: table							!important; }
-  html.large-up thead.show-for-large-up {
-    display: table-header-group !important; }
-  html.large-up tbody.show-for-large-up {
-    display: table-row-group		!important; }
-  html.large-up tr.show-for-large-up {
-    display: table-row					!important; }
-  html.large-up td.show-for-large-up,
-  html.large-up th.show-for-large-up {
-    display: table-cell					!important; }
-  html.no-large-up .hide-for-large-up {
-    display: inherit !important; }
+    display: none !important; }
   html.no-large-up .show-for-large-up {
-    display: none								!important; }
-  html.no-large-up table.hide-for-large-up {
-    display: table							!important; }
-  html.no-large-up thead.hide-for-large-up {
-    display: table-header-group !important; }
-  html.no-large-up tbody.hide-for-large-up {
-    display: table-row-group		!important; }
-  html.no-large-up tr.hide-for-large-up {
-    display: table-row					!important; }
-  html.no-large-up td.hide-for-large-up,
-  html.no-large-up th.hide-for-large-up {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.xlarge .show-for-xlarge {
-    display: inherit !important; }
   html.xlarge .hide-for-xlarge {
-    display: none								!important; }
-  html.xlarge table.show-for-xlarge {
-    display: table							!important; }
-  html.xlarge thead.show-for-xlarge {
-    display: table-header-group !important; }
-  html.xlarge tbody.show-for-xlarge {
-    display: table-row-group		!important; }
-  html.xlarge tr.show-for-xlarge {
-    display: table-row					!important; }
-  html.xlarge td.show-for-xlarge,
-  html.xlarge th.show-for-xlarge {
-    display: table-cell					!important; }
-  html.no-xlarge .hide-for-xlarge {
-    display: inherit !important; }
+    display: none !important; }
   html.no-xlarge .show-for-xlarge {
-    display: none								!important; }
-  html.no-xlarge table.hide-for-xlarge {
-    display: table							!important; }
-  html.no-xlarge thead.hide-for-xlarge {
-    display: table-header-group !important; }
-  html.no-xlarge tbody.hide-for-xlarge {
-    display: table-row-group		!important; }
-  html.no-xlarge tr.hide-for-xlarge {
-    display: table-row					!important; }
-  html.no-xlarge td.hide-for-xlarge,
-  html.no-xlarge th.hide-for-xlarge {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 @media only screen {
-  html.xlarge-up .show-for-xlarge-up {
-    display: inherit !important; }
   html.xlarge-up .hide-for-xlarge-up {
-    display: none								!important; }
-  html.xlarge-up table.show-for-xlarge-up {
-    display: table							!important; }
-  html.xlarge-up thead.show-for-xlarge-up {
-    display: table-header-group !important; }
-  html.xlarge-up tbody.show-for-xlarge-up {
-    display: table-row-group		!important; }
-  html.xlarge-up tr.show-for-xlarge-up {
-    display: table-row					!important; }
-  html.xlarge-up td.show-for-xlarge-up,
-  html.xlarge-up th.show-for-xlarge-up {
-    display: table-cell					!important; }
-  html.no-xlarge-up .hide-for-xlarge-up {
-    display: inherit !important; }
+    display: none !important; }
   html.no-xlarge-up .show-for-xlarge-up {
-    display: none								!important; }
-  html.no-xlarge-up table.hide-for-xlarge-up {
-    display: table							!important; }
-  html.no-xlarge-up thead.hide-for-xlarge-up {
-    display: table-header-group !important; }
-  html.no-xlarge-up tbody.hide-for-xlarge-up {
-    display: table-row-group		!important; }
-  html.no-xlarge-up tr.hide-for-xlarge-up {
-    display: table-row					!important; }
-  html.no-xlarge-up td.hide-for-xlarge-up,
-  html.no-xlarge-up th.hide-for-xlarge-up {
-    display: table-cell					!important; } }
+    display: none !important; } }
 
 .modernizr-mediaquery-media-query {
   font-family: "mini=screen and (max-width: 29.9375em)&mini-down=screen and (max-width: 29.9375em)&small=screen and (min-width: 30em) and (max-width: 47.9375em)&small-down=screen and (max-width: 47.9375em)&small-up=screen and (min-width: 30em)&medium=screen and (min-width: 48em) and (max-width: 59.9375em)&medium-down=screen and (max-width: 59.9375em)&medium-up=screen and (min-width: 48em)&large=screen and (min-width: 60em) and (max-width: 74.9375em)&large-down=screen and (max-width: 74.9375em)&large-up=screen and (min-width: 60em)&xlarge=screen and (min-width: 75em)&xlarge-up=screen and (min-width: 75em)&landscape=screen and (orientation: landscape)&portrait=screen and (orientation: portrait)"; }
 
 .modernizr-mediaquery-min-max {
   font-family: "mini=0px_479px&mini-down=0_479px&small=480px_767px&small-down=0_767px&small-up=480px_0&medium=768px_959px&medium-down=0_959px&medium-up=768px_0&large=960px_1199px&large-down=0_1199px&large-up=960px_0&xlarge=1200px_0px&xlarge-up=1200px_0&landscape=0_1_1&portrait=0_1_0_1"; }
+
+html.fullscreen .hide-for-fullscreen {
+  display: none !important; }
+
+html.no-fullscreen .show-for-fullscreen {
+  display: none !important; }
+
+html.localstorage .hide-for-localstorage {
+  display: none !important; }
+
+html.no-localstorage .show-for-localstorage {
+  display: none !important; }
+
+html.sessionstorage .hide-for-sessionstorage {
+  display: none !important; }
+
+html.no-sessionstorage .show-for-sessionstorage {
+  display: none !important; }
 
 /***********************************************
 	fcoo-polyfill.scss, 
@@ -3304,3 +2538,423 @@ th.hide-for-portrait {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   max-height: 541px; }
+
+/*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
+
+/**
+ * 1. Change the default font family in all browsers (opinionated).
+ * 2. Prevent adjustments of font size after orientation changes in IE and iOS.
+ */
+
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/**
+ * Remove the margin in all browsers (opinionated).
+ */
+
+body {
+  margin: 0;
+}
+
+/* HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Add the correct display in IE 9-.
+ * 1. Add the correct display in Edge, IE, and Firefox.
+ * 2. Add the correct display in IE.
+ */
+
+article,
+aside,
+details, /* 1 */
+figcaption,
+figure,
+footer,
+header,
+main, /* 2 */
+menu,
+nav,
+section,
+summary { /* 1 */
+  display: block;
+}
+
+/**
+ * Add the correct display in IE 9-.
+ */
+
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+}
+
+/**
+ * Add the correct display in iOS 4-7.
+ */
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+ * Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+
+progress {
+  vertical-align: baseline;
+}
+
+/**
+ * Add the correct display in IE 10-.
+ * 1. Add the correct display in IE.
+ */
+
+template, /* 1 */
+[hidden] {
+  display: none;
+}
+
+/* Links
+   ========================================================================== */
+
+/**
+ * 1. Remove the gray background on active links in IE 10.
+ * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.
+ */
+
+a {
+  background-color: transparent; /* 1 */
+  -webkit-text-decoration-skip: objects; /* 2 */
+}
+
+/**
+ * Remove the outline on focused links when they are also active or hovered
+ * in all browsers (opinionated).
+ */
+
+a:active,
+a:hover {
+  outline-width: 0;
+}
+
+/* Text-level semantics
+   ========================================================================== */
+
+/**
+ * 1. Remove the bottom border in Firefox 39-.
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+
+abbr[title] {
+  border-bottom: none; /* 1 */
+  text-decoration: underline; /* 2 */
+  text-decoration: underline dotted; /* 2 */
+}
+
+/**
+ * Prevent the duplicate application of `bolder` by the next rule in Safari 6.
+ */
+
+b,
+strong {
+  font-weight: inherit;
+}
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/**
+ * Add the correct font style in Android 4.3-.
+ */
+
+dfn {
+  font-style: italic;
+}
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/**
+ * Add the correct background and color in IE 9-.
+ */
+
+mark {
+  background-color: #ff0;
+  color: #000;
+}
+
+/**
+ * Add the correct font size in all browsers.
+ */
+
+small {
+  font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/* Embedded content
+   ========================================================================== */
+
+/**
+ * Remove the border on images inside links in IE 10-.
+ */
+
+img {
+  border-style: none;
+}
+
+/**
+ * Hide the overflow in IE.
+ */
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Grouping content
+   ========================================================================== */
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/**
+ * Add the correct margin in IE 8.
+ */
+
+figure {
+  margin: 1em 40px;
+}
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+
+hr {
+  box-sizing: content-box; /* 1 */
+  height: 0; /* 1 */
+  overflow: visible; /* 2 */
+}
+
+/* Forms
+   ========================================================================== */
+
+/**
+ * 1. Change font properties to `inherit` in all browsers (opinionated).
+ * 2. Remove the margin in Firefox and Safari.
+ */
+
+button,
+input,
+select,
+textarea {
+  font: inherit; /* 1 */
+  margin: 0; /* 2 */
+}
+
+/**
+ * Restore the font weight unset by the previous rule.
+ */
+
+optgroup {
+  font-weight: bold;
+}
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ */
+
+button,
+input { /* 1 */
+  overflow: visible;
+}
+
+/**
+ * Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text transform in Firefox.
+ */
+
+button,
+select { /* 1 */
+  text-transform: none;
+}
+
+/**
+ * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`
+ *    controls in Android 4.
+ * 2. Correct the inability to style clickable types in iOS and Safari.
+ */
+
+button,
+html [type="button"], /* 1 */
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+}
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+/**
+ * Change the border, margin, and padding in all browsers (opinionated).
+ */
+
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+
+legend {
+  box-sizing: border-box; /* 1 */
+  color: inherit; /* 2 */
+  display: table; /* 1 */
+  max-width: 100%; /* 1 */
+  padding: 0; /* 3 */
+  white-space: normal; /* 1 */
+}
+
+/**
+ * Remove the default vertical scrollbar in IE.
+ */
+
+textarea {
+  overflow: auto;
+}
+
+/**
+ * 1. Add the correct box sizing in IE 10-.
+ * 2. Remove the padding in IE 10-.
+ */
+
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Correct the odd appearance in Chrome and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+
+[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/**
+ * Remove the inner padding and cancel buttons in Chrome and Safari on OS X.
+ */
+
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * Correct the text style of placeholders in Chrome, Edge, and Safari.
+ */
+
+::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.54;
+}
+
+/**
+ * 1. Correct the inability to style clickable types in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}

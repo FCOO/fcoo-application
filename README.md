@@ -69,10 +69,15 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 ### [fcoo-polyfill](http://github.com/fcoo/fcoo-polyfill)
 --
 ### [fcoo-language](http://github.com/fcoo/fcoo-language)
+
+--
+### [normalize.css](https://github.com/necolas/normalize.css/)
+
+
 -----
 ## <a name="version"></a>Versions
 
-### 0.0.* (2016-05-18)
+### 0.1.0 (2016-MM-DD)
 
 - **`1.12.*`**: jQuery
 - **`latest`**: javascript-utilities
@@ -80,6 +85,8 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 - **`1.*`**	: fcoo-modernizr-mediaquery-device
 - **`latest`**: fcoo-polyfill
 - **`0.*`**	: fcoo-language
+- **`latest`**: normalize.css
+
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-leaflet/LICENSE).

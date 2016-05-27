@@ -17,11 +17,22 @@
 //MATHSASS - https://github.com/terkel/mathsass
 @import "../bower_components/mathsass/dist/math";
 
-//Standard classes
-.hide {
-  display: none !important; 
+
+body {
+	padding: 0;
+	margin: 0;
 }
 
-.invisible {
-  visibility: hidden; 
+html, body {
+	height: 100%;
 }
+
+
+
+//Standard classes
+.hide				{	display: none !important; }
+.invisible	{ visibility: hidden;				}
+.bold				{ font-weight: bold;				}
+
+
+
