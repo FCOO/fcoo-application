@@ -79,13 +79,13 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 
 ### 0.1.0 (2016-MM-DD)
 
-- **`1.12.*`**: jQuery
-- **`latest`**: javascript-utilities
-- **`latest`**: fcoo-fontawesome
-- **`1.*`**	: fcoo-modernizr-mediaquery-device
-- **`latest`**: fcoo-polyfill
-- **`0.*`**	: fcoo-language
-- **`latest`**: normalize.css
+	1.12.*	: jQuery
+	latest	: javascript-utilities
+	latest	: fcoo-fontawesome
+	1.*		: fcoo-modernizr-mediaquery-device
+	latest	: fcoo-polyfill
+	0.*		: fcoo-language
+	latest	: normalize.css
 
 
 ## Copyright and License
