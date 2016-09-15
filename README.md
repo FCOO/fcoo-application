@@ -77,8 +77,16 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 -----
 ## <a name="version"></a>Versions
 
-### 0.1.0 (2016-MM-DD)
+### ^1.0.0 (2016-09-23) - IE9 Compatible 
+	1.12.*	: jQuery
+	latest	: javascript-utilities
+	latest	: fcoo-fontawesome
+	1.*		: fcoo-modernizr-mediaquery-device
+	latest	: fcoo-polyfill
+	0.*		: fcoo-language
+	latest	: normalize.css
 
+### 0.1.0 (2016-MM-DD)
 	1.12.*	: jQuery
 	latest	: javascript-utilities
 	latest	: fcoo-fontawesome
