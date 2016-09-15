@@ -19,7 +19,7 @@ In `bower.json` of the application correct the `fcoo-application` section in `de
  
 	"dependencies": {
 	  ...
-      "fcoo-application": "fcoo/fcoo-application#1.2.3",
+      "fcoo-application": "fcoo/fcoo-application#^1.2.3",
 	  ...
 	}
 
@@ -27,7 +27,7 @@ and add/update the `resolutions` section
 
 	"resolutions": {
 	  ...
-      "fcoo-application": "1.2.3",
+      "fcoo-application": "^1.2.3",
 	  ...
 	}
 
@@ -77,16 +77,16 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 -----
 ## <a name="version"></a>Versions
 
-### ^1.0.0 (2016-09-23) - IE9 Compatible 
-	1.12.*	: jQuery
+### ^1.0.0 (>=2016-09-23) - IE9 Compatible 
+	^3.1.0	: jQuery
 	latest	: javascript-utilities
 	latest	: fcoo-fontawesome
-	1.*		: fcoo-modernizr-mediaquery-device
+	^1.2.0  : fcoo-modernizr-mediaquery-device
 	latest	: fcoo-polyfill
-	0.*		: fcoo-language
+    ^0.2.1	: fcoo-language
 	latest	: normalize.css
 
-### 0.1.0 (2016-MM-DD)
+### 0.0.* (>=2016-05-18)
 	1.12.*	: jQuery
 	latest	: javascript-utilities
 	latest	: fcoo-fontawesome
