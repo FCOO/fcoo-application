@@ -35,7 +35,7 @@
     "javascript-utilities": "fcoo/javascript-utilities#latest",
     "fcoo-fontawesome": "fcoo/fcoo-fontawesome#latest",
     "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#1.*",
-    "fcoo-polyfill": "fcoo/fcoo-polyfill^1.2.0",
+    "fcoo-polyfill": "fcoo/fcoo-polyfill#1.2.0",
     "fcoo-language": "fcoo/fcoo-language#0.*",
     "normalize-css": "latest"
   },
@@ -43,7 +43,7 @@
   "resolutions": {
     "jquery": "1.12.*",
     "fcoo-modernizr-mediaquery-device": "1.*",
-    "fcoo-polyfill": "^1.2.0",
+    "fcoo-polyfill": "#1.2.0",
     "fcoo-language": "0.*"
   }
 }
