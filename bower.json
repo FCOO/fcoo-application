@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -47,6 +47,5 @@
     "fcoo-polyfill": "^2.0.0",
     "fcoo-language": "^0.2.1",
     "raven-js": "^3.7.0"
-
   }
 }

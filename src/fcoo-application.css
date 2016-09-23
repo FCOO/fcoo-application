@@ -9,14 +9,24 @@
 
 ************************************************/
 html, body {
-  height: 100%;
-}
+  height: 100%; }
 
 body {
   padding: 0;
-  margin: 0;
-}
+  margin: 0; }
 
+.hide {
+  display: none !important; }
+
+.invisible {
+  visibility: hidden; }
+
+.bold {
+  font-weight: bold; }
+
+/*****************************************************
+Style for the <div> covering the page during loading
+*****************************************************/
 div.loading {
   position: absolute;
   left: 0;
@@ -27,45 +37,27 @@ div.loading {
   background-image: url("images/favicon.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: center;
-}
-body:not(.loading) div.loading {
-  width: 0;
-  height: 0;
-  opacity: 0;
-  -webkit-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-  -moz-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-  transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-}
-body.loading div.loading {
-  cursor: progress;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-}
-div.loading span.loading {
-  display: block !important;
-  cursor: progress;
-  position: absolute;
-  top: 75%;
-  right: 0;
-  left: 0;
-  margin: auto;
-  width: 3rem;
-  height: 3rem;
-  color: #ffffff;
-}
-
-.hide {
-  display: none !important;
-}
-
-.invisible {
-  visibility: hidden;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-/*# sourceMappingURL=fcoo-application.css.map */
+  background-position: center; }
+  body:not(.loading) div.loading {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    -webkit-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
+    -moz-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
+    transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s; }
+  body.loading div.loading {
+    cursor: progress;
+    width: 100%;
+    height: 100%;
+    opacity: 1; }
+  div.loading span.loading {
+    display: block !important;
+    cursor: progress;
+    position: absolute;
+    top: 75%;
+    right: 0;
+    left: 0;
+    margin: auto;
+    width: 3rem;
+    height: 3rem;
+    color: #ffffff; }
