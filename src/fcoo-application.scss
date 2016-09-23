@@ -40,7 +40,7 @@ div.loading {
     position: absolute;
     left:0; 
     top: 0; 
-    z-index: 999999;
+    z-index: 2147483647; //2N32
     
     $background-color: "{APPLICATION_COLOR}"; 
     background-color: #214b87; //Fallback: Default "FCOO-blue"
@@ -58,26 +58,26 @@ div.loading {
         @include transition(opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration);    
     }
     body.loading & {
-        cursor: progress; 
-        width: 100%; 
-        height:100%;
+        cursor : progress; 
+        width  : 100%; 
+        height : 100%;
         opacity: 1;
     }
 
     span.loading {
         display: block !important;
-        cursor: progress; 
+        cursor : progress; 
 
         position: absolute;
-        top: 75%;
-        right: 0;
-        left: 0;
+        top   : 75%;
+        right : 0;
+        left  : 0;
         margin: auto;
-        width: 3rem;
-        height: 3rem;
 
         $favicon-color: "{APPLICATION_FAVICONCOLOR}"; 
         color: #ffffff; //Fallback: white
+        color: #{$favicon-color};
+
     }
 }
 

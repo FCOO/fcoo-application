@@ -20,10 +20,15 @@
     /*********************************************************************
     Set <body> class = 'loading' and adds spinner
     *********************************************************************/
-    var $body = $('body');
-    $body
-        .addClass('loading')
-        .append( $('<div class="loading"><span class="loading fa fa-circle-o-notch fa-spin fa-3x fa-fw"></span></div>') );
+    var $body = $('body'),
+        $div  = $('body > div.loading');
+
+    $body.addClass('loading');
+    if (!$div.length){
+      $div = $('<div class="loading"></div>' );
+      $div.prependTo( $body );
+    }
+    $div.append( $('<span class="loading fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span>') );
 
     $(window).on( 'load', function() { $body.removeClass("loading"); });
 
