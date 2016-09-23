@@ -1,10 +1,10 @@
 /***********************************************
-	fcoo-application.scss, 
+    fcoo-application.scss, 
 
-	(c) 2016, FCOO
+    (c) 2016, FCOO
 
-	https://github.com/FCOO/fcoo-application
-	https://github.com/FCOO
+    https://github.com/FCOO/fcoo-application
+    https://github.com/FCOO
 
 
 ************************************************/
@@ -18,17 +18,69 @@
 @import "../bower_components/mathsass/dist/math";
 
 html, body {
-	height: 100%;	
+    height: 100%;    
 }
 body {
-	padding	: 0;
-	margin	: 0;
+    padding: 0;
+    margin : 0;
 }
 
 //Standard classes
-.hide				{	display: none !important; }
-.invisible	{ visibility: hidden;				}
-.bold				{ font-weight: bold;				}
+.hide      {    display: none !important; }
+.invisible { visibility: hidden;          }
+.bold      { font-weight: bold;           }
+
+
+/*****************************************************
+Style for the <div> covering the page during loading
+*****************************************************/
+div.loading {
+    $duration: 0.4s; //Duration of the fade-in and fade-out
+
+    position: absolute;
+    left:0; 
+    top: 0; 
+    z-index: 999999;
+    
+    $background-color: "{APPLICATION_COLOR}"; 
+    background-color: #214b87; //Fallback: Default "FCOO-blue"
+    background-color: #{$background-color};
+
+    background-image: url("images/favicon.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+
+    body:not(.loading) & {
+        width  : 0;
+        height : 0;
+        opacity: 0;
+        @include transition(opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration);    
+    }
+    body.loading & {
+        cursor: progress; 
+        width: 100%; 
+        height:100%;
+        opacity: 1;
+    }
+
+    span.loading {
+        display: block !important;
+        cursor: progress; 
+
+        position: absolute;
+        top: 75%;
+        right: 0;
+        left: 0;
+        margin: auto;
+        width: 3rem;
+        height: 3rem;
+
+        $favicon-color: "{APPLICATION_FAVICONCOLOR}"; 
+        color: #ffffff; //Fallback: white
+    }
+}
+
 
 
 

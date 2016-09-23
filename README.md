@@ -15,6 +15,7 @@ This package is used to create a standard [FCOO] web applications with jquery, l
 http://FCOO.github.io/fcoo-application/demo/ 
 
 ## Usage
+### Dependencies and versions
 In `bower.json` of the application correct the `fcoo-application` section in `dependencies` to
  
 	"dependencies": {
@@ -34,6 +35,45 @@ and add/update the `resolutions` section
 where `1.2.3` responses to a [version](#version) 
 
 **NOTE that the version must be added both in the `"dependencies"` and the `"resolutions"` section** 
+
+### Embedded options from `gruntfile.js`
+
+### Embedding options into html-, js-, and css-files
+When building an application by running the command `>grunt build` (see [fcoo-grunt-plugin](https://github.com/FCOO/fcoo-grunt-plugin)) the options in `gruntfile.js: options.application` will be embedded into all html-, js-, and css-files
+The position for the options must be marked with `{APPLICATION_ID` where `ID` is the upper case of the name name in `options.application`
+
+	//In gruntfile.js
+	...
+	options: {
+	    application: {
+	         "id"      : 248,
+             "name"    : "The name of the application",
+	         "myOption": true
+	    }
+	}
+
+	//In a js-file
+	var applicationId = "{APPLICATION_ID}",
+		applicationName = "{APPLICATION_NAME}",
+		myOptions = "{APPLICATION_MYOPTION}";
+	
+	//After >grunt build
+	var applicationId = "248",
+		applicationName = "The name of the application",
+		myOptions = "true";
+
+NOTE that all embedded options will be as strings.
+
+Tree functions is provided to use default values during development:
+
+	function getApplicationOption( fullEmbedString, developmentValue )
+	function getApplicationBooleanOption( fullEmbedString, developmentValue )
+	function getApplicationNumberOption( fullEmbedString, developmentValue )
+
+	var applicationId = getApplicationNumberOption( "{APPLICATION_ID}", 0 ),
+		applicationName = getApplicationOption( "{APPLICATION_NAME}", "The Name" ),
+		myOptions = getApplicationBooleanOption( "{APPLICATION_MYOPTION}", false );
+
 
 ----
 ## Default options and installed packages
@@ -73,6 +113,19 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 --
 ### [normalize.css](https://github.com/necolas/normalize.css/)
 
+### [raven-js](https://github.com/getsentry/raven-js)
+
+raven-js is the JavaScript client for [Sentry](https://sentry.io) used by FCOO to report all uncaught exceptions in the applications  
+Each application has a unique DSN used in `raven.config( dsn, options )`
+If a application need to report uncaught exceptions to [Sentry](https://sentry.io) the DSN must be added to the application-options in `gruntfile.js` as `sentryDSN`
+
+	options: {
+	    application: {
+	        ...
+	        sentryDSN: "https://[SOME CODE]@app.getsentry.com/[CODE]"
+	    }
+	}
+
 
 -----
 ## <a name="version"></a>Versions
@@ -85,6 +138,7 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 	latest	: fcoo-polyfill
     ^0.2.1	: fcoo-language
 	latest	: normalize.css
+	^3.7.0  : raven-js
 
 ### 0.0.* (>=2016-05-18)
 	1.12.*	: jQuery
