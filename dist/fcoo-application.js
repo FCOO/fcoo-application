@@ -68,6 +68,7 @@
     /*********************************************************************
     Adding the Piwik Tracking Code
     *********************************************************************/
+/* REMOVED AGAIN AND PUT BACK IN app/_index.html.tmpl OF THE APPLICATION
     var piwikSiteId = ns.getApplicationNumberOption( "{APPLICATION_PIWIKSITEID}", 0);
     if (piwikSiteId){
         var _paq = _paq || [];
@@ -83,7 +84,7 @@
         })();
     }
 
-
+*/
 
 
 	/******************************************
