@@ -13,19 +13,22 @@
   <link  href="../src/fcoo-application.css" rel="stylesheet">	
 </head>
 
-<body onclick="$('body').toggleClass('loading')">
-<div class="loading"></div>
+<body style="padding: 30px">
+    <div class="loading"></div>
 
 
-<table border=1 style="background-color:red"><tr><td>En celle</td></tr></table>
+    Hash: <input type="text" id="hash" size="150">
 
-	
-	
+	<button onclick="correct()">Correct Hash</button><br><br>
+	Corrected: <input type="text" id="corrected" size="150" readonly=true>
+
 	<script src="bower_components.js"></script>
 	<script src="../src/fcoo-application.js"></script>
 	<script>
-
-
+        function correct(){
+            document.getElementById("corrected").value = correctHash( document.getElementById("hash").value );
+            return false;
+        }
 	</script>
 </body>
 </html>
