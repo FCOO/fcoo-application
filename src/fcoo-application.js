@@ -87,12 +87,37 @@
 */
 
 /*
-window.location.protocol;
+window.location.protocol
 window.location.host
 window.location.pathname
 window.location.search 
 window.location.hash 
+
+var parser = document.createElement('a');
+parser.href = "http://example.com:3000/pathname/?search=test#hash";
+
+parser.protocol; // => "http:"
+parser.hostname; // => "example.com"
+parser.port;     // => "3000"
+parser.pathname; // => "/pathname/"
+parser.search;   // => "?search=test"
+parser.hash;     // => "#hash"
+parser.host;     // => "example.com:3000"
+
+
 */
+var parser = document.createElement('a');
+parser.href = window.location.href;
+
+console.log( window.location.href );
+console.log('protocol', parser.protocol==window.location.protocol);
+
+console.log('parser.hostname', parser.hostname, window.location.host); // => "example.com"
+console.log(parser.port);     // => "3000"
+console.log('pathname', parser.pathname == window.location.pathname); // => "/pathname/"
+console.log('search', parser.search==window.location.search);   // => "?search=test"
+console.log('hash', parser.hash == window.location.hash);     // => "#hash"
+console.log('host', parser.host == window.location.host);     // => "example.com:3000"
 
     
     window.correctHash = function( hash ){    
