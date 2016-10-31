@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -31,20 +31,26 @@
     "mathsass": "latest"
   },
   "dependencies": {
-    "jquery": "^3.1.0",
-    "javascript-utilities": "fcoo/javascript-utilities#latest",
-    "fcoo-fontawesome": "fcoo/fcoo-fontawesome#latest",
-    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^1.2.0",
-    "fcoo-polyfill": "fcoo/fcoo-polyfill#latest",
-    "fcoo-language": "fcoo/fcoo-language#^0.2.1",
-    "normalize-css": "latest",
-    "raven-js": "^3.7.0"
+    "jquery": "3.1.1",
+    "fcoo-fontawesome": "fcoo/fcoo-fontawesome#2.0.0",
+    "javascript-utilities": "fcoo/javascript-utilities#0.2.1",
+    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#1.2.0",
+    "fcoo-polyfill": "fcoo/fcoo-polyfill#2.1.0",
+    "fcoo-language": "fcoo/fcoo-language#0.2.1",
+    "url.js-extensions": "fcoo/url.js-extensions#1.1.0",
+    "normalize-css": "5.0.0",
+    "raven-js": "3.7.0"
   },
   "overrides": {},
   "resolutions": {
-    "jquery": "^3.1.0",
-    "fcoo-modernizr-mediaquery-device": "^1.2.0",
-    "fcoo-language": "^0.2.1",
-    "raven-js": "^3.7.0"
+    "jquery": "3.1.1",
+    "fcoo-fontawesome": "2.0.0",
+    "javascript-utilities": "0.2.1",
+    "fcoo-modernizr-mediaquery-device": "1.2.0",
+    "fcoo-polyfill": "2.1.0",
+    "fcoo-language": "0.2.1",
+    "url.js-extensions": "1.1.0",
+    "normalize-css": "5.0.0",
+    "raven-js": "3.7.0"
   }
 }

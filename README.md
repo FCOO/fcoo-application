@@ -84,10 +84,10 @@ In [version](#version) the specific versions of the different packages are liste
 ### [jQuery](http://jquery.com)
 
 --
-### [javascript-utilities](http://github.com/fcoo/javascript-utilities)
+### [fcoo-fontawesome](http://github.com/fcoo/fcoo-fontawesome)
 
 --
-### [fcoo-fontawesome](http://github.com/fcoo/fcoo-fontawesome)
+### [javascript-utilities](http://github.com/fcoo/javascript-utilities)
 
 --
 ### [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-mediaquery-device)
@@ -111,6 +111,10 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 ### [fcoo-language](http://github.com/fcoo/fcoo-language)
 
 --
+### [url.js-extensions](https://github.com/FCOO/url.js-extensions)
+Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to remove broken values in the query string and hash tag
+
+--
 ### [normalize.css](https://github.com/necolas/normalize.css/)
 
 ### [raven-js](https://github.com/getsentry/raven-js)
@@ -130,24 +134,15 @@ If a application need to report uncaught exceptions to [Sentry](https://sentry.i
 -----
 ## <a name="version"></a>Versions
 
-### ^1.0.0 (>=2016-09-16) - IE9 Compatible 
-	^3.1.0	: jQuery
-	latest	: javascript-utilities
-	latest	: fcoo-fontawesome
-	^1.2.0  : fcoo-modernizr-mediaquery-device
-	latest	: fcoo-polyfill
-    ^0.2.1	: fcoo-language
-	latest	: normalize.css
-	^3.7.0  : raven-js
-
-### 0.0.* (>=2016-05-18)
-	1.12.*	: jQuery
-	latest	: javascript-utilities
-	latest	: fcoo-fontawesome
-	1.*		: fcoo-modernizr-mediaquery-device
-	latest	: fcoo-polyfill
-	0.*		: fcoo-language
-	latest	: normalize.css
+	3.1.1: jQuery
+	2.0.0: fcoo-fontawesome
+	0.2.1: javascript-utilities
+	1.2.0: fcoo-modernizr-mediaquery-device
+	2.1.0: fcoo-polyfill
+    0.2.1: fcoo-language
+	1.1.0: url.js-extensions
+	5.0.0: normalize.css
+	3.7.0: raven-js
 
 
 ## Copyright and License

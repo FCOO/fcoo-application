@@ -8,7 +8,7 @@
 
 ****************************************************************************/
 
-(function ($, window, document, undefined) {
+(function ($, window/*, document, undefined*/) {
 	"use strict";
 	
 	//Create fcoo-namespace
@@ -57,6 +57,10 @@
 
     $(window).on( 'load', function() { $body.removeClass("loading"); });
 
+    /*********************************************************************
+    Call Url.adjustUrl() to remove broken values in the url
+    *********************************************************************/
+    window.Url.adjustUrl();
 
     /*********************************************************************
     Initialize raven to report all uncaught exceptions to sentry
@@ -85,109 +89,6 @@
     }
 
 */
-
-/*
-window.location.protocol
-window.location.host
-window.location.pathname
-window.location.search 
-window.location.hash 
-
-var parser = document.createElement('a');
-parser.href = "http://example.com:3000/pathname/?search=test#hash";
-
-parser.protocol; // => "http:"
-parser.hostname; // => "example.com"
-parser.port;     // => "3000"
-parser.pathname; // => "/pathname/"
-parser.search;   // => "?search=test"
-parser.hash;     // => "#hash"
-parser.host;     // => "example.com:3000"
-
-
-*/
-var parser = document.createElement('a');
-parser.href = window.location.href;
-
-console.log( window.location.href );
-console.log('protocol', parser.protocol==window.location.protocol);
-
-console.log('parser.hostname', parser.hostname, window.location.host); // => "example.com"
-console.log(parser.port);     // => "3000"
-console.log('pathname', parser.pathname == window.location.pathname); // => "/pathname/"
-console.log('search', parser.search==window.location.search);   // => "?search=test"
-console.log('hash', parser.hash == window.location.hash);     // => "#hash"
-console.log('host', parser.host == window.location.host);     // => "example.com:3000"
-
-    
-    window.correctHash = function( hash ){    
-        //Chack and correct the parameter and/or hash-tag
-        var hashList,
-            result = '',
-            valueRegEx = new RegExp(/[\w\-_. ]+/),
-            idRegEx = new RegExp(/[\w\-_]+/),
-            idValues, id, values, value, oneValueOk, i, j;
-
-        //Remove pre-#
-        while (hash.length && (hash.charAt(0) == '#') ){
-            hash = hash.slice(1);
-        }
-
-    
-        try {
-            hash = decodeURI(hash);
-        }
-        catch(err) {
-//            hashOk = false;
-        }
-
-        hashList = hash.split('&'); 
-
-        for (i=0; i<hashList.length; i++ ){
-            idValues = hashList[i].split('=');
-            id = idValues[0];
-            values = idValues[1] || undefined; 
-            oneValueOk = false;
-            if ( idRegEx.exec(id) == id ){
-                //Correct id
-                if (values === undefined){
-                    oneValueOk = true;
-                    valueList = [];
-                }
-                else {
-                    //Check syntax of values
-                    var valueList = values.split(',');
-                    for (j=0; j<valueList.length; j++ ){
-                        value = valueList[j];
-                        if ( valueRegEx.exec(value) == value ){
-                            oneValueOk = true;
-                        }
-                        else {
-                            valueList[j] = undefined;
-//                            hashOk = false;
-                        }
-                    }
-                }
-                if ( oneValueOk ){
-                    result += (result ? '&' : '') + id;
-                    var firstValue = true;
-                    for (j=0; j<valueList.length; j++ ){
-                        value = valueList[j];
-                        if (value !== undefined){
-                            result += (firstValue ? '=' : ',') + (value == 'undefined' ? 'false' : value);
-                            firstValue = false;
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    };
-
-
-//var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname+window.location.search+window.location.hash;
-
-//file:///C:/web-dev/fcoo-application/demo/index.html#lang=da&domain=faroe_islands&zoom=7&lat=61.501&lon=-6.01&locate=false&follow=undefined&layer=FCOO%20Standard&overlays=Safety.MSI%252CSafety.Firing%20warnings%2C%252
 
 
 	/******************************************
