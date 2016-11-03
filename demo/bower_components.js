@@ -15700,331 +15700,331 @@ window.matchMedia || (window.matchMedia = function() {
 
 ;
 /****************************************************************************
-	color.js,
-	Functions to caluclate the brightness of a color
-	Taken from http://codepen.io/lunelson/pen/jENxwB
+    color.js,
+    Functions to caluclate the brightness of a color
+    Taken from http://codepen.io/lunelson/pen/jENxwB
 
 ****************************************************************************/
 
-;(function (window, document, undefined) {
-	"use strict";
+(function (window/*, document, undefined*/) {
+    "use strict";
 
-	//Create fcoo-namespace
-	var nsColor = window;
+    //Create fcoo-namespace
+    var nsColor = window;
 
 
-	function lin2log(n) {
-		if (n <= 0.0031308)
-			return n * 12.92;
-		else
-			return 1.055 * Math.pow(n,1/2.4) - 0.055;
-	}
+    function lin2log(n) {
+        if (n <= 0.0031308)
+            return n * 12.92;
+        else
+            return 1.055 * Math.pow(n,1/2.4) - 0.055;
+    }
 
-	function log2lin(n) {
-		if (n <= 0.04045)
-			return n / 12.92;
-		else
-			return Math.pow(((n + 0.055)/1.055),2.4);
-	}
+    function log2lin(n) {
+        if (n <= 0.04045)
+            return n / 12.92;
+        else
+            return Math.pow(((n + 0.055)/1.055),2.4);
+    }
 
-	/********************************************
-	brightness
-	********************************************/
-	nsColor.brightness = function brightness(r, g, b) {
-		r = log2lin(r/255);
-		g = log2lin(g/255);
-		b = log2lin(b/255);
-		return lin2log(0.2126 * r + 0.7152 * g + 0.0722 * b) * 100;
-	};
+    /********************************************
+    brightness
+    ********************************************/
+    nsColor.brightness = function brightness(r, g, b) {
+        r = log2lin(r/255);
+        g = log2lin(g/255);
+        b = log2lin(b/255);
+        return lin2log(0.2126 * r + 0.7152 * g + 0.0722 * b) * 100;
+    };
 
-	/********************************************
-	colorContrastHEX
-	********************************************/
-	nsColor.colorContrastHEX = function colorContrastHEX( color ) {
-		if (color.length === 3)
-			color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
-		var rgb = [];
-		for (var i = 0; i <= 2; i++)
-			rgb[i] = parseInt(color.substr(1+i*2, 2), 16);
-		return nsColor.colorContrastRGB(rgb[0], rgb[1], rgb[2]);
-	};
+    /********************************************
+    colorContrastHEX
+    ********************************************/
+    nsColor.colorContrastHEX = function colorContrastHEX( color ) {
+        if (color.length === 3)
+            color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
+        var rgb = [];
+        for (var i = 0; i <= 2; i++)
+            rgb[i] = parseInt(color.substr(1+i*2, 2), 16);
+        return nsColor.colorContrastRGB(rgb[0], rgb[1], rgb[2]);
+    };
 
-	/********************************************
-	colorContrastRGB
-	********************************************/
-	nsColor.colorContrastRGB = function colorContrastRGB(r, g, b) {
-		var colorBrightness = nsColor.brightness(r, g, b),
-				whiteBrightness = nsColor.brightness(255, 255, 255),
-				blackBrightness = nsColor.brightness(0, 0, 0);
-		return Math.abs(colorBrightness - whiteBrightness) > Math.abs(colorBrightness - blackBrightness) ? '#ffffff' : '#000000';
-	};
+    /********************************************
+    colorContrastRGB
+    ********************************************/
+    nsColor.colorContrastRGB = function colorContrastRGB(r, g, b) {
+        var colorBrightness = nsColor.brightness(r, g, b),
+                whiteBrightness = nsColor.brightness(255, 255, 255),
+                blackBrightness = nsColor.brightness(0, 0, 0);
+        return Math.abs(colorBrightness - whiteBrightness) > Math.abs(colorBrightness - blackBrightness) ? '#ffffff' : '#000000';
+    };
 
 
 
 }(this, document));
 ;
 /****************************************************************************
-	json.js,
+    json.js,
 ****************************************************************************/
 
-;(function (window, document, undefined) {
-	"use strict";
+(function (window/*, document, undefined*/) {
+    "use strict";
 
-	//Create fcoo-namespace
-	var nsJSON = window;
+    //Create fcoo-namespace
+    var nsJSON = window;
 
-	/******************************************
-	serializeJSON
-	Converts a json-object a la {id1:'value1', id2:'value2'}
-	to [ { name: "id1", value: "value1" }, { name: "id2", value: "value2" } ]
-	*******************************************/
-	nsJSON.serializeJSON = function( jsonObj ){
-		var result = [];
-		for (var id in jsonObj)
-			if (jsonObj.hasOwnProperty(id))
-				result.push( {name: id, value: jsonObj[id] });
-		return result;
-	};
+    /******************************************
+    serializeJSON
+    Converts a json-object a la {id1:'value1', id2:'value2'}
+    to [ { name: "id1", value: "value1" }, { name: "id2", value: "value2" } ]
+    *******************************************/
+    nsJSON.serializeJSON = function( jsonObj ){
+        var result = [];
+        for (var id in jsonObj)
+            if (jsonObj.hasOwnProperty(id))
+                result.push( {name: id, value: jsonObj[id] });
+        return result;
+    };
 
 
 }(this, document));
 ;
 /****************************************************************************
-	math.js,
+    math.js,
 
 ****************************************************************************/
 
-;(function (window, document, undefined) {
-	"use strict";
+(function (window/*, document, undefined*/) {
+    "use strict";
 
-	var nsMath = window;
+    var nsMath = window;
 
-	/*******************************************
-	significant - return n rounded to significant sf
-	*******************************************/
-	nsMath.significant =	function significant(n, sf) {
-		sf = sf - Math.floor(Math.log(n) / Math.LN10) - 1;
-		sf = Math.pow(10, sf);
-		n = Math.round(n * sf);
-		n = n / sf;
-		return n;
-	};
+    /*******************************************
+    significant - return n rounded to significant sf
+    *******************************************/
+    nsMath.significant =    function significant(n, sf) {
+        sf = sf - Math.floor(Math.log(n) / Math.LN10) - 1;
+        sf = Math.pow(10, sf);
+        n = Math.round(n * sf);
+        n = n / sf;
+        return n;
+    };
 
-	/*******************************************
-	precision
-	*******************************************/
-	nsMath.precision =	function precision(n, dp) {
-		dp = Math.pow(10, dp);
-		n = n * dp;
-		n = Math.round(n);
-		n = n / dp;
-		return n;
-	};
+    /*******************************************
+    precision
+    *******************************************/
+    nsMath.precision =    function precision(n, dp) {
+        dp = Math.pow(10, dp);
+        n = n * dp;
+        n = Math.round(n);
+        n = n / dp;
+        return n;
+    };
 
-	/*******************************************
-	nearest
-	*******************************************/
-	nsMath.nearest =	function nearest(n, v) {
-		v = v ? v : 1;
-		n = n / v;
-		n = Math.round(n) * v;
-		return n;
-	};
+    /*******************************************
+    nearest
+    *******************************************/
+    nsMath.nearest =    function nearest(n, v) {
+        v = v ? v : 1;
+        n = n / v;
+        n = Math.round(n) * v;
+        return n;
+    };
 
-	/*******************************************
-	roundDownTo
-	*******************************************/
-	nsMath.roundDownTo =	function roundDownTo(n, v) {
-		v = v ? v : 1;
-		n = n / v;
-		n = Math.floor(n) * v;
-		return n;
-	};
+    /*******************************************
+    roundDownTo
+    *******************************************/
+    nsMath.roundDownTo =    function roundDownTo(n, v) {
+        v = v ? v : 1;
+        n = n / v;
+        n = Math.floor(n) * v;
+        return n;
+    };
 
-	/*******************************************
-	roundToRange
-	*******************************************/
-	nsMath.roundToRange =	function roundToRange(v, min, max) {
-		return Math.max( Math.min(v, max), min);
-	};
+    /*******************************************
+    roundToRange
+    *******************************************/
+    nsMath.roundToRange =    function roundToRange(v, min, max) {
+        return Math.max( Math.min(v, max), min);
+    };
 
-	/*******************************************
-	toDecimal
-	Convert a integer value v to a decimal
-	Eq	toDecimal(89)		= 0.89
-			toDecimal(9)		= 0.9
-			toDecimal(1234)	= 0.1234
-	*******************************************/
-	nsMath.toDecimal =	function toDecimal(v) {
-		var l = v.toString().length;
-		return v / Math.pow(10, l);
-	};
+    /*******************************************
+    toDecimal
+    Convert a integer value v to a decimal
+    Eq    toDecimal(89)        = 0.89
+            toDecimal(9)        = 0.9
+            toDecimal(1234)    = 0.1234
+    *******************************************/
+    nsMath.toDecimal =    function toDecimal(v) {
+        var l = v.toString().length;
+        return v / Math.pow(10, l);
+    };
 
 }(this, document));
 ;
 /****************************************************************************
-	url.js,
+    url.js,
 
-	Based on Adil Malik, http://stackoverflow.com/questions/1090948/change-url-parameters/10997390#10997390
+    Based on Adil Malik, http://stackoverflow.com/questions/1090948/change-url-parameters/10997390#10997390
 
 ****************************************************************************/
 
-;(function (window, document, undefined) {
-	"use strict";
+(function (window/*, document, undefined*/) {
+    "use strict";
 
-	//Create namespace
-	var nsUrl = window;
+    //Create namespace
+    var nsUrl = window;
 
 
-	/******************************************
-	getUrlParameters - Get all parameters out of the URL.
-	@return Array List of URL parameters key-value indexed
-	******************************************/
-	nsUrl.getUrlParameters = function() {
-		var vars = [],
-				hash,
-				hashes,
-				i;
-		i = window.location.href.indexOf('?');
-		if (i !== -1) {
-			hashes = window.location.href.slice(i + 1).split('#')[0].split('&');
-			for (i = 0; i < hashes.length; i = i + 1) {
-				hash = hashes[i].split('=');
-				vars.push(hash[0]);
-				vars[hash[0]] = hash[1];
-			}
-		}
-		hashes = window.location.hash.slice(1).split('&');
-		for (i = 0; i < hashes.length; i = i + 1) {
-			hash = hashes[i].split('=');
-			vars.push(hash[0]);
-			vars[hash[0]] = hash[1];
-		}
-		return vars;
-	};
+    /******************************************
+    getUrlParameters - Get all parameters out of the URL.
+    @return Array List of URL parameters key-value indexed
+    ******************************************/
+    nsUrl.getUrlParameters = function() {
+        var vars = [],
+                hash,
+                hashes,
+                i;
+        i = window.location.href.indexOf('?');
+        if (i !== -1) {
+            hashes = window.location.href.slice(i + 1).split('#')[0].split('&');
+            for (i = 0; i < hashes.length; i = i + 1) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+        }
+        hashes = window.location.hash.slice(1).split('&');
+        for (i = 0; i < hashes.length; i = i + 1) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    };
 
-	/******************************************
-	_updateUrl - Add or replace a parameter or hash tag (with value) in the given URL.
-	@param String id the parameter or hash-tag
-	@param String value the value of the id
-	@param String url the URL
-	@param Boolean isHashTag true id is a hash tag
-	@return String the changed URL
-	*******************************************/
-	function _updateUrl(id, value, url, isHashTag) {
-		url = url || window.location.href;
+    /******************************************
+    _updateUrl - Add or replace a parameter or hash tag (with value) in the given URL.
+    @param String id the parameter or hash-tag
+    @param String value the value of the id
+    @param String url the URL
+    @param Boolean isHashTag true id is a hash tag
+    @return String the changed URL
+    *******************************************/
+    function _updateUrl(id, value, url, isHashTag) {
+        url = url || window.location.href;
 
-		var theAnchor = null,
-				tempArray = url.split("?"),
-				baseURL = tempArray[0],
-				additionalURL = tempArray[1],
-				tmpAnchor,
-				theParams = null,
-				i;
+        var theAnchor = null,
+                tempArray = url.split("?"),
+                baseURL = tempArray[0],
+                additionalURL = tempArray[1],
+                tmpAnchor,
+                theParams = null,
+                i;
 
-		if (additionalURL) {
-			tmpAnchor = additionalURL.split("#");
-			theParams = tmpAnchor[0];
-			theAnchor = tmpAnchor[1];
-		}
-		else {
-			tmpAnchor = baseURL.split("#");
-			theAnchor  = tmpAnchor[1];
-			if (tmpAnchor[0])
-			  baseURL = tmpAnchor[0];
-		}
+        if (additionalURL) {
+            tmpAnchor = additionalURL.split("#");
+            theParams = tmpAnchor[0];
+            theAnchor = tmpAnchor[1];
+        }
+        else {
+            tmpAnchor = baseURL.split("#");
+            theAnchor  = tmpAnchor[1];
+            if (tmpAnchor[0])
+              baseURL = tmpAnchor[0];
+        }
 
-		var updateStr = isHashTag ? theAnchor : theParams,
-				found = false,
-				nextId;
+        var updateStr = isHashTag ? theAnchor : theParams,
+                found = false,
+                nextId;
     tempArray = updateStr ? updateStr.split("&") : [];
-	  for (i=0; i < tempArray.length; i++) {
-			nextId = tempArray[i].split('=')[0];
-			if (nextId == id) {
-				tempArray[i] = nextId+'='+value;
-				found = true;
-				break;
-			}
-		}
-		if (!found)
-			tempArray.push(id+'='+value);
-		updateStr = tempArray.length > 1 ? tempArray.join('&') : tempArray[0];
-		if (isHashTag)
-			theAnchor = updateStr;
-		else
-			theParams = updateStr;
+      for (i=0; i < tempArray.length; i++) {
+            nextId = tempArray[i].split('=')[0];
+            if (nextId == id) {
+                tempArray[i] = nextId+'='+value;
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            tempArray.push(id+'='+value);
+        updateStr = tempArray.length > 1 ? tempArray.join('&') : tempArray[0];
+        if (isHashTag)
+            theAnchor = updateStr;
+        else
+            theParams = updateStr;
 
-		return baseURL + (theParams ? '?' + theParams : '') + (theAnchor ? '#' + theAnchor : '');
-	}
+        return baseURL + (theParams ? '?' + theParams : '') + (theAnchor ? '#' + theAnchor : '');
+    }
 
-	/******************************************
-	updateUrlParameter - Add or replace a parameter (with value) in the given URL.
-	@param String url the URL
-	@param String param the parameter
-	@param String paramVal the value of the parameter
-	@return String the changed URL
-	*******************************************/
-	nsUrl.updateUrlParameter = function(param, paramVal, url) {
-		return _updateUrl(param, paramVal, url, false);
-	};
+    /******************************************
+    updateUrlParameter - Add or replace a parameter (with value) in the given URL.
+    @param String url the URL
+    @param String param the parameter
+    @param String paramVal the value of the parameter
+    @return String the changed URL
+    *******************************************/
+    nsUrl.updateUrlParameter = function(param, paramVal, url) {
+        return _updateUrl(param, paramVal, url, false);
+    };
 
-	/******************************************
-	updateUrlParameters - Same as `updateUrlParameter` but with `params` as object a la `{"param1":"newValue", "param2":"newValue2"}`
-	*******************************************/
-	nsUrl.updateUrlParameters = function(params, url) {
-		url = url || window.location.href;
-		for (var param in params)
-			if ( params.hasOwnProperty(param) )
-			  url = nsUrl.updateUrlParameter(param, params[param], url);
-		return url;
-	};
+    /******************************************
+    updateUrlParameters - Same as `updateUrlParameter` but with `params` as object a la `{"param1":"newValue", "param2":"newValue2"}`
+    *******************************************/
+    nsUrl.updateUrlParameters = function(params, url) {
+        url = url || window.location.href;
+        for (var param in params)
+            if ( params.hasOwnProperty(param) )
+              url = nsUrl.updateUrlParameter(param, params[param], url);
+        return url;
+    };
 
-	/******************************************
-	updateUrlHash - Add or replace a parameter (with value) in the given URL.
-	@param String hash the hash-id
-	@param String hashVal the value of the hash-id
-	@param String url the URL
-	@return String the changed URL
-	*******************************************/
-	nsUrl.updateUrlHash = function(hash, hashVal, url) {
-		return _updateUrl(hash, hashVal, url, true);
-	};
+    /******************************************
+    updateUrlHash - Add or replace a parameter (with value) in the given URL.
+    @param String hash the hash-id
+    @param String hashVal the value of the hash-id
+    @param String url the URL
+    @return String the changed URL
+    *******************************************/
+    nsUrl.updateUrlHash = function(hash, hashVal, url) {
+        return _updateUrl(hash, hashVal, url, true);
+    };
 
-	/******************************************
-	updateUrlHashes - Same as `updateUrlHash` but with `hashes` as object a la `{"hash1":"newValue", "hash2":"newValue2"}`
-	*******************************************/
-	nsUrl.updateUrlHashes = function(hashes, url) {
-		url = url || window.location.href;
-		for (var hash in hashes)
-			if ( hashes.hasOwnProperty(hash) )
-			  url = nsUrl.updateUrlHash(hash, hashes[hash], url);
-		return url;
-	};
-
-
-
-	/******************************************
-	reloadPage
-	Reload the page.
-	Replace the original parameters and/or hashtags params and/or hashes
-	*******************************************/
-	nsUrl.reloadPage = function( params, hashes ){
-		window.location.href = nsUrl.updateUrlParameters( params, nsUrl.updateUrlHashes( hashes ) );
-		window.location.reload( true );
-	};
+    /******************************************
+    updateUrlHashes - Same as `updateUrlHash` but with `hashes` as object a la `{"hash1":"newValue", "hash2":"newValue2"}`
+    *******************************************/
+    nsUrl.updateUrlHashes = function(hashes, url) {
+        url = url || window.location.href;
+        for (var hash in hashes)
+            if ( hashes.hasOwnProperty(hash) )
+              url = nsUrl.updateUrlHash(hash, hashes[hash], url);
+        return url;
+    };
 
 
+
+    /******************************************
+    reloadPage
+    Reload the page.
+    Replace the original parameters and/or hashtags params and/or hashes
+    *******************************************/
+    nsUrl.reloadPage = function( params, hashes ){
+        window.location.href = nsUrl.updateUrlParameters( params, nsUrl.updateUrlHashes( hashes ) );
+        window.location.reload( true );
+    };
 
 
 
 
-	//******************************************
+
+
+    //******************************************
 
 
 
 }(this, document));
 ;
-/*! Raven.js 3.7.0 (cf2ddee) | github.com/getsentry/raven-js */
+/*! Raven.js 3.8.0 (d78f15c) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -16117,29 +16117,12 @@ module.exports = {
 };
 
 },{}],4:[function(_dereq_,module,exports){
-/*global XDomainRequest:false*/
+/*global XDomainRequest:false, __DEV__:false*/
 'use strict';
 
-var TraceKit = _dereq_(7);
+var TraceKit = _dereq_(6);
 var RavenConfigError = _dereq_(2);
-var utils = _dereq_(6);
 var stringify = _dereq_(1);
-
-var isFunction = utils.isFunction;
-var isUndefined = utils.isUndefined;
-var isError = utils.isError;
-var isEmptyObject = utils.isEmptyObject;
-var hasKey = utils.hasKey;
-var joinRegExp = utils.joinRegExp;
-var each = utils.each;
-var objectMerge = utils.objectMerge;
-var truncate = utils.truncate;
-var urlencode = utils.urlencode;
-var uuid4 = utils.uuid4;
-var htmlTreeAsString = utils.htmlTreeAsString;
-var parseUrl = utils.parseUrl;
-var isString = utils.isString;
-var fill = utils.fill;
 
 var wrapConsoleMethod = _dereq_(3).wrapMethod;
 
@@ -16150,6 +16133,8 @@ function now() {
     return +new Date();
 }
 
+var _window = typeof window !== 'undefined' ? window : undefined;
+var _document = _window && _window.document;
 
 // First, check for JSON support
 // If there is no JSON, we no-op the core features of Raven
@@ -16157,7 +16142,7 @@ function now() {
 function Raven() {
     this._hasJSON = !!(typeof JSON === 'object' && JSON.stringify);
     // Raven can run in contexts where there's no document (react-native)
-    this._hasDocument = typeof document !== 'undefined';
+    this._hasDocument = !isUndefined(_document);
     this._lastCapturedException = null;
     this._lastEventId = null;
     this._globalServer = null;
@@ -16181,7 +16166,7 @@ function Raven() {
     this._originalErrorStackTraceLimit = Error.stackTraceLimit;
     // capture references to window.console *and* all its methods first
     // before the console plugin has a chance to monkey patch
-    this._originalConsole = window.console || {};
+    this._originalConsole = _window.console || {};
     this._originalConsoleMethods = {};
     this._plugins = [];
     this._startTime = now();
@@ -16189,7 +16174,7 @@ function Raven() {
     this._breadcrumbs = [];
     this._lastCapturedEvent = null;
     this._keypressTimeout;
-    this._location = window.location;
+    this._location = _window.location;
     this._lastHref = this._location && this._location.href;
 
     for (var method in this._originalConsole) {  // eslint-disable-line guard-for-in
@@ -16208,7 +16193,7 @@ Raven.prototype = {
     // webpack (using a build step causes webpack #1617). Grunt verifies that
     // this value matches package.json during build.
     //   See: https://github.com/getsentry/raven-js/issues/465
-    VERSION: '3.7.0',
+    VERSION: '3.8.0',
 
     debug: false,
 
@@ -16224,11 +16209,13 @@ Raven.prototype = {
     config: function(dsn, options) {
         var self = this;
 
-        if (this._globalServer) {
+        if (self._globalServer) {
                 this._logDebug('error', 'Error: Raven has already been configured');
-            return this;
+            return self;
         }
-        if (!dsn) return this;
+        if (!dsn) return self;
+
+        var globalOptions = self._globalOptions;
 
         // merge in options
         if (options) {
@@ -16237,44 +16224,44 @@ Raven.prototype = {
                 if (key === 'tags' || key === 'extra') {
                     self._globalContext[key] = value;
                 } else {
-                    self._globalOptions[key] = value;
+                    globalOptions[key] = value;
                 }
             });
         }
 
-        this.setDSN(dsn);
+        self.setDSN(dsn);
 
         // "Script error." is hard coded into browsers for errors that it can't read.
         // this is the result of a script being pulled in from an external domain and CORS.
-        this._globalOptions.ignoreErrors.push(/^Script error\.?$/);
-        this._globalOptions.ignoreErrors.push(/^Javascript error: Script error\.? on line 0$/);
+        globalOptions.ignoreErrors.push(/^Script error\.?$/);
+        globalOptions.ignoreErrors.push(/^Javascript error: Script error\.? on line 0$/);
 
         // join regexp rules into one big rule
-        this._globalOptions.ignoreErrors = joinRegExp(this._globalOptions.ignoreErrors);
-        this._globalOptions.ignoreUrls = this._globalOptions.ignoreUrls.length ? joinRegExp(this._globalOptions.ignoreUrls) : false;
-        this._globalOptions.whitelistUrls = this._globalOptions.whitelistUrls.length ? joinRegExp(this._globalOptions.whitelistUrls) : false;
-        this._globalOptions.includePaths = joinRegExp(this._globalOptions.includePaths);
-        this._globalOptions.maxBreadcrumbs = Math.max(0, Math.min(this._globalOptions.maxBreadcrumbs || 100, 100)); // default and hard limit is 100
+        globalOptions.ignoreErrors = joinRegExp(globalOptions.ignoreErrors);
+        globalOptions.ignoreUrls = globalOptions.ignoreUrls.length ? joinRegExp(globalOptions.ignoreUrls) : false;
+        globalOptions.whitelistUrls = globalOptions.whitelistUrls.length ? joinRegExp(globalOptions.whitelistUrls) : false;
+        globalOptions.includePaths = joinRegExp(globalOptions.includePaths);
+        globalOptions.maxBreadcrumbs = Math.max(0, Math.min(globalOptions.maxBreadcrumbs || 100, 100)); // default and hard limit is 100
 
         var autoBreadcrumbDefaults = {
             xhr: true,
             console: true,
             dom: true,
-            location: true
+            location: true,
         };
 
-        var autoBreadcrumbs = this._globalOptions.autoBreadcrumbs;
+        var autoBreadcrumbs = globalOptions.autoBreadcrumbs;
         if ({}.toString.call(autoBreadcrumbs) === '[object Object]') {
             autoBreadcrumbs = objectMerge(autoBreadcrumbDefaults, autoBreadcrumbs);
         } else if (autoBreadcrumbs !== false) {
             autoBreadcrumbs = autoBreadcrumbDefaults;
         }
-        this._globalOptions.autoBreadcrumbs = autoBreadcrumbs;
+        globalOptions.autoBreadcrumbs = autoBreadcrumbs;
 
-        TraceKit.collectWindowErrors = !!this._globalOptions.collectWindowErrors;
+        TraceKit.collectWindowErrors = !!globalOptions.collectWindowErrors;
 
         // return for chaining
-        return this;
+        return self;
     },
 
     /*
@@ -16287,21 +16274,21 @@ Raven.prototype = {
      */
     install: function() {
         var self = this;
-        if (this.isSetup() && !this._isRavenInstalled) {
+        if (self.isSetup() && !self._isRavenInstalled) {
             TraceKit.report.subscribe(function () {
                 self._handleOnErrorStackInfo.apply(self, arguments);
             });
-            this._instrumentTryCatch();
+            self._instrumentTryCatch();
             if (self._globalOptions.autoBreadcrumbs)
-                this._instrumentBreadcrumbs();
+                self._instrumentBreadcrumbs();
 
             // Install all of the plugins
-            this._drainPlugins();
+            self._drainPlugins();
 
-            this._isRavenInstalled = true;
+            self._isRavenInstalled = true;
         }
 
-        Error.stackTraceLimit = this._globalOptions.stackTraceLimit;
+        Error.stackTraceLimit = self._globalOptions.stackTraceLimit;
         return this;
     },
 
@@ -16311,19 +16298,20 @@ Raven.prototype = {
      * @param {string} dsn The public Sentry DSN
      */
     setDSN: function(dsn) {
-        var uri = this._parseDSN(dsn),
+        var self = this,
+            uri = self._parseDSN(dsn),
           lastSlash = uri.path.lastIndexOf('/'),
           path = uri.path.substr(1, lastSlash);
 
-        this._dsn = dsn;
-        this._globalKey = uri.user;
-        this._globalSecret = uri.pass && uri.pass.substr(1);
-        this._globalProject = uri.path.substr(lastSlash + 1);
+        self._dsn = dsn;
+        self._globalKey = uri.user;
+        self._globalSecret = uri.pass && uri.pass.substr(1);
+        self._globalProject = uri.path.substr(lastSlash + 1);
 
-        this._globalServer = this._getGlobalServer(uri);
+        self._globalServer = self._getGlobalServer(uri);
 
-        this._globalEndpoint = this._globalServer +
-            '/' + path + 'api/' + this._globalProject + '/store/';
+        self._globalEndpoint = self._globalServer +
+            '/' + path + 'api/' + self._globalProject + '/store/';
     },
 
     /*
@@ -16546,7 +16534,7 @@ Raven.prototype = {
     },
 
     addPlugin: function(plugin /*arg1, arg2, ... argN*/) {
-        var pluginArgs = Array.prototype.slice.call(arguments, 1);
+        var pluginArgs = [].slice.call(arguments, 1);
 
         this._plugins.push([plugin, pluginArgs]);
         if (this._isRavenInstalled) {
@@ -16725,14 +16713,14 @@ Raven.prototype = {
         // TODO: remove window dependence?
 
         // Attempt to initialize Raven on load
-        var RavenConfig = window.RavenConfig;
+        var RavenConfig = _window.RavenConfig;
         if (RavenConfig) {
             this.config(RavenConfig.dsn, RavenConfig.config).install();
         }
     },
 
     showReportDialog: function (options) {
-        if (!window.document) // doesn't work without a document (React native)
+        if (!_document) // doesn't work without a document (React native)
             return;
 
         options = options || {};
@@ -16760,10 +16748,10 @@ Raven.prototype = {
 
         var globalServer = this._getGlobalServer(this._parseDSN(dsn));
 
-        var script = document.createElement('script');
+        var script = _document.createElement('script');
         script.async = true;
         script.src = globalServer + '/api/embed/error-page/' + qs;
-        (document.head || document.body).appendChild(script);
+        (_document.head || _document.body).appendChild(script);
     },
 
     /**** Private functions ****/
@@ -16787,11 +16775,11 @@ Raven.prototype = {
 
         eventType = 'raven' + eventType.substr(0,1).toUpperCase() + eventType.substr(1);
 
-        if (document.createEvent) {
-            evt = document.createEvent('HTMLEvents');
+        if (_document.createEvent) {
+            evt = _document.createEvent('HTMLEvents');
             evt.initEvent(eventType, true, true);
         } else {
-            evt = document.createEventObject();
+            evt = _document.createEventObject();
             evt.eventType = eventType;
         }
 
@@ -16799,14 +16787,14 @@ Raven.prototype = {
             evt[key] = options[key];
         }
 
-        if (document.createEvent) {
+        if (_document.createEvent) {
             // IE9 if standards
-            document.dispatchEvent(evt);
+            _document.dispatchEvent(evt);
         } else {
             // IE8 regardless of Quirks or Standards
             // IE9 if quirks
             try {
-                document.fireEvent('on' + evt.eventType.toLowerCase(), evt);
+                _document.fireEvent('on' + evt.eventType.toLowerCase(), evt);
             } catch(e) {
                 // Do nothing
             }
@@ -16873,7 +16861,7 @@ Raven.prototype = {
             // only consider keypress events on actual input elements
             // this will disregard keypresses targeting body (e.g. tabbing
             // through elements, hotkeys, etc)
-            if (!tagName || tagName !== 'INPUT' && tagName !== 'TEXTAREA')
+            if (!tagName || tagName !== 'INPUT' && tagName !== 'TEXTAREA' && !target.isContentEditable)
                 return;
 
             // record first keypress in a series, but ignore subsequent
@@ -16956,7 +16944,7 @@ Raven.prototype = {
         var autoBreadcrumbs = this._globalOptions.autoBreadcrumbs;
 
         function wrapEventTarget(global) {
-            var proto = window[global] && window[global].prototype;
+            var proto = _window[global] && _window[global].prototype;
             if (proto && proto.hasOwnProperty && proto.hasOwnProperty('addEventListener')) {
                 fill(proto, 'addEventListener', function(orig) {
                     return function (evtName, fn, capture, secure) { // preserve arity
@@ -16994,10 +16982,10 @@ Raven.prototype = {
             }
         }
 
-        fill(window, 'setTimeout', wrapTimeFn, wrappedBuiltIns);
-        fill(window, 'setInterval', wrapTimeFn, wrappedBuiltIns);
-        if (window.requestAnimationFrame) {
-            fill(window, 'requestAnimationFrame', function (orig) {
+        fill(_window, 'setTimeout', wrapTimeFn, wrappedBuiltIns);
+        fill(_window, 'setInterval', wrapTimeFn, wrappedBuiltIns);
+        if (_window.requestAnimationFrame) {
+            fill(_window, 'requestAnimationFrame', function (orig) {
                 return function (cb) {
                     return orig(self.wrap(cb));
                 };
@@ -17011,7 +16999,7 @@ Raven.prototype = {
             wrapEventTarget(eventTargets[i]);
         }
 
-        var $ = window.jQuery || window.$;
+        var $ = _window.jQuery || _window.$;
         if ($ && $.fn && $.fn.ready) {
             fill($.fn, 'ready', function (orig) {
                 return function (fn) {
@@ -17045,7 +17033,7 @@ Raven.prototype = {
             }
         }
 
-        if (autoBreadcrumbs.xhr && 'XMLHttpRequest' in window) {
+        if (autoBreadcrumbs.xhr && 'XMLHttpRequest' in _window) {
             var xhrproto = XMLHttpRequest.prototype;
             fill(xhrproto, 'open', function(origOpen) {
                 return function (method, url) { // preserve arity
@@ -17102,17 +17090,54 @@ Raven.prototype = {
             }, wrappedBuiltIns);
         }
 
+        if (autoBreadcrumbs.xhr && 'fetch' in _window) {
+            fill(_window, 'fetch', function(origFetch) {
+                return function (fn, t) { // preserve arity
+                    // Make a copy of the arguments to prevent deoptimization
+                    // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
+                    var args = new Array(arguments.length);
+                    for(var i = 0; i < args.length; ++i) {
+                        args[i] = arguments[i];
+                    }
+
+                    var method = 'GET';
+
+                    if (args[1] && args[1].method) {
+                        method = args[1].method;
+                    }
+
+                    var fetchData = {
+                        method: method,
+                        url: args[0],
+                        status_code: null
+                    };
+
+                    self.captureBreadcrumb({
+                        type: 'http',
+                        category: 'fetch',
+                        data: fetchData
+                    });
+
+                    return origFetch.apply(this, args).then(function (response) {
+                        fetchData.status_code = response.status;
+
+                        return response;
+                    });
+                };
+            }, wrappedBuiltIns);
+        }
+
         // Capture breadcrumbs from any click that is unhandled / bubbled up all the way
         // to the document. Do this before we instrument addEventListener.
         if (autoBreadcrumbs.dom && this._hasDocument) {
-            if (document.addEventListener) {
-                document.addEventListener('click', self._breadcrumbEventHandler('click'), false);
-                document.addEventListener('keypress', self._keypressEventHandler(), false);
+            if (_document.addEventListener) {
+                _document.addEventListener('click', self._breadcrumbEventHandler('click'), false);
+                _document.addEventListener('keypress', self._keypressEventHandler(), false);
             }
             else {
                 // IE8 Compatibility
-                document.attachEvent('onclick', self._breadcrumbEventHandler('click'));
-                document.attachEvent('onkeypress', self._keypressEventHandler());
+                _document.attachEvent('onclick', self._breadcrumbEventHandler('click'));
+                _document.attachEvent('onkeypress', self._keypressEventHandler());
             }
         }
 
@@ -17120,13 +17145,13 @@ Raven.prototype = {
         // NOTE: in Chrome App environment, touching history.pushState, *even inside
         //       a try/catch block*, will cause Chrome to output an error to console.error
         // borrowed from: https://github.com/angular/angular.js/pull/13945/files
-        var chrome = window.chrome;
+        var chrome = _window.chrome;
         var isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
-        var hasPushState = !isChromePackagedApp && window.history && history.pushState;
+        var hasPushState = !isChromePackagedApp && _window.history && history.pushState;
         if (autoBreadcrumbs.location && hasPushState) {
             // TODO: remove onpopstate handler on uninstall()
-            var oldOnPopState = window.onpopstate;
-            window.onpopstate = function () {
+            var oldOnPopState = _window.onpopstate;
+            _window.onpopstate = function () {
                 var currentHref = self._location.href;
                 self._captureUrlChange(self._lastHref, currentHref);
 
@@ -17152,7 +17177,7 @@ Raven.prototype = {
             }, wrappedBuiltIns);
         }
 
-        if (autoBreadcrumbs.console && 'console' in window && console.log) {
+        if (autoBreadcrumbs.console && 'console' in _window && console.log) {
             // console
             var consoleMethodCallback = function (msg, data) {
                 self.captureBreadcrumb({
@@ -17351,7 +17376,7 @@ Raven.prototype = {
     },
 
     _getHttpData: function() {
-        if (!this._hasDocument || !document.location || !document.location.href) {
+        if (!this._hasDocument || !_document.location || !_document.location.href) {
             return;
         }
 
@@ -17361,10 +17386,10 @@ Raven.prototype = {
             }
         };
 
-        httpData.url = document.location.href;
+        httpData.url = _document.location.href;
 
-        if (document.referrer) {
-            httpData.headers.Referer = document.referrer;
+        if (_document.referrer) {
+            httpData.headers.Referer = _document.referrer;
         }
 
         return httpData;
@@ -17438,6 +17463,10 @@ Raven.prototype = {
         this._sendProcessedPayload(data);
     },
 
+    _getUuid: function () {
+      return uuid4();
+    },
+
     _sendProcessedPayload: function(data, callback) {
         var self = this;
         var globalOptions = this._globalOptions;
@@ -17445,7 +17474,7 @@ Raven.prototype = {
         // Send along an event_id if not explicitly passed.
         // This event_id can be used to reference the error within Sentry itself.
         // Set lastEventId after we know the error should actually be sent
-        this._lastEventId = data.event_id || (data.event_id = uuid4());
+        this._lastEventId = data.event_id || (data.event_id = this._getUuid());
 
         // Try and clean up the packet before sending by truncating long values
         data = this._trimPacket(data);
@@ -17561,46 +17590,12 @@ Raven.prototype = {
     }
 };
 
-// Deprecations
-Raven.prototype.setUser = Raven.prototype.setUserContext;
-Raven.prototype.setReleaseContext = Raven.prototype.setRelease;
-
-module.exports = Raven;
-
-},{"1":1,"2":2,"3":3,"6":6,"7":7}],5:[function(_dereq_,module,exports){
-/**
- * Enforces a single instance of the Raven client, and the
- * main entry point for Raven. If you are a consumer of the
- * Raven library, you SHOULD load this file (vs raven.js).
- **/
-
-'use strict';
-
-var RavenConstructor = _dereq_(4);
-
-var _Raven = window.Raven;
-
-var Raven = new RavenConstructor();
-
-/*
- * Allow multiple versions of Raven to be installed.
- * Strip Raven from the global context and returns the instance.
+/*------------------------------------------------
+ * utils
  *
- * @return {Raven}
+ * conditionally exported for test via Raven.utils
+ =================================================
  */
-Raven.noConflict = function () {
-	window.Raven = _Raven;
-	return Raven;
-};
-
-Raven.afterLoad();
-
-module.exports = Raven;
-
-},{"4":4}],6:[function(_dereq_,module,exports){
-/*eslint no-extra-parens:0*/
-'use strict';
-
 var objectPrototype = Object.prototype;
 
 function isUndefined(what) {
@@ -17766,6 +17761,7 @@ function uuid4() {
  * @returns {string}
  */
 function htmlTreeAsString(elem) {
+    /* eslint no-extra-parens:0*/
     var MAX_TRAVERSE_HEIGHT = 5,
         MAX_OUTPUT_LEN = 80,
         out = [],
@@ -17851,34 +17847,66 @@ function fill(obj, name, replacement, track) {
     }
 }
 
-module.exports = {
-    isUndefined: isUndefined,
-    isFunction: isFunction,
-    isString: isString,
-    isObject: isObject,
-    isEmptyObject: isEmptyObject,
-    isError: isError,
-    each: each,
-    objectMerge: objectMerge,
-    truncate: truncate,
-    hasKey: hasKey,
-    joinRegExp: joinRegExp,
-    urlencode: urlencode,
-    uuid4: uuid4,
-    htmlTreeAsString: htmlTreeAsString,
-    htmlElementAsString: htmlElementAsString,
-    parseUrl: parseUrl,
-    fill: fill
+if (typeof __DEV__ !== 'undefined' && __DEV__) {
+    Raven.utils = {
+        isUndefined: isUndefined,
+        isFunction: isFunction,
+        isString: isString,
+        isObject: isObject,
+        isEmptyObject: isEmptyObject,
+        isError: isError,
+        each: each,
+        objectMerge: objectMerge,
+        truncate: truncate,
+        hasKey: hasKey,
+        joinRegExp: joinRegExp,
+        urlencode: urlencode,
+        uuid4: uuid4,
+        htmlTreeAsString: htmlTreeAsString,
+        htmlElementAsString: htmlElementAsString,
+        parseUrl: parseUrl,
+        fill: fill
+    };
 };
 
-},{}],7:[function(_dereq_,module,exports){
+// Deprecations
+Raven.prototype.setUser = Raven.prototype.setUserContext;
+Raven.prototype.setReleaseContext = Raven.prototype.setRelease;
+
+module.exports = Raven;
+
+},{"1":1,"2":2,"3":3,"6":6}],5:[function(_dereq_,module,exports){
+/**
+ * Enforces a single instance of the Raven client, and the
+ * main entry point for Raven. If you are a consumer of the
+ * Raven library, you SHOULD load this file (vs raven.js).
+ **/
+
 'use strict';
 
-var utils = _dereq_(6);
+var RavenConstructor = _dereq_(4);
 
-var hasKey = utils.hasKey;
-var isString = utils.isString;
-var isUndefined = utils.isUndefined;
+var _Raven = window.Raven;
+
+var Raven = new RavenConstructor();
+
+/*
+ * Allow multiple versions of Raven to be installed.
+ * Strip Raven from the global context and returns the instance.
+ *
+ * @return {Raven}
+ */
+Raven.noConflict = function () {
+	window.Raven = _Raven;
+	return Raven;
+};
+
+Raven.afterLoad();
+
+module.exports = Raven;
+
+},{"4":4}],6:[function(_dereq_,module,exports){
+'use strict';
 
 /*
  TraceKit - Cross brower stack traces - github.com/occ/TraceKit
@@ -17988,7 +18016,7 @@ TraceKit.report = (function reportModuleWrapper() {
           return;
         }
         for (var i in handlers) {
-            if (hasKey(handlers, i)) {
+            if (handlers.hasOwnProperty(i)) {
                 try {
                     handlers[i].apply(null, [stack].concat(_slice.call(arguments, 2)));
                 } catch (inner) {
@@ -18037,7 +18065,7 @@ TraceKit.report = (function reportModuleWrapper() {
             var name = undefined;
             var msg = message; // must be new var or will modify original `arguments`
             var groups;
-            if (isString(message)) {
+            if ({}.toString.call(message) === '[object String]') {
                 var groups = message.match(ERROR_TYPES_RE);
                 if (groups) {
                     name = groups[1];
@@ -18118,7 +18146,7 @@ TraceKit.report = (function reportModuleWrapper() {
         // slow slow IE to see if onerror occurs or not before reporting
         // this exception; otherwise, we will end up with an incomplete
         // stack trace
-        window.setTimeout(function () {
+        setTimeout(function () {
             if (lastException === ex) {
                 processLastException();
             }
@@ -18252,7 +18280,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {?Object.<string, *>} Stack trace information.
      */
     function computeStackTraceFromStackProp(ex) {
-        if (isUndefined(ex.stack) || !ex.stack) return;
+        if (typeof ex.stack === 'undefined' || !ex.stack) return;
 
         var chrome = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|<anonymous>).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
             gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|\[native).*?)(?::(\d+))?(?::(\d+))?\s*$/i,
@@ -18304,7 +18332,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             return null;
         }
 
-        if (!stack[0].column && !isUndefined(ex.columnNumber)) {
+        if (!stack[0].column && typeof ex.columnNumber !== 'undefined') {
             // FireFox uses this awesome columnNumber property for its top frame
             // Also note, Firefox's column number is 0-based and everything else expects 1-based,
             // so adding 1
@@ -18480,7 +18508,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
 module.exports = TraceKit;
 
-},{"6":6}]},{},[5])(5)
+},{}]},{},[5])(5)
 });
 ;
 "use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj};(function(f){if((typeof exports==="undefined"?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Url=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o])}return s}({1:[function(require,module,exports){window.addEventListener("popstate",function(e){Url.triggerPopStateCb(e)});var Url=module.exports={_onPopStateCbs:[],_isHash:false,queryString:function queryString(name,notDecoded){name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),results=regex.exec(location.search),encoded=null;if(results===null){regex=new RegExp("[\\?&]"+name+"(\\&([^&#]*)|$)");if(regex.test(location.search)){return true}return undefined}else{encoded=results[1].replace(/\+/g," ");if(notDecoded){return encoded}return decodeURIComponent(encoded)}},parseQuery:function parseQuery(search){var query={};if(typeof search!=="string"){search=window.location.search}search=search.replace(/^\?/g,"");if(!search){return{}}var a=search.split("&"),i=0,iequ,value=null;for(;i<a.length;++i){iequ=a[i].indexOf("=");if(iequ<0){iequ=a[i].length;value=true}else{value=decodeURIComponent(a[i].slice(iequ+1))}query[decodeURIComponent(a[i].slice(0,iequ))]=value}return query},stringify:function stringify(queryObj){if(!queryObj||queryObj.constructor!==Object){throw new Error("Query object should be an object.")}var stringified="";Object.keys(queryObj).forEach(function(c){var value=queryObj[c];stringified+=c;if(value!==true){stringified+="="+encodeURIComponent(queryObj[c])}stringified+="&"});stringified=stringified.replace(/\&$/g,"");return stringified},updateSearchParam:function updateSearchParam(param,value,push,triggerPopState){var searchParsed=this.parseQuery();if(value===undefined){delete searchParsed[param]}else{if(searchParsed[param]===value){return Url}searchParsed[param]=value}var newSearch="?"+this.stringify(searchParsed);this._updateAll(window.location.pathname+newSearch+location.hash,push,triggerPopState);return Url},getLocation:function getLocation(){return window.location.pathname+window.location.search+window.location.hash},hash:function hash(newHash,triggerPopState){if(newHash===undefined){return location.hash.substring(1)}if(!triggerPopState){setTimeout(function(){Url._isHash=false},0);Url._isHash=true}return location.hash=newHash},_updateAll:function _updateAll(s,push,triggerPopState){window.history[push?"pushState":"replaceState"](null,"",s);if(triggerPopState){Url.triggerPopStateCb({})}return s},pathname:function pathname(_pathname,push,triggerPopState){if(_pathname===undefined){return location.pathname}return this._updateAll(_pathname+window.location.search+window.location.hash,push,triggerPopState)},triggerPopStateCb:function triggerPopStateCb(e){if(this._isHash){return}this._onPopStateCbs.forEach(function(c){c(e)})},onPopState:function onPopState(cb){this._onPopStateCbs.push(cb)},removeHash:function removeHash(){this._updateAll(window.location.pathname+window.location.search,false,false)},removeQuery:function removeQuery(){this._updateAll(window.location.pathname+window.location.hash,false,false)},version:"2.3.1"}},{}]},{},[1])(1)});
@@ -18498,10 +18526,48 @@ module.exports = TraceKit;
 (function ($, window, document, undefined) {
     "use strict";
     
-    var ns = window.Url; 
+    /******************************************
+    anyString(name, notDecoded, search, sep)
+    Copy of Url.queryString with optional input string (search) 
+    and separaator (sep)
+    ******************************************/
+    function anyString(name, notDecoded, search, sep){
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+
+        var regex = new RegExp("[\\"+sep+"&]" + name + "=([^&#]*)")
+          , results = regex.exec(search)
+          , encoded = null
+          ;
+
+        if (results === null) {
+            regex = new RegExp("[\\"+sep+"&]" + name + "(\\&([^&#]*)|$)");
+            if (regex.test(search)) {
+                return true;
+            }
+            return undefined;
+        } else {
+            encoded = results[1].replace(/\+/g, " ");
+            if (notDecoded) {
+                return encoded;
+            }
+            return decodeURIComponent(encoded);
+        }
+    }
+
 
     /******************************************
-    correctSearchOrHash
+    _upateSearchAndHash
+    *******************************************/
+    function _upateSearchAndHash( searchStr, hashStr ){
+        return this._updateAll( 
+                   window.location.pathname + 
+                   (searchStr ? '?' + searchStr : '') + 
+                   (hashStr  ? '#' + hashStr  : '')
+               );          
+    }
+
+    /******************************************
+    _correctSearchOrHash
     Check and correct search or hash = ID_VALUE[&ID_VALUE]
         ID_VALUE = 
             ID or
@@ -18510,7 +18576,7 @@ module.exports = TraceKit;
         VALUE contains only a-z 0-9 - _ SPACE
         ID contains only a-z 0-9 - _
     *******************************************/
-    function correctSearchOrHash( str, preChar ){
+    function _correctSearchOrHash( str, preChar ){
         function decodeStr( str ){
             try {
                 decodeURIComponent( str ); 
@@ -18523,19 +18589,22 @@ module.exports = TraceKit;
 
         //Chack and correct the parameter and/or hash-tag
         preChar = preChar || '#';
+
         var strList,
             result = '',
-            valueRegEx = new RegExp(/[\w\-_. {}:"]+/),
             idRegEx = new RegExp(/[\w\-_]+/),
             idValues, id, values, value, oneValueOk, i, j;
 
         //Convert to char
-        str = str.replace(/%3D/g, "=");
-        str = str.replace(/%2C/g, ",");
-        str = str.replace(/%3F/g, "?");
-        str = str.replace(/%23/g, "#");
-        str = str.replace(/%7B/g, "{");
-        str = str.replace(/%7D/g, "}");
+        str = str.replace(/%3D/g, '=');
+        str = str.replace(/%2C/g, ',');
+        str = str.replace(/%3F/g, '?');
+        str = str.replace(/%23/g, '#');
+        str = str.replace(/%7B/g, '{');
+        str = str.replace(/%7D/g, '}');
+        str = str.replace(/%2B/g, '+');
+        str = str.replace(/%22/g, '"');
+        str = str.replace(/%3A/g, ':');
 
         //Remove pre-char
         while (str.length && (str.charAt(0) == preChar) )
@@ -18559,8 +18628,11 @@ module.exports = TraceKit;
                     var valueList = values.split(',');
                     for (j=0; j<valueList.length; j++ ){
                         value = decodeStr( valueList[j] );
-                        if ( value && (valueRegEx.exec(value) == value) )
+                        if ( value ){
+                            if (value == 'undefined')
+                              valueList[j] = 'false';
                             oneValueOk = true;
+                        }
                         else
                             valueList[j] = undefined;
                     }
@@ -18570,10 +18642,8 @@ module.exports = TraceKit;
                     var firstValue = true;
                     for (j=0; j<valueList.length; j++ ){
                         value = valueList[j];
-                        if (value !== undefined){
-                            result += (firstValue ? '=' : ',') + (value == 'undefined' ? 'false' : value);
-                            firstValue = false;
-                        }
+                        result += (firstValue ? '=' : ',') + (value ? value : ''); 
+                        firstValue = false;
                     }
                 }
             } //end of correct id
@@ -18587,28 +18657,27 @@ module.exports = TraceKit;
     Check and correct the url
     *******************************************/
     function adjustUrl(){
-        //Update search string
-        var newSearchObj = ns.parseQuery( correctSearchOrHash( window.location.search, '?' ) );
-        ns.removeQuery(/*push, trigger*/);
-        $.each( newSearchObj, function( param, value){
-            ns.updateSearchParam(param, value/*, push, triggerPopState*/);
-        });
-
-        //Update hash-tags
-        var newHash = correctSearchOrHash( window.location.hash, '#' );
-        ns.removeHash(/*push, trigger*/);
-        ns.hash( newHash );
-
-        return ns;
+        return this._upateSearchAndHash( 
+                   this._correctSearchOrHash( window.location.search, '?' ), 
+                   this._correctSearchOrHash( window.location.hash, '#' )
+               );
     }
 
+    /******************************************
+    hashString
+    Same as queryString but for the hash
+    It is a adjusted copy of queryString
+    *******************************************/
+    function hashString(name, notDecoded){
+        return anyString(name, notDecoded, window.location.hash, '#');
+    }
     
     /******************************************
     parseHash
     Same as parseQuery but for the hash
     *******************************************/
     function parseHash(){
-        return ns.parseQuery( ns.hash() );    
+        return this.parseQuery( this.hash() );    
     }
 
     /******************************************
@@ -18622,11 +18691,11 @@ module.exports = TraceKit;
         }
         else {
             if (hashParsed[hashParam] === value)
-                return ns;
+                return this;
             hashParsed[hashParam] = value;
         }
         this.hash (this.stringify(hashParsed), triggerPopState);
-        return ns;
+        return this;
     }
 
 
@@ -18635,7 +18704,6 @@ module.exports = TraceKit;
     Validate value using validator
     validator = regExp | function( value ) | array of validator
     *******************************************/
-
     function validateJSONValue( value ){
         try {
             var jsonObj = JSON.parse( value );
@@ -18647,7 +18715,6 @@ module.exports = TraceKit;
         }
         return false;
     }
-
 
     function validateValue( value, validator ){
         //Convert Boolean into String
@@ -18714,12 +18781,18 @@ module.exports = TraceKit;
             updateUrl     : true 
         }); 
         
-        var queryObj = this.parseQuery(),
-            hashObj = this.parseHash(),
-            _this = this;
+        var _this = this;
 
         //*****************************************************************
-        function updateObj( obj ){
+        function parseObj( str ){
+
+            var obj = _this.parseQuery( str );
+            //Use anyString(..) to get adjusted value
+            $.each( obj, function( id/*, value*/ ){
+                obj[id] = anyString(id, true, '?'+str, '?');
+            });
+
+            //Validate all values
             $.each( obj, function( id, value ){
                 //Validate value
                 if ( !_this.validateValue( value, validatorObj[id] ) )
@@ -18740,22 +18813,20 @@ module.exports = TraceKit;
                 else
                     obj[id] = value;
             });
-        }
 
-        //*****************************************************************
-        updateObj( queryObj );
-        updateObj( hashObj );
-        
-        //Update url
-        if (options.updateUrl){
-            var searchStr = decodeURIComponent( this.stringify(queryObj) ),
-                hashStr   = decodeURIComponent( this.stringify(hashObj) );
-            this._updateAll( 
-                window.location.pathname + 
-                (searchStr ? '?'+searchStr : '') + 
-                (hashStr ? '#'+hashStr : '')
-            );          
+            return obj;
         }
+        //*****************************************************************
+
+        var queryObj = parseObj( this._correctSearchOrHash( window.location.search, '?' ) ),
+            hashObj  = parseObj( this._correctSearchOrHash( window.location.hash,   '#' ) );
+
+        //Update url
+        if (options.updateUrl)
+            this._upateSearchAndHash(
+                decodeURIComponent( this.stringify(queryObj) ),
+                decodeURIComponent( this.stringify(hashObj) )
+            );
 
         var result = $.extend( options.queryOverHash ? hashObj  : queryObj, 
                                options.queryOverHash ? queryObj : hashObj   ); 
@@ -18775,23 +18846,33 @@ module.exports = TraceKit;
         return result; 
     }
 
+    function onHashChange(){
+        this.adjustUrl();
+    }
+
     //Extend window.Url with the new methods
-    $.extend( ns, {
-        adjustUrl      : adjustUrl,
-        parseHash      : parseHash,
-        updateHashParam: updateHashParam,
-        validateValue  : validateValue,
-        parseAll       : parseAll
+    $.extend( window.Url, {
+        _upateSearchAndHash  : _upateSearchAndHash,
+        _correctSearchOrHash : _correctSearchOrHash,
+        adjustUrl            : adjustUrl,
+        hashString           : hashString,
+        parseHash            : parseHash,
+        updateHashParam      : updateHashParam,
+        validateValue        : validateValue,
+        parseAll             : parseAll,
+        onHashChange         : onHashChange
     });
 
-   
+
+    $(window).on( 'hashchange', $.proxy( onHashChange, window.Url ) );
+
+
 
     /******************************************
     Initialize/ready 
     *******************************************/
     $(function() { 
-
-    
+        window.Url.adjustUrl();
     }); 
     //******************************************
 
@@ -18809,17 +18890,5 @@ window.location.host
 window.location.pathname
 window.location.search 
 window.location.hash 
-
-Alternative way of getting parts of the url
-var parser = document.createElement('a');
-parser.href = "http://example.com:3000/pathname/?search=test#hash";
-
-parser.protocol; // => "http:"
-parser.hostname; // => "example.com"
-parser.port;     // => "3000"
-parser.pathname; // => "/pathname/"
-parser.search;   // => "?search=test"
-parser.hash;     // => "#hash"
-parser.host;     // => "example.com:3000"
 
 ******************************************/
