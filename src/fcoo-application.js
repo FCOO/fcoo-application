@@ -12,11 +12,9 @@
 	"use strict";
 	
 	//Create fcoo-namespace
-	//window.fcoo = window.fcoo || {};
-	//var ns = window.fcoo;
-	//or 
-    var ns = window;
-
+	window.fcoo = window.fcoo || {};
+	var ns = window.fcoo;
+	
     /*********************************************************************
     Functions to get options from options.application in gruntfile.js
     *********************************************************************/
