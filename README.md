@@ -20,7 +20,7 @@ In `bower.json` of the application correct the `fcoo-application` section in `de
  
 	"dependencies": {
 	  ...
-      "fcoo-application": "fcoo/fcoo-application#^1.2.3",
+      "fcoo-application": "fcoo/fcoo-application#1.2.3",
 	  ...
 	}
 
@@ -28,13 +28,17 @@ and add/update the `resolutions` section
 
 	"resolutions": {
 	  ...
-      "fcoo-application": "^1.2.3",
+      "fcoo-application": "1.2.3",
 	  ...
 	}
 
 where `1.2.3` responses to a [version](#version) 
 
 **NOTE that the version must be added both in the `"dependencies"` and the `"resolutions"` section** 
+
+### Namespace `window.fcoo`
+All methods and options in the package is located in namespace `window.fcoo`
+
 
 ### Embedded options from `gruntfile.js`
 
@@ -70,9 +74,9 @@ Tree functions is provided to use default values during development:
 	function getApplicationBooleanOption( fullEmbedString, developmentValue )
 	function getApplicationNumberOption( fullEmbedString, developmentValue )
 
-	var applicationId = getApplicationNumberOption( "{APPLICATION_ID}", 0 ),
-		applicationName = getApplicationOption( "{APPLICATION_NAME}", "The Name" ),
-		myOptions = getApplicationBooleanOption( "{APPLICATION_MYOPTION}", false );
+	var applicationId = fcoo.getApplicationNumberOption( "{APPLICATION_ID}", 0 ),
+		applicationName = fcoo.getApplicationOption( "{APPLICATION_NAME}", "The Name" ),
+		myOptions = fcoo.getApplicationBooleanOption( "{APPLICATION_MYOPTION}", false );
 
 
 ----
