@@ -20,7 +20,7 @@ In `bower.json` of the application correct the `fcoo-application` section in `de
  
 	"dependencies": {
 	  ...
-      "fcoo-application": "fcoo/fcoo-application#1.2.3",
+      "fcoo-application": "fcoo/fcoo-application#~1.2.3",
 	  ...
 	}
 
@@ -28,13 +28,14 @@ and add/update the `resolutions` section
 
 	"resolutions": {
 	  ...
-      "fcoo-application": "1.2.3",
+      "fcoo-application": "~1.2.3",
 	  ...
 	}
 
 where `1.2.3` responses to a [version](#version) 
 
 **NOTE that the version must be added both in the `"dependencies"` and the `"resolutions"` section** 
+
 
 ### Namespace `window.fcoo`
 All methods and options in the package is located in namespace `window.fcoo`
@@ -138,15 +139,18 @@ If a application need to report uncaught exceptions to [Sentry](https://sentry.i
 -----
 ## <a name="version"></a>Versions
 
-	3.1.1: jQuery
-	2.0.0: fcoo-fontawesome
-	0.2.1: javascript-utilities
-	1.2.0: fcoo-modernizr-mediaquery-device
-	2.1.0: fcoo-polyfill
-    0.2.1: fcoo-language
-	1.1.0: url.js-extensions
-	5.0.0: normalize.css
-	3.7.0: raven-js
+For FCOO packages use the "*allow patch*" : `~1.2.3`
+For all other packages use "*fixed version*" : `1.2.3`
+
+	 3.1.1: jQuery
+	~2.0.0: fcoo-fontawesome
+	~0.2.1: javascript-utilities
+	~1.2.0: fcoo-modernizr-mediaquery-device
+	~2.1.0: fcoo-polyfill
+    ~0.2.1: fcoo-language
+	~1.1.0: url.js-extensions
+	 5.0.0: normalize.css
+	 3.7.0: raven-js
 
 
 ## Copyright and License

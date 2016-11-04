@@ -12,11 +12,66 @@
 	"use strict";
 	
 	//Create fcoo-namespace
-	//window.fcoo = window.fcoo || {};
-	//var ns = window.fcoo;
-	//or 
-    var ns = window;
+	window.fcoo = window.fcoo || {};
+	var ns = window.fcoo;
+	
 
+    
+    /*********************************************************************
+    Determinate if the application is running in "standalone mode"
+
+    The app operates in standalone mode when 
+    - it has a query string parameter "standalone=true" (generic), or
+    - the navigator.standalone property is set (iOS), or 
+    - the display-mode is standalone (Android).
+    For standalone apps we use localStorage for persisting state.
+    *********************************************************************/
+    ns.standalone = 
+        window.Url.parseAll( {standalone:'BOOLEAN'}, {standalone:false} ).standalone ||
+        ( ("standalone" in window.navigator) && window.navigator.standalone ) ||
+        ( window.matchMedia('(display-mode: standalone)').matches );
+
+
+/*
+        if (urlParams.standalone == "true") {
+            var params = window.localStorage.getItem('params');
+            if (params !== null) {
+                window.localStorage.setItem('paramsTemp', params);
+                hashes = params.split('&');
+                for (i = 0; i < hashes.length; i = i + 1) {
+                    hash = hashes[i].split('=');
+                    urlParams.push(hash[0]);
+                    urlParams[hash[0]] = hash[1];
+                }
+            }
+        }
+*/    
+/* TODO: Test if localStorage is available
+function storageAvailable(type) {
+	try {
+		var storage = window[type],
+			x = '__storage_test__';
+		storage.setItem(x, x);
+		storage.removeItem(x);
+		return true;
+	}
+	catch(e) {
+		return false;
+	}
+}
+And here is how you would use it:
+
+if (storageAvailable('localStorage')) {
+	// Yippee! We can use localStorage awesomeness
+}
+else {
+	// Too bad, no localStorage for us
+}
+
+*/
+
+
+        
     /*********************************************************************
     Functions to get options from options.application in gruntfile.js
     *********************************************************************/
