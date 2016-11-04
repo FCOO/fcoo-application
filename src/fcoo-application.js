@@ -46,6 +46,30 @@
             }
         }
 */    
+/* TODO: Test if localStorage is available
+function storageAvailable(type) {
+	try {
+		var storage = window[type],
+			x = '__storage_test__';
+		storage.setItem(x, x);
+		storage.removeItem(x);
+		return true;
+	}
+	catch(e) {
+		return false;
+	}
+}
+And here is how you would use it:
+
+if (storageAvailable('localStorage')) {
+	// Yippee! We can use localStorage awesomeness
+}
+else {
+	// Too bad, no localStorage for us
+}
+
+*/
+
 
         
     /*********************************************************************
