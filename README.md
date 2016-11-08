@@ -122,6 +122,16 @@ Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to re
 --
 ### [normalize.css](https://github.com/necolas/normalize.css/)
 
+--
+### [Offline.js](http://github.hubspot.com/offline/docs/welcome/)
+
+*Offline.js is a library to automatically alert your users when they've lost internet connectivity, like Gmail. It captures AJAX requests which were made while the connection was down, and remakes them when it's back up, so your app reacts perfectly.*
+
+For the current version of fcoo-application `Offline.js` is:
+- using the theme named **Chrome** , and
+- only supports **English**
+
+--
 ### [raven-js](https://github.com/getsentry/raven-js)
 
 raven-js is the JavaScript client for [Sentry](https://sentry.io) used by FCOO to report all uncaught exceptions in the applications  
