@@ -145,6 +145,11 @@ If a application need to report uncaught exceptions to [Sentry](https://sentry.i
 	    }
 	}
 
+#### Options
+The following options are set in Raven
+`release`: Set to current version of the applicationnal tags to assign to each event.
+`whitelistUrls`: `"/https?:\/\/(.*\.)?fcoo\.dk/"`
+
 
 -----
 ## <a name="version"></a>Versions
