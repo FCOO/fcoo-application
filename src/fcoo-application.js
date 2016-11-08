@@ -33,6 +33,7 @@
 
 
 /*
+
         if (urlParams.standalone == "true") {
             var params = window.localStorage.getItem('params');
             if (params !== null) {
