@@ -122,7 +122,22 @@ else {
     *********************************************************************/
     var sentryDSN = ns.getApplicationOption( "{APPLICATION_SENTRYDSN}", '');
     if (sentryDSN)
-        Raven.config(sentryDSN).install();
+        Raven.config(sentryDSN,{
+            //Senrty options
+            release      : ns.getApplicationOption( "{APPLICATION_VERSION}", null), //Track the version of your application in Sentry.
+            //environment  : '', //Track the environment name inside Sentry. Eq. production/beta/staging
+            //serverName   :'', //Typically this would be the server name, but that doesn’t exist on all platforms.
+            //tags         : {id:'value'}, //Additional tags to assign to each event.
+            whitelistUrls: '/https?:\/\/(.*\.)?fcoo\.dk/', //The inverse of ignoreUrls
+            ignoreUrls   : [],
+            ignoreErrors : [],
+            includePaths : [], //An array of regex patterns to indicate which urls are a part of your app in the stack trace
+            //dataCallback : null, //A function that allows mutation of the data payload right before being sent to Sentry. dataCallback: function(data) { /*do something to data*/ return data; 
+
+
+
+        
+        }).install();
 
     /*********************************************************************
     Adding the Piwik Tracking Code
