@@ -15,6 +15,22 @@ This package is used to create a standard [FCOO] web applications with jquery, l
 http://FCOO.github.io/fcoo-application/demo/ 
 
 ## Usage
+### Namespace `window.fcoo`
+All global variables, methods, and options in the package is located in namespace `window.fcoo`
+
+### Global variables, methods, and options
+#### `window.fcoo.standalone` [Boolean]
+Determinate if the application is running in "*standalone mode*". The app operates in standalone mode when 
+- it has a query string parameter `standalone=true` (generic), or
+- the `navigator.standalone property` is set (iOS), or 
+- the `display-mode` is `standalone` (Android).
+For standalone apps we use localStorage for persisting state.
+
+#### `window.fcoo.settings` [Object]
+Contains the data and methods to get and set setiings for the user.
+See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details 
+
+
 ### Dependencies and versions
 In `bower.json` of the application correct the `fcoo-application` section in `dependencies` to
  
@@ -37,8 +53,6 @@ where `1.2.3` responses to a [version](#version)
 **NOTE that the version must be added both in the `"dependencies"` and the `"resolutions"` section** 
 
 
-### Namespace `window.fcoo`
-All methods and options in the package is located in namespace `window.fcoo`
 
 
 ### Embedded options from `gruntfile.js`
@@ -120,6 +134,9 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to remove broken values in the query string and hash tag
 
 --
+### [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings)
+
+--
 ### [normalize.css](https://github.com/necolas/normalize.css/)
 
 --
@@ -163,6 +180,7 @@ For all other packages use "*fixed version*" : `1.2.3`
 	~1.2.0: fcoo-modernizr-mediaquery-device
 	~2.1.0: fcoo-polyfill
     ~0.2.1: fcoo-language
+    ~1.0.0: fcoo-settings
 	~1.1.0: url.js-extensions
 	 5.0.0: normalize.css
 	 3.7.0: raven-js
