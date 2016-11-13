@@ -3010,65 +3010,89 @@ html.no-lang-kl .show-for-lang-kl {
   display: none !important; }
 
 /***********************************************
-	fcoo-modernizr-mediaquery-device.scss, 
+    fcoo-modernizr-mediaquery-device.scss, 
 
-	(c) 2016, FCOO
+    (c) 2016, FCOO
 
-	https://github.com/FCOO/fcoo-modernizr-mediaquery-device
-	https://github.com/FCOO
+    https://github.com/FCOO/fcoo-modernizr-mediaquery-device
+    https://github.com/FCOO
 
-
-************************************************/
-/***********************************************
-	modernizr-device.scss, 
-
-	(c) 2015, FCOO
-
-	https://github.com/FCOO/modernizr-device
-	https://github.com/FCOO
-
-************************************************/
-.ie8 .hide-for-ie8 {
-  display: none !important; }
-
-.ie8 .show-for-no-ie8 {
-  display: none !important; }
-
-.no-ie8 .show-for-ie8 {
-  display: none !important; }
-
-.no-ie8 .hide-for-no-ie8 {
-  display: none !important; }
-
-/***********************************************
-	modernizr-mediaquery.scss, 
-
-	(c) 2015, FCOO
-
-	https://github.com/FCOO/modernizr-mediaquery
-	https://github.com/FCOO
 
 ************************************************/
 /***********************************************
-	modernizr-mediaquery-variables.scss, 
+    modernizr-device.scss, 
 
-	(c) 2015, FCOO
+    (c) 2015, FCOO
 
-	https://github.com/FCOO/modernizr-mediaquery
-	https://github.com/FCOO
+    https://github.com/FCOO/modernizr-device
+    https://github.com/FCOO
 
-	Variables and functions to create modernizr-mediaquery.css and modernizr-mediaquery-pure.css
+************************************************/
+.ie9 .hide-for-ie9 {
+  display: none !important; }
+
+.ie9 .show-for-no-ie9 {
+  display: none !important; }
+
+.no-ie9 .show-for-ie9 {
+  display: none !important; }
+
+.no-ie9 .hide-for-no-ie9 {
+  display: none !important; }
+
+.ie10 .hide-for-ie10 {
+  display: none !important; }
+
+.ie10 .show-for-no-ie10 {
+  display: none !important; }
+
+.no-ie10 .show-for-ie10 {
+  display: none !important; }
+
+.no-ie10 .hide-for-no-ie10 {
+  display: none !important; }
+
+.ie11 .hide-for-ie11 {
+  display: none !important; }
+
+.ie11 .show-for-no-ie11 {
+  display: none !important; }
+
+.no-ie11 .show-for-ie11 {
+  display: none !important; }
+
+.no-ie11 .hide-for-no-ie11 {
+  display: none !important; }
+
+/***********************************************
+    modernizr-mediaquery.scss, 
+
+    (c) 2015, FCOO
+
+    https://github.com/FCOO/modernizr-mediaquery
+    https://github.com/FCOO
 
 ************************************************/
 /***********************************************
-	_modernizr-mediaquery-orientation_print.scss, 
+    modernizr-mediaquery-variables.scss, 
 
-	(c) 2015, FCOO
+    (c) 2015, FCOO
 
-	https://github.com/FCOO/modernizr-mediaquery
-	https://github.com/FCOO
+    https://github.com/FCOO/modernizr-mediaquery
+    https://github.com/FCOO
 
-	Media-query for orientation and print
+    Variables and functions to create modernizr-mediaquery.css
+
+************************************************/
+/***********************************************
+    _modernizr-mediaquery-orientation_print.scss, 
+
+    (c) 2015, FCOO
+
+    https://github.com/FCOO/modernizr-mediaquery
+    https://github.com/FCOO
+
+    Media-query for orientation and print
 
 ************************************************/
 .show-for-landscape {
@@ -3202,16 +3226,10 @@ html.fullscreen .hide-for-fullscreen {
 html.no-fullscreen .show-for-fullscreen {
   display: none !important; }
 
-html.localstorage .hide-for-localstorage {
+html.https .hide-for-https {
   display: none !important; }
 
-html.no-localstorage .show-for-localstorage {
-  display: none !important; }
-
-html.sessionstorage .hide-for-sessionstorage {
-  display: none !important; }
-
-html.no-sessionstorage .show-for-sessionstorage {
+html.no-https .show-for-https {
   display: none !important; }
 
 /*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
