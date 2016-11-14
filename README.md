@@ -102,6 +102,18 @@ In [version](#version) the specific versions of the different packages are liste
 --
 ### [jQuery](http://jquery.com)
 
+-- 
+### [fcoo-global-events](https://github.com/FCOO/fcoo-global-events)
+Creates `window.fcoo.events` as a `GlobalEvents`-object
+
+
+--
+### [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings)
+
+--
+### [fcoo-language](http://github.com/fcoo/fcoo-language)
+
+
 --
 ### [fcoo-fontawesome](http://github.com/fcoo/fcoo-fontawesome)
 
@@ -123,18 +135,12 @@ Sets the breakpoints as:
 
 See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-mediaquery-device) for a complete list of test included
 
-
 --
 ### [fcoo-polyfill](http://github.com/fcoo/fcoo-polyfill)
---
-### [fcoo-language](http://github.com/fcoo/fcoo-language)
 
 --
 ### [url.js-extensions](https://github.com/FCOO/url.js-extensions)
 Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to remove broken values in the query string and hash tag
-
---
-### [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings)
 
 --
 ### [normalize.css](https://github.com/necolas/normalize.css/)
@@ -146,7 +152,7 @@ Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to re
 
 For the current version of fcoo-application `Offline.js` is:
 - using the theme named **Chrome** , and
-- only supports **English**
+- only supporting **English**
 
 --
 ### [raven-js](https://github.com/getsentry/raven-js)
@@ -174,17 +180,18 @@ The following options are set in Raven
 For FCOO packages use the "*allow patch*" : `~1.2.3`
 For all other packages use "*fixed version*" : `1.2.3`
 
-	 3.1.1: jQuery
-	~2.0.0: fcoo-fontawesome
-	~0.2.1: javascript-utilities
-	~1.2.0: fcoo-modernizr-mediaquery-device
-	~2.1.0: fcoo-polyfill
-    ~0.2.1: fcoo-language
-    ~1.0.0: fcoo-settings
-	~1.1.0: url.js-extensions
-	 5.0.0: normalize.css
-	 3.7.0: raven-js
-
+	 3.1.1 : jQuery
+    ~1.0.0 : fcoo-global-events
+    ~1.0.0 : fcoo-settings
+    ~0.2.1 : fcoo-language
+	~2.0.0 : fcoo-fontawesome
+	~0.2.1 : javascript-utilities
+	~1.2.0 : fcoo-modernizr-mediaquery-device
+	~2.1.0 : fcoo-polyfill
+	~1.1.0 : url.js-extensions
+	 5.0.0 : normalize.css
+	 3.7.0 : raven-js
+     0.7.18: offline
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-leaflet/LICENSE).
