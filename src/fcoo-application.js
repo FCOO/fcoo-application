@@ -15,6 +15,18 @@
 	window.fcoo = window.fcoo || {};
 	var ns = window.fcoo;
 	
+/*
+var n = 123456789.123;
+var sep= ['', ' ', '.', ','];
+
+var nStr = n.toLocaleString('en'); //"123,456,789.123"
+nStr = nStr.replace(/\,/g, '*');
+nStr = nStr.replace(/\./g, '.');
+for (var i=0; i<sep.length; i++ )
+//    console.log(sep[i],':', n, nStr.replace(/\*/g, sep[i]));
+*/
+
+
 
     
     /*********************************************************************
