@@ -128,7 +128,6 @@ else {
     window.Offline.options = {
         // Should we check the connection status immediatly on page load.
         //default checkOnLoad: false,
-        checkOnLoad: true,
 
         // Should we monitor AJAX requests to help decide if we have a connection.
         //default interceptRequests: true,
