@@ -180,7 +180,7 @@ The following options are set in Raven
 For FCOO packages use the "*allow patch*" : `~1.2.3`
 For all other packages use "*fixed version*" : `1.2.3`
 
-	 3.1.1 : jQuery
+	~3.1.1 : jQuery
     ~1.0.0 : fcoo-global-events
     ~1.1.0 : fcoo-settings
     ~0.2.1 : fcoo-language
@@ -189,9 +189,9 @@ For all other packages use "*fixed version*" : `1.2.3`
 	~1.2.0 : fcoo-modernizr-mediaquery-device
 	~2.1.0 : fcoo-polyfill
 	~1.1.0 : url.js-extensions
-	 5.0.0 : normalize.css
-	 3.7.0 : raven-js
-     0.7.18: offline
+	~5.0.0 : normalize.css
+	~3.7.0 : raven-js
+    ~0.7.18: offline
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-leaflet/LICENSE).
