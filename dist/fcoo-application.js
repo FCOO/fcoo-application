@@ -17,6 +17,9 @@
 	
 
     
+    //Setting protocol
+    ns.protocol = window.location.protocol == 'https:' ? 'https:' : 'http:';
+    
     /*********************************************************************
     Determinate if the application is running in "standalone mode"
 
@@ -142,6 +145,14 @@ else {
 
         // Should we store and attempt to remake requests which fail while the connection is down.
         //default requests: true,
+
+        //checking - see http://github.hubspot.com/offline/ 'Checking'
+        checks: {
+            image: { 
+                url: ns.protocol + '//app.fcoo.dk/favicon.ico?_='+new Date().getTime() 
+            }, 
+            active: 'image'
+        }
 
     };    
     
