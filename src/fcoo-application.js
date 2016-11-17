@@ -125,37 +125,45 @@ else {
     /*********************************************************************
     Initialize offline.js - http://github.hubspot.com/offline/
     *********************************************************************/
-    window.Offline.options = {
         // Should we check the connection status immediatly on page load.
-        //default checkOnLoad: false,
+//        checkOnLoad: false, //default = false
 
         // Should we monitor AJAX requests to help decide if we have a connection.
-        //default interceptRequests: true,
+        //interceptRequests: true, //default = true
 
         // Should we automatically retest periodically when the connection is down (set to false to disable).
-        /*default reconnect: {
+/*
+        reconnect: {
             // How many seconds should we wait before rechecking.
             initialDelay: 3,
 
             // How long should we wait between retries.
             delay: (1.5 * last delay, capped at 1 hour)
         },
-        */
-
+*/
         // Should we store and attempt to remake requests which fail while the connection is down.
-        //default requests: true,
+//        requests: true, //defalut = true
 
-        //checking - see http://github.hubspot.com/offline/ 'Checking'
+
+
+    window.Offline.options = {
         checks: {
             image: { 
-                url: ns.protocol + '//app.fcoo.dk/favicon.ico?_='+new Date().getTime() 
+                url: function(){ 
+                        //var result = ns.protocol + '//app.fcoo.dk/favicon.ico?_='+new Date().getTime();
+                        var result = ns.protocol + '//app.fcoo.dk/favicon.ico?niels='+new Date().getTime();
+                        return result;
+                     }
             }, 
             active: 'image'
         }
+    };
+  
+//    console.log(window.Offline);//.options);
+    //Offline.on('confirmed-up', function(){ console.log('ON!'); modernizrOn('connected') });
+    //Offline.on('confirmed-down', function(){ console.log('OFF!'); modernizrOff('connected') });
+    //window.setInterval(function(){Offline.check()}, 10*1000);
 
-    };    
-    
-    
     /*********************************************************************
     Initialize raven to report all uncaught exceptions to sentry
     *********************************************************************/
@@ -204,7 +212,6 @@ else {
 	Initialize/ready 
 	*******************************************/
 	$(function() { 
-
 	
 	}); 
 	//******************************************
