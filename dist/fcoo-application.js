@@ -118,6 +118,34 @@ else {
     *********************************************************************/
     window.Url.adjustUrl();
 
+
+    /*********************************************************************
+    Initialize offline.js - http://github.hubspot.com/offline/
+    *********************************************************************/
+    window.Offline.options = {
+        // Should we check the connection status immediatly on page load.
+        //default checkOnLoad: false,
+        checkOnLoad: true,
+
+        // Should we monitor AJAX requests to help decide if we have a connection.
+        //default interceptRequests: true,
+
+        // Should we automatically retest periodically when the connection is down (set to false to disable).
+        /*default reconnect: {
+            // How many seconds should we wait before rechecking.
+            initialDelay: 3,
+
+            // How long should we wait between retries.
+            delay: (1.5 * last delay, capped at 1 hour)
+        },
+        */
+
+        // Should we store and attempt to remake requests which fail while the connection is down.
+        //default requests: true,
+
+    };    
+    
+    
     /*********************************************************************
     Initialize raven to report all uncaught exceptions to sentry
     *********************************************************************/
