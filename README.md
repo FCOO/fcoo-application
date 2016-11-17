@@ -182,7 +182,7 @@ For all other packages use "*fixed version*" : `1.2.3`
 
 	 3.1.1 : jQuery
     ~1.0.0 : fcoo-global-events
-    ~1.0.0 : fcoo-settings
+    ~1.1.0 : fcoo-settings
     ~0.2.1 : fcoo-language
 	~2.0.0 : fcoo-fontawesome
 	~0.2.1 : javascript-utilities

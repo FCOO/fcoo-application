@@ -41,7 +41,7 @@
     "normalize-css": "5.0.0",
     "raven-js": "3.8.0",
     "offline": "HubSpot/offline#0.7.18",
-    "fcoo-settings": "fcoo/fcoo-settings#~1.0.0",
+    "fcoo-settings": "fcoo/fcoo-settings#~1.1.0",
     "fcoo-global-events": "fcoo/fcoo-global-events#~1.0.0"
   },
   "overrides": {
