@@ -21,35 +21,55 @@
 <body>
     <div class="loading"></div>
     <p id="status"></p>
-    <button onclick="reloadImg()">Reload image</button><br>
-    <button onclick="getStatus()">Get status</button><br>
+    <button onclick="demoReloadImg()">Reload image</button><br>
+    <!-- <button onclick="getStatus()">Get status</button><br> -->
     <img id="img1" src="sea.jpg">
     <img id="img2" src="sea2.jpg">
     <script src="bower_components.js"></script>
 	<script src="../src/fcoo-application.js"></script>
 	<script>
-        function reloadImg(){
+        function demoReloadImg(){
             var random = new Date().getTime();
-            $('#img1').prop('src', 'sea.jpg?_='+random);
+            $('#img1').prop('src', 'sea.jpg?param1=value1&param2=value2&_='+random);
             $('#img2').prop('src', 'sea2.jpg?_='+random);
         }
 
 
-        function getStatus(){
-            var str = '';
-            var imgLoad = imagesLoaded('body');
-            imgLoad.on( 'always', function() {
-                //console.log( imgLoad.images.length + ' images loaded' );
-                // detect which image is broken
-                for ( var i = 0, len = imgLoad.images.length; i < len; i++ ) {
-                    var image = imgLoad.images[i];
-                    var result = image.isLoaded ? 'loaded' : 'broken';
-                    str = str + '<br>image is ' + result + ' for ' + image.img.src ;
-                    //console.log( 'image is ' + result + ' for ' + image.img.src );
+        function reloadImg( img ){
+            var src = img.src;
+                param = {};
+                if (src.indexOf('?') > -1){
+                    var srcSplit = src.split('?');
+                    src = srcSplit[0];
+                    param = Url.parseQuery( srcSplit[1] );
                 }
-                $('#status').html( str );
-           });
+                param['niels'] = new Date().getTime();
+                img.src = src + '?' + Url.stringify( param );
+//console.log( src + '?' + Url.stringify( param ) );
+//                param = src.indexOf('?')
+
         }
+
+        Offline.on('up', function(){
+//            var str = '';
+            var imgLoad = imagesLoaded('body',/*);
+            imgLoad.on( 'always', */function() {
+                // detect which image is broken
+                $.each( imgLoad.images, function( index, image ){
+                    if (!image.isLoaded)
+                        reloadImg( image.img );                
+                });
+//                for (var i=0; i<imgLoad.images.length; i++ ){
+//                    var image = imgLoad.images[i];
+//                    var result = image.isLoaded ? 'loaded' : 'broken';
+//                    str = str + '<br>image is ' + result + ' for ' + image.img.src ;
+//                    console.log( 'image is ' + result + ' for ' + image.img.src );
+//                    if (!image.isLoaded)
+//                        reloadImg( image.img );
+//                }
+//                $('#status').html( str );
+           });
+        });
 
 
         

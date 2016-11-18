@@ -161,7 +161,7 @@ NOTE: The texts in `/src/_danish.sass` are not translated jet!
 
 
 #### Modernizr 
-A Modernizr test named `"connected` is added. 
+A Modernizr test named `"connected"` is added. 
 Classes `show-for-connected` `hide-for-connected` `show-for-no-connected` `hide-for-no-connected` are added
 
 
