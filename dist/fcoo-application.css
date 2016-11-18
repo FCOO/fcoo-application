@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /***********************************************
     fcoo-application.scss, 
 
@@ -63,73 +64,74 @@ div.loading {
 
 /*****************************************************
 Style for offline.js with danish translations
-Use when html has class "lang-da"
+Use when the user has selected danish (html has class "lang-da") or 
+the user has selected a no-english language and danish as 2. languages
 *****************************************************/
-html.lang-da .offline-ui .offline-ui-retry:before {
-  content: "Reconnect"; }
+html.lang-da .offline-ui .offline-ui-retry:before, html.no-lang-en.lang2-da .offline-ui .offline-ui-retry:before {
+  content: "Genopret"; }
 
-html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before {
-  content: "Your computer is connected to the internet."; }
+html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
+  content: "Din computer er forbundet til internettet."; }
   @media (max-width: 1024px) {
-    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before {
-      content: "Your device is connected to the internet."; } }
+    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
+      content: "Din enhed er forbundet til internettet."; } }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before {
-      content: "Your device is connected."; } }
+    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
+      content: "Din enhed har forbindelse"; } }
 
-html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before {
-  content: "Your computer lost its internet connection."; }
+html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
+  content: "Din computer tabte forbindelsen til internettet"; }
   @media (max-width: 1024px) {
-    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before {
-      content: "Your device lost its internet connection."; } }
+    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
+      content: "Din enhed tabte forbindelsen til internettet"; } }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before {
-      content: "Your device isn't connected."; } }
+    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
+      content: "Din enhed har tabt forbindelsen"; } }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before {
-  content: "Attempting to reconnect..."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before {
+  content: "Forsøger at genoprette forbindelsen..."; }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " seconds..."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekunder..."; }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-      content: "Reconnecting in " attr(data-retry-in-value) "s..."; } }
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " second..."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekund..."; }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-      content: "Reconnecting in " attr(data-retry-in-value) "s..."; } }
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " minutes..."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minutter..."; }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-      content: "Reconnecting in " attr(data-retry-in-value) "m..."; } }
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " minute..."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minut..."; }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-      content: "Reconnecting in " attr(data-retry-in-value) "m..."; } }
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " hours..."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " timer..."; }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-      content: "Reconnecting in " attr(data-retry-in-value) "h..."; } }
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " hour..."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " time..."; }
   @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-      content: "Reconnecting in " attr(data-retry-in-value) "h..."; } }
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry {
+html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry {
   display: none; }
 
-html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before {
-  content: "Connection attempt failed."; }
+html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before {
+  content: "Genopretning af forbindelse fejlede."; }
 
 .connected .hide-for-connected {
   display: none !important; }

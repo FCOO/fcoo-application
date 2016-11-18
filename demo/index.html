@@ -11,16 +11,27 @@
 
   <link  href="bower_components.css" rel="stylesheet">	
   <link  href="../src/fcoo-application.css" rel="stylesheet">	
+  <style>
+    p,img {
+        margin:20px;
+    }
+  </style>
 </head>
 
 <body>
+    <p>Image reloades every 1s</p>
     <div class="loading"></div>
-
-
+    <p id="img-complete"></p>
+    <img src="sea.jpg">
 	<script src="bower_components.js"></script>
 	<script src="../src/fcoo-application.js"></script>
 	<script>
-Offline.check();
+        setInterval(function(){ 
+            var random = new Date().getTime();
+            $('img').prop('src', 'sea.jpg?_='+random);
+            $('#img-complete').text( random );
+        }, 
+        1*1000);
     </script>
 </body>
 </html>

@@ -88,9 +88,10 @@ div.loading {
 
 /*****************************************************
 Style for offline.js with danish translations
-Use when html has class "lang-da"
+Use when the user has selected danish (html has class "lang-da") or 
+the user has selected a no-english language and danish as 2. languages
 *****************************************************/
-html.lang-da {
+html.lang-da, html.no-lang-en.lang2-da {
     @import "offline-danish";
 }
 
