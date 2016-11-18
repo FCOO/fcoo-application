@@ -159,10 +159,13 @@ else {
         }
     };
   
-//    console.log(window.Offline);//.options);
-    //Offline.on('confirmed-up', function(){ console.log('ON!'); modernizrOn('connected') });
-    //Offline.on('confirmed-down', function(){ console.log('OFF!'); modernizrOff('connected') });
-    //window.setInterval(function(){Offline.check()}, 10*1000);
+
+    //Adds Modernizr test "connected"
+    window.Offline.on('up',   function(){ window.modernizrOn( 'connected'); });
+    window.Offline.on('down', function(){ window.modernizrOff('connected'); });
+
+
+
 
     /*********************************************************************
     Initialize raven to report all uncaught exceptions to sentry

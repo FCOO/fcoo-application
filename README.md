@@ -152,7 +152,16 @@ Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to re
 
 For the current version of fcoo-application `Offline.js` is:
 - using the theme named **Chrome** , and
-- only supporting **English**
+- supporting **English** as default
+
+A Danish translation is in `/src/_danish.sass`
+The danish text is used if `<html>` has class=`"lang-da"`
+
+
+#### Modernizr 
+A Modernizr test named `"connected` is added. 
+Classes `show-for-connected` `hide-for-connected` `show-for-no-connected` `hide-for-no-connected` are added
+
 
 --
 ### [raven-js](https://github.com/getsentry/raven-js)

@@ -17,6 +17,9 @@
 //MATHSASS - https://github.com/terkel/mathsass
 @import "../bower_components/mathsass/dist/math";
 
+//MODERNIZR-SCSS - https://github.com/FCOO/modernizr-scss
+@import "../bower_components/modernizr-scss/dist/modernizr-scss";
+
 html, body {
     height: 100%;    
 }
@@ -83,4 +86,20 @@ div.loading {
 
 
 
+/*****************************************************
+Style for offline.js with danish translations
+Use when html has class "lang-da"
+*****************************************************/
+html.lang-da {
+    @import "offline-danish";
+}
 
+
+//Create Modernizr-classe "show-for-connected` `hide-for-connected" etc.
+@include show-and-hide-for-modernizr-test( 'connected', '', true, '', false );
+
+html.no-connected {
+    body {
+        box-shadow: inset 0px 0px 10px 5px rgba(255,0,0,1);
+    }
+}

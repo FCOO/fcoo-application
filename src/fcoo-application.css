@@ -60,3 +60,88 @@ div.loading {
     margin: auto;
     color: #ffffff;
     color: {APPLICATION_FAVICONCOLOR}; }
+
+/*****************************************************
+Style for offline.js with danish translations
+Use when html has class "lang-da"
+*****************************************************/
+html.lang-da .offline-ui .offline-ui-retry:before {
+  content: "DK-Reconnect"; }
+
+html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before {
+  content: "DK Your computer is connected to the internet."; }
+  @media (max-width: 1024px) {
+    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before {
+      content: "Your device is connected to the internet."; } }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before {
+      content: "Your device is connected."; } }
+
+html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before {
+  content: "Your computer lost its internet connection."; }
+  @media (max-width: 1024px) {
+    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before {
+      content: "Your device lost its internet connection."; } }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before {
+      content: "Your device isn't connected."; } }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before {
+  content: "Attempting to reconnect..."; }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
+  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " seconds..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
+      content: "Reconnecting in " attr(data-retry-in-value) "s..."; } }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
+  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " second..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
+      content: "Reconnecting in " attr(data-retry-in-value) "s..."; } }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
+  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " minutes..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
+      content: "Reconnecting in " attr(data-retry-in-value) "m..."; } }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
+  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " minute..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
+      content: "Reconnecting in " attr(data-retry-in-value) "m..."; } }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
+  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " hours..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
+      content: "Reconnecting in " attr(data-retry-in-value) "h..."; } }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
+  content: "Connection lost. Reconnecting in " attr(data-retry-in-value) " hour..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
+      content: "Reconnecting in " attr(data-retry-in-value) "h..."; } }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry {
+  display: none; }
+
+html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before {
+  content: "Connection attempt failed."; }
+
+.connected .hide-for-connected {
+  display: none !important; }
+
+.connected .show-for-no-connected {
+  display: none !important; }
+
+.no-connected .show-for-connected {
+  display: none !important; }
+
+.no-connected .hide-for-no-connected {
+  display: none !important; }
+
+html.no-connected body {
+  box-shadow: inset 0px 0px 10px 5px red; }
