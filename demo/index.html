@@ -19,24 +19,48 @@
 </head>
 
 <body>
-    <p>Image reloades every 1s</p>
     <div class="loading"></div>
-    <p id="img-complete"></p>
-    <img src="sea.jpg">
-	<script src="bower_components.js"></script>
+    <p id="status"></p>
+    <button onclick="reloadImg()">Reload image</button><br>
+    <button onclick="getStatus()">Get status</button><br>
+    <img id="img1" src="sea.jpg">
+    <img id="img2" src="sea2.jpg">
+    <script src="bower_components.js"></script>
 	<script src="../src/fcoo-application.js"></script>
 	<script>
-        setInterval(function(){ 
+        function reloadImg(){
             var random = new Date().getTime();
-            $('#img-complete').text( random + ' complete='+$('img')[0].complete );
-        }, 
-        2*1000);
+            $('#img1').prop('src', 'sea.jpg?_='+random);
+            $('#img2').prop('src', 'sea2.jpg?_='+random);
+        }
 
-        setInterval(function(){ 
-            var random = new Date().getTime();
-            $('img').prop('src', 'sea.jpg?_='+random);
-        }, 
-        1*1000);
+
+        function getStatus(){
+            var str = '';
+            var imgLoad = imagesLoaded('body');
+            imgLoad.on( 'always', function() {
+                //console.log( imgLoad.images.length + ' images loaded' );
+                // detect which image is broken
+                for ( var i = 0, len = imgLoad.images.length; i < len; i++ ) {
+                    var image = imgLoad.images[i];
+                    var result = image.isLoaded ? 'loaded' : 'broken';
+                    str = str + '<br>image is ' + result + ' for ' + image.img.src ;
+                    //console.log( 'image is ' + result + ' for ' + image.img.src );
+                }
+                $('#status').html( str );
+           });
+        }
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
     </script>
 </body>
