@@ -36,6 +36,9 @@
 
 
         function reloadImg( img ){
+            var tempImg = new Image();
+            tempImg.src = img.src;
+/*
             var src = img.src;
                 param = {};
                 if (src.indexOf('?') > -1){
@@ -47,7 +50,7 @@
                 img.src = src + '?' + Url.stringify( param );
 //console.log( src + '?' + Url.stringify( param ) );
 //                param = src.indexOf('?')
-
+*/
         }
 
         Offline.on('up', function(){
