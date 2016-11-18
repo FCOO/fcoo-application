@@ -157,6 +157,8 @@ For the current version of fcoo-application `Offline.js` is:
 A Danish translation is in `/src/_danish.sass`
 The danish text is used if `<html>` has class=`"lang-da"`
 
+NOTE: The texts in `/src/_danish.sass` are not translated jet!
+
 
 #### Modernizr 
 A Modernizr test named `"connected` is added. 
