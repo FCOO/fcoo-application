@@ -22,7 +22,7 @@
     <div class="loading"></div>
     <p id="status"></p>
     <button onclick="demoReloadImg()">Reload image</button><br>
-    <!-- <button onclick="getStatus()">Get status</button><br> -->
+    <button onclick="checkAllImages()">Get status</button><br>
     <img id="img1" src="sea.jpg">
     <img id="img2" src="sea2.jpg">
     <script src="bower_components.js"></script>
@@ -34,11 +34,39 @@
             $('#img2').prop('src', 'sea2.jpg?_='+random);
         }
 
+        function load(e){ 
+console.log('load', e);
+            $(e.target)
+                .removeAttr('originalSrc')
+                .off('error', error )
+                .off('load', load );
+        }
 
-        function reloadImg( img ){
-            var tempImg = new Image();
-            tempImg.src = img.src;
-/*
+        function error(e){ 
+console.log('error', e);
+            var img = e.target;
+            var src = $(img).attr('originalSrc');
+            load(e);
+            img.src = src;
+        }
+
+        function reloadImg( img, index ){
+            var $img = $(img); console.log(index,' before',img);
+
+$img.attr('originalSrc', img.src);
+            $img
+                .on('load', load )
+                .on('error', error );
+            //img.onerror = error;
+            if (index)
+                img.src = 'findesikke.jpg';
+            else {
+            //$img.off('error', error);
+//            img.src = 'findeshellerikke.jpg';            
+//            console.log(index,' after',img);
+//            var tempImg = new Image();
+//            tempImg.src = img.src;
+
             var src = img.src;
                 param = {};
                 if (src.indexOf('?') > -1){
@@ -48,19 +76,17 @@
                 }
                 param['niels'] = new Date().getTime();
                 img.src = src + '?' + Url.stringify( param );
-//console.log( src + '?' + Url.stringify( param ) );
-//                param = src.indexOf('?')
-*/
+            }
         }
 
-        Offline.on('up', function(){
+        checkAllImages = function(){
 //            var str = '';
             var imgLoad = imagesLoaded('body',/*);
             imgLoad.on( 'always', */function() {
                 // detect which image is broken
                 $.each( imgLoad.images, function( index, image ){
-                    if (!image.isLoaded)
-                        reloadImg( image.img );                
+//                    if (!image.isLoaded)
+                        reloadImg( image.img, index );                
                 });
 //                for (var i=0; i<imgLoad.images.length; i++ ){
 //                    var image = imgLoad.images[i];
@@ -72,9 +98,9 @@
 //                }
 //                $('#status').html( str );
            });
-        });
+        };
 
-
+        Offline.on('up', checkAllImages);
         
         
         
