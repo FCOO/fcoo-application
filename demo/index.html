@@ -28,10 +28,16 @@
 	<script>
         setInterval(function(){ 
             var random = new Date().getTime();
+            $('#img-complete').text( random + ' complete='+$('img')[0].complete );
+        }, 
+        2*1000);
+
+        setInterval(function(){ 
+            var random = new Date().getTime();
             $('img').prop('src', 'sea.jpg?_='+random);
-            $('#img-complete').text( random );
         }, 
         1*1000);
+
     </script>
 </body>
 </html>
