@@ -126,7 +126,7 @@ else {
     Initialize offline.js - http://github.hubspot.com/offline/
     *********************************************************************/
         // Should we check the connection status immediatly on page load.
-//        checkOnLoad: false, //default = false
+        //checkOnLoad: false, //default = false
 
         // Should we monitor AJAX requests to help decide if we have a connection.
         //interceptRequests: true, //default = true
@@ -165,8 +165,56 @@ else {
     window.Offline.on('down', function(){ window.modernizrOff('connected'); });
 
 
+    /*********************************************************************
+    Using imagesloaded (http://imagesloaded.desandro.com) to test if any
+    images was attended to be loaded during the disconnection
+    If so try to reload the images by reolading it with a 'dummy' parameter
+    named '_X_'. If this fails: reload it with the original src
+    *********************************************************************/
+    window.Offline.on('up', function(){
+        var imgLoad = window.imagesLoaded('body', function(){
+            // detect which image is broken
+            $.each( imgLoad.images, function( index, image ){
+                if (!image.isLoaded){
+                    //Reload the images
+                    var $img = $(image.img),
+                        src = image.img.src;
+                    $img.attr('originalSrc', src);
+                    $img
+                        .on('load', load )
+                        .on('error', error );
+
+                    var param = {};
+                    if (src.indexOf('?') > -1){
+                        var srcSplit = src.split('?');
+                        src = srcSplit[0];
+                        param = window.Url.parseQuery( srcSplit[1] );
+                    }
+                    param['_X_'] = new Date().getTime();
+                    image.img.src = src + '?' + window.Url.stringify( param );
+                }
+            });
+        });
+    });
+
+    function load(e){ 
+        $(e.target)
+            .removeAttr('originalSrc')
+            .off('error', error )
+            .off('load', load );
+    }
+
+    function error(e){ 
+        var img = e.target,
+            src = $(img).attr('originalSrc');
+        load(e);
+        img.src = src;
+    }
 
 
+
+
+    
     /*********************************************************************
     Initialize raven to report all uncaught exceptions to sentry
     *********************************************************************/
