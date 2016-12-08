@@ -6,17 +6,30 @@
 	https://github.com/FCOO/fcoo-application
 	https://github.com/FCOO
 
+Set-up of common systems, objects, and methods for FCOO web applications
+Sections:
+1: Namespace, application states, system variables
+2: Set up 'loading...'
+3: Initialize offline.js - http://github.hubspot.com/offline/
+4: Initialize raven to report all uncaught exceptions to sentry AND 
+   Adding the Piwik Tracking Code
+5: TODO 
+
 ****************************************************************************/
 
 (function ($, window/*, document, undefined*/) {
 	"use strict";
 	
-	//Create fcoo-namespace
+    /***********************************************************************
+    ************************************************************************
+    1: Namespace, application states, system variables
+    ************************************************************************
+    ***********************************************************************/
+
+    //Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
 	var ns = window.fcoo;
 	
-
-    
     //Setting protocol
     ns.protocol = window.location.protocol == 'https:' ? 'https:' : 'http:';
     
@@ -35,51 +48,9 @@
         ( window.matchMedia('(display-mode: standalone)').matches );
 
 
-/*
-
-        if (urlParams.standalone == "true") {
-            var params = window.localStorage.getItem('params');
-            if (params !== null) {
-                window.localStorage.setItem('paramsTemp', params);
-                hashes = params.split('&');
-                for (i = 0; i < hashes.length; i = i + 1) {
-                    hash = hashes[i].split('=');
-                    urlParams.push(hash[0]);
-                    urlParams[hash[0]] = hash[1];
-                }
-            }
-        }
-*/    
-/* TODO: Test if localStorage is available
-function storageAvailable(type) {
-	try {
-		var storage = window[type],
-			x = '__storage_test__';
-		storage.setItem(x, x);
-		storage.removeItem(x);
-		return true;
-	}
-	catch(e) {
-		return false;
-	}
-}
-And here is how you would use it:
-
-if (storageAvailable('localStorage')) {
-	// Yippee! We can use localStorage awesomeness
-}
-else {
-	// Too bad, no localStorage for us
-}
-
-*/
-
-
-        
     /*********************************************************************
     Functions to get options from options.application in gruntfile.js
     *********************************************************************/
-
     ns.getApplicationOption = function ( fullEmbedString, developmentValue, convertFunction ){
         convertFunction = convertFunction || function( str ){ return str; };
         var regExp = /{APPLICATION_\w*}/g;
@@ -101,9 +72,13 @@ else {
     };
 
 
-    /*********************************************************************
-    Set <body> class = 'loading' and adds spinner
-    *********************************************************************/
+    /***********************************************************************
+    ************************************************************************
+    2: Set up 'loading...'
+    ************************************************************************
+    ***********************************************************************/
+
+    //Set <body> class = 'loading' and adds spinner
     var $body = $('body'),
         $div  = $('body > div.loading');
 
@@ -116,42 +91,39 @@ else {
 
     $(window).on( 'load', function() { $body.removeClass("loading"); });
 
-    /*********************************************************************
-    Call Url.adjustUrl() to remove broken values in the url
-    *********************************************************************/
+    //Call Url.adjustUrl() to remove broken values in the url
     window.Url.adjustUrl();
 
 
-    /*********************************************************************
-    Initialize offline.js - http://github.hubspot.com/offline/
-    *********************************************************************/
-        // Should we check the connection status immediatly on page load.
-        //checkOnLoad: false, //default = false
+    /***********************************************************************
+    ************************************************************************
+    3: Initialize offline.js - http://github.hubspot.com/offline/
+    ************************************************************************
+    ***********************************************************************/
+    // Should we check the connection status immediatly on page load.
+    //checkOnLoad: false, //default = false
 
-        // Should we monitor AJAX requests to help decide if we have a connection.
-        //interceptRequests: true, //default = true
+    // Should we monitor AJAX requests to help decide if we have a connection.
+    //interceptRequests: true, //default = true
 
-        // Should we automatically retest periodically when the connection is down (set to false to disable).
+    // Should we automatically retest periodically when the connection is down (set to false to disable).
 /*
-        reconnect: {
-            // How many seconds should we wait before rechecking.
-            initialDelay: 3,
+    reconnect: {
+        // How many seconds should we wait before rechecking.
+        initialDelay: 3,
 
-            // How long should we wait between retries.
-            delay: (1.5 * last delay, capped at 1 hour)
-        },
+        // How long should we wait between retries.
+        delay: (1.5 * last delay, capped at 1 hour)
+    },
 */
-        // Should we store and attempt to remake requests which fail while the connection is down.
-//        requests: true, //defalut = true
-
-
+    // Should we store and attempt to remake requests which fail while the connection is down.
+    // requests: true, //defalut = true
 
     window.Offline.options = {
         checks: {
             image: { 
                 url: function(){ 
-                        //var result = ns.protocol + '//app.fcoo.dk/favicon.ico?_='+new Date().getTime();
-                        var result = ns.protocol + '//app.fcoo.dk/favicon.ico?niels='+new Date().getTime();
+                        var result = ns.protocol + '//app.fcoo.dk/favicon.ico?_='+new Date().getTime();
                         return result;
                      }
             }, 
@@ -191,7 +163,7 @@ else {
                         param = window.Url.parseQuery( srcSplit[1] );
                     }
                     param['_X_'] = new Date().getTime();
-                    image.img.src = src + '?' + window.Url.stringify( param );
+                    image.img.src = src + '?' + window. Url.stringify( param );
                 }
             });
         });
@@ -212,12 +184,14 @@ else {
     }
 
 
-
-
+    /***********************************************************************
+    ************************************************************************
+    4: Initialize raven to report all uncaught exceptions to sentry AND 
+       Adding the Piwik Tracking Code
+    ************************************************************************
+    ***********************************************************************/
     
-    /*********************************************************************
-    Initialize raven to report all uncaught exceptions to sentry
-    *********************************************************************/
+    //Initialize raven to report all uncaught exceptions to sentry
     var sentryDSN = ns.getApplicationOption( "{APPLICATION_SENTRYDSN}", '');
     if (sentryDSN)
         Raven.config(sentryDSN,{
@@ -231,15 +205,9 @@ else {
             ignoreErrors : [],
             includePaths : [], //An array of regex patterns to indicate which urls are a part of your app in the stack trace
             //dataCallback : null, //A function that allows mutation of the data payload right before being sent to Sentry. dataCallback: function(data) { /*do something to data*/ return data; 
-
-
-
-        
         }).install();
 
-    /*********************************************************************
-    Adding the Piwik Tracking Code
-    *********************************************************************/
+    //Adding the Piwik Tracking Code
 /* REMOVED AGAIN AND PUT BACK IN app/_index.html.tmpl OF THE APPLICATION
     var piwikSiteId = ns.getApplicationNumberOption( "{APPLICATION_PIWIKSITEID}", 0);
     if (piwikSiteId){
@@ -258,6 +226,33 @@ else {
 
 */
 
+    /***********************************************************************
+    ************************************************************************
+    TODO: 5: Define the different formats used with jquery-value-format (https://github.com/FCOO/jquery-value-format)
+    ************************************************************************
+    ***********************************************************************/
+
+/*
+languagechanged
+dateformatchanged
+timeformatchanged
+numberformatchanged
+latlngformatchanged
+
+Formats
+lat
+lng
+latlng
+time        (12:00)
+date
+date_short
+date_long
+datetime
+date_utc    : moment as utc in italic
+datetime_utc: moment as utc in italic
+timezone    : the name of current timezone
+
+*/
 
 	/******************************************
 	Initialize/ready 
