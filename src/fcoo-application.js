@@ -78,17 +78,37 @@ Sections:
     ************************************************************************
     ***********************************************************************/
 
-    //Set <body> class = 'loading' and adds spinner
-    var $body = $('body'),
-        $div  = $('body > div.loading');
+    //Set <body> class = 'loading' and adds logo and spinner
+    var $body       = $('body'),
+        $loadingDiv = $('body > div.loading'),
+        $versionDiv;
 
     $body.addClass('loading');
-    if (!$div.length){
-      $div = $('<div class="loading"></div>' );
-      $div.prependTo( $body );
+    if (!$loadingDiv.length){
+      $loadingDiv = $('<div class="loading"></div>' );
+      $loadingDiv.prependTo( $body );
     }
-    $div.append( $('<span class="loading fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span>') );
+    $loadingDiv.addClass('loading fcoo-app-color fcoo-app-background');
 
+    $loadingDiv.append( $('<div class="logo"><div class="icon-fcoo-app-logo"></div></div>'));
+    
+    $versionDiv = $('<div class="version fcoo-app-color"></div>');
+    $loadingDiv.append( $versionDiv );
+
+    $loadingDiv.append( $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>') );
+
+    //Test if the path-name contains any of the words defining the version to be none-production
+    var pathName = new String(window.location.pathname).toUpperCase();
+    $.each( ['BETA', 'STAGING','DEMO', 'TEST'], function( index, name ){
+        if (pathName.indexOf(name) > -1){
+            $versionDiv.text( name );
+            $versionDiv.addClass('withContent');
+            window.document.title = name +' - ' + window.document.title;
+            return false;
+        }
+    });    
+        
+    
     $(window).on( 'load', function() { $body.removeClass("loading"); });
 
     //Call Url.adjustUrl() to remove broken values in the url

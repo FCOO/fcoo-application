@@ -30,6 +30,32 @@ For standalone apps we use localStorage for persisting state.
 Contains the data and methods to get and set setiings for the user.
 See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details 
 
+### CSS Classes
+
+In `gruntfile.js` for each application (see below) two colors (`color` and `faviconColor`can be defined:
+
+    fcoo_grunt_plugin: {
+        options: {
+            "application": {
+	        "color"       : "...",
+	        "faviconColor": "...",
+            ...
+        }
+    }
+
+The following css classes are defined
+
+    .fcoo-color     /* text-color as default color (white) */
+    .fcoo-app-color /* text-color as application color (options.application.faviconColor) */
+
+    .fcoo-background     /* background-color as default color ("FCOO blue")  */
+    .fcoo-app-background /* background-color as application background color (options.application.color)  */
+ 
+The FCOO logo are provided as at SVG-font and can be applied using the css classes
+
+    .icon-fcoo-logo      /* FCOO logo in default color (white) */
+    .icon-fcoo-app-logo  /* FCOO logo in the application color (options.application.faviconColor) */
+
 
 ### Dependencies and versions
 In `bower.json` of the application correct the `fcoo-application` section in `dependencies` to
