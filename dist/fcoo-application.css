@@ -26,6 +26,51 @@ body {
   font-weight: bold; }
 
 /*****************************************************
+Style for FCOO logo as font
+icon-fcoo-logo = Default FCOO logo (white)
+icon-fcoo-app-logo = Same as icon-fcoo-logo but in the application color
+fcoo-background = background-color = default blue
+fcoo-app-background = background-color = application background-color
+
+*****************************************************/
+@font-face {
+  font-family: 'fcoo-logo';
+  src: url("fonts/fcoo-logo.woff?ma2cie") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+.icon-fcoo-logo, .icon-fcoo-app-logo {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'fcoo-logo' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white; }
+  .icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
+    content: "\e900"; }
+
+.icon-fcoo-app-logo {
+  color: {APPLICATION_FAVICONCOLOR} !important; }
+
+.fcoo-color, .fcoo-app-color {
+  color: white; }
+
+.fcoo-app-color {
+  color: {APPLICATION_FAVICONCOLOR} !important; }
+
+.fcoo-background, .fcoo-app-background {
+  background-color: #214b87; }
+
+.fcoo-app-background {
+  background-color: {APPLICATION_COLOR} !important; }
+
+/*****************************************************
 Style for the <div> covering the page during loading
 *****************************************************/
 div.loading {
@@ -34,11 +79,7 @@ div.loading {
   top: 0;
   z-index: 2147483647;
   background-color: #214b87;
-  background-color: {APPLICATION_COLOR};
-  background-image: url("images/favicon.png");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center; }
+  background-color: {APPLICATION_COLOR}; }
   body:not(.loading) div.loading {
     width: 0;
     height: 0;
@@ -51,16 +92,31 @@ div.loading {
     width: 100%;
     height: 100%;
     opacity: 1; }
-  div.loading span.loading {
+  div.loading > div {
     display: block !important;
     cursor: progress;
     position: absolute;
-    top: 75%;
     right: 0;
     left: 0;
-    margin: auto;
-    color: #ffffff;
-    color: {APPLICATION_FAVICONCOLOR}; }
+    margin: 0;
+    padding: 0;
+    text-align: center; }
+    div.loading > div.logo {
+      top: 0%;
+      height: 60%; }
+      div.loading > div.logo > div {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 280px; }
+    div.loading > div.version {
+      top: 60%;
+      font-size: 200%; }
+      div.loading > div.version.withContent {
+        background-color: red;
+        color: white; }
+    div.loading > div.working {
+      top: 80%; }
 
 /*****************************************************
 Style for offline.js with danish translations

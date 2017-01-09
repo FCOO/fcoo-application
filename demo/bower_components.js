@@ -10252,7 +10252,8 @@ return jQuery;
         };
 
         this.on = function(eventNames, callback, context, options){
-            var i, eventName = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
+			var eventName, i;
+			eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
             for (i=0; i<eventNames.length; i++ ){
                 eventName = eventNames[i];
                 if (eventName){
@@ -16534,7 +16535,9 @@ window.matchMedia || (window.matchMedia = function() {
     function updateHash(hashObj, dontCallHashChange){
         this.dontCallHashChange = dontCallHashChange;
         var newHash = this.stringify( $.extend({}, this.parseHash(), hashObj || {}) );
-        return window.location.hash = newHash;
+
+        //return window.location.hash = '#'+newHash;
+        return this._updateAll(window.location.pathname + window.location.search + '#' + newHash, false);
     }
      
     /******************************************
@@ -16554,7 +16557,10 @@ window.matchMedia || (window.matchMedia = function() {
             hashParsed[hashParam] = value;
         }
         this.dontCallHashChange = dontCallHashChange;
-        return window.location.hash = this.stringify(hashParsed);
+
+        //return window.location.hash = this.stringify(hashParsed);
+        return this._updateAll(window.location.pathname + window.location.search + '#' + this.stringify(hashParsed), false);
+
     }
 
 
