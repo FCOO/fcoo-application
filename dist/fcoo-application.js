@@ -88,15 +88,16 @@ Sections:
       $loadingDiv = $('<div class="loading"></div>' );
       $loadingDiv.prependTo( $body );
     }
-    $loadingDiv.addClass('loading fcoo-app-color fcoo-app-background');
 
-    $loadingDiv.append( $('<div class="logo"><div class="icon-fcoo-app-logo"></div></div>'));
-    
+    $loadingDiv.addClass('loading fcoo-app-color fcoo-app-background icon-fcoo-app-logo');
+
     $versionDiv = $('<div class="version fcoo-app-color"></div>');
     $loadingDiv.append( $versionDiv );
 
     $loadingDiv.append( $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>') );
 
+   
+    
     //Test if the path-name contains any of the words defining the version to be none-production
     var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
 
