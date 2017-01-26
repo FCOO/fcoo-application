@@ -98,9 +98,10 @@ Sections:
     $loadingDiv.append( $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>') );
 
     //Test if the path-name contains any of the words defining the version to be none-production
-    var pathName = new String(window.location.pathname).toUpperCase();
+    var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
+
     $.each( ['BETA', 'STAGING','DEMO', 'TEST'], function( index, name ){
-        if (pathName.indexOf(name) > -1){
+        if (urlStr.indexOf(name) > -1){
             $versionDiv.text( name );
             $versionDiv.addClass('withContent');
             window.document.title = name +' - ' + window.document.title;
