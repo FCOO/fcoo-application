@@ -1,6 +1,10 @@
 {
   "name": "fcoo-application",
+<<<<<<< HEAD
   "version": "1.8.2",
+=======
+  "version": "1.8.1",
+>>>>>>> 57f596671586559718b05d4777ebc3086f7471b0
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
