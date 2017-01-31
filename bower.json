@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "1.8.5",
+  "version": "1.9.0",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -38,9 +38,9 @@
     "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#~1.4.0",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#~2.1.0",
     "fcoo-language": "fcoo/fcoo-language#~0.2.1",
-    "url.js-extensions": "fcoo/url.js-extensions#~1.7.0",
+    "url.js-extensions": "fcoo/url.js-extensions#~1.8.0",
     "normalize-css": "~5.0.0",
-    "raven-js": "~3.9.0",
+    "raven-js": "~3.10.0",
     "offline": "HubSpot/offline#~0.7.18",
     "fcoo-settings": "fcoo/fcoo-settings#~1.1.0",
     "fcoo-global-events": "fcoo/fcoo-global-events#~1.0.0",
@@ -62,11 +62,11 @@
     "fcoo-modernizr-mediaquery-device": "~1.4.0",
     "fcoo-polyfill": "~2.2.0",
     "fcoo-language": "~0.2.1",
-    "url.js-extensions": "~1.6.0",
+    "url.js-extensions": "~1.8.0",
     "fcoo-settings": "~1.1.0",
     "fcoo-global-events": "~1.0.0",
     "normalize-css": "~5.0.0",
-    "raven-js": "~3.9.0",
+    "raven-js": "~3.10.0",
     "offline": "~0.7.18",
     "imagesloaded": "4.1.1"
   }
