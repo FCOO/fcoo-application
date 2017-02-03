@@ -15,12 +15,44 @@
 
 <body style="background-color: gray; cursor:pointer">
     <div class="loading"></div>
+    <select id="theSelect" style="width:200px"></select>
+    <button onClick="fcoo.settings.set('language', 'da');">Dansk</button>    
+    <button onClick="fcoo.settings.set('language', 'en');">English</button>    
 
-    
-    
     <script src="bower_components.js"></script>
 	<script src="../src/fcoo-application.js"></script>
 	<script>
+
+        var $select = $('#theSelect');
+        var optionList = [
+            { da: 'Dette er nummer ET', en:'This is number ONE'},
+            { da: 'Dette er nummer TO', en:'This is number TWO'},
+            { da: 'Dette er nummer TRE', en:'This is number THREE'},
+            { da: 'Dette er nummer FIRE', en:'This is number FOUR'}
+        ];
+
+        i18next.addPhrase( 'test', 'title', {
+            da:'Dette er title for nummer {{count}}', 
+            en:'This is the title for #{{count}}'
+        });
+
+        for (var i=0; i<optionList.length; i++ ){
+            var option = optionList[i];
+            i18next.addPhrase( 'test', 'item'+i, option );
+
+            var $option = $('<option/>')
+                            .i18n('test:item'+i )
+                            .i18n('test:title', 'title', {count: i+1} )
+                            .appendTo($select);
+       
+        }
+        
+
+    $(function() { 
+
+
+    });
+
     </script>
 </body>
 </html>

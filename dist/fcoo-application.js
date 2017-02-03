@@ -162,7 +162,7 @@ Sections:
     /*********************************************************************
     Using imagesloaded (http://imagesloaded.desandro.com) to test if any
     images was attended to be loaded during the disconnection
-    If so try to reload the images by reolading it with a 'dummy' parameter
+    If so try to reload the images by reloading it with a 'dummy' parameter
     named '_X_'. If this fails: reload it with the original src
     *********************************************************************/
     window.Offline.on('up', function(){

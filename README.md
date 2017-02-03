@@ -74,7 +74,7 @@ and add/update the `resolutions` section
 	  ...
 	}
 
-where `1.2.3` responses to a [version](#version) 
+where `1.2.3` responses to a version
 
 **NOTE that the version must be added both in the `"dependencies"` and the `"resolutions"` section** 
 
@@ -123,30 +123,53 @@ Tree functions is provided to use default values during development:
 ----
 ## Default options and installed packages
 The following packages are included and installed automatic. 
-In [version](#version) the specific versions of the different packages are listed
+The specific versions of the different packages are given in the current version of `bower.json`
+#### Version format
+| Format | Name | Range | Description/use |
+| :--: | :--: | :--: | :--- |
+| `^1.2.3` | *Allow minor* | `1.2.3 >= x > 2.0.0` | Automatic use minor updates. Used for FCOO packages |
+| `~1.2.3` | *Allow patch* | `1.2.3 >= x > 1.3.0` | Automatic use patch updates |
+| `1.2.3` | *Fixed version* | `1.2.3` | Only use specified version |
 
---
+---
 ### [jQuery](http://jquery.com)
 
--- 
+--- 
 ### [fcoo-global-events](https://github.com/FCOO/fcoo-global-events)
 Creates `window.fcoo.events` as a `GlobalEvents`-object
 
-
---
+---
 ### [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings)
 
---
+---
 ### [fcoo-language](http://github.com/fcoo/fcoo-language)
 
+---
+### [fcoo-number](http://github.com/fcoo/fcoo-number)
 
---
+---
+### [fcoo-moment](http://github.com/fcoo/fcoo-moment)
+
+---
+### [fcoo-latlng-format](http://github.com/fcoo/fcoo-latlng-format)
+
+---
+### [fcoo-value-format](http://github.com/fcoo/fcoo-value-format)
+
+---
 ### [fcoo-fontawesome](http://github.com/fcoo/fcoo-fontawesome)
 
---
+---
+### [url.js-extensions](https://github.com/FCOO/url.js-extensions)
+Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to remove broken values in the query string and hash tag
+
+---
 ### [javascript-utilities](http://github.com/fcoo/javascript-utilities)
 
---
+---
+### [fcoo-polyfill](http://github.com/fcoo/fcoo-polyfill)
+
+---
 ### [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-mediaquery-device)
 
 Sets the breakpoints as:
@@ -161,17 +184,10 @@ Sets the breakpoints as:
 
 See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-mediaquery-device) for a complete list of test included
 
---
-### [fcoo-polyfill](http://github.com/fcoo/fcoo-polyfill)
-
---
-### [url.js-extensions](https://github.com/FCOO/url.js-extensions)
-Calling [adjustUrl()](https://github.com/FCOO/url.js-extensions#adjusturl) to remove broken values in the query string and hash tag
-
---
+---
 ### [normalize.css](https://github.com/necolas/normalize.css/)
 
---
+---
 ### [Offline.js](http://github.hubspot.com/offline/docs/welcome/)
 
 *Offline.js is a library to automatically alert your users when they've lost internet connectivity, like Gmail. It captures AJAX requests which were made while the connection was down, and remakes them when it's back up, so your app reacts perfectly.*
@@ -183,15 +199,16 @@ For the current version of fcoo-application `Offline.js` is:
 A Danish translation is in `/src/_danish.sass`
 The danish text is used if `<html>` has class=`"lang-da"`
 
-NOTE: The texts in `/src/_danish.sass` are not translated jet!
-
-
 #### Modernizr 
 A Modernizr test named `"connected"` is added. 
 Classes `show-for-connected` `hide-for-connected` `show-for-no-connected` `hide-for-no-connected` are added
 
+#### [imagesLoaded](http://imagesloaded.desandro.com/)
+Used to test if any images was attended to be loaded during the disconnection
+If so try to reload the images by reloading it with a `dummy` parameter named '`_X_`'. 
+If this fails: reload it with the original src
 
---
+---
 ### [raven-js](https://github.com/getsentry/raven-js)
 
 raven-js is the JavaScript client for [Sentry](https://sentry.io) used by FCOO to report all uncaught exceptions in the applications  
@@ -207,28 +224,9 @@ If a application need to report uncaught exceptions to [Sentry](https://sentry.i
 
 #### Options
 The following options are set in Raven
-`release`: Set to current version of the applicationnal tags to assign to each event.
+`release`: Set to current version of the application tags to assign to each event.
 `whitelistUrls`: `"/https?:\/\/(.*\.)?fcoo\.dk/"`
 
-
------
-## <a name="version"></a>Versions
-
-For FCOO packages use the "*allow patch*" : `~1.2.3`
-For all other packages use "*fixed version*" : `1.2.3`
-
-	~3.1.1 : jQuery
-    ~1.0.0 : fcoo-global-events
-    ~1.1.0 : fcoo-settings
-    ~0.2.1 : fcoo-language
-	~2.0.0 : fcoo-fontawesome
-	~0.2.1 : javascript-utilities
-	~1.2.0 : fcoo-modernizr-mediaquery-device
-	~2.1.0 : fcoo-polyfill
-	~1.1.0 : url.js-extensions
-	~5.0.0 : normalize.css
-	~3.7.0 : raven-js
-    ~0.7.18: offline
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-leaflet/LICENSE).
