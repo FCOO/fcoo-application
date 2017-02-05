@@ -123,7 +123,7 @@ Tree functions is provided to use default values during development:
 ----
 ## Default options and installed packages
 The following packages are included and installed automatic. 
-The specific versions of the different packages are given in the current version of `bower.json`
+The specific versions of the different packages are given in the current version of [bower.json](https://github.com/FCOO/fcoo-application/blob/master/bower.json)
 #### Version format
 | Format | Name | Range | Description/use |
 | :--: | :--: | :--: | :--- |
