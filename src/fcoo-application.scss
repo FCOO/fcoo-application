@@ -171,11 +171,7 @@ div.loading {
             display: none !important;
         }
     }
-
 }
-
-
-
 
 /*****************************************************
 Style for offline.js with danish translations
@@ -187,11 +183,18 @@ html.lang-da, html.no-lang-en.lang2-da {
 }
 
 
-//Create Modernizr-classe "show-for-connected` `hide-for-connected" etc.
-@include show-and-hide-for-modernizr-test( 'connected', '', true, '', false );
+//Addd red shadow to the body, when there are no connections
+html.no-connected body {
+    box-shadow: inset 0px 0px 10px 5px rgba(255,0,0,1);
+}
 
-html.no-connected {
-    body {
-        box-shadow: inset 0px 0px 10px 5px rgba(255,0,0,1);
-    }
+
+//Create Modernizr-classe for tests
+$modernizr-test-list: (
+    connected,
+    mouse
+); 
+
+@each $modernizr-test in $modernizr-test-list {
+    @include show-and-hide-for-modernizr-test( $modernizr-test, html, false, '', false );
 }
