@@ -10,25 +10,20 @@
 
 ************************************************/
 html, body {
-  height: 100%;
-}
+  height: 100%; }
 
 body {
   padding: 0;
-  margin: 0;
-}
+  margin: 0; }
 
 .hide {
-  display: none !important;
-}
+  display: none !important; }
 
 .invisible {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 .bold {
-  font-weight: bold;
-}
+  font-weight: bold; }
 
 /*****************************************************
 Style for FCOO logo as font
@@ -42,8 +37,8 @@ fcoo-app-background = background-color = application background-color
   font-family: 'fcoo-logo';
   src: url("fonts/fcoo-logo.woff?ma2cie") format("woff");
   font-weight: normal;
-  font-style: normal;
-}
+  font-style: normal; }
+
 .icon-fcoo-logo, .icon-fcoo-app-logo {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'fcoo-logo' !important;
@@ -56,31 +51,24 @@ fcoo-app-background = background-color = application background-color
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: white;
-}
-.icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
-  content: "\e900";
-}
+  color: white; }
+  .icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
+    content: "\e900"; }
 
 .icon-fcoo-app-logo {
-  color: {APPLICATION_FAVICONCOLOR} !important;
-}
+  color: {APPLICATION_FAVICONCOLOR} !important; }
 
 .fcoo-color, .fcoo-app-color {
-  color: white;
-}
+  color: white; }
 
 .fcoo-app-color {
-  color: {APPLICATION_FAVICONCOLOR} !important;
-}
+  color: {APPLICATION_FAVICONCOLOR} !important; }
 
 .fcoo-background, .fcoo-app-background {
-  background-color: #214b87;
-}
+  background-color: #214b87; }
 
 .fcoo-app-background {
-  background-color: {APPLICATION_COLOR} !important;
-}
+  background-color: {APPLICATION_COLOR} !important; }
 
 /*****************************************************
 Style for the <div> covering the page during loading
@@ -92,55 +80,46 @@ div.loading {
   z-index: 2147483647;
   background-color: #214b87;
   background-color: {APPLICATION_COLOR};
-  text-align: center;
-}
-body.loading div.loading {
-  cursor: progress;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-}
-body.loading div.loading:before {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 10%;
-  font-size: 280px;
-  line-height: 0.5;
-}
-body.loading div.loading > div {
-  display: block !important;
-  cursor: progress;
-  position: absolute;
-  right: 0;
-  left: 0;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-body.loading div.loading > div.version {
-  top: 60%;
-  font-family: sans-serif;
-  font-size: 200%;
-}
-body.loading div.loading > div.version.withContent {
-  background-color: red;
-  color: white;
-}
-body.loading div.loading > div.working {
-  top: 80%;
-}
-body:not(.loading) div.loading {
-  width: 0;
-  height: 0;
-  opacity: 0;
-  -webkit-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-  -moz-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-  transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-}
-body:not(.loading) div.loading:before, body:not(.loading) div.loading > div {
-  display: none !important;
-}
+  text-align: center; }
+  body.loading div.loading {
+    cursor: progress;
+    width: 100%;
+    height: 100%;
+    opacity: 1; }
+    body.loading div.loading:before {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 10%;
+      font-size: 280px;
+      line-height: 0.5; }
+    body.loading div.loading > div {
+      display: block !important;
+      cursor: progress;
+      position: absolute;
+      right: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      text-align: center; }
+      body.loading div.loading > div.version {
+        top: 60%;
+        font-family: sans-serif;
+        font-size: 200%; }
+        body.loading div.loading > div.version.withContent {
+          background-color: red;
+          color: white; }
+      body.loading div.loading > div.working {
+        top: 80%; }
+  body:not(.loading) div.loading {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    -webkit-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
+    -moz-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
+    transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s; }
+    body:not(.loading) div.loading:before, body:not(.loading) div.loading > div {
+      display: none !important; }
 
 /*****************************************************
 Style for offline.js with danish translations
@@ -148,110 +127,82 @@ Use when the user has selected danish (html has class "lang-da") or
 the user has selected a no-english language and danish as 2. languages
 *****************************************************/
 html.lang-da .offline-ui .offline-ui-retry:before, html.no-lang-en.lang2-da .offline-ui .offline-ui-retry:before {
-  content: "Genopret";
-}
+  content: "Genopret"; }
+
 html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-  content: "Din computer er forbundet til internettet.";
-}
-@media (max-width: 1024px) {
-  html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-    content: "Din enhed er forbundet til internettet.";
-  }
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-    content: "Din enhed har forbindelse";
-  }
-}
+  content: "Din computer er forbundet til internettet."; }
+  @media (max-width: 1024px) {
+    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
+      content: "Din enhed er forbundet til internettet."; } }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
+      content: "Din enhed har forbindelse"; } }
+
 html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-  content: "Din computer tabte forbindelsen til internettet";
-}
-@media (max-width: 1024px) {
-  html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-    content: "Din enhed tabte forbindelsen til internettet";
-  }
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-    content: "Din enhed har tabt forbindelsen";
-  }
-}
+  content: "Din computer tabte forbindelsen til internettet"; }
+  @media (max-width: 1024px) {
+    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
+      content: "Din enhed tabte forbindelsen til internettet"; } }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
+      content: "Din enhed har tabt forbindelsen"; } }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before {
-  content: "Fors├©ger at genoprette forbindelsen...";
-}
+  content: "Forsøger at genoprette forbindelsen..."; }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekunder...";
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-    content: "Genopretter om " attr(data-retry-in-value) "s...";
-  }
-}
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekunder..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekund...";
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-    content: "Genopretter om " attr(data-retry-in-value) "s...";
-  }
-}
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekund..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minutter...";
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-    content: "Genopretter om " attr(data-retry-in-value) "m...";
-  }
-}
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minutter..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minut...";
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-    content: "Genopretter om " attr(data-retry-in-value) "m...";
-  }
-}
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minut..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " timer...";
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-    content: "Genopretter om " attr(data-retry-in-value) "t...";
-  }
-}
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " timer..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " time...";
-}
-@media (max-width: 568px) {
-  html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-    content: "Genopretter om " attr(data-retry-in-value) "t...";
-  }
-}
+  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " time..."; }
+  @media (max-width: 568px) {
+    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
+      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry {
-  display: none;
-}
+  display: none; }
+
 html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before {
-  content: "Genopretning af forbindelse fejlede.";
-}
+  content: "Genopretning af forbindelse fejlede."; }
 
 html.no-connected body {
-  box-shadow: inset 0px 0px 10px 5px red;
-}
+  box-shadow: inset 0px 0px 10px 5px red; }
 
 html.connected .hide-for-connected {
-  display: none !important;
-}
+  display: none !important; }
 
 html.no-connected .show-for-connected {
-  display: none !important;
-}
+  display: none !important; }
 
 html.mouse .hide-for-mouse {
-  display: none !important;
-}
+  display: none !important; }
 
 html.no-mouse .show-for-mouse {
-  display: none !important;
-}
-
-/*# sourceMappingURL=fcoo-application.css.map */
+  display: none !important; }

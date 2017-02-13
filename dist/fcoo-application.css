@@ -192,17 +192,17 @@ html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-
 html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before {
   content: "Genopretning af forbindelse fejlede."; }
 
-.connected .hide-for-connected {
-  display: none !important; }
-
-.connected .show-for-no-connected {
-  display: none !important; }
-
-.no-connected .show-for-connected {
-  display: none !important; }
-
-.no-connected .hide-for-no-connected {
-  display: none !important; }
-
 html.no-connected body {
   box-shadow: inset 0px 0px 10px 5px red; }
+
+html.connected .hide-for-connected {
+  display: none !important; }
+
+html.no-connected .show-for-connected {
+  display: none !important; }
+
+html.mouse .hide-for-mouse {
+  display: none !important; }
+
+html.no-mouse .show-for-mouse {
+  display: none !important; }

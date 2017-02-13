@@ -10,10 +10,10 @@ Set-up of common systems, objects, and methods for FCOO web applications
 Sections:
 1: Namespace, application states, system variables
 2: Set up 'loading...'
-3: Initialize offline.js - http://github.hubspot.com/offline/
-4: Initialize raven to report all uncaught exceptions to sentry AND 
+3: Set up different Modernizr tests
+4: Initialize offline.js - http://github.hubspot.com/offline/
+5: Initialize raven to report all uncaught exceptions to sentry AND 
    Adding the Piwik Tracking Code
-5: TODO 
 
 ****************************************************************************/
 
@@ -119,7 +119,24 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    3: Initialize offline.js - http://github.hubspot.com/offline/
+    3: Set up different Modernizr tests
+    ************************************************************************
+    ***********************************************************************/
+    //Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
+    //Simple set the test on, the first time a mousemove-event is fired on the <body>
+	$(function() { 
+        window.fcoo.modernizr.addTest('mouse', false);
+        $('body').on('mousemove.fcoo.application', function(){
+            window.fcoo.modernizr.mouse = true;
+            window.modernizrOn('mouse');
+            $('body').off('mousemove.fcoo.application');
+        });
+	}); 
+
+
+    /***********************************************************************
+    ************************************************************************
+    4: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
     // Should we check the connection status immediatly on page load.
@@ -208,7 +225,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    4: Initialize raven to report all uncaught exceptions to sentry AND 
+    5: Initialize raven to report all uncaught exceptions to sentry AND 
        Adding the Piwik Tracking Code
     ************************************************************************
     ***********************************************************************/
@@ -248,39 +265,12 @@ Sections:
 
 */
 
-    /***********************************************************************
-    ************************************************************************
-    TODO: 5: Define the different formats used with jquery-value-format (https://github.com/FCOO/jquery-value-format)
-    ************************************************************************
-    ***********************************************************************/
-
-/*
-languagechanged
-dateformatchanged
-timeformatchanged
-numberformatchanged
-latlngformatchanged
-
-Formats
-lat
-lng
-latlng
-time        (12:00)
-date
-date_short
-date_long
-datetime
-date_utc    : moment as utc in italic
-datetime_utc: moment as utc in italic
-timezone    : the name of current timezone
-
-*/
 
 	/******************************************
 	Initialize/ready 
 	*******************************************/
 	$(function() { 
-	
+    
 	}); 
 	//******************************************
 

@@ -27,7 +27,7 @@ Determinate if the application is running in "*standalone mode*". The app operat
 For standalone apps we use localStorage for persisting state.
 
 #### `window.fcoo.settings` [Object]
-Contains the data and methods to get and set setiings for the user.
+Contains the data and methods to get and set settings for the user.
 See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details 
 
 ### CSS Classes
@@ -186,6 +186,9 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 
 ---
 ### [normalize.css](https://github.com/necolas/normalize.css/)
+
+---
+### [noty](https://github.com/needim/noty)
 
 ---
 ### [Offline.js](http://github.hubspot.com/offline/docs/welcome/)
