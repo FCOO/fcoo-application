@@ -11978,15 +11978,8 @@ var LanguageUtil = function () {
     this.logger = baseLogger.create('languageUtils');
   }
 
-  LanguageUtil.prototype.getLanguagePartFromCode = function getLanguagePartFromCode(code) {
-    if (code.indexOf('-') < 0) return code;
-
-    var p = code.split('-');
-    return this.formatLanguageCode(p[0]);
-  };
-
   LanguageUtil.prototype.getScriptPartFromCode = function getScriptPartFromCode(code) {
-    if (code.indexOf('-') < 0) return null;
+    if (!code || code.indexOf('-') < 0) return null;
 
     var p = code.split('-');
     if (p.length === 2) return null;
@@ -11995,7 +11988,7 @@ var LanguageUtil = function () {
   };
 
   LanguageUtil.prototype.getLanguagePartFromCode = function getLanguagePartFromCode(code) {
-    if (code.indexOf('-') < 0) return code;
+    if (!code || code.indexOf('-') < 0) return code;
 
     var p = code.split('-');
     return this.formatLanguageCode(p[0]);
@@ -12044,6 +12037,8 @@ var LanguageUtil = function () {
     if (!fallbacks) return [];
     if (typeof fallbacks === 'string') fallbacks = [fallbacks];
     if (Object.prototype.toString.apply(fallbacks) === '[object Array]') return fallbacks;
+
+    if (!code) return fallbacks.default || [];
 
     // asume we have an object defining fallbacks
     var found = fallbacks[code];
@@ -12836,7 +12831,7 @@ var I18n = function (_EventEmitter) {
     _this.options = transformOptions(options);
     _this.services = {};
     _this.logger = baseLogger;
-    _this.modules = {};
+    _this.modules = { external: [] };
 
     if (callback && !_this.isInitialized && !options.isClone) _this.init(options, callback);
     return _this;
@@ -12925,6 +12920,10 @@ var I18n = function (_EventEmitter) {
 
         _this2.emit.apply(_this2, [event].concat(args));
       });
+
+      this.modules.external.forEach(function (m) {
+        if (m.init) m.init(_this2);
+      });
     }
 
     // append api
@@ -12971,6 +12970,7 @@ var I18n = function (_EventEmitter) {
         var toLoad = [];
 
         var append = function append(lng) {
+          if (!lng) return;
           var lngs = _this3.services.languageUtils.toResolveHierarchy(lng);
           lngs.forEach(function (l) {
             if (toLoad.indexOf(l) < 0) toLoad.push(l);
@@ -13011,7 +13011,7 @@ var I18n = function (_EventEmitter) {
       this.modules.cache = module;
     }
 
-    if (module.type === 'logger' || module.log && module.warn && module.warn) {
+    if (module.type === 'logger' || module.log && module.warn && module.error) {
       this.modules.logger = module;
     }
 
@@ -13021,6 +13021,10 @@ var I18n = function (_EventEmitter) {
 
     if (module.type === 'postProcessor') {
       postProcessor.addPostProcessor(module);
+    }
+
+    if (module.type === '3rdParty') {
+      this.modules.external.push(module);
     }
 
     return this;
@@ -13796,14 +13800,27 @@ return index;
     );
 
 
-    /*
+    /***********************************************************
     Add new methods to jQuery prototype: 
-    $.fn.i18n( key[, attribute][, options] )
+    $.fn.i18n( htmlOrKeyOrPhrase[, attribute][, options] )
     Add/updates the "data-i18n" attribute
-    */
+
+    htmlOrKeyOrPhrase = simple html-string OR 
+                        i18next-key OR 
+                        a phrase-object (see langValue in i18next.addPhrase)
+    
+    
+    ***********************************************************/
+    var tempKeyId = 0,
+        tempNS = '__TEMP__';
     $.fn.extend({
-        i18n: function(key) {
-            var options = null, attribute = '', argument;
+        i18n: function( htmlOrKeyOrPhrase ) {
+            var options = null, 
+                attribute = '', 
+                argument,
+                isKey = true,
+                key = htmlOrKeyOrPhrase;
+
             for (var i=1; i<arguments.length; i++ ){
                 argument = arguments[i];              
                 switch ($.type(argument)){
@@ -13812,37 +13829,55 @@ return index;
                 }
             }
 
-            return this.each(function() {
-                var $this = $(this),
-                    oldData = $this.attr( jQuery_i18n_selectorAttr ),
-                    newData = [],
-                    oldStr,
-                    newStr = attribute ? '[' + attribute + ']' + key : key,
-                    keep;
-                oldData = oldData ? oldData.split(';') : [];
+            //Get the key or add a temp-phrase
+            if (typeof htmlOrKeyOrPhrase == 'string')//{
+                isKey = !!(window.i18next.t( htmlOrKeyOrPhrase, {defaultValue:''} ));
+            else {
+                //It is a {da:'...', en:'...', de:'...'} object
+                key = 'jqueryfni18n' + tempKeyId++;
+                window.i18next.addPhrase( tempNS, key, htmlOrKeyOrPhrase );
+                key = tempNS+':'+key;
+            }    
+
+            if (isKey)
+                return this.each(function() {
+                    var $this = $(this),
+                        oldData = $this.attr( jQuery_i18n_selectorAttr ),
+                        newData = [],
+                        oldStr,
+                        newStr = attribute ? '[' + attribute + ']' + key : key,
+                        keep;
+                    oldData = oldData ? oldData.split(';') : [];
             
-                for (var i=0; i<oldData.length; i++ ){
-                    oldStr = oldData[i];
-                    keep = true;
-                    //if the new key has an attribute => remove data with '[attribute]'
-                    if (attribute && (oldStr.indexOf('[' + attribute + ']') == 0))
-                        keep = false;                      
-                    //if the new key don't has a attribute => only keep other attributes
-                    if (!attribute && (oldStr.indexOf('[') == -1)) 
-                      keep = false;
+                    for (var i=0; i<oldData.length; i++ ){
+                        oldStr = oldData[i];
+                        keep = true;
+                        //if the new key has an attribute => remove data with '[attribute]'
+                        if (attribute && (oldStr.indexOf('[' + attribute + ']') == 0))
+                            keep = false;                      
+                        //if the new key don't has a attribute => only keep other attributes
+                        if (!attribute && (oldStr.indexOf('[') == -1)) 
+                          keep = false;
+                        if (keep)
+                          newData.push( oldStr );
+                    }
+                    newData.push( newStr);                                
 
-                    if (keep)
-                      newData.push( oldStr );
-                }
-                newData.push( newStr);                                
+                    //Set data-i18n
+                    $this.attr( jQuery_i18n_selectorAttr, newData.join(';') );
 
-                //Set data-i18n
-                $this.attr( jQuery_i18n_selectorAttr, newData.join(';') );
+                    //Set data-i18n-options
+                    if (options)
+                        $this.attr( 'data-' + jQuery_i18n_optionsAttr, JSON.stringify( options ) );
 
-                //Set data-i18n-options
-                if (options)
-                    $this.attr( 'data-' + jQuery_i18n_optionsAttr, JSON.stringify( options ) );
-            });
+                    //Update contents
+                    $this.localize();        
+                });
+            else
+                //Not a key => simple add htmlOrKeyOrPhrase as html
+                return this.each(function() {
+                    $(this).html( htmlOrKeyOrPhrase );
+                });
         }
     });        
 
@@ -13874,6 +13909,190 @@ return index;
 
 
 }(jQuery, this, document));
+;
+/****************************************************************************
+	fcoo-i18next-phrases.js, 
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/fcoo-i18next-phrases
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+	"use strict";
+	
+	//Create fcoo-namespace
+	//window.fcoo = window.fcoo || {};
+    //var ns = window;
+
+    /*
+    Namespace name
+    Full name of institutions or organizations. 
+    Use national abbreviation as key and include name in national language. 
+    */
+    window.i18next.addPhrases( 'name', {
+        fcoo: {
+            da: "Forsvarets Center for Operativ Oceanografi",
+            en: "Defence Center for Operational Oceanography"
+        },
+        dmi: {
+            da: "Danmarks Meteorologiske Institut",
+            en: "Danish Meteorological Institute"
+        },
+        ecmwf: {
+            en: "European Centre for Medium-Range Weather Forecasts"
+        },
+        noaa: {
+            en: "National Oceanic and Atmospheric Administration"
+        },
+        navo: {
+            en: "The Naval Oceanographic Office"
+        },
+        bsh: {
+            en: "Federal Maritime and Hydrographic Agency",
+            de: "Bundesamt f�r Seeschifffahrt und Hydrographie"
+        },
+        smhi: {
+            en: "Swedish Meteorological and Hydrological Institute",
+            sv: "Sveriges meteorologiska och hydrologiska institut"
+        },
+
+        
+
+    });
+
+    /*
+    Namespace abbr
+    The abbrivation of institutes etc.
+    Only needed in $.i18nLink if key.toUpperCase is different from abbr
+    E.g. if key = 'fcoo' and abbr = 'FCOO' => no need for 'abbr:fcoo'
+    */
+    window.i18next.addPhrases( 'abbr', {
+  
+
+    });
+
+    /*
+    Namespace link
+    The link-address to a home-page. Use the address as key. 
+    E.g. key = "link:dmi.dk", translation da:"http://dmi.dk", en:"http://dmi.dk/en"
+    */
+    window.i18next.addPhrases( 'link', {
+        fcoo : { da: "//fcoo.dk", en: "//fcoo.dk?lang=en" },
+        dmi  : { da: "http://dmi.dk",  en: "http://dmi.dk/en" },
+        ecmwf: { en: "http://www.ecmwf.int" },
+        noaa : { en: "http://noaa.gov" },
+        navo : { en: "http://www.usno.navy.mil/NAVO" },
+        bsh  : { en: "http://www.bsh.de/en", de: "http://www.bsh.de" },
+        smhi : { en: "//www.smhi.se/en", sv: "//www.smhi.se" }
+
+
+    });
+
+    /*
+    Namespace button
+    Standard text to buttons. 
+    E.g. button:close = {da: "Luk", en:"Close"}
+    */
+
+
+    /*
+    Namespace parameter
+    Physical parameter. Using XXX codes for parameter. See http://www.nco.ncep.noaa.gov/pmb/docs/on388/table2.html
+    E.g. 
+        parameter:wind = {da:"vindhastighed", en:"wind speed"}
+        parameter:wdir = {da:"vindretning", en:"wind direction"}
+    */
+/* TODO
+
+    en: {
+          'Significant wave height of combined wind waves and swell': 'Wave height',
+          'degC': '&deg;C',
+          'Temp.': 'Temperature'
+    },
+    da: {
+          'Wave height': 'B�lgeh�jde',
+          'Mean wave period': 'B�lgeperiode',
+          'Vel.': 'Str�mhastighed',
+          'Current speed': 'Str�mhastighed',
+          'Current': 'Str�mhastighed',
+          'Elevation': 'Vandstand',
+          'Temperature': 'Temperatur',
+          'Temp.': 'Temperatur',
+          'Salinity': 'Salinitet',
+          'Sea surface temperature': 'Temperatur',
+          'Sea surface salinity': 'Salinitet',
+          'Wind speed': 'Vindhastighed',
+          'Wind': 'Vindhastighed',
+          'Air temperature (2m)': '2 meter temperatur',
+          'Sea ice concentration': 'Haviskoncentration',
+          'Sea ice thickness': 'Havistykkelse',
+          'Sea ice drift speed': 'Havisdrifthastighed',
+          'Visibility': 'Sigtbarhed',
+          'Total precipitation flux': 'Nedb�r',
+          '2 metre temperature': '2 meter temperatur',
+          'Total cloud cover': 'Skyd�kke',
+          'Significant wave height of combined wind waves and swell': 'B�lgeh�jde',
+          'mm/hour': 'mm/time',
+          'degC': '&deg;C',
+          'knots': 'knob',
+          'fraction': 'fraktion',
+          'meters': 'meter'
+    }
+    
+
+*/
+
+
+
+    /*
+    Namespace unit
+    Physical units.
+    E.g. unit:metre = {da:"meter", en:"metre"}
+    */
+
+
+
+    /*
+    jQuery methods to create element with contents given by i18next-keys
+    */
+
+    //Create a <a>- or <span>-element with abbriviation and title and link (if exists)
+    $.i18nLink = function( key ){
+        var $element,
+            abbr = window.i18next.t('abbr:'+key, {defaultValue:''});
+
+        if (window.i18next.t('link:'+key, {default:''})){
+            //Create an <a>-element
+            $element = $('<a/>');
+            $element.i18n('link:'+key, 'href');
+        }
+        else 
+            //Create a <span>-element
+            $element = $('<span/>');
+
+        //Add title
+        if (window.i18next.t('name:'+key, {defaultValue:''}))
+            $element.i18n('name:'+key, 'title');          
+
+        //Add abbrivation
+        if (abbr)
+            $element.i18n('abbr:'+key);          
+        else
+            $element.text( key.toUpperCase());          
+        
+        return $element;
+    };
+
+    //Initialize/ready 
+	$(function() { 
+
+	
+	}); //End of initialize/ready
+
+}(this, document));
 ;
 /*! @preserve
  * numeral.js

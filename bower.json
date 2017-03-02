@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -50,7 +50,7 @@
     "offline": "HubSpot/offline#~0.7.18",
     "imagesloaded": "desandro/imagesloaded#~4.1.1",
     "raven-js": "~3.10.0",
-    "fcoo-i18next-phrases": "https://gitlab.com/FCOO/fcoo-i18next-phrases.git#latest"
+    "fcoo-i18next-phrases": "fcoo/fcoo-i18next-phrases#latest"
   },
   "overrides": {
     "offline": {
