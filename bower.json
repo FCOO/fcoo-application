@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -32,7 +32,7 @@
     "modernizr-scss": "FCOO/modernizr-scss#latest"
   },
   "dependencies": {
-    "jquery": "~3.1.1",
+    "jquery": "~3.2.0",
     "fcoo-global-events": "fcoo/fcoo-global-events#^1.0.0",
     "fcoo-settings": "fcoo/fcoo-settings#^1.2.0",
     "fcoo-language": "fcoo/fcoo-language#^2.1.0",
@@ -62,7 +62,7 @@
     }
   },
   "resolutions": {
-    "jquery": "~3.1.1",
+    "jquery": "~3.2.0",
     "fcoo-global-events": "^1.0.0",
     "fcoo-settings": "^1.2.0",
     "fcoo-language": "^2.1.0",

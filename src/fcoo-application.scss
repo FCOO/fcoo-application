@@ -164,7 +164,9 @@ div.loading {
         width  : 0;
         height : 0;
         opacity: 0;
-        @include transition(opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration);    
+        
+        //Deprecated @include transition(opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration);    
+        transition: opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration;    
 
         //Hide logo, version and working when not loading 
         &:before, & > div { 

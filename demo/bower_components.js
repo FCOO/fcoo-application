@@ -1,15 +1,15 @@
 /*!
- * jQuery JavaScript Library v3.1.1
+ * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright jQuery Foundation and other contributors
+ * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2016-09-22T22:30Z
+ * Date: 2017-03-20T18:59Z
  */
 ( function( global, factory ) {
 
@@ -88,7 +88,7 @@ var support = {};
 
 
 var
-	version = "3.1.1",
+	version = "3.2.1",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -236,11 +236,11 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 				// Recurse if we're merging plain objects or arrays
 				if ( deep && copy && ( jQuery.isPlainObject( copy ) ||
-					( copyIsArray = jQuery.isArray( copy ) ) ) ) {
+					( copyIsArray = Array.isArray( copy ) ) ) ) {
 
 					if ( copyIsArray ) {
 						copyIsArray = false;
-						clone = src && jQuery.isArray( src ) ? src : [];
+						clone = src && Array.isArray( src ) ? src : [];
 
 					} else {
 						clone = src && jQuery.isPlainObject( src ) ? src : {};
@@ -278,8 +278,6 @@ jQuery.extend( {
 	isFunction: function( obj ) {
 		return jQuery.type( obj ) === "function";
 	},
-
-	isArray: Array.isArray,
 
 	isWindow: function( obj ) {
 		return obj != null && obj === obj.window;
@@ -353,10 +351,6 @@ jQuery.extend( {
 	// Microsoft forgot to hump their vendor prefix (#9572)
 	camelCase: function( string ) {
 		return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
-	},
-
-	nodeName: function( elem, name ) {
-		return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 	},
 
 	each: function( obj, callback ) {
@@ -2843,6 +2837,13 @@ var siblings = function( n, elem ) {
 
 var rneedsContext = jQuery.expr.match.needsContext;
 
+
+
+function nodeName( elem, name ) {
+
+  return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+
+};
 var rsingleTag = ( /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i );
 
 
@@ -3194,7 +3195,18 @@ jQuery.each( {
 		return siblings( elem.firstChild );
 	},
 	contents: function( elem ) {
-		return elem.contentDocument || jQuery.merge( [], elem.childNodes );
+        if ( nodeName( elem, "iframe" ) ) {
+            return elem.contentDocument;
+        }
+
+        // Support: IE 9 - 11 only, iOS 7 only, Android Browser <=4.3 only
+        // Treat the template element as a regular one in browsers that
+        // don't support it.
+        if ( nodeName( elem, "template" ) ) {
+            elem = elem.content || elem;
+        }
+
+        return jQuery.merge( [], elem.childNodes );
 	}
 }, function( name, fn ) {
 	jQuery.fn[ name ] = function( until, selector ) {
@@ -3292,7 +3304,7 @@ jQuery.Callbacks = function( options ) {
 		fire = function() {
 
 			// Enforce single-firing
-			locked = options.once;
+			locked = locked || options.once;
 
 			// Execute callbacks for all pending executions,
 			// respecting firingIndex overrides and runtime changes
@@ -3461,7 +3473,7 @@ function Thrower( ex ) {
 	throw ex;
 }
 
-function adoptValue( value, resolve, reject ) {
+function adoptValue( value, resolve, reject, noValue ) {
 	var method;
 
 	try {
@@ -3477,9 +3489,10 @@ function adoptValue( value, resolve, reject ) {
 		// Other non-thenables
 		} else {
 
-			// Support: Android 4.0 only
-			// Strict mode functions invoked without .call/.apply get global-object context
-			resolve.call( undefined, value );
+			// Control `resolve` arguments by letting Array#slice cast boolean `noValue` to integer:
+			// * false: [ value ].slice( 0 ) => resolve( value )
+			// * true: [ value ].slice( 1 ) => resolve()
+			resolve.apply( undefined, [ value ].slice( noValue ) );
 		}
 
 	// For Promises/A+, convert exceptions into rejections
@@ -3489,7 +3502,7 @@ function adoptValue( value, resolve, reject ) {
 
 		// Support: Android 4.0 only
 		// Strict mode functions invoked without .call/.apply get global-object context
-		reject.call( undefined, value );
+		reject.apply( undefined, [ value ] );
 	}
 }
 
@@ -3814,7 +3827,8 @@ jQuery.extend( {
 
 		// Single- and empty arguments are adopted like Promise.resolve
 		if ( remaining <= 1 ) {
-			adoptValue( singleValue, master.done( updateFunc( i ) ).resolve, master.reject );
+			adoptValue( singleValue, master.done( updateFunc( i ) ).resolve, master.reject,
+				!remaining );
 
 			// Use .then() to unwrap secondary thenables (cf. gh-3000)
 			if ( master.state() === "pending" ||
@@ -3885,15 +3899,6 @@ jQuery.extend( {
 	// A counter to track how many items to wait for before
 	// the ready event fires. See #6781
 	readyWait: 1,
-
-	// Hold (or release) the ready event
-	holdReady: function( hold ) {
-		if ( hold ) {
-			jQuery.readyWait++;
-		} else {
-			jQuery.ready( true );
-		}
-	},
 
 	// Handle when the DOM is ready
 	ready: function( wait ) {
@@ -4130,7 +4135,7 @@ Data.prototype = {
 		if ( key !== undefined ) {
 
 			// Support array or space separated string of keys
-			if ( jQuery.isArray( key ) ) {
+			if ( Array.isArray( key ) ) {
 
 				// If key is an array of keys...
 				// We always set camelCase keys, so remove that.
@@ -4356,7 +4361,7 @@ jQuery.extend( {
 
 			// Speed up dequeue by getting out quickly if this is just a lookup
 			if ( data ) {
-				if ( !queue || jQuery.isArray( data ) ) {
+				if ( !queue || Array.isArray( data ) ) {
 					queue = dataPriv.access( elem, type, jQuery.makeArray( data ) );
 				} else {
 					queue.push( data );
@@ -4733,7 +4738,7 @@ function getAll( context, tag ) {
 		ret = [];
 	}
 
-	if ( tag === undefined || tag && jQuery.nodeName( context, tag ) ) {
+	if ( tag === undefined || tag && nodeName( context, tag ) ) {
 		return jQuery.merge( [ context ], ret );
 	}
 
@@ -5340,7 +5345,7 @@ jQuery.event = {
 
 			// For checkbox, fire native event so checked state will be right
 			trigger: function() {
-				if ( this.type === "checkbox" && this.click && jQuery.nodeName( this, "input" ) ) {
+				if ( this.type === "checkbox" && this.click && nodeName( this, "input" ) ) {
 					this.click();
 					return false;
 				}
@@ -5348,7 +5353,7 @@ jQuery.event = {
 
 			// For cross-browser consistency, don't fire native .click() on links
 			_default: function( event ) {
-				return jQuery.nodeName( event.target, "a" );
+				return nodeName( event.target, "a" );
 			}
 		},
 
@@ -5625,11 +5630,12 @@ var
 	rscriptTypeMasked = /^true\/(.*)/,
 	rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
 
+// Prefer a tbody over its parent table for containing new rows
 function manipulationTarget( elem, content ) {
-	if ( jQuery.nodeName( elem, "table" ) &&
-		jQuery.nodeName( content.nodeType !== 11 ? content : content.firstChild, "tr" ) ) {
+	if ( nodeName( elem, "table" ) &&
+		nodeName( content.nodeType !== 11 ? content : content.firstChild, "tr" ) ) {
 
-		return elem.getElementsByTagName( "tbody" )[ 0 ] || elem;
+		return jQuery( ">tbody", elem )[ 0 ] || elem;
 	}
 
 	return elem;
@@ -6159,12 +6165,18 @@ var getStyles = function( elem ) {
 
 function curCSS( elem, name, computed ) {
 	var width, minWidth, maxWidth, ret,
+
+		// Support: Firefox 51+
+		// Retrieving style before computed somehow
+		// fixes an issue with getting wrong values
+		// on detached elements
 		style = elem.style;
 
 	computed = computed || getStyles( elem );
 
-	// Support: IE <=9 only
-	// getPropertyValue is only needed for .css('filter') (#12537)
+	// getPropertyValue is needed for:
+	//   .css('filter') (IE 9 only, #12537)
+	//   .css('--customProperty) (#3144)
 	if ( computed ) {
 		ret = computed.getPropertyValue( name ) || computed[ name ];
 
@@ -6230,6 +6242,7 @@ var
 	// except "table", "table-cell", or "table-caption"
 	// See here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
 	rdisplayswap = /^(none|table(?!-c[ea]).+)/,
+	rcustomProp = /^--/,
 	cssShow = { position: "absolute", visibility: "hidden", display: "block" },
 	cssNormalTransform = {
 		letterSpacing: "0",
@@ -6257,6 +6270,16 @@ function vendorPropName( name ) {
 			return name;
 		}
 	}
+}
+
+// Return a property mapped along what jQuery.cssProps suggests or to
+// a vendor prefixed property.
+function finalPropName( name ) {
+	var ret = jQuery.cssProps[ name ];
+	if ( !ret ) {
+		ret = jQuery.cssProps[ name ] = vendorPropName( name ) || name;
+	}
+	return ret;
 }
 
 function setPositiveNumber( elem, value, subtract ) {
@@ -6319,43 +6342,30 @@ function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
 
 function getWidthOrHeight( elem, name, extra ) {
 
-	// Start with offset property, which is equivalent to the border-box value
-	var val,
-		valueIsBorderBox = true,
+	// Start with computed style
+	var valueIsBorderBox,
 		styles = getStyles( elem ),
+		val = curCSS( elem, name, styles ),
 		isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
 
-	// Support: IE <=11 only
-	// Running getBoundingClientRect on a disconnected node
-	// in IE throws an error.
-	if ( elem.getClientRects().length ) {
-		val = elem.getBoundingClientRect()[ name ];
+	// Computed unit is not pixels. Stop here and return.
+	if ( rnumnonpx.test( val ) ) {
+		return val;
 	}
 
-	// Some non-html elements return undefined for offsetWidth, so check for null/undefined
-	// svg - https://bugzilla.mozilla.org/show_bug.cgi?id=649285
-	// MathML - https://bugzilla.mozilla.org/show_bug.cgi?id=491668
-	if ( val <= 0 || val == null ) {
+	// Check for style in case a browser which returns unreliable values
+	// for getComputedStyle silently falls back to the reliable elem.style
+	valueIsBorderBox = isBorderBox &&
+		( support.boxSizingReliable() || val === elem.style[ name ] );
 
-		// Fall back to computed then uncomputed css if necessary
-		val = curCSS( elem, name, styles );
-		if ( val < 0 || val == null ) {
-			val = elem.style[ name ];
-		}
-
-		// Computed unit is not pixels. Stop here and return.
-		if ( rnumnonpx.test( val ) ) {
-			return val;
-		}
-
-		// Check for style in case a browser which returns unreliable values
-		// for getComputedStyle silently falls back to the reliable elem.style
-		valueIsBorderBox = isBorderBox &&
-			( support.boxSizingReliable() || val === elem.style[ name ] );
-
-		// Normalize "", auto, and prepare for extra
-		val = parseFloat( val ) || 0;
+	// Fall back to offsetWidth/Height when value is "auto"
+	// This happens for inline elements with no explicit setting (gh-3571)
+	if ( val === "auto" ) {
+		val = elem[ "offset" + name[ 0 ].toUpperCase() + name.slice( 1 ) ];
 	}
+
+	// Normalize "", auto, and prepare for extra
+	val = parseFloat( val ) || 0;
 
 	// Use the active box-sizing model to add/subtract irrelevant styles
 	return ( val +
@@ -6420,10 +6430,15 @@ jQuery.extend( {
 		// Make sure that we're working with the right name
 		var ret, type, hooks,
 			origName = jQuery.camelCase( name ),
+			isCustomProp = rcustomProp.test( name ),
 			style = elem.style;
 
-		name = jQuery.cssProps[ origName ] ||
-			( jQuery.cssProps[ origName ] = vendorPropName( origName ) || origName );
+		// Make sure that we're working with the right name. We don't
+		// want to query the value if it is a CSS custom property
+		// since they are user-defined.
+		if ( !isCustomProp ) {
+			name = finalPropName( origName );
+		}
 
 		// Gets hook for the prefixed version, then unprefixed version
 		hooks = jQuery.cssHooks[ name ] || jQuery.cssHooks[ origName ];
@@ -6459,7 +6474,11 @@ jQuery.extend( {
 			if ( !hooks || !( "set" in hooks ) ||
 				( value = hooks.set( elem, value, extra ) ) !== undefined ) {
 
-				style[ name ] = value;
+				if ( isCustomProp ) {
+					style.setProperty( name, value );
+				} else {
+					style[ name ] = value;
+				}
 			}
 
 		} else {
@@ -6478,11 +6497,15 @@ jQuery.extend( {
 
 	css: function( elem, name, extra, styles ) {
 		var val, num, hooks,
-			origName = jQuery.camelCase( name );
+			origName = jQuery.camelCase( name ),
+			isCustomProp = rcustomProp.test( name );
 
-		// Make sure that we're working with the right name
-		name = jQuery.cssProps[ origName ] ||
-			( jQuery.cssProps[ origName ] = vendorPropName( origName ) || origName );
+		// Make sure that we're working with the right name. We don't
+		// want to modify the value if it is a CSS custom property
+		// since they are user-defined.
+		if ( !isCustomProp ) {
+			name = finalPropName( origName );
+		}
 
 		// Try prefixed name followed by the unprefixed name
 		hooks = jQuery.cssHooks[ name ] || jQuery.cssHooks[ origName ];
@@ -6507,6 +6530,7 @@ jQuery.extend( {
 			num = parseFloat( val );
 			return extra === true || isFinite( num ) ? num || 0 : val;
 		}
+
 		return val;
 	}
 } );
@@ -6606,7 +6630,7 @@ jQuery.fn.extend( {
 				map = {},
 				i = 0;
 
-			if ( jQuery.isArray( name ) ) {
+			if ( Array.isArray( name ) ) {
 				styles = getStyles( elem );
 				len = name.length;
 
@@ -6744,13 +6768,18 @@ jQuery.fx.step = {};
 
 
 var
-	fxNow, timerId,
+	fxNow, inProgress,
 	rfxtypes = /^(?:toggle|show|hide)$/,
 	rrun = /queueHooks$/;
 
-function raf() {
-	if ( timerId ) {
-		window.requestAnimationFrame( raf );
+function schedule() {
+	if ( inProgress ) {
+		if ( document.hidden === false && window.requestAnimationFrame ) {
+			window.requestAnimationFrame( schedule );
+		} else {
+			window.setTimeout( schedule, jQuery.fx.interval );
+		}
+
 		jQuery.fx.tick();
 	}
 }
@@ -6977,7 +7006,7 @@ function propFilter( props, specialEasing ) {
 		name = jQuery.camelCase( index );
 		easing = specialEasing[ name ];
 		value = props[ index ];
-		if ( jQuery.isArray( value ) ) {
+		if ( Array.isArray( value ) ) {
 			easing = value[ 1 ];
 			value = props[ index ] = value[ 0 ];
 		}
@@ -7036,12 +7065,19 @@ function Animation( elem, properties, options ) {
 
 			deferred.notifyWith( elem, [ animation, percent, remaining ] );
 
+			// If there's more to do, yield
 			if ( percent < 1 && length ) {
 				return remaining;
-			} else {
-				deferred.resolveWith( elem, [ animation ] );
-				return false;
 			}
+
+			// If this was an empty animation, synthesize a final progress notification
+			if ( !length ) {
+				deferred.notifyWith( elem, [ animation, 1, 0 ] );
+			}
+
+			// Resolve the animation and report its conclusion
+			deferred.resolveWith( elem, [ animation ] );
+			return false;
 		},
 		animation = deferred.promise( {
 			elem: elem,
@@ -7106,6 +7142,13 @@ function Animation( elem, properties, options ) {
 		animation.opts.start.call( elem, animation );
 	}
 
+	// Attach callbacks from options
+	animation
+		.progress( animation.opts.progress )
+		.done( animation.opts.done, animation.opts.complete )
+		.fail( animation.opts.fail )
+		.always( animation.opts.always );
+
 	jQuery.fx.timer(
 		jQuery.extend( tick, {
 			elem: elem,
@@ -7114,11 +7157,7 @@ function Animation( elem, properties, options ) {
 		} )
 	);
 
-	// attach callbacks from options
-	return animation.progress( animation.opts.progress )
-		.done( animation.opts.done, animation.opts.complete )
-		.fail( animation.opts.fail )
-		.always( animation.opts.always );
+	return animation;
 }
 
 jQuery.Animation = jQuery.extend( Animation, {
@@ -7169,8 +7208,8 @@ jQuery.speed = function( speed, easing, fn ) {
 		easing: fn && easing || easing && !jQuery.isFunction( easing ) && easing
 	};
 
-	// Go to the end state if fx are off or if document is hidden
-	if ( jQuery.fx.off || document.hidden ) {
+	// Go to the end state if fx are off
+	if ( jQuery.fx.off ) {
 		opt.duration = 0;
 
 	} else {
@@ -7362,7 +7401,7 @@ jQuery.fx.tick = function() {
 	for ( ; i < timers.length; i++ ) {
 		timer = timers[ i ];
 
-		// Checks the timer has not already been removed
+		// Run the timer and safely remove it when done (allowing for external removal)
 		if ( !timer() && timers[ i ] === timer ) {
 			timers.splice( i--, 1 );
 		}
@@ -7376,30 +7415,21 @@ jQuery.fx.tick = function() {
 
 jQuery.fx.timer = function( timer ) {
 	jQuery.timers.push( timer );
-	if ( timer() ) {
-		jQuery.fx.start();
-	} else {
-		jQuery.timers.pop();
-	}
+	jQuery.fx.start();
 };
 
 jQuery.fx.interval = 13;
 jQuery.fx.start = function() {
-	if ( !timerId ) {
-		timerId = window.requestAnimationFrame ?
-			window.requestAnimationFrame( raf ) :
-			window.setInterval( jQuery.fx.tick, jQuery.fx.interval );
+	if ( inProgress ) {
+		return;
 	}
+
+	inProgress = true;
+	schedule();
 };
 
 jQuery.fx.stop = function() {
-	if ( window.cancelAnimationFrame ) {
-		window.cancelAnimationFrame( timerId );
-	} else {
-		window.clearInterval( timerId );
-	}
-
-	timerId = null;
+	inProgress = null;
 };
 
 jQuery.fx.speeds = {
@@ -7516,7 +7546,7 @@ jQuery.extend( {
 		type: {
 			set: function( elem, value ) {
 				if ( !support.radioValue && value === "radio" &&
-					jQuery.nodeName( elem, "input" ) ) {
+					nodeName( elem, "input" ) ) {
 					var val = elem.value;
 					elem.setAttribute( "type", value );
 					if ( val ) {
@@ -7947,7 +7977,7 @@ jQuery.fn.extend( {
 			} else if ( typeof val === "number" ) {
 				val += "";
 
-			} else if ( jQuery.isArray( val ) ) {
+			} else if ( Array.isArray( val ) ) {
 				val = jQuery.map( val, function( value ) {
 					return value == null ? "" : value + "";
 				} );
@@ -8006,7 +8036,7 @@ jQuery.extend( {
 							// Don't return options that are disabled or in a disabled optgroup
 							!option.disabled &&
 							( !option.parentNode.disabled ||
-								!jQuery.nodeName( option.parentNode, "optgroup" ) ) ) {
+								!nodeName( option.parentNode, "optgroup" ) ) ) {
 
 						// Get the specific value for the option
 						value = jQuery( option ).val();
@@ -8058,7 +8088,7 @@ jQuery.extend( {
 jQuery.each( [ "radio", "checkbox" ], function() {
 	jQuery.valHooks[ this ] = {
 		set: function( elem, value ) {
-			if ( jQuery.isArray( value ) ) {
+			if ( Array.isArray( value ) ) {
 				return ( elem.checked = jQuery.inArray( jQuery( elem ).val(), value ) > -1 );
 			}
 		}
@@ -8353,7 +8383,7 @@ var
 function buildParams( prefix, obj, traditional, add ) {
 	var name;
 
-	if ( jQuery.isArray( obj ) ) {
+	if ( Array.isArray( obj ) ) {
 
 		// Serialize array item.
 		jQuery.each( obj, function( i, v ) {
@@ -8405,7 +8435,7 @@ jQuery.param = function( a, traditional ) {
 		};
 
 	// If an array was passed in, assume that it is an array of form elements.
-	if ( jQuery.isArray( a ) || ( a.jquery && !jQuery.isPlainObject( a ) ) ) {
+	if ( Array.isArray( a ) || ( a.jquery && !jQuery.isPlainObject( a ) ) ) {
 
 		// Serialize the form elements
 		jQuery.each( a, function() {
@@ -8451,7 +8481,7 @@ jQuery.fn.extend( {
 				return null;
 			}
 
-			if ( jQuery.isArray( val ) ) {
+			if ( Array.isArray( val ) ) {
 				return jQuery.map( val, function( val ) {
 					return { name: elem.name, value: val.replace( rCRLF, "\r\n" ) };
 				} );
@@ -9876,13 +9906,6 @@ jQuery.expr.pseudos.animated = function( elem ) {
 
 
 
-/**
- * Gets a window from an element
- */
-function getWindow( elem ) {
-	return jQuery.isWindow( elem ) ? elem : elem.nodeType === 9 && elem.defaultView;
-}
-
 jQuery.offset = {
 	setOffset: function( elem, options, i ) {
 		var curPosition, curLeft, curCSSTop, curTop, curOffset, curCSSLeft, calculatePosition,
@@ -9947,13 +9970,14 @@ jQuery.fn.extend( {
 				} );
 		}
 
-		var docElem, win, rect, doc,
+		var doc, docElem, rect, win,
 			elem = this[ 0 ];
 
 		if ( !elem ) {
 			return;
 		}
 
+		// Return zeros for disconnected and hidden (display: none) elements (gh-2310)
 		// Support: IE <=11 only
 		// Running getBoundingClientRect on a
 		// disconnected node in IE throws an error
@@ -9963,20 +9987,14 @@ jQuery.fn.extend( {
 
 		rect = elem.getBoundingClientRect();
 
-		// Make sure element is not hidden (display: none)
-		if ( rect.width || rect.height ) {
-			doc = elem.ownerDocument;
-			win = getWindow( doc );
-			docElem = doc.documentElement;
+		doc = elem.ownerDocument;
+		docElem = doc.documentElement;
+		win = doc.defaultView;
 
-			return {
-				top: rect.top + win.pageYOffset - docElem.clientTop,
-				left: rect.left + win.pageXOffset - docElem.clientLeft
-			};
-		}
-
-		// Return zeros for disconnected and hidden elements (gh-2310)
-		return rect;
+		return {
+			top: rect.top + win.pageYOffset - docElem.clientTop,
+			left: rect.left + win.pageXOffset - docElem.clientLeft
+		};
 	},
 
 	position: function() {
@@ -10002,7 +10020,7 @@ jQuery.fn.extend( {
 
 			// Get correct offsets
 			offset = this.offset();
-			if ( !jQuery.nodeName( offsetParent[ 0 ], "html" ) ) {
+			if ( !nodeName( offsetParent[ 0 ], "html" ) ) {
 				parentOffset = offsetParent.offset();
 			}
 
@@ -10049,7 +10067,14 @@ jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( 
 
 	jQuery.fn[ method ] = function( val ) {
 		return access( this, function( elem, method, val ) {
-			var win = getWindow( elem );
+
+			// Coalesce documents and windows
+			var win;
+			if ( jQuery.isWindow( elem ) ) {
+				win = elem;
+			} else if ( elem.nodeType === 9 ) {
+				win = elem.defaultView;
+			}
 
 			if ( val === undefined ) {
 				return win ? win[ prop ] : elem[ method ];
@@ -10158,7 +10183,16 @@ jQuery.fn.extend( {
 	}
 } );
 
+jQuery.holdReady = function( hold ) {
+	if ( hold ) {
+		jQuery.readyWait++;
+	} else {
+		jQuery.ready( true );
+	}
+};
+jQuery.isArray = Array.isArray;
 jQuery.parseJSON = JSON.parse;
+jQuery.nodeName = nodeName;
 
 
 
@@ -10211,7 +10245,6 @@ jQuery.noConflict = function( deep ) {
 if ( !noGlobal ) {
 	window.jQuery = window.$ = jQuery;
 }
-
 
 
 
@@ -10368,677 +10401,6 @@ return jQuery;
 //	}); 
 
 }(this, document));
-;
-"use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj};(function(f){if((typeof exports==="undefined"?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Url=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o])}return s}({1:[function(require,module,exports){window.addEventListener("popstate",function(e){Url.triggerPopStateCb(e)});var Url=module.exports={_onPopStateCbs:[],_isHash:false,queryString:function queryString(name,notDecoded){name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),results=regex.exec(location.search),encoded=null;if(results===null){regex=new RegExp("[\\?&]"+name+"(\\&([^&#]*)|$)");if(regex.test(location.search)){return true}return undefined}else{encoded=results[1].replace(/\+/g," ");if(notDecoded){return encoded}return decodeURIComponent(encoded)}},parseQuery:function parseQuery(search){var query={};if(typeof search!=="string"){search=window.location.search}search=search.replace(/^\?/g,"");if(!search){return{}}var a=search.split("&"),i=0,iequ,value=null;for(;i<a.length;++i){iequ=a[i].indexOf("=");if(iequ<0){iequ=a[i].length;value=true}else{value=decodeURIComponent(a[i].slice(iequ+1))}query[decodeURIComponent(a[i].slice(0,iequ))]=value}return query},stringify:function stringify(queryObj){if(!queryObj||queryObj.constructor!==Object){throw new Error("Query object should be an object.")}var stringified="";Object.keys(queryObj).forEach(function(c){var value=queryObj[c];stringified+=c;if(value!==true){stringified+="="+encodeURIComponent(queryObj[c])}stringified+="&"});stringified=stringified.replace(/\&$/g,"");return stringified},updateSearchParam:function updateSearchParam(param,value,push,triggerPopState){var searchParsed=this.parseQuery();if(value===undefined){delete searchParsed[param]}else{if(searchParsed[param]===value){return Url}searchParsed[param]=value}var newSearch="?"+this.stringify(searchParsed);this._updateAll(window.location.pathname+newSearch+location.hash,push,triggerPopState);return Url},getLocation:function getLocation(){return window.location.pathname+window.location.search+window.location.hash},hash:function hash(newHash,triggerPopState){if(newHash===undefined){return location.hash.substring(1)}if(!triggerPopState){setTimeout(function(){Url._isHash=false},0);Url._isHash=true}return location.hash=newHash},_updateAll:function _updateAll(s,push,triggerPopState){window.history[push?"pushState":"replaceState"](null,"",s);if(triggerPopState){Url.triggerPopStateCb({})}return s},pathname:function pathname(_pathname,push,triggerPopState){if(_pathname===undefined){return location.pathname}return this._updateAll(_pathname+window.location.search+window.location.hash,push,triggerPopState)},triggerPopStateCb:function triggerPopStateCb(e){if(this._isHash){return}this._onPopStateCbs.forEach(function(c){c(e)})},onPopState:function onPopState(cb){this._onPopStateCbs.push(cb)},removeHash:function removeHash(){this._updateAll(window.location.pathname+window.location.search,false,false)},removeQuery:function removeQuery(){this._updateAll(window.location.pathname+window.location.hash,false,false)},version:"2.3.1"}},{}]},{},[1])(1)});
-;
-/****************************************************************************
-    url.js-extensions.js, 
-
-    (c) 2016, FCOO
-
-    https://github.com/FCOO/url.js-extensions
-    https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window, document, undefined) {
-    "use strict";
-
-    //Workaround for event.newURL and event.oldURL
-    //let this snippet run before your hashchange event binding code
-    if (!window.HashChangeEvent)(
-        function(){
-            var lastURL= document.URL;
-            window.addEventListener("hashchange", function(event){
-                Object.defineProperty(event,"oldURL",{enumerable:true,configurable:true,value:lastURL});
-                Object.defineProperty(event,"newURL",{enumerable:true,configurable:true,value:document.URL});
-                lastURL = document.URL;
-            });
-        }()
-    );
-
-
-    //Overwrite Url._updateAll to handle Security Error in Safari on Mac that prevent more that 100 history updates in 30 sec
-    window.Url._updateAll = function(s, push, triggerPopState) {
-        try {
-            window.history[push ? "pushState" : "replaceState"](null, "", s);          
-        }
-        catch (e) {
-            //Use 'old' methods - perhaps it will reload the page 
-            window.location.replace( s );
-        }
-        
-        if (triggerPopState) {
-            window.Url.triggerPopStateCb({});
-        }
-        return s;
-    };
-
-
-    /******************************************
-    anyString(name, notDecoded, search, sep)
-    Copy of Url.queryString with optional input string (search) 
-    and separaator (sep)
-    ******************************************/
-    function anyString(name, notDecoded, search, sep){
-        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-
-        var regex = new RegExp("[\\"+sep+"&]" + name + "=([^&#]*)")
-          , results = regex.exec(search)
-          , encoded = null
-          ;
-
-        if (results === null) {
-            regex = new RegExp("[\\"+sep+"&]" + name + "(\\&([^&#]*)|$)");
-            if (regex.test(search)) {
-                return true;
-            }
-            return undefined;
-        } else {
-            encoded = results[1].replace(/\+/g, " ");
-            if (notDecoded) {
-                return encoded;
-            }
-            return decodeURIComponent(encoded);
-        }
-    }
-
-
-    /******************************************
-    _correctSearchOrHash
-    Check and correct search or hash = ID_VALUE[&ID_VALUE]
-        ID_VALUE = 
-            ID or
-            ID=VALUE or
-            ID=VALUE,VALUE2,...,VALUEN
-        VALUE contains only a-z 0-9 - _ SPACE
-        ID contains only a-z 0-9 - _
-    *******************************************/
-    function _correctSearchOrHash( str, preChar ){
-        function decodeStr( str ){
-            try {
-                decodeURIComponent( str ); 
-                return decodeURIComponent( str ); 
-            }
-            catch(err) { 
-                return undefined;
-            }
-        }
-
-        //Chack and correct the parameter and/or hash-tag
-        var strList,
-            result = '',
-            idRegEx = new RegExp(/[\w\-_]+/),
-            idValues, id, values, value, oneValueOk, i, j;
-
-        //Convert to char
-        str = str.replace(/%3D/g, '=');
-        str = str.replace(/%2C/g, ',');
-        str = str.replace(/%3F/g, '?');
-        str = str.replace(/%23/g, '#');
-        str = str.replace(/%7B/g, '{');
-        str = str.replace(/%7D/g, '}');
-        str = str.replace(/%2B/g, '+');
-        str = str.replace(/%22/g, '"');
-        str = str.replace(/%3A/g, ':');
-
-        //Remove pre-char
-        while (preChar && str.length && (str.charAt(0) == preChar) )
-            str = str.slice(1);
-
-        strList = str.split('&'); 
-
-        for (i=0; i<strList.length; i++ ){
-            idValues = strList[i].split('=');
-            id = decodeStr( idValues[0] );
-            values = idValues[1] || undefined; 
-            oneValueOk = false;
-            if ( id && (idRegEx.exec(id) == id ) ){
-                //Correct id
-                if (values === undefined){
-                    oneValueOk = true;
-                    valueList = [];
-                }
-                else {
-                    //Check syntax of values
-                    var valueList = values.split(',');
-                    for (j=0; j<valueList.length; j++ ){
-                        value = decodeStr( valueList[j] );
-                        if ( value ){
-                            if (value == 'undefined')
-                              valueList[j] = 'false';
-                            oneValueOk = true;
-                        }
-                        else
-                            valueList[j] = undefined;
-                    }
-                }
-                if ( oneValueOk ){
-                    result += (result ? '&' : '') + id;
-                    var firstValue = true;
-                    for (j=0; j<valueList.length; j++ ){
-                        value = valueList[j];
-                        result += (firstValue ? '=' : ',') + (value ? value : ''); 
-                        firstValue = false;
-                    }
-                }
-            } //end of correct id
-        }
-        return decodeURIComponent(result);
-    }
-
-
-    /******************************************
-    adjustUrl
-    Check and correct the url
-    *******************************************/
-    function adjustUrl(){ 
-        var oldSearch = window.location.search,
-            newSearch = this._correctSearchOrHash( oldSearch, '?' ),
-            oldHash   = window.location.hash,
-            newHash   = this._correctSearchOrHash( oldHash, '#' ),
-            newUrl    = window.location.pathname +  
-                          (newSearch ? '?' + encodeURI(newSearch) : '') + 
-                          (newHash   ? '#' + encodeURI(newHash)   : '');
-
-        this._updateAll( newUrl );          
-        return newUrl;
-    }
-
-    /******************************************
-    onHashchange( handler [, context])
-    Add handler = function( event) to the event "hashchange"
-    Can by omitted if the hash-tag is updated using 
-    Url.updateHashParam(..) or Url.updateHash(..)
-    *******************************************/
-    function onHashchange( handler, context ){
-        this.hashchange = this.hashchange || [];
-        this.hashchange.push( $.proxy(handler, context) );
-    }
-   
-    /******************************************
-    hashString
-    Same as queryString but for the hash
-    It is a adjusted copy of queryString
-    *******************************************/
-    function hashString(name, notDecoded){
-        return anyString(name, notDecoded, window.location.hash, '#');
-    }
-    
-    /******************************************
-    parseHash
-    Same as parseQuery but for the hash
-    *******************************************/
-    function parseHash(){
-        return this.parseQuery( this.hash() );    
-    }
-
-    /******************************************
-    updateHash(hashObj, dontCallHashChange)
-    Update hash-tag with the id-value in hashObj
-    If dontCallHashChange==true the hashchange-event-functions 
-    added with Url.onHashchange( function[, context]) will not be called
-    *******************************************/
-    function updateHash(hashObj, dontCallHashChange){
-        this.dontCallHashChange = dontCallHashChange;
-        var newHash = this.stringify( $.extend({}, this.parseHash(), hashObj || {}) );
-
-        //return window.location.hash = '#'+newHash;
-        return this._updateAll(window.location.pathname + window.location.search + '#' + newHash, false);
-    }
-     
-    /******************************************
-    updateHashParam
-    Adds, updates or deletes a hash-tag
-    If dontCallHashChange==true the hashchange-event-functions 
-    added with Url.onHashchange( function[, context]) will not be called
-    *******************************************/
-    function updateHashParam(hashParam, value, dontCallHashChange){
-        var hashParsed = this.parseHash();
-        if (value === undefined){
-            delete hashParsed[hashParam];
-        }
-        else {
-            if (hashParsed[hashParam] === value)
-                return this;
-            hashParsed[hashParam] = value;
-        }
-        this.dontCallHashChange = dontCallHashChange;
-
-        //return window.location.hash = this.stringify(hashParsed);
-        return this._updateAll(window.location.pathname + window.location.search + '#' + this.stringify(hashParsed), false);
-
-    }
-
-
-    /******************************************
-    validateValue
-    Validate value using validator
-    validator = regExp | function( value ) | array of validator
-    *******************************************/
-    function validateJSONValue( value ){
-        try {
-            var jsonObj = JSON.parse( value );
-            if ($.type( jsonObj ) == 'object')
-                return true;
-        }
-        catch (e) { 
-            return false;
-        }
-        return false;
-    }
-
-    function validateValue( value, validator ){
-        //Convert Boolean into String
-        if ($.type( value ) === "boolean")
-            value = value ? 'true' : 'false';  
-        value = value || '';
-
-        if (validator === undefined)
-            return true;
-
-        if ( $.isFunction(validator) )
-          return !!validator( value );
-
-        if ( $.isArray(validator) ){
-            var result = true;
-            $.each( validator, function( index, _validator ){
-                if ( !validateValue( value, _validator) ){
-                    result = false;
-                    return false;
-                }
-            });
-            return result;
-        }
-        switch (validator){
-            case 'BOOLEAN' : validator = /true|false/;           break;
-            case 'NUMBER'  : validator = /[-+]?[0-9]*\.?[0-9]+/; break;
-            case 'NOTEMPTY': validator = /.+/;                   break;
-
-            //Special case for json-object-string
-            case 'JSON'    : return validateValue( value, validateJSONValue); 
-        }
-
-        var regExp = new RegExp(validator),
-            execResult = regExp.exec(value); 
-        return !!(execResult && (execResult.length == 1) && (execResult[0] == value));
-    }
-
-
-    /******************************************
-    _parseObject( obj, validatorObj, defaultObj, options )
-    Parse obj after it is validated and converted acording to
-    validatorObj, defaultObj, and options
-
-    validatorObj: object with {id: validator,..}. Failed values are removed 
-    defaultObj  : object with {id: value}. Values to be used if `id` is missing or fails validation 
-    options: {
-        convertBoolean: Boolean (default = true ) If true all values == "true" or "false" are converted into Boolean
-        convertNumber : Boolean (default = true ) If true all values representing a number is converted to float
-        convertJSON   : Boolean (default = true ) If true all values representing a stringify json-object is converted to a real json-object
-        queryOverHash : Boolean (default = true ) If true and the same id is given in both query-string and hash-tag the value from query-string is returned. 
-                                                  If false the value from hash-tag is returned
-    }
-    *******************************************/
-    function _parseObject( obj, validatorObj, defaultObj, options ){
-        validatorObj = validatorObj || {}; 
-        defaultObj = defaultObj || {}; 
-        options = $.extend( {}, options, { 
-            convertBoolean: true, 
-            convertNumber : true, 
-            convertJSON   : true,
-            queryOverHash : true 
-        }); 
-        
-        var _this = this;
-
-        //Validate all values
-        $.each( obj, function( id, value ){
-            //Convert '+' to space
-            if ( $.type(value) == 'string' )
-                value = value.replace(/\+/g, " ");
-            
-            //Validate value
-            if ( !_this.validateValue( value, validatorObj[id] ) )
-                value = undefined; 
-
-            //Convert "true" and false" to Boolean
-            if ( options.convertBoolean && ( (value == 'true') || (value == 'false') ) )
-              value = (value == 'true');
-                
-            //Convert String to Float
-            if (options.convertNumber && _this.validateValue( value, 'NUMBER') ){
-                value = parseFloat( value );
-            }
-                
-            //Remove deleted keys
-            if (value === undefined)
-                delete obj[id];
-            else
-                obj[id] = value;
-        });
-
-        //Convert String to json-object
-        if (options.convertJSON)
-            $.each( obj, function( id, value ){
-                if ( _this.validateValue( value, 'JSON') )
-                    obj[id] = JSON.parse( value );
-            });        
-        
-        //Insert default values
-        $.each( defaultObj, function( id, value ){
-            if (obj[id] === undefined)
-              obj[id] = value;
-        });
-
-        return obj;
-    }
-
-    /******************************************
-    parseAll( validatorObj, defaultObj, options )
-    Parse the combined query-string and hash-tags
-    Returns a object with `id: value` for both query-string and hash-tags
-    validatorObj, defaultObj, options: See _parseObject
-    *******************************************/
-    function parseAll( validatorObj, defaultObj, options ){
-        var _this = this,
-            queryOverHash = options ? !!options.queryOverHash : true;
-
-        function parseObj( str ){ 
-            var obj = _this.parseQuery( str );
-
-            //Use anyString(..) to get adjusted value
-            $.each( obj, function( id/*, value*/ ){
-                obj[id] = anyString(id, false, '?'+str, '?');
-            });
-
-            return _this._parseObject( obj, validatorObj, defaultObj, options ); 
-        }
-
-        var queryObj = parseObj( this._correctSearchOrHash( window.location.search, '?' ) ),
-            hashObj  = parseObj( this._correctSearchOrHash( window.location.hash,   '#' ) );
-
-        return $.extend( queryOverHash ? hashObj  : queryObj, 
-                         queryOverHash ? queryObj : hashObj   ); 
-    }
-
-    /******************************************
-    onHashChange()
-    ******************************************/
-    function onHashChange( event ){
-        //Adjust the hash-tag
-        var oldHash = window.location.hash,
-            newHash = this._correctSearchOrHash( oldHash, '#' );
-
-        if ( decodeURIComponent(oldHash.substring(1)) != decodeURIComponent(newHash) ){
-          window.location.hash = newHash; //Will trig a new call of onHashChange
-        }
-        else {
-            if (this.dontCallHashChange){
-                this.dontCallHashChange = false;
-                return;
-            }
-            //Fire the events added with Url.onHashchange
-            this.hashchange = this.hashchange || [];
-            for (var i=0; i<this.hashchange.length; i++ )
-                this.hashchange[i]( event );
-        }
-    }
-
-    /******************************************
-    //Extend window.Url with the new methods
-    ******************************************/
-    $.extend( window.Url, {
-        _correctSearchOrHash: _correctSearchOrHash,
-        adjustUrl           : adjustUrl,
-        onHashchange        : onHashchange,
-        hashString          : hashString,
-        parseHash           : parseHash,
-        updateHash          : updateHash,
-        updateHashParam     : updateHashParam,
-        validateValue       : validateValue,
-        _parseObject        : _parseObject,
-        parseAll            : parseAll,
-        onHashChange        : onHashChange
-    });
-
-    //Add the 'global' hashchange-event-methods
-    window.addEventListener("hashchange", $.proxy( onHashChange, window.Url ), false);
-
-
-
-    /******************************************
-    Initialize/ready 
-    *******************************************/
-    $(function() { 
-        window.Url.adjustUrl();
-    }); 
-    //******************************************
-
-
-
-}(jQuery, this, document));
-
-/******************************************
-Variables in window.location making up the full url
-    
-var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + window.location.search + window.location.hash;
-
-window.location.protocol
-window.location.host
-window.location.pathname
-window.location.search 
-window.location.hash 
-
-******************************************/
-
-;
-/****************************************************************************
-    fcoo-settings.js, 
-
-    (c) 2016, FCOO
-
-    https://github.com/FCOO/fcoo-settings
-    https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window, document, undefined) {
-    "use strict";
-    
-    //Create fcoo.settings-namespace
-    window.fcoo = window.fcoo || {};
-    var ns = window.fcoo.settings = window.fcoo.settings || {};
-
-    var settings       = {},
-        loadedValues   = {},
-        queryValues    = {}, //values set in the url
-        storageIdSave  = 'fcoo_settings',
-        storageIdForce = 'fcoo_settings_FORCE';
-
-        //Get query settings            
-        try { 
-            queryValues = JSON.parse( window.Url.queryString('settings') ); 
-        }
-        catch (e) { 
-            queryValues = {}; 
-        }
-
-    /**********************************
-    Setting( options )
-    options = {id, validator, applyFunc, defaultValue, globalEvents )
-    id [String]
-    validator [null] | [String] | [function( value)]. If [String] => using Url.js-extensions validation
-    applyFunc [function( value, id, defaultValue )] function to apply the settings for id
-    defaultValue 
-    globalEvents {String} = Id of global-events in fcoo.events that aare fired when the setting is changed
-    onError [function( value, id )] (optional). Called if a new value is invalid according to validator
-    **********************************/
-    function Setting( options ) {
-        this.options = options;
-        this.options.applyFunc = options.applyFunc || function(){};
-        this.value = null;
-        this.saveValue = null;
-        if ((this.options.defaultValue === undefined) && (typeof this.options.validator == 'string') )
-            //Try to set default value based on the validator
-            switch (this.options.validator){
-                case 'BOOLEAN': this.options.defaultValue = false;  break;
-                case 'NUMBER' : this.options.defaultValue = 0;      break;
-            }
-    }
-
-    ns.Setting = Setting;
-
-    //Extend the prototype
-    ns.Setting.prototype = {
-        apply:  function ( newValue, dontCallApplyFunc ){ 
-                    var id = this.options.id;
-                    newValue = (newValue === undefined) ? this.options.defaultValue : newValue;
-
-                    if ( !window.Url.validateValue(''+newValue, this.options.validator) ){ 
-                        if (this.options.onError)
-                            this.options.onError( newValue, id );
-                        newValue = this.options.defaultValue;
-                    }
-                    
-                    this.value = newValue;
-
-                    //Set saveValue = newValue unless it is the value from query-string
-                    if ((queryValues[id] === null) || (newValue != queryValues[id]))
-                        this.saveValue = newValue;
-                    queryValues[id] = null;
-
-                    if (!dontCallApplyFunc)
-                        this.options.applyFunc( this.value, id, this.options.defaultValue );
-
-                    //Fire global-events (if any)
-                    if (this.options.globalEvents && window.fcoo.events && window.fcoo.events.fire)
-                        window.fcoo.events.fire( this.options.globalEvents, id, this.value );
-
-                }    
-    };    
-
-    /**********************************
-    add( options )
-    options = {id, validator, applyFunc, defaultValue, globalEvents )
-    id [String]
-    validator [null] | [String] | [function( value)]. If [String] = 
-    defaultValue 
-    **********************************/
-    ns.add = function( options ){
-        options = $.extend( {}, { callApply: true }, options );
-        var setting = new ns.Setting( options );
-        settings[options.id] = setting;
-        setting.apply( loadedValues[setting.options.id], !options.callApply );                       
-    };
-    
-    /**********************************
-    set( id, value, reload )
-    id [String]
-    value [any]
-    reload [Boolean] 
-    **********************************/
-    ns.set = function( id, value, reload ){
-        var setting = settings[id];
-        if (!setting)
-          return false;
-
-        //Use saved value if 'value' isn't given
-        value = value === undefined ? this.get( id ) : value;
-        setting.apply( value, reload );
-        this.save( reload );
-
-        if (reload)
-          window.location.reload();
-    };
-    
-    /**********************************
-    get( id )
-    id [String]
-    **********************************/
-    ns.get = function( id ){
-        var setting = settings[id];
-        return setting ? setting.value : undefined;
-    };
-
-    /**********************************
-    loadFromLocalStorage()
-    Load the settings from localStorage 'fcoo-settings'
-    **********************************/
-    ns.loadFromLocalStorage = function(){
-        return JSON.parse( window.localStorage.getItem( storageIdSave ) || '{}' );
-    };
-
-    /**********************************
-    load()
-    Load the settings from
-        1) sessionStorage 'fcoo-settings-FORCE', or
-        2) Load settings from
-            a: url param 'settings
-            b: localStorage 'fcoo-settings'
-            c: default values
-    **********************************/
-    ns.load = function(){
-        //1) Try loading from storageIdForce 
-        var str = window.sessionStorage.getItem( storageIdForce );
-        if (str){
-            window.sessionStorage.removeItem( storageIdForce );
-            loadedValues = JSON.parse( str );
-        }
-        else {
-            //2) Load settings from...
-            //a: url param 'settings = queryValues
-
-            //b: localStorage 'fcoo-settings', 
-            var savedValues = this.loadFromLocalStorage();
-
-            //c: default values - is set by fcoo.settings.add(...)
-
-            //Combine the new settings
-            loadedValues =  $.extend( {}, savedValues, queryValues );
-        }
-
-        $.each( settings, function( id, setting ){ 
-            setting.apply( loadedValues[id] ); 
-        });
-    };
-    
-    /**********************************
-    save( toForce, saveStr )
-    Save the settings in 
-    toForce == false: localStorage 'fcoo-settings'
-    toForce == true : sessionStorage 'fcoo-settings-FORCE'
-
-    saveStr (special case) the string to be saved and only when toForce==true
-    **********************************/
-    ns.save = function( toForce, saveStr ){ 
-        //Save all saveValue from settings
-        var settingValuesToSave = this.loadFromLocalStorage();
-        $.each( settings, function( id, setting ){ 
-            if (setting.saveValue)
-                settingValuesToSave[ setting.options.id ] = setting.saveValue;
-        });
-
-        if (toForce){
-            //Save all settings to sessionStorage 'fcoo-settings-FORCE'
-            window.sessionStorage.setItem( storageIdForce, saveStr || JSON.stringify( settingValuesToSave ) );
-        }
-        else {
-            window.localStorage.setItem( storageIdSave, JSON.stringify( settingValuesToSave ) );
-        }
-    };
-
-
-    //Load the settings
-    ns.load();
-
-    /******************************************
-    Initialize/ready 
-    *******************************************/
-//    $(function() { 
-//    }); 
-
-}(jQuery, this, document));
 ;
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -12202,58 +11564,40 @@ var PluralResolver = function () {
     var rule = this.getRule(code);
 
     if (rule) {
-      var _ret = function () {
-        if (rule.numbers.length === 1) return {
-            v: ''
-          }; // only singular
+      if (rule.numbers.length === 1) return ''; // only singular
 
-        var idx = rule.noAbs ? rule.plurals(count) : rule.plurals(Math.abs(count));
-        var suffix = rule.numbers[idx];
+      var idx = rule.noAbs ? rule.plurals(count) : rule.plurals(Math.abs(count));
+      var suffix = rule.numbers[idx];
 
-        // special treatment for lngs only having singular and plural
-        if (rule.numbers.length === 2 && rule.numbers[0] === 1) {
-          if (suffix === 2) {
-            suffix = 'plural';
-          } else if (suffix === 1) {
-            suffix = '';
-          }
+      // special treatment for lngs only having singular and plural
+      if (rule.numbers.length === 2 && rule.numbers[0] === 1) {
+        if (suffix === 2) {
+          suffix = 'plural';
+        } else if (suffix === 1) {
+          suffix = '';
         }
+      }
 
-        var returnSuffix = function returnSuffix() {
-          return _this.options.prepend && suffix.toString() ? _this.options.prepend + suffix.toString() : suffix.toString();
-        };
+      var returnSuffix = function returnSuffix() {
+        return _this.options.prepend && suffix.toString() ? _this.options.prepend + suffix.toString() : suffix.toString();
+      };
 
-        // COMPATIBILITY JSON
-        // v1
-        if (_this.options.compatibilityJSON === 'v1') {
-          if (suffix === 1) return {
-              v: ''
-            };
-          if (typeof suffix === 'number') return {
-              v: '_plural_' + suffix.toString()
-            };
-          return {
-            v: returnSuffix()
-          };
+      // COMPATIBILITY JSON
+      // v1
+      if (this.options.compatibilityJSON === 'v1') {
+        if (suffix === 1) return '';
+        if (typeof suffix === 'number') return '_plural_' + suffix.toString();
+        return returnSuffix();
+      }
+      // v2
+      else if (this.options.compatibilityJSON === 'v2' || rule.numbers.length === 2 && rule.numbers[0] === 1) {
+          return returnSuffix();
         }
-        // v2
-        else if (_this.options.compatibilityJSON === 'v2' || rule.numbers.length === 2 && rule.numbers[0] === 1) {
-            return {
-              v: returnSuffix()
-            };
+        // v3 - gettext index
+        else if (rule.numbers.length === 2 && rule.numbers[0] === 1) {
+            return returnSuffix();
           }
-          // v3 - gettext index
-          else if (rule.numbers.length === 2 && rule.numbers[0] === 1) {
-              return {
-                v: returnSuffix()
-              };
-            }
-        return {
-          v: _this.options.prepend && idx.toString() ? _this.options.prepend + idx.toString() : idx.toString()
-        };
-      }();
-
-      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      return this.options.prepend && idx.toString() ? this.options.prepend + idx.toString() : idx.toString();
     } else {
       this.logger.warn('no plural rule found for: ' + code);
       return '';
@@ -12292,7 +11636,8 @@ var Interpolator = function () {
 
     this.prefix = iOpts.prefix ? regexEscape(iOpts.prefix) : iOpts.prefixEscaped || '{{';
     this.suffix = iOpts.suffix ? regexEscape(iOpts.suffix) : iOpts.suffixEscaped || '}}';
-    this.formatSeparator = iOpts.formatSeparator ? regexEscape(iOpts.formatSeparator) : iOpts.formatSeparator || ',';
+
+    this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
 
     this.unescapePrefix = iOpts.unescapeSuffix ? '' : iOpts.unescapePrefix || '-';
     this.unescapeSuffix = this.unescapePrefix ? '' : iOpts.unescapeSuffix || '';
@@ -12592,29 +11937,27 @@ var Connector = function (_EventEmitter) {
 
     // load one by one
     else {
-        (function () {
-          var readOne = function readOne(name) {
-            var _this6 = this;
+        var readOne = function readOne(name) {
+          var _this6 = this;
 
-            var _name$split5 = name.split('|'),
-                _name$split6 = slicedToArray(_name$split5, 2),
-                lng = _name$split6[0],
-                ns = _name$split6[1];
+          var _name$split5 = name.split('|'),
+              _name$split6 = slicedToArray(_name$split5, 2),
+              lng = _name$split6[0],
+              ns = _name$split6[1];
 
-            this.read(lng, ns, 'read', null, null, function (err, data) {
-              if (err) _this6.logger.warn('loading namespace ' + ns + ' for language ' + lng + ' failed', err);
-              if (!err && data) _this6.logger.log('loaded namespace ' + ns + ' for language ' + lng, data);
+          this.read(lng, ns, 'read', null, null, function (err, data) {
+            if (err) _this6.logger.warn('loading namespace ' + ns + ' for language ' + lng + ' failed', err);
+            if (!err && data) _this6.logger.log('loaded namespace ' + ns + ' for language ' + lng, data);
 
-              _this6.loaded(name, err, data);
-            });
-          };
-
-          
-
-          toLoad.toLoad.forEach(function (name) {
-            readOne.call(_this5, name);
+            _this6.loaded(name, err, data);
           });
-        })();
+        };
+
+        
+
+        toLoad.toLoad.forEach(function (name) {
+          readOne.call(_this5, name);
+        });
       }
   };
 
@@ -12652,31 +11995,29 @@ var Connector = function (_EventEmitter) {
 
     // load one by one
     else {
-        (function () {
-          var readOne = function readOne(name) {
-            var _this8 = this;
+        var readOne = function readOne(name) {
+          var _this8 = this;
 
-            var _name$split7 = name.split('|'),
-                _name$split8 = slicedToArray(_name$split7, 2),
-                lng = _name$split8[0],
-                ns = _name$split8[1];
+          var _name$split7 = name.split('|'),
+              _name$split8 = slicedToArray(_name$split7, 2),
+              lng = _name$split8[0],
+              ns = _name$split8[1];
 
-            this.read(lng, ns, 'read', null, null, function (err, data) {
-              if (err) _this8.logger.warn('reloading namespace ' + ns + ' for language ' + lng + ' failed', err);
-              if (!err && data) _this8.logger.log('reloaded namespace ' + ns + ' for language ' + lng, data);
+          this.read(lng, ns, 'read', null, null, function (err, data) {
+            if (err) _this8.logger.warn('reloading namespace ' + ns + ' for language ' + lng + ' failed', err);
+            if (!err && data) _this8.logger.log('reloaded namespace ' + ns + ' for language ' + lng, data);
 
-              _this8.loaded(name, err, data);
-            });
-          };
-
-          
-
-          languages.forEach(function (l) {
-            namespaces.forEach(function (n) {
-              readOne.call(_this7, l + '|' + n);
-            });
+            _this8.loaded(name, err, data);
           });
-        })();
+        };
+
+        
+
+        languages.forEach(function (l) {
+          namespaces.forEach(function (n) {
+            readOne.call(_this7, l + '|' + n);
+          });
+        });
       }
   };
 
@@ -12962,35 +12303,29 @@ var I18n = function (_EventEmitter) {
     var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
 
     if (!this.options.resources) {
-      var _ret = function () {
-        if (_this3.language && _this3.language.toLowerCase() === 'cimode') return {
-            v: callback()
-          }; // avoid loading resources for cimode
+      if (this.language && this.language.toLowerCase() === 'cimode') return callback(); // avoid loading resources for cimode
 
-        var toLoad = [];
+      var toLoad = [];
 
-        var append = function append(lng) {
-          if (!lng) return;
-          var lngs = _this3.services.languageUtils.toResolveHierarchy(lng);
-          lngs.forEach(function (l) {
-            if (toLoad.indexOf(l) < 0) toLoad.push(l);
-          });
-        };
-
-        append(_this3.language);
-
-        if (_this3.options.preload) {
-          _this3.options.preload.forEach(function (l) {
-            append(l);
-          });
-        }
-
-        _this3.services.cacheConnector.load(toLoad, _this3.options.ns, function () {
-          _this3.services.backendConnector.load(toLoad, _this3.options.ns, callback);
+      var append = function append(lng) {
+        if (!lng) return;
+        var lngs = _this3.services.languageUtils.toResolveHierarchy(lng);
+        lngs.forEach(function (l) {
+          if (toLoad.indexOf(l) < 0) toLoad.push(l);
         });
-      }();
+      };
 
-      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      append(this.language);
+
+      if (this.options.preload) {
+        this.options.preload.forEach(function (l) {
+          append(l);
+        });
+      }
+
+      this.services.cacheConnector.load(toLoad, this.options.ns, function () {
+        _this3.services.backendConnector.load(toLoad, _this3.options.ns, callback);
+      });
     } else {
       callback(null);
     }
@@ -13170,90 +12505,253 @@ return i18next;
 })));
 
 ;
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.i18nextIntervalPluralPostProcessor = factory());
-}(this, (function () { 'use strict';
+/****************************************************************************
+    i18next-phrases.js, 
 
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
+    (c) 2017, FCOO
 
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
+    https://github.com/FCOO/i18next-phrases
+    https://github.com/FCOO
+
+****************************************************************************/
+
+/****************************************************************************
+    Default 1-dim json-structure for i18next is 
+        { lang1: { 
+            namespace: { key: value1 }
+          },
+          lang2: { 
+            namespace: { key: value2 }
+          }
+        }
+
+    To make adding translation easier two new formats are supported: 
+
+    1: phrase: namespace->key->lang
+        {
+            namespace1: {
+                key1: {
+                    lang1: value1-1-1,
+                    lang2: value2-1-1
+                },
+                key2: {
+                    lang1: value1-1-2,
+                    lang2: value2-1-2
+                }
+            },
+            namespace2: {
+                key1: {
+                    lang1: value1-2-1,
+                    lang2: value2-2-1
+                },
+                key2: {
+                    lang1: value1-2-2,
+                    lang2: value2-2-2
+                }
+            }
+        }
+    
+    2: key-phrase: key->namespace->lang
+        {
+            key1: {
+                namespace1: {
+                    lang1: value1-1-1,
+                    lang2: value2-1-1
+                },
+                namespace2: {
+                    lang1: value1-2-1,
+                    lang2: value2-2-1
+                }
+            },
+            key2: {
+                namespace1: {
+                    lang1: value1-1-2,
+                    lang2: value2-1-2
+                },
+                namespace2: {
+                    lang1: value1-2-2,
+                    lang2: value2-2-2
+                }
+            }
+        }
+****************************************************************************/
+
+(function ($, i18next/*, window, document, undefined*/) {
+    "use strict";
+
+    /***********************************************************************
+    addPhrase( key, [namespace,] langValues) 
+    - key {string} can be a combined namespace:key string. 
+    - langValues = { [lang: value]xN }
+    ***********************************************************************/
+    i18next.addPhrase = function( namespace, key, langValues ){
+        var nsSeparator = this.options.nsSeparator,
+            _this = this;
+
+        if (arguments.length == 2){
+            langValues = arguments[1];
+            if (arguments[0].indexOf(nsSeparator) > -1){
+              key = arguments[0].split(nsSeparator)[1];
+              namespace = arguments[0].split(nsSeparator)[0];
+            }
+            else {
+                key = arguments[0];
+                namespace = this.options.defaultNS[0];
+            }
+        }
+
+        $.each( langValues, function( lang, value ){
+            _this.addResource(lang, namespace, key, value);
+        });
+        return this;
+    };
+
+    /***********************************************************************
+    addPhrases( [namespace,] keyLangValues )
+    - keyLangValues = { key: [lang: value]xN }, key2: [lang: value]xN } }
+    ***********************************************************************/
+    i18next.addPhrases = function( namespace, keyLangValues ){
+        var _this = this;
+        $.each( keyLangValues, function( key, langValues ){
+            _this.addPhrase( namespace, key, langValues );
+        });
+        return this;
+    };
+
+    /***********************************************************************
+    addBundlePhrases( namespaceKeyLangValues  )
+    - namespaceKeyLangValues = {
+          namespace1: { 
+              key1: { [lang: value]xN }, 
+              key2: { [lang: value]xN }
+          }, 
+          namespace2:{
+              ...
+          }
       }
-    }
-  }
+    ***********************************************************************/
+    i18next.addBundlePhrases = function( namespaceKeyLangValues ){
+        var _this = this;
+        $.each( namespaceKeyLangValues, function( namespace, keyLangValues ){
+            _this.addPhrases( namespace, keyLangValues );
+        });
+        return this;
+    };
 
-  return target;
-};
+    /***********************************************************************
+    i18next.loadPhrases( jsonFileName, callback );
+    ***********************************************************************/
+    i18next.loadPhrases = function( jsonFileName, callback ){
+        var jqxhr = $.getJSON( jsonFileName ),
+            _this = this;
+        if (callback)
+            jqxhr.fail( callback );
 
-function intervalMatches(interval, count) {
-  if (interval.indexOf('-') > -1) {
-    var p = interval.split('-');
-    if (p[1] === 'inf') {
-      var from = parseInt(p[0], 10);
-      return count >= from;
-    } else {
-      var _from = parseInt(p[0], 10);
-      var to = parseInt(p[1], 10);
-      return count >= _from && count <= to;
-    }
-  } else {
-    var match = parseInt(interval, 10);
-    return match === count;
-  }
-}
+        jqxhr.done( function( data ) {
+            _this.addBundlePhrases( data );
+            if (callback)
+              callback( null );
+        });
+    };
+    
+    /***********************************************************************
+    i18next.addKeyPhrase = function( key, namespace, langValues )
+    - langValues = { [lang: value]xN }
+    ***********************************************************************/
+    i18next.addKeyPhrase = function( key, namespace, langValues ){
+        return this.addPhrase( namespace, key, langValues );
+    };
 
-var index = {
-  name: 'interval',
-  type: 'postProcessor',
-
-  options: {
-    intervalSeparator: ';',
-    intervalRegex: /^\((\S*)\){(.*)}$/,
-    intervalSuffix: '_interval'
-  },
-
-  setOptions: function setOptions(options) {
-    this.options = _extends({}, this.options, options);
-  },
-  process: function process(value, key, options, translator) {
-    var _this = this;
-
-    var p = value.split(this.options.intervalSeparator);
-
-    var found = void 0;
-    p.forEach(function (iv) {
-      if (found) return;
-      var match = _this.options.intervalRegex.exec(iv);
-
-      if (match && intervalMatches(match[1], options.count || 0)) {
-        found = match[2];
+    /***********************************************************************
+    i18next.addKeyPhrases = function( key, namespaceLangValues )
+    - namespaceLangValues = { 
+          namespace1: { [lang: value]xN }, 
+          namespace2: { [lang: value]xN } }, 
       }
-    });
+    ***********************************************************************/
+    i18next.addKeyPhrases = function( key, namespaceLangValues ){
+        var _this = this;
+        $.each( namespaceLangValues, function( namespace, langValues ){
+            _this.addKeyPhrase( key, namespace, langValues );
+        });
+        return this;
+    };
 
-    // not found fallback to classical plural
-    if (!found) {
-      var newOptions = _extends({}, options);
-      if (typeof newOptions.postProcess === 'string') {
-        delete newOptions.postProcess;
-      } else {
-        var index = newOptions.postProcess.indexOf('interval'); // <-- Not supported in <IE9
-        if (index !== -1) newOptions.postProcess.splice(index, 1);
-      }
-      found = translator.translate(key.replace(this.options.intervalSuffix, ''), newOptions);
-    }
+    /***********************************************************************
+    addBundleKeyPhrases( keyNamespaceLangValues  )
+    keyNamespaceLangValues = { 
+        key1: { 
+            namespace1: { [lang: value]xN }, 
+            namespace2: { [lang: value]xN }
+        }, 
+        key2:{
+            ...
+        }
+    }`
+    ***********************************************************************/
+    i18next.addBundleKeyPhrases = function( keyNamespaceLangValues ){
+        var _this = this;
+        $.each( keyNamespaceLangValues, function( key, namespaceLangValues ){
+            _this.addKeyPhrases( key, namespaceLangValues );
+        });
+        return this;
+    };
 
-    return found || value;
-  }
-};
+    /***********************************************************************
+    i18next.loadKeyPhrases = function( jsonFileName, callback )
+    ***********************************************************************/
+    i18next.loadKeyPhrases = function( jsonFileName, callback ){
+        var jqxhr = $.getJSON( jsonFileName );
+        if (callback)
+            jqxhr.fail( callback );
 
-return index;
+        jqxhr.done( function( data ) {
+            $.each( data, function( namespace, keyLangValues ) {
+                i18next.addKeyPhrases( namespace, keyLangValues );
+            });
+            if (callback)
+              callback( null );
+        });
+    
+    };
+    
+    
+    /***********************************************************************
+    sentence ( langValues, options )
+    - langValues = { [lang: value]xN }
+    A single translation of a sentence. No key used or added
+    ***********************************************************************/
+    i18next.sentence = function( langValues, options ){ 
+        var nsTemp = '__TEMP__',
+            keyTemp = '__KEY__',
+            _this = this,
+            nsSeparator = this.options.nsSeparator;
+        
+        //Remove any data from nsTemp
+//        $.each( languages, function( index, lang ){
+//            _this.removeResourceBundle(lang, nsTemp);
+//        });
+        this.addPhrase( nsTemp, keyTemp, langValues );
+        var result = this.t(nsTemp + nsSeparator + keyTemp, options );
 
-})));
+        //Remove the key again
+        $.each( langValues, function( lang ){
+            _this.removeResourceBundle(lang, nsTemp);
+        });
+
+        return result;
+    };
+
+    /***********************************************************************
+    s ( langValues, options )
+    - langValues = { [lang: value]xN }
+    ***********************************************************************/
+    i18next.s = function( langValues, options ){
+        return this.sentence( langValues, options );
+    };
+
+
+}(jQuery, this.i18next, this, document));
 ;
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -13377,6 +12875,1076 @@ function init(i18next, $) {
 
 var index = {
   init: init
+};
+
+return index;
+
+})));
+;
+/****************************************************************************
+	jquery-i18next-phrases.js, 
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/jquery-i18next-phrases
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+	
+    /***********************************************************
+    Initialize jquery-i18next - i18next plugin for jquery 
+    https://github.com/i18next/jquery-i18next
+    ***********************************************************/
+    var jQuery_i18n_selectorAttr = 'data-i18n',    // selector for translating elements
+        jQuery_i18n_targetAttr   = 'i18n-target',  // data-() attribute to grab target element to translate (if diffrent then itself)
+        jQuery_i18n_optionsAttr  = 'i18n-options'; // data-() attribute that contains options, will load/set if useOptionsAttr = true
+
+    
+    window.jqueryI18next.init(
+        window.i18next/*i18nextInstance*/, 
+        $, 
+        {
+            tName         : 't',                        // --> appends $.t = i18next.t
+            i18nName      : 'i18n',                     // --> appends $.i18n = i18next
+            handleName    : 'localize',                 // --> appends $(selector).localize(opts);
+            selectorAttr  : jQuery_i18n_selectorAttr,   // selector for translating elements
+            targetAttr    : jQuery_i18n_targetAttr,     // data-() attribute to grab target element to translate (if diffrent then itself)
+            optionsAttr   : jQuery_i18n_optionsAttr,    // data-() attribute that contains options, will load/set if useOptionsAttr = true
+            useOptionsAttr: true,                       // see optionsAttr
+            parseDefaultValueFromContent: false         // parses default values from content ele.val or ele.text
+        }
+    );
+
+
+    /***********************************************************
+    Add new methods to jQuery prototype: 
+    $.fn.i18n( htmlOrKeyOrPhrase[, attribute][, options] )
+    Add/updates the "data-i18n" attribute
+
+    htmlOrKeyOrPhrase = simple html-string ( "This will <u>always</u> be in English" ) OR 
+                        i18next-key ( "myNS:myKey" ) OR 
+                        a phrase-object - see langValue in i18next.addPhrase ( {da:"Dette er en test", en:"This is a test"} ) OR
+                        a string representing a phrase-object ( '{"da":"Dette er en test", "en":"This is a test"}' )
+    ***********************************************************/
+    var tempKeyId = 0,
+        tempNS = '__TEMP__';
+
+    $.fn.i18n = function( htmlOrKeyOrPhrase ) {
+        var options = null, 
+            attribute = '', 
+            argument,
+            keyFound = true, 
+            key = htmlOrKeyOrPhrase;
+
+        for (var i=1; i<arguments.length; i++ ){
+            argument = arguments[i];              
+            switch ($.type(argument)){
+              case 'object': options = argument; break;
+              case 'string': attribute = argument; break;
+            }
+        }
+
+        var original = htmlOrKeyOrPhrase;
+        try {
+            htmlOrKeyOrPhrase = JSON.parse(htmlOrKeyOrPhrase);
+        }
+        catch (e) {
+            htmlOrKeyOrPhrase = original; 
+        }
+
+        //Get the key or add a temp-phrase
+        if (typeof htmlOrKeyOrPhrase == 'string')//{
+            keyFound = window.i18next.exists(htmlOrKeyOrPhrase);
+        else {
+            //It is a {da:'...', en:'...', de:'...'} object
+            key = 'jqueryfni18n' + tempKeyId++;
+            window.i18next.addPhrase( tempNS, key, htmlOrKeyOrPhrase );
+            key = tempNS+':'+key;
+        }    
+
+        return this.each(function() {
+            var $this = $(this),
+                oldData = $this.attr( jQuery_i18n_selectorAttr ),
+                newData = [],
+                oldStr,
+                newStr = attribute ? '[' + attribute + ']' + key : key,
+                keep;
+            oldData = oldData ? oldData.split(';') : [];
+            
+            for (var i=0; i<oldData.length; i++ ){
+                oldStr = oldData[i];
+                keep = true;
+                //if the new key has an attribute => remove data with '[attribute]'
+                if (attribute && (oldStr.indexOf('[' + attribute + ']') == 0))
+                    keep = false;                      
+                //if the new key don't has a attribute => only keep other attributes
+                if (!attribute && (oldStr.indexOf('[') == -1)) 
+                    keep = false;
+                if (keep)
+                    newData.push( oldStr );
+            }
+            newData.push( newStr);                                
+
+            //Set data-i18n
+            $this.attr( jQuery_i18n_selectorAttr, newData.join(';') );
+
+            //Set data-i18n-options
+            if (options)
+                $this.attr( 'data-' + jQuery_i18n_optionsAttr, JSON.stringify( options ) );
+
+            if (!keyFound){
+                //Not (yet) a key => simple add htmlOrKeyOrPhrase as html or attr
+                if (attribute)
+                    $(this).attr( attribute, htmlOrKeyOrPhrase );
+                else
+                    $(this).html( htmlOrKeyOrPhrase );
+            }
+            //Update contents
+            $this.localize();        
+
+        });
+    };
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+	fcoo-i18next-phrases.js, 
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/fcoo-i18next-phrases
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function (i18next/*, window, document, undefined*/) {
+	"use strict";
+
+    //Initialize i18next if not already done
+    if ($.isEmptyObject(i18next.options)){
+        window.i18next.init({
+            initImmediate     : false, //prevents resource loading in init function inside setTimeout (default async behaviour)
+            resources         : {},    //Empty bagend
+            lng        : 'da',
+            fallbackLng:'en'
+       
+        });
+     }
+
+
+    function callback( err ){
+        if (err){
+            //TODO          
+        }
+        else { 
+            $('*').localize();
+        }
+    }
+    
+    function loadJSON( jsonFileName, callback, onFail ){
+        var jqxhr = $.getJSON( jsonFileName );
+
+        if (callback)
+            jqxhr.done( callback );
+            
+        if (onFail)
+            jqxhr.fail( onFail );
+    }
+
+    
+    
+    //Load "fcoo-i18next-abbr-name-link.json"
+    i18next.loadKeyPhrases( 'data/fcoo-i18next-abbr-name-link.json', callback );
+
+    
+    //Load "fcoo-parameter.json"
+    loadJSON( "data/fcoo-parameter.json", 
+        function( data ) {
+            //Create translation of units with WMO-unit and/or CF Standard Name units as key
+            $.each( data.units, function( index, unit ){
+                if (unit.en){
+                    if (unit.WMO_unit)
+                        i18next.addPhrase( 'unit', unit.WMO_unit, unit );                  
+                    if (unit.CF_unit)
+                        i18next.addPhrase( 'unit', unit.CF_unit, unit );                  
+                }
+            });
+
+            //Create translation of paramter-names with WMO-abbr and/or CF Standard Name as key
+            $.each( data.parameters, function( index, parameter ){
+                if (parameter.en){
+                    if (parameter.WMO_abbr)
+                        i18next.addPhrase( 'parameter', parameter.WMO_abbr, parameter );                  
+                    if (parameter.CF_SN)
+                        i18next.addPhrase( 'parameter', parameter.CF_SN, parameter );                  
+                }
+            });
+            $('*').localize();
+        },
+        
+        function( /*err*/ ){
+            //TODO
+        }
+    );
+
+    
+    
+    /*
+    Namespace button
+    Standard text to buttons. 
+    E.g. button:close = {da: "Luk", en:"Close"}
+    */
+
+
+    /*
+    Namespace parameter
+    Physical parameter. Using XXX codes for parameter. See http://www.nco.ncep.noaa.gov/pmb/docs/on388/table2.html
+    E.g. 
+        parameter:wind = {da:"vindhastighed", en:"wind speed"}
+        parameter:wdir = {da:"vindretning", en:"wind direction"}
+    */
+/* TODO
+
+    en: {
+          'Significant wave height of combined wind waves and swell': 'Wave height',
+          'degC': '&deg;C',
+          'Temp.': 'Temperature'
+    },
+    da: {
+          'Wave height': 'Bølgehøjde',
+          'Mean wave period': 'Bølgeperiode',
+          'Vel.': 'Strømhastighed',
+          'Current speed': 'Strømhastighed',
+          'Current': 'Strømhastighed',
+          'Elevation': 'Vandstand',
+          'Temperature': 'Temperatur',
+          'Temp.': 'Temperatur',
+          'Salinity': 'Salinitet',
+          'Sea surface temperature': 'Temperatur',
+          'Sea surface salinity': 'Salinitet',
+          'Wind speed': 'Vindhastighed',
+          'Wind': 'Vindhastighed',
+          'Air temperature (2m)': '2 meter temperatur',
+          'Sea ice concentration': 'Haviskoncentration',
+          'Sea ice thickness': 'Havistykkelse',
+          'Sea ice drift speed': 'Havisdrifthastighed',
+          'Visibility': 'Sigtbarhed',
+          'Total precipitation flux': 'Nedbør',
+          '2 metre temperature': '2 meter temperatur',
+          'Total cloud cover': 'Skydække',
+          'Significant wave height of combined wind waves and swell': 'Bølgehøjde',
+          'mm/hour': 'mm/time',
+          'degC': '&deg;C',
+          'knots': 'knob',
+          'fraction': 'fraktion',
+          'meters': 'meter'
+    }
+    
+
+*/
+
+
+
+    /*
+    Namespace unit
+    Physical units.
+    E.g. unit:metre = {da:"meter", en:"metre"}
+    */
+
+
+    //Initialize/ready 
+	$(function() { 
+
+	
+	}); //End of initialize/ready
+
+}(this.i18next, this, document));
+;
+/****************************************************************************
+	jQuery.i18nLink.js, 
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/fcoo-i18next-phrases
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function (/*window, document, undefined*/) {
+	"use strict";
+
+    /************************************************************************
+    jQuery methods to create element with contents given by i18next-keys
+    *************************************************************************/
+
+    //Create a <a>-element with abbriviation (in <span>) and title and link (if exists)
+    $.i18nLink = function( key ){
+        return  $('<a/>')
+                    .i18n('link:'+key, 'href', {defaultValue: null})
+                    .i18n('name:'+key, 'title')
+                    .append( 
+                        $('<span/>')
+                            .i18n('abbr:'+key, {defaultValue: key.toUpperCase()} ) 
+                    );
+                     
+    };
+
+
+}(this, document));
+;
+"use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj};(function(f){if((typeof exports==="undefined"?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Url=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o])}return s}({1:[function(require,module,exports){window.addEventListener("popstate",function(e){Url.triggerPopStateCb(e)});var Url=module.exports={_onPopStateCbs:[],_isHash:false,queryString:function queryString(name,notDecoded){name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),results=regex.exec(location.search),encoded=null;if(results===null){regex=new RegExp("[\\?&]"+name+"(\\&([^&#]*)|$)");if(regex.test(location.search)){return true}return undefined}else{encoded=results[1].replace(/\+/g," ");if(notDecoded){return encoded}return decodeURIComponent(encoded)}},parseQuery:function parseQuery(search){var query={};if(typeof search!=="string"){search=window.location.search}search=search.replace(/^\?/g,"");if(!search){return{}}var a=search.split("&"),i=0,iequ,value=null;for(;i<a.length;++i){iequ=a[i].indexOf("=");if(iequ<0){iequ=a[i].length;value=true}else{value=decodeURIComponent(a[i].slice(iequ+1))}query[decodeURIComponent(a[i].slice(0,iequ))]=value}return query},stringify:function stringify(queryObj){if(!queryObj||queryObj.constructor!==Object){throw new Error("Query object should be an object.")}var stringified="";Object.keys(queryObj).forEach(function(c){var value=queryObj[c];stringified+=c;if(value!==true){stringified+="="+encodeURIComponent(queryObj[c])}stringified+="&"});stringified=stringified.replace(/\&$/g,"");return stringified},updateSearchParam:function updateSearchParam(param,value,push,triggerPopState){var searchParsed=this.parseQuery();if(value===undefined){delete searchParsed[param]}else{if(searchParsed[param]===value){return Url}searchParsed[param]=value}var newSearch="?"+this.stringify(searchParsed);this._updateAll(window.location.pathname+newSearch+location.hash,push,triggerPopState);return Url},getLocation:function getLocation(){return window.location.pathname+window.location.search+window.location.hash},hash:function hash(newHash,triggerPopState){if(newHash===undefined){return location.hash.substring(1)}if(!triggerPopState){setTimeout(function(){Url._isHash=false},0);Url._isHash=true}return location.hash=newHash},_updateAll:function _updateAll(s,push,triggerPopState){window.history[push?"pushState":"replaceState"](null,"",s);if(triggerPopState){Url.triggerPopStateCb({})}return s},pathname:function pathname(_pathname,push,triggerPopState){if(_pathname===undefined){return location.pathname}return this._updateAll(_pathname+window.location.search+window.location.hash,push,triggerPopState)},triggerPopStateCb:function triggerPopStateCb(e){if(this._isHash){return}this._onPopStateCbs.forEach(function(c){c(e)})},onPopState:function onPopState(cb){this._onPopStateCbs.push(cb)},removeHash:function removeHash(){this._updateAll(window.location.pathname+window.location.search,false,false)},removeQuery:function removeQuery(){this._updateAll(window.location.pathname+window.location.hash,false,false)},version:"2.3.1"}},{}]},{},[1])(1)});
+;
+/****************************************************************************
+    url.js-extensions.js, 
+
+    (c) 2016, FCOO
+
+    https://github.com/FCOO/url.js-extensions
+    https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window, document, undefined) {
+    "use strict";
+
+    //Workaround for event.newURL and event.oldURL
+    //let this snippet run before your hashchange event binding code
+    if (!window.HashChangeEvent)(
+        function(){
+            var lastURL= document.URL;
+            window.addEventListener("hashchange", function(event){
+                Object.defineProperty(event,"oldURL",{enumerable:true,configurable:true,value:lastURL});
+                Object.defineProperty(event,"newURL",{enumerable:true,configurable:true,value:document.URL});
+                lastURL = document.URL;
+            });
+        }()
+    );
+
+
+    //Overwrite Url._updateAll to handle Security Error in Safari on Mac that prevent more that 100 history updates in 30 sec
+    window.Url._updateAll = function(s, push, triggerPopState) {
+        try {
+            window.history[push ? "pushState" : "replaceState"](null, "", s);          
+        }
+        catch (e) {
+            //Use 'old' methods - perhaps it will reload the page 
+            window.location.replace( s );
+        }
+        
+        if (triggerPopState) {
+            window.Url.triggerPopStateCb({});
+        }
+        return s;
+    };
+
+
+    /******************************************
+    anyString(name, notDecoded, search, sep)
+    Copy of Url.queryString with optional input string (search) 
+    and separaator (sep)
+    ******************************************/
+    function anyString(name, notDecoded, search, sep){
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+
+        var regex = new RegExp("[\\"+sep+"&]" + name + "=([^&#]*)")
+          , results = regex.exec(search)
+          , encoded = null
+          ;
+
+        if (results === null) {
+            regex = new RegExp("[\\"+sep+"&]" + name + "(\\&([^&#]*)|$)");
+            if (regex.test(search)) {
+                return true;
+            }
+            return undefined;
+        } else {
+            encoded = results[1].replace(/\+/g, " ");
+            if (notDecoded) {
+                return encoded;
+            }
+            return decodeURIComponent(encoded);
+        }
+    }
+
+
+    /******************************************
+    _correctSearchOrHash
+    Check and correct search or hash = ID_VALUE[&ID_VALUE]
+        ID_VALUE = 
+            ID or
+            ID=VALUE or
+            ID=VALUE,VALUE2,...,VALUEN
+        VALUE contains only a-z 0-9 - _ SPACE
+        ID contains only a-z 0-9 - _
+    *******************************************/
+    function _correctSearchOrHash( str, preChar ){
+        function decodeStr( str ){
+            try {
+                decodeURIComponent( str ); 
+                return decodeURIComponent( str ); 
+            }
+            catch(err) { 
+                return undefined;
+            }
+        }
+
+        //Chack and correct the parameter and/or hash-tag
+        var strList,
+            result = '',
+            idRegEx = new RegExp(/[\w\-_]+/),
+            idValues, id, values, value, oneValueOk, i, j;
+
+        //Convert to char
+        str = str.replace(/%3D/g, '=');
+        str = str.replace(/%2C/g, ',');
+        str = str.replace(/%3F/g, '?');
+        str = str.replace(/%23/g, '#');
+        str = str.replace(/%7B/g, '{');
+        str = str.replace(/%7D/g, '}');
+        str = str.replace(/%2B/g, '+');
+        str = str.replace(/%22/g, '"');
+        str = str.replace(/%3A/g, ':');
+
+        //Remove pre-char
+        while (preChar && str.length && (str.charAt(0) == preChar) )
+            str = str.slice(1);
+
+        strList = str.split('&'); 
+
+        for (i=0; i<strList.length; i++ ){
+            idValues = strList[i].split('=');
+            id = decodeStr( idValues[0] );
+            values = idValues[1] || undefined; 
+            oneValueOk = false;
+            if ( id && (idRegEx.exec(id) == id ) ){
+                //Correct id
+                if (values === undefined){
+                    oneValueOk = true;
+                    valueList = [];
+                }
+                else {
+                    //Check syntax of values
+                    var valueList = values.split(',');
+                    for (j=0; j<valueList.length; j++ ){
+                        value = decodeStr( valueList[j] );
+                        if ( value ){
+                            if (value == 'undefined')
+                              valueList[j] = 'false';
+                            oneValueOk = true;
+                        }
+                        else
+                            valueList[j] = undefined;
+                    }
+                }
+                if ( oneValueOk ){
+                    result += (result ? '&' : '') + id;
+                    var firstValue = true;
+                    for (j=0; j<valueList.length; j++ ){
+                        value = valueList[j];
+                        result += (firstValue ? '=' : ',') + (value ? value : ''); 
+                        firstValue = false;
+                    }
+                }
+            } //end of correct id
+        }
+        return decodeURIComponent(result);
+    }
+
+
+    /******************************************
+    adjustUrl
+    Check and correct the url
+    *******************************************/
+    function adjustUrl(){ 
+        var oldSearch = window.location.search,
+            newSearch = this._correctSearchOrHash( oldSearch, '?' ),
+            oldHash   = window.location.hash,
+            newHash   = this._correctSearchOrHash( oldHash, '#' ),
+            newUrl    = window.location.pathname +  
+                          (newSearch ? '?' + encodeURI(newSearch) : '') + 
+                          (newHash   ? '#' + encodeURI(newHash)   : '');
+
+        this._updateAll( newUrl );          
+        return newUrl;
+    }
+
+    /******************************************
+    onHashchange( handler [, context])
+    Add handler = function( event) to the event "hashchange"
+    Can by omitted if the hash-tag is updated using 
+    Url.updateHashParam(..) or Url.updateHash(..)
+    *******************************************/
+    function onHashchange( handler, context ){
+        this.hashchange = this.hashchange || [];
+        this.hashchange.push( $.proxy(handler, context) );
+    }
+   
+    /******************************************
+    hashString
+    Same as queryString but for the hash
+    It is a adjusted copy of queryString
+    *******************************************/
+    function hashString(name, notDecoded){
+        return anyString(name, notDecoded, window.location.hash, '#');
+    }
+    
+    /******************************************
+    parseHash
+    Same as parseQuery but for the hash
+    *******************************************/
+    function parseHash(){
+        return this.parseQuery( this.hash() );    
+    }
+
+    /******************************************
+    updateHash(hashObj, dontCallHashChange)
+    Update hash-tag with the id-value in hashObj
+    If dontCallHashChange==true the hashchange-event-functions 
+    added with Url.onHashchange( function[, context]) will not be called
+    *******************************************/
+    function updateHash(hashObj, dontCallHashChange){
+        this.dontCallHashChange = dontCallHashChange;
+        var newHash = this.stringify( $.extend({}, this.parseHash(), hashObj || {}) );
+
+        //return window.location.hash = '#'+newHash;
+        return this._updateAll(window.location.pathname + window.location.search + '#' + newHash, false);
+    }
+     
+    /******************************************
+    updateHashParam
+    Adds, updates or deletes a hash-tag
+    If dontCallHashChange==true the hashchange-event-functions 
+    added with Url.onHashchange( function[, context]) will not be called
+    *******************************************/
+    function updateHashParam(hashParam, value, dontCallHashChange){
+        var hashParsed = this.parseHash();
+        if (value === undefined){
+            delete hashParsed[hashParam];
+        }
+        else {
+            if (hashParsed[hashParam] === value)
+                return this;
+            hashParsed[hashParam] = value;
+        }
+        this.dontCallHashChange = dontCallHashChange;
+
+        //return window.location.hash = this.stringify(hashParsed);
+        return this._updateAll(window.location.pathname + window.location.search + '#' + this.stringify(hashParsed), false);
+
+    }
+
+
+    /******************************************
+    validateValue
+    Validate value using validator
+    validator = regExp | function( value ) | array of validator
+    *******************************************/
+    function validateJSONValue( value ){
+        try {
+            var jsonObj = JSON.parse( value );
+            if ($.type( jsonObj ) == 'object')
+                return true;
+        }
+        catch (e) { 
+            return false;
+        }
+        return false;
+    }
+
+    function validateValue( value, validator ){
+        //Convert Boolean into String
+        if ($.type( value ) === "boolean")
+            value = value ? 'true' : 'false';  
+        value = value || '';
+
+        if (validator === undefined)
+            return true;
+
+        if ( $.isFunction(validator) )
+          return !!validator( value );
+
+        if ( $.isArray(validator) ){
+            var result = true;
+            $.each( validator, function( index, _validator ){
+                if ( !validateValue( value, _validator) ){
+                    result = false;
+                    return false;
+                }
+            });
+            return result;
+        }
+        switch (validator){
+            case 'BOOLEAN' : validator = /true|false/;           break;
+            case 'NUMBER'  : validator = /[-+]?[0-9]*\.?[0-9]+/; break;
+            case 'NOTEMPTY': validator = /.+/;                   break;
+
+            //Special case for json-object-string
+            case 'JSON'    : return validateValue( value, validateJSONValue); 
+        }
+
+        var regExp = new RegExp(validator),
+            execResult = regExp.exec(value); 
+        return !!(execResult && (execResult.length == 1) && (execResult[0] == value));
+    }
+
+
+    /******************************************
+    _parseObject( obj, validatorObj, defaultObj, options )
+    Parse obj after it is validated and converted acording to
+    validatorObj, defaultObj, and options
+
+    validatorObj: object with {id: validator,..}. Failed values are removed 
+    defaultObj  : object with {id: value}. Values to be used if `id` is missing or fails validation 
+    options: {
+        convertBoolean: Boolean (default = true ) If true all values == "true" or "false" are converted into Boolean
+        convertNumber : Boolean (default = true ) If true all values representing a number is converted to float
+        convertJSON   : Boolean (default = true ) If true all values representing a stringify json-object is converted to a real json-object
+        queryOverHash : Boolean (default = true ) If true and the same id is given in both query-string and hash-tag the value from query-string is returned. 
+                                                  If false the value from hash-tag is returned
+    }
+    *******************************************/
+    function _parseObject( obj, validatorObj, defaultObj, options ){
+        validatorObj = validatorObj || {}; 
+        defaultObj = defaultObj || {}; 
+        options = $.extend( {}, options, { 
+            convertBoolean: true, 
+            convertNumber : true, 
+            convertJSON   : true,
+            queryOverHash : true 
+        }); 
+        
+        var _this = this;
+
+        //Validate all values
+        $.each( obj, function( id, value ){
+            //Convert '+' to space
+            if ( $.type(value) == 'string' )
+                value = value.replace(/\+/g, " ");
+            
+            //Validate value
+            if ( !_this.validateValue( value, validatorObj[id] ) )
+                value = undefined; 
+
+            //Convert "true" and false" to Boolean
+            if ( options.convertBoolean && ( (value == 'true') || (value == 'false') ) )
+              value = (value == 'true');
+                
+            //Convert String to Float
+            if (options.convertNumber && _this.validateValue( value, 'NUMBER') ){
+                value = parseFloat( value );
+            }
+                
+            //Remove deleted keys
+            if (value === undefined)
+                delete obj[id];
+            else
+                obj[id] = value;
+        });
+
+        //Convert String to json-object
+        if (options.convertJSON)
+            $.each( obj, function( id, value ){
+                if ( _this.validateValue( value, 'JSON') )
+                    obj[id] = JSON.parse( value );
+            });        
+        
+        //Insert default values
+        $.each( defaultObj, function( id, value ){
+            if (obj[id] === undefined)
+              obj[id] = value;
+        });
+
+        return obj;
+    }
+
+    /******************************************
+    parseAll( validatorObj, defaultObj, options )
+    Parse the combined query-string and hash-tags
+    Returns a object with `id: value` for both query-string and hash-tags
+    validatorObj, defaultObj, options: See _parseObject
+    *******************************************/
+    function parseAll( validatorObj, defaultObj, options ){
+        var _this = this,
+            queryOverHash = options ? !!options.queryOverHash : true;
+
+        function parseObj( str ){ 
+            var obj = _this.parseQuery( str );
+
+            //Use anyString(..) to get adjusted value
+            $.each( obj, function( id/*, value*/ ){
+                obj[id] = anyString(id, false, '?'+str, '?');
+            });
+
+            return _this._parseObject( obj, validatorObj, defaultObj, options ); 
+        }
+
+        var queryObj = parseObj( this._correctSearchOrHash( window.location.search, '?' ) ),
+            hashObj  = parseObj( this._correctSearchOrHash( window.location.hash,   '#' ) );
+
+        return $.extend( queryOverHash ? hashObj  : queryObj, 
+                         queryOverHash ? queryObj : hashObj   ); 
+    }
+
+    /******************************************
+    onHashChange()
+    ******************************************/
+    function onHashChange( event ){
+        //Adjust the hash-tag
+        var oldHash = window.location.hash,
+            newHash = this._correctSearchOrHash( oldHash, '#' );
+
+        if ( decodeURIComponent(oldHash.substring(1)) != decodeURIComponent(newHash) ){
+          window.location.hash = newHash; //Will trig a new call of onHashChange
+        }
+        else {
+            if (this.dontCallHashChange){
+                this.dontCallHashChange = false;
+                return;
+            }
+            //Fire the events added with Url.onHashchange
+            this.hashchange = this.hashchange || [];
+            for (var i=0; i<this.hashchange.length; i++ )
+                this.hashchange[i]( event );
+        }
+    }
+
+    /******************************************
+    //Extend window.Url with the new methods
+    ******************************************/
+    $.extend( window.Url, {
+        _correctSearchOrHash: _correctSearchOrHash,
+        adjustUrl           : adjustUrl,
+        onHashchange        : onHashchange,
+        hashString          : hashString,
+        parseHash           : parseHash,
+        updateHash          : updateHash,
+        updateHashParam     : updateHashParam,
+        validateValue       : validateValue,
+        _parseObject        : _parseObject,
+        parseAll            : parseAll,
+        onHashChange        : onHashChange
+    });
+
+    //Add the 'global' hashchange-event-methods
+    window.addEventListener("hashchange", $.proxy( onHashChange, window.Url ), false);
+
+
+
+    /******************************************
+    Initialize/ready 
+    *******************************************/
+    $(function() { 
+        window.Url.adjustUrl();
+    }); 
+    //******************************************
+
+
+
+}(jQuery, this, document));
+
+/******************************************
+Variables in window.location making up the full url
+    
+var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + window.location.search + window.location.hash;
+
+window.location.protocol
+window.location.host
+window.location.pathname
+window.location.search 
+window.location.hash 
+
+******************************************/
+
+;
+/****************************************************************************
+    fcoo-settings.js, 
+
+    (c) 2016, FCOO
+
+    https://github.com/FCOO/fcoo-settings
+    https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window, document, undefined) {
+    "use strict";
+    
+    //Create fcoo.settings-namespace
+    window.fcoo = window.fcoo || {};
+    var ns = window.fcoo.settings = window.fcoo.settings || {};
+
+    var settings       = {},
+        loadedValues   = {},
+        queryValues    = {}, //values set in the url
+        storageIdSave  = 'fcoo_settings',
+        storageIdForce = 'fcoo_settings_FORCE';
+
+        //Get query settings            
+        try { 
+            queryValues = JSON.parse( window.Url.queryString('settings') ); 
+        }
+        catch (e) { 
+            queryValues = {}; 
+        }
+
+    /**********************************
+    Setting( options )
+    options = {id, validator, applyFunc, defaultValue, globalEvents )
+    id [String]
+    validator [null] | [String] | [function( value)]. If [String] => using Url.js-extensions validation
+    applyFunc [function( value, id, defaultValue )] function to apply the settings for id
+    defaultValue 
+    globalEvents {String} = Id of global-events in fcoo.events that aare fired when the setting is changed
+    onError [function( value, id )] (optional). Called if a new value is invalid according to validator
+    **********************************/
+    function Setting( options ) {
+        this.options = options;
+        this.options.applyFunc = options.applyFunc || function(){};
+        this.value = null;
+        this.saveValue = null;
+        if ((this.options.defaultValue === undefined) && (typeof this.options.validator == 'string') )
+            //Try to set default value based on the validator
+            switch (this.options.validator){
+                case 'BOOLEAN': this.options.defaultValue = false;  break;
+                case 'NUMBER' : this.options.defaultValue = 0;      break;
+            }
+    }
+
+    ns.Setting = Setting;
+
+    //Extend the prototype
+    ns.Setting.prototype = {
+        apply:  function ( newValue, dontCallApplyFunc ){ 
+                    var id = this.options.id;
+                    newValue = (newValue === undefined) ? this.options.defaultValue : newValue;
+
+                    if ( !window.Url.validateValue(''+newValue, this.options.validator) ){ 
+                        if (this.options.onError)
+                            this.options.onError( newValue, id );
+                        newValue = this.options.defaultValue;
+                    }
+                    
+                    this.value = newValue;
+
+                    //Set saveValue = newValue unless it is the value from query-string
+                    if ((queryValues[id] === null) || (newValue != queryValues[id]))
+                        this.saveValue = newValue;
+                    queryValues[id] = null;
+
+                    if (!dontCallApplyFunc)
+                        this.options.applyFunc( this.value, id, this.options.defaultValue );
+
+                    //Fire global-events (if any)
+                    if (this.options.globalEvents && window.fcoo.events && window.fcoo.events.fire)
+                        window.fcoo.events.fire( this.options.globalEvents, id, this.value );
+
+                }    
+    };    
+
+    /**********************************
+    add( options )
+    options = {id, validator, applyFunc, defaultValue, globalEvents )
+    id [String]
+    validator [null] | [String] | [function( value)]. If [String] = 
+    defaultValue 
+    **********************************/
+    ns.add = function( options ){
+        options = $.extend( {}, { callApply: true }, options );
+        var setting = new ns.Setting( options );
+        settings[options.id] = setting;
+        setting.apply( loadedValues[setting.options.id], !options.callApply );                       
+    };
+    
+    /**********************************
+    set( id, value, reload )
+    id [String]
+    value [any]
+    reload [Boolean] 
+    **********************************/
+    ns.set = function( id, value, reload ){
+        var setting = settings[id];
+        if (!setting)
+          return false;
+
+        //Use saved value if 'value' isn't given
+        value = value === undefined ? this.get( id ) : value;
+        setting.apply( value, reload );
+        this.save( reload );
+
+        if (reload)
+          window.location.reload();
+    };
+    
+    /**********************************
+    get( id )
+    id [String]
+    **********************************/
+    ns.get = function( id ){
+        var setting = settings[id];
+        return setting ? setting.value : undefined;
+    };
+
+    /**********************************
+    loadFromLocalStorage()
+    Load the settings from localStorage 'fcoo-settings'
+    **********************************/
+    ns.loadFromLocalStorage = function(){
+        return JSON.parse( window.localStorage.getItem( storageIdSave ) || '{}' );
+    };
+
+    /**********************************
+    load()
+    Load the settings from
+        1) sessionStorage 'fcoo-settings-FORCE', or
+        2) Load settings from
+            a: url param 'settings
+            b: localStorage 'fcoo-settings'
+            c: default values
+    **********************************/
+    ns.load = function(){
+        //1) Try loading from storageIdForce 
+        var str = window.sessionStorage.getItem( storageIdForce );
+        if (str){
+            window.sessionStorage.removeItem( storageIdForce );
+            loadedValues = JSON.parse( str );
+        }
+        else {
+            //2) Load settings from...
+            //a: url param 'settings = queryValues
+
+            //b: localStorage 'fcoo-settings', 
+            var savedValues = this.loadFromLocalStorage();
+
+            //c: default values - is set by fcoo.settings.add(...)
+
+            //Combine the new settings
+            loadedValues =  $.extend( {}, savedValues, queryValues );
+        }
+
+        $.each( settings, function( id, setting ){ 
+            setting.apply( loadedValues[id] ); 
+        });
+    };
+    
+    /**********************************
+    save( toForce, saveStr )
+    Save the settings in 
+    toForce == false: localStorage 'fcoo-settings'
+    toForce == true : sessionStorage 'fcoo-settings-FORCE'
+
+    saveStr (special case) the string to be saved and only when toForce==true
+    **********************************/
+    ns.save = function( toForce, saveStr ){ 
+        //Save all saveValue from settings
+        var settingValuesToSave = this.loadFromLocalStorage();
+        $.each( settings, function( id, setting ){ 
+            if (setting.saveValue)
+                settingValuesToSave[ setting.options.id ] = setting.saveValue;
+        });
+
+        if (toForce){
+            //Save all settings to sessionStorage 'fcoo-settings-FORCE'
+            window.sessionStorage.setItem( storageIdForce, saveStr || JSON.stringify( settingValuesToSave ) );
+        }
+        else {
+            window.localStorage.setItem( storageIdSave, JSON.stringify( settingValuesToSave ) );
+        }
+    };
+
+
+    //Load the settings
+    ns.load();
+
+    /******************************************
+    Initialize/ready 
+    *******************************************/
+//    $(function() { 
+//    }); 
+
+}(jQuery, this, document));
+;
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global.i18nextIntervalPluralPostProcessor = factory());
+}(this, (function () { 'use strict';
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+function intervalMatches(interval, count) {
+  if (interval.indexOf('-') > -1) {
+    var p = interval.split('-');
+    if (p[1] === 'inf') {
+      var from = parseInt(p[0], 10);
+      return count >= from;
+    } else {
+      var _from = parseInt(p[0], 10);
+      var to = parseInt(p[1], 10);
+      return count >= _from && count <= to;
+    }
+  } else {
+    var match = parseInt(interval, 10);
+    return match === count;
+  }
+}
+
+var index = {
+  name: 'interval',
+  type: 'postProcessor',
+
+  options: {
+    intervalSeparator: ';',
+    intervalRegex: /^\((\S*)\){(.*)}$/,
+    intervalSuffix: '_interval'
+  },
+
+  setOptions: function setOptions(options) {
+    this.options = _extends({}, this.options, options);
+  },
+  process: function process(value, key, options, translator) {
+    var _this = this;
+
+    var p = value.split(this.options.intervalSeparator);
+
+    var found = void 0;
+    p.forEach(function (iv) {
+      if (found) return;
+      var match = _this.options.intervalRegex.exec(iv);
+
+      if (match && intervalMatches(match[1], options.count || 0)) {
+        found = match[2];
+      }
+    });
+
+    // not found fallback to classical plural
+    if (!found) {
+      var newOptions = _extends({}, options);
+      if (typeof newOptions.postProcess === 'string') {
+        delete newOptions.postProcess;
+      } else {
+        var index = newOptions.postProcess.indexOf('interval'); // <-- Not supported in <IE9
+        if (index !== -1) newOptions.postProcess.splice(index, 1);
+      }
+      found = translator.translate(key.replace(this.options.intervalSuffix, ''), newOptions);
+    }
+
+    return found || value;
+  }
 };
 
 return index;
@@ -13627,131 +14195,6 @@ return index;
         ns.langFlag.setLang( i18next.language );
     });
 
-
-    /***********************************************************************
-    Extend i18next
-    ************************************************************************
-    Default 1-dim json-structure for i18next is 
-        { lang1: { 
-            namespace: { key: value1 }
-          },
-          lang2: { 
-            namespace: { key: value2 }
-          }
-        }
-    To make adding translation easier a new format is supported: 
-        { namespace: {
-            key: {
-              lang1: value1,
-              lang2: value2
-            }
-        }
-
-    
-    Four methods areadded to i18next:
-        addPhrase( key, [namespace,] langValue) 
-        - key {string} can be a combined namespace:key string. 
-        - langValue = { {lang: value}xN }
-
-        addPhrases( [namespace,] keyLangValue )
-        - keyLangValue = { key: {lang: value}xN }, key2: {lang: value}xN } }
-
-        sentence ( langValue, options )
-        - langValue = { {lang: value}xN }
-
-        s ( langValue, options )
-        - langValue = { {lang: value}xN }
-    ***********************************************************************/
-
-    /***********************************************************************
-    addPhrase( key, [namespace,] langValue) 
-    - key {string} can be a combined namespace:key string. 
-    - langValue = { {lang: value}xN }
-    ***********************************************************************/
-    i18next.addPhrase = function( namespace, key, langValue ){
-        if (arguments.length == 2){
-            langValue = arguments[1];
-            if (arguments[0].indexOf(':') > -1){
-              key = arguments[0].split(':')[1];
-              namespace = arguments[0].split(':')[0];
-            }
-            else {
-                key = arguments[0];
-                namespace = this.options.defaultNS[0];
-            }
-        }
-        var _this = this;
-
-        $.each( langValue, function( lang, value ){
-            _this.addResource(lang, namespace, key, value);
-        });
-        return this;
-    };
-
-    /***********************************************************************
-    addPhrases( [namespace,] keyLangValue )
-    - keyLangValue = { key: {lang: value}xN }, key2: {lang: value}xN } }
-    ***********************************************************************/
-    i18next.addPhrases = function( namespace, keyLangValue ){
-        var _this = this;
-        $.each( keyLangValue, function( key, langValue ){
-            _this.addPhrase( namespace, key, langValue );
-        });
-        return this;
-    };
-        
-    /***********************************************************************
-    i18next.loadPhrases( jsonFileName );
-    namespaceKeyLangValue = 
-        {   namespaceA: {
-                keyA: {
-                    langA: "The text",
-                    langB: "Tekst"
-                },
-                keyB: { ... }
-            },
-            namespaceB :{ ... }
-        }
-    ***********************************************************************/
-    i18next.loadPhrases = function( jsonFileName, onFail ){
-        var jqxhr = $.getJSON( jsonFileName );
-        if (onFail)
-            jqxhr.fail( onFail );
-
-        jqxhr.done( function( data ) {
-            $.each( data, function( namespace, keyLangValue ) {
-                i18next.addPhrases( namespace, keyLangValue );
-            });
-        });
-    };
-    
-    /***********************************************************************
-    sentence ( langValue, options )
-    - langValue = { {lang: value}xN }
-    A single translation of a sentence. No key used or added
-    ***********************************************************************/
-    i18next.sentence = function( langValue, options ){
-        var nsTemp = '__TEMP__',
-            keyTemp = '__KEY__',
-            _this = this;
-        
-        //Remove any data from nsTemp
-        $.each( languages, function( index, lang ){
-            _this.removeResourceBundle(lang, nsTemp);
-        });
-        this.addPhrase( nsTemp, keyTemp, langValue );
-        return this.t(nsTemp + this.options.nsSeparator + keyTemp, options );
-    };
-
-    /***********************************************************************
-    s ( langValue, options )
-    - langValue = { {lang: value}xN }
-    ***********************************************************************/
-    i18next.s = function( langValue, options ){
-        return this.sentence( langValue, options );
-    };
-
-
     /***********************************************************
     Ininialize i18next
     ***********************************************************/
@@ -13773,114 +14216,6 @@ return index;
     i18next.on('languageChanged', function() {
         window.fcoo.events.fire( languagechanged );
     });
-
-
-    /***********************************************************
-    jquery-i18next - i18next plugin for jquery 
-    https://github.com/i18next/jquery-i18next
-    ***********************************************************/
-    var jQuery_i18n_selectorAttr = 'data-i18n',    // selector for translating elements
-        jQuery_i18n_targetAttr   = 'i18n-target',  // data-() attribute to grab target element to translate (if diffrent then itself)
-        jQuery_i18n_optionsAttr  = 'i18n-options'; // data-() attribute that contains options, will load/set if useOptionsAttr = true
-
-    
-    window.jqueryI18next.init(
-        i18next/*i18nextInstance*/, 
-        $, 
-        {
-            tName         : 't',                        // --> appends $.t = i18next.t
-            i18nName      : 'i18n',                     // --> appends $.i18n = i18next
-            handleName    : 'localize',                 // --> appends $(selector).localize(opts);
-            selectorAttr  : jQuery_i18n_selectorAttr,   // selector for translating elements
-            targetAttr    : jQuery_i18n_targetAttr,     // data-() attribute to grab target element to translate (if diffrent then itself)
-            optionsAttr   : jQuery_i18n_optionsAttr,    // data-() attribute that contains options, will load/set if useOptionsAttr = true
-            useOptionsAttr: true,                       // see optionsAttr
-            parseDefaultValueFromContent: true          // parses default values from content ele.val or ele.text
-        }
-    );
-
-
-    /***********************************************************
-    Add new methods to jQuery prototype: 
-    $.fn.i18n( htmlOrKeyOrPhrase[, attribute][, options] )
-    Add/updates the "data-i18n" attribute
-
-    htmlOrKeyOrPhrase = simple html-string OR 
-                        i18next-key OR 
-                        a phrase-object (see langValue in i18next.addPhrase)
-    
-    
-    ***********************************************************/
-    var tempKeyId = 0,
-        tempNS = '__TEMP__';
-    $.fn.extend({
-        i18n: function( htmlOrKeyOrPhrase ) {
-            var options = null, 
-                attribute = '', 
-                argument,
-                isKey = true,
-                key = htmlOrKeyOrPhrase;
-
-            for (var i=1; i<arguments.length; i++ ){
-                argument = arguments[i];              
-                switch ($.type(argument)){
-                  case 'object': options = argument; break;
-                  case 'string': attribute = argument; break;
-                }
-            }
-
-            //Get the key or add a temp-phrase
-            if (typeof htmlOrKeyOrPhrase == 'string')//{
-                isKey = !!(window.i18next.t( htmlOrKeyOrPhrase, {defaultValue:''} ));
-            else {
-                //It is a {da:'...', en:'...', de:'...'} object
-                key = 'jqueryfni18n' + tempKeyId++;
-                window.i18next.addPhrase( tempNS, key, htmlOrKeyOrPhrase );
-                key = tempNS+':'+key;
-            }    
-
-            if (isKey)
-                return this.each(function() {
-                    var $this = $(this),
-                        oldData = $this.attr( jQuery_i18n_selectorAttr ),
-                        newData = [],
-                        oldStr,
-                        newStr = attribute ? '[' + attribute + ']' + key : key,
-                        keep;
-                    oldData = oldData ? oldData.split(';') : [];
-            
-                    for (var i=0; i<oldData.length; i++ ){
-                        oldStr = oldData[i];
-                        keep = true;
-                        //if the new key has an attribute => remove data with '[attribute]'
-                        if (attribute && (oldStr.indexOf('[' + attribute + ']') == 0))
-                            keep = false;                      
-                        //if the new key don't has a attribute => only keep other attributes
-                        if (!attribute && (oldStr.indexOf('[') == -1)) 
-                          keep = false;
-                        if (keep)
-                          newData.push( oldStr );
-                    }
-                    newData.push( newStr);                                
-
-                    //Set data-i18n
-                    $this.attr( jQuery_i18n_selectorAttr, newData.join(';') );
-
-                    //Set data-i18n-options
-                    if (options)
-                        $this.attr( 'data-' + jQuery_i18n_optionsAttr, JSON.stringify( options ) );
-
-                    //Update contents
-                    $this.localize();        
-                });
-            else
-                //Not a key => simple add htmlOrKeyOrPhrase as html
-                return this.each(function() {
-                    $(this).html( htmlOrKeyOrPhrase );
-                });
-        }
-    });        
-
 
     //Update all element when language changes
     window.fcoo.events.on( languagechanged, function() { 
@@ -13909,190 +14244,6 @@ return index;
 
 
 }(jQuery, this, document));
-;
-/****************************************************************************
-	fcoo-i18next-phrases.js, 
-
-	(c) 2017, FCOO
-
-	https://github.com/FCOO/fcoo-i18next-phrases
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-	"use strict";
-	
-	//Create fcoo-namespace
-	//window.fcoo = window.fcoo || {};
-    //var ns = window;
-
-    /*
-    Namespace name
-    Full name of institutions or organizations. 
-    Use national abbreviation as key and include name in national language. 
-    */
-    window.i18next.addPhrases( 'name', {
-        fcoo: {
-            da: "Forsvarets Center for Operativ Oceanografi",
-            en: "Defence Center for Operational Oceanography"
-        },
-        dmi: {
-            da: "Danmarks Meteorologiske Institut",
-            en: "Danish Meteorological Institute"
-        },
-        ecmwf: {
-            en: "European Centre for Medium-Range Weather Forecasts"
-        },
-        noaa: {
-            en: "National Oceanic and Atmospheric Administration"
-        },
-        navo: {
-            en: "The Naval Oceanographic Office"
-        },
-        bsh: {
-            en: "Federal Maritime and Hydrographic Agency",
-            de: "Bundesamt f�r Seeschifffahrt und Hydrographie"
-        },
-        smhi: {
-            en: "Swedish Meteorological and Hydrological Institute",
-            sv: "Sveriges meteorologiska och hydrologiska institut"
-        },
-
-        
-
-    });
-
-    /*
-    Namespace abbr
-    The abbrivation of institutes etc.
-    Only needed in $.i18nLink if key.toUpperCase is different from abbr
-    E.g. if key = 'fcoo' and abbr = 'FCOO' => no need for 'abbr:fcoo'
-    */
-    window.i18next.addPhrases( 'abbr', {
-  
-
-    });
-
-    /*
-    Namespace link
-    The link-address to a home-page. Use the address as key. 
-    E.g. key = "link:dmi.dk", translation da:"http://dmi.dk", en:"http://dmi.dk/en"
-    */
-    window.i18next.addPhrases( 'link', {
-        fcoo : { da: "//fcoo.dk", en: "//fcoo.dk?lang=en" },
-        dmi  : { da: "http://dmi.dk",  en: "http://dmi.dk/en" },
-        ecmwf: { en: "http://www.ecmwf.int" },
-        noaa : { en: "http://noaa.gov" },
-        navo : { en: "http://www.usno.navy.mil/NAVO" },
-        bsh  : { en: "http://www.bsh.de/en", de: "http://www.bsh.de" },
-        smhi : { en: "//www.smhi.se/en", sv: "//www.smhi.se" }
-
-
-    });
-
-    /*
-    Namespace button
-    Standard text to buttons. 
-    E.g. button:close = {da: "Luk", en:"Close"}
-    */
-
-
-    /*
-    Namespace parameter
-    Physical parameter. Using XXX codes for parameter. See http://www.nco.ncep.noaa.gov/pmb/docs/on388/table2.html
-    E.g. 
-        parameter:wind = {da:"vindhastighed", en:"wind speed"}
-        parameter:wdir = {da:"vindretning", en:"wind direction"}
-    */
-/* TODO
-
-    en: {
-          'Significant wave height of combined wind waves and swell': 'Wave height',
-          'degC': '&deg;C',
-          'Temp.': 'Temperature'
-    },
-    da: {
-          'Wave height': 'B�lgeh�jde',
-          'Mean wave period': 'B�lgeperiode',
-          'Vel.': 'Str�mhastighed',
-          'Current speed': 'Str�mhastighed',
-          'Current': 'Str�mhastighed',
-          'Elevation': 'Vandstand',
-          'Temperature': 'Temperatur',
-          'Temp.': 'Temperatur',
-          'Salinity': 'Salinitet',
-          'Sea surface temperature': 'Temperatur',
-          'Sea surface salinity': 'Salinitet',
-          'Wind speed': 'Vindhastighed',
-          'Wind': 'Vindhastighed',
-          'Air temperature (2m)': '2 meter temperatur',
-          'Sea ice concentration': 'Haviskoncentration',
-          'Sea ice thickness': 'Havistykkelse',
-          'Sea ice drift speed': 'Havisdrifthastighed',
-          'Visibility': 'Sigtbarhed',
-          'Total precipitation flux': 'Nedb�r',
-          '2 metre temperature': '2 meter temperatur',
-          'Total cloud cover': 'Skyd�kke',
-          'Significant wave height of combined wind waves and swell': 'B�lgeh�jde',
-          'mm/hour': 'mm/time',
-          'degC': '&deg;C',
-          'knots': 'knob',
-          'fraction': 'fraktion',
-          'meters': 'meter'
-    }
-    
-
-*/
-
-
-
-    /*
-    Namespace unit
-    Physical units.
-    E.g. unit:metre = {da:"meter", en:"metre"}
-    */
-
-
-
-    /*
-    jQuery methods to create element with contents given by i18next-keys
-    */
-
-    //Create a <a>- or <span>-element with abbriviation and title and link (if exists)
-    $.i18nLink = function( key ){
-        var $element,
-            abbr = window.i18next.t('abbr:'+key, {defaultValue:''});
-
-        if (window.i18next.t('link:'+key, {default:''})){
-            //Create an <a>-element
-            $element = $('<a/>');
-            $element.i18n('link:'+key, 'href');
-        }
-        else 
-            //Create a <span>-element
-            $element = $('<span/>');
-
-        //Add title
-        if (window.i18next.t('name:'+key, {defaultValue:''}))
-            $element.i18n('name:'+key, 'title');          
-
-        //Add abbrivation
-        if (abbr)
-            $element.i18n('abbr:'+key);          
-        else
-            $element.text( key.toUpperCase());          
-        
-        return $element;
-    };
-
-    //Initialize/ready 
-	$(function() { 
-
-	
-	}); //End of initialize/ready
-
-}(this, document));
 ;
 /*! @preserve
  * numeral.js
@@ -17582,7 +17733,7 @@ else {
 }(window.Modernizr, jQuery, this, document));
 ;
 //! moment.js
-//! version : 2.17.1
+//! version : 2.18.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -17622,6 +17773,10 @@ function isObjectEmpty(obj) {
         return false;
     }
     return true;
+}
+
+function isUndefined(input) {
+    return input === void 0;
 }
 
 function isNumber(input) {
@@ -17680,7 +17835,9 @@ function defaultParsingFlags() {
         userInvalidated : false,
         iso             : false,
         parsedDateParts : [],
-        meridiem        : null
+        meridiem        : null,
+        rfc2822         : false,
+        weekdayMismatch : false
     };
 }
 
@@ -17756,10 +17913,6 @@ function createInvalid (flags) {
     return m;
 }
 
-function isUndefined(input) {
-    return input === void 0;
-}
-
 // Plugins that add properties should also add the key here (null value),
 // so we can properly clone ourselves.
 var momentProperties = hooks.momentProperties = [];
@@ -17799,7 +17952,7 @@ function copyConfig(to, from) {
     }
 
     if (momentProperties.length > 0) {
-        for (i in momentProperties) {
+        for (i = 0; i < momentProperties.length; i++) {
             prop = momentProperties[i];
             val = from[prop];
             if (!isUndefined(val)) {
@@ -17936,8 +18089,11 @@ function set (config) {
     }
     this._config = config;
     // Lenient ordinal parsing accepts just a number in addition to
-    // number + (possibly) stuff coming from _ordinalParseLenient.
-    this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
+    // number + (possibly) stuff coming from _dayOfMonthOrdinalParse.
+    // TODO: Remove "ordinalParse" fallback in next major release.
+    this._dayOfMonthOrdinalParseLenient = new RegExp(
+        (this._dayOfMonthOrdinalParse.source || this._ordinalParse.source) +
+            '|' + (/\d{1,2}/).source);
 }
 
 function mergeConfigs(parentConfig, childConfig) {
@@ -18035,7 +18191,7 @@ function invalidDate () {
 }
 
 var defaultOrdinal = '%d';
-var defaultOrdinalParse = /\d{1,2}/;
+var defaultDayOfMonthOrdinalParse = /\d{1,2}/;
 
 function ordinal (number) {
     return this._ordinal.replace('%d', number);
@@ -18045,6 +18201,7 @@ var defaultRelativeTime = {
     future : 'in %s',
     past   : '%s ago',
     s  : 'a few seconds',
+    ss : '%d seconds',
     m  : 'a minute',
     mm : '%d minutes',
     h  : 'an hour',
@@ -18227,7 +18384,7 @@ function makeFormatFunction(format) {
     return function (mom) {
         var output = '', i;
         for (i = 0; i < length; i++) {
-            output += array[i] instanceof Function ? array[i].call(mom, format) : array[i];
+            output += isFunction(array[i]) ? array[i].call(mom, format) : array[i];
         }
         return output;
     };
@@ -18430,7 +18587,8 @@ var MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/;
 var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
 function localeMonths (m, format) {
     if (!m) {
-        return this._months;
+        return isArray(this._months) ? this._months :
+            this._months['standalone'];
     }
     return isArray(this._months) ? this._months[m.month()] :
         this._months[(this._months.isFormat || MONTHS_IN_FORMAT).test(format) ? 'format' : 'standalone'][m.month()];
@@ -18439,7 +18597,8 @@ function localeMonths (m, format) {
 var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
 function localeMonthsShort (m, format) {
     if (!m) {
-        return this._monthsShort;
+        return isArray(this._monthsShort) ? this._monthsShort :
+            this._monthsShort['standalone'];
     }
     return isArray(this._monthsShort) ? this._monthsShort[m.month()] :
         this._monthsShort[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
@@ -18706,11 +18865,11 @@ function getIsLeapYear () {
 }
 
 function createDate (y, m, d, h, M, s, ms) {
-    //can't just apply() to create a date:
-    //http://stackoverflow.com/questions/181348/instantiating-a-javascript-object-by-calling-prototype-constructor-apply
+    // can't just apply() to create a date:
+    // https://stackoverflow.com/q/181348
     var date = new Date(y, m, d, h, M, s, ms);
 
-    //the date constructor remaps years 0-99 to 1900-1999
+    // the date constructor remaps years 0-99 to 1900-1999
     if (y < 100 && y >= 0 && isFinite(date.getFullYear())) {
         date.setFullYear(y);
     }
@@ -18720,7 +18879,7 @@ function createDate (y, m, d, h, M, s, ms) {
 function createUTCDate (y) {
     var date = new Date(Date.UTC.apply(null, arguments));
 
-    //the Date.UTC function remaps years 0-99 to 1900-1999
+    // the Date.UTC function remaps years 0-99 to 1900-1999
     if (y < 100 && y >= 0 && isFinite(date.getUTCFullYear())) {
         date.setUTCFullYear(y);
     }
@@ -18737,7 +18896,7 @@ function firstWeekOffset(year, dow, doy) {
     return -fwdlw + fwd - 1;
 }
 
-//http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
+// https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
 function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
     var localWeekday = (7 + weekday - dow) % 7,
         weekOffset = firstWeekOffset(year, dow, doy),
@@ -18938,7 +19097,8 @@ function parseIsoWeekday(input, locale) {
 var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
 function localeWeekdays (m, format) {
     if (!m) {
-        return this._weekdays;
+        return isArray(this._weekdays) ? this._weekdays :
+            this._weekdays['standalone'];
     }
     return isArray(this._weekdays) ? this._weekdays[m.day()] :
         this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
@@ -19258,8 +19418,10 @@ addRegexToken('a',  matchMeridiem);
 addRegexToken('A',  matchMeridiem);
 addRegexToken('H',  match1to2);
 addRegexToken('h',  match1to2);
+addRegexToken('k',  match1to2);
 addRegexToken('HH', match1to2, match2);
 addRegexToken('hh', match1to2, match2);
+addRegexToken('kk', match1to2, match2);
 
 addRegexToken('hmm', match3to4);
 addRegexToken('hmmss', match5to6);
@@ -19267,6 +19429,10 @@ addRegexToken('Hmm', match3to4);
 addRegexToken('Hmmss', match5to6);
 
 addParseToken(['H', 'HH'], HOUR);
+addParseToken(['k', 'kk'], function (input, array, config) {
+    var kInput = toInt(input);
+    array[HOUR] = kInput === 24 ? 0 : kInput;
+});
 addParseToken(['a', 'A'], function (input, array, config) {
     config._isPm = config._locale.isPM(input);
     config._meridiem = input;
@@ -19337,7 +19503,7 @@ var baseConfig = {
     longDateFormat: defaultLongDateFormat,
     invalidDate: defaultInvalidDate,
     ordinal: defaultOrdinal,
-    ordinalParse: defaultOrdinalParse,
+    dayOfMonthOrdinalParse: defaultDayOfMonthOrdinalParse,
     relativeTime: defaultRelativeTime,
 
     months: defaultLocaleMonths,
@@ -19648,6 +19814,77 @@ function configFromISO(config) {
     }
 }
 
+// RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
+var basicRfcRegex = /^((?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d?\d\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(?:\d\d)?\d\d\s)(\d\d:\d\d)(\:\d\d)?(\s(?:UT|GMT|[ECMP][SD]T|[A-IK-Za-ik-z]|[+-]\d{4}))$/;
+
+// date and time from ref 2822 format
+function configFromRFC2822(config) {
+    var string, match, dayFormat,
+        dateFormat, timeFormat, tzFormat;
+    var timezones = {
+        ' GMT': ' +0000',
+        ' EDT': ' -0400',
+        ' EST': ' -0500',
+        ' CDT': ' -0500',
+        ' CST': ' -0600',
+        ' MDT': ' -0600',
+        ' MST': ' -0700',
+        ' PDT': ' -0700',
+        ' PST': ' -0800'
+    };
+    var military = 'YXWVUTSRQPONZABCDEFGHIKLM';
+    var timezone, timezoneIndex;
+
+    string = config._i
+        .replace(/\([^\)]*\)|[\n\t]/g, ' ') // Remove comments and folding whitespace
+        .replace(/(\s\s+)/g, ' ') // Replace multiple-spaces with a single space
+        .replace(/^\s|\s$/g, ''); // Remove leading and trailing spaces
+    match = basicRfcRegex.exec(string);
+
+    if (match) {
+        dayFormat = match[1] ? 'ddd' + ((match[1].length === 5) ? ', ' : ' ') : '';
+        dateFormat = 'D MMM ' + ((match[2].length > 10) ? 'YYYY ' : 'YY ');
+        timeFormat = 'HH:mm' + (match[4] ? ':ss' : '');
+
+        // TODO: Replace the vanilla JS Date object with an indepentent day-of-week check.
+        if (match[1]) { // day of week given
+            var momentDate = new Date(match[2]);
+            var momentDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][momentDate.getDay()];
+
+            if (match[1].substr(0,3) !== momentDay) {
+                getParsingFlags(config).weekdayMismatch = true;
+                config._isValid = false;
+                return;
+            }
+        }
+
+        switch (match[5].length) {
+            case 2: // military
+                if (timezoneIndex === 0) {
+                    timezone = ' +0000';
+                } else {
+                    timezoneIndex = military.indexOf(match[5][1].toUpperCase()) - 12;
+                    timezone = ((timezoneIndex < 0) ? ' -' : ' +') +
+                        (('' + timezoneIndex).replace(/^-?/, '0')).match(/..$/)[0] + '00';
+                }
+                break;
+            case 4: // Zone
+                timezone = timezones[match[5]];
+                break;
+            default: // UT or +/-9999
+                timezone = timezones[' GMT'];
+        }
+        match[5] = timezone;
+        config._i = match.splice(1).join('');
+        tzFormat = ' ZZ';
+        config._f = dayFormat + dateFormat + timeFormat + tzFormat;
+        configFromStringAndFormat(config);
+        getParsingFlags(config).rfc2822 = true;
+    } else {
+        config._isValid = false;
+    }
+}
+
 // date from iso format or fallback
 function configFromString(config) {
     var matched = aspNetJsonRegex.exec(config._i);
@@ -19660,13 +19897,24 @@ function configFromString(config) {
     configFromISO(config);
     if (config._isValid === false) {
         delete config._isValid;
-        hooks.createFromInputFallback(config);
+    } else {
+        return;
     }
+
+    configFromRFC2822(config);
+    if (config._isValid === false) {
+        delete config._isValid;
+    } else {
+        return;
+    }
+
+    // Final attempt, use Input Fallback
+    hooks.createFromInputFallback(config);
 }
 
 hooks.createFromInputFallback = deprecate(
-    'value provided is not in a recognized ISO format. moment construction falls back to js Date(), ' +
-    'which is not reliable across all browsers and versions. Non ISO date formats are ' +
+    'value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), ' +
+    'which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are ' +
     'discouraged and will be removed in an upcoming major release. Please refer to ' +
     'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
     function (config) {
@@ -19713,10 +19961,10 @@ function configFromArray (config) {
     }
 
     //if the day of the year is set, figure out what it is
-    if (config._dayOfYear) {
+    if (config._dayOfYear != null) {
         yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
 
-        if (config._dayOfYear > daysInYear(yearToUse)) {
+        if (config._dayOfYear > daysInYear(yearToUse) || config._dayOfYear === 0) {
             getParsingFlags(config)._overflowDayOfYear = true;
         }
 
@@ -19820,6 +20068,9 @@ function dayOfYearFromWeekInfo(config) {
 // constant that refers to the ISO standard
 hooks.ISO_8601 = function () {};
 
+// constant that refers to the RFC 2822 form
+hooks.RFC_2822 = function () {};
+
 // date from string and format string
 function configFromStringAndFormat(config) {
     // TODO: Move this to another part of the creation flow to prevent circular deps
@@ -19827,7 +20078,10 @@ function configFromStringAndFormat(config) {
         configFromISO(config);
         return;
     }
-
+    if (config._f === hooks.RFC_2822) {
+        configFromRFC2822(config);
+        return;
+    }
     config._a = [];
     getParsingFlags(config).empty = true;
 
@@ -20019,7 +20273,7 @@ function prepareConfig (config) {
 
 function configFromInput(config) {
     var input = config._i;
-    if (input === undefined) {
+    if (isUndefined(input)) {
         config._d = new Date(hooks.now());
     } else if (isDate(input)) {
         config._d = new Date(input.valueOf());
@@ -20030,7 +20284,7 @@ function configFromInput(config) {
             return parseInt(obj, 10);
         });
         configFromArray(config);
-    } else if (typeof(input) === 'object') {
+    } else if (isObject(input)) {
         configFromObject(config);
     } else if (isNumber(input)) {
         // from milliseconds
@@ -20131,6 +20385,38 @@ var now = function () {
     return Date.now ? Date.now() : +(new Date());
 };
 
+var ordering = ['year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond'];
+
+function isDurationValid(m) {
+    for (var key in m) {
+        if (!(ordering.indexOf(key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
+            return false;
+        }
+    }
+
+    var unitHasDecimal = false;
+    for (var i = 0; i < ordering.length; ++i) {
+        if (m[ordering[i]]) {
+            if (unitHasDecimal) {
+                return false; // only allow non-integers for smallest unit
+            }
+            if (parseFloat(m[ordering[i]]) !== toInt(m[ordering[i]])) {
+                unitHasDecimal = true;
+            }
+        }
+    }
+
+    return true;
+}
+
+function isValid$1() {
+    return this._isValid;
+}
+
+function createInvalid$1() {
+    return createDuration(NaN);
+}
+
 function Duration (duration) {
     var normalizedInput = normalizeObjectUnits(duration),
         years = normalizedInput.year || 0,
@@ -20142,6 +20428,8 @@ function Duration (duration) {
         minutes = normalizedInput.minute || 0,
         seconds = normalizedInput.second || 0,
         milliseconds = normalizedInput.millisecond || 0;
+
+    this._isValid = isDurationValid(normalizedInput);
 
     // representation for dateAddRemove
     this._milliseconds = +milliseconds +
@@ -20266,7 +20554,7 @@ hooks.updateOffset = function () {};
 // a second time. In case it wants us to change the offset again
 // _changeInProgress == true case, then we have to adjust, because
 // there is no such time in the given timezone.
-function getSetOffset (input, keepLocalTime) {
+function getSetOffset (input, keepLocalTime, keepMinutes) {
     var offset = this._offset || 0,
         localAdjust;
     if (!this.isValid()) {
@@ -20278,7 +20566,7 @@ function getSetOffset (input, keepLocalTime) {
             if (input === null) {
                 return this;
             }
-        } else if (Math.abs(input) < 16) {
+        } else if (Math.abs(input) < 16 && !keepMinutes) {
             input = input * 60;
         }
         if (!this._isUTC && keepLocalTime) {
@@ -20336,7 +20624,7 @@ function setOffsetToLocal (keepLocalTime) {
 
 function setOffsetToParsedOffset () {
     if (this._tzm != null) {
-        this.utcOffset(this._tzm);
+        this.utcOffset(this._tzm, false, true);
     } else if (typeof this._i === 'string') {
         var tZone = offsetFromString(matchOffset, this._i);
         if (tZone != null) {
@@ -20468,6 +20756,7 @@ function createDuration (input, key) {
 }
 
 createDuration.fn = Duration.prototype;
+createDuration.invalid = createInvalid$1;
 
 function parseIso (inp, sign) {
     // We'd normally use ~~inp for this, but unfortunately it also
@@ -20704,18 +20993,19 @@ function toString () {
     return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
 }
 
-function toISOString () {
+function toISOString() {
+    if (!this.isValid()) {
+        return null;
+    }
     var m = this.clone().utc();
-    if (0 < m.year() && m.year() <= 9999) {
-        if (isFunction(Date.prototype.toISOString)) {
-            // native implementation is ~50x faster, use it when we can
-            return this.toDate().toISOString();
-        } else {
-            return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
-        }
-    } else {
+    if (m.year() < 0 || m.year() > 9999) {
         return formatMoment(m, 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
     }
+    if (isFunction(Date.prototype.toISOString)) {
+        // native implementation is ~50x faster, use it when we can
+        return this.toDate().toISOString();
+    }
+    return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
 }
 
 /**
@@ -20735,7 +21025,7 @@ function inspect () {
         zone = 'Z';
     }
     var prefix = '[' + func + '("]';
-    var year = (0 < this.year() && this.year() <= 9999) ? 'YYYY' : 'YYYYYY';
+    var year = (0 <= this.year() && this.year() <= 9999) ? 'YYYY' : 'YYYYYY';
     var datetime = '-MM-DD[T]HH:mm:ss.SSS';
     var suffix = zone + '[")]';
 
@@ -20903,7 +21193,7 @@ function toJSON () {
     return this.isValid() ? this.toISOString() : null;
 }
 
-function isValid$1 () {
+function isValid$2 () {
     return isValid(this);
 }
 
@@ -21063,7 +21353,10 @@ addUnitPriority('date', 9);
 addRegexToken('D',  match1to2);
 addRegexToken('DD', match1to2, match2);
 addRegexToken('Do', function (isStrict, locale) {
-    return isStrict ? locale._ordinalParse : locale._ordinalParseLenient;
+    // TODO: Remove "ordinalParse" fallback in next major release.
+    return isStrict ?
+      (locale._dayOfMonthOrdinalParse || locale._ordinalParse) :
+      locale._dayOfMonthOrdinalParseLenient;
 });
 
 addParseToken(['D', 'DD'], DATE);
@@ -21243,7 +21536,7 @@ proto.isBetween         = isBetween;
 proto.isSame            = isSame;
 proto.isSameOrAfter     = isSameOrAfter;
 proto.isSameOrBefore    = isSameOrBefore;
-proto.isValid           = isValid$1;
+proto.isValid           = isValid$2;
 proto.lang              = lang;
 proto.locale            = locale;
 proto.localeData        = localeData;
@@ -21468,7 +21761,7 @@ function listWeekdaysMin (localeSorted, format, index) {
 }
 
 getSetGlobalLocale('en', {
-    ordinalParse: /\d{1,2}(th|st|nd|rd)/,
+    dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/,
     ordinal : function (number) {
         var b = number % 10,
             output = (toInt(number % 100 / 10) === 1) ? 'th' :
@@ -21589,6 +21882,9 @@ function monthsToDays (months) {
 }
 
 function as (units) {
+    if (!this.isValid()) {
+        return NaN;
+    }
     var days;
     var months;
     var milliseconds = this._milliseconds;
@@ -21617,6 +21913,9 @@ function as (units) {
 
 // TODO: Use this.as('ms')?
 function valueOf$1 () {
+    if (!this.isValid()) {
+        return NaN;
+    }
     return (
         this._milliseconds +
         this._days * 864e5 +
@@ -21642,12 +21941,12 @@ var asYears        = makeAs('y');
 
 function get$2 (units) {
     units = normalizeUnits(units);
-    return this[units + 's']();
+    return this.isValid() ? this[units + 's']() : NaN;
 }
 
 function makeGetter(name) {
     return function () {
-        return this._data[name];
+        return this.isValid() ? this._data[name] : NaN;
     };
 }
 
@@ -21665,11 +21964,12 @@ function weeks () {
 
 var round = Math.round;
 var thresholds = {
-    s: 45,  // seconds to minute
-    m: 45,  // minutes to hour
-    h: 22,  // hours to day
-    d: 26,  // days to month
-    M: 11   // months to year
+    ss: 44,         // a few seconds to seconds
+    s : 45,         // seconds to minute
+    m : 45,         // minutes to hour
+    h : 22,         // hours to day
+    d : 26,         // days to month
+    M : 11          // months to year
 };
 
 // helper function for moment.fn.from, moment.fn.fromNow, and moment.duration.fn.humanize
@@ -21686,16 +21986,17 @@ function relativeTime$1 (posNegDuration, withoutSuffix, locale) {
     var months   = round(duration.as('M'));
     var years    = round(duration.as('y'));
 
-    var a = seconds < thresholds.s && ['s', seconds]  ||
-            minutes <= 1           && ['m']           ||
-            minutes < thresholds.m && ['mm', minutes] ||
-            hours   <= 1           && ['h']           ||
-            hours   < thresholds.h && ['hh', hours]   ||
-            days    <= 1           && ['d']           ||
-            days    < thresholds.d && ['dd', days]    ||
-            months  <= 1           && ['M']           ||
-            months  < thresholds.M && ['MM', months]  ||
-            years   <= 1           && ['y']           || ['yy', years];
+    var a = seconds <= thresholds.ss && ['s', seconds]  ||
+            seconds < thresholds.s   && ['ss', seconds] ||
+            minutes <= 1             && ['m']           ||
+            minutes < thresholds.m   && ['mm', minutes] ||
+            hours   <= 1             && ['h']           ||
+            hours   < thresholds.h   && ['hh', hours]   ||
+            days    <= 1             && ['d']           ||
+            days    < thresholds.d   && ['dd', days]    ||
+            months  <= 1             && ['M']           ||
+            months  < thresholds.M   && ['MM', months]  ||
+            years   <= 1             && ['y']           || ['yy', years];
 
     a[2] = withoutSuffix;
     a[3] = +posNegDuration > 0;
@@ -21724,10 +22025,17 @@ function getSetRelativeTimeThreshold (threshold, limit) {
         return thresholds[threshold];
     }
     thresholds[threshold] = limit;
+    if (threshold === 's') {
+        thresholds.ss = limit - 1;
+    }
     return true;
 }
 
 function humanize (withSuffix) {
+    if (!this.isValid()) {
+        return this.localeData().invalidDate();
+    }
+
     var locale = this.localeData();
     var output = relativeTime$1(this, !withSuffix, locale);
 
@@ -21748,6 +22056,10 @@ function toISOString$1() {
     // This is because there is no context-free conversion between hours and days
     // (think of clock changes)
     // and also not between days and months (28-31 days per month)
+    if (!this.isValid()) {
+        return this.localeData().invalidDate();
+    }
+
     var seconds = abs$1(this._milliseconds) / 1000;
     var days         = abs$1(this._days);
     var months       = abs$1(this._months);
@@ -21792,6 +22104,7 @@ function toISOString$1() {
 
 var proto$2 = Duration.prototype;
 
+proto$2.isValid        = isValid$1;
 proto$2.abs            = abs;
 proto$2.add            = add$1;
 proto$2.subtract       = subtract$1;
@@ -21847,7 +22160,7 @@ addParseToken('x', function (input, array, config) {
 // Side effect imports
 
 
-hooks.version = '2.17.1';
+hooks.version = '2.18.1';
 
 setHookCallback(createLocal);
 
@@ -21908,14 +22221,14 @@ var da = moment.defineLocale('da', {
         L : 'DD/MM/YYYY',
         LL : 'D. MMMM YYYY',
         LLL : 'D. MMMM YYYY HH:mm',
-        LLLL : 'dddd [d.] D. MMMM YYYY HH:mm'
+        LLLL : 'dddd [d.] D. MMMM YYYY [kl.] HH:mm'
     },
     calendar : {
-        sameDay : '[I dag kl.] LT',
-        nextDay : '[I morgen kl.] LT',
-        nextWeek : 'dddd [kl.] LT',
-        lastDay : '[I går kl.] LT',
-        lastWeek : '[sidste] dddd [kl] LT',
+        sameDay : '[i dag kl.] LT',
+        nextDay : '[i morgen kl.] LT',
+        nextWeek : 'på dddd [kl.] LT',
+        lastDay : '[i går kl.] LT',
+        lastWeek : '[i] dddd[s kl.] LT',
         sameElse : 'L'
     },
     relativeTime : {
@@ -21933,7 +22246,7 @@ var da = moment.defineLocale('da', {
         y : 'et år',
         yy : '%d år'
     },
-    ordinalParse: /\d{1,2}\./,
+    dayOfMonthOrdinalParse: /\d{1,2}\./,
     ordinal : '%d.',
     week : {
         dow : 1, // Monday is the first day of the week.
@@ -22013,7 +22326,7 @@ var de = moment.defineLocale('de', {
         y : processRelativeTime,
         yy : processRelativeTime
     },
-    ordinalParse: /\d{1,2}\./,
+    dayOfMonthOrdinalParse: /\d{1,2}\./,
     ordinal : '%d.',
     week : {
         dow : 1, // Monday is the first day of the week.
@@ -22077,7 +22390,7 @@ var sv = moment.defineLocale('sv', {
         y : 'ett år',
         yy : '%d år'
     },
-    ordinalParse: /\d{1,2}(e|a)/,
+    dayOfMonthOrdinalParse: /\d{1,2}(e|a)/,
     ordinal : function (number) {
         var b = number % 10,
             output = (~~(number % 100 / 10) === 1) ? 'e' :
@@ -22149,7 +22462,7 @@ var nb = moment.defineLocale('nb', {
         y : 'ett år',
         yy : '%d år'
     },
-    ordinalParse: /\d{1,2}\./,
+    dayOfMonthOrdinalParse: /\d{1,2}\./,
     ordinal : '%d.',
     week : {
         dow : 1, // Monday is the first day of the week.
@@ -22211,7 +22524,7 @@ var fo = moment.defineLocale('fo', {
         y : 'eitt ár',
         yy : '%d ár'
     },
-    ordinalParse: /\d{1,2}\./,
+    dayOfMonthOrdinalParse: /\d{1,2}\./,
     ordinal : '%d.',
     week : {
         dow : 1, // Monday is the first day of the week.

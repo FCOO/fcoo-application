@@ -115,8 +115,6 @@ div.loading {
     width: 0;
     height: 0;
     opacity: 0;
-    -webkit-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-    -moz-transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
     transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s; }
     body:not(.loading) div.loading:before, body:not(.loading) div.loading > div {
       display: none !important; }
