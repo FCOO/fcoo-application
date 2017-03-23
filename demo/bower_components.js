@@ -11156,7 +11156,7 @@ var Translator = function (_EventEmitter) {
         var copy$$1 = resType === '[object Array]' ? [] : {}; // apply child translation on a copy
 
         for (var m in res) {
-          copy$$1[m] = this.translate('' + key + keySeparator + m, _extends({ joinArrays: false, ns: namespaces }, options));
+          copy$$1[m] = this.translate('' + key + keySeparator + m, _extends({}, options, { joinArrays: false, ns: namespaces }));
         }
         res = copy$$1;
       }
@@ -13952,101 +13952,99 @@ return index;
 })));
 ;
 /****************************************************************************
-	lang-flag-icon.js,
+    lang-flag-icon.js,
 
-	(c) 2016, FCOO
+    (c) 2016, FCOO
 
-	https://github.com/FCOO/lang-flag-icon
-	https://github.com/FCOO
+    https://github.com/FCOO/lang-flag-icon
+    https://github.com/FCOO
 
 ****************************************************************************/
 
-;(function ($, window, document, undefined) {
-	"use strict";
+(function ($, window/*, document, undefined*/) {
+    "use strict";
 
-	var ns = window;
+    var ns = window;
 
-	function LangFlag( options ) {
-		this.VERSION = "0.1.6";
-		this.options = $.extend({
-			//Default options
-			defaultFlag: 'dk',
-			defaultLang: 'da'
-		}, options || {} );
+    function LangFlag( options ) {
+        this.VERSION = "1.0.0";
+        this.options = $.extend({
+            //Default options
+            defaultFlag: 'dk',
+            defaultLang: 'da'
+        }, options || {} );
 
-		this.modernizr = window.Modernizr;
+        this.modernizr = window.Modernizr;
 
-		function readListFromFontFamily( className ){
-			var meta	= $('<meta class="' + className + '">').appendTo(document.head),
-					str = meta.css('font-family'),
-					i, result = [];
-			meta.remove();
-			for (i=0; i<str.length; i=i+2 )
-				result.push( str.slice(i, i+2) );
-			return result;
-		}
+        function readListFromFontFamily( className ){
+            var meta= $('<meta class="' + className + '">').appendTo(document.head),
+                str = meta.css('font-family'),
+                i, 
+                result = [];
 
-		//Reads the list of flags from the css-file using the 'dummy' class "lang-flag-icon-flag"
-		this.flagList = readListFromFontFamily( 'lang-flag-icon-flag' );
+            meta.remove();
+            for (i=0; i<str.length; i=i+2 )
+                result.push( str.slice(i, i+2) );
+            return result;
+        }
 
-		//Reads the list of flags with modernizr-classes from the css-file using the 'dummy' class "lang-flag-icon-flag-modernizr"
-		this.flagModernizrList = readListFromFontFamily( 'lang-flag-icon-flag-modernizr' );
+        //Reads the list of flags from the css-file using the 'dummy' class "lang-flag-icon-flag"
+        this.flagList = readListFromFontFamily( 'lang-flag-icon-flag' );
 
-		if (this.flagModernizrList.length)
-			this.setFlag( this.options.defaultFlag);
+        //Reads the list of flags with modernizr-classes from the css-file using the 'dummy' class "lang-flag-icon-flag-modernizr"
+        this.flagModernizrList = readListFromFontFamily( 'lang-flag-icon-flag-modernizr' );
 
-		//Reads the list of langs from the css-file using the 'dummy' class "lang-flag-icon-lang"
-		this.langList = readListFromFontFamily( 'lang-flag-icon-lang' );
+        if (this.flagModernizrList.length)
+            this.setFlag( this.options.defaultFlag);
 
-		//Reads the list of langs with modernizr-classes from the css-file using the 'dummy' class "lang-flag-icon-lang-modernizr"
-		this.langModernizrList = readListFromFontFamily( 'lang-flag-icon-lang-modernizr' );
+        //Reads the list of langs from the css-file using the 'dummy' class "lang-flag-icon-lang"
+        this.langList = readListFromFontFamily( 'lang-flag-icon-lang' );
 
-		if (this.langModernizrList.length)
-			this.setLang( this.options.defaultLang);
+        //Reads the list of langs with modernizr-classes from the css-file using the 'dummy' class "lang-flag-icon-lang-modernizr"
+        this.langModernizrList = readListFromFontFamily( 'lang-flag-icon-lang-modernizr' );
 
-
-
-	}
-
-  // expose access to the constructor
-  ns.LangFlag = LangFlag;
-
-	//Extend the prototype
-	ns.LangFlag.prototype = {
-
-		//setFlag
-		setFlag: function( flag ){	this._set( 'flag', this.flagModernizrList, flag );	},
-
-		//setLang
-		setLang: function( lang ){	this._set( 'lang', this.langModernizrList, lang );	},
-
-		//_set
-		_set: function( prefix, list, id ){
-			var i, nextId, isOn, onClassName, offClassName;
-			for (i=0; i<list.length; i++ ){
-				nextId = list[i];
-				isOn = (nextId == id);
-				onClassName  = prefix + '-' + nextId;
-				offClassName = 'no-' + onClassName;
-				$('html').toggleClass( onClassName, isOn );
-				$('html').toggleClass( offClassName, !isOn );
-			}
-
-
-		},
+        if (this.langModernizrList.length)
+            this.setLang( this.options.defaultLang);
 
 
 
-	};
+    }
+
+    // expose access to the constructor
+    ns.LangFlag = LangFlag;
+
+    //Extend the prototype
+    ns.LangFlag.prototype = {
+
+        //setFlag
+        setFlag: function( flag ){    this._set( 'flag', this.flagModernizrList, flag );    },
+
+        //setLang
+        setLang: function( lang ){    this._set( 'lang', this.langModernizrList, lang );    },
+
+        //_set
+        _set: function( prefix, list, id ){
+            var i, nextId, isOn, onClassName, offClassName;
+            for (i=0; i<list.length; i++ ){
+                nextId = list[i];
+                isOn = (nextId == id);
+                onClassName  = prefix + '-' + nextId;
+                offClassName = 'no-' + onClassName;
+                $('html').toggleClass( onClassName, isOn );
+                $('html').toggleClass( offClassName, !isOn );
+            }
+        }
+
+    };
 
 
-	/******************************************
-	Initialize/ready
-	*******************************************/
-	$(function() { //"$( function() { ... });" is short for "$(document).ready( function(){...});"
+    /******************************************
+    Initialize/ready
+    *******************************************/
+    $(function() { //"$( function() { ... });" is short for "$(document).ready( function(){...});"
 
-	}); //End of initialize/ready
-	//******************************************
+    }); //End of initialize/ready
+    //******************************************
 
 
 
@@ -39427,7 +39425,7 @@ return ImagesLoaded;
 
 /*!
  @package noty - jQuery Notification Plugin
- @version version: 2.4.0
+ @version version: 2.4.1
  @contributors https://github.com/needim/noty/graphs/contributors
 
  @documentation Examples and Documentation - http://needim.github.com/noty/
@@ -39645,21 +39643,17 @@ var NotyObject = {
 
   }, // end show
 
-  bindTimeout: function() {
+  bindTimeout: function () {
     var self = this;
+
     // If noty is have a timeout option
     if (self.options.timeout) {
 
       if (self.options.progressBar && self.$progressBar) {
         self.$progressBar.css({
-          transition: 'all 100ms linear'
+          transition: 'all ' + self.options.timeout + 'ms linear',
+          width: '0%'
         });
-
-        self.progressPercentage = (self.$progressBar.width() / (self.options.timeout / 100));
-
-        self.intervalId = setInterval(function() {
-          self.$progressBar.width((self.$progressBar.width() - self.progressPercentage));
-        }, 100);
       }
 
       self.queueClose(self.options.timeout);
@@ -39670,10 +39664,13 @@ var NotyObject = {
   },
 
   dequeueClose: function () {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.$progressBar.css('width', '100%');
-      this.intervalId = null;
+    var self = this;
+
+    if (self.options.progressBar) {
+      this.$progressBar.css({
+        transition: 'none',
+        width: '100%'
+      });
     }
 
     if (!this.closeTimer) return;
@@ -39684,27 +39681,23 @@ var NotyObject = {
   queueClose: function (timeout) {
     var self = this;
 
-    if (!self.intervalId && self.options.progressBar) {
-      self.intervalId = setInterval(function() {
-        self.$progressBar.width((self.$progressBar.width() - self.progressPercentage));
-      }, 100);
+    if (self.options.progressBar) {
+      self.$progressBar.css({
+        transition: 'all ' + self.options.timeout + 'ms linear',
+        width: '0%'
+      });
     }
 
     if (this.closeTimer) return;
     self.closeTimer = window.setTimeout(function () {
       self.close();
     }, timeout);
-    return self.closeTimer
+    return self.closeTimer;
   },
 
   close: function () {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-
-      if (this.$progressBar) {
-        this.$progressBar.css('width', '0%');
-      }
+    if (this.$progressBar) {
+      this.$progressBar.remove();
     }
 
     if (this.closeTimer) this.dequeueClose();
@@ -39751,7 +39744,7 @@ var NotyObject = {
       });
 
     } else if (typeof self.options.animation.close == 'object' && self.options.animation.close == null) {
-      self.$bar.dequeue().hide(0, function() {
+      self.$bar.dequeue().hide(0, function () {
         if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
         self.closeCleanUp();
       });
@@ -41588,7 +41581,7 @@ return window.noty;
   });
 }.call(this);
 ;
-/*! Raven.js 3.10.0 (d7e787e) | github.com/getsentry/raven-js */
+/*! Raven.js 3.13.1 (f55d281) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -41601,35 +41594,6 @@ return window.noty;
  */
 
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Raven = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-exports = module.exports = stringify
-exports.getSerialize = serializer
-
-function stringify(obj, replacer, spaces, cycleReplacer) {
-  return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces)
-}
-
-function serializer(replacer, cycleReplacer) {
-  var stack = [], keys = []
-
-  if (cycleReplacer == null) cycleReplacer = function(key, value) {
-    if (stack[0] === value) return "[Circular ~]"
-    return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
-  }
-
-  return function(key, value) {
-    if (stack.length > 0) {
-      var thisPos = stack.indexOf(this)
-      ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
-      ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
-      if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
-    }
-    else stack.push(value)
-
-    return replacer == null ? value : replacer.call(this, key, value)
-  }
-}
-
-},{}],2:[function(_dereq_,module,exports){
 'use strict';
 
 function RavenConfigError(message) {
@@ -41641,7 +41605,7 @@ RavenConfigError.prototype.constructor = RavenConfigError;
 
 module.exports = RavenConfigError;
 
-},{}],3:[function(_dereq_,module,exports){
+},{}],2:[function(_dereq_,module,exports){
 'use strict';
 
 var wrapMethod = function(console, level, callback) {
@@ -41680,16 +41644,20 @@ module.exports = {
     wrapMethod: wrapMethod
 };
 
-},{}],4:[function(_dereq_,module,exports){
+},{}],3:[function(_dereq_,module,exports){
 (function (global){
 /*global XDomainRequest:false, __DEV__:false*/
 'use strict';
 
 var TraceKit = _dereq_(6);
-var RavenConfigError = _dereq_(2);
-var stringify = _dereq_(1);
+var stringify = _dereq_(7);
+var RavenConfigError = _dereq_(1);
+var utils = _dereq_(5);
 
-var wrapConsoleMethod = _dereq_(3).wrapMethod;
+var isError = utils.isError,
+    isObject = utils.isObject;
+
+var wrapConsoleMethod = _dereq_(2).wrapMethod;
 
 var dsnKeys = 'source protocol user pass host port path'.split(' '),
     dsnPattern = /^(?:(\w+):)?\/\/(?:(\w+)(:\w+)?@)?([\w\.-]+)(?::(\d+))?(\/.*)/;
@@ -41704,6 +41672,7 @@ var _window = typeof window !== 'undefined' ? window
             : typeof self !== 'undefined' ? self
             : {};
 var _document = _window.document;
+var _navigator = _window.navigator;
 
 // First, check for JSON support
 // If there is no JSON, we no-op the core features of Raven
@@ -41712,7 +41681,9 @@ function Raven() {
     this._hasJSON = !!(typeof JSON === 'object' && JSON.stringify);
     // Raven can run in contexts where there's no document (react-native)
     this._hasDocument = !isUndefined(_document);
+    this._hasNavigator = !isUndefined(_navigator);
     this._lastCapturedException = null;
+    this._lastData = null;
     this._lastEventId = null;
     this._globalServer = null;
     this._globalKey = null;
@@ -41728,7 +41699,8 @@ function Raven() {
         collectWindowErrors: true,
         maxMessageLength: 0,
         stackTraceLimit: 50,
-        autoBreadcrumbs: true
+        autoBreadcrumbs: true,
+        sampleRate: 1
     };
     this._ignoreOnError = 0;
     this._isRavenInstalled = false;
@@ -41763,7 +41735,7 @@ Raven.prototype = {
     // webpack (using a build step causes webpack #1617). Grunt verifies that
     // this value matches package.json during build.
     //   See: https://github.com/getsentry/raven-js/issues/465
-    VERSION: '3.10.0',
+    VERSION: '3.13.1',
 
     debug: false,
 
@@ -41964,6 +41936,10 @@ Raven.prototype = {
             while(i--) args[i] = deep ? self.wrap(options, arguments[i]) : arguments[i];
 
             try {
+                // Attempt to invoke user-land function
+                // NOTE: If you are a Sentry user, and you are seeing this stack frame, it
+                //       means Raven caught an error invoking your application code. This is
+                //       expected behavior and NOT indicative of a bug with Raven.js.
                 return func.apply(this, args);
             } catch(e) {
                 self._ignoreNextOnError();
@@ -42424,14 +42400,14 @@ Raven.prototype = {
                 return;
 
             self._lastCapturedEvent = evt;
-            var elem = evt.target;
 
+            // try/catch both:
+            // - accessing evt.target (see getsentry/raven-js#838, #768)
+            // - `htmlTreeAsString` because it's complex, and just accessing the DOM incorrectly
+            //   can throw an exception in some circumstances.
             var target;
-
-            // try/catch htmlTreeAsString because it's particularly complicated, and
-            // just accessing the DOM incorrectly can throw an exception in some circumstances.
             try {
-                target = htmlTreeAsString(elem);
+                target = htmlTreeAsString(evt.target);
             } catch (e) {
                 target = '<unknown>';
             }
@@ -42456,8 +42432,15 @@ Raven.prototype = {
         //       debounce timeout is triggered, we will only capture
         //       a single breadcrumb from the FIRST target (acceptable?)
         return function (evt) {
-            var target = evt.target,
-                tagName = target && target.tagName;
+            var target;
+            try {
+                target = evt.target;
+            } catch (e) {
+                // just accessing event properties can throw an exception in some rare circumstances
+                // see: https://github.com/getsentry/raven-js/issues/838
+                return;
+            }
+            var tagName = target && target.tagName;
 
             // only consider keypress events on actual input elements
             // this will disregard keypresses targeting body (e.g. tabbing
@@ -42574,9 +42557,17 @@ Raven.prototype = {
                                 // see #724
                                 if (!evt) return;
 
-                                if (evt.type === 'click')
+                                var eventType;
+                                try {
+                                    eventType = evt.type
+                                } catch (e) {
+                                    // just accessing event properties can throw an exception in some rare circumstances
+                                    // see: https://github.com/getsentry/raven-js/issues/838
+                                    return;
+                                }
+                                if (eventType === 'click')
                                     return clickHandler(evt);
-                                else if (evt.type === 'keypress')
+                                else if (eventType === 'keypress')
                                     return keypressHandler(evt);
                             };
                         }
@@ -42611,15 +42602,6 @@ Raven.prototype = {
         var eventTargets = ['EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode', 'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase', 'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow', 'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList', 'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'];
         for (var i = 0; i < eventTargets.length; i++) {
             wrapEventTarget(eventTargets[i]);
-        }
-
-        var $ = _window.jQuery || _window.$;
-        if ($ && $.fn && $.fn.ready) {
-            fill($.fn, 'ready', function (orig) {
-                return function (fn) {
-                    return orig.call(this, self.wrap(fn));
-                };
-            }, wrappedBuiltIns);
         }
     },
 
@@ -42990,20 +42972,23 @@ Raven.prototype = {
     },
 
     _getHttpData: function() {
-        if (!this._hasDocument || !_document.location || !_document.location.href) {
-            return;
+        if (!this._hasNavigator && !this._hasDocument) return;
+        var httpData = {};
+
+        if (this._hasNavigator && _navigator.userAgent) {
+            httpData.headers = {
+              'User-Agent': navigator.userAgent
+            };
         }
 
-        var httpData = {
-            headers: {
-                'User-Agent': navigator.userAgent
+        if (this._hasDocument) {
+            if (_document.location && _document.location.href) {
+                httpData.url = _document.location.href;
             }
-        };
-
-        httpData.url = _document.location.href;
-
-        if (_document.referrer) {
-            httpData.headers.Referer = _document.referrer;
+            if (_document.referrer) {
+                if (!httpData.headers) httpData.headers = {};
+                httpData.headers.Referer = _document.referrer;
+            }
         }
 
         return httpData;
@@ -43016,6 +43001,35 @@ Raven.prototype = {
 
     _shouldBackoff: function() {
         return this._backoffDuration && now() - this._backoffStart < this._backoffDuration;
+    },
+
+    /**
+     * Returns true if the in-process data payload matches the signature
+     * of the previously-sent data
+     *
+     * NOTE: This has to be done at this level because TraceKit can generate
+     *       data from window.onerror WITHOUT an exception object (IE8, IE9,
+     *       other old browsers). This can take the form of an "exception"
+     *       data object with a single frame (derived from the onerror args).
+     */
+    _isRepeatData: function (current) {
+        var last = this._lastData;
+
+        if (!last ||
+            current.message !== last.message || // defined for captureMessage
+            current.culprit !== last.culprit)   // defined for captureException/onerror
+            return false;
+
+        // Stacktrace interface (i.e. from captureMessage)
+        if (current.stacktrace || last.stacktrace) {
+            return isSameStacktrace(current.stacktrace, last.stacktrace);
+        }
+        // Exception interface (i.e. from captureException/onerror)
+        else if (current.exception || last.exception) {
+            return isSameException(current.exception, last.exception);
+        }
+
+        return true;
     },
 
     _setBackoffState: function(request) {
@@ -43037,7 +43051,7 @@ Raven.prototype = {
             // If Retry-After is not in Access-Control-Expose-Headers, most
             // browsers will throw an exception trying to access it
             retry = request.getResponseHeader('Retry-After');
-            retry = parseInt(retry, 10);
+            retry = parseInt(retry, 10) * 1000; // Retry-After is returned in seconds
         } catch (e) {
             /* eslint no-empty:0 */
         }
@@ -43123,7 +43137,13 @@ Raven.prototype = {
             return;
         }
 
-        this._sendProcessedPayload(data);
+        if (typeof globalOptions.sampleRate === 'number') {
+            if (Math.random() < globalOptions.sampleRate) {
+                this._sendProcessedPayload(data);
+            }
+        } else {
+            this._sendProcessedPayload(data);
+        }
     },
 
     _getUuid: function () {
@@ -43143,6 +43163,17 @@ Raven.prototype = {
 
         // Try and clean up the packet before sending by truncating long values
         data = this._trimPacket(data);
+
+        // ideally duplicate error testing should occur *before* dataCallback/shouldSendCallback,
+        // but this would require copying an un-truncated copy of the data packet, which can be
+        // arbitrarily deep (extra_data) -- could be worthwhile? will revisit
+        if (!this._globalOptions.allowDuplicates && this._isRepeatData(data)) {
+            this._logDebug('warn', 'Raven dropped repeat event: ', data);
+            return;
+        }
+
+        // Store outbound payload after trim
+        this._lastData = data;
 
         this._logDebug('debug', 'Raven about to send:', data);
 
@@ -43208,24 +43239,18 @@ Raven.prototype = {
         if (!hasCORS) return;
 
         var url = opts.url;
-        function handler() {
-            if (request.status === 200) {
-                if (opts.onSuccess) {
-                    opts.onSuccess();
-                }
-            } else if (opts.onError) {
-                var err = new Error('Sentry error code: ' + request.status);
-                err.request = request;
-                opts.onError(err);
-            }
-        }
 
         if ('withCredentials' in request) {
             request.onreadystatechange = function () {
                 if (request.readyState !== 4) {
                     return;
+                } else if (request.status === 200) {
+                    opts.onSuccess && opts.onSuccess();
+                } else if (opts.onError) {
+                    var err = new Error('Sentry error code: ' + request.status);
+                    err.request = request;
+                    opts.onError(err);
                 }
-                handler();
             };
         } else {
             request = new XDomainRequest();
@@ -43234,7 +43259,16 @@ Raven.prototype = {
             url = url.replace(/^https?:/, '');
 
             // onreadystatechange not supported by XDomainRequest
-            request.onload = handler;
+            if (opts.onSuccess) {
+                request.onload = opts.onSuccess;
+            }
+            if (opts.onError) {
+                request.onerror = function () {
+                    var err = new Error('Sentry error code: XDomainRequest');
+                    err.request = request;
+                    opts.onError(err);
+                }
+            }
         }
 
         // NOTE: auth is intentionally sent as part of query string (NOT as custom
@@ -43283,23 +43317,10 @@ function isString(what) {
     return objectPrototype.toString.call(what) === '[object String]';
 }
 
-function isObject(what) {
-    return typeof what === 'object' && what !== null;
-}
 
 function isEmptyObject(what) {
     for (var _ in what) return false;  // eslint-disable-line guard-for-in, no-unused-vars
     return true;
-}
-
-// Sorta yanked from https://github.com/joyent/node/blob/aa3b4b4/lib/util.js#L560
-// with some tiny modifications
-function isError(what) {
-    var toString = objectPrototype.toString.call(what);
-    return isObject(what) &&
-        toString === '[object Error]' ||
-        toString === '[object Exception]' || // Firefox NS_ERROR_FAILURE Exceptions
-        what instanceof Error;
 }
 
 function each(obj, callback) {
@@ -43489,7 +43510,7 @@ function htmlElementAsString(elem) {
 
     className = elem.className;
     if (className && isString(className)) {
-        classes = className.split(' ');
+        classes = className.split(/\s+/);
         for (i = 0; i < classes.length; i++) {
             out.push('.' + classes[i]);
         }
@@ -43503,6 +43524,58 @@ function htmlElementAsString(elem) {
         }
     }
     return out.join('');
+}
+
+/**
+ * Returns true if either a OR b is truthy, but not both
+ */
+function isOnlyOneTruthy(a, b) {
+    return !!(!!a ^ !!b);
+}
+
+/**
+ * Returns true if the two input exception interfaces have the same content
+ */
+function isSameException(ex1, ex2) {
+    if (isOnlyOneTruthy(ex1, ex2))
+        return false;
+
+    ex1 = ex1.values[0];
+    ex2 = ex2.values[0];
+
+    if (ex1.type !== ex2.type ||
+        ex1.value !== ex2.value)
+        return false;
+
+    return isSameStacktrace(ex1.stacktrace, ex2.stacktrace);
+}
+
+/**
+ * Returns true if the two input stack trace interfaces have the same content
+ */
+function isSameStacktrace(stack1, stack2) {
+    if (isOnlyOneTruthy(stack1, stack2))
+        return false;
+
+    var frames1 = stack1.frames;
+    var frames2 = stack2.frames;
+
+    // Exit early if frame count differs
+    if (frames1.length !== frames2.length)
+        return false;
+
+    // Iterate through every frame; bail out if anything differs
+    var a, b;
+    for (var i = 0; i < frames1.length; i++) {
+        a = frames1[i];
+        b = frames2[i];
+        if (a.filename !== b.filename ||
+            a.lineno !== b.lineno ||
+            a.colno !== b.colno ||
+            a['function'] !== b['function'])
+            return false;
+    }
+    return true;
 }
 
 /**
@@ -43549,7 +43622,7 @@ Raven.prototype.setReleaseContext = Raven.prototype.setRelease;
 module.exports = Raven;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"1":1,"2":2,"3":3,"6":6}],5:[function(_dereq_,module,exports){
+},{"1":1,"2":2,"5":5,"6":6,"7":7}],4:[function(_dereq_,module,exports){
 (function (global){
 /**
  * Enforces a single instance of the Raven client, and the
@@ -43559,7 +43632,7 @@ module.exports = Raven;
 
 'use strict';
 
-var RavenConstructor = _dereq_(4);
+var RavenConstructor = _dereq_(3);
 
 // This is to be defensive in environments where window does not exist (see https://github.com/getsentry/raven-js/pull/785)
 var _window = typeof window !== 'undefined' ? window
@@ -43586,9 +43659,32 @@ Raven.afterLoad();
 module.exports = Raven;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"4":4}],6:[function(_dereq_,module,exports){
+},{"3":3}],5:[function(_dereq_,module,exports){
+'use strict';
+
+function isObject(what) {
+    return typeof what === 'object' && what !== null;
+}
+
+// Sorta yanked from https://github.com/joyent/node/blob/aa3b4b4/lib/util.js#L560
+// with some tiny modifications
+function isError(what) {
+    var toString = {}.toString.call(what);
+    return isObject(what) &&
+        toString === '[object Error]' ||
+        toString === '[object Exception]' || // Firefox NS_ERROR_FAILURE Exceptions
+        what instanceof Error;
+}
+
+module.exports = {
+    isObject: isObject,
+    isError: isError
+};
+},{}],6:[function(_dereq_,module,exports){
 (function (global){
 'use strict';
+
+var utils = _dereq_(5);
 
 /*
  TraceKit - Cross brower stack traces
@@ -43616,7 +43712,7 @@ var _slice = [].slice;
 var UNKNOWN_FUNCTION = '?';
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Error_types
-var ERROR_TYPES_RE = /^(?:Uncaught (?:exception: )?)?((?:Eval|Internal|Range|Reference|Syntax|Type|URI)Error): ?(.*)$/;
+var ERROR_TYPES_RE = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/;
 
 function getLocationHref() {
     if (typeof document === 'undefined' || typeof document.location === 'undefined')
@@ -43624,6 +43720,7 @@ function getLocationHref() {
 
     return document.location.href;
 }
+
 
 /**
  * TraceKit.report: cross-browser processing of unhandled exceptions
@@ -43742,7 +43839,9 @@ TraceKit.report = (function reportModuleWrapper() {
         if (lastExceptionStack) {
             TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
             processLastException();
-        } else if (ex) {
+        } else if (ex && utils.isError(ex)) {
+            // non-string `ex` arg; attempt to extract stack trace
+
             // New chrome and blink send along a real error object
             // Let's just report that like a normal error.
             // See: https://mikewest.org/2013/08/debugging-runtime-errors-with-window-onerror
@@ -44185,7 +44284,6 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                 throw e;
             }
         }
-
         return {
             'name': ex.name,
             'message': ex.message,
@@ -44202,5 +44300,54 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 module.exports = TraceKit;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[5])(5)
+},{"5":5}],7:[function(_dereq_,module,exports){
+'use strict';
+
+/*
+ json-stringify-safe
+ Like JSON.stringify, but doesn't throw on circular references.
+
+ Originally forked from https://github.com/isaacs/json-stringify-safe
+ version 5.0.1 on 3/8/2017 and modified for IE8 compatibility.
+ Tests for this are in test/vendor.
+
+ ISC license: https://github.com/isaacs/json-stringify-safe/blob/master/LICENSE
+*/
+
+exports = module.exports = stringify
+exports.getSerialize = serializer
+
+function indexOf(haystack, needle) {
+  for (var i = 0; i < haystack.length; ++i) {
+    if (haystack[i] === needle) return i;
+  }
+  return -1;
+}
+
+function stringify(obj, replacer, spaces, cycleReplacer) {
+  return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces)
+}
+
+function serializer(replacer, cycleReplacer) {
+  var stack = [], keys = []
+
+  if (cycleReplacer == null) cycleReplacer = function(key, value) {
+    if (stack[0] === value) return '[Circular ~]'
+    return '[Circular ~.' + keys.slice(0, indexOf(stack, value)).join('.') + ']'
+  }
+
+  return function(key, value) {
+    if (stack.length > 0) {
+      var thisPos = indexOf(stack, this);
+      ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
+      ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
+      if (~indexOf(stack, value)) value = cycleReplacer.call(this, key, value)
+    }
+    else stack.push(value)
+
+    return replacer == null ? value : replacer.call(this, key, value)
+  }
+}
+
+},{}]},{},[4])(4)
 });
