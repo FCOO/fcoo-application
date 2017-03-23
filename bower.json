@@ -1,84 +1,84 @@
 {
-    "name": "fcoo-application",
-    "version": "2.1.3",
-    "homepage": "https://github.com/FCOO/fcoo-application",
-    "authors": [
-        "Niels Holt"
-    ],
-    "description": "",
-    "main": [
-        "dist/fcoo-application.js",
-        "dist/fcoo-application.css"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/FCOO/fcoo-application.git"
-    },
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ],
-    "moduleType": [
-        "es6"
-    ],
-    "devDependencies": {
-        "bourbon": "latest",
-        "modernizr-mixin": "latest",
-        "mathsass": "latest",
-        "modernizr-scss": "FCOO/modernizr-scss#latest"
-    },
-    "dependencies": {
-        "jquery": "~3.2.0",
-        "fcoo-global-events": "fcoo/fcoo-global-events#^1.0.0",
-        "fcoo-settings": "fcoo/fcoo-settings#^1.2.0",
-        "fcoo-language": "fcoo/fcoo-language#^3.0.0",
-        "fcoo-number": "fcoo/fcoo-number#^1.0.0",
-        "fcoo-moment": "fcoo/fcoo-moment#^1.0.0",
-        "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^1.0.0",
-        "fcoo-value-format": "fcoo/fcoo-value-format#^1.1.0",
-        "fcoo-fontawesome": "fcoo/fcoo-fontawesome#^2.0.0",
-        "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
-        "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
-        "fcoo-polyfill": "fcoo/fcoo-polyfill#^3.0.0",
-        "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^2.0.0",
-        "normalize-css": "~5.0.0",
-        "noty": "~2.4.0",
-        "offline": "HubSpot/offline#~0.7.18",
-        "imagesloaded": "desandro/imagesloaded#~4.1.1",
-        "raven-js": "~3.13.0",
-        "fcoo-i18next-phrases": "fcoo/fcoo-i18next-phrases#latest"
-    },
-    "overrides": {
-        "offline": {
-            "main": [
-                "offline.js",
-                "themes/offline-language-english.css",
-                "themes/offline-theme-chrome.css"
-            ]
-        }
-    },
-    "resolutions": {
-        "jquery": "~3.2.0",
-        "fcoo-global-events": "^1.0.0",
-        "fcoo-settings": "^1.2.0",
-        "fcoo-language": "^3.0.0",
-        "fcoo-number": "^1.0.0",
-        "fcoo-moment": "^1.0.0",
-        "fcoo-latlng-format": "^1.0.0",
-        "fcoo-value-format": "^1.1.0",
-        "fcoo-fontawesome": "^2.0.0",
-        "url.js-extensions": "^2.0.0",
-        "javascript-utilities": "^1.0.0",
-        "fcoo-polyfill": "^3.0.0",
-        "fcoo-modernizr-mediaquery-device": "^2.0.0",
-        "normalize-css": "~5.0.0",
-        "noty": "~2.4.0",
-        "offline": "~0.7.18",
-        "imagesloaded": "~4.1.1",
-        "raven-js": "~3.13.0"
+  "name": "fcoo-application",
+  "version": "3.0.0",
+  "homepage": "https://github.com/FCOO/fcoo-application",
+  "authors": [
+    "Niels Holt"
+  ],
+  "description": "",
+  "main": [
+    "dist/fcoo-application.js",
+    "dist/fcoo-application.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/FCOO/fcoo-application.git"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "moduleType": [
+    "es6"
+  ],
+  "devDependencies": {
+    "bourbon": "latest",
+    "modernizr-mixin": "latest",
+    "mathsass": "latest",
+    "modernizr-scss": "FCOO/modernizr-scss#latest"
+  },
+  "dependencies": {
+    "jquery": "~3.2.0",
+    "fcoo-global-events": "fcoo/fcoo-global-events#^1.0.0",
+    "fcoo-settings": "fcoo/fcoo-settings#^1.2.0",
+    "fcoo-language": "fcoo/fcoo-language#^3.0.1",
+    "fcoo-number": "fcoo/fcoo-number#^1.0.0",
+    "fcoo-moment": "fcoo/fcoo-moment#^1.0.0",
+    "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^1.0.0",
+    "fcoo-value-format": "fcoo/fcoo-value-format#^1.1.0",
+    "fcoo-fontawesome": "fcoo/fcoo-fontawesome#^2.0.0",
+    "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
+    "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
+    "fcoo-polyfill": "fcoo/fcoo-polyfill#^3.0.0",
+    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^2.0.0",
+    "normalize-css": "~5.0.0",
+    "noty": "~2.4.0",
+    "offline": "HubSpot/offline#~0.7.18",
+    "imagesloaded": "desandro/imagesloaded#~4.1.1",
+    "raven-js": "~3.13.0",
+    "fcoo-i18next-phrases": "fcoo/fcoo-i18next-phrases#latest"
+  },
+  "overrides": {
+    "offline": {
+      "main": [
+        "offline.js",
+        "themes/offline-language-english.css",
+        "themes/offline-theme-chrome.css"
+      ]
     }
+  },
+  "resolutions": {
+    "jquery": "~3.2.0",
+    "fcoo-global-events": "^1.0.0",
+    "fcoo-settings": "^1.2.0",
+    "fcoo-language": "^3.0.1",
+    "fcoo-number": "^1.0.0",
+    "fcoo-moment": "^1.0.0",
+    "fcoo-latlng-format": "^1.0.0",
+    "fcoo-value-format": "^1.1.0",
+    "fcoo-fontawesome": "^2.0.0",
+    "url.js-extensions": "^2.0.0",
+    "javascript-utilities": "^1.0.0",
+    "fcoo-polyfill": "^3.0.0",
+    "fcoo-modernizr-mediaquery-device": "^2.0.0",
+    "normalize-css": "~5.0.0",
+    "noty": "~2.4.0",
+    "offline": "~0.7.18",
+    "imagesloaded": "~4.1.1",
+    "raven-js": "~3.13.0"
+  }
 }
