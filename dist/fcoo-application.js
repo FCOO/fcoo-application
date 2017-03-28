@@ -188,15 +188,24 @@ Sections:
     ************************************************************************
     ***********************************************************************/
     //Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
-    //Simple set the test on, the first time a mousemove-event is fired on the <body>
-	$(function() { 
+    //Solution by http://stackoverflow.com/users/1701813/hacktisch
+    //Mouse devices (also touch screen laptops) first fire mousemove before they can fire touchstart and hasMouse is set to TRUE. 
+    //Touch devices (also for instance iOS which fires mousemove) FIRST fire touchstart upon click, and then mousemove. 
+    //That is why hasMouse will be set to FALSE.
+    $(function() { 
         window.fcoo.modernizr.addTest('mouse', false);
-        $('body').on('mousemove.fcoo.application', function(){
-            window.fcoo.modernizr.mouse = true;
-            window.modernizrOn('mouse');
-            $('body').off('mousemove.fcoo.application');
-        });
-	}); 
+        $(window)
+            .bind('mousemove.fcoo.application',function(){
+                $(window).unbind('.fcoo.application');
+                window.fcoo.modernizr.mouse = true;
+                window.modernizrOn('mouse');
+            })
+            .bind('touchstart.fcoo.application',function(){
+                $(window).unbind('.fcoo.application'); 
+                window.fcoo.modernizr.mouse = false;
+                window.modernizrOff('mouse');
+            });
+    });
 
 
     /***********************************************************************
