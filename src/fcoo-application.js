@@ -9,7 +9,7 @@
 Set-up of common systems, objects, and methods for FCOO web applications
 Sections:
 1: Namespace, application states, system variables
-2: window.fcoo.parseAll - Methods to load all hash and parameters
+2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
 4: Set up different Modernizr tests
 5: Initialize offline.js - http://github.hubspot.com/offline/
@@ -84,9 +84,10 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    2: window.fcoo.parseAll - Methods to load all hash and parameters
+    2: Methods to load and save all hash and parameters
     ************************************************************************
     ***********************************************************************/
+    //window.fcoo.parseAll - return object with all parameter and hash from url or localStorage
     ns.parseAll = function( validatorObj, defaultObj, options ){
 
         var result = window.Url.parseAll( validatorObj, defaultObj, options );
@@ -106,28 +107,36 @@ Sections:
                 //Add values from localStorage to result
                 $.each( localStorageObj, function( key, value ){ result[key] = value; });
             }
-//result.niels = 'NIELS';
-console.log( result, ns.localStorageTempKey, window.Url.stringify(result) );
+
             //Save the total result as "temp" in localStorage
-            window.localStorage.setItem(ns.localStorageTempKey, window.Url.stringify(result) );
-/*
-                window.localStorage.setItem('paramsTemp', params);
-                hashes = params.split('&');
-                for (i = 0; i < hashes.length; i = i + 1) {
-                    hash = hashes[i].split('=');
-                    urlParams.push(hash[0]);
-                    urlParams[hash[0]] = hash[1];
-                }
-*/
-
-
-          
+            try {
+                window.localStorage.setItem(ns.localStorageTempKey, window.Url.stringify(result) );  
+            }
+            catch (e) {
+                //console.log(e);
+            }            
         }            
 
         result.standalone = ns.standalone;
         return result;
     };
 
+    //window.fcoo.saveLocalStorage - saves all temporary parameters in localStorage[ns.localStorageTempKey] to localStorage[ns.localStorageKey] => Will be reloaded next time
+    ns.saveLocalStorage = function(){
+        var result = true;
+        try {
+            window.localStorage.setItem(
+                ns.localStorageKey, 
+                window.localStorage.getItem(ns.localStorageTempKey)  
+            );  
+        }
+        catch (e) {
+            result = false;
+        }            
+        return result;
+    };
+    
+    
     /***********************************************************************
     ************************************************************************
     3: Set up 'loading...'

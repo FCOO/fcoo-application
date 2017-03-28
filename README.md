@@ -31,9 +31,16 @@ Contains the data and methods to get and set settings for the user.
 See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details 
 
 #### `window.fcoo.parseAll [function( validatorObj, defaultObj, options )]`
-Return an object with all parameter and hash-tags. Reading from localStorage if `window.fcoo.standalone` is set
+Return an object with all parameter and hash-tags. 
+If `window.fcoo.standalone` is set the parameters are read from localStorage and a temporary copy is saved under id = `window.fcoo.localStorageTempKey`
 
 See [fcoo/url.js-extensions](https://github.com/FCOO/url.js-extensions) for description of `validatorObj`, `defaultObj`, and `options`
+
+#### `window.fcoo.saveLocalStorage [function()]`
+Saves all temporary parameters in `localStorage[fcoo.localStorageTempKey]` to `localStorage[fcoo.localStorageKey]` => Will be reloaded next time
+
+
+
 
 ### CSS Classes
 

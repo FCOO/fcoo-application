@@ -9,10 +9,11 @@
 Set-up of common systems, objects, and methods for FCOO web applications
 Sections:
 1: Namespace, application states, system variables
-2: Set up 'loading...'
-3: Set up different Modernizr tests
-4: Initialize offline.js - http://github.hubspot.com/offline/
-5: Initialize raven to report all uncaught exceptions to sentry AND 
+2: Methods to load and save all hash and parameters
+3: Set up 'loading...'
+4: Set up different Modernizr tests
+5: Initialize offline.js - http://github.hubspot.com/offline/
+6: Initialize raven to report all uncaught exceptions to sentry AND 
    Adding the Piwik Tracking Code
 
 ****************************************************************************/
@@ -72,9 +73,73 @@ Sections:
     };
 
 
+    //Getting the application-id
+    ns.applicationId = ns.getApplicationOption( "{APPLICATION_ID}", '0');
+
+    //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
+    //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
+    ns.localStorageKey     = 'fcoo_' + ns.applicationId;
+    ns.localStorageTempKey = ns.localStorageKey + '_temp';
+
+
     /***********************************************************************
     ************************************************************************
-    2: Set up 'loading...'
+    2: Methods to load and save all hash and parameters
+    ************************************************************************
+    ***********************************************************************/
+    //window.fcoo.parseAll - return object with all parameter and hash from url or localStorage
+    ns.parseAll = function( validatorObj, defaultObj, options ){
+
+        var result = window.Url.parseAll( validatorObj, defaultObj, options );
+
+        
+        if (ns.standalone){
+            //Load parameters from localStorage
+            var paramStr = window.localStorage.getItem( ns.localStorageKey );
+
+
+            if (paramStr !== null) {
+                //Load and adjust/validate parametre from localStorage
+                var localStorageObj = window.Url.parseQuery(paramStr);
+                localStorageObj = window.Url._parseObject( localStorageObj, validatorObj, defaultObj, options );
+
+
+                //Add values from localStorage to result
+                $.each( localStorageObj, function( key, value ){ result[key] = value; });
+            }
+
+            //Save the total result as "temp" in localStorage
+            try {
+                window.localStorage.setItem(ns.localStorageTempKey, window.Url.stringify(result) );  
+            }
+            catch (e) {
+                //console.log(e);
+            }            
+        }            
+
+        result.standalone = ns.standalone;
+        return result;
+    };
+
+    //window.fcoo.saveLocalStorage - saves all temporary parameters in localStorage[ns.localStorageTempKey] to localStorage[ns.localStorageKey] => Will be reloaded next time
+    ns.saveLocalStorage = function(){
+        var result = true;
+        try {
+            window.localStorage.setItem(
+                ns.localStorageKey, 
+                window.localStorage.getItem(ns.localStorageTempKey)  
+            );  
+        }
+        catch (e) {
+            result = false;
+        }            
+        return result;
+    };
+    
+    
+    /***********************************************************************
+    ************************************************************************
+    3: Set up 'loading...'
     ************************************************************************
     ***********************************************************************/
 
@@ -119,7 +184,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    3: Set up different Modernizr tests
+    4: Set up different Modernizr tests
     ************************************************************************
     ***********************************************************************/
     //Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
@@ -136,7 +201,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    4: Initialize offline.js - http://github.hubspot.com/offline/
+    5: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
     // Should we check the connection status immediatly on page load.
@@ -225,7 +290,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    5: Initialize raven to report all uncaught exceptions to sentry AND 
+    6: Initialize raven to report all uncaught exceptions to sentry AND 
        Adding the Piwik Tracking Code
     ************************************************************************
     ***********************************************************************/
