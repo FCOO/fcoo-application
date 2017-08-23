@@ -3152,6 +3152,15 @@ html.no-lang2-en .show-for-lang2-en {
 
 ************************************************/
 /***********************************************
+    _fcoo-modernizr-mediaquery-variables.scss, 
+
+    (c) 2016, FCOO
+
+    https://github.com/FCOO/fcoo-modernizr-mediaquery-device
+    https://github.com/FCOO
+
+************************************************/
+/***********************************************
     modernizr-mediaquery.scss, 
 
     (c) 2015, FCOO
@@ -3417,6 +3426,12 @@ html.no-timezoneutc .show-for-timezoneutc {
 	-ms-touch-action: none;
 	touch-action: none;
 }
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
 .leaflet-tile {
 	filter: inherit;
 	visibility: hidden;
@@ -3660,7 +3675,14 @@ html.no-timezoneutc .show-for-timezoneutc {
 	height: 30px;
 	line-height: 30px;
 	}
-
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
 
 /* zoom control */
 
@@ -3669,15 +3691,9 @@ html.no-timezoneutc .show-for-timezoneutc {
 	font: bold 18px 'Lucida Console', Monaco, monospace;
 	text-indent: 1px;
 	}
-.leaflet-control-zoom-out {
-	font-size: 20px;
-	}
 
-.leaflet-touch .leaflet-control-zoom-in {
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
 	font-size: 22px;
-	}
-.leaflet-touch .leaflet-control-zoom-out {
-	font-size: 24px;
 	}
 
 
@@ -3716,6 +3732,7 @@ html.no-timezoneutc .show-for-timezoneutc {
 	}
 .leaflet-control-layers-scrollbar {
 	overflow-y: scroll;
+	overflow-x: hidden;
 	padding-right: 5px;
 	}
 .leaflet-control-layers-selector {
@@ -3980,23 +3997,21 @@ html.no-timezoneutc .show-for-timezoneutc {
 	border-right-color: #fff;
 	}
 
-/*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
-
-/**
- * 1. Change the default font family in all browsers (opinionated).
- * 2. Correct the line height in all browsers.
- * 3. Prevent adjustments of font size after orientation changes in
- *    IE on Windows Phone and in iOS.
- */
+/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
    ========================================================================== */
 
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in
+ *    IE on Windows Phone and in iOS.
+ */
+
 html {
-  font-family: sans-serif; /* 1 */
-  line-height: 1.15; /* 2 */
-  -ms-text-size-adjust: 100%; /* 3 */
-  -webkit-text-size-adjust: 100%; /* 3 */
+  line-height: 1.15; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
 }
 
 /* Sections
@@ -4090,17 +4105,7 @@ a {
 }
 
 /**
- * Remove the outline on focused links when they are also active or hovered
- * in all browsers (opinionated).
- */
-
-a:active,
-a:hover {
-  outline-width: 0;
-}
-
-/**
- * 1. Remove the bottom border in Firefox 39-.
+ * 1. Remove the bottom border in Chrome 57- and Firefox 39-.
  * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
  */
 
@@ -4299,13 +4304,11 @@ button:-moz-focusring,
 }
 
 /**
- * Change the border, margin, and padding in all browsers (opinionated).
+ * Correct the padding in Firefox.
  */
 
 fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em;
+  padding: 0.35em 0.75em 0.625em;
 }
 
 /**
