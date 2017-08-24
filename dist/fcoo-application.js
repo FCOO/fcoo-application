@@ -34,6 +34,18 @@ Sections:
     //Setting protocol
     ns.protocol = window.location.protocol == 'https:' ? 'https:' : 'http:';
     
+
+    /*********************************************************************
+    Determinate if localStorage is supported and available
+    If the browser is in 'Private' mode not all browser supports localStorage
+    In localStorage isn't supported a fake version is installed
+    At the moment no warning is given when localStorage isn't supported since
+    some browser in private-mode allows the use of window.localStorage but 
+    don't save it when the session ends
+    The test is done in fcoo/fake-localstorage
+    *********************************************************************/
+    ns.localStorageExists = !window.fake_localstorage_installed;
+
     /*********************************************************************
     Determinate if the application is running in "standalone mode"
 

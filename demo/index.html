@@ -15,9 +15,6 @@
 
 <body style="background-color: gray; cursor:pointer">
     <div class="loading"></div>
-    <div id="result3"></div>
-    <div id="result"></div>
-    <div id="result2"></div>
     <select id="theSelect" style="width:200px"></select>
     <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button>    
     <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>    
@@ -25,41 +22,7 @@
     <div class="show-for-mouse">Vises kun, hvis der er en mus</div>
     <script src="bower_components.js"></script>
 	<script src="../src/fcoo-application.js"></script>
-	<script src="../src/detect-private-browsing.js"></script> 
 	<script>
-
-        var test = localStorage.getItem('niels_test');
-        document.getElementById('result3').innerHTML = 'localStorage.getItem("niels_test")="' + test + '"';
-        localStorage.setItem('niels_test', 'Gemt den '+ (new Date()).toString());
-
-        detectPrivateMode(function(is_private) {
-            document.getElementById('result').innerHTML = typeof is_private === 'undefined' ? 'cannot detect' : is_private ? 'private' : 'not private';
-
-        });
-
-        var localStorageExists = false;
-
-        // Example of how to use it
-        if (typeof window.localStorage === 'object') {
-            // Safari will throw a fit if we try to use localStorage.setItem in private browsing mode. 
-            try {
-                localStorage.setItem('localStorageTest', 1);
-                localStorage.removeItem('localStorageTest');
-                localStorageExists = true;
-            } 
-            catch (e) {
-                localStorageExists = false;
-                //fakeLocalStorage();
-            }
-        } 
-        else {
-            // Use fake localStorage for any browser that does not support it.
-            localStorageExists = false;
-            //fakeLocalStorage();
-        }
-        
-
-        document.getElementById('result2').innerHTML = localStorageExists  ? 'localStorage exists' : 'localStorage NOT exists';
 
         window.noty({text: 'Hi!'});
 
@@ -89,7 +52,22 @@
         
 
     $(function() { 
+        function w( str ){
+            document.body.innerHTML = document.body.innerHTML + '<br>' + str;
+        }
+        w(fcoo.localStorageExists  ? 'localStorage exists' : 'localStorage NOT exists');
+        
+        w('localStorage.getItem("niels_test")="' + localStorage.getItem('niels_test') + '"');
+
+        localStorage.setItem("niels_test", "Saved  "+ (new Date()).toString());
+        w('localStorage.setItem("niels_test", "Saved  "+ (new Date()).toString());');
+
+
+        w('localStorage.getItem("niels_test")="' + localStorage.getItem('niels_test') + '"');
+
+
     });
+
 
     </script>
 </body>

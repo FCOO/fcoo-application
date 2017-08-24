@@ -13285,6 +13285,106 @@ return index;
 
 }(this, document));
 ;
+/****************************************************************************
+	fake-localstorage.js, 
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/fake-localstorage
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+	"use strict";
+	
+    /*********************************************************************
+    Determinate if localStorage is supported and available
+    If the browser is in 'Private' mode not all browser supports localStorage
+    In localStorage isn't supported a fake version is installed
+    At the moment no warning is given when localStorage isn't supported since
+    some browser in private-mode allows the use of window.localStorage but 
+    don't save it when the session ends
+    *********************************************************************/
+    window.fake_localstorage_installed = false;
+
+    // Test taken from https://gist.github.com/engelfrost/fd707819658f72b42f55
+    if (typeof window.localStorage === 'object') {
+        // Safari will throw a fit if we try to use localStorage.setItem in private browsing mode. 
+        try {
+            localStorage.setItem('localStorageTest', 1);
+            localStorage.removeItem('localStorageTest');
+            window.fake_localstorage_installed = false;
+        } 
+        catch (e) {
+            window.fake_localstorage_installed = true;
+        }
+    } 
+    else 
+        window.fake_localstorage_installed = true;        
+
+    if (window.fake_localstorage_installed){
+        /*********************************************************************
+        Create a fake localStorage for any browser that does not support it.
+
+        Taken from https://gist.github.com/engelfrost/fd707819658f72b42f55:
+            Fake localStorage implementation. 
+            Mimics localStorage, including events. 
+            It will work just like localStorage, except for the persistant storage part. 
+        *********************************************************************/
+        var fakeLocalStorage = {};
+        var storage; 
+  
+        // If Storage exists we modify it to write to our fakeLocalStorage object instead. 
+        // If Storage does not exist we create an empty object. 
+        if (window.Storage && window.localStorage) {
+            storage = window.Storage.prototype; 
+        } else {
+            // We don't bother implementing a fake Storage object
+            window.localStorage = {}; 
+            storage = window.localStorage; 
+        }
+  
+        // For older IE
+        if (!window.location.origin) {
+            window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+        }
+
+        var dispatchStorageEvent = function(key, newValue) {
+            var oldValue = (key == null) ? null : storage.getItem(key); // `==` to match both null and undefined
+            var url = location.href.substr(location.origin.length);
+            var storageEvent = document.createEvent('StorageEvent'); // For IE, http://stackoverflow.com/a/25514935/1214183
+
+            storageEvent.initStorageEvent('storage', false, false, key, oldValue, newValue, url, null);
+            window.dispatchEvent(storageEvent);
+        };
+
+        storage.key = function(i) {
+            var key = Object.keys(fakeLocalStorage)[i];
+            return typeof key === 'string' ? key : null;
+        };
+
+        storage.getItem = function(key) {
+            return typeof fakeLocalStorage[key] === 'string' ? fakeLocalStorage[key] : null;
+        };
+
+        storage.setItem = function(key, value) {
+            dispatchStorageEvent(key, value);
+            fakeLocalStorage[key] = String(value);
+        };
+
+        storage.removeItem = function(key) {
+            dispatchStorageEvent(key, null);
+            delete fakeLocalStorage[key];
+        };
+
+        storage.clear = function() {
+            dispatchStorageEvent(null, null);
+            fakeLocalStorage = {};
+        };
+    }
+}(this));
+;
 "use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj};(function(f){if((typeof exports==="undefined"?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Url=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o])}return s}({1:[function(require,module,exports){window.addEventListener("popstate",function(e){Url.triggerPopStateCb(e)});var Url=module.exports={_onPopStateCbs:[],_isHash:false,queryString:function queryString(name,notDecoded){name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),results=regex.exec(location.search),encoded=null;if(results===null){regex=new RegExp("[\\?&]"+name+"(\\&([^&#]*)|$)");if(regex.test(location.search)){return true}return undefined}else{encoded=results[1].replace(/\+/g," ");if(notDecoded){return encoded}return decodeURIComponent(encoded)}},parseQuery:function parseQuery(search){var query={};if(typeof search!=="string"){search=window.location.search}search=search.replace(/^\?/g,"");if(!search){return{}}var a=search.split("&"),i=0,iequ,value=null;for(;i<a.length;++i){iequ=a[i].indexOf("=");if(iequ<0){iequ=a[i].length;value=true}else{value=decodeURIComponent(a[i].slice(iequ+1))}query[decodeURIComponent(a[i].slice(0,iequ))]=value}return query},stringify:function stringify(queryObj){if(!queryObj||queryObj.constructor!==Object){throw new Error("Query object should be an object.")}var stringified="";Object.keys(queryObj).forEach(function(c){var value=queryObj[c];stringified+=c;if(value!==true){stringified+="="+encodeURIComponent(queryObj[c])}stringified+="&"});stringified=stringified.replace(/\&$/g,"");return stringified},updateSearchParam:function updateSearchParam(param,value,push,triggerPopState){var searchParsed=this.parseQuery();if(value===undefined){delete searchParsed[param]}else{if(searchParsed[param]===value){return Url}searchParsed[param]=value}var newSearch="?"+this.stringify(searchParsed);this._updateAll(window.location.pathname+newSearch+location.hash,push,triggerPopState);return Url},getLocation:function getLocation(){return window.location.pathname+window.location.search+window.location.hash},hash:function hash(newHash,triggerPopState){if(newHash===undefined){return location.hash.substring(1)}if(!triggerPopState){setTimeout(function(){Url._isHash=false},0);Url._isHash=true}return location.hash=newHash},_updateAll:function _updateAll(s,push,triggerPopState){window.history[push?"pushState":"replaceState"](null,"",s);if(triggerPopState){Url.triggerPopStateCb({})}return s},pathname:function pathname(_pathname,push,triggerPopState){if(_pathname===undefined){return location.pathname}return this._updateAll(_pathname+window.location.search+window.location.hash,push,triggerPopState)},triggerPopStateCb:function triggerPopStateCb(e){if(this._isHash){return}this._onPopStateCbs.forEach(function(c){c(e)})},onPopState:function onPopState(cb){this._onPopStateCbs.push(cb)},removeHash:function removeHash(){this._updateAll(window.location.pathname+window.location.search,false,false)},removeQuery:function removeQuery(){this._updateAll(window.location.pathname+window.location.hash,false,false)},version:"2.3.1"}},{}]},{},[1])(1)});
 ;
 /****************************************************************************
@@ -13927,7 +14027,7 @@ window.location.hash
 
     saveStr (special case) the string to be saved and only when toForce==true
     **********************************/
-    ns.save = function( toForce, saveStr ){ 
+    ns.save = function( toForce, saveStr ){
         //Save all saveValue from settings
         var settingValuesToSave = this.loadFromLocalStorage();
         $.each( settings, function( id, setting ){ 

@@ -19,6 +19,12 @@ http://FCOO.github.io/fcoo-application/demo/
 All global variables, methods, and options in the package is located in namespace `window.fcoo`
 
 ### Global variables, methods, and options
+
+#### `window.fcoo.localStorageExists` [Boolean]
+Determinate if `localStorage` is supported and available. If the browser is in *Private* mode not all browser supports `localStorage`
+If `localStorage` isn't supported a fake version is installed
+At the moment no warning is given when `localStorage` isn't supported since some browser in private-mode allows the use of `window.localStorage` but don't save it when the session ends
+
 #### `window.fcoo.standalone` [Boolean]
 Determinate if the application is running in "*standalone mode*". The app operates in standalone mode when 
 - it has a query string parameter `standalone=true` (generic), or
