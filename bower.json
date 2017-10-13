@@ -44,13 +44,14 @@
     "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
     "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#^3.0.0",
-    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^2.0.0",
-    "normalize-css": "~7.0.0",
+    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^3.0.0",
     "noty": "~2.4.1",
     "offline": "HubSpot/offline#~0.7.18",
     "imagesloaded": "desandro/imagesloaded#~4.1.1",
     "raven-js": "~3.17.0",
-    "fcoo-i18next-phrases": "fcoo/fcoo-i18next-phrases#latest"
+    "fcoo-i18next-phrases": "fcoo/fcoo-i18next-phrases#latest",
+    "jquery-bootstrap": "fcoo/jquery-bootstrap#^1.0.0",
+    "jquery-action-pan": "fcoo/jquery-action-pan#^1.0.0"
   },
   "overrides": {
     "offline": {

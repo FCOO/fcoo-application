@@ -13,18 +13,25 @@
   <link  href="../src/fcoo-application.css" rel="stylesheet">	
 </head>
 
-<body style="background-color: gray; cursor:pointer">
+<body>
     <div class="loading"></div>
-    <select id="theSelect" style="width:200px"></select>
-    <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button>    
-    <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>    
 
-    <div class="show-for-mouse">Vises kun, hvis der er en mus</div>
+    <div class="main-container">
+        <select id="theSelect" style="width:200px"></select><br>
+        <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>    
+        <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>    
+
+        <div class="show-for-mouse">Vises kun, hvis der er en mus</div>
+    </div>
+
     <script src="bower_components.js"></script>
-	<script src="../src/fcoo-application.js"></script>
-	<script>
+	<script src="../src/top-menu.js"></script>
+    <script src="../src/fcoo-application.js"></script>
 
-        window.noty({text: 'Hi!'});
+	<script>
+        var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
+
+
 
         var $select = $('#theSelect');
         var optionList = [
@@ -51,7 +58,20 @@
         }
         
 
-    $(function() { 
+        $(function() { 
+
+            window.fcoo.createTopMenu({
+//search: false,
+            });
+
+
+            $('.main-container').on('click', function( event ){
+                if (event.target === this){
+                    colorIndex = (colorIndex+1) % colors.length;
+                    $('.top-menu').css('background-color', colors[colorIndex]);
+                }
+            });
+/*
         function w( str ){
             document.body.innerHTML = document.body.innerHTML + '<br>' + str;
         }
@@ -65,8 +85,9 @@
 
         w('localStorage.getItem("niels_test")="' + localStorage.getItem('niels_test') + '"');
 
+*/
 
-    });
+        });
 
 
     </script>

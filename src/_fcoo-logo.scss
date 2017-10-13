@@ -1,0 +1,88 @@
+/*****************************************************
+FCOO-LOGO
+
+Style for FCOO logo as font
+icon-fcoo-logo = Default FCOO logo (white)
+icon-fcoo-app-logo = Same as icon-fcoo-logo but in the application color
+fcoo-background = background-color = default blue
+fcoo-app-background = background-color = application background-color
+*****************************************************/
+$default-favicon-color   : white;
+$app-favicon-color       : "{APPLICATION_FAVICONCOLOR}"; 
+
+$default-background-color: #214b87;
+$app-background-color    : "{APPLICATION_COLOR}"; 
+
+
+@font-face {
+    font-family: 'fcoo-logo';
+//Only using woff    src:  url('fonts/fcoo-logo.eot?ma2cie');
+//Only using woff    src:  url('fonts/fcoo-logo.eot?ma2cie#iefix') format('embedded-opentype'),  url('fonts/fcoo-logo.ttf?ma2cie') format('truetype'), url('fonts/fcoo-logo.woff?ma2cie') format('woff'),    url('fonts/fcoo-logo.svg?ma2cie#icomoon') format('svg');
+    src:  url('fonts/fcoo-logo.woff?ma2cie') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.icon-fcoo-logo, .icon-fcoo-app-logo {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'fcoo-logo' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    color: $default-favicon-color; 
+
+     &:before { content: "\e900"; }
+}
+
+.icon-fcoo-app-logo {
+    color: #{$app-favicon-color} !important;
+}
+
+.fcoo-color, .fcoo-app-color {
+    color: $default-favicon-color;
+}
+
+.fcoo-app-color {
+    color: #{$app-favicon-color} !important;
+}
+
+.fcoo-background, .fcoo-app-background {
+    background-color: $default-background-color;
+}
+
+.fcoo-app-background {
+    background-color: #{$app-background-color} !important;
+}
+
+
+/**********************************************************
+fcoo-name = the font used for the FCOO name in the logo - TODO
+**********************************************************/
+@font-face {
+    font-family: 'fcoo-name';
+    src:  url('fonts/svenings.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    speak: none;
+    line-height: 1;
+}
+
+.fcoo-name {
+    font-family: fcoo-name;
+}
+
+.fcoo-name-color {
+    color: $default-background-color;
+}
+
+

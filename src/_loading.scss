@@ -1,0 +1,78 @@
+/*****************************************************
+LOADING 
+Style for the <div> covering the page during loading
+*****************************************************/
+div.loading {
+    $duration: 0.4s; //Duration of the fade-in and fade-out
+
+    position: absolute;
+    left:0; 
+    top: 0; 
+    z-index: 2147483647; //2N32
+    
+    background-color: $default-background-color;
+    background-color: #{$app-background-color};
+
+    //Sizing and placing the logo
+    text-align: center;
+
+    //When body loading 
+    body.loading & {
+        cursor : progress; 
+        width  : 100%; 
+        height : 100%;
+        opacity: 1;
+
+        //Logo
+        &:before {
+            position: absolute;
+            left    : 0;
+            right   : 0;
+            top     : 10%;
+
+            font-size  : 280px; 
+            line-height: 0.5;
+        }
+
+        //Version and working
+        & > div {
+            display: block !important;
+            cursor : progress; 
+            position: absolute;
+            right : 0;
+            left  : 0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+
+            //Size and position
+            &.version { 
+                top        :60%;
+                font-family: sans-serif;
+                font-size  : 200%;  
+                &.withContent {
+                    background-color: red;
+                    color           : white;
+                }
+            }
+            &.working { 
+                top:80%; 
+            }
+        }
+    }
+
+    //When body finish loading 
+    body:not(.loading) & {
+        width  : 0;
+        height : 0;
+        opacity: 0;
+        
+        //Deprecated @include transition(opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration);    
+        transition: opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration;    
+
+        //Hide logo, version and working when not loading 
+        &:before, & > div { 
+            display: none !important;
+        }
+    }
+}

@@ -1,5 +1,5 @@
 /****************************************************************************
-	fcoo-application.js, 
+	fcoo-application.js,
 
 	(c) 2016, FCOO
 
@@ -11,16 +11,16 @@ Sections:
 1: Namespace, application states, system variables
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
-4: Set up different Modernizr tests
+4: Set up different Modernizr tests and initialize jquery-bootstrap
 5: Initialize offline.js - http://github.hubspot.com/offline/
-6: Initialize raven to report all uncaught exceptions to sentry AND 
+6: Initialize raven to report all uncaught exceptions to sentry AND
    Adding the Piwik Tracking Code
 
 ****************************************************************************/
 
 (function ($, window/*, document, undefined*/) {
 	"use strict";
-	
+
     /***********************************************************************
     ************************************************************************
     1: Namespace, application states, system variables
@@ -30,17 +30,17 @@ Sections:
     //Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
 	var ns = window.fcoo;
-	
+
     //Setting protocol
     ns.protocol = window.location.protocol == 'https:' ? 'https:' : 'http:';
-    
+
 
     /*********************************************************************
     Determinate if localStorage is supported and available
     If the browser is in 'Private' mode not all browser supports localStorage
     In localStorage isn't supported a fake version is installed
     At the moment no warning is given when localStorage isn't supported since
-    some browser in private-mode allows the use of window.localStorage but 
+    some browser in private-mode allows the use of window.localStorage but
     don't save it when the session ends
     The test is done in fcoo/fake-localstorage
     *********************************************************************/
@@ -49,13 +49,13 @@ Sections:
     /*********************************************************************
     Determinate if the application is running in "standalone mode"
 
-    The app operates in standalone mode when 
+    The app operates in standalone mode when
     - it has a query string parameter "standalone=true" (generic), or
-    - the navigator.standalone property is set (iOS), or 
+    - the navigator.standalone property is set (iOS), or
     - the display-mode is standalone (Android).
     For standalone apps we use localStorage for persisting state.
     *********************************************************************/
-    ns.standalone = 
+    ns.standalone =
         window.Url.parseAll( {standalone:'BOOLEAN'}, {standalone:false} ).standalone ||
         ( ("standalone" in window.navigator) && window.navigator.standalone ) ||
         ( window.matchMedia('(display-mode: standalone)').matches );
@@ -104,7 +104,7 @@ Sections:
 
         var result = window.Url.parseAll( validatorObj, defaultObj, options );
 
-        
+
         if (ns.standalone){
             //Load parameters from localStorage
             var paramStr = window.localStorage.getItem( ns.localStorageKey );
@@ -122,12 +122,12 @@ Sections:
 
             //Save the total result as "temp" in localStorage
             try {
-                window.localStorage.setItem(ns.localStorageTempKey, window.Url.stringify(result) );  
+                window.localStorage.setItem(ns.localStorageTempKey, window.Url.stringify(result) );
             }
             catch (e) {
                 //console.log(e);
-            }            
-        }            
+            }
+        }
 
         result.standalone = ns.standalone;
         return result;
@@ -138,17 +138,17 @@ Sections:
         var result = true;
         try {
             window.localStorage.setItem(
-                ns.localStorageKey, 
-                window.localStorage.getItem(ns.localStorageTempKey)  
-            );  
+                ns.localStorageKey,
+                window.localStorage.getItem(ns.localStorageTempKey)
+            );
         }
         catch (e) {
             result = false;
-        }            
+        }
         return result;
     };
-    
-    
+
+
     /***********************************************************************
     ************************************************************************
     3: Set up 'loading...'
@@ -173,8 +173,8 @@ Sections:
 
     $loadingDiv.append( $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>') );
 
-   
-    
+
+
     //Test if the path-name contains any of the words defining the version to be none-production
     var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
 
@@ -185,9 +185,9 @@ Sections:
             window.document.title = name +' - ' + window.document.title;
             return false;
         }
-    });    
-        
-    
+    });
+
+
     $(window).on( 'load', function() { $body.removeClass("loading"); });
 
     //Call Url.adjustUrl() to remove broken values in the url
@@ -196,15 +196,15 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    4: Set up different Modernizr tests
+    4: Set up different Modernizr tests and initialize jquery-bootstrap
     ************************************************************************
     ***********************************************************************/
     //Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
     //Solution by http://stackoverflow.com/users/1701813/hacktisch
-    //Mouse devices (also touch screen laptops) first fire mousemove before they can fire touchstart and hasMouse is set to TRUE. 
-    //Touch devices (also for instance iOS which fires mousemove) FIRST fire touchstart upon click, and then mousemove. 
+    //Mouse devices (also touch screen laptops) first fire mousemove before they can fire touchstart and hasMouse is set to TRUE.
+    //Touch devices (also for instance iOS which fires mousemove) FIRST fire touchstart upon click, and then mousemove.
     //That is why hasMouse will be set to FALSE.
-    $(function() { 
+    $(function() {
         window.fcoo.modernizr.addTest('mouse', false);
         $(window)
             .bind('mousemove.fcoo.application',function(){
@@ -213,10 +213,16 @@ Sections:
                 window.modernizrOn('mouse');
             })
             .bind('touchstart.fcoo.application',function(){
-                $(window).unbind('.fcoo.application'); 
+                $(window).unbind('.fcoo.application');
                 window.fcoo.modernizr.mouse = false;
                 window.modernizrOff('mouse');
             });
+    });
+
+    //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
+    //We are using the Modernizr test touchevents
+    $(function() {
+        window.bsIsTouch = window.fcoo.modernizr.touchevents;
     });
 
 
@@ -246,16 +252,16 @@ Sections:
 
     window.Offline.options = {
         checks: {
-            image: { 
-                url: function(){ 
+            image: {
+                url: function(){
                         var result = ns.protocol + '//app.fcoo.dk/favicon.ico?_='+new Date().getTime();
                         return result;
                      }
-            }, 
+            },
             active: 'image'
         }
     };
-  
+
 
     //Adds Modernizr test "connected"
     window.Offline.on('up',   function(){ window.modernizrOn( 'connected'); });
@@ -294,14 +300,14 @@ Sections:
         });
     });
 
-    function load(e){ 
+    function load(e){
         $(e.target)
             .removeAttr('originalSrc')
             .off('error', error )
             .off('load', load );
     }
 
-    function error(e){ 
+    function error(e){
         var img = e.target,
             src = $(img).attr('originalSrc');
         load(e);
@@ -311,11 +317,11 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    6: Initialize raven to report all uncaught exceptions to sentry AND 
+    6: Initialize raven to report all uncaught exceptions to sentry AND
        Adding the Piwik Tracking Code
     ************************************************************************
     ***********************************************************************/
-    
+
     //Initialize raven to report all uncaught exceptions to sentry
     var sentryDSN = ns.getApplicationOption( "{APPLICATION_SENTRYDSN}", '');
     if (sentryDSN)
@@ -329,7 +335,7 @@ Sections:
             ignoreUrls   : [],
             ignoreErrors : [],
             includePaths : [], //An array of regex patterns to indicate which urls are a part of your app in the stack trace
-            //dataCallback : null, //A function that allows mutation of the data payload right before being sent to Sentry. dataCallback: function(data) { /*do something to data*/ return data; 
+            //dataCallback : null, //A function that allows mutation of the data payload right before being sent to Sentry. dataCallback: function(data) { /*do something to data*/ return data;
         }).install();
 
     //Adding the Piwik Tracking Code
@@ -353,11 +359,11 @@ Sections:
 
 
 	/******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
-    
-	}); 
+	$(function() {
+
+	});
 	//******************************************
 
 }(jQuery, this, document));

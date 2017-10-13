@@ -20,13 +20,21 @@
 //MODERNIZR-SCSS - https://github.com/FCOO/modernizr-scss
 @import "../bower_components/modernizr-scss/dist/modernizr-scss";
 
-html, body {
-    height: 100%;    
-}
-body {
-    padding: 0;
-    margin : 0;
-}
+
+
+/***************************************************
+Import Bootstrap variables and variables and the 
+adjustments to Bootstrap from fcoo/jquery-bootstrap
+***************************************************/
+@import "../bower_components/jquery-bootstrap/src/bootstrap-variables";
+
+@import "../bower_components/bootstrap/scss/functions";
+@import "../bower_components/bootstrap/scss/variables";
+@import "../bower_components/bootstrap/scss/mixins";
+
+@import "../bower_components/jquery-bootstrap/src/variables";
+@import "../bower_components/jquery-bootstrap/src/mixins";
+
 
 //Standard classes
 .hide      { display: none !important; }
@@ -36,167 +44,26 @@ body {
 
 /*****************************************************
 Style for FCOO logo as font
-icon-fcoo-logo = Default FCOO logo (white)
-icon-fcoo-app-logo = Same as icon-fcoo-logo but in the application color
-fcoo-background = background-color = default blue
-fcoo-app-background = background-color = application background-color
-
 *****************************************************/
-$default-favicon-color   : white;
-$app-favicon-color       : "{APPLICATION_FAVICONCOLOR}"; 
-
-$default-background-color: #214b87;
-$app-background-color    : "{APPLICATION_COLOR}"; 
-
-
-@font-face {
-    font-family: 'fcoo-logo';
-//Only using woff    src:  url('fonts/fcoo-logo.eot?ma2cie');
-//Only using woff    src:  url('fonts/fcoo-logo.eot?ma2cie#iefix') format('embedded-opentype'),  url('fonts/fcoo-logo.ttf?ma2cie') format('truetype'), url('fonts/fcoo-logo.woff?ma2cie') format('woff'),    url('fonts/fcoo-logo.svg?ma2cie#icomoon') format('svg');
-    src:  url('fonts/fcoo-logo.woff?ma2cie') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-.icon-fcoo-logo, .icon-fcoo-app-logo {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'fcoo-logo' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    color: $default-favicon-color; 
-
-     &:before { content: "\e900"; }
-}
-
-.icon-fcoo-app-logo {
-    color: #{$app-favicon-color} !important;
-}
-
-.fcoo-color, .fcoo-app-color {
-    color: $default-favicon-color;
-}
-
-.fcoo-app-color {
-    color: #{$app-favicon-color} !important;
-}
-
-.fcoo-background, .fcoo-app-background {
-    background-color: $default-background-color;
-}
-
-.fcoo-app-background {
-    background-color: #{$app-background-color} !important;
-}
+@import "fcoo-logo";
 
 /*****************************************************
 Style for the <div> covering the page during loading
 *****************************************************/
-div.loading {
-    $duration: 0.4s; //Duration of the fade-in and fade-out
-
-    position: absolute;
-    left:0; 
-    top: 0; 
-    z-index: 2147483647; //2N32
-    
-    background-color: $default-background-color;
-    background-color: #{$app-background-color};
-
-    //Sizing and placing the logo
-    text-align: center;
-
-    //When body loading 
-    body.loading & {
-        cursor : progress; 
-        width  : 100%; 
-        height : 100%;
-        opacity: 1;
-
-        //Logo
-        &:before {
-            position: absolute;
-            left    : 0;
-            right   : 0;
-            top     : 10%;
-
-            font-size  : 280px; 
-            line-height: 0.5;
-        }
-
-        //Version and working
-        & > div {
-            display: block !important;
-            cursor : progress; 
-            position: absolute;
-            right : 0;
-            left  : 0;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-
-            //Size and position
-            &.version { 
-                top        :60%;
-                font-family: sans-serif;
-                font-size  : 200%;  
-                &.withContent {
-                    background-color: red;
-                    color           : white;
-                }
-            }
-            &.working { 
-                top:80%; 
-            }
-        }
-    }
-
-    //When body finish loading 
-    body:not(.loading) & {
-        width  : 0;
-        height : 0;
-        opacity: 0;
-        
-        //Deprecated @include transition(opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration);    
-        transition: opacity $duration ease-out 0s, width 0s ease-in-out $duration, height 0s ease-in-out $duration;    
-
-        //Hide logo, version and working when not loading 
-        &:before, & > div { 
-            display: none !important;
-        }
-    }
-}
+@import "loading";
 
 /*****************************************************
-Style for offline.js with danish translations
-Use when the user has selected danish (html has class "lang-da") or 
-the user has selected a no-english language and danish as 2. languages
+Style for offline.js
 *****************************************************/
-html.lang-da, html.no-lang-en.lang2-da {
-    @import "offline-danish";
-}
+@import "offline-js";
 
+/*****************************************************
+Style for html, body and main structure
+*****************************************************/
+@import "main";
 
-//Addd red shadow to the body, when there are no connections
-html.no-connected body {
-    box-shadow: inset 0px 0px 10px 5px rgba(255,0,0,1);
-}
+/*****************************************************
+Style for top menu
+*****************************************************/
+@import "top-menu";
 
-
-//Create Modernizr-classe for tests
-$modernizr-test-list: (
-    connected,
-    mouse
-); 
-
-@each $modernizr-test in $modernizr-test-list {
-    @include show-and-hide-for-modernizr-test( $modernizr-test, html, false, '', false );
-}

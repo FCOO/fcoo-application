@@ -1,0 +1,32 @@
+/*****************************************************
+MAIN
+
+Style for <html>, <body> and main structure
+*****************************************************/
+
+/***************************************************
+Style for html and body to prevent bouncing on mobile
+devices and to fix the size and prevent any scrolling in body
+***************************************************/
+html, body {
+    height  : 100%;    
+    width   : 100%;
+    overflow: hidden;
+}
+
+body {
+    padding : 0;
+    margin  : 0;
+    width   : -webkit-calc(100% - 0px); //To fix issues with "100vh" in Safari
+    height  : -webkit-calc(100% - 0px); //To fix issues with "100vh" in Safari
+    position: fixed;
+
+    transition: padding-top .15s ease-in-out;
+
+    .main-container {
+        width : 100%;
+        height: 100%;
+        background-color: gray;
+    }
+}
+
