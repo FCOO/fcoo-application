@@ -144,17 +144,22 @@ body {
             border-bottom-right-radius: 0;
             border-top-right-radius   : 0;
             border-right: none;
-            width: 150px;
+            width: 6rem;
 
-            .small-up & + .btn {
+            .small-up & {
+                width: 10rem;
+            }
+//            .xsmall-port-down & {
+            .xsmall-land-down & {
+                display: none;
+            }
+
+            .xsmall-land-up & + .btn { 
                 border-left: none;
                 border-bottom-left-radius: 0;
                 border-top-left-radius   : 0;
             }
         }
-//        .small-down & .btn {
-//            background-color: red;
-//        }
     }
     
     //Badge to show number of unread messages etc.

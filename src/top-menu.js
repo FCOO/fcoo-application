@@ -57,22 +57,28 @@ SetCreate and manage the top-menu for FCOO web applications
             header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Dansk - en meget laaaaaaaaaaaaaaaaaaang title", "en":"English"}'),
 
             messages : true,
+messages1 : true,
+messages2 : true,
             search   : true,
             help     : true,
             rightMenu: true
         }, options );
 
+
         var $body = $('body'),
             $topMenuContainer,
             $aboutFCOO,
             $topBar,
+            //topMenuElements - info on the different possible elements/buttons on the menu.
+            //width=relative width (-1 = not included in total)
             topMenuElements = [
                 {id: 'leftMenu'  },
-                {id: 'rightSide' },
-                {id: 'logo'      },
-                {id: 'header'    },
+                {id: 'logo',                       width   : -1   },
+                {id: 'header',                     width   : -1   },
                 {id: 'search',    rightSide: true },
-                {id: 'messages',  rightSide: true },
+                {id: 'messages',  rightSide: true, width   :  2   },
+{id: 'messages1', rightSide: true, width: 1},
+{id: 'messages2', rightSide: true, width: 1.5},
                 {id: 'help',      rightSide: true },
                 {id: 'rightMenu', rightSide: true }
             ];
@@ -173,11 +179,48 @@ SetCreate and manage the top-menu for FCOO web applications
             action            : function(){ setTopMenuState( topMenuState == 'extended' ? 'normal' : 'hidden' ); }
         });
 
+
+        //Count the number of buttons to decide the width of the screen where the header and/or the logo disappears
+        var totalWidth = 0;
+        $.each( topMenuElements, function( index, elementInfo ){
+            if (options[elementInfo.id]){
+                var width = elementInfo.width || 1;
+                if (width > 0)
+                    totalWidth += width;
+            }
+        });
+
+        //Very rough estimate of max width where there is enuogh space to show the logo
+        var minScreenWidth = (totalWidth + 2) * 2.5 * 16, //1=extra 2=width of logo
+            logoHideClassName = '';
+
+        if (minScreenWidth > 200){
+            //Find the smallest mediaQuery breakpoint larger than minScreenWidth
+            var mqBreakpoint = 10000;
+            $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
+                if ((minMax.min == 0) && (minMax.max <= mqBreakpoint) && (minMax.max >= minScreenWidth)){
+                    mqBreakpoint = minMax.max;
+                    logoHideClassName = 'hide-for-'+minMax.id;
+                }
+            });
+        }
+
+        //Set the minimum width of the visible header to 4 times a button and calculate the breakpoint for the header
+        var headerHideClassName = '';
+        minScreenWidth = minScreenWidth + 4 * 2.5 * 16;
+        mqBreakpoint = 10000;
+            $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
+                if ((minMax.min == 0) && (minMax.max < mqBreakpoint) && (minMax.max > minScreenWidth)){
+                    mqBreakpoint = minMax.max;
+                    headerHideClassName = 'hide-for-'+minMax.id;
+                }
+            });
+
+
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElements
         var firstRightSideFound = false;
         $.each( topMenuElements, function( index, elementInfo ){
             var $element;
-
             if (!options[elementInfo.id])
                 return true;
             switch (elementInfo.id){
@@ -191,7 +234,9 @@ SetCreate and manage the top-menu for FCOO web applications
                 case "logo":
                     //FCOO logo with click to extende/diminish top-menu content
                     $element =
-                        $('<a class="icon-fcoo-app-logo hide-for-mini-down"></a>')
+                        $('<a/>')
+                            .addClass( 'icon-fcoo-app-logo' )
+                            .addClass( logoHideClassName )
                             .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
                             .on('click', function(){
                                 $topMenu.actionPanForce( topMenuState == 'normal' ? 'down' : 'up', true );
@@ -202,7 +247,8 @@ SetCreate and manage the top-menu for FCOO web applications
                 case "header":
                     $element =
                         $('<div/>')
-                            .addClass('text-nowrap hide-for-mini-down header')
+                            .addClass('text-nowrap header')
+                            .addClass(headerHideClassName)
                             .i18n( options.header )
                             .appendTo($topMenu);
                         break;
@@ -217,12 +263,34 @@ $element.append( $('<span class="badge badge-info">12</span>') );
 $element.append( $('<span class="badge badge-danger">!</span>') );
                     break;
 
+                case "messages1":
+                    $element =
+                        topMenuButton({
+                            icon:'fa-envelope'
+                        })
+                        .css('color', '#17a2b8');
+
+//$element.append( $('<span class="badge badge-info">12</span>') );
+$element.append( $('<span class="badge badge-danger">!</span>') );
+                    break;
+
+                case "messages2":
+                    $element =
+                        topMenuButton({
+                            icon:'fa-envelope'
+                        })
+                        .css('color', '#dc3545');
+
+//$element.append( $('<span class="badge badge-info">12</span>') );
+//$element.append( $('<span class="badge badge-danger">!</span>') );
+                    break;
+
                 case "search":
                     $element =
                         $('<form onsubmit="return false;"/>')
                             .addClass('form-inline')
                             .appendTo($topMenu);
-                    $   ('<input type="text" class="hide-for-small-down form-control" id="exampleInputPassword1"></div>')
+                    $   ('<input type="text" class="form-control" id="exampleInputPassword1"></div>')
                             .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
                             .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
                             .appendTo( $element );

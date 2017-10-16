@@ -9,13 +9,108 @@
 
 
 ************************************************/
-html, body {
-  height: 100%; }
+/***************************************************
+Import Bootstrap variables and variables and the 
+adjustments to Bootstrap from fcoo/jquery-bootstrap
+***************************************************/
+/************************************************************
+BOOTSTRAP-VARIABLES
+************************************************************/
+/***********************************************
+ADJUST BOOTSTRAP DEFAULT VALUES
+************************************************/
+/************************************************************
+Including "size" xs as in Bootstrap 3
+************************************************************/
+/************************************************************
+Border-colors
+************************************************************/
+/************************************************************
+VARIABLES
+************************************************************/
+/***********************************************
+DEFINE BOOTSTRAP BUTTON STYLE
+$btn-style-name MUST correspond with ns.bsButtonClass 
+in src/jquery-bootstrap-button.js 
+************************************************/
+/************************************************************
+Variables bassed on bootstrop variables
+************************************************************/
+/************************************************************
+HEADER
+Font-sizes for headers are one 'size' smaller than normal font
+$font-size-lg  : 1.25rem    20px
+$font-size-base: 1rem       16px
+$font-size-sm  : .875rem    14px
+$font-size-xs  : .75rem     12px
 
-body {
-  padding: 0;
-  margin: 0; }
-
+************************************************************/
+/************************************************************
+CONTENT
+Unifies padding and font-size for content of modal, accordion, popup etc.
+Using same font-size and vertical/horizontal padding as buttons
+************************************************************/
+/************************************************************
+MARGIN-BOTTOM
+All elements in modal-windows get same margin-bottom
+************************************************************/
+/************************************************************
+MIXIN
+************************************************************/
+/************************************************************
+RIGHT-SIDE-ICON
+Add style to <i> to place it to the right and vertical center
+NOTE: Parent element MUST have @include vertical-align-center();
+************************************************************/
+/************************************************************
+FOCUS
+All elements get same outline when they have focus:
+No outline
+border-color = light blue
+************************************************************/
+/************************************************************
+CONTENT
+Unifies padding for modal, accordion, popup etc.
+************************************************************/
+/************************************************************
+CONTROL-CONTAINER
+Style for div with controls inside modal. 
+Must have tabindex:"-1" to work with focus
+************************************************************/
+/************************************************************
+HEADER AND TITLE BACKGROUND-COLOR AND COLOR
+Headers for modal, popover, popup etc.
+************************************************************/
+/************************************************************
+color-hover - Background-color and text-color for 'normal' and hover
+************************************************************/
+/************************************************************
+header-color - Colors for headers
+************************************************************/
+/************************************************************
+title-color - create colors for headers for table and accordion etc.
+************************************************************/
+/************************************************************
+control-active-color
+Mixin to set colors for selected elements and when hover
+************************************************************/
+/************************************************************
+HEADER, TITLE, AND FOOTER PADDING AND FONT-SIZE
+Padding are set to button y-padding (moving text to the left)
+************************************************************/
+/************************************************************
+header-variant
+************************************************************/
+/************************************************************
+title-variant - as header but with same font-size as siblings
+************************************************************/
+/************************************************************
+footer-variant
+************************************************************/
+/************************************************************
+MARGIN-BOTTOM FOR ELEMENTS IN MODAL
+All elements in modal-windows get same margin-bottom
+************************************************************/
 .hide {
   display: none !important; }
 
@@ -27,11 +122,15 @@ body {
 
 /*****************************************************
 Style for FCOO logo as font
+*****************************************************/
+/*****************************************************
+FCOO-LOGO
+
+Style for FCOO logo as font
 icon-fcoo-logo = Default FCOO logo (white)
 icon-fcoo-app-logo = Same as icon-fcoo-logo but in the application color
 fcoo-background = background-color = default blue
 fcoo-app-background = background-color = application background-color
-
 *****************************************************/
 @font-face {
   font-family: 'fcoo-logo';
@@ -58,19 +157,42 @@ fcoo-app-background = background-color = application background-color
 .icon-fcoo-app-logo {
   color: {APPLICATION_FAVICONCOLOR} !important; }
 
-.fcoo-color, .fcoo-app-color {
+.fcoo-color, .fcoo-app-color, .top-menu {
   color: white; }
 
-.fcoo-app-color {
+.fcoo-app-color, .top-menu {
   color: {APPLICATION_FAVICONCOLOR} !important; }
 
-.fcoo-background, .fcoo-app-background {
+.fcoo-background, .fcoo-app-background, .top-menu {
   background-color: #214b87; }
 
-.fcoo-app-background {
+.fcoo-app-background, .top-menu {
   background-color: {APPLICATION_COLOR} !important; }
 
+/**********************************************************
+fcoo-name = the font used for the FCOO name in the logo - TODO
+**********************************************************/
+@font-face {
+  font-family: 'fcoo-name';
+  src: url("fonts/svenings.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  speak: none;
+  line-height: 1; }
+
+.fcoo-name {
+  font-family: fcoo-name; }
+
+.fcoo-name-color {
+  color: #214b87; }
+
 /*****************************************************
+Style for the <div> covering the page during loading
+*****************************************************/
+/*****************************************************
+LOADING 
 Style for the <div> covering the page during loading
 *****************************************************/
 div.loading {
@@ -120,6 +242,11 @@ div.loading {
       display: none !important; }
 
 /*****************************************************
+Style for offline.js
+*****************************************************/
+/*****************************************************
+OFFLINE-JS
+
 Style for offline.js with danish translations
 Use when the user has selected danish (html has class "lang-da") or 
 the user has selected a no-english language and danish as 2. languages
@@ -204,3 +331,180 @@ html.mouse .hide-for-mouse {
 
 html.no-mouse .show-for-mouse {
   display: none !important; }
+
+/*****************************************************
+Style for html, body and main structure
+*****************************************************/
+/*****************************************************
+MAIN
+
+Style for <html>, <body> and main structure
+*****************************************************/
+/***************************************************
+Style for html and body to prevent bouncing on mobile
+devices and to fix the size and prevent any scrolling in body
+***************************************************/
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; }
+
+body {
+  padding: 0;
+  margin: 0;
+  width: -webkit-calc(100% - 0px);
+  height: -webkit-calc(100% - 0px);
+  position: fixed;
+  transition: padding-top .15s ease-in-out; }
+  body .main-container {
+    width: 100%;
+    height: 100%;
+    background-color: gray; }
+
+/*****************************************************
+Style for top menu
+*****************************************************/
+/*****************************************************
+TOP-MENU
+
+Style for top menu and items (logo, buttons etc)
+*****************************************************/
+/***************************************************
+top-menu is like Bootstrap navbar but to avoid 
+confussions another name is used
+***************************************************/
+body.top-menu-hidden {
+  padding-top: 0 !important; }
+
+.top-menu-container > * {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+  opacity: 1;
+  transition: opacity .15s ease-in-out; }
+
+.about-fcoo {
+  background-color: white;
+  border-bottom: 1px solid black;
+  text-align: center;
+  font-size: 1rem;
+  opacity: 0.6; }
+  .top-menu-extended .about-fcoo,
+  .top-menu-threshold-down ~ .about-fcoo {
+    opacity: 1; }
+  .top-menu-threshold-up ~ .about-fcoo {
+    opacity: .6; }
+  .about-fcoo > * {
+    margin: .5rem;
+    flex-shrink: 1;
+    flex-grow: 0; }
+  .about-fcoo .fcoo-logo {
+    width: 310px;
+    height: 71.5384615385px;
+    flex-shrink: 0;
+    background-image: url("images/FCOO_logo_260x60.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain; }
+
+.top-menu {
+  margin-top: 0px;
+  padding: 0.25rem;
+  font-size: 0.875rem;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+  .touchevents .top-menu {
+    font-size: 1rem; }
+  .top-menu > * {
+    flex-shrink: 0;
+    flex-grow: 0; }
+  .top-menu > *:not(:first-child):not(.right-side) {
+    margin-left: 0.25rem !important; }
+    .touchevents .top-menu > *:not(:first-child):not(.right-side) {
+      margin-left: 0.5rem !important; }
+  .top-menu .left-side {
+    margin-right: auto !important; }
+  .top-menu .right-side {
+    margin-left: auto !important; }
+  .top-menu .btn i.fa.fa-search {
+    font-size: 0.85em; }
+  .top-menu .btn i.fa.fa-i-list {
+    font-size: 0.75em; }
+  .top-menu .icon-fcoo-app-logo {
+    padding: 0;
+    margin: 0;
+    line-height: .5;
+    opacity: 0.8;
+    font-size: 4.5em; }
+    .touchevents .top-menu .icon-fcoo-app-logo {
+      opacity: 1; }
+    .top-menu .icon-fcoo-app-logo:focus, .top-menu .icon-fcoo-app-logo:hover {
+      opacity: 1; }
+  .top-menu .header {
+    flex-shrink: 1;
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.5em;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 0.25rem; }
+    .touchevents .top-menu .header {
+      margin-right: 0.5rem; }
+  .top-menu .form-inline .form-control {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: none;
+    width: 6rem; }
+    .small-up .top-menu .form-inline .form-control {
+      width: 10rem; }
+    .xsmall-land-down .top-menu .form-inline .form-control {
+      display: none; }
+    .xsmall-land-up .top-menu .form-inline .form-control + .btn {
+      border-left: none;
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0; }
+  .top-menu .badge {
+    position: inherit;
+    font-size: 0.45em;
+    border: 1px solid white;
+    margin-left: .25rem; }
+    .top-menu .badge:empty {
+      display: none; }
+
+.top-bar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3rem;
+  margin-left: -1.5rem;
+  display: none;
+  opacity: 0;
+  font-size: 2rem;
+  text-align: center;
+  line-height: 0.7;
+  color: #343a40;
+  text-shadow: -1px 0 rgba(255, 255, 255, 0.5), 0 1px rgba(255, 255, 255, 0.5), 1px 0 rgba(255, 255, 255, 0.5), 0 -1px rgba(255, 255, 255, 0.5);
+  background-color: transparent; }
+  .top-menu-hidden .top-bar {
+    display: block;
+    opacity: 1; }
+
+/*
+//TODO border around input and button for search: border: 1px solid $input-border-color;
+$btn-border-radius:              $border-radius !default;
+$btn-border-radius-lg:           $border-radius-lg !default;
+$btn-border-radius-sm:           $border-radius-sm !default;
+*/
+/* TEST
+.main-container {
+
+.mini & { background-color: green; }
+.xsmall-port & { background-color: yellow; }
+.xsmall-land & { background-color: orange; }
+.small & { background-color: red; }
+
+}
+*/

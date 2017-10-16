@@ -67,3 +67,13 @@ Style for top menu
 *****************************************************/
 @import "top-menu";
 
+/* TEST
+.main-container {
+
+.mini & { background-color: green; }
+.xsmall-port & { background-color: yellow; }
+.xsmall-land & { background-color: orange; }
+.small & { background-color: red; }
+
+}
+*/
