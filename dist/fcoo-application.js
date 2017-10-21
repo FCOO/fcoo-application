@@ -429,6 +429,7 @@ SetCreate and manage the top-menu for FCOO web applications
             messages : true,
 messages1 : true,
 messages2 : true,
+            warning  : true,
             search   : true,
             help     : true,
             rightMenu: true
@@ -449,6 +450,7 @@ messages2 : true,
                 {id: 'messages',  rightSide: true, width   :  2   },
 {id: 'messages1', rightSide: true, width: 1},
 {id: 'messages2', rightSide: true, width: 1.5},
+                {id: 'warning',   rightSide: true },
                 {id: 'help',      rightSide: true },
                 {id: 'rightMenu', rightSide: true }
             ];
@@ -588,9 +590,10 @@ messages2 : true,
 
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElements
-        var firstRightSideFound = false;
+        var firstRightSideFound = false,
+            $element;
         $.each( topMenuElements, function( index, elementInfo ){
-            var $element;
+            $element = null;
             if (!options[elementInfo.id])
                 return true;
             switch (elementInfo.id){
@@ -626,33 +629,19 @@ messages2 : true,
                 case "messages":
                     $element =
                         topMenuButton({
-                            icon:'fa-envelope-o'
+                            icon:'fa-envelope-o' //'fa-envelope'
                         });
-
-$element.append( $('<span class="badge badge-info">12</span>') );
-$element.append( $('<span class="badge badge-danger">!</span>') );
-                    break;
-
-                case "messages1":
-                    $element =
-                        topMenuButton({
-                            icon:'fa-envelope'
-                        })
-                        .css('color', '#17a2b8');
-
-//$element.append( $('<span class="badge badge-info">12</span>') );
-$element.append( $('<span class="badge badge-danger">!</span>') );
-                    break;
-
-                case "messages2":
-                    $element =
-                        topMenuButton({
-                            icon:'fa-envelope'
-                        })
-                        .css('color', '#dc3545');
 
 //$element.append( $('<span class="badge badge-info">12</span>') );
 //$element.append( $('<span class="badge badge-danger">!</span>') );
+
+                    break;
+
+                case "warning":
+                    $element = topMenuButton({ icon: 'fa fa-i-warning' });
+                    $('<i/>')
+                        .addClass('fa fa-i-warning-black text-warning')
+                        .appendTo( $element );
                     break;
 
                 case "search":
@@ -681,11 +670,14 @@ $element.append( $('<span class="badge badge-danger">!</span>') );
                     break;
             }
 
-            $element.appendTo( $topMenu );
 
-            if ((!firstRightSideFound) && elementInfo.rightSide){
-                $element.addClass('right-side');
-                firstRightSideFound = true;
+            if ($element){
+                $element.appendTo( $topMenu );
+
+                if ((!firstRightSideFound) && elementInfo.rightSide){
+                    $element.addClass('right-side');
+                    firstRightSideFound = true;
+                }
             }
 
         });

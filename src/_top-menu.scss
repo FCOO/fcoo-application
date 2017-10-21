@@ -105,8 +105,28 @@ body {
     .btn i.fa {
         &.fa-search { font-size: 0.85em; }
         &.fa-i-list { font-size: 0.75em; }
+        &.fa-i-warning,
+        &.fa-i-warning-black { 
+            font-size: 0.8em; 
+            position : absolute; 
+            bottom   : 0.35em; 
+        }
+        &.fa-i-warning { 
+            z-index: 2;
+        }
     }
-   
+    //Special adjusment for small buttons
+    .btn-sm i.fa {
+        &.fa-i-warning,
+        &.fa-i-warning-black { 
+            bottom   : 0.45em; 
+        }
+        &.fa-question-circle-o {
+            position: absolute;
+            bottom: 0.24em;
+        }
+    }
+    
     //FCOO-logo inside top menu get fixed size and hover effect
     .icon-fcoo-app-logo {
         padding    : 0;

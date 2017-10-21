@@ -431,6 +431,17 @@ body.top-menu-hidden {
     font-size: 0.85em; }
   .top-menu .btn i.fa.fa-i-list {
     font-size: 0.75em; }
+  .top-menu .btn i.fa.fa-i-warning, .top-menu .btn i.fa.fa-i-warning-black {
+    font-size: 0.8em;
+    position: absolute;
+    bottom: 0.35em; }
+  .top-menu .btn i.fa.fa-i-warning {
+    z-index: 2; }
+  .top-menu .btn-sm i.fa.fa-i-warning, .top-menu .btn-sm i.fa.fa-i-warning-black {
+    bottom: 0.45em; }
+  .top-menu .btn-sm i.fa.fa-question-circle-o {
+    position: absolute;
+    bottom: 0.24em; }
   .top-menu .icon-fcoo-app-logo {
     padding: 0;
     margin: 0;

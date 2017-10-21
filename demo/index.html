@@ -59,22 +59,13 @@
         
 
         $(function() { 
-            var messageNo = (window.location.search || 'm=0').split('=')[1],
-                newMessageNo = (parseInt( messageNo ) + 1) % 3;
-            
-console.log(newMessageNo);
-            $('<button/>')
-                .text('Message mode ' + newMessageNo )
-                .on('click', function(){ window.location.href = window.location.href.split('?')[0] + '?messageId='+newMessageNo })
-                .appendTo( $('.main-container'));
 
             window.fcoo.createTopMenu({
-//search: false,
-//help: false,
-messages: messageNo == '0', 
-messages1: messageNo == '1', 
-messages2: messageNo == '2', 
-//rightMenu: false,
+                //search: false,
+                //help: false,
+                messages: true, 
+                warning: true, 
+                //rightMenu: false,
             });
 
 
