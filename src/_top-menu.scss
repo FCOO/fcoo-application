@@ -8,7 +8,6 @@ Style for top menu and items (logo, buttons etc)
     text-shadow: -1px 0 $color, 0 1px $color, 1px 0 $color, 0 -1px $color; //Black or white border around text to have contract
 }
 
-
 /***************************************************
 top-menu is like Bootstrap navbar but to avoid 
 confussions another name is used
@@ -107,6 +106,7 @@ body {
         width: 1em;
     }
 
+
     //Adjusting font-size of specific icon to make all look equal sized
     .btn i.fa {
         &.fa-search { font-size: 0.85em; }
@@ -179,7 +179,8 @@ body {
         }
     }
     
-    //Badge to show number of unread messages etc.
+    //Badge to show number of unread messages etc. NOT USED AT THE MOMENT
+/*
     .badge {
         position   : inherit; //Overwrite Bootstrap default
         font-size  : 0.45em;
@@ -189,6 +190,7 @@ body {
             display: none;
         }
     }
+*/
 } //end of .top-menu
 
 .top-bar {

@@ -1,0 +1,139 @@
+/*****************************************************
+TOP-MENU-BTN-SHAKE
+
+Style for shaking icon in buttons in top menu
+*****************************************************/
+
+/*****************************************************
+Created with csshake and modified to have interval between
+animations and to apply to button even when no-hover
+
+*****************************************************/
+
+
+.top-menu .btn i.fa {
+    transform-origin: center center;
+}
+
+.top-menu .btn.shake-constant i.fa {
+    animation-name    : shake-little;
+//    animation-name    : shake-rotate;
+
+    animation-duration: 10000ms; //=> shake 1s every 10s
+//    animation-duration:  5000ms; //=> shake .5s every 5s
+
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+$px: 2px; 
+
+@keyframes shake-little {
+   .2% { transform: translate($px, $px) rotate(0.5deg); }
+   .4% { transform: translate(0px, 0px) rotate(0.5deg); }
+   .6% { transform: translate(0px, 0px) rotate(0.5deg); }
+   .8% { transform: translate(0px, $px) rotate(0.5deg); }
+  1.0% { transform: translate(0px, $px) rotate(0.5deg); }
+  1.2% { transform: translate(0px, 0px) rotate(0.5deg); }
+  1.4% { transform: translate(0px, $px) rotate(0.5deg); }
+  1.6% { transform: translate(0px, $px) rotate(0.5deg); }
+  1.8% { transform: translate($px, $px) rotate(0.5deg); }
+  2.0% { transform: translate(0px, 0px) rotate(0.5deg); }
+  2.2% { transform: translate(0px, 0px) rotate(0.5deg); }
+  2.4% { transform: translate($px, $px) rotate(0.5deg); }
+  2.6% { transform: translate($px, $px) rotate(0.5deg); }
+  2.8% { transform: translate(0px, $px) rotate(0.5deg); }
+  3.0% { transform: translate(0px, $px) rotate(0.5deg); }
+  3.2% { transform: translate($px, $px) rotate(0.5deg); }
+  3.4% { transform: translate($px, 0px) rotate(0.5deg); }
+  3.6% { transform: translate(0px, $px) rotate(0.5deg); }
+  3.8% { transform: translate($px, 0px) rotate(0.5deg); }
+  4.0% { transform: translate($px, 0px) rotate(0.5deg); }
+  4.2% { transform: translate($px, $px) rotate(0.5deg); }
+  4.4% { transform: translate(0px, $px) rotate(0.5deg); }
+  4.6% { transform: translate($px, $px) rotate(0.5deg); }
+  4.8% { transform: translate(0px, $px) rotate(0.5deg); }
+  5.0% { transform: translate(0px, $px) rotate(0.5deg); }
+  5.2% { transform: translate($px, 0px) rotate(0.5deg); }
+  5.4% { transform: translate($px, $px) rotate(0.5deg); }
+  5.6% { transform: translate($px, $px) rotate(0.5deg); }
+  5.8% { transform: translate(0px, $px) rotate(0.5deg); }
+  6.0% { transform: translate(0px, 0px) rotate(0.5deg); }
+  6.2% { transform: translate(0px, 0px) rotate(0.5deg); }
+  6.4% { transform: translate($px, $px) rotate(0.5deg); }
+  6.6% { transform: translate($px, $px) rotate(0.5deg); }
+  6.8% { transform: translate(0px, $px) rotate(0.5deg); }
+  7.0% { transform: translate($px, 0px) rotate(0.5deg); }
+  7.2% { transform: translate(0px, 0px) rotate(0.5deg); }
+  7.4% { transform: translate($px, 0px) rotate(0.5deg); }
+  7.6% { transform: translate($px, $px) rotate(0.5deg); }
+  7.8% { transform: translate($px, 0px) rotate(0.5deg); }
+  8.0% { transform: translate(0px, $px) rotate(0.5deg); }
+  8.2% { transform: translate($px, $px) rotate(0.5deg); }
+  8.4% { transform: translate(0px, $px) rotate(0.5deg); }
+  8.6% { transform: translate(0px, 0px) rotate(0.5deg); }
+  8.8% { transform: translate($px, $px) rotate(0.5deg); }
+  9.0% { transform: translate($px, 0px) rotate(0.5deg); }
+  9.2% { transform: translate(0px, 0px) rotate(0.5deg); }
+  9.4% { transform: translate($px, $px) rotate(0.5deg); }
+  9.6% { transform: translate(0px, $px) rotate(0.5deg); }
+  9.8% { transform: translate($px, 0px) rotate(0.5deg); }
+  10%  { transform: translate(0, 0) rotate(0);  }
+  0%, 100% { transform: translate(0, 0) rotate(0);  }
+}
+
+/*
+@keyframes shake-rotate {
+   .2% { transform: translate(0, 0) rotate(7.5deg); }
+   .4% { transform: translate(0, 0) rotate(2.5deg); }
+   .6% { transform: translate(0, 0) rotate(2.5deg); }
+   .8% { transform: translate(0, 0) rotate(-0.5deg); }
+  1.0% { transform: translate(0, 0) rotate(2.5deg); }
+  1.2% { transform: translate(0, 0) rotate(-5.5deg); }
+  1.4% { transform: translate(0, 0) rotate(0.5deg); }
+  1.6% { transform: translate(0, 0) rotate(0.5deg); }
+  1.8% { transform: translate(0, 0) rotate(2.5deg); }
+  2.0% { transform: translate(0, 0) rotate(1.5deg); }
+  2.2% { transform: translate(0, 0) rotate(-5.5deg); }
+  2.4% { transform: translate(0, 0) rotate(3.5deg); }
+  2.6% { transform: translate(0, 0) rotate(4.5deg); }
+  2.8% { transform: translate(0, 0) rotate(5.5deg); }
+  3.0% { transform: translate(0, 0) rotate(0.5deg); }
+  3.2% { transform: translate(0, 0) rotate(-0.5deg); }
+  3.4% { transform: translate(0, 0) rotate(6.5deg); }
+  3.6% { transform: translate(0, 0) rotate(4.5deg); }
+  3.8% { transform: translate(0, 0) rotate(-5.5deg); }
+  4.0% { transform: translate(0, 0) rotate(6.5deg); }
+  4.2% { transform: translate(0, 0) rotate(-4.5deg); }
+  4.4% { transform: translate(0, 0) rotate(6.5deg); }
+  4.6% { transform: translate(0, 0) rotate(1.5deg); }
+  4.8% { transform: translate(0, 0) rotate(-6.5deg); }
+  5.0% { transform: translate(0, 0) rotate(6.5deg); }
+  5.2% { transform: translate(0, 0) rotate(4.5deg); }
+  5.4% { transform: translate(0, 0) rotate(-6.5deg); }
+  5.6% { transform: translate(0, 0) rotate(-5.5deg); }
+  5.8% { transform: translate(0, 0) rotate(7.5deg); }
+  6.0% { transform: translate(0, 0) rotate(3.5deg); }
+  6.2% { transform: translate(0, 0) rotate(6.5deg); }
+  6.4% { transform: translate(0, 0) rotate(2.5deg); }
+  6.6% { transform: translate(0, 0) rotate(-4.5deg); }
+  6.8% { transform: translate(0, 0) rotate(-3.5deg); }
+  7.0% { transform: translate(0, 0) rotate(-3.5deg); }
+  7.2% { transform: translate(0, 0) rotate(0.5deg); }
+  7.4% { transform: translate(0, 0) rotate(-5.5deg); }
+  7.6% { transform: translate(0, 0) rotate(4.5deg); }
+  7.8% { transform: translate(0, 0) rotate(-1.5deg); }
+  8.0% { transform: translate(0, 0) rotate(1.5deg); }
+  8.2% { transform: translate(0, 0) rotate(2.5deg); }
+  8.4% { transform: translate(0, 0) rotate(0.5deg); }
+  8.6% { transform: translate(0, 0) rotate(-2.5deg); }
+  8.8% { transform: translate(0, 0) rotate(7.5deg); }
+  9.0% { transform: translate(0, 0) rotate(4.5deg); }
+  9.2% { transform: translate(0, 0) rotate(-6.5deg); }
+  9.4% { transform: translate(0, 0) rotate(0.5deg); }
+  9.6% { transform: translate(0, 0) rotate(5.5deg); }
+  9.8% { transform: translate(0, 0) rotate(-6.5deg); }
+  10%  { transform: translate(0, 0) rotate(0); } 
+  0%, 100% { transform: translate(0, 0) rotate(0); } 
+}
+*/

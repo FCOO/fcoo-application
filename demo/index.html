@@ -59,14 +59,16 @@
         
 
         $(function() { 
+            var topMenu = 
+                window.fcoo.createTopMenu({
+                    //search: false,
+                    //help: false,
+                    messages: true, 
+                    warning: true, 
+                    //rightMenu: false,
+                });
 
-            window.fcoo.createTopMenu({
-                //search: false,
-                //help: false,
-                messages: true, 
-                warning: true, 
-                //rightMenu: false,
-            });
+            topMenu.warning.addClass('shake-constant');
 
 
             $('.main-container').on('click', function( event ){

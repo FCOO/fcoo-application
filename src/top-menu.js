@@ -47,6 +47,8 @@ SetCreate and manage the top-menu for FCOO web applications
 
     /*******************************************
     createTopMenu = function( options )
+    Create the top menu and return a object with
+    the created element
     *******************************************/
     ns.createTopMenu = function( options ){
         options = $.extend({}, {
@@ -57,8 +59,6 @@ SetCreate and manage the top-menu for FCOO web applications
             header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Dansk - en meget laaaaaaaaaaaaaaaaaaang title", "en":"English"}'),
 
             messages : true,
-messages1 : true,
-messages2 : true,
             warning  : true,
             search   : true,
             help     : true,
@@ -74,16 +74,15 @@ messages2 : true,
             //width=relative width (-1 = not included in total)
             topMenuElements = [
                 {id: 'leftMenu'  },
-                {id: 'logo',                       width   : -1   },
-                {id: 'header',                     width   : -1   },
+                {id: 'logo',      exclude: true }, //width   : -1   },
+                {id: 'header',    exclude: true }, //width   : -1   },
                 {id: 'search',    rightSide: true },
-                {id: 'messages',  rightSide: true, width   :  2   },
-{id: 'messages1', rightSide: true, width: 1},
-{id: 'messages2', rightSide: true, width: 1.5},
+                {id: 'messages',  rightSide: true },
                 {id: 'warning',   rightSide: true },
                 {id: 'help',      rightSide: true },
                 {id: 'rightMenu', rightSide: true }
-            ];
+            ],
+            result = {};
 
         //**************************************************
         function topMenuButton( options ){
@@ -105,14 +104,14 @@ messages2 : true,
         //**************************************************
 
         //Container for all elements used in top-menu
-        $topMenuContainer =
+        result.topMenuContainer = $topMenuContainer =
             $('<div/>')
                 .addClass("top-menu-container")
                 .appendTo( $body );
 
 
         //Contact info for FCOO
-        $aboutFCOO = $('<div/>')
+        result.aboutFCOO = $aboutFCOO = $('<div/>')
             .addClass("d-flex justify-content-center flex-wrap about-fcoo") //justify-content-around
             .appendTo( $topMenuContainer );
 
@@ -136,12 +135,12 @@ messages2 : true,
                 .appendTo( $aboutFCOO );
 
         //Create the menu-bar
-        $topMenu = $('<nav/>')
+        result.topMenu = $topMenu = $('<nav/>')
                 .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu")
                 .prependTo( $topMenuContainer );
 
         //Create the bar to drag down the top-menu when it is hidden
-        $topBar = $('<div/>')
+        result.topBar = $topBar = $('<div/>')
                     .addClass('top-bar fa fa-minus')
                     .appendTo( $topMenuContainer )
                     .actionPan({
@@ -186,9 +185,12 @@ messages2 : true,
         var totalWidth = 0;
         $.each( topMenuElements, function( index, elementInfo ){
             if (options[elementInfo.id]){
-                var width = elementInfo.width || 1;
-                if (width > 0)
-                    totalWidth += width;
+                if (!elementInfo.exclude)
+                    totalWidth++;
+
+//                var width = elementInfo.width || 1;
+//                if (width > 0)
+//                    totalWidth += width;
             }
         });
 
@@ -300,10 +302,13 @@ messages2 : true,
                     $element =
                         topMenuButton({ icon:'fa-i-list' });
                     break;
-            }
+            } //end of switch (elementInfo.id){
 
 
             if ($element){
+
+                result[elementInfo.id] = $element;
+
                 $element.appendTo( $topMenu );
 
                 if ((!firstRightSideFound) && elementInfo.rightSide){
@@ -357,6 +362,9 @@ messages2 : true,
         //Initialize
         topMenuState = '';
         onWindowResize();
+
+
+        return result;
 
     }; //end of createTopMenu
 }(jQuery, this, document));
