@@ -101,6 +101,12 @@ body {
         margin-left: auto !important;
     }
     
+
+    //Prevent double icon buttons to get double width
+    .btn.fa-stack {
+        width: 1em;
+    }
+
     //Adjusting font-size of specific icon to make all look equal sized
     .btn i.fa {
         &.fa-search { font-size: 0.85em; }
@@ -108,19 +114,10 @@ body {
         &.fa-i-warning,
         &.fa-i-warning-black { 
             font-size: 0.8em; 
-            position : absolute; 
-            bottom   : 0.35em; 
-        }
-        &.fa-i-warning { 
-            z-index: 2;
         }
     }
     //Special adjusment for small buttons
     .btn-sm i.fa {
-        &.fa-i-warning,
-        &.fa-i-warning-black { 
-            bottom   : 0.45em; 
-        }
         &.fa-question-circle-o {
             position: absolute;
             bottom: 0.24em;

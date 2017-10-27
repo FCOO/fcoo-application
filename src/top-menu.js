@@ -268,9 +268,11 @@ messages2 : true,
                     break;
 
                 case "warning":
-                    $element = topMenuButton({ icon: 'fa fa-i-warning' });
+                    //Create yellow warning triangle by overlaying two icons
+                    $element = topMenuButton({ icon: 'fa-i-warning-black fa-stack-1x text-warning' });
+                    $element.addClass('fa-stack');
                     $('<i/>')
-                        .addClass('fa fa-i-warning-black text-warning')
+                        .addClass('fa fa-i-warning fa-stack-2x')
                         .appendTo( $element );
                     break;
 
