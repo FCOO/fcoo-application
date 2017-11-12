@@ -10275,13 +10275,13 @@ return jQuery;
             for (j=0; j<eventNames.length; j++ ){
                 eventName = eventNames[j];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     var i, lgd = this.events[eventName].length;
                     if (reverse){
                         for (i=lgd-1; i>=0; i-- )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
                                 break;
-                    } 
+                    }
                     else {
                         for (i=0; i<lgd; i++ )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
@@ -10297,11 +10297,11 @@ return jQuery;
             for (i=0; i<eventNames.length; i++ ){
                 eventName = eventNames[i];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     this.events[eventName].push( {
                         callback: callback,
                         context : context || null,
-                        options : $.extend( {once:false, first:false, last:false}, options ) 
+                        options : $.extend( {once:false, first:false, last:false}, options )
                     });
                 }
             }
@@ -10318,7 +10318,7 @@ return jQuery;
             eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
             _loop_func = function( eventObj, index, list ){
                 if ( (callback == eventObj.callback) &&
-                    (!context || (context == eventObj.context)) ){ 
+                    (!context || (context == eventObj.context)) ){
                     list.splice(index, 1);
                     return true;
                 }
@@ -10333,32 +10333,32 @@ return jQuery;
         };
 
 
-        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){ 
+        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){
             var newArguments = [];
             for (var i=1; i < arguments.length; i++) {
                 newArguments.push(arguments[i]);
             }
 
             //Fire the functions marked 'first'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.first)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions not marked 'first' or 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (!eventObj.options.first && !eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions marked 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
-            
+
             //Remove all functions marked 'once'
-            this._loop( eventName, function( eventObj, index, list ){ 
+            this._loop( eventName, function( eventObj, index, list ){
                 if (eventObj.options.once)
                     list.splice(index, 1);
             }, true);
@@ -10369,14 +10369,14 @@ return jQuery;
         this.oneFirst = function(){ this.onceFirst( arguments ); };
         this.oneLast  = function(){ this.onceLast( arguments  ); };
     }
-  
+
     // expose access to the constructor
     window.GlobalEvents = GlobalEvents;
 
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	fcoo-global-events.js, 
+	fcoo-global-events.js,
 
 	(c) 2016, FCOO
 
@@ -10387,18 +10387,18 @@ return jQuery;
 
 (function (window/*, document, undefined*/) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
 
     window.fcoo.events = new window.GlobalEvents();
 
 
-	//Initialize/ready 
-//	$(function() { 
+	//Initialize/ready
+//	$(function() {
 
 
-//	}); 
+//	});
 
 }(this, document));
 ;
@@ -10810,14 +10810,13 @@ function escape(data) {
 var ResourceStore = function (_EventEmitter) {
   inherits(ResourceStore, _EventEmitter);
 
-  function ResourceStore() {
-    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  function ResourceStore(data) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { ns: ['translation'], defaultNS: 'translation' };
     classCallCheck(this, ResourceStore);
 
     var _this = possibleConstructorReturn(this, _EventEmitter.call(this));
 
-    _this.data = data;
+    _this.data = data || {};
     _this.options = options;
     return _this;
   }
@@ -10953,146 +10952,6 @@ var postProcessor = {
   }
 };
 
-/* eslint no-param-reassign: 0 */
-function convertInterpolation(options) {
-
-  options.interpolation = {
-    unescapeSuffix: 'HTML'
-  };
-
-  options.interpolation.prefix = options.interpolationPrefix || '__';
-  options.interpolation.suffix = options.interpolationSuffix || '__';
-  options.interpolation.escapeValue = options.escapeInterpolation || false;
-
-  options.interpolation.nestingPrefix = options.reusePrefix || '$t(';
-  options.interpolation.nestingSuffix = options.reuseSuffix || ')';
-
-  return options;
-}
-
-function convertAPIOptions(options) {
-  if (options.resStore) options.resources = options.resStore;
-
-  if (options.ns && options.ns.defaultNs) {
-    options.defaultNS = options.ns.defaultNs;
-    options.ns = options.ns.namespaces;
-  } else {
-    options.defaultNS = options.ns || 'translation';
-  }
-
-  if (options.fallbackToDefaultNS && options.defaultNS) options.fallbackNS = options.defaultNS;
-
-  options.saveMissing = options.sendMissing;
-  options.saveMissingTo = options.sendMissingTo || 'current';
-  options.returnNull = !options.fallbackOnNull;
-  options.returnEmptyString = !options.fallbackOnEmpty;
-  options.returnObjects = options.returnObjectTrees;
-  options.joinArrays = '\n';
-
-  options.returnedObjectHandler = options.objectTreeKeyHandler;
-  options.parseMissingKeyHandler = options.parseMissingKey;
-  options.appendNamespaceToMissingKey = true;
-
-  options.nsSeparator = options.nsseparator || ':';
-  options.keySeparator = options.keyseparator || '.';
-
-  if (options.shortcutFunction === 'sprintf') {
-    options.overloadTranslationOptionHandler = function handle(args) {
-      var values = [];
-
-      for (var i = 1; i < args.length; i++) {
-        values.push(args[i]);
-      }
-
-      return {
-        postProcess: 'sprintf',
-        sprintf: values
-      };
-    };
-  }
-
-  options.whitelist = options.lngWhitelist;
-  options.preload = options.preload;
-  if (options.load === 'current') options.load = 'currentOnly';
-  if (options.load === 'unspecific') options.load = 'languageOnly';
-
-  // backend
-  options.backend = options.backend || {};
-  options.backend.loadPath = options.resGetPath || 'locales/__lng__/__ns__.json';
-  options.backend.addPath = options.resPostPath || 'locales/add/__lng__/__ns__';
-  options.backend.allowMultiLoading = options.dynamicLoad;
-
-  // cache
-  options.cache = options.cache || {};
-  options.cache.prefix = 'res_';
-  options.cache.expirationTime = 7 * 24 * 60 * 60 * 1000;
-  options.cache.enabled = options.useLocalStorage;
-
-  options = convertInterpolation(options);
-  if (options.defaultVariables) options.interpolation.defaultVariables = options.defaultVariables;
-
-  // COMPATIBILITY: deprecation
-  // if (options.getAsync === false) throw deprecation error
-
-  return options;
-}
-
-function convertJSONOptions(options) {
-  options = convertInterpolation(options);
-  options.joinArrays = '\n';
-
-  return options;
-}
-
-function convertTOptions(options) {
-  if (options.interpolationPrefix || options.interpolationSuffix || options.escapeInterpolation !== undefined) {
-    options = convertInterpolation(options);
-  }
-
-  options.nsSeparator = options.nsseparator;
-  options.keySeparator = options.keyseparator;
-
-  options.returnObjects = options.returnObjectTrees;
-
-  return options;
-}
-
-function appendBackwardsAPI(i18n) {
-  i18n.lng = function () {
-    baseLogger.deprecate('i18next.lng() can be replaced by i18next.language for detected language or i18next.languages for languages ordered by translation lookup.');
-    return i18n.services.languageUtils.toResolveHierarchy(i18n.language)[0];
-  };
-
-  i18n.preload = function (lngs, cb) {
-    baseLogger.deprecate('i18next.preload() can be replaced with i18next.loadLanguages()');
-    i18n.loadLanguages(lngs, cb);
-  };
-
-  i18n.setLng = function (lng, options, callback) {
-    baseLogger.deprecate('i18next.setLng() can be replaced with i18next.changeLanguage() or i18next.getFixedT() to get a translation function with fixed language or namespace.');
-    if (typeof options === 'function') {
-      callback = options;
-      options = {};
-    }
-    if (!options) options = {};
-
-    if (options.fixLng === true) {
-      if (callback) return callback(null, i18n.getFixedT(lng));
-    }
-
-    return i18n.changeLanguage(lng, callback);
-  };
-
-  i18n.addPostProcessor = function (name, fc) {
-    baseLogger.deprecate('i18next.addPostProcessor() can be replaced by i18next.use({ type: \'postProcessor\', name: \'name\', process: fc })');
-    i18n.use({
-      type: 'postProcessor',
-      name: name,
-      process: fc
-    });
-  };
-}
-
 var Translator = function (_EventEmitter) {
   inherits(Translator, _EventEmitter);
 
@@ -11116,11 +10975,8 @@ var Translator = function (_EventEmitter) {
   Translator.prototype.exists = function exists(key) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { interpolation: {} };
 
-    if (this.options.compatibilityAPI === 'v1') {
-      options = convertTOptions(options);
-    }
-
-    return this.resolve(key, options) !== undefined;
+    var resolved = this.resolve(key, options);
+    return resolved && resolved.res !== undefined;
   };
 
   Translator.prototype.extractFromKey = function extractFromKey(key, options) {
@@ -11148,8 +11004,6 @@ var Translator = function (_EventEmitter) {
     if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) !== 'object') {
       /* eslint prefer-rest-params: 0 */
       options = this.options.overloadTranslationOptionHandler(arguments);
-    } else if (this.options.compatibilityAPI === 'v1') {
-      options = convertTOptions(options);
     }
 
     // non valid keys handling
@@ -11181,7 +11035,9 @@ var Translator = function (_EventEmitter) {
     }
 
     // resolve from store
-    var res = this.resolve(keys, options);
+    var resolved = this.resolve(keys, options);
+    var res = resolved && resolved.res;
+    var usedKey = resolved && resolved.usedKey || key;
 
     var resType = Object.prototype.toString.apply(res);
     var noObject = ['[object Number]', '[object Function]', '[object RegExp]'];
@@ -11191,7 +11047,7 @@ var Translator = function (_EventEmitter) {
     if (res && typeof res !== 'string' && noObject.indexOf(resType) < 0 && !(joinArrays && resType === '[object Array]')) {
       if (!options.returnObjects && !this.options.returnObjects) {
         this.logger.warn('accessing an object - but returnObjects options is not enabled!');
-        return this.options.returnedObjectHandler ? this.options.returnedObjectHandler(key, res, options) : 'key \'' + key + ' (' + this.language + ')\' returned an object instead of string.';
+        return this.options.returnedObjectHandler ? this.options.returnedObjectHandler(usedKey, res, options) : 'key \'' + key + ' (' + this.language + ')\' returned an object instead of string.';
       }
 
       // if we got a separator we loop over children - else we just return object as is
@@ -11202,7 +11058,7 @@ var Translator = function (_EventEmitter) {
         /* eslint no-restricted-syntax: 0 */
         for (var m in res) {
           if (Object.prototype.hasOwnProperty.call(res, m)) {
-            copy$$1[m] = this.translate('' + key + keySeparator + m, _extends({}, options, { joinArrays: false, ns: namespaces }));
+            copy$$1[m] = this.translate('' + usedKey + keySeparator + m, _extends({}, options, { joinArrays: false, ns: namespaces }));
           }
         }
         res = copy$$1;
@@ -11210,11 +11066,11 @@ var Translator = function (_EventEmitter) {
     } else if (joinArrays && resType === '[object Array]') {
       // array special treatment
       res = res.join(joinArrays);
-      if (res) res = this.extendTranslation(res, key, options);
+      if (res) res = this.extendTranslation(res, keys, options);
     } else {
       // string, empty or null
       var usedDefault = false;
-      var usedKey = false;
+      var _usedKey = false;
 
       // fallback value
       if (!this.isValidLookup(res) && options.defaultValue !== undefined) {
@@ -11222,12 +11078,12 @@ var Translator = function (_EventEmitter) {
         res = options.defaultValue;
       }
       if (!this.isValidLookup(res)) {
-        usedKey = true;
+        _usedKey = true;
         res = key;
       }
 
       // save missing
-      if (usedKey || usedDefault) {
+      if (_usedKey || usedDefault) {
         this.logger.log('missingKey', lng, namespace, key, res);
 
         var lngs = [];
@@ -11254,13 +11110,13 @@ var Translator = function (_EventEmitter) {
       }
 
       // extend
-      res = this.extendTranslation(res, key, options);
+      res = this.extendTranslation(res, keys, options);
 
       // append namespace if still key
-      if (usedKey && res === key && this.options.appendNamespaceToMissingKey) res = namespace + ':' + key;
+      if (_usedKey && res === key && this.options.appendNamespaceToMissingKey) res = namespace + ':' + key;
 
       // parseMissingKeyHandler
-      if (usedKey && this.options.parseMissingKeyHandler) res = this.options.parseMissingKeyHandler(res);
+      if (_usedKey && this.options.parseMissingKeyHandler) res = this.options.parseMissingKeyHandler(res);
     }
 
     // return
@@ -11301,15 +11157,16 @@ var Translator = function (_EventEmitter) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     var found = void 0;
+    var usedKey = void 0;
 
     if (typeof keys === 'string') keys = [keys];
 
     // forEach possible key
     keys.forEach(function (k) {
       if (_this3.isValidLookup(found)) return;
-
       var extracted = _this3.extractFromKey(k, options);
       var key = extracted.key;
+      usedKey = key;
       var namespaces = extracted.namespaces;
       if (_this3.options.fallbackNS) namespaces = namespaces.concat(_this3.options.fallbackNS);
 
@@ -11351,7 +11208,7 @@ var Translator = function (_EventEmitter) {
       });
     });
 
-    return found;
+    return { res: found, usedKey: usedKey };
   };
 
   Translator.prototype.isValidLookup = function isValidLookup(res) {
@@ -11487,7 +11344,7 @@ var LanguageUtil = function () {
 
 // definition http://translate.sourceforge.net/wiki/l10n/pluralforms
 /* eslint-disable */
-var sets = [{ lngs: ['ach', 'ak', 'am', 'arn', 'br', 'fil', 'gun', 'ln', 'mfe', 'mg', 'mi', 'oc', 'tg', 'ti', 'tr', 'uz', 'wa'], nr: [1, 2], fc: 1 }, { lngs: ['af', 'an', 'ast', 'az', 'bg', 'bn', 'ca', 'da', 'de', 'dev', 'el', 'en', 'eo', 'es', 'es_ar', 'et', 'eu', 'fi', 'fo', 'fur', 'fy', 'gl', 'gu', 'ha', 'he', 'hi', 'hu', 'hy', 'ia', 'it', 'kn', 'ku', 'lb', 'mai', 'ml', 'mn', 'mr', 'nah', 'nap', 'nb', 'ne', 'nl', 'nn', 'no', 'nso', 'pa', 'pap', 'pms', 'ps', 'pt', 'pt_br', 'rm', 'sco', 'se', 'si', 'so', 'son', 'sq', 'sv', 'sw', 'ta', 'te', 'tk', 'ur', 'yo'], nr: [1, 2], fc: 2 }, { lngs: ['ay', 'bo', 'cgg', 'fa', 'id', 'ja', 'jbo', 'ka', 'kk', 'km', 'ko', 'ky', 'lo', 'ms', 'sah', 'su', 'th', 'tt', 'ug', 'vi', 'wo', 'zh'], nr: [1], fc: 3 }, { lngs: ['be', 'bs', 'dz', 'hr', 'ru', 'sr', 'uk'], nr: [1, 2, 5], fc: 4 }, { lngs: ['ar'], nr: [0, 1, 2, 3, 11, 100], fc: 5 }, { lngs: ['cs', 'sk'], nr: [1, 2, 5], fc: 6 }, { lngs: ['csb', 'pl'], nr: [1, 2, 5], fc: 7 }, { lngs: ['cy'], nr: [1, 2, 3, 8], fc: 8 }, { lngs: ['fr'], nr: [1, 2], fc: 9 }, { lngs: ['ga'], nr: [1, 2, 3, 7, 11], fc: 10 }, { lngs: ['gd'], nr: [1, 2, 3, 20], fc: 11 }, { lngs: ['is'], nr: [1, 2], fc: 12 }, { lngs: ['jv'], nr: [0, 1], fc: 13 }, { lngs: ['kw'], nr: [1, 2, 3, 4], fc: 14 }, { lngs: ['lt'], nr: [1, 2, 10], fc: 15 }, { lngs: ['lv'], nr: [1, 2, 0], fc: 16 }, { lngs: ['mk'], nr: [1, 2], fc: 17 }, { lngs: ['mnk'], nr: [0, 1, 2], fc: 18 }, { lngs: ['mt'], nr: [1, 2, 11, 20], fc: 19 }, { lngs: ['or'], nr: [2, 1], fc: 2 }, { lngs: ['ro'], nr: [1, 2, 20], fc: 20 }, { lngs: ['sl'], nr: [5, 1, 2, 3], fc: 21 }];
+var sets = [{ lngs: ['ach', 'ak', 'am', 'arn', 'br', 'fil', 'gun', 'ln', 'mfe', 'mg', 'mi', 'oc', 'pt', 'pt-BR', 'tg', 'ti', 'tr', 'uz', 'wa'], nr: [1, 2], fc: 1 }, { lngs: ['af', 'an', 'ast', 'az', 'bg', 'bn', 'ca', 'da', 'de', 'dev', 'el', 'en', 'eo', 'es', 'et', 'eu', 'fi', 'fo', 'fur', 'fy', 'gl', 'gu', 'ha', 'he', 'hi', 'hu', 'hy', 'ia', 'it', 'kn', 'ku', 'lb', 'mai', 'ml', 'mn', 'mr', 'nah', 'nap', 'nb', 'ne', 'nl', 'nn', 'no', 'nso', 'pa', 'pap', 'pms', 'ps', 'pt-PT', 'rm', 'sco', 'se', 'si', 'so', 'son', 'sq', 'sv', 'sw', 'ta', 'te', 'tk', 'ur', 'yo'], nr: [1, 2], fc: 2 }, { lngs: ['ay', 'bo', 'cgg', 'fa', 'id', 'ja', 'jbo', 'ka', 'kk', 'km', 'ko', 'ky', 'lo', 'ms', 'sah', 'su', 'th', 'tt', 'ug', 'vi', 'wo', 'zh'], nr: [1], fc: 3 }, { lngs: ['be', 'bs', 'dz', 'hr', 'ru', 'sr', 'uk'], nr: [1, 2, 5], fc: 4 }, { lngs: ['ar'], nr: [0, 1, 2, 3, 11, 100], fc: 5 }, { lngs: ['cs', 'sk'], nr: [1, 2, 5], fc: 6 }, { lngs: ['csb', 'pl'], nr: [1, 2, 5], fc: 7 }, { lngs: ['cy'], nr: [1, 2, 3, 8], fc: 8 }, { lngs: ['fr'], nr: [1, 2], fc: 9 }, { lngs: ['ga'], nr: [1, 2, 3, 7, 11], fc: 10 }, { lngs: ['gd'], nr: [1, 2, 3, 20], fc: 11 }, { lngs: ['is'], nr: [1, 2], fc: 12 }, { lngs: ['jv'], nr: [0, 1], fc: 13 }, { lngs: ['kw'], nr: [1, 2, 3, 4], fc: 14 }, { lngs: ['lt'], nr: [1, 2, 10], fc: 15 }, { lngs: ['lv'], nr: [1, 2, 0], fc: 16 }, { lngs: ['mk'], nr: [1, 2], fc: 17 }, { lngs: ['mnk'], nr: [0, 1, 2], fc: 18 }, { lngs: ['mt'], nr: [1, 2, 11, 20], fc: 19 }, { lngs: ['or'], nr: [2, 1], fc: 2 }, { lngs: ['ro'], nr: [1, 2, 20], fc: 20 }, { lngs: ['sl'], nr: [5, 1, 2, 3], fc: 21 }];
 
 var _rulesPluralsTypes = {
   1: function _(n) {
@@ -11587,7 +11444,7 @@ var PluralResolver = function () {
   };
 
   PluralResolver.prototype.getRule = function getRule(code) {
-    return this.rules[this.languageUtils.getLanguagePartFromCode(code)];
+    return this.rules[code] || this.rules[this.languageUtils.getLanguagePartFromCode(code)];
   };
 
   PluralResolver.prototype.needsPlural = function needsPlural(code) {
@@ -11602,7 +11459,7 @@ var PluralResolver = function () {
     var rule = this.getRule(code);
 
     if (rule) {
-      if (rule.numbers.length === 1) return ''; // only singular
+      //if (rule.numbers.length === 1) return ''; // only singular
 
       var idx = rule.noAbs ? rule.plurals(count) : rule.plurals(Math.abs(count));
       var suffix = rule.numbers[idx];
@@ -11682,6 +11539,8 @@ var Interpolator = function () {
     this.nestingPrefix = iOpts.nestingPrefix ? regexEscape(iOpts.nestingPrefix) : iOpts.nestingPrefixEscaped || regexEscape('$t(');
     this.nestingSuffix = iOpts.nestingSuffix ? regexEscape(iOpts.nestingSuffix) : iOpts.nestingSuffixEscaped || regexEscape(')');
 
+    this.maxReplaces = iOpts.maxReplaces ? iOpts.maxReplaces : 1000;
+
     // the regexp
     this.resetRegExp();
   };
@@ -11707,6 +11566,7 @@ var Interpolator = function () {
 
     var match = void 0;
     var value = void 0;
+    var replaces = void 0;
 
     function regexSafe(val) {
       return val.replace(/\$/g, '$$$$');
@@ -11724,14 +11584,20 @@ var Interpolator = function () {
 
     this.resetRegExp();
 
+    replaces = 0;
     // unescape if has unescapePrefix/Suffix
     /* eslint no-cond-assign: 0 */
     while (match = this.regexpUnescape.exec(str)) {
       value = handleFormat(match[1].trim());
       str = str.replace(match[0], value);
       this.regexpUnescape.lastIndex = 0;
+      replaces++;
+      if (replaces >= this.maxReplaces) {
+        break;
+      }
     }
 
+    replaces = 0;
     // regular escape on demand
     while (match = this.regexp.exec(str)) {
       value = handleFormat(match[1].trim());
@@ -11743,6 +11609,10 @@ var Interpolator = function () {
       value = this.escapeValue ? regexSafe(this.escape(value)) : regexSafe(value);
       str = str.replace(match[0], value);
       this.regexp.lastIndex = 0;
+      replaces++;
+      if (replaces >= this.maxReplaces) {
+        break;
+      }
     }
     return str;
   };
@@ -11819,7 +11689,7 @@ var Connector = function (_EventEmitter) {
 
     _this.backend = backend;
     _this.store = store;
-    _this.services = services;
+    _this.languageUtils = services.languageUtils;
     _this.options = options;
     _this.logger = baseLogger.create('backendConnector');
 
@@ -11959,7 +11829,7 @@ var Connector = function (_EventEmitter) {
     }
     var options = _extends({}, this.backend.options, this.options.backend);
 
-    if (typeof languages === 'string') languages = this.services.languageUtils.toResolveHierarchy(languages);
+    if (typeof languages === 'string') languages = this.languageUtils.toResolveHierarchy(languages);
     if (typeof namespaces === 'string') namespaces = [namespaces];
 
     var toLoad = this.queueLoad(languages, namespaces, callback);
@@ -12005,7 +11875,7 @@ var Connector = function (_EventEmitter) {
     }
     var options = _extends({}, this.backend.options, this.options.backend);
 
-    if (typeof languages === 'string') languages = this.services.languageUtils.toResolveHierarchy(languages);
+    if (typeof languages === 'string') languages = this.languageUtils.toResolveHierarchy(languages);
     if (typeof namespaces === 'string') namespaces = [namespaces];
 
     // load with multi-load
@@ -12182,7 +12052,8 @@ function get$1() {
       nestingSuffix: ')',
       // nestingPrefixEscaped: '$t(',
       // nestingSuffixEscaped: ')',
-      defaultVariables: undefined // object that can have values to interpolate on - extends passed in interpolation data
+      // defaultVariables: undefined // object that can have values to interpolate on - extends passed in interpolation data
+      maxReplaces: 1000 // max replaces to prevent endless loop
     }
   };
 }
@@ -12229,22 +12100,18 @@ var I18n = function (_EventEmitter) {
     return _this;
   }
 
-  I18n.prototype.init = function init(options, callback) {
+  I18n.prototype.init = function init() {
     var _this2 = this;
+
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var callback = arguments[1];
 
     if (typeof options === 'function') {
       callback = options;
       options = {};
     }
-    if (!options) options = {};
+    this.options = _extends({}, get$1(), this.options, transformOptions(options));
 
-    if (options.compatibilityAPI === 'v1') {
-      this.options = _extends({}, get$1(), transformOptions(convertAPIOptions(options)), {});
-    } else if (options.compatibilityJSON === 'v1') {
-      this.options = _extends({}, get$1(), transformOptions(convertJSONOptions(options)), {});
-    } else {
-      this.options = _extends({}, get$1(), this.options, transformOptions(options));
-    }
     this.format = this.options.interpolation.format;
     if (!callback) callback = noop;
 
@@ -12328,9 +12195,6 @@ var I18n = function (_EventEmitter) {
         return (_store = _this2.store)[fcName].apply(_store, arguments);
       };
     });
-
-    // COMPATIBILITY: remove this
-    if (this.options.compatibilityAPI === 'v1') appendBackwardsAPI(this);
 
     var load = function load() {
       _this2.changeLanguage(_this2.options.lng, function (err, t) {
@@ -12434,6 +12298,8 @@ var I18n = function (_EventEmitter) {
     var _this4 = this;
 
     var done = function done(err, l) {
+      _this4.translator.changeLanguage(l);
+
       if (l) {
         _this4.emit('languageChanged', l);
         _this4.logger.log('languageChanged', l);
@@ -12448,8 +12314,6 @@ var I18n = function (_EventEmitter) {
       if (l) {
         _this4.language = l;
         _this4.languages = _this4.services.languageUtils.toResolveHierarchy(l);
-
-        _this4.translator.changeLanguage(l);
 
         if (_this4.services.languageDetector) _this4.services.languageDetector.cacheUserLanguage(l);
       }
@@ -12471,10 +12335,16 @@ var I18n = function (_EventEmitter) {
   I18n.prototype.getFixedT = function getFixedT(lng, ns) {
     var _this5 = this;
 
-    var fixedT = function fixedT(key) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var fixedT = function fixedT(key, opts) {
+      for (var _len4 = arguments.length, rest = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
+        rest[_key4 - 2] = arguments[_key4];
+      }
 
       var options = _extends({}, opts);
+      if ((typeof opts === 'undefined' ? 'undefined' : _typeof(opts)) !== 'object') {
+        options = _this5.options.overloadTranslationOptionHandler([key, opts].concat(rest));
+      }
+
       options.lng = options.lng || fixedT.lng;
       options.lngs = options.lngs || fixedT.lngs;
       options.ns = options.ns || fixedT.ns;
@@ -12558,20 +12428,21 @@ var I18n = function (_EventEmitter) {
     var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
 
     var mergedOptions = _extends({}, this.options, options, { isClone: true });
-    var clone = new I18n(mergedOptions, callback);
+    var clone = new I18n(mergedOptions);
     var membersToCopy = ['store', 'services', 'language'];
     membersToCopy.forEach(function (m) {
       clone[m] = _this7[m];
     });
     clone.translator = new Translator(clone.services, clone.options);
     clone.translator.on('*', function (event) {
-      for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-        args[_key4 - 1] = arguments[_key4];
+      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+        args[_key5 - 1] = arguments[_key5];
       }
 
       clone.emit.apply(clone, [event].concat(args));
     });
     clone.init(mergedOptions, callback);
+    clone.translator.options = clone.options; // sync options
 
     return clone;
   };
@@ -12587,7 +12458,7 @@ return i18next;
 
 ;
 /****************************************************************************
-    i18next-phrases.js, 
+    i18next-phrases.js,
 
     (c) 2017, FCOO
 
@@ -12597,16 +12468,16 @@ return i18next;
 ****************************************************************************/
 
 /****************************************************************************
-    Default 1-dim json-structure for i18next is 
-        { lang1: { 
+    Default 1-dim json-structure for i18next is
+        { lang1: {
             namespace: { key: value1 }
           },
-          lang2: { 
+          lang2: {
             namespace: { key: value2 }
           }
         }
 
-    To make adding translation easier two new formats are supported: 
+    To make adding translation easier two new formats are supported:
 
     1: phrase: namespace->key->lang
         {
@@ -12631,7 +12502,7 @@ return i18next;
                 }
             }
         }
-    
+
     2: key-phrase: key->namespace->lang
         {
             key1: {
@@ -12661,8 +12532,8 @@ return i18next;
     "use strict";
 
     /***********************************************************************
-    addPhrase( [namespace,] key, langValues) 
-    - key {string} can be a combined namespace:key string. 
+    addPhrase( [namespace,] key, langValues)
+    - key {string} can be a combined namespace:key string.
     - langValues = { [lang: value]xN }
     ***********************************************************************/
     i18next.addPhrase = function( namespace, key, langValues ){
@@ -12672,7 +12543,7 @@ return i18next;
         if (arguments.length == 2){
             //No namespace
             namespace  = this.options.defaultNS[0];
-            key        = arguments[0];     
+            key        = arguments[0];
             langValues = arguments[1];
         }
 
@@ -12707,10 +12578,10 @@ return i18next;
     /***********************************************************************
     addBundlePhrases( namespaceKeyLangValues  )
     - namespaceKeyLangValues = {
-          namespace1: { 
-              key1: { [lang: value]xN }, 
+          namespace1: {
+              key1: { [lang: value]xN },
               key2: { [lang: value]xN }
-          }, 
+          },
           namespace2:{
               ...
           }
@@ -12739,7 +12610,7 @@ return i18next;
               callback( null );
         });
     };
-    
+
     /***********************************************************************
     i18next.addKeyPhrase = function( key, namespace, langValues )
     - langValues = { [lang: value]xN }
@@ -12750,9 +12621,9 @@ return i18next;
 
     /***********************************************************************
     i18next.addKeyPhrases = function( key, namespaceLangValues )
-    - namespaceLangValues = { 
-          namespace1: { [lang: value]xN }, 
-          namespace2: { [lang: value]xN } }, 
+    - namespaceLangValues = {
+          namespace1: { [lang: value]xN },
+          namespace2: { [lang: value]xN } },
       }
     ***********************************************************************/
     i18next.addKeyPhrases = function( key, namespaceLangValues ){
@@ -12765,11 +12636,11 @@ return i18next;
 
     /***********************************************************************
     addBundleKeyPhrases( keyNamespaceLangValues  )
-    keyNamespaceLangValues = { 
-        key1: { 
-            namespace1: { [lang: value]xN }, 
+    keyNamespaceLangValues = {
+        key1: {
+            namespace1: { [lang: value]xN },
             namespace2: { [lang: value]xN }
-        }, 
+        },
         key2:{
             ...
         }
@@ -12798,21 +12669,21 @@ return i18next;
             if (callback)
               callback( null );
         });
-    
+
     };
-    
-    
+
+
     /***********************************************************************
     sentence ( langValues, options )
     - langValues = { [lang: value]xN }
     A single translation of a sentence. No key used or added
     ***********************************************************************/
-    i18next.sentence = function( langValues, options ){ 
+    i18next.sentence = function( langValues, options ){
         var nsTemp = '__TEMP__',
             keyTemp = '__KEY__',
             _this = this,
             nsSeparator = this.options.nsSeparator;
-        
+
         //Remove any data from nsTemp
 //        $.each( languages, function( index, lang ){
 //            _this.removeResourceBundle(lang, nsTemp);
@@ -12923,7 +12794,8 @@ function init(i18next, $) {
       var keys = key.split(';');
 
       $.each(keys, function (m, k) {
-        if (k !== '') parse(target, k, opts);
+        // .trim(): Trim the comma-separated parameters on the data-i18n attribute.
+        if (k !== '') parse(target, k.trim(), opts);
       });
     } else {
       parse(target, key, opts);
@@ -12968,7 +12840,7 @@ return index;
 })));
 ;
 /****************************************************************************
-	jquery-i18next-phrases.js, 
+	jquery-i18next-phrases.js,
 
 	(c) 2017, FCOO
 
@@ -12979,19 +12851,19 @@ return index;
 
 (function ($, window/*, document, undefined*/) {
 	"use strict";
-	
+
     /***********************************************************
-    Initialize jquery-i18next - i18next plugin for jquery 
+    Initialize jquery-i18next - i18next plugin for jquery
     https://github.com/i18next/jquery-i18next
     ***********************************************************/
     var jQuery_i18n_selectorAttr = 'data-i18n',    // selector for translating elements
         jQuery_i18n_targetAttr   = 'i18n-target',  // data-() attribute to grab target element to translate (if diffrent then itself)
         jQuery_i18n_optionsAttr  = 'i18n-options'; // data-() attribute that contains options, will load/set if useOptionsAttr = true
 
-    
+
     window.jqueryI18next.init(
-        window.i18next/*i18nextInstance*/, 
-        $, 
+        window.i18next/*i18nextInstance*/,
+        $,
         {
             tName         : 't',                        // --> appends $.t = i18next.t
             i18nName      : 'i18n',                     // --> appends $.i18n = i18next
@@ -13006,12 +12878,12 @@ return index;
 
 
     /***********************************************************
-    Add new methods to jQuery prototype: 
+    Add new methods to jQuery prototype:
     $.fn.i18n( htmlOrKeyOrPhrase[, attribute][, options] )
     Add/updates the "data-i18n" attribute
 
-    htmlOrKeyOrPhrase = simple html-string ( "This will <u>always</u> be in English" ) OR 
-                        i18next-key ( "myNS:myKey" ) OR 
+    htmlOrKeyOrPhrase = simple html-string ( "This will <u>always</u> be in English" ) OR
+                        i18next-key ( "myNS:myKey" ) OR
                         a phrase-object - see langValue in i18next.addPhrase ( {da:"Dette er en test", en:"This is a test"} ) OR
                         a string representing a phrase-object ( '{"da":"Dette er en test", "en":"This is a test"}' )
     ***********************************************************/
@@ -13019,14 +12891,14 @@ return index;
         tempNS = '__TEMP__';
 
     $.fn.i18n = function( htmlOrKeyOrPhrase ) {
-        var options = null, 
-            attribute = '', 
+        var options = null,
+            attribute = '',
             argument,
-            keyFound = true, 
+            keyFound = true,
             key = htmlOrKeyOrPhrase;
 
         for (var i=1; i<arguments.length; i++ ){
-            argument = arguments[i];              
+            argument = arguments[i];
             switch ($.type(argument)){
               case 'object': options = argument; break;
               case 'string': attribute = argument; break;
@@ -13038,7 +12910,7 @@ return index;
             htmlOrKeyOrPhrase = JSON.parse(htmlOrKeyOrPhrase);
         }
         catch (e) {
-            htmlOrKeyOrPhrase = original; 
+            htmlOrKeyOrPhrase = original;
         }
 
         //Convert number back to string
@@ -13053,7 +12925,7 @@ return index;
             key = 'jqueryfni18n' + tempKeyId++;
             window.i18next.addPhrase( tempNS, key, htmlOrKeyOrPhrase );
             key = tempNS+':'+key;
-        }    
+        }
 
         return this.each(function() {
             var $this = $(this),
@@ -13063,20 +12935,20 @@ return index;
                 newStr = attribute ? '[' + attribute + ']' + key : key,
                 keep;
             oldData = oldData ? oldData.split(';') : [];
-            
+
             for (var i=0; i<oldData.length; i++ ){
                 oldStr = oldData[i];
                 keep = true;
                 //if the new key has an attribute => remove data with '[attribute]'
                 if (attribute && (oldStr.indexOf('[' + attribute + ']') == 0))
-                    keep = false;                      
+                    keep = false;
                 //if the new key don't has a attribute => only keep other attributes
-                if (!attribute && (oldStr.indexOf('[') == -1)) 
+                if (!attribute && (oldStr.indexOf('[') == -1))
                     keep = false;
                 if (keep)
                     newData.push( oldStr );
             }
-            newData.push( newStr);                                
+            newData.push( newStr);
 
             //Set data-i18n
             $this.attr( jQuery_i18n_selectorAttr, newData.join(';') );
@@ -13093,7 +12965,7 @@ return index;
                     $(this).html( htmlOrKeyOrPhrase );
             }
             //Update contents
-            $this.localize();        
+            $this.localize();
 
         });
     };
@@ -13101,7 +12973,7 @@ return index;
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	fcoo-i18next-phrases.js, 
+	fcoo-i18next-phrases.js,
 
 	(c) 2017, FCOO
 
@@ -13120,46 +12992,46 @@ return index;
             resources         : {},    //Empty bagend
             lng        : 'da',
             fallbackLng:'en'
-       
+
         });
      }
 
 
     function callback( err ){
         if (err){
-            //TODO          
+            //TODO
         }
-        else { 
+        else {
             $('*').localize();
         }
     }
-    
+
     function loadJSON( jsonFileName, callback, onFail ){
         var jqxhr = $.getJSON( jsonFileName );
 
         if (callback)
             jqxhr.done( callback );
-            
+
         if (onFail)
             jqxhr.fail( onFail );
     }
 
-    
-    
+
+
     //Load "fcoo-i18next-abbr-name-link.json"
     i18next.loadKeyPhrases( 'data/fcoo-i18next-abbr-name-link.json', callback );
 
-    
+
     //Load "fcoo-parameter.json"
-    loadJSON( "data/fcoo-parameter.json", 
+    loadJSON( "data/fcoo-parameter.json",
         function( data ) {
             //Create translation of units with WMO-unit and/or CF Standard Name units as key
             $.each( data.units, function( index, unit ){
                 if (unit.en){
                     if (unit.WMO_unit)
-                        i18next.addPhrase( 'unit', unit.WMO_unit, unit );                  
+                        i18next.addPhrase( 'unit', unit.WMO_unit, unit );
                     if (unit.CF_unit)
-                        i18next.addPhrase( 'unit', unit.CF_unit, unit );                  
+                        i18next.addPhrase( 'unit', unit.CF_unit, unit );
                 }
             });
 
@@ -13167,24 +13039,24 @@ return index;
             $.each( data.parameters, function( index, parameter ){
                 if (parameter.en){
                     if (parameter.WMO_abbr)
-                        i18next.addPhrase( 'parameter', parameter.WMO_abbr, parameter );                  
+                        i18next.addPhrase( 'parameter', parameter.WMO_abbr, parameter );
                     if (parameter.CF_SN)
-                        i18next.addPhrase( 'parameter', parameter.CF_SN, parameter );                  
+                        i18next.addPhrase( 'parameter', parameter.CF_SN, parameter );
                 }
             });
             $('*').localize();
         },
-        
+
         function( /*err*/ ){
             //TODO
         }
     );
 
-    
-    
+
+
     /*
     Namespace button
-    Standard text to buttons. 
+    Standard text to buttons.
     E.g. button:close = {da: "Luk", en:"Close"}
     */
 
@@ -13192,7 +13064,7 @@ return index;
     /*
     Namespace parameter
     Physical parameter. Using XXX codes for parameter. See http://www.nco.ncep.noaa.gov/pmb/docs/on388/table2.html
-    E.g. 
+    E.g.
         parameter:wind = {da:"vindhastighed", en:"wind speed"}
         parameter:wdir = {da:"vindretning", en:"wind direction"}
     */
@@ -13232,7 +13104,7 @@ return index;
           'fraction': 'fraktion',
           'meters': 'meter'
     }
-    
+
 
 */
 
@@ -13245,16 +13117,16 @@ return index;
     */
 
 
-    //Initialize/ready 
-	$(function() { 
+    //Initialize/ready
+	$(function() {
 
-	
+
 	}); //End of initialize/ready
 
 }(this.i18next, this, document));
 ;
 /****************************************************************************
-	jQuery.i18nLink.js, 
+	jQuery.i18nLink.js,
 
 	(c) 2017, FCOO
 
@@ -13275,18 +13147,18 @@ return index;
         return  $('<a/>')
                     .i18n('link:'+key, 'href', {defaultValue: null})
                     .i18n('name:'+key, 'title')
-                    .append( 
+                    .append(
                         $('<span/>')
-                            .i18n('abbr:'+key, {defaultValue: key.toUpperCase()} ) 
+                            .i18n('abbr:'+key, {defaultValue: key.toUpperCase()} )
                     );
-                     
+
     };
 
 
 }(this, document));
 ;
 /****************************************************************************
-	fake-localstorage.js, 
+	fake-localstorage.js,
 
 	(c) 2017, FCOO
 
@@ -13297,54 +13169,54 @@ return index;
 
 (function (window/*, document, undefined*/) {
 	"use strict";
-	
+
     /*********************************************************************
     Determinate if localStorage is supported and available
     If the browser is in 'Private' mode not all browser supports localStorage
     In localStorage isn't supported a fake version is installed
     At the moment no warning is given when localStorage isn't supported since
-    some browser in private-mode allows the use of window.localStorage but 
+    some browser in private-mode allows the use of window.localStorage but
     don't save it when the session ends
     *********************************************************************/
     window.fake_localstorage_installed = false;
 
     // Test taken from https://gist.github.com/engelfrost/fd707819658f72b42f55
     if (typeof window.localStorage === 'object') {
-        // Safari will throw a fit if we try to use localStorage.setItem in private browsing mode. 
+        // Safari will throw a fit if we try to use localStorage.setItem in private browsing mode.
         try {
             localStorage.setItem('localStorageTest', 1);
             localStorage.removeItem('localStorageTest');
             window.fake_localstorage_installed = false;
-        } 
+        }
         catch (e) {
             window.fake_localstorage_installed = true;
         }
-    } 
-    else 
-        window.fake_localstorage_installed = true;        
+    }
+    else
+        window.fake_localstorage_installed = true;
 
     if (window.fake_localstorage_installed){
         /*********************************************************************
         Create a fake localStorage for any browser that does not support it.
 
         Taken from https://gist.github.com/engelfrost/fd707819658f72b42f55:
-            Fake localStorage implementation. 
-            Mimics localStorage, including events. 
-            It will work just like localStorage, except for the persistant storage part. 
+            Fake localStorage implementation.
+            Mimics localStorage, including events.
+            It will work just like localStorage, except for the persistant storage part.
         *********************************************************************/
         var fakeLocalStorage = {};
-        var storage; 
-  
-        // If Storage exists we modify it to write to our fakeLocalStorage object instead. 
-        // If Storage does not exist we create an empty object. 
+        var storage;
+
+        // If Storage exists we modify it to write to our fakeLocalStorage object instead.
+        // If Storage does not exist we create an empty object.
         if (window.Storage && window.localStorage) {
-            storage = window.Storage.prototype; 
+            storage = window.Storage.prototype;
         } else {
             // We don't bother implementing a fake Storage object
-            window.localStorage = {}; 
-            storage = window.localStorage; 
+            window.localStorage = {};
+            storage = window.localStorage;
         }
-  
+
         // For older IE
         if (!window.location.origin) {
             window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
@@ -13388,7 +13260,7 @@ return index;
 "use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj};(function(f){if((typeof exports==="undefined"?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Url=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o])}return s}({1:[function(require,module,exports){window.addEventListener("popstate",function(e){Url.triggerPopStateCb(e)});var Url=module.exports={_onPopStateCbs:[],_isHash:false,queryString:function queryString(name,notDecoded){name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),results=regex.exec(location.search),encoded=null;if(results===null){regex=new RegExp("[\\?&]"+name+"(\\&([^&#]*)|$)");if(regex.test(location.search)){return true}return undefined}else{encoded=results[1].replace(/\+/g," ");if(notDecoded){return encoded}return decodeURIComponent(encoded)}},parseQuery:function parseQuery(search){var query={};if(typeof search!=="string"){search=window.location.search}search=search.replace(/^\?/g,"");if(!search){return{}}var a=search.split("&"),i=0,iequ,value=null;for(;i<a.length;++i){iequ=a[i].indexOf("=");if(iequ<0){iequ=a[i].length;value=true}else{value=decodeURIComponent(a[i].slice(iequ+1))}query[decodeURIComponent(a[i].slice(0,iequ))]=value}return query},stringify:function stringify(queryObj){if(!queryObj||queryObj.constructor!==Object){throw new Error("Query object should be an object.")}var stringified="";Object.keys(queryObj).forEach(function(c){var value=queryObj[c];stringified+=c;if(value!==true){stringified+="="+encodeURIComponent(queryObj[c])}stringified+="&"});stringified=stringified.replace(/\&$/g,"");return stringified},updateSearchParam:function updateSearchParam(param,value,push,triggerPopState){var searchParsed=this.parseQuery();if(value===undefined){delete searchParsed[param]}else{if(searchParsed[param]===value){return Url}searchParsed[param]=value}var newSearch="?"+this.stringify(searchParsed);this._updateAll(window.location.pathname+newSearch+location.hash,push,triggerPopState);return Url},getLocation:function getLocation(){return window.location.pathname+window.location.search+window.location.hash},hash:function hash(newHash,triggerPopState){if(newHash===undefined){return location.hash.substring(1)}if(!triggerPopState){setTimeout(function(){Url._isHash=false},0);Url._isHash=true}return location.hash=newHash},_updateAll:function _updateAll(s,push,triggerPopState){window.history[push?"pushState":"replaceState"](null,"",s);if(triggerPopState){Url.triggerPopStateCb({})}return s},pathname:function pathname(_pathname,push,triggerPopState){if(_pathname===undefined){return location.pathname}return this._updateAll(_pathname+window.location.search+window.location.hash,push,triggerPopState)},triggerPopStateCb:function triggerPopStateCb(e){if(this._isHash){return}this._onPopStateCbs.forEach(function(c){c(e)})},onPopState:function onPopState(cb){this._onPopStateCbs.push(cb)},removeHash:function removeHash(){this._updateAll(window.location.pathname+window.location.search,false,false)},removeQuery:function removeQuery(){this._updateAll(window.location.pathname+window.location.hash,false,false)},version:"2.3.1"}},{}]},{},[1])(1)});
 ;
 /****************************************************************************
-    url.js-extensions.js, 
+    url.js-extensions.js,
 
     (c) 2016, FCOO
 
@@ -13417,13 +13289,13 @@ return index;
     //Overwrite Url._updateAll to handle Security Error in Safari on Mac that prevent more that 100 history updates in 30 sec
     window.Url._updateAll = function(s, push, triggerPopState) {
         try {
-            window.history[push ? "pushState" : "replaceState"](null, "", s);          
+            window.history[push ? "pushState" : "replaceState"](null, "", s);
         }
         catch (e) {
-            //Use 'old' methods - perhaps it will reload the page 
+            //Use 'old' methods - perhaps it will reload the page
             window.location.replace( s );
         }
-        
+
         if (triggerPopState) {
             window.Url.triggerPopStateCb({});
         }
@@ -13433,7 +13305,7 @@ return index;
 
     /******************************************
     anyString(name, notDecoded, search, sep)
-    Copy of Url.queryString with optional input string (search) 
+    Copy of Url.queryString with optional input string (search)
     and separaator (sep)
     ******************************************/
     function anyString(name, notDecoded, search, sep){
@@ -13463,7 +13335,7 @@ return index;
     /******************************************
     _correctSearchOrHash
     Check and correct search or hash = ID_VALUE[&ID_VALUE]
-        ID_VALUE = 
+        ID_VALUE =
             ID or
             ID=VALUE or
             ID=VALUE,VALUE2,...,VALUEN
@@ -13473,10 +13345,10 @@ return index;
     function _correctSearchOrHash( str, preChar ){
         function decodeStr( str ){
             try {
-                decodeURIComponent( str ); 
-                return decodeURIComponent( str ); 
+                decodeURIComponent( str );
+                return decodeURIComponent( str );
             }
-            catch(err) { 
+            catch(err) {
                 return undefined;
             }
         }
@@ -13502,12 +13374,12 @@ return index;
         while (preChar && str.length && (str.charAt(0) == preChar) )
             str = str.slice(1);
 
-        strList = str.split('&'); 
+        strList = str.split('&');
 
         for (i=0; i<strList.length; i++ ){
             idValues = strList[i].split('=');
             id = decodeStr( idValues[0] );
-            values = idValues[1] || undefined; 
+            values = idValues[1] || undefined;
             oneValueOk = false;
             if ( id && (idRegEx.exec(id) == id ) ){
                 //Correct id
@@ -13534,7 +13406,7 @@ return index;
                     var firstValue = true;
                     for (j=0; j<valueList.length; j++ ){
                         value = valueList[j];
-                        result += (firstValue ? '=' : ',') + (value ? value : ''); 
+                        result += (firstValue ? '=' : ',') + (value ? value : '');
                         firstValue = false;
                     }
                 }
@@ -13548,30 +13420,30 @@ return index;
     adjustUrl
     Check and correct the url
     *******************************************/
-    function adjustUrl(){ 
+    function adjustUrl(){
         var oldSearch = window.location.search,
             newSearch = this._correctSearchOrHash( oldSearch, '?' ),
             oldHash   = window.location.hash,
             newHash   = this._correctSearchOrHash( oldHash, '#' ),
-            newUrl    = window.location.pathname +  
-                          (newSearch ? '?' + encodeURI(newSearch) : '') + 
+            newUrl    = window.location.pathname +
+                          (newSearch ? '?' + encodeURI(newSearch) : '') +
                           (newHash   ? '#' + encodeURI(newHash)   : '');
 
-        this._updateAll( newUrl );          
+        this._updateAll( newUrl );
         return newUrl;
     }
 
     /******************************************
     onHashchange( handler [, context])
     Add handler = function( event) to the event "hashchange"
-    Can by omitted if the hash-tag is updated using 
+    Can by omitted if the hash-tag is updated using
     Url.updateHashParam(..) or Url.updateHash(..)
     *******************************************/
     function onHashchange( handler, context ){
         this.hashchange = this.hashchange || [];
         this.hashchange.push( $.proxy(handler, context) );
     }
-   
+
     /******************************************
     hashString
     Same as queryString but for the hash
@@ -13580,19 +13452,19 @@ return index;
     function hashString(name, notDecoded){
         return anyString(name, notDecoded, window.location.hash, '#');
     }
-    
+
     /******************************************
     parseHash
     Same as parseQuery but for the hash
     *******************************************/
     function parseHash(){
-        return this.parseQuery( this.hash() );    
+        return this.parseQuery( this.hash() );
     }
 
     /******************************************
     updateHash(hashObj, dontCallHashChange)
     Update hash-tag with the id-value in hashObj
-    If dontCallHashChange==true the hashchange-event-functions 
+    If dontCallHashChange==true the hashchange-event-functions
     added with Url.onHashchange( function[, context]) will not be called
     *******************************************/
     function updateHash(hashObj, dontCallHashChange){
@@ -13602,11 +13474,11 @@ return index;
         //return window.location.hash = '#'+newHash;
         return this._updateAll(window.location.pathname + window.location.search + '#' + newHash, false);
     }
-     
+
     /******************************************
     updateHashParam
     Adds, updates or deletes a hash-tag
-    If dontCallHashChange==true the hashchange-event-functions 
+    If dontCallHashChange==true the hashchange-event-functions
     added with Url.onHashchange( function[, context]) will not be called
     *******************************************/
     function updateHashParam(hashParam, value, dontCallHashChange){
@@ -13638,7 +13510,7 @@ return index;
             if ($.type( jsonObj ) == 'object')
                 return true;
         }
-        catch (e) { 
+        catch (e) {
             return false;
         }
         return false;
@@ -13647,7 +13519,7 @@ return index;
     function validateValue( value, validator ){
         //Convert Boolean into String
         if ($.type( value ) === "boolean")
-            value = value ? 'true' : 'false';  
+            value = value ? 'true' : 'false';
         value = value || '';
 
         if (validator === undefined)
@@ -13672,11 +13544,11 @@ return index;
             case 'NOTEMPTY': validator = /.+/;                   break;
 
             //Special case for json-object-string
-            case 'JSON'    : return validateValue( value, validateJSONValue); 
+            case 'JSON'    : return validateValue( value, validateJSONValue);
         }
 
         var regExp = new RegExp(validator),
-            execResult = regExp.exec(value); 
+            execResult = regExp.exec(value);
         return !!(execResult && (execResult.length == 1) && (execResult[0] == value));
     }
 
@@ -13686,26 +13558,26 @@ return index;
     Parse obj after it is validated and converted acording to
     validatorObj, defaultObj, and options
 
-    validatorObj: object with {id: validator,..}. Failed values are removed 
-    defaultObj  : object with {id: value}. Values to be used if `id` is missing or fails validation 
+    validatorObj: object with {id: validator,..}. Failed values are removed
+    defaultObj  : object with {id: value}. Values to be used if `id` is missing or fails validation
     options: {
         convertBoolean: Boolean (default = true ) If true all values == "true" or "false" are converted into Boolean
         convertNumber : Boolean (default = true ) If true all values representing a number is converted to float
         convertJSON   : Boolean (default = true ) If true all values representing a stringify json-object is converted to a real json-object
-        queryOverHash : Boolean (default = true ) If true and the same id is given in both query-string and hash-tag the value from query-string is returned. 
+        queryOverHash : Boolean (default = true ) If true and the same id is given in both query-string and hash-tag the value from query-string is returned.
                                                   If false the value from hash-tag is returned
     }
     *******************************************/
     function _parseObject( obj, validatorObj, defaultObj, options ){
-        validatorObj = validatorObj || {}; 
-        defaultObj = defaultObj || {}; 
-        options = $.extend( {}, options, { 
-            convertBoolean: true, 
-            convertNumber : true, 
+        validatorObj = validatorObj || {};
+        defaultObj = defaultObj || {};
+        options = $.extend( {}, options, {
+            convertBoolean: true,
+            convertNumber : true,
             convertJSON   : true,
-            queryOverHash : true 
-        }); 
-        
+            queryOverHash : true
+        });
+
         var _this = this;
 
         //Validate all values
@@ -13713,20 +13585,20 @@ return index;
             //Convert '+' to space
             if ( $.type(value) == 'string' )
                 value = value.replace(/\+/g, " ");
-            
+
             //Validate value
             if ( !_this.validateValue( value, validatorObj[id] ) )
-                value = undefined; 
+                value = undefined;
 
             //Convert "true" and false" to Boolean
             if ( options.convertBoolean && ( (value == 'true') || (value == 'false') ) )
               value = (value == 'true');
-                
+
             //Convert String to Float
             if (options.convertNumber && _this.validateValue( value, 'NUMBER') ){
                 value = parseFloat( value );
             }
-                
+
             //Remove deleted keys
             if (value === undefined)
                 delete obj[id];
@@ -13739,8 +13611,8 @@ return index;
             $.each( obj, function( id, value ){
                 if ( _this.validateValue( value, 'JSON') )
                     obj[id] = JSON.parse( value );
-            });        
-        
+            });
+
         //Insert default values
         $.each( defaultObj, function( id, value ){
             if (obj[id] === undefined)
@@ -13760,7 +13632,7 @@ return index;
         var _this = this,
             queryOverHash = options ? !!options.queryOverHash : true;
 
-        function parseObj( str ){ 
+        function parseObj( str ){
             var obj = _this.parseQuery( str );
 
             //Use anyString(..) to get adjusted value
@@ -13768,14 +13640,14 @@ return index;
                 obj[id] = anyString(id, false, '?'+str, '?');
             });
 
-            return _this._parseObject( obj, validatorObj, defaultObj, options ); 
+            return _this._parseObject( obj, validatorObj, defaultObj, options );
         }
 
         var queryObj = parseObj( this._correctSearchOrHash( window.location.search, '?' ) ),
             hashObj  = parseObj( this._correctSearchOrHash( window.location.hash,   '#' ) );
 
-        return $.extend( queryOverHash ? hashObj  : queryObj, 
-                         queryOverHash ? queryObj : hashObj   ); 
+        return $.extend( queryOverHash ? hashObj  : queryObj,
+                         queryOverHash ? queryObj : hashObj   );
     }
 
     /******************************************
@@ -13824,11 +13696,11 @@ return index;
 
 
     /******************************************
-    Initialize/ready 
+    Initialize/ready
     *******************************************/
-    $(function() { 
+    $(function() {
         window.Url.adjustUrl();
-    }); 
+    });
     //******************************************
 
 
@@ -13837,20 +13709,20 @@ return index;
 
 /******************************************
 Variables in window.location making up the full url
-    
+
 var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + window.location.search + window.location.hash;
 
 window.location.protocol
 window.location.host
 window.location.pathname
-window.location.search 
-window.location.hash 
+window.location.search
+window.location.hash
 
 ******************************************/
 
 ;
 /****************************************************************************
-    fcoo-settings.js, 
+    fcoo-settings.js,
 
     (c) 2016, FCOO
 
@@ -13861,7 +13733,7 @@ window.location.hash
 
 (function ($, window, document, undefined) {
     "use strict";
-    
+
     //Create fcoo.settings-namespace
     window.fcoo = window.fcoo || {};
     var ns = window.fcoo.settings = window.fcoo.settings || {};
@@ -13872,12 +13744,12 @@ window.location.hash
         storageIdSave  = 'fcoo_settings',
         storageIdForce = 'fcoo_settings_FORCE';
 
-        //Get query settings            
-        try { 
-            queryValues = JSON.parse( window.Url.queryString('settings') ); 
+        //Get query settings
+        try {
+            queryValues = JSON.parse( window.Url.queryString('settings') );
         }
-        catch (e) { 
-            queryValues = {}; 
+        catch (e) {
+            queryValues = {};
         }
 
     /**********************************
@@ -13886,7 +13758,7 @@ window.location.hash
     id [String]
     validator [null] | [String] | [function( value)]. If [String] => using Url.js-extensions validation
     applyFunc [function( value, id, defaultValue )] function to apply the settings for id
-    defaultValue 
+    defaultValue
     globalEvents {String} = Id of global-events in fcoo.events that aare fired when the setting is changed
     onError [function( value, id )] (optional). Called if a new value is invalid according to validator
     **********************************/
@@ -13907,16 +13779,16 @@ window.location.hash
 
     //Extend the prototype
     ns.Setting.prototype = {
-        apply:  function ( newValue, dontCallApplyFunc ){ 
+        apply:  function ( newValue, dontCallApplyFunc ){
                     var id = this.options.id;
                     newValue = (newValue === undefined) ? this.options.defaultValue : newValue;
 
-                    if ( !window.Url.validateValue(''+newValue, this.options.validator) ){ 
+                    if ( !window.Url.validateValue(''+newValue, this.options.validator) ){
                         if (this.options.onError)
                             this.options.onError( newValue, id );
                         newValue = this.options.defaultValue;
                     }
-                    
+
                     this.value = newValue;
 
                     //Set saveValue = newValue unless it is the value from query-string
@@ -13931,28 +13803,28 @@ window.location.hash
                     if (this.options.globalEvents && window.fcoo.events && window.fcoo.events.fire)
                         window.fcoo.events.fire( this.options.globalEvents, id, this.value );
 
-                }    
-    };    
+                }
+    };
 
     /**********************************
     add( options )
     options = {id, validator, applyFunc, defaultValue, globalEvents )
     id [String]
-    validator [null] | [String] | [function( value)]. If [String] = 
-    defaultValue 
+    validator [null] | [String] | [function( value)]. If [String] =
+    defaultValue
     **********************************/
     ns.add = function( options ){
         options = $.extend( {}, { callApply: true }, options );
         var setting = new ns.Setting( options );
         settings[options.id] = setting;
-        setting.apply( loadedValues[setting.options.id], !options.callApply );                       
+        setting.apply( loadedValues[setting.options.id], !options.callApply );
     };
-    
+
     /**********************************
     set( id, value, reload )
     id [String]
     value [any]
-    reload [Boolean] 
+    reload [Boolean]
     **********************************/
     ns.set = function( id, value, reload ){
         var setting = settings[id];
@@ -13967,7 +13839,7 @@ window.location.hash
         if (reload)
           window.location.reload();
     };
-    
+
     /**********************************
     get( id )
     id [String]
@@ -13995,7 +13867,7 @@ window.location.hash
             c: default values
     **********************************/
     ns.load = function(){
-        //1) Try loading from storageIdForce 
+        //1) Try loading from storageIdForce
         var str = window.sessionStorage.getItem( storageIdForce );
         if (str){
             window.sessionStorage.removeItem( storageIdForce );
@@ -14005,7 +13877,7 @@ window.location.hash
             //2) Load settings from...
             //a: url param 'settings = queryValues
 
-            //b: localStorage 'fcoo-settings', 
+            //b: localStorage 'fcoo-settings',
             var savedValues = this.loadFromLocalStorage();
 
             //c: default values - is set by fcoo.settings.add(...)
@@ -14014,14 +13886,14 @@ window.location.hash
             loadedValues =  $.extend( {}, savedValues, queryValues );
         }
 
-        $.each( settings, function( id, setting ){ 
-            setting.apply( loadedValues[id] ); 
+        $.each( settings, function( id, setting ){
+            setting.apply( loadedValues[id] );
         });
     };
-    
+
     /**********************************
     save( toForce, saveStr )
-    Save the settings in 
+    Save the settings in
     toForce == false: localStorage 'fcoo-settings'
     toForce == true : sessionStorage 'fcoo-settings-FORCE'
 
@@ -14030,7 +13902,7 @@ window.location.hash
     ns.save = function( toForce, saveStr ){
         //Save all saveValue from settings
         var settingValuesToSave = this.loadFromLocalStorage();
-        $.each( settings, function( id, setting ){ 
+        $.each( settings, function( id, setting ){
             if (setting.saveValue)
                 settingValuesToSave[ setting.options.id ] = setting.saveValue;
         });
@@ -14049,18 +13921,145 @@ window.location.hash
     ns.load();
 
     /******************************************
-    Initialize/ready 
+    Initialize/ready
     *******************************************/
-//    $(function() { 
-//    }); 
+//    $(function() {
+//    });
 
 }(jQuery, this, document));
 ;
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.i18nextIntervalPluralPostProcessor = factory());
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.i18nextIntervalPluralPostProcessor = factory());
 }(this, (function () { 'use strict';
+
+var asyncGenerator = function () {
+  function AwaitValue(value) {
+    this.value = value;
+  }
+
+  function AsyncGenerator(gen) {
+    var front, back;
+
+    function send(key, arg) {
+      return new Promise(function (resolve, reject) {
+        var request = {
+          key: key,
+          arg: arg,
+          resolve: resolve,
+          reject: reject,
+          next: null
+        };
+
+        if (back) {
+          back = back.next = request;
+        } else {
+          front = back = request;
+          resume(key, arg);
+        }
+      });
+    }
+
+    function resume(key, arg) {
+      try {
+        var result = gen[key](arg);
+        var value = result.value;
+
+        if (value instanceof AwaitValue) {
+          Promise.resolve(value.value).then(function (arg) {
+            resume("next", arg);
+          }, function (arg) {
+            resume("throw", arg);
+          });
+        } else {
+          settle(result.done ? "return" : "normal", result.value);
+        }
+      } catch (err) {
+        settle("throw", err);
+      }
+    }
+
+    function settle(type, value) {
+      switch (type) {
+        case "return":
+          front.resolve({
+            value: value,
+            done: true
+          });
+          break;
+
+        case "throw":
+          front.reject(value);
+          break;
+
+        default:
+          front.resolve({
+            value: value,
+            done: false
+          });
+          break;
+      }
+
+      front = front.next;
+
+      if (front) {
+        resume(front.key, front.arg);
+      } else {
+        back = null;
+      }
+    }
+
+    this._invoke = send;
+
+    if (typeof gen.return !== "function") {
+      this.return = undefined;
+    }
+  }
+
+  if (typeof Symbol === "function" && Symbol.asyncIterator) {
+    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
+      return this;
+    };
+  }
+
+  AsyncGenerator.prototype.next = function (arg) {
+    return this._invoke("next", arg);
+  };
+
+  AsyncGenerator.prototype.throw = function (arg) {
+    return this._invoke("throw", arg);
+  };
+
+  AsyncGenerator.prototype.return = function (arg) {
+    return this._invoke("return", arg);
+  };
+
+  return {
+    wrap: function (fn) {
+      return function () {
+        return new AsyncGenerator(fn.apply(this, arguments));
+      };
+    },
+    await: function (value) {
+      return new AwaitValue(value);
+    }
+  };
+}();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -14099,7 +14098,7 @@ var index = {
 
   options: {
     intervalSeparator: ';',
-    intervalRegex: /^\((\S*)\){(.*)}$/,
+    intervalRegex: /\((\S*)\).*{(.*)}/,
     intervalSuffix: '_interval'
   },
 
@@ -14130,7 +14129,16 @@ var index = {
         var index = newOptions.postProcess.indexOf('interval'); // <-- Not supported in <IE9
         if (index !== -1) newOptions.postProcess.splice(index, 1);
       }
-      found = translator.translate(key.replace(this.options.intervalSuffix, ''), newOptions);
+
+      var newKeys = void 0;
+      if (typeof key === 'string') {
+        newKeys = key.replace(this.options.intervalSuffix, '');
+      } else if (key.length > -1) {
+        newKeys = key.map(function (k) {
+          return k.replace(_this.options.intervalSuffix, '');
+        });
+      }
+      if (newKeys) found = translator.translate(newKeys, newOptions);
     }
 
     return found || value;
@@ -14140,6 +14148,7 @@ var index = {
 return index;
 
 })));
+
 ;
 /****************************************************************************
     lang-flag-icon.js,
@@ -14169,7 +14178,7 @@ return index;
         function readListFromFontFamily( className ){
             var meta= $('<meta class="' + className + '">').appendTo(document.head),
                 str = meta.css('font-family'),
-                i, 
+                i,
                 result = [];
 
             meta.remove();
@@ -14241,7 +14250,7 @@ return index;
 }(jQuery, this, document));
 ;
 /****************************************************************************
-    fcoo-language.js, 
+    fcoo-language.js,
 
     (c) 2016, FCOO
 
@@ -14252,16 +14261,16 @@ return index;
 
 (function ($, window/*, document, undefined*/) {
     "use strict";
-    
+
     //Create fcoo-namespace
     window.fcoo = window.fcoo || {};
-    var ns = window.fcoo; 
+    var ns = window.fcoo;
 
     //global events "languagechanged" fired when the language is changed
     var languagechanged = "languagechanged";
-    
+
     //*****************************************************************************
-    // All available languages.  
+    // All available languages.
     // **NOTE ** THIS LIST MUST MATCH THE LIST $lang-list IN src/fcoo-language.scss
     //******************************************************************************
     var languages = ['da', 'en',  'fo', 'kl' /*', de', 'sv', 'no'*/];
@@ -14270,24 +14279,24 @@ return index;
     var standardLanguage  = 'en',                     //Standard language is allways english (en)
         standardLanguages = [standardLanguage, 'da']; //Standard languages is allways danish (da) and english (en)
 
-    //getLanguage( 'da-DK') => 'da'    
+    //getLanguage( 'da-DK') => 'da'
     function getLanguage( language_country ){ return language_country.split('-')[0]; }
 
     //validateLanguage( lang ): Return lang if it is in languages Else return ''
     function validateLanguage( lang ){ return languages.indexOf( lang ) > -1 ? lang : ''; }
-        
+
     //isStandardLanguage( lang ) Return lang if lang is in standardLanguages ('da' or 'en') Else return ''
-    function isStandardLanguage( lang ){ return standardLanguages.indexOf( lang ) > -1 ? lang : ''; }    
-    
+    function isStandardLanguage( lang ){ return standardLanguages.indexOf( lang ) > -1 ? lang : ''; }
+
     //browserLanguage = Language of the browser
-    var browserLanguage = getLanguage( 
-                              navigator.language || 
-                              navigator.userLanguage || 
-                              navigator.browserLanguage || 
-                              navigator.systemLanguage || 
-                              standardLanguage 
+    var browserLanguage = getLanguage(
+                              navigator.language ||
+                              navigator.userLanguage ||
+                              navigator.browserLanguage ||
+                              navigator.systemLanguage ||
+                              standardLanguage
                           ),
-        
+
         //defaultLanguage = valid value of: param 'lang' OR the browser language OR 'en'
         defaultLanguage = validateLanguage( window.Url.queryString('lang') ) ||
                           validateLanguage( browserLanguage ) ||
@@ -14295,22 +14304,22 @@ return index;
 
     //The ?lang=... is removed. Is only used if no 'language' is set in fcoo.settings
     window.Url.updateSearchParam('lang');
-    
+
 
     /***********************************************************
     Some of the contents on FCOOs web applications are only available
-    in either Danish (da) or English (en). 
+    in either Danish (da) or English (en).
     If the user has selected a language other than da or en they select between
     da and en to be the second language (language2 in fcoo.settings)
-    This is primarily to allow users how has selected Faroese or Greenlandic 
+    This is primarily to allow users how has selected Faroese or Greenlandic
     to see no-translated contents in Danish.
 
     It is also possible that some phrases are translated into languages not in
-    the list of available languages. Eq. links to homepages offen 'comes' in national 
+    the list of available languages. Eq. links to homepages offen 'comes' in national
     language and English "smhi.se" is in Swedish or English
-    
+
     The function getFallbackLng sets up the fallback languages for i18next
-    
+
     ***********************************************************/
     function getFallbackLng(lang, lang2){
         var result = [];
@@ -14322,13 +14331,13 @@ return index;
         //If the browser language is not among the available languages => use the browser language as first fallback
         if (languages.indexOf(browserLanguage) == -1)
             addLang(browserLanguage);
-        
+
         //Validate lang2 to be 'da' or 'en' and adds it
         lang2 = isStandardLanguage( lang2 ) || isStandardLanguage( browserLanguage ) || standardLanguage;
         addLang( lang2 );
 
         //Add alternativ to lang 2 = da/en when lang2 is en/da
-        addLang( standardLanguages[ 1 - standardLanguages.indexOf( lang2 ) ] ); 
+        addLang( standardLanguages[ 1 - standardLanguages.indexOf( lang2 ) ] );
 
         return result;
     }
@@ -14338,7 +14347,7 @@ return index;
     setLanguageAndLanguage2
     ***********************************************************/
     function setLanguageAndLanguage2(lang, lang2){
-        i18next.options.fallbackLng = getFallbackLng(lang, lang2);  
+        i18next.options.fallbackLng = getFallbackLng(lang, lang2);
         i18next.changeLanguage( lang );
     }
 
@@ -14346,9 +14355,9 @@ return index;
     Set up and load language via fcoo.settings
     ***********************************************************/
     window.fcoo.settings.add({
-        id          : 'language', 
+        id          : 'language',
         validator   : validateLanguage,
-        applyFunc   : function( lang ){ setLanguageAndLanguage2( lang, window.fcoo.settings.get('language2') ); }, 
+        applyFunc   : function( lang ){ setLanguageAndLanguage2( lang, window.fcoo.settings.get('language2') ); },
         defaultValue: defaultLanguage,
         callApply   : false
     });
@@ -14356,23 +14365,23 @@ return index;
     //language used when initialize i18next
     var language = window.fcoo.settings.get( 'language' );
 
-    
+
     /***********************************************************
     Set up and load language2 via fcoo.settings
     ***********************************************************/
     window.fcoo.settings.add({
-        id          : 'language2', 
+        id          : 'language2',
         validator   : validateLanguage,
         applyFunc   : function( lang2 ){ setLanguageAndLanguage2( i18next.language, lang2 ); },
         defaultValue: standardLanguage,
         callApply   : false
     });
-    
-    
+
+
     //fallback used when initialize i18next
     var fallbackLng = getFallbackLng( language, window.fcoo.settings.get('language2') );
 
-    
+
     /***********************************************************
     Create fcoo.langFlag
     ***********************************************************/
@@ -14391,7 +14400,7 @@ return index;
         fallbackLng : fallbackLng,
         keySeparator: '#',
 
-        useDataAttrOptions: true, 
+        useDataAttrOptions: true,
         initImmediate     : false, //prevents resource loading in init function inside setTimeout (default async behaviour)
         resources         : {},    //Empty bagend
 
@@ -14399,15 +14408,15 @@ return index;
     });
     i18next.use( window.i18nextIntervalPluralPostProcessor );
 
-        
+
     //Fire languagechenged when language is changed
     i18next.on('languageChanged', function() {
         window.fcoo.events.fire( languagechanged );
     });
 
     //Update all element when language changes
-    window.fcoo.events.on( languagechanged, function() { 
-        $("*").localize();        
+    window.fcoo.events.on( languagechanged, function() {
+        $("*").localize();
     });
 
 
@@ -14423,12 +14432,12 @@ return index;
     };
     i18next.use(nameOfProcessor);
 */
-    
-    //Initialize/ready 
-    $(function() { 
+
+    //Initialize/ready
+    $(function() {
         //Update all language related elements
         window.fcoo.settings.set('language', language );
-    }); 
+    });
 
 
 }(jQuery, this, document));
@@ -15124,7 +15133,7 @@ return index;
         }
     });
 
-    
+
 
 (function() {
         numeral.register('format', 'bps', {
@@ -15488,7 +15497,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
     var latLngFormat;
 
-   
+
     /************************************
     Constructors
     ************************************/
@@ -15501,12 +15510,12 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
 
         if (!this.inputIsValid && console.warn)
-            console.warn('latLngFormat: Invalid arguments');         
+            console.warn('latLngFormat: Invalid arguments');
     }
 
-    
+
     latLngFormat = function() {
-        //Possible arguments: ( Number ), ( Number, Number ) ( [Number, Number] ), ( String ), ( String, String ) ( [String, String] ) 
+        //Possible arguments: ( Number ), ( Number, Number ) ( [Number, Number] ), ( String ), ( String, String ) ( [String, String] )
         var inputs = null,
             inputValid = false;
         if (arguments.length && (arguments.length <= 2)){
@@ -15518,13 +15527,13 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
             }
             if (arguments.length == 2)
               inputs = [ arguments[0], arguments[1] ];
-        
+
             inputValid = true;
             $.each( inputs, function( index, val ){
                 if ((typeof val != 'number') && (typeof val != 'string')){
                     inputValid = false;
                     return false;
-                }        
+                }
             });
         }
         return new LatLngFormat( inputValid ? inputs : null );
@@ -15541,7 +15550,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     latLngFormat.LATLNGFORMAT_DMM  = LATLNGFORMAT_DMM;
     latLngFormat.LATLNGFORMAT_DD   = LATLNGFORMAT_DD;
 
-   
+
     /************************************
     LatlngFormat Prototype
     ************************************/
@@ -15553,7 +15562,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
         _method   : function (method, param1, param2) { return [ method.call( this, 0, this._getLat(), param1, param2 ), method.call( this, 1, this._getLng(), param1, param2 ) ]; },
         _methodLat: function (method, param1, param2) { return method.call( this, 0, this._getLat(), param1, param2 ); },
         _methodLng: function (method, param1, param2) { return method.call( this, 1, this._getLng(), param1, param2 ); },
-    
+
         //**********************************************************
         //_valid - Return true if the value is a valid position
         _valid: function(latOrLng, value){
@@ -15618,7 +15627,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
             if ((value === '') || !this._valid(latOrLng,  value))
                 return null;
-            
+
             var split = value.split(/\D/),
                 result = 0,
                 convertMaskIndex = 0,
@@ -15678,10 +15687,10 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
         convertLat: function( orgLatLngFormat ){ return this._methodLat( this._convert, orgLatLngFormat ); },
         convertLng: function( orgLatLngFormat ){ return this._methodLng( this._convert, orgLatLngFormat ); },
 
-        
+
     };//end of latLngFormat.fn = LatLngFormat.prototype = {
-    
-   
+
+
     /************************************
     Static methods
     ************************************/
@@ -15689,7 +15698,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
         //setFormat
         setFormat: function( formatId ){
             if (formatId !== null)
-              this.options.formatId = formatId; 
+              this.options.formatId = formatId;
 
             /*
             Create editMask,convertMask, regexp, placeholder in options based on options.formatId and numeral.js
@@ -15776,7 +15785,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
                     break;
             }
             $.extend( this.options, newOptions );
-        
+
             return formatId;
         }
     }); //end of $.extend( latLngFormat, {
@@ -15788,10 +15797,10 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     //Overwrite numeral.js method XX to update format with new decimal delimiters
     var n = window.numeral;
     if (n && n.locale){
-        n.locale = 
+        n.locale =
             function( locale ){
                 return function(){
-                    //Original function 
+                    //Original function
                     var result = locale.apply(this, arguments);
 
                     //Update format
@@ -15803,11 +15812,11 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     }
 
 
-    
+
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	fcoo-latlng-format.js, 
+	fcoo-latlng-format.js,
 
 	(c) 2017, FCOO
 
@@ -15818,19 +15827,19 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
 (function ($, window/*, document, undefined*/) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
     window.fcoo = window.fcoo || {};
-    var ns = window.fcoo; 
+    var ns = window.fcoo;
 
     /***********************************************************
     Set up and load latlng-format via fcoo.settings
     ***********************************************************/
     ns.settings.add({
-        id          : 'latlng', 
-        validator   : function( /*latlngFormatId*/ ){ 
-                          //TODO Check for valid value                              
-                          return true;      
+        id          : 'latlng',
+        validator   : function( /*latlngFormatId*/ ){
+                          //TODO Check for valid value
+                          return true;
                       },
         applyFunc   : function( latlngFormatId ){
                           window.latLngFormat.setFormat( latlngFormatId );
@@ -15881,7 +15890,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
 ;(function(window, document, undefined){
   var tests = [];
-  
+
 
   /**
    *
@@ -15930,7 +15939,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     }
   };
 
-  
+
 
   // Fake some of Object.create so we can force non test results to be non "own" properties.
   var Modernizr = function() {};
@@ -15940,10 +15949,10 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
   // Overwrite name so constructor name is nicer :D
   Modernizr = new Modernizr();
 
-  
+
 
   var classes = [];
-  
+
 
   /**
    * is returns a boolean if the typeof an obj is exactly type.
@@ -16039,7 +16048,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
    */
 
   var docElement = document.documentElement;
-  
+
 
   /**
    * A convenience helper to check if the document we are running in is an SVG document
@@ -16049,7 +16058,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
    */
 
   var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-  
+
 
   /**
    * setClasses takes an array of class names and adds them to the root element
@@ -16117,7 +16126,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     }
   })();
 
-  
+
 
 
    // _l tracks listeners for async tests, as well as tests that execute after the initial run
@@ -16327,7 +16336,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     ModernizrProto.addTest = addTest;
   });
 
-  
+
 
 
   /**
@@ -16347,11 +16356,11 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
    */
 
   var omPrefixes = 'Moz O ms Webkit';
-  
+
 
   var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
   ModernizrProto._cssomPrefixes = cssomPrefixes;
-  
+
 
   /**
    * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
@@ -16418,7 +16427,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
   ModernizrProto.atRule = atRule;
 
-  
+
 
   /**
    * createElement is a convenience wrapper around document.createElement. Since we
@@ -16519,7 +16528,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
 
   ModernizrProto.hasEvent = hasEvent;
-  
+
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -16692,7 +16701,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
   ModernizrProto.mq = mq;
 
-  
+
 
 
   /**
@@ -16726,7 +16735,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     delete modElem.elem;
   });
 
-  
+
 
   var mStyle = {
     style: modElem.elem.style
@@ -16738,7 +16747,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     delete mStyle.style;
   });
 
-  
+
 
   /**
    * domToCSS takes a camelCase string and converts it to kebab-case
@@ -16928,7 +16937,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
   var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
   ModernizrProto._domPrefixes = domPrefixes;
-  
+
 
   /**
    * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
@@ -17023,7 +17032,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
   // Modernizr.testAllProps('boxSizing')
   ModernizrProto.testAllProps = testPropsAll;
 
-  
+
 
   /**
    * prefixed returns the prefixed or nonprefixed property name variant of your input
@@ -17107,7 +17116,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
     }
   };
 
-  
+
 /*!
 {
   "name": "Fullscreen API",
@@ -17166,7 +17175,7 @@ Detects support for the ability to make the current website take over the user's
   // expose these for the plugin API. Look in the source for how to join() them against your input
   ModernizrProto._prefixes = prefixes;
 
-  
+
 
   /**
    * testStyles injects an element with style element and some CSS rules
@@ -17226,7 +17235,7 @@ Detects support for the ability to make the current website take over the user's
    */
 
   var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
+
 /*!
 {
   "name": "Touch Events",
@@ -17346,7 +17355,7 @@ This test will also return `true` for Firefox 4 Multitouch support.
     return testPropsAll(prop, undefined, undefined, value, skipValueTest);
   }
   ModernizrProto.testAllProps = testAllProps;
-  
+
 /*!
 {
   "name": "Flexbox",
@@ -17582,8 +17591,8 @@ else {
         this.mobile             = function () { return this.androidPhone() || this.iphone() || this.ipod() || this.windowsPhone() || this.blackberryPhone() || this.fxosPhone() || this.meego(); };
         this.tablet             = function () { return this.ipad() || this.androidTablet() || this.blackberryTablet() || this.windowsTablet() || this.fxosTablet(); };
         this.desktop            = function () { return !this.tablet() && !this.mobile(); };
-        
-        
+
+
         if (this.options.scale){
             var docEl = document.documentElement;
             //this.devicePixelRatio = ('devicePixelRatio' in window) ? window.devicePixelRatio : 'unsupported';
@@ -17683,7 +17692,7 @@ else {
         if (this.options.modernizr.ie)
             //Adding test for Internet Explore versions
             for (var version=7; version<=10; version++ )
-                Modernizr.addTest('ie'+version, this.browser_version == 'MSIE '+version );        
+                Modernizr.addTest('ie'+version, this.browser_version == 'MSIE '+version );
     }
 
     // expose access to the constructor
@@ -17695,7 +17704,7 @@ else {
 
 ;
 /****************************************************************************
-	modernizr-javascript.js, 
+	modernizr-javascript.js,
 
 	(c) 2016, FCOO
 
@@ -17706,25 +17715,26 @@ else {
 
 (function ($, window, document, undefined) {
 	"use strict";
-	
+
 	var ns = window;
 
     //Extend the jQuery prototype
     $.fn.extend({
-        modernizrOn : function( test ){ 
-            return this.modernizrToggle( test, true ); 
+        modernizrOn : function( test ){
+            return this.modernizrToggle( test, true );
         },
 
-        modernizrOff: function( test ){ 
-            return this.modernizrToggle( test, false ); 
+        modernizrOff: function( test ){
+            return this.modernizrToggle( test, false );
         },
-        
-        modernizrToggle: function( test, on ){ 
+
+        modernizrToggle: function( test, on ){
 		if ( on === undefined )
             return this.modernizrToggle( test, !this.hasClass( test ) );
 
             on = !!on; //on => Boolean
-            return this.toggleClass( test, on ).toggleClass( 'no-' + test, !on );
+//            return this.toggleClass( test, on ).toggleClass( 'no-' + test, !on );
+            return this.toggleClass( 'no-' + test, !on ).toggleClass( test, on );
         }
     });
 
@@ -17774,7 +17784,7 @@ else {
 
             if (!ret.hasOwnProperty(key)) {
                 ret[key] = val;
-            } else 
+            } else
                 if (Array.isArray(ret[key])) {
                     ret[key].push(val);
                 } else {
@@ -17807,7 +17817,7 @@ else {
         var id,
             meta      = $('<meta class="modernizr-mediaquery-media-query">').appendTo(document.head),
             mediaJSON = parseStyleToObject(meta.css('font-family'));
-        meta.remove();        
+        meta.remove();
 
         this.mediaQueryList = [];
         for (id in mediaJSON)
@@ -17816,20 +17826,20 @@ else {
                 mq: mediaJSON[id],
                 on: false
             });
-    
-            
+
+
         //'Reads the different min-max-intervalls from the css-file using the 'dummy' class "modernizr-mediaquery-min-max"
         meta      = $('<meta class="modernizr-mediaquery-min-max">').appendTo(document.head);
         mediaJSON = parseStyleToObject(meta.css('font-family'));
-        meta.remove();        
+        meta.remove();
 
         this.minMaxRatioList = [];
         for (id in mediaJSON){
-            var minMaxRatio = mediaJSON[id].split('_');            
+            var minMaxRatio = mediaJSON[id].split('_');
             this.minMaxRatioList.push({
                 id      : id,
                 min     : parseFloat(minMaxRatio[0]),
-                max     : parseFloat(minMaxRatio[1]) || 100000, 
+                max     : parseFloat(minMaxRatio[1]) || 100000,
                 minRatio: minMaxRatio.length > 2 ? parseFloat(minMaxRatio[2]) : 100000,
                 maxRatio: minMaxRatio.length > 3 ? parseFloat(minMaxRatio[3]) : 100000,
                 on      : false
@@ -17859,13 +17869,13 @@ else {
         one : function( mediaQueries, callback, context ){ this.globalEvents.one(  mediaQueries, callback, context ); },
 
 
-        setHtmlFontSizePx: function( fontSizePx ){ 
+        setHtmlFontSizePx: function( fontSizePx ){
             $('html').css('font-size', fontSizePx);
             $(window).trigger('resize.mmq');
             return fontSizePx;
         },
-        
-        setHtmlFontSizePercent: function( fontSizePercent ){ 
+
+        setHtmlFontSizePercent: function( fontSizePercent ){
             return this.setHtmlFontSizePx( fontSizePercent/100*this.defaultHtmlFontSize );
         },
 
@@ -17875,12 +17885,12 @@ else {
             return !!this.modernizr.mq(mediaQuery.mq);
         },
         _isOn_minMaxRatioMode: function( minMaxRatio ){
-            return ( (this.window_width_em >= (minMaxRatio.min / this.defaultHtmlFontSize)) && 
+            return ( (this.window_width_em >= (minMaxRatio.min / this.defaultHtmlFontSize)) &&
                      (this.window_width_em <= (minMaxRatio.max / this.defaultHtmlFontSize)) ) ||
-                   ( (this.window_ratio >= minMaxRatio.minRatio) && 
+                   ( (this.window_ratio >= minMaxRatio.minRatio) &&
                      ( this.window_ratio <= minMaxRatio.maxRatio ) );
         },
-        
+
         _onMediaQuery: function( /*event*/ ){
             var i, list, listElem, isOn, isOnFunc;
             this.screen_width  = screen.width;
@@ -17895,7 +17905,7 @@ else {
             this.window_ratio = this.window_width / this.window_height;
 
             if (this.options.useWindowClientDim){
-                list = this.minMaxRatioList; 
+                list = this.minMaxRatioList;
                 isOnFunc = $.proxy(this._isOn_minMaxRatioMode, this);
             }
             else {
@@ -17956,7 +17966,7 @@ else {
     /******************************************
     Initialize/ready
     *******************************************/
-    $(function() { 
+    $(function() {
 
         //Create fcoo.modernizrDevice
         ns.modernizrDevice = new window.ModernizrDevice({
@@ -22842,7 +22852,7 @@ return fo;
 
 ;
 /*! Moment Duration Format v1.3.0
- *  https://github.com/jsmreese/moment-duration-format 
+ *  https://github.com/jsmreese/moment-duration-format
  *  Date: 2014-07-15
  *
  *  Duration format plugin function for the Moment.js library
@@ -22858,21 +22868,21 @@ return fo;
 	// returns "0" repeated qty times
 	function repeatZero(qty) {
 		var result = "";
-		
+
 		// exit early
 		// if qty is 0 or a negative number
 		// or doesn't coerce to an integer
 		qty = parseInt(qty, 10);
 		if (!qty || qty < 1) { return result; }
-		
+
 		while (qty) {
 			result += "0";
 			qty -= 1;
 		}
-		
+
 		return result;
 	}
-	
+
 	// padZero(str, len [, isRight])
 	// pads a string with zeros up to a specified length
 	// will not pad a string if its length is aready
@@ -22882,20 +22892,20 @@ return fo;
 	function padZero(str, len, isRight) {
 		if (str == null) { str = ""; }
 		str = "" + str;
-		
+
 		return (isRight ? str : "") + repeatZero(len - str.length) + (isRight ? "" : str);
 	}
-	
+
 	// isArray
 	function isArray(array) {
 		return Object.prototype.toString.call(array) === "[object Array]";
 	}
-	
+
 	// isObject
 	function isObject(obj) {
 		return Object.prototype.toString.call(obj) === "[object Object]";
 	}
-	
+
 	// findLast
 	function findLast(array, callback) {
 		var index = array.length;
@@ -22910,7 +22920,7 @@ return fo;
 		var index = 0,
 			max = array.length,
 			match;
-			
+
 		if (typeof callback !== "function") {
 			match = callback;
 			callback = function (item) {
@@ -22923,12 +22933,12 @@ return fo;
 			index += 1;
 		}
 	}
-	
+
 	// each
 	function each(array, callback) {
 		var index = 0,
 			max = array.length;
-			
+
 		if (!array || !max) { return; }
 
 		while (index < max) {
@@ -22936,7 +22946,7 @@ return fo;
 			index += 1;
 		}
 	}
-	
+
 	// map
 	function map(array, callback) {
 		var index = 0,
@@ -22944,103 +22954,103 @@ return fo;
 			ret = [];
 
 		if (!array || !max) { return ret; }
-				
+
 		while (index < max) {
 			ret[index] = callback(array[index], index);
 			index += 1;
 		}
-		
+
 		return ret;
 	}
-	
+
 	// pluck
 	function pluck(array, prop) {
 		return map(array, function (item) {
 			return item[prop];
 		});
 	}
-	
+
 	// compact
 	function compact(array) {
 		var ret = [];
-		
+
 		each(array, function (item) {
 			if (item) { ret.push(item); }
 		});
-		
+
 		return ret;
 	}
-	
+
 	// unique
 	function unique(array) {
 		var ret = [];
-		
+
 		each(array, function (_a) {
 			if (!find(ret, _a)) { ret.push(_a); }
 		});
-		
+
 		return ret;
 	}
-	
+
 	// intersection
 	function intersection(a, b) {
 		var ret = [];
-		
+
 		each(a, function (_a) {
 			each(b, function (_b) {
 				if (_a === _b) { ret.push(_a); }
 			});
 		});
-		
+
 		return unique(ret);
 	}
-	
+
 	// rest
 	function rest(array, callback) {
 		var ret = [];
-		
+
 		each(array, function (item, index) {
 			if (!callback(item)) {
 				ret = array.slice(index);
 				return false;
 			}
 		});
-		
+
 		return ret;
 	}
 
 	// initial
 	function initial(array, callback) {
 		var reversed = array.slice().reverse();
-		
+
 		return rest(reversed, callback).reverse();
 	}
-	
+
 	// extend
 	function extend(a, b) {
 		for (var key in b) {
 			if (b.hasOwnProperty(key)) { a[key] = b[key]; }
 		}
-		
+
 		return a;
 	}
-			
+
 	// define internal moment reference
 	var moment;
 
 	if (typeof require === "function") {
-		try { moment = require('moment'); } 
+		try { moment = require('moment'); }
 		catch (e) {}
-	} 
-	
+	}
+
 	if (!moment && root.moment) {
 		moment = root.moment;
 	}
-	
+
 	if (!moment) {
 		throw "Moment Duration Format cannot find Moment.js";
 	}
-	
+
 	// moment.duration.format([template] [, precision] [, settings])
 	moment.duration.fn.format = function () {
 
@@ -23166,7 +23176,7 @@ return fo;
 			// update remainder
 			remainder.subtract(wholeValue, momentType);
 		});
-	
+
 		// trim tokens array
 		if (settings.trim) {
 			tokens = (settings.trim === "left" ? rest : initial)(tokens, function (token) {
@@ -23176,8 +23186,8 @@ return fo;
 				return !(token.isLeast || (token.type != null && token.wholeValue));
 			});
 		}
-		
-		
+
+
 		// build output
 
 		// the first moment token can have special handling
@@ -23203,7 +23213,7 @@ return fo;
 			} else {
 				val = token.wholeValue.toString();
 			}
-			
+
 			// remove negative sign from the beginning
 			val = val.replace(/^\-/, "");
 
@@ -23220,20 +23230,20 @@ return fo;
 					case 1:
 						val += "." + padZero(decVal[0], settings.precision, true).slice(0, settings.precision);
 						break;
-						
+
 					case 2:
-						val += "." + padZero(decVal[1], settings.precision, true).slice(0, settings.precision);		
+						val += "." + padZero(decVal[1], settings.precision, true).slice(0, settings.precision);
 						break;
-						
+
 					case 3:
-						val += "." + padZero(repeatZero((+decVal[2]) - 1) + (decVal[0] || "0") + decVal[1], settings.precision, true).slice(0, settings.precision);		
+						val += "." + padZero(repeatZero((+decVal[2]) - 1) + (decVal[0] || "0") + decVal[1], settings.precision, true).slice(0, settings.precision);
 						break;
-					
+
 					default:
 						throw "Moment Duration Format: unable to parse token decimal value.";
 				}
 			}
-			
+
 			// add a negative sign if the value is negative and token is most significant
 			if (token.isMost && token.value < 0) {
 				val = "-" + val;
@@ -23336,7 +23346,7 @@ return fo;
 
     var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
     var maxValues = [24, 60, 60, 1000];
-    
+
     // Capitalize first letter
     key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
@@ -23382,7 +23392,7 @@ return fo;
 }).call(this);
 ;
 //! moment-timezone.js
-//! version : 0.5.13
+//! version : 0.5.14
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -23407,7 +23417,7 @@ return fo;
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.13",
+	var VERSION = "0.5.14",
 		zones = {},
 		links = {},
 		names = {},
@@ -23575,6 +23585,11 @@ return fo;
 		},
 
 		offset : function (mom) {
+			logError("zone.offset has been deprecated in favor of zone.utcOffset");
+			return this.offsets[this._index(mom)];
+		},
+
+		utcOffset : function (mom) {
 			return this.offsets[this._index(mom)];
 		}
 	};
@@ -23614,7 +23629,7 @@ return fo;
 	}
 
 	ZoneScore.prototype.scoreOffsetAt = function (offsetAt) {
-		this.offsetScore += Math.abs(this.zone.offset(offsetAt.at) - offsetAt.offset);
+		this.offsetScore += Math.abs(this.zone.utcOffset(offsetAt.at) - offsetAt.offset);
 		if (this.zone.abbr(offsetAt.at).replace(/[^A-Z]/g, '') !== offsetAt.abbr) {
 			this.abbrScore++;
 		}
@@ -23708,7 +23723,7 @@ return fo;
 		// use Intl API when available and returning valid time zone
 		try {
 			var intlName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-			if (intlName){
+			if (intlName && intlName.length > 3) {
 				var name = names[normalizeName(intlName)];
 				if (name) {
 					return name;
@@ -23766,9 +23781,7 @@ return fo;
 			normalized = normalizeName(name);
 			zones[normalized] = packed[i];
 			names[normalized] = name;
-			if (split[5]) {
-				addToGuesses(normalized, split[2].split(' '));
-			}
+			addToGuesses(normalized, split[2].split(' '));
 		}
 	}
 
@@ -23847,7 +23860,8 @@ return fo;
 	}
 
 	function needsOffset (m) {
-		return !!(m._a && (m._tzm === undefined));
+		var isUnixTimestamp = (m._f === 'X' || m._f === 'x');
+		return !!(m._a && (m._tzm === undefined) && !isUnixTimestamp);
 	}
 
 	function logError (message) {
@@ -23916,7 +23930,7 @@ return fo;
 			mom._z = zone;
 		}
 		if (mom._z) {
-			offset = mom._z.offset(mom);
+			offset = mom._z.utcOffset(mom);
 			if (Math.abs(offset) < 16) {
 				offset = offset / 60;
 			}
@@ -23928,11 +23942,11 @@ return fo;
 		}
 	};
 
-	fn.tz = function (name) {
+	fn.tz = function (name, keepTime) {
 		if (name) {
 			this._z = getZone(name);
 			if (this._z) {
-				moment.updateOffset(this);
+				moment.updateOffset(this, keepTime);
 			} else {
 				logError("Moment Timezone has no data for " + name + ". See http://momentjs.com/timezone/docs/#/data-loading/.");
 			}
@@ -23979,10 +23993,10 @@ return fo;
 	}
 
 	loadData({
-		"version": "2017b",
+		"version": "2017c",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
-			"Africa/Khartoum|EAT|-30|0||51e5",
+			"Africa/Nairobi|EAT|-30|0||47e5",
 			"Africa/Algiers|CET|-10|0||26e5",
 			"Africa/Lagos|WAT|-10|0||17e6",
 			"Africa/Maputo|CAT|-20|0||26e5",
@@ -23990,8 +24004,9 @@ return fo;
 			"Africa/Casablanca|WET WEST|0 -10|0101010101010101010101010101010101010101010|1H3C0 wM0 co0 go0 1o00 s00 dA0 vc0 11A0 A00 e00 y00 11A0 uM0 e00 Dc0 11A0 s00 e00 IM0 WM0 mo0 gM0 LA0 WM0 jA0 e00 Rc0 11A0 e00 e00 U00 11A0 8o0 e00 11A0 11A0 5A0 e00 17c0 1fA0 1a00|32e5",
 			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|11e6",
 			"Africa/Johannesburg|SAST|-20|0||84e5",
+			"Africa/Khartoum|EAT CAT|-30 -20|01|1Usl0|51e5",
 			"Africa/Tripoli|EET CET CEST|-20 -10 -20|0120|1IlA0 TA0 1o00|11e5",
-			"Africa/Windhoek|WAST WAT|-20 -10|01010101010101010101010|1GQo0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0|32e4",
+			"Africa/Windhoek|WAST WAT CAT|-20 -10 -20|0101010101012|1GQo0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0|32e4",
 			"America/Adak|HST HDT|a0 90|01010101010101010101010|1GIc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|326",
 			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1GIb0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|30e4",
 			"America/Santo_Domingo|AST|40|0||29e5",
@@ -24017,7 +24032,7 @@ return fo;
 			"America/Fort_Nelson|PST PDT MST|80 70 70|01010102|1GIa0 1zb0 Op0 1zb0 Op0 1zb0 Op0|39e2",
 			"America/Halifax|AST ADT|40 30|01010101010101010101010|1GI60 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|39e4",
 			"America/Godthab|-03 -02|30 20|01010101010101010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|17e3",
-			"America/Grand_Turk|EST EDT AST|50 40 40|010101012|1GI70 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|37e2",
+			"America/Grand_Turk|EST EDT AST|50 40 40|0101010121010101010|1GI70 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 5Ip0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|37e2",
 			"America/Havana|CST CDT|50 40|01010101010101010101010|1GQt0 1qM0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0|21e5",
 			"America/Metlakatla|PST AKST AKDT|80 90 80|0121212121212121|1PAa0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|14e2",
 			"America/Miquelon|-03 -02|30 20|01010101010101010101010|1GI50 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|61e2",
@@ -24053,7 +24068,7 @@ return fo;
 			"Asia/Damascus|EET EEST|-20 -30|01010101010101010101010|1GPy0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|26e5",
 			"Asia/Dili|+09|-90|0||19e4",
 			"Asia/Dubai|+04|-40|0||39e5",
-			"Asia/Famagusta|EET EEST +03|-20 -30 -30|01010101012|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 15U0",
+			"Asia/Famagusta|EET EEST +03|-20 -30 -30|0101010101201010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 15U0 2Ks0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0",
 			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1GPy0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1220 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|18e5",
 			"Asia/Hong_Kong|HKT|-80|0||73e5",
 			"Asia/Hovd|+07 +08|-70 -80|01010|1O8H0 1cJ0 1cP0 1cJ0|81e3",
@@ -24119,12 +24134,12 @@ return fo;
 			"Pacific/Chatham|+1345 +1245|-dJ -cJ|01010101010101010101010|1GQe0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00|600",
 			"Pacific/Apia|+14 +13|-e0 -d0|01010101010101010101010|1GQe0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00|37e3",
 			"Pacific/Bougainville|+10 +11|-a0 -b0|01|1NwE0|18e4",
-			"Pacific/Fiji|+13 +12|-d0 -c0|01010101010101010101010|1Goe0 1Nc0 Ao0 1Q00 xz0 1SN0 uM0 1SM0 uM0 1VA0 s00 1VA0 uM0 1SM0 uM0 1SM0 uM0 1SM0 uM0 1VA0 s00 1VA0|88e4",
+			"Pacific/Fiji|+13 +12|-d0 -c0|01010101010101010101010|1Goe0 1Nc0 Ao0 1Q00 xz0 1SN0 uM0 1SM0 uM0 1VA0 s00 1VA0 s00 1VA0 uM0 1SM0 uM0 1SM0 uM0 1VA0 s00 1VA0|88e4",
 			"Pacific/Guam|ChST|-a0|0||17e4",
 			"Pacific/Marquesas|-0930|9u|0||86e2",
 			"Pacific/Pago_Pago|SST|b0|0||37e2",
 			"Pacific/Norfolk|+1130 +11|-bu -b0|01|1PoCu|25e4",
-			"Pacific/Tongatapu|+13 +14|-d0 -e0|01010101010101|1S4d0 s00 1VA0 uM0 1SM0 uM0 1SM0 uM0 1SM0 uM0 1VA0 s00 1VA0|75e3"
+			"Pacific/Tongatapu|+13 +14|-d0 -e0|010|1S4d0 s00|75e3"
 		],
 		"links": [
 			"Africa/Abidjan|Africa/Accra",
@@ -24159,18 +24174,6 @@ return fo;
 			"Africa/Casablanca|Africa/El_Aaiun",
 			"Africa/Johannesburg|Africa/Maseru",
 			"Africa/Johannesburg|Africa/Mbabane",
-			"Africa/Khartoum|Africa/Addis_Ababa",
-			"Africa/Khartoum|Africa/Asmara",
-			"Africa/Khartoum|Africa/Asmera",
-			"Africa/Khartoum|Africa/Dar_es_Salaam",
-			"Africa/Khartoum|Africa/Djibouti",
-			"Africa/Khartoum|Africa/Juba",
-			"Africa/Khartoum|Africa/Kampala",
-			"Africa/Khartoum|Africa/Mogadishu",
-			"Africa/Khartoum|Africa/Nairobi",
-			"Africa/Khartoum|Indian/Antananarivo",
-			"Africa/Khartoum|Indian/Comoro",
-			"Africa/Khartoum|Indian/Mayotte",
 			"Africa/Lagos|Africa/Bangui",
 			"Africa/Lagos|Africa/Brazzaville",
 			"Africa/Lagos|Africa/Douala",
@@ -24188,6 +24191,17 @@ return fo;
 			"Africa/Maputo|Africa/Kigali",
 			"Africa/Maputo|Africa/Lubumbashi",
 			"Africa/Maputo|Africa/Lusaka",
+			"Africa/Nairobi|Africa/Addis_Ababa",
+			"Africa/Nairobi|Africa/Asmara",
+			"Africa/Nairobi|Africa/Asmera",
+			"Africa/Nairobi|Africa/Dar_es_Salaam",
+			"Africa/Nairobi|Africa/Djibouti",
+			"Africa/Nairobi|Africa/Juba",
+			"Africa/Nairobi|Africa/Kampala",
+			"Africa/Nairobi|Africa/Mogadishu",
+			"Africa/Nairobi|Indian/Antananarivo",
+			"Africa/Nairobi|Indian/Comoro",
+			"Africa/Nairobi|Indian/Mayotte",
 			"Africa/Tripoli|Libya",
 			"America/Adak|America/Atka",
 			"America/Adak|US/Aleutian",
@@ -24289,7 +24303,6 @@ return fo;
 			"America/Managua|America/Regina",
 			"America/Managua|America/Swift_Current",
 			"America/Managua|America/Tegucigalpa",
-			"America/Managua|Canada/East-Saskatchewan",
 			"America/Managua|Canada/Saskatchewan",
 			"America/Mexico_City|America/Bahia_Banderas",
 			"America/Mexico_City|America/Merida",
@@ -24585,7 +24598,7 @@ return fo;
 
 ;
 /****************************************************************************
-    moment-simple-format.js, 
+    moment-simple-format.js,
 
     (c) 2016, FCOO
 
@@ -24596,13 +24609,13 @@ return fo;
 
 (function (moment, $ /*, window, document, undefined*/) {
     "use strict";
- 
+
     /***********************************************************
     dateFormatList = array[0..dateFormats-1] of {DMY: [String], MDY: [String], YMD: [String]}
     List of different format-strings in tree different sequence
     ***********************************************************/
     var dateFormatList = [],
-        w, m, y, 
+        w, m, y,
         wFormat, mFormat, backslash, yFormat, dateFormat;
     for (w in {F:'', S:'', N:''})
         for (m in {F:'', S:'', D:''})
@@ -24611,8 +24624,8 @@ return fo;
                 wFormat = w == 'F' ? 'dddd, ' : w == 'S' ? 'ddd, ' : '';
                 mFormat = m == 'F' ? 'MMMM'   : m == 'S' ? 'MMM'   : 'MM';
                 yFormat = y == 'F' ? 'YYYY'   : y == 'S' ? 'YY'    : '';
-                backslash = mFormat == 'MM'; 
-                
+                backslash = mFormat == 'MM';
+
                 dateFormat.DMY = wFormat + 'DD' + (backslash ? '/' : '. ') + mFormat + (yFormat ? (backslash ? '/' : ' ') + yFormat : '');
                 dateFormat.MDY = wFormat + mFormat + (backslash ? '/' : ' ') + 'DD' + (yFormat ? (backslash ? '/' : ', ') + yFormat : '');
                 dateFormat.YMD = wFormat + (yFormat ? yFormat + (backslash ? '/' : ' ') : '') + mFormat + (backslash ? '/' : ' ') + 'DD';
@@ -24621,8 +24634,8 @@ return fo;
             }
     //Special case: NNN
     dateFormatList.push( { code:'NNN', DMY: 'DD', MDY: 'DD', YMD: 'DD'} );
-    
-    /* 'Handmade' version to see the principle 
+
+    /* 'Handmade' version to see the principle
         { code:'FFF', DMY: 'dddd, DD. MMMM YYYY', MDY: 'dddd, MMMM DD, YYYY', YMD: 'dddd, YYYY MMMM DD' },    //Monday, 24. December 2015 | Monday, December 24, 2015 | Monday, 2015 December 24
         { code:'SFF', DMY: 'ddd, DD. MMMM YYYY' , MDY: 'ddd, MMMM DD, YYYY' , YMD: 'ddd, YYYY MMMM DD'  },    //Mon, 24. December 2015    | Monday, December 24, 2015 | Mon, 2015 December 24
         { code:'SSF', DMY: 'ddd, DD. MMM YYYY'  , MDY: 'ddd, MMM DD, YYYY'  , YMD: 'ddd, YYYY MMM DD'   },    //Mon, 24. Dec 2015         | Mon Dec 24, 2015          | Mon 2015 Dec 24
@@ -24641,13 +24654,13 @@ return fo;
             timezone      : 'local',
             date          : 'DMY',
             dateFormat    : {
-                weekday: 'None', 
-                month  : 'Short', 
+                weekday: 'None',
+                month  : 'Short',
                 year   : 'Full'
             },
             relativeFormat: {
-                now    : true, 
-                days   : false, 
+                now    : true,
+                days   : false,
                 hours  : true,
                 minutes: true
             },
@@ -24672,20 +24685,20 @@ return fo;
             relativeFormat: ''
         };
 
-    
+
 
     function options2code( options ){
         //Convert the format of dastes in options to a tree-char code
         function convert( singleOption ){
             singleOption = singleOption.toUpperCase();
             return singleOption == 'FULL'    ? 'F' :
-                   singleOption == 'SHORT'   ? 'S' : 
-                   singleOption == 'DIGITAL' ? 'D' : 
-                   singleOption == 'NONE'    ? 'N' : 
+                   singleOption == 'SHORT'   ? 'S' :
+                   singleOption == 'DIGITAL' ? 'D' :
+                   singleOption == 'NONE'    ? 'N' :
                                    singleOption;
-        } 
+        }
         return convert( options.dateFormat.weekday ) + convert( options.dateFormat.month ) + convert( options.dateFormat.year );
-    }            
+    }
 
     //Global const, var, and methods
 
@@ -24693,7 +24706,7 @@ return fo;
     moment.sfGetOptions
     Return the current options optional merged with `options`
     ********************************************************************/
-    moment.sfGetOptions = function( options ){ 
+    moment.sfGetOptions = function( options ){
         return $.extend( true, {}, namespace.options, options );
     };
 
@@ -24701,12 +24714,12 @@ return fo;
     moment.sfGetDateFormat
     Return the current moment date format based on current options optional merged with `options`
     ********************************************************************/
-    moment.sfGetDateFormat = function( options ){ 
+    moment.sfGetDateFormat = function( options ){
         options = $.extend( true, {}, namespace.options, options );
         var i, code = options2code( options );
         for (i=0; i<dateFormatList.length; i++ )
             if (dateFormatList[i].code == code)
-              return dateFormatList[i][ options.date ]; 
+              return dateFormatList[i][ options.date ];
         return '';
     };
 
@@ -24714,7 +24727,7 @@ return fo;
     moment.sfGetTimeFormat
     Return the current moment time format based on current options optional merged with `options`
     ********************************************************************/
-    moment.sfGetTimeFormat = function( options ){ 
+    moment.sfGetTimeFormat = function( options ){
         options = $.extend( true, {}, namespace.options, options );
         return parseInt(options.time) == 24 ? 'HH:mm' : 'hh:mma';
     };
@@ -24723,7 +24736,7 @@ return fo;
     moment.sfGetHourFormat
     Return the current moment hour format based on current options optional merged with `options`
     ********************************************************************/
-    moment.sfGetHourFormat = function( options ){ 
+    moment.sfGetHourFormat = function( options ){
         options = $.extend( true, {}, namespace.options, options );
         return parseInt(options.time) == 24 ? 'HH' : 'hha';
     };
@@ -24732,7 +24745,7 @@ return fo;
     moment.sfGetTimezone
     Return the current timezone record moment or the timezone record withid = `id`
     ********************************************************************/
-    moment.sfGetTimezone = function( id ){     
+    moment.sfGetTimezone = function( id ){
         id = id || namespace.options.timezone;
         for (var i=0; i<namespace.timezoneList.length; i++ )
             if (namespace.timezoneList[i].id == id)
@@ -24743,21 +24756,21 @@ return fo;
     /*******************************************************************
     moment.sfGetRelativeFormat
     ********************************************************************/
-    moment.sfGetRelativeFormat = function( options ){ 
+    moment.sfGetRelativeFormat = function( options ){
         options = $.extend( true, {}, namespace.options, options );
         var opt_relativeFormat = options.relativeFormat,
             opt_text           = options.text;
 
-        return (opt_relativeFormat.days    ? 'd['  + opt_text.dayAbbr  + ']' : '') + 
+        return (opt_relativeFormat.days    ? 'd['  + opt_text.dayAbbr  + ']' : '') +
                (opt_relativeFormat.hours   ? 'h['  + opt_text.hourAbbr + ']' : '') +
                (opt_relativeFormat.minutes ? 'mm[' + opt_text.minAbbr  + ']' : '');
     };
-    
+
     /*******************************************************************
     moment.sfSetFormat
-    Set the `options`   
+    Set the `options`
     ********************************************************************/
-    moment.sfSetFormat = function( options ){ 
+    moment.sfSetFormat = function( options ){
         $.extend( true, namespace.options, options );
         namespace.code = options2code( namespace.options );
 
@@ -24770,9 +24783,9 @@ return fo;
         if (namespace.onSetFormatList)
           for (var i=0; i<namespace.onSetFormatList.length; i++ )
             namespace.onSetFormatList[i]( namespace.options );
-          
+
     };
-    
+
     /*******************************************************************
     moment.sfOnSetFormat
     Add `func = function( options )` to be called after `moment.sfSetFormat( options )` is called
@@ -24792,36 +24805,36 @@ return fo;
     All the timezones are in `moment.simpleFormat.timezoneList //[]`
     ********************************************************************/
         /*******************************************************************
-        timezoneUpdate( name, offsetMoment )
-        Update fullname with optional new value of name and/or offsetMoment
+        timezoneUpdate( name, utcOffsetMoment )
+        Update fullname with optional new value of name and/or utcOffsetMoment
         ********************************************************************/
-        function timezoneUpdate( name, offsetMoment ){
+        function timezoneUpdate( name, utcOffsetMoment ){
             this.name = name || this.name || this.id;
-            this.offsetMoment = offsetMoment || this.offsetMoment || moment();
-            var offset = 0; 
+            this.utcOffsetMoment = utcOffsetMoment || this.utcOffsetMoment || moment();
+            var utcOffset = 0;
             switch (this.id){
-                case 'local': offset = (new Date()).getTimezoneOffset();    break;
-                case 'utc'  : offset = null; break;
-                default     : offset = window.moment.tz.zone(this.id).offset( this.offsetMoment ); break;
+                case 'local': utcOffset = (new Date()).getTimezoneOffset();    break;
+                case 'utc'  : utcOffset = null; break;
+                default     : utcOffset = window.moment.tz.zone(this.id).utcOffset( this.utcOffsetMoment ); break;
             }
-            this.offset = offset;                      
+            this.utcOffset = utcOffset;
             this.fullName = this.name;
-            if (offset !== null){
-                this.fullName += ' (UTC' + (offset<=0?'+':'-');
-                offset = Math.abs(offset);        
-                var h = Math.floor(offset / 60),
-                    m = offset % 60;
+            if (utcOffset !== null){
+                this.fullName += ' (UTC' + (utcOffset<=0?'+':'-');
+                utcOffset = Math.abs(utcOffset);
+                var h = Math.floor(utcOffset / 60),
+                    m = utcOffset % 60;
                 this.fullName += (h<10?'0':'') + h + ':' + (m<10?'0':'') + m + ')';
             }
         }
-    
-    moment.sfAddTimezone = function( options, offsetMoment ){ 
+
+    moment.sfAddTimezone = function( options, utcOffsetMoment ){
         var THIS = this;
         if ($.isArray( options ))
-            $.each( options, function( index, opt ){ THIS.sfAddTimezone( opt, offsetMoment ); } );
-        else { 
+            $.each( options, function( index, opt ){ THIS.sfAddTimezone( opt, utcOffsetMoment ); } );
+        else {
             options.update = timezoneUpdate;
-            options.update( null, offsetMoment );
+            options.update( null, utcOffsetMoment );
             namespace.timezoneList.push(options);
         }
     };
@@ -24830,7 +24843,7 @@ return fo;
 
     /*******************************************************************
     moment.sfDateFormatList
-    Return a array of available formats. 
+    Return a array of available formats.
     includeCodeFunc = function( code ): optional - return true or false to include or exclude a format with code from the list
     ********************************************************************/
     moment.sfDateFormatList = function( includeCodeFunc ){
@@ -24839,7 +24852,7 @@ return fo;
         for (i=0; i<dateFormatList.length; i++ ){
             dateFormat = dateFormatList[i];
             if (includeCodeFunc( dateFormat.code ) ){
-                result.push( dateFormat[ namespace.options.date ] );              
+                result.push( dateFormat[ namespace.options.date ] );
             }
         }
         return result;
@@ -24850,7 +24863,7 @@ return fo;
     Initialize the options and the list of time-zones
     Only need to be call if `options.text` is changed
     ********************************************************************/
-    moment.sfInit = function( options ){ 
+    moment.sfInit = function( options ){
         this.sfSetFormat( options );
 
         if (namespace.timezoneList.length){
@@ -24867,7 +24880,7 @@ return fo;
     };
 
     moment.sfInit();
-    
+
 
     //Moment.prototype.method == moment.fn.method
 
@@ -24875,7 +24888,7 @@ return fo;
     moment.fn.tzMoment
     Return the moment adjusted to `timezone` or the time-zone set with `moment.sfSetFormat`
     ********************************************************************/
-    moment.fn.tzMoment = function( timezone ) { 
+    moment.fn.tzMoment = function( timezone ) {
         timezone = timezone || namespace.options.timezone;
         if (timezone == 'local') return this.local();
         if (timezone == 'utc') return this.utc();
@@ -24904,7 +24917,7 @@ return fo;
     moment.fn.dateFormat
     Return a formatted date string. The format is given by `options` or the options set with `moment.sfSetFormat`
     ********************************************************************/
-    moment.fn.dateFormat = function( options ) { 
+    moment.fn.dateFormat = function( options ) {
         return this._sfAnyFormat( options, function(){
             return this.format( namespace.dateFormat );
         });
@@ -24914,7 +24927,7 @@ return fo;
     moment.fn.timeFormat
     Return a formatted time string. The format is given by `options` or the options set with `moment.sfSetFormat`
     ********************************************************************/
-    moment.fn.timeFormat = function( options ) { 
+    moment.fn.timeFormat = function( options ) {
         return this._sfAnyFormat( options, function(){
             return this.format( namespace.timeFormat );
         });
@@ -24924,7 +24937,7 @@ return fo;
     moment.fn.hourFormat
     Return a formatted hour string. The format is given by `options` or the options set with `moment.sfSetFormat`
     ********************************************************************/
-    moment.fn.hourFormat = function( options ) { 
+    moment.fn.hourFormat = function( options ) {
         return this._sfAnyFormat( options, function(){
             return this.format( namespace.hourFormat );
         });
@@ -24935,7 +24948,7 @@ return fo;
     moment.fn.dateTimeFormat
     Return a formatted date and time string. The format is given by `options` or the options set with `moment.sfSetFormat`
     ********************************************************************/
-    moment.fn.dateTimeFormat = function( options ) { 
+    moment.fn.dateTimeFormat = function( options ) {
         return this.dateFormat( options ) + ' ' + this.timeFormat( options );
     };
 
@@ -24943,7 +24956,7 @@ return fo;
     moment.fn.relativeFormat
     Return a relative time string. The format is given by `options` or the options set with `moment.sfSetFormat`
     ********************************************************************/
-    moment.fn.relativeFormat = function( options ) { 
+    moment.fn.relativeFormat = function( options ) {
         return this._sfAnyFormat( options, function(){
             var mom = moment( this ).round(1, 'minutes'),
                 now = moment().round(1, 'minutes'),
@@ -24965,7 +24978,7 @@ return fo;
 
 ;
 /****************************************************************************
-	fcoo-moment.js, 
+	fcoo-moment.js,
 
 	(c) 2016, FCOO
 
@@ -24976,7 +24989,7 @@ Set-up of common systems, objects, and methods for FCOO web applications use of 
 Sections:
 1: Translation for moment-simple-format
 2: Add time-zones and translation of there names
-4: 
+4:
 5: Define common Modernizr-tests used to display moment
 6: Load format for date, time and timezone from fcoo.settings
 
@@ -24984,7 +24997,7 @@ Sections:
 
 (function ($, moment, i18next, window/*, document, undefined*/) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
 
@@ -25006,7 +25019,7 @@ Sections:
 
 
     //Change language in moment and call sfInit when the language is changed
-    window.fcoo.events.on('languagechanged', function(){ 
+    window.fcoo.events.on('languagechanged', function(){
 
         //Special case: Norwegian (no) using "Bokmål" (nb)
         moment.locale(i18next.language == 'no' ? 'nb' : i18next.language);
@@ -25048,7 +25061,7 @@ Sections:
     );
 
     //Add the translation of the timezones incl. the two default id:'local' and id:'utc'
-    //Østgrønland (grønlandsk: "Tunu"), Vestgrønland (Grønlandsk: "Kitaa"), Nordgrønland (grønlandsk: "Avannaarsua") 
+    //Østgrønland (grønlandsk: "Tunu"), Vestgrønland (Grønlandsk: "Kitaa"), Nordgrønland (grønlandsk: "Avannaarsua")
     i18next.addPhrases( 'timezone', {
         'local'               : { en: 'Local time',                      da: 'Lokaltid'           },
         'utc'                 : { en: 'UTC',                             da: 'UTC'                },
@@ -25063,15 +25076,15 @@ Sections:
     });
 
     //Translate the names of the timezones when the language is changed
-    window.fcoo.events.on('languagechanged', function(){ 
+    window.fcoo.events.on('languagechanged', function(){
         $.each( moment.simpleFormat.timezoneList, function( index, timezone ){
             timezone.update( i18next.t('timezone:' + timezone.id) );
         });
-        
+
     });
 
 
-/*        
+/*
 Standard
     value="local" Local
     value="utc" UTC
@@ -25098,7 +25111,7 @@ Greenland
     ***********************************************************************/
 
     /* The following Modernizr-test are deffined in fcoo-moment.scss and are set in momentSimpleFormatSetFormat
-    showrelative: Show also the date/time as relative to now. Can be created using fcoo-value-format 
+    showrelative: Show also the date/time as relative to now. Can be created using fcoo-value-format
     showutc     : Show also the date/time in UTC
     timezoneutc : On when the selected time zone is UTC
 
@@ -25119,9 +25132,9 @@ Greenland
                         'timezone'          : window.fcoo.settings.get('timezone'),
                         '_fcoo_showrelative': window.fcoo.settings.get('showrelative'),
                         '_fcoo_showutc'     : window.fcoo.settings.get('showutc'),
-                    }, 
+                    },
                     options );
-        
+
         //Update moment-formats
         moment.sfSetFormat( options );
 
@@ -25136,54 +25149,54 @@ Greenland
 
     //Set up and load 'date', 'time', 'timezone', 'showrelative', and 'showutc'  via fcoo.settings
     window.fcoo.settings.add({
-        id          : 'date', 
+        id          : 'date',
         validator   : function( date ){ return $.inArray( date, ['DMY', 'MDY', 'YMD']) > -1; },
-        applyFunc   : function( date ){ momentSimpleFormatSetFormat({ 'date': date });       }, 
+        applyFunc   : function( date ){ momentSimpleFormatSetFormat({ 'date': date });       },
         defaultValue: 'DMY',
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'time', 
+        id          : 'time',
         validator   : function( time ){ return $.inArray( time, ['12', '24']) > -1;    },
-        applyFunc   : function( time ){ momentSimpleFormatSetFormat({ 'time': time }); }, 
+        applyFunc   : function( time ){ momentSimpleFormatSetFormat({ 'time': time }); },
         defaultValue: '24',
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'timezone', 
+        id          : 'timezone',
         validator   : function( timezone ){ return moment.sfGetTimezone( timezone ) !== null;      },
-        applyFunc   : function( timezone ){ momentSimpleFormatSetFormat({ 'timezone': timezone }); }, 
+        applyFunc   : function( timezone ){ momentSimpleFormatSetFormat({ 'timezone': timezone }); },
         defaultValue: 'local',
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'showrelative', 
+        id          : 'showrelative',
         validator   : function( showrelative ){ return jQuery.type( showrelative ) === "boolean";                    },
-        applyFunc   : function( showrelative ){ momentSimpleFormatSetFormat({ '_fcoo_showrelative': showrelative }); }, 
+        applyFunc   : function( showrelative ){ momentSimpleFormatSetFormat({ '_fcoo_showrelative': showrelative }); },
         defaultValue: false,
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'showutc', 
+        id          : 'showutc',
         validator   : function( showutc ){ return jQuery.type( showutc ) === "boolean";               },
-        applyFunc   : function( showutc ){ momentSimpleFormatSetFormat({ '_fcoo_showutc': showutc }); }, 
+        applyFunc   : function( showutc ){ momentSimpleFormatSetFormat({ '_fcoo_showutc': showutc }); },
         defaultValue: false,
         callApply   : false
     });
 
 
     //Also fire "datetimeformatchanged" when the language is changed
-    window.fcoo.events.on('languagechanged', momentSimpleFormatSetFormat); 
+    window.fcoo.events.on('languagechanged', momentSimpleFormatSetFormat);
 
 
     momentSimpleFormatSetFormat();
 
-    
+
     /******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
-	
+	$(function() {
+
 	}); //End of initialize/ready
 	//******************************************
 
@@ -25192,7 +25205,7 @@ Greenland
 }(jQuery, moment, i18next, this, document));
 ;
 /****************************************************************************
-    kl.js, 
+    kl.js,
 
     Translation of Moment text to Kalaallisut/Greenlandic (language code = kl)
 
@@ -25200,7 +25213,7 @@ Greenland
 
 moment.defineLocale('kl', {
     parentLocale: 'da',
-  
+
     /* TODO */
 
 
@@ -25209,7 +25222,7 @@ moment.defineLocale('kl', {
 
 ;
 /****************************************************************************
-	fcoo-number.js, 
+	fcoo-number.js,
 
 	(c) 2017, FCOO
 
@@ -25220,10 +25233,10 @@ moment.defineLocale('kl', {
 
 (function ($, window/*, document, undefined*/) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
     window.fcoo = window.fcoo || {};
-    var ns = window.fcoo; 
+    var ns = window.fcoo;
 
     //Options for the 6 posible formats. Placed in seperate namespace
 
@@ -25242,17 +25255,17 @@ moment.defineLocale('kl', {
         n = 1.1,
         s = n.toLocaleString(),
         defaultDelimiters = s.indexOf(',') > -1 ? 'NONE_COMMA' : 'NONE_DOT';
-    
+
     /***********************************************************
     Set up and load number-formats (delimiters) via fcoo.settings
     ***********************************************************/
     ns.settings.add({
-        id          : 'number', 
-        validator   : function( delimitersId ){ 
+        id          : 'number',
+        validator   : function( delimitersId ){
                           delimitersId = delimitersId ? delimitersId.toUpperCase() : null;
-                          return NumeralJsDelimiters[delimitersId] !== null;      
+                          return NumeralJsDelimiters[delimitersId] !== null;
                       },
-        applyFunc   : function( delimitersId ){ 
+        applyFunc   : function( delimitersId ){
                           delimitersId = delimitersId ? delimitersId.toUpperCase() : null;
                           var delimiters = NumeralJsDelimiters[delimitersId];
                           if (delimiters)
@@ -25260,7 +25273,7 @@ moment.defineLocale('kl', {
                                   options.delimiters.thousands = delimiters.thousands;
                                   options.delimiters.decimal   = delimiters.decimal;
                           });
-                      }, 
+                      },
         defaultValue: defaultDelimiters,
         callApply   : true,
         globalEvents: 'numberformatchanged'
@@ -25283,7 +25296,7 @@ moment.defineLocale('kl', {
                     output;
                 value = value / factor;
 
-                // check for space before 
+                // check for space before
                 format = format.replace(regExp2, '');
                 output = window.numeral._.numberToFormat(value, format, roundingFunction);
 
@@ -25335,7 +25348,7 @@ moment.defineLocale('kl', {
      'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
      'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn').split(',');
   while (prop = properties.pop()) if (!con[prop]) con[prop] = {};
-  while (method = methods.pop()) if (typeof con[method] !== 'function') con[method] = dummy;
+  while (method = methods.pop()) if (!con[method]) con[method] = dummy;
   // Using `this` for web workers & supports Browserify / Webpack.
 })(typeof window === 'undefined' ? this : window);
 
@@ -25360,7 +25373,7 @@ moment.defineLocale('kl', {
 
 ;
 /****************************************************************************
-	jquery-value-format.js, 
+	jquery-value-format.js,
 
 	(c) 2016, FCOO
 
@@ -25371,7 +25384,7 @@ moment.defineLocale('kl', {
 
 (function ($, window, document, undefined) {
 	"use strict";
-	
+
     var dataId_prefix  = 'vf-',
         dataId_format  = dataId_prefix + 'format',
         dataId_value   = dataId_prefix + 'value',
@@ -25385,13 +25398,13 @@ moment.defineLocale('kl', {
             convertBack: defaultConvert,
             format     : function( value /*, options */) { return '** UNKNOWN FORMAT FOR "' + value + '" **'; }
         };
-        
+
     //Create valueFormat-namespace
 	$.valueFormat = $.valueFormat || {};
 
     //*********************************************************************
     //jQuery.valueFormat.add = append a new format
-	$.valueFormat.add = function( options ){ 
+	$.valueFormat.add = function( options ){
         this.formats = this.formats || {};
 
         options.convert = options.convert || defaultConvert;
@@ -25415,7 +25428,7 @@ moment.defineLocale('kl', {
         return this;
     };
 
-   
+
     //*********************************************************************
     //jQuery.fn.vfFormat( id, options ): Sets the format of the selected elements and update them
 	$.fn.vfFormat = function( id, options, dontUpdate ) {
@@ -25464,15 +25477,15 @@ moment.defineLocale('kl', {
                  .vfFormat( id, options, true )
                  .vfValue( value );
     };
-    
+
     //*********************************************************************
-    //jQuery.fn.vfUpdate(): Update the selected elements 
+    //jQuery.fn.vfUpdate(): Update the selected elements
 	$.fn.vfUpdate = function() {
 		return this.each(function() {
             $( this )._vfUpdate();
 		});
 	};
-    
+
     //*********************************************************************
     //Internal methods
     //jQuery.fn._vfGetFormat()
@@ -25485,7 +25498,7 @@ moment.defineLocale('kl', {
     $.fn._vfGetOptions = function() {
         var options = this.data( dataId_options ) || {};
 
-        //Convert options (if any) from string to json-object 
+        //Convert options (if any) from string to json-object
         if (options && ($.type(options) == 'string') ){
             options = options.split("'").join('"');
             try {
@@ -25493,7 +25506,7 @@ moment.defineLocale('kl', {
                 if ($.type( newOptions ) == 'object')
                     options = newOptions;
             }
-            catch (e) { 
+            catch (e) {
                 options = null;
             }
         }
@@ -25515,7 +25528,7 @@ moment.defineLocale('kl', {
 
             if (options.capitalizeFirstLetter)
                 value = value.charAt(0).toUpperCase() + value.slice(1);
-            
+
             //prefix, postfix
             value = (options.prefix ? options.prefix : '') + value + (options.postfix ? options.postfix : '');
 
@@ -25526,12 +25539,12 @@ moment.defineLocale('kl', {
 
 
 	/******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
+	$(function() {
 
-	
-	}); 
+
+	});
 	//******************************************
 
 
@@ -39181,7 +39194,7 @@ exports.map = createMap;
 
 ;
 /****************************************************************************
-	fcoo-value-format.js, 
+	fcoo-value-format.js,
 
 	(c) 2017, FCOO
 
@@ -39192,10 +39205,10 @@ exports.map = createMap;
 
 (function ($, window, document, undefined) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
-	var ns = window.fcoo; 
+	var ns = window.fcoo;
 
     /***************************************************************************
     Updating formats on global events
@@ -39218,7 +39231,7 @@ exports.map = createMap;
 
     function addFormat( options ){
         $.valueFormat.add( options );
-        formatIdList.push( options.id );          
+        formatIdList.push( options.id );
     }
 
 
@@ -39235,21 +39248,21 @@ exports.map = createMap;
         return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
     }
 
-    function convertNumber( value ){ 
+    function convertNumber( value ){
         return $.isNumeric( value ) ? value : parseFloat( value );
-    } 
+    }
 
     function formatNumber( value, options ){
         var decimals = getDecimals( options ),
             format = options.format ? options.format : '0,0[.]' + (decimals ? Array(decimals+1).join('0') : '');
         return window.numeral( value ).format ( format );
-    } 
+    }
 
     /*************************************
     formatId = number
     *************************************/
-    addFormat({ 
-        id     : 'number', 
+    addFormat({
+        id     : 'number',
         format : function( value, options ){ return formatNumber( value, options ); },
         convert: convertNumber
     });
@@ -39257,22 +39270,22 @@ exports.map = createMap;
     /*************************************
     formatId = distance
     *************************************/
-    addFormat({ 
-        id     : 'distance', 
-        format : function( value, options ){ 
+    addFormat({
+        id     : 'distance',
+        format : function( value, options ){
             var factor = 1,
                 unitStr = ' m';
             switch (options.unit){
               case 'nm': factor = 1862; unitStr = ' nm';break;
               case 'km': factor = 1000; unitStr = ' km';break;
             }
-            
+
             value = round( value/factor, getDecimals( options ) );
-            return formatNumber( value, options) + unitStr; 
+            return formatNumber( value, options) + unitStr;
         },
         convert: convertNumber
     });
-    
+
     /*************************************
     LATLNG
     *************************************/
@@ -39291,40 +39304,40 @@ exports.map = createMap;
     /*************************************
     formatId = latlng
     *************************************/
-    addFormat({ 
+    addFormat({
         id: 'latlng',
-        format : function( latLng, options ){ 
+        format : function( latLng, options ){
             return latLng.format().join(options.separator ? options.separator : '&nbsp;');
-         }, 
-         convert: convertLatLng 
-     });    
+         },
+         convert: convertLatLng
+     });
 
-    
-    
+
+
     /*************************************
     DATE AND TIME (MOMENT)
     *************************************/
     setGlobalEvent( 'datetimeformatchanged' );
 
-    //Since changing language using moment.locale(...) do not change allready created moment-object 
+    //Since changing language using moment.locale(...) do not change allready created moment-object
     //the moment are saved as a Date-object or as moment and 're-constructed' when the display is updated
-    function convertMoment( m, options ){ 
+    function convertMoment( m, options ){
         if ((m === undefined) || (m == null))
-            m = moment();          
+            m = moment();
         else
             if (jQuery.type( m ) === "string")
-                m = moment( m );              
+                m = moment( m );
 
-        return options.saveAsMoment ? m : m.toDate();     
+        return options.saveAsMoment ? m : m.toDate();
     }
-    
-    function convertBackMoment( m, options ){ 
+
+    function convertBackMoment( m, options ){
         m = m ? m : moment();
-        return moment( options.saveAsMoment ? m.toDate() : m ); 
+        return moment( options.saveAsMoment ? m.toDate() : m );
     }
 
     function addMomentFormat(id, formatFunc ){
-        addFormat({id: id, format: formatFunc, convert: convertMoment, convertBack: convertBackMoment });    
+        addFormat({id: id, format: formatFunc, convert: convertMoment, convertBack: convertBackMoment });
     }
 
 
@@ -39332,12 +39345,14 @@ exports.map = createMap;
     formatId = time, hour
     Time/hour in current timezone
     *************************************/
-    addMomentFormat( 'time',     function( m ){ return m.tzMoment().timeFormat(); } );    
-    addMomentFormat( 'hour',     function( m ){ return m.tzMoment().hourFormat(); } );    
-    addMomentFormat( 'time_utc', function( m ){ return m.utc().timeFormat();      } );    
-    addMomentFormat( 'hour_utc', function( m ){ return m.utc().hourFormat();      } );    
+    addMomentFormat( 'time',        function( m ){ return m.tzMoment().timeFormat(); } );
+    addMomentFormat( 'hour',        function( m ){ return m.tzMoment().hourFormat(); } );
+    addMomentFormat( 'time_utc',    function( m ){ return m.utc().timeFormat();      } );
+    addMomentFormat( 'hour_utc',    function( m ){ return m.utc().hourFormat();      } );
+    addMomentFormat( 'time_local',  function( m ){ return m.local().timeFormat();    } );
+    addMomentFormat( 'hour_local',  function( m ){ return m.local().hourFormat();    } );
 
-   
+
     /*************************************
     formatId = timezone, timezone_full
     *************************************/
@@ -39346,34 +39361,40 @@ exports.map = createMap;
             timezoneFormat = options.showTimezone || 'NONE';
         timezoneFormat = timezoneFormat.toUpperCase();
         timezoneFormat = timezoneFormat == 'FULL'  ? 'F' :
-                         timezoneFormat == 'SHORT' ? 'S' : 
-                         timezoneFormat == 'NONE'  ? 'N' : 
+                         timezoneFormat == 'SHORT' ? 'S' :
+                         timezoneFormat == 'NONE'  ? 'N' :
                          timezoneFormat;
 
         switch (timezoneFormat){
           case 'S': timezoneText = moment.simpleFormat.timezone.name; break;
           case 'F': timezoneText = moment.simpleFormat.timezone.fullName; break;
         }
-        
+
         if (timezoneText && options.inclParenthesis)
-            timezoneText = '(' + timezoneText + ')';        
+            timezoneText = '(' + timezoneText + ')';
         return timezoneText;
-    }   
-            
-    addFormat({ id: 'timezone',      format: function( dummy, options  ){ return  timezoneFormat( {showTimezone:'SHORT', inclParenthesis: options.inclParenthesis} );  } });    
-    addFormat({ id: 'timezone_full', format: function( dummy, options  ){ return  timezoneFormat( {showTimezone:'FULL',  inclParenthesis: options.inclParenthesis} );  } });    
+    }
+
+    addFormat({ id: 'timezone',      format: function( dummy, options  ){ return  timezoneFormat( {showTimezone:'SHORT', inclParenthesis: options.inclParenthesis} );  } });
+    addFormat({ id: 'timezone_full', format: function( dummy, options  ){ return  timezoneFormat( {showTimezone:'FULL',  inclParenthesis: options.inclParenthesis} );  } });
 
 
     /*************************************
     formatId = date[_XX], datetime[_XX]
     *************************************/
-    function momentFormat( m, options, dateFormat, datetime, utc ){
+    function momentFormat( m, options, dateFormat, datetime, tz ){
         options = options || {};
         if (dateFormat)
             options.dateFormat = dateFormat;
         var formatFunc = datetime ? moment.fn.dateTimeFormat : moment.fn.dateFormat,
             timezoneText = timezoneFormat( options );
-        return formatFunc.call( utc ? m.utc() : m.tzMoment(), options ) + (timezoneText ? '&nbsp;'+timezoneText : '');    
+        return formatFunc.call(
+                    tz == 'utc'   ? m.utc() :
+                    tz == 'local' ? m.local() :
+                                    m.tzMoment(),
+                    options
+                ) +
+                (timezoneText ? '&nbsp;'+timezoneText : '');
     }
 
     //Format: 'FULL', 'SHORT', 'DIGITAL', 'NONE'
@@ -39381,26 +39402,35 @@ exports.map = createMap;
         dateLongFormat    = { weekday: 'Full',  month: 'Full',    year: 'Full' },
         dateShortFormat   = { weekday: 'None',  month: 'Digital', year: 'Short' };
 
-    addMomentFormat( 'date',                function( m, options ){ return momentFormat( m, options, dateDefaultFormat ); } );
-    addMomentFormat( 'date_long',           function( m, options ){ return momentFormat( m, options, dateLongFormat    ); } );
-    addMomentFormat( 'date_short',          function( m, options ){ return momentFormat( m, options, dateShortFormat   ); } );
-    addMomentFormat( 'date_format',         function( m, options ){ return momentFormat( m, options                    ); } );
+    addMomentFormat( 'date',                  function( m, options ){ return momentFormat( m, options, dateDefaultFormat ); } );
+    addMomentFormat( 'date_long',             function( m, options ){ return momentFormat( m, options, dateLongFormat    ); } );
+    addMomentFormat( 'date_short',            function( m, options ){ return momentFormat( m, options, dateShortFormat   ); } );
+    addMomentFormat( 'date_format',           function( m, options ){ return momentFormat( m, options                    ); } );
 
-    addMomentFormat( 'date_utc',            function( m, options ){ return momentFormat( m, options, dateDefaultFormat, false, true ); } );
-    addMomentFormat( 'date_long_utc',       function( m, options ){ return momentFormat( m, options, dateLongFormat,    false, true ); } );
-    addMomentFormat( 'date_short_utc',      function( m, options ){ return momentFormat( m, options, dateShortFormat,   false, true ); } );
-    addMomentFormat( 'date_format_utc',     function( m, options ){ return momentFormat( m, options, null,              false, true ); } );
-    
-    addMomentFormat( 'datetime',            function( m, options ){ return momentFormat( m, options, dateDefaultFormat, true       ); } );
-    addMomentFormat( 'datetime_long',       function( m, options ){ return momentFormat( m, options, dateLongFormat,    true       ); } );
-    addMomentFormat( 'datetime_short',      function( m, options ){ return momentFormat( m, options, dateShortFormat,   true       ); } );
-    addMomentFormat( 'datetime_format',     function( m, options ){ return momentFormat( m, options, null,              true       ); } );
+    addMomentFormat( 'date_utc',              function( m, options ){ return momentFormat( m, options, dateDefaultFormat, false, 'utc' ); } );
+    addMomentFormat( 'date_long_utc',         function( m, options ){ return momentFormat( m, options, dateLongFormat,    false, 'utc' ); } );
+    addMomentFormat( 'date_short_utc',        function( m, options ){ return momentFormat( m, options, dateShortFormat,   false, 'utc' ); } );
+    addMomentFormat( 'date_format_utc',       function( m, options ){ return momentFormat( m, options, null,              false, 'utc' ); } );
 
-    addMomentFormat( 'datetime_utc',        function( m, options ){ return momentFormat( m, options, dateDefaultFormat, true, true ); } );
-    addMomentFormat( 'datetime_long_utc',   function( m, options ){ return momentFormat( m, options, dateLongFormat,    true, true ); } );
-    addMomentFormat( 'datetime_short_utc',  function( m, options ){ return momentFormat( m, options, dateShortFormat,   true, true ); } );
-    addMomentFormat( 'datetime_format_utc', function( m, options ){ return momentFormat( m, options, null,              true, true ); } );
-    
+    addMomentFormat( 'date_local',            function( m, options ){ return momentFormat( m, options, dateDefaultFormat, false, 'local' ); } );
+    addMomentFormat( 'date_long_local',       function( m, options ){ return momentFormat( m, options, dateLongFormat,    false, 'local' ); } );
+    addMomentFormat( 'date_short_local',      function( m, options ){ return momentFormat( m, options, dateShortFormat,   false, 'local' ); } );
+    addMomentFormat( 'date_format_local',     function( m, options ){ return momentFormat( m, options, null,              false, 'local' ); } );
+
+    addMomentFormat( 'datetime',              function( m, options ){ return momentFormat( m, options, dateDefaultFormat, true       ); } );
+    addMomentFormat( 'datetime_long',         function( m, options ){ return momentFormat( m, options, dateLongFormat,    true       ); } );
+    addMomentFormat( 'datetime_short',        function( m, options ){ return momentFormat( m, options, dateShortFormat,   true       ); } );
+    addMomentFormat( 'datetime_format',       function( m, options ){ return momentFormat( m, options, null,              true       ); } );
+
+    addMomentFormat( 'datetime_utc',          function( m, options ){ return momentFormat( m, options, dateDefaultFormat, true, 'utc' ); } );
+    addMomentFormat( 'datetime_long_utc',     function( m, options ){ return momentFormat( m, options, dateLongFormat,    true, 'utc' ); } );
+    addMomentFormat( 'datetime_short_utc',    function( m, options ){ return momentFormat( m, options, dateShortFormat,   true, 'utc' ); } );
+    addMomentFormat( 'datetime_format_utc',   function( m, options ){ return momentFormat( m, options, null,              true, 'utc' ); } );
+
+    addMomentFormat( 'datetime_local',        function( m, options ){ return momentFormat( m, options, dateDefaultFormat, true, 'local' ); } );
+    addMomentFormat( 'datetime_long_local',   function( m, options ){ return momentFormat( m, options, dateLongFormat,    true, 'local' ); } );
+    addMomentFormat( 'datetime_short_local',  function( m, options ){ return momentFormat( m, options, dateShortFormat,   true, 'local' ); } );
+    addMomentFormat( 'datetime_format_local', function( m, options ){ return momentFormat( m, options, null,              true, 'local' ); } );
 
 
     /*************************************
@@ -39412,27 +39442,27 @@ exports.map = createMap;
           case 'H'  : options.relativeFormat = {now: true, days: false, hours: true, minutes: false }; break;
           case 'HM' : options.relativeFormat = {now: true, days: false, hours: true, minutes: true  }; break;
           case 'DHM': options.relativeFormat = {now: true, days: true,  hours: true, minutes: true  }; break;
-          default   : options.relativeFormat = {now: true, days: true,  hours: true, minutes: false }; 
+          default   : options.relativeFormat = {now: true, days: true,  hours: true, minutes: false };
         }
-        return m.relativeFormat( options ); 
+        return m.relativeFormat( options );
     }
-                    
-    addMomentFormat( 'relative',     function( m ){ return momentRelativeFormat( m, 'DH'  ); } );
-    addMomentFormat( 'relative_dh',  function( m ){ return momentRelativeFormat( m, 'DH'  ); } ); 
-    addMomentFormat( 'relative_h',   function( m ){ return momentRelativeFormat( m, 'H'   ); } ); 
-    addMomentFormat( 'relative_hm',  function( m ){ return momentRelativeFormat( m, 'HM'  ); } ); 
-    addMomentFormat( 'relative_dhm', function( m ){ return momentRelativeFormat( m, 'DHM' ); } ); 
 
-    
+    addMomentFormat( 'relative',     function( m ){ return momentRelativeFormat( m, 'DH'  ); } );
+    addMomentFormat( 'relative_dh',  function( m ){ return momentRelativeFormat( m, 'DH'  ); } );
+    addMomentFormat( 'relative_h',   function( m ){ return momentRelativeFormat( m, 'H'   ); } );
+    addMomentFormat( 'relative_hm',  function( m ){ return momentRelativeFormat( m, 'HM'  ); } );
+    addMomentFormat( 'relative_dhm', function( m ){ return momentRelativeFormat( m, 'DHM' ); } );
+
+
     //Flush global-events
     setGlobalEvent( 'dummy' );
 
 /*
-    //Initialize/ready 
-	$(function() { 
+    //Initialize/ready
+	$(function() {
 
-	
-	}); 
+
+	});
 */
 }(jQuery, this, document));
 ;
@@ -42766,7 +42796,7 @@ if (typeof define === 'function' && define.amd) {
 
 ;
 /****************************************************************************
-	jquery-hammer.js.js, 
+	jquery-hammer.js.js,
 
 	(c) 2017, FCOO
 
@@ -42780,12 +42810,12 @@ if (typeof define === 'function' && define.amd) {
     var hammerEvents = [
         {
             events: 'pan panstart panmove panend pancancel panleft panright panup pandown',
-            recognizer: 'pan', 
+            recognizer: 'pan',
             options: { direction: Hammer.DIRECTION_ALL }
         },
         {
             events: 'pinch pinchstart pinchmove pinchend pinchcancel pinchin pinchout',
-            recognizer: 'pinch', 
+            recognizer: 'pinch',
             options: { enable: true }
         },
         {
@@ -42793,12 +42823,12 @@ if (typeof define === 'function' && define.amd) {
         },
         {
             events: 'rotate rotatestart rotatemove rotateend rotatecancel',
-            recognizer: 'rotate', 
+            recognizer: 'rotate',
             options: { enable: true }
         },
         {
             events: 'swipe swipeleft swiperight swipeup swipedown',
-            recognizer: 'swipe', 
+            recognizer: 'swipe',
             options: { direction: Hammer.DIRECTION_ALL }
         },
         {
@@ -42809,7 +42839,7 @@ if (typeof define === 'function' && define.amd) {
 
     $.each( hammerEvents, function( index, hammerEvent ){
         var events = hammerEvent.events.split(' ');
-        $.each( events, function( index, event ){ 
+        $.each( events, function( index, event ){
             $.event.special[event] = {
                 setup:  function( /*data, namespaces, eventHandle*/ ){
                             $(this).hammer();
@@ -43227,7 +43257,7 @@ if (typeof define === 'function' && define.amd) {
 ;
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.12.5
+ * @version 1.12.6
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -43255,22 +43285,7 @@ if (typeof define === 'function' && define.amd) {
 	(global.Popper = factory());
 }(this, (function () { 'use strict';
 
-var nativeHints = ['native code', '[object MutationObserverConstructor]'];
-
-/**
- * Determine if a function is implemented natively (as opposed to a polyfill).
- * @method
- * @memberof Popper.Utils
- * @argument {Function | undefined} fn the function to check
- * @returns {Boolean}
- */
-var isNative = (function (fn) {
-  return nativeHints.some(function (hint) {
-    return (fn || '').toString().indexOf(hint) > -1;
-  });
-});
-
-var isBrowser = typeof window !== 'undefined';
+var isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
 var timeoutDuration = 0;
 for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
@@ -43281,26 +43296,16 @@ for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
 }
 
 function microtaskDebounce(fn) {
-  var scheduled = false;
-  var i = 0;
-  var elem = document.createElement('span');
-
-  // MutationObserver provides a mechanism for scheduling microtasks, which
-  // are scheduled *before* the next task. This gives us a way to debounce
-  // a function but ensure it's called *before* the next paint.
-  var observer = new MutationObserver(function () {
-    fn();
-    scheduled = false;
-  });
-
-  observer.observe(elem, { attributes: true });
-
+  var called = false;
   return function () {
-    if (!scheduled) {
-      scheduled = true;
-      elem.setAttribute('x-index', i);
-      i = i + 1; // don't use compund (+=) because it doesn't get optimized in V8
+    if (called) {
+      return;
     }
+    called = true;
+    Promise.resolve().then(function () {
+      called = false;
+      fn();
+    });
   };
 }
 
@@ -43317,11 +43322,7 @@ function taskDebounce(fn) {
   };
 }
 
-// It's common for MutationObserver polyfills to be seen in the wild, however
-// these rely on Mutation Events which only occur when an element is connected
-// to the DOM. The algorithm used in this module does not use a connected element,
-// and so we must ensure that a *native* MutationObserver is available.
-var supportsNativeMutationObserver = isBrowser && isNative(window.MutationObserver);
+var supportsMicroTasks = isBrowser && window.Promise;
 
 /**
 * Create a debounced version of a method, that's asynchronously deferred
@@ -43332,7 +43333,7 @@ var supportsNativeMutationObserver = isBrowser && isNative(window.MutationObserv
 * @argument {Function} fn
 * @returns {Function}
 */
-var debounce = supportsNativeMutationObserver ? microtaskDebounce : taskDebounce;
+var debounce = supportsMicroTasks ? microtaskDebounce : taskDebounce;
 
 /**
  * Check if the given variable is a function
@@ -43385,8 +43386,16 @@ function getParentNode(element) {
  */
 function getScrollParent(element) {
   // Return body, `getScroll` will take care to get the correct `scrollTop` from it
-  if (!element || ['HTML', 'BODY', '#document'].indexOf(element.nodeName) !== -1) {
+  if (!element) {
     return window.document.body;
+  }
+
+  switch (element.nodeName) {
+    case 'HTML':
+    case 'BODY':
+      return element.ownerDocument.body;
+    case '#document':
+      return element.body;
   }
 
   // Firefox want us to check `-x` and `-y` variations as well
@@ -43416,6 +43425,10 @@ function getOffsetParent(element) {
   var nodeName = offsetParent && offsetParent.nodeName;
 
   if (!nodeName || nodeName === 'BODY' || nodeName === 'HTML') {
+    if (element) {
+      return element.ownerDocument.documentElement;
+    }
+
     return window.document.documentElement;
   }
 
@@ -43511,8 +43524,8 @@ function getScroll(element) {
   var nodeName = element.nodeName;
 
   if (nodeName === 'BODY' || nodeName === 'HTML') {
-    var html = window.document.documentElement;
-    var scrollingElement = window.document.scrollingElement || html;
+    var html = element.ownerDocument.documentElement;
+    var scrollingElement = element.ownerDocument.scrollingElement || html;
     return scrollingElement[upperSide];
   }
 
@@ -43761,7 +43774,7 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
 }
 
 function getViewportOffsetRectRelativeToArtbitraryNode(element) {
-  var html = window.document.documentElement;
+  var html = element.ownerDocument.documentElement;
   var relativeOffset = getOffsetRectRelativeToArbitraryNode(element, html);
   var width = Math.max(html.clientWidth, window.innerWidth || 0);
   var height = Math.max(html.clientHeight, window.innerHeight || 0);
@@ -43822,10 +43835,10 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
     if (boundariesElement === 'scrollParent') {
       boundariesNode = getScrollParent(getParentNode(popper));
       if (boundariesNode.nodeName === 'BODY') {
-        boundariesNode = window.document.documentElement;
+        boundariesNode = popper.ownerDocument.documentElement;
       }
     } else if (boundariesElement === 'window') {
-      boundariesNode = window.document.documentElement;
+      boundariesNode = popper.ownerDocument.documentElement;
     } else {
       boundariesNode = boundariesElement;
     }
@@ -44066,10 +44079,11 @@ function runModifiers(modifiers, data, ends) {
   var modifiersToRun = ends === undefined ? modifiers : modifiers.slice(0, findIndex(modifiers, 'name', ends));
 
   modifiersToRun.forEach(function (modifier) {
-    if (modifier.function) {
+    if (modifier['function']) {
+      // eslint-disable-line dot-notation
       console.warn('`modifier.function` is deprecated, use `modifier.fn`!');
     }
-    var fn = modifier.function || modifier.fn;
+    var fn = modifier['function'] || modifier.fn; // eslint-disable-line dot-notation
     if (modifier.enabled && isFunction(fn)) {
       // Add properties to offsets to make them a complete clientRect object
       // we do this before each modifier to make sure the previous one doesn't
@@ -44196,9 +44210,19 @@ function destroy() {
   return this;
 }
 
+/**
+ * Get the window associated with the element
+ * @argument {Element} element
+ * @returns {Window}
+ */
+function getWindow(element) {
+  var ownerDocument = element.ownerDocument;
+  return ownerDocument ? ownerDocument.defaultView : window;
+}
+
 function attachToScrollParents(scrollParent, event, callback, scrollParents) {
   var isBody = scrollParent.nodeName === 'BODY';
-  var target = isBody ? window : scrollParent;
+  var target = isBody ? scrollParent.ownerDocument.defaultView : scrollParent;
   target.addEventListener(event, callback, { passive: true });
 
   if (!isBody) {
@@ -44216,7 +44240,7 @@ function attachToScrollParents(scrollParent, event, callback, scrollParents) {
 function setupEventListeners(reference, options, state, updateBound) {
   // Resize event listener on window
   state.updateBound = updateBound;
-  window.addEventListener('resize', state.updateBound, { passive: true });
+  getWindow(reference).addEventListener('resize', state.updateBound, { passive: true });
 
   // Scroll event listener on scroll parents
   var scrollElement = getScrollParent(reference);
@@ -44247,7 +44271,7 @@ function enableEventListeners() {
  */
 function removeEventListeners(reference, state) {
   // Remove resize event listener on window
-  window.removeEventListener('resize', state.updateBound);
+  getWindow(reference).removeEventListener('resize', state.updateBound);
 
   // Remove scroll event listener on scroll parents
   state.scrollParents.forEach(function (target) {
@@ -45549,8 +45573,8 @@ var Popper = function () {
     };
 
     // get reference and popper elements (allow jQuery wrappers)
-    this.reference = reference.jquery ? reference[0] : reference;
-    this.popper = popper.jquery ? popper[0] : popper;
+    this.reference = reference && reference.jquery ? reference[0] : reference;
+    this.popper = popper && popper.jquery ? popper[0] : popper;
 
     // Deep merge modifiers options
     this.options.modifiers = {};
@@ -49508,7 +49532,7 @@ var Popover = function ($) {
 })();
 ;
 /****************************************************************************
-	bootstrap-popover-extensions.js, 
+	bootstrap-popover-extensions.js,
 
 	(c) 2017, FCOO
 
@@ -49519,7 +49543,7 @@ var Popover = function ($) {
 
 (function ($/*, window, document, undefined*/) {
 	"use strict";
-	
+
     //Concert from all new placement to original
     var truePlacement2placement = {
             topleft   : 'top',    top   : 'top',    topright   : 'top',
@@ -49538,7 +49562,7 @@ var Popover = function ($) {
                 this.config.truePlacement = this.config.placement;
                 this.config.placement = truePlacement2placement[this.config.truePlacement];
             }
-            
+
             //Original methods
             _show.apply(this, arguments);
 
@@ -49579,7 +49603,7 @@ var Popover = function ($) {
 }(jQuery, this, document));
 ;
 /****************************************************************************
-    jquery-checkbox-radio-group.js, 
+    jquery-checkbox-radio-group.js,
 
     (c) 2017, FCOO
 
@@ -49590,7 +49614,7 @@ var Popover = function ($) {
 
 (function ($/*, window, document, undefined*/) {
     "use strict";
-    
+
     var globalCheckboxId = 0;
 
     $.fn.extend({
@@ -49599,14 +49623,14 @@ var Popover = function ($) {
         options:
             id         (default: id of element or auto-created)
             prop       (default '')     Property set when the eleemnt is selected
-            className  (default: '')    Class-name set when the eleemnt is selected      
+            className  (default: '')    Class-name set when the eleemnt is selected
             selector   (default: null)  Selector for child-element to be updated with prop and/or className
             modernizr  (default; false) If true the element get "no-"+className when unselected
             selected   (default: false)
             onChange = function( id, selected, $checkbox )
         ***********************************************************/
         checkbox: function( options ){
-            return this.each(function() {        
+            return this.each(function() {
                 var $this = $(this),
                     _options = $.extend({
                         id       : options.id || $this.prop('id') || 'checkbox_' + globalCheckboxId++,
@@ -49628,20 +49652,20 @@ var Popover = function ($) {
             return this.data('cbx_options').selected;
         },
 
-        _cbxSet: function( selected, dontCallOnChange ){ 
+        _cbxSet: function( selected, dontCallOnChange ){
             var options = this.data('cbx_options');
             options.selected = !!selected;
             this.data('cbx_options', options );
 
             var $elements = options.selector ? this.children( options.selector ) : this;
-            $elements.each( function(){ 
+            $elements.each( function(){
                 var $this = $(this);
                 if (options.prop)
                     $this.prop(options.prop, options.selected);
 
                 if (options.className){
                     if (options.modernizr)
-                        $this.modernizrToggle(options.className, options.selected); 
+                        $this.modernizrToggle(options.className, options.selected);
                     else
                         $this.toggleClass(options.className, options.selected);
                 }
@@ -49649,7 +49673,7 @@ var Popover = function ($) {
             });
 
             if (!dontCallOnChange)
-                this._cbxCallOnChange();          
+                this._cbxCallOnChange();
             return this;
         },
 
@@ -49661,10 +49685,10 @@ var Popover = function ($) {
         _cbxCallOnChange: function(){
             var options = this.data('cbx_options');
             if (options.onChange)
-                $.proxy( options.onChange, options.context )( 
+                $.proxy( options.onChange, options.context )(
                     options.id,
                     this._cbxGet(),
-                    this 
+                    this
                 );
             if (options.postOnChange)
                 options.postOnChange( this );
@@ -49688,7 +49712,7 @@ var Popover = function ($) {
             case 3 : selector = arguments[1];
                      options = arguments[2];
                      break;
-            case 2 : if ($.type(arguments[1]) == "string") 
+            case 2 : if ($.type(arguments[1]) == "string")
                          selector = arguments[1];
                      else
                          options = arguments[1];
@@ -49699,15 +49723,15 @@ var Popover = function ($) {
         var _this = this;
         if ($.isArray($element))
             $.each( $element, function( index, $elem ){ _addElement.call( _this, $elem, options ); });
-        else 
+        else
             if (selector)
                 _addElement.call( this, $element.children( selector ), options );
             else
-                $element.each( function(){ 
+                $element.each( function(){
                     _this._cbxChildList.push( $(this).checkbox( options ) );
                     $(this).data('cbx_owner', _this );
                 });
-        
+
         return this;
     }
 
@@ -49715,31 +49739,31 @@ var Popover = function ($) {
     function _removeElement($element, remove){
         this._cbxChildList = $.grep( this._cbxChildList, function( $child ){ return $child === $element; } , true );
         if (remove)
-            $element.remove();  
-        
+            $element.remove();
+
         return this;
     }
 
     /***********************************************************
     $.fn.checkboxGroup( options )
-    The input acts as checkbox for a group of checkbokes (=parent). 
-    The state of the input is updated when any of the child-input are changed 
+    The input acts as checkbox for a group of checkbokes (=parent).
+    The state of the input is updated when any of the child-input are changed
     and all the child can be changed by clicking the input
     options:
         prop, className, modernizr, selector: Same as for $.fn.checkbox. Also used as default for child-checkboxes
         selected, onChange: Same as for $.fn.checkbox but only used as default for child-checkboxes
-        prop_semi, className_semi: Same as for $.fn.checkbox but for the semi-selected start where selected children > 0 and < total items        
+        prop_semi, className_semi: Same as for $.fn.checkbox but for the semi-selected start where selected children > 0 and < total items
     ***********************************************************/
-    //function checkboxGroup_addElement 
+    //function checkboxGroup_addElement
     function checkboxGroup_addElement(){
-        _addElement.apply( this, arguments );     
+        _addElement.apply( this, arguments );
         this._cbxgUpdateParent();
         return this;
     }
-    
-    //function checkboxGroup_addElement 
+
+    //function checkboxGroup_addElement
     function checkboxGroup_removeElement(/*$element, remove*/){
-        _removeElement.apply( this, arguments );     
+        _removeElement.apply( this, arguments );
         this._cbxgUpdateParent();
         return this;
     }
@@ -49753,7 +49777,7 @@ var Popover = function ($) {
             );
 
             this.defaultChildOptions = $.extend({
-                postOnChange: $.proxy( this._cbxgUpdateParent, this )            
+                postOnChange: $.proxy( this._cbxgUpdateParent, this )
             }, options);
             this.addElement = checkboxGroup_addElement;
             this.removeElement = checkboxGroup_removeElement;
@@ -49780,13 +49804,13 @@ var Popover = function ($) {
                 this.prop(options.prop_semi, semiSelected);
             if (options.className_semi){
                 if (options.modernizr)
-                    this.modernizrToggle(options.className_semi, semiSelected); 
+                    this.modernizrToggle(options.className_semi, semiSelected);
                 else
                     this.toggleClass(options.className_semi, semiSelected);
             }
         },
 
-        //$.fn._cbxgOnClickParent = Click on parent 
+        //$.fn._cbxgOnClickParent = Click on parent
         _cbxgOnClickParent: function(){
             //If all at least one child is selected => deselect all
             //If all child is deselected => select all
@@ -49798,14 +49822,14 @@ var Popover = function ($) {
                 }
             });
             $.each( this._cbxChildList, function( index, $child ){
-                if ($child._cbxGet() != selected) 
-                    $child._cbxSet( selected ); 
+                if ($child._cbxGet() != selected)
+                    $child._cbxSet( selected );
             });
             this._cbxgUpdateParent();
         }
     });
-    
-    
+
+
     /***********************************************************
     $.radioGroup( options )
     options:
@@ -49821,18 +49845,19 @@ var Popover = function ($) {
             className        : '',
             prop             : 'checked',
             allowZeroSelected: false,
+            allowReselect    : false,
             onChange         : function(){}
         }, options || {} );
         this.defaultChildOptions = $.extend({}, this.options );
     };
-  
+
     //Extend the prototype
     $.RadioGroup.prototype = {
 
         //addElement
         addElement: function(){
             var firstIndex = this._cbxChildList ? this._cbxChildList.length : 0;
-            _addElement.apply( this, arguments );     
+            _addElement.apply( this, arguments );
 
             //Convert all child onChange to this.onChange
             for (var i=firstIndex; i<this._cbxChildList.length; i++ ){
@@ -49845,9 +49870,9 @@ var Popover = function ($) {
             }
             if (this.options.selectedId){
                 var _this = this,
-                    list = $.grep(this._cbxChildList, function($elem){ return $elem.data('cbx_options').id == _this.options.selectedId; });              
+                    list = $.grep(this._cbxChildList, function($elem){ return $elem.data('cbx_options').id == _this.options.selectedId; });
                 if (list.length){
-                    list[0]._cbxSet( true );                  
+                    list[0]._cbxSet( true );
                     this.options.selectedId = null;
                 }
             }
@@ -49857,10 +49882,10 @@ var Popover = function ($) {
 
         //removeElement
         removeElement: function(/*$element, remove*/){
-            _removeElement.apply( this, arguments );     
+            _removeElement.apply( this, arguments );
             return this;
         },
-        
+
         //
         onChange: function(id, selected){
             //Find clicked child and other selected child
@@ -49875,15 +49900,15 @@ var Popover = function ($) {
             if ($selectedChild){
                 $selectedChild._cbxSet( false, true );
                 if (this.options.allowZeroSelected)
-                    selectedChildOptions.ownOnChange( selectedChildOptions.id, false, $selectedChild, this.options.radioGroupId ); 
+                    selectedChildOptions.ownOnChange( selectedChildOptions.id, false, $selectedChild, this.options.radioGroupId );
             }
 
             //Only allow click on selected element if options.allowZeroSelected: true
             if (selected || this.options.allowZeroSelected)
-                childOptions.ownOnChange( childOptions.id, selected, $child, this.options.radioGroupId ); 
-            else 
+                childOptions.ownOnChange( childOptions.id, selected, $child, this.options.radioGroupId );
+            else
                 //Select again
-                $child._cbxSet( true, true );
+                $child._cbxSet( true, !this.options.allowReselect );
         }
 
     };
@@ -49893,11 +49918,11 @@ var Popover = function ($) {
     };
 
     /******************************************
-    Initialize/ready 
+    Initialize/ready
     *******************************************/
-    $(function() { 
+    $(function() {
 
-    
+
     }); //End of initialize/ready
     //******************************************
 
@@ -49917,9 +49942,9 @@ var Popover = function ($) {
 (function ( $ ) {
 	var attachEvent = document.attachEvent,
 		stylesCreated = false;
-	
+
 	var jQuery_resize = $.fn.resize;
-	
+
 	$.fn.resize = function(callback) {
 		return this.each(function() {
 			if(this == window)
@@ -49934,14 +49959,14 @@ var Popover = function ($) {
 			removeResizeListener(this, callback);
 		});
 	}
-	
+
 	if (!attachEvent) {
 		var requestFrame = (function(){
 			var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
 								function(fn){ return window.setTimeout(fn, 20); };
 			return function(fn){ return raf(fn); };
 		})();
-		
+
 		var cancelFrame = (function(){
 			var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
 								   window.clearTimeout;
@@ -49965,7 +49990,7 @@ var Popover = function ($) {
 			return element.offsetWidth != element.__resizeLast__.width ||
 						 element.offsetHeight != element.__resizeLast__.height;
 		}
-		
+
 		function scrollListener(e){
 			var element = this;
 			resetTriggers(this);
@@ -49980,7 +50005,7 @@ var Popover = function ($) {
 				}
 			});
 		};
-		
+
 		/* Detect CSS Animations support to detect element display/re-attach */
 		var animation = false,
 			animationstring = 'animation',
@@ -49991,8 +50016,8 @@ var Popover = function ($) {
 			pfx  = '';
 		{
 			var elm = document.createElement('fakeelement');
-			if( elm.style.animationName !== undefined ) { animation = true; }    
-			
+			if( elm.style.animationName !== undefined ) { animation = true; }
+
 			if( animation === false ) {
 				for( var i = 0; i < domPrefixes.length; i++ ) {
 					if( elm.style[ domPrefixes[i] + 'AnimationName' ] !== undefined ) {
@@ -50006,12 +50031,12 @@ var Popover = function ($) {
 				}
 			}
 		}
-		
+
 		var animationName = 'resizeanim';
 		var animationKeyframes = '@' + keyframeprefix + 'keyframes ' + animationName + ' { from { opacity: 0; } to { opacity: 0; } } ';
 		var animationStyle = keyframeprefix + 'animation: 1ms ' + animationName + '; ';
 	}
-	
+
 	function createStyles() {
 		if (!stylesCreated) {
 			//opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
@@ -50020,7 +50045,7 @@ var Popover = function ($) {
 					'.resize-triggers, .resize-triggers > div, .contract-trigger:before { content: \" \"; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; } .resize-triggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }',
 				head = document.head || document.getElementsByTagName('head')[0],
 				style = document.createElement('style');
-			
+
 			style.type = 'text/css';
 			if (style.styleSheet) {
 				style.styleSheet.cssText = css;
@@ -50032,7 +50057,7 @@ var Popover = function ($) {
 			stylesCreated = true;
 		}
 	}
-	
+
 	window.addResizeListener = function(element, fn){
 		if (attachEvent) element.attachEvent('onresize', fn);
 		else {
@@ -50047,7 +50072,7 @@ var Popover = function ($) {
 				element.appendChild(element.__resizeTriggers__);
 				resetTriggers(element);
 				element.addEventListener('scroll', scrollListener, true);
-				
+
 				/* Listen for a css animation to detect element display/re-attach */
 				animationstartevent && element.__resizeTriggers__.addEventListener(animationstartevent, function(e) {
 					if(e.animationName == animationName)
@@ -50057,7 +50082,7 @@ var Popover = function ($) {
 			element.__resizeListeners__.push(fn);
 		}
 	};
-	
+
 	window.removeResizeListener = function(element, fn){
 		if (attachEvent) element.detachEvent('onresize', fn);
 		else {
@@ -50071,7 +50096,7 @@ var Popover = function ($) {
 }( jQuery ));
 ;
 /****************************************************************************
-    jquery-scroll-container.js, 
+    jquery-scroll-container.js,
 
     (c) 2017, FCOO
 
@@ -50084,7 +50109,7 @@ var Popover = function ($) {
     "use strict";
 
     if ( $('html').hasClass('touchevents') || $('html').hasClass('no-touchevents') )
-        ;    //Modernizr (or someone else) has set the correct class      
+        ;    //Modernizr (or someone else) has set the correct class
     else
         //Default: No touch
         $('html').addClass('no-touchevents');
@@ -50121,16 +50146,16 @@ var Popover = function ($) {
             var scrollLeft = Math.ceil( this.scrollLeft() ),
                 scrollTop  = Math.ceil( this.scrollTop()  );
 
-            this._psSetXShadow( 'left',   scrollLeft > 0 ); 
-            this._psSetXShadow( 'right',  scrollLeft < (this.get(0).scrollWidth - this.get(0).clientWidth) ); 
+            this._psSetXShadow( 'left',   scrollLeft > 0 );
+            this._psSetXShadow( 'right',  scrollLeft < (this.get(0).scrollWidth - this.get(0).clientWidth) );
 
-            this._psSetYShadow( 'top',    scrollTop > 0 ); 
-            this._psSetYShadow( 'bottom', scrollTop < (this.get(0).scrollHeight - this.get(0).clientHeight) ); 
-            
+            this._psSetYShadow( 'top',    scrollTop > 0 );
+            this._psSetYShadow( 'bottom', scrollTop < (this.get(0).scrollHeight - this.get(0).clientHeight) );
+
         }
 
     });
-    
+
     var scrollbarOptions = {
         //handlers              //It is a list of handlers to use to scroll the element. Default: ['click-rail', 'drag-scrollbar', 'keyboard', 'wheel', 'touch'] Disabled by default: 'selection'
         //wheelSpeed            //The scroll speed applied to mousewheel event. Default: 1
@@ -50148,7 +50173,7 @@ var Popover = function ($) {
         useBothWheelAxes   : true, //=> Mousewheel works in both horizontal and vertical scroll
         scrollXMarginOffset: 1,    //IE11 apears to work betten when == 1
         scrollYMarginOffset: 1,    //                --||--
-            
+
         direction: 'vertical' //["vertical"|"horizontal"|"both"] (default: "vertical")
     };
 
@@ -50181,24 +50206,24 @@ var Popover = function ($) {
         //Add background for the bar
         this.scrollbarXRail.prepend( $('<div/>').addClass('ps__scrollbar-x-bg') );
         this.scrollbarYRail.prepend( $('<div/>').addClass('ps__scrollbar-y-bg') );
-        
-       
-        //Assume the the content is scrolled to the top/left 
-        this._psSetXShadow('right',   true  ); 
+
+
+        //Assume the the content is scrolled to the top/left
+        this._psSetXShadow('right',   true  );
         this._psSetYShadow( 'bottom', true  );
 
         // Adding event to update shadows
         this.on('ps-scroll-y ps-scroll-x', $.proxy( this._psUpdateShadow, this ) );
-        
-        
+
+
         //Add inner container to cache resize when adding/removing elements from container
-        this.scrollbarContainer = 
+        this.scrollbarContainer =
             $('<div/>')
                 .addClass('jquery-scroll-container')
                 .appendTo( this );
 
 
-        //Update scrollbar when container or content change size        
+        //Update scrollbar when container or content change size
         var _psUpdate = $.proxy( this._psUpdate, this );
         this.resize( _psUpdate );
         this.scrollbarContainer.resize( _psUpdate );
@@ -50209,8 +50234,8 @@ var Popover = function ($) {
 
 /**********************************************************************
 TODO: NEW METHODS
-        //verticalScrollToElement    
-        this.verticalScrollToElement = function verticalScrollToElement(elem, options){ 
+        //verticalScrollToElement
+        this.verticalScrollToElement = function verticalScrollToElement(elem, options){
             elem = elem instanceof $ ? elem : $(elem);
             //Find the different relative positions and heights
             var topInContents = elem.position().top,                                   //The top-position in the hole contentens
@@ -50223,7 +50248,7 @@ TODO: NEW METHODS
 
             if ((topInBox >= 0) && (bottomInBox <= boxHeight)){
                 //Ok - The element is inside the box
-            } else 
+            } else
                 if (topInBox < 0){
                     //The elements top is above the top of the box => scroll element t top of box
                     deltaScroll = topInBox;
@@ -50234,29 +50259,29 @@ TODO: NEW METHODS
                         deltaScroll += (topInBox - deltaScroll);
                     }
                 }
-                    
+
             if (deltaScroll)
                 this.mCustomScrollbar("scrollTo", scrolledBy + deltaScroll, {timeout:0, scrollInertia:0});
         };
 
         //verticalScrollElementToTop( elem ) - scroll elem to the top of the scroll-box. TODO
-        
-        //verticalScrollToTop            
+
+        //verticalScrollToTop
         this.verticalScrollToTop    = function verticalScrollToTop(options){ this.mCustomScrollbar("scrollTo", 'top', options); };
-        //verticalScrollToBottom        
+        //verticalScrollToBottom
         this.verticalScrollToBottom = function verticalScrollToBottom(options){ this.mCustomScrollbar("scrollTo", 'bottom', options);    };
-        //verticalScrollAppend        
+        //verticalScrollAppend
         this.verticalScrollAppend   = function verticalScrollAppend( elem ){ this.find('.mCSB_container').append( elem ); };
-        //verticalScrollPrepend        
+        //verticalScrollPrepend
         this.verticalScrollPrepend  = function verticalScrollPrepend( elem ){ this.find('.mCSB_container').prepend( elem );    };
 
 **********************************************************************/
 
 
-    
-    //Initialize/ready 
-    $(function() { 
-    }); 
+
+    //Initialize/ready
+    $(function() {
+    });
 
 
 
@@ -50267,7 +50292,7 @@ TODO: NEW METHODS
 
     https://github.com/noraesae/perfect-scrollbar
 
-    THIS IS MODIFIED VERSIONS OF THE JS-FILE 
+    THIS IS MODIFIED VERSIONS OF THE JS-FILE
     FROM PERFECT-SCROLLBAR VERSION 0.7.1
 
 ************************************************/
@@ -50294,7 +50319,7 @@ TODO: NEW METHODS
         }
         return n[o].exports
     }
-           
+
     var i=typeof require=="function"&&require;
     for(var o=0;o<r.length;o++)
         s(r[o]);
@@ -51098,7 +51123,7 @@ function bindMouseWheelHandler(element, i) {
   }
 
   function mousewheelHandler(e) {
-    var delta = getDeltaFromEvent(e); 
+    var delta = getDeltaFromEvent(e);
 
     var deltaX = delta[0];
     var deltaY = delta[1];
@@ -51885,8 +51910,3082 @@ module.exports = function (element) {
 },{"../lib/dom":3,"../lib/helper":6,"./instances":18,"./update-geometry":19,"./update-scroll":20}]},{},[1]);
 
 ;
+/*
+  @package NOTY - Dependency-free notification library
+  @version version: 3.1.3
+  @contributors https://github.com/needim/noty/graphs/contributors
+  @documentation Examples and Documentation - http://needim.github.com/noty
+  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
+*/
+
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("Noty", [], factory);
+	else if(typeof exports === 'object')
+		exports["Noty"] = factory();
+	else
+		root["Noty"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.css = exports.deepExtend = exports.animationEndEvents = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.inArray = inArray;
+exports.stopPropagation = stopPropagation;
+exports.generateID = generateID;
+exports.outerHeight = outerHeight;
+exports.addListener = addListener;
+exports.hasClass = hasClass;
+exports.addClass = addClass;
+exports.removeClass = removeClass;
+exports.remove = remove;
+exports.classList = classList;
+exports.visibilityChangeFlow = visibilityChangeFlow;
+exports.createAudioElements = createAudioElements;
+
+var _api = __webpack_require__(1);
+
+var API = _interopRequireWildcard(_api);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var animationEndEvents = exports.animationEndEvents = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+
+function inArray(needle, haystack, argStrict) {
+  var key = void 0;
+  var strict = !!argStrict;
+
+  if (strict) {
+    for (key in haystack) {
+      if (haystack.hasOwnProperty(key) && haystack[key] === needle) {
+        return true;
+      }
+    }
+  } else {
+    for (key in haystack) {
+      if (haystack.hasOwnProperty(key) && haystack[key] === needle) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function stopPropagation(evt) {
+  evt = evt || window.event;
+
+  if (typeof evt.stopPropagation !== 'undefined') {
+    evt.stopPropagation();
+  } else {
+    evt.cancelBubble = true;
+  }
+}
+
+var deepExtend = exports.deepExtend = function deepExtend(out) {
+  out = out || {};
+
+  for (var i = 1; i < arguments.length; i++) {
+    var obj = arguments[i];
+
+    if (!obj) continue;
+
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (Array.isArray(obj[key])) {
+          out[key] = obj[key];
+        } else if (_typeof(obj[key]) === 'object' && obj[key] !== null) {
+          out[key] = deepExtend(out[key], obj[key]);
+        } else {
+          out[key] = obj[key];
+        }
+      }
+    }
+  }
+
+  return out;
+};
+
+function generateID() {
+  var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  var id = 'noty_' + prefix + '_';
+
+  id += 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0;
+    var v = c === 'x' ? r : r & 0x3 | 0x8;
+    return v.toString(16);
+  });
+
+  return id;
+}
+
+function outerHeight(el) {
+  var height = el.offsetHeight;
+  var style = window.getComputedStyle(el);
+
+  height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+  return height;
+}
+
+var css = exports.css = function () {
+  var cssPrefixes = ['Webkit', 'O', 'Moz', 'ms'];
+  var cssProps = {};
+
+  function camelCase(string) {
+    return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function (match, letter) {
+      return letter.toUpperCase();
+    });
+  }
+
+  function getVendorProp(name) {
+    var style = document.body.style;
+    if (name in style) return name;
+
+    var i = cssPrefixes.length;
+    var capName = name.charAt(0).toUpperCase() + name.slice(1);
+    var vendorName = void 0;
+
+    while (i--) {
+      vendorName = cssPrefixes[i] + capName;
+      if (vendorName in style) return vendorName;
+    }
+
+    return name;
+  }
+
+  function getStyleProp(name) {
+    name = camelCase(name);
+    return cssProps[name] || (cssProps[name] = getVendorProp(name));
+  }
+
+  function applyCss(element, prop, value) {
+    prop = getStyleProp(prop);
+    element.style[prop] = value;
+  }
+
+  return function (element, properties) {
+    var args = arguments;
+    var prop = void 0;
+    var value = void 0;
+
+    if (args.length === 2) {
+      for (prop in properties) {
+        if (properties.hasOwnProperty(prop)) {
+          value = properties[prop];
+          if (value !== undefined && properties.hasOwnProperty(prop)) {
+            applyCss(element, prop, value);
+          }
+        }
+      }
+    } else {
+      applyCss(element, args[1], args[2]);
+    }
+  };
+}();
+
+function addListener(el, events, cb) {
+  var useCapture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  events = events.split(' ');
+  for (var i = 0; i < events.length; i++) {
+    if (document.addEventListener) {
+      el.addEventListener(events[i], cb, useCapture);
+    } else if (document.attachEvent) {
+      el.attachEvent('on' + events[i], cb);
+    }
+  }
+}
+
+function hasClass(element, name) {
+  var list = typeof element === 'string' ? element : classList(element);
+  return list.indexOf(' ' + name + ' ') >= 0;
+}
+
+function addClass(element, name) {
+  var oldList = classList(element);
+  var newList = oldList + name;
+
+  if (hasClass(oldList, name)) return;
+
+  // Trim the opening space.
+  element.className = newList.substring(1);
+}
+
+function removeClass(element, name) {
+  var oldList = classList(element);
+  var newList = void 0;
+
+  if (!hasClass(element, name)) return;
+
+  // Replace the class name.
+  newList = oldList.replace(' ' + name + ' ', ' ');
+
+  // Trim the opening and closing spaces.
+  element.className = newList.substring(1, newList.length - 1);
+}
+
+function remove(element) {
+  if (element.parentNode) {
+    element.parentNode.removeChild(element);
+  }
+}
+
+function classList(element) {
+  return (' ' + (element && element.className || '') + ' ').replace(/\s+/gi, ' ');
+}
+
+function visibilityChangeFlow() {
+  var hidden = void 0;
+  var visibilityChange = void 0;
+  if (typeof document.hidden !== 'undefined') {
+    // Opera 12.10 and Firefox 18 and later support
+    hidden = 'hidden';
+    visibilityChange = 'visibilitychange';
+  } else if (typeof document.msHidden !== 'undefined') {
+    hidden = 'msHidden';
+    visibilityChange = 'msvisibilitychange';
+  } else if (typeof document.webkitHidden !== 'undefined') {
+    hidden = 'webkitHidden';
+    visibilityChange = 'webkitvisibilitychange';
+  }
+
+  function onVisibilityChange() {
+    API.PageHidden = document[hidden];
+    handleVisibilityChange();
+  }
+
+  function onBlur() {
+    API.PageHidden = true;
+    handleVisibilityChange();
+  }
+
+  function onFocus() {
+    API.PageHidden = false;
+    handleVisibilityChange();
+  }
+
+  function handleVisibilityChange() {
+    if (API.PageHidden) stopAll();else resumeAll();
+  }
+
+  function stopAll() {
+    setTimeout(function () {
+      Object.keys(API.Store).forEach(function (id) {
+        if (API.Store.hasOwnProperty(id)) {
+          if (API.Store[id].options.visibilityControl) {
+            API.Store[id].stop();
+          }
+        }
+      });
+    }, 100);
+  }
+
+  function resumeAll() {
+    setTimeout(function () {
+      Object.keys(API.Store).forEach(function (id) {
+        if (API.Store.hasOwnProperty(id)) {
+          if (API.Store[id].options.visibilityControl) {
+            API.Store[id].resume();
+          }
+        }
+      });
+      API.queueRenderAll();
+    }, 100);
+  }
+
+  addListener(document, visibilityChange, onVisibilityChange);
+  addListener(window, 'blur', onBlur);
+  addListener(window, 'focus', onFocus);
+}
+
+function createAudioElements(ref) {
+  if (ref.hasSound) {
+    var audioElement = document.createElement('audio');
+
+    ref.options.sounds.sources.forEach(function (s) {
+      var source = document.createElement('source');
+      source.src = s;
+      source.type = 'audio/' + getExtension(s);
+      audioElement.appendChild(source);
+    });
+
+    if (ref.barDom) {
+      ref.barDom.appendChild(audioElement);
+    } else {
+      document.querySelector('body').appendChild(audioElement);
+    }
+
+    audioElement.volume = ref.options.sounds.volume;
+
+    if (!ref.soundPlayed) {
+      audioElement.play();
+      ref.soundPlayed = true;
+    }
+
+    audioElement.onended = function () {
+      remove(audioElement);
+    };
+  }
+}
+
+function getExtension(fileName) {
+  return fileName.match(/\.([^.]+)$/)[1];
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Defaults = exports.Store = exports.Queues = exports.DefaultMaxVisible = exports.docTitle = exports.DocModalCount = exports.PageHidden = undefined;
+exports.getQueueCounts = getQueueCounts;
+exports.addToQueue = addToQueue;
+exports.removeFromQueue = removeFromQueue;
+exports.queueRender = queueRender;
+exports.queueRenderAll = queueRenderAll;
+exports.ghostFix = ghostFix;
+exports.build = build;
+exports.hasButtons = hasButtons;
+exports.handleModal = handleModal;
+exports.handleModalClose = handleModalClose;
+exports.queueClose = queueClose;
+exports.dequeueClose = dequeueClose;
+exports.fire = fire;
+exports.openFlow = openFlow;
+exports.closeFlow = closeFlow;
+
+var _utils = __webpack_require__(0);
+
+var Utils = _interopRequireWildcard(_utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var PageHidden = exports.PageHidden = false;
+var DocModalCount = exports.DocModalCount = 0;
+
+var DocTitleProps = {
+  originalTitle: null,
+  count: 0,
+  changed: false,
+  timer: -1
+};
+
+var docTitle = exports.docTitle = {
+  increment: function increment() {
+    DocTitleProps.count++;
+
+    docTitle._update();
+  },
+
+  decrement: function decrement() {
+    DocTitleProps.count--;
+
+    if (DocTitleProps.count <= 0) {
+      docTitle._clear();
+      return;
+    }
+
+    docTitle._update();
+  },
+
+  _update: function _update() {
+    var title = document.title;
+
+    if (!DocTitleProps.changed) {
+      DocTitleProps.originalTitle = title;
+      document.title = '(' + DocTitleProps.count + ') ' + title;
+      DocTitleProps.changed = true;
+    } else {
+      document.title = '(' + DocTitleProps.count + ') ' + DocTitleProps.originalTitle;
+    }
+  },
+
+  _clear: function _clear() {
+    if (DocTitleProps.changed) {
+      DocTitleProps.count = 0;
+      document.title = DocTitleProps.originalTitle;
+      DocTitleProps.changed = false;
+    }
+  }
+};
+
+var DefaultMaxVisible = exports.DefaultMaxVisible = 5;
+
+var Queues = exports.Queues = {
+  global: {
+    maxVisible: DefaultMaxVisible,
+    queue: []
+  }
+};
+
+var Store = exports.Store = {};
+
+var Defaults = exports.Defaults = {
+  type: 'alert',
+  layout: 'topRight',
+  theme: 'mint',
+  text: '',
+  timeout: false,
+  progressBar: true,
+  closeWith: ['click'],
+  animation: {
+    open: 'noty_effects_open',
+    close: 'noty_effects_close'
+  },
+  id: false,
+  force: false,
+  killer: false,
+  queue: 'global',
+  container: false,
+  buttons: [],
+  callbacks: {
+    beforeShow: null,
+    onShow: null,
+    afterShow: null,
+    onClose: null,
+    afterClose: null,
+    onClick: null,
+    onHover: null,
+    onTemplate: null
+  },
+  sounds: {
+    sources: [],
+    volume: 1,
+    conditions: []
+  },
+  titleCount: {
+    conditions: []
+  },
+  modal: false,
+  visibilityControl: false
+
+  /**
+   * @param {string} queueName
+   * @return {object}
+   */
+};function getQueueCounts() {
+  var queueName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'global';
+
+  var count = 0;
+  var max = DefaultMaxVisible;
+
+  if (Queues.hasOwnProperty(queueName)) {
+    max = Queues[queueName].maxVisible;
+    Object.keys(Store).forEach(function (i) {
+      if (Store[i].options.queue === queueName && !Store[i].closed) count++;
+    });
+  }
+
+  return {
+    current: count,
+    maxVisible: max
+  };
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function addToQueue(ref) {
+  if (!Queues.hasOwnProperty(ref.options.queue)) {
+    Queues[ref.options.queue] = { maxVisible: DefaultMaxVisible, queue: [] };
+  }
+
+  Queues[ref.options.queue].queue.push(ref);
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function removeFromQueue(ref) {
+  if (Queues.hasOwnProperty(ref.options.queue)) {
+    var queue = [];
+    Object.keys(Queues[ref.options.queue].queue).forEach(function (i) {
+      if (Queues[ref.options.queue].queue[i].id !== ref.id) {
+        queue.push(Queues[ref.options.queue].queue[i]);
+      }
+    });
+    Queues[ref.options.queue].queue = queue;
+  }
+}
+
+/**
+ * @param {string} queueName
+ * @return {void}
+ */
+function queueRender() {
+  var queueName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'global';
+
+  if (Queues.hasOwnProperty(queueName)) {
+    var noty = Queues[queueName].queue.shift();
+
+    if (noty) noty.show();
+  }
+}
+
+/**
+ * @return {void}
+ */
+function queueRenderAll() {
+  Object.keys(Queues).forEach(function (queueName) {
+    queueRender(queueName);
+  });
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function ghostFix(ref) {
+  var ghostID = Utils.generateID('ghost');
+  var ghost = document.createElement('div');
+  ghost.setAttribute('id', ghostID);
+  Utils.css(ghost, {
+    height: Utils.outerHeight(ref.barDom) + 'px'
+  });
+
+  ref.barDom.insertAdjacentHTML('afterend', ghost.outerHTML);
+
+  Utils.remove(ref.barDom);
+  ghost = document.getElementById(ghostID);
+  Utils.addClass(ghost, 'noty_fix_effects_height');
+  Utils.addListener(ghost, Utils.animationEndEvents, function () {
+    Utils.remove(ghost);
+  });
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function build(ref) {
+  findOrCreateContainer(ref);
+
+  var markup = '<div class="noty_body">' + ref.options.text + '</div>' + buildButtons(ref) + '<div class="noty_progressbar"></div>';
+
+  ref.barDom = document.createElement('div');
+  ref.barDom.setAttribute('id', ref.id);
+  Utils.addClass(ref.barDom, 'noty_bar noty_type__' + ref.options.type + ' noty_theme__' + ref.options.theme);
+
+  ref.barDom.innerHTML = markup;
+
+  fire(ref, 'onTemplate');
+}
+
+/**
+ * @param {Noty} ref
+ * @return {boolean}
+ */
+function hasButtons(ref) {
+  return !!(ref.options.buttons && Object.keys(ref.options.buttons).length);
+}
+
+/**
+ * @param {Noty} ref
+ * @return {string}
+ */
+function buildButtons(ref) {
+  if (hasButtons(ref)) {
+    var buttons = document.createElement('div');
+    Utils.addClass(buttons, 'noty_buttons');
+
+    Object.keys(ref.options.buttons).forEach(function (key) {
+      buttons.appendChild(ref.options.buttons[key].dom);
+    });
+
+    ref.options.buttons.forEach(function (btn) {
+      buttons.appendChild(btn.dom);
+    });
+    return buttons.outerHTML;
+  }
+  return '';
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function handleModal(ref) {
+  if (ref.options.modal) {
+    if (DocModalCount === 0) {
+      createModal(ref);
+    }
+
+    exports.DocModalCount = DocModalCount += 1;
+  }
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function handleModalClose(ref) {
+  if (ref.options.modal && DocModalCount > 0) {
+    exports.DocModalCount = DocModalCount -= 1;
+
+    if (DocModalCount <= 0) {
+      var modal = document.querySelector('.noty_modal');
+
+      if (modal) {
+        Utils.removeClass(modal, 'noty_modal_open');
+        Utils.addClass(modal, 'noty_modal_close');
+        Utils.addListener(modal, Utils.animationEndEvents, function () {
+          Utils.remove(modal);
+        });
+      }
+    }
+  }
+}
+
+/**
+ * @return {void}
+ */
+function createModal() {
+  var body = document.querySelector('body');
+  var modal = document.createElement('div');
+  Utils.addClass(modal, 'noty_modal');
+  body.insertBefore(modal, body.firstChild);
+  Utils.addClass(modal, 'noty_modal_open');
+
+  Utils.addListener(modal, Utils.animationEndEvents, function () {
+    Utils.removeClass(modal, 'noty_modal_open');
+  });
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function findOrCreateContainer(ref) {
+  if (ref.options.container) {
+    ref.layoutDom = document.querySelector(ref.options.container);
+    return;
+  }
+
+  var layoutID = 'noty_layout__' + ref.options.layout;
+  ref.layoutDom = document.querySelector('div#' + layoutID);
+
+  if (!ref.layoutDom) {
+    ref.layoutDom = document.createElement('div');
+    ref.layoutDom.setAttribute('id', layoutID);
+    Utils.addClass(ref.layoutDom, 'noty_layout');
+    document.querySelector('body').appendChild(ref.layoutDom);
+  }
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function queueClose(ref) {
+  if (ref.options.timeout) {
+    if (ref.options.progressBar && ref.progressDom) {
+      Utils.css(ref.progressDom, {
+        transition: 'width ' + ref.options.timeout + 'ms linear',
+        width: '0%'
+      });
+    }
+
+    clearTimeout(ref.closeTimer);
+
+    ref.closeTimer = setTimeout(function () {
+      ref.close();
+    }, ref.options.timeout);
+  }
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function dequeueClose(ref) {
+  if (ref.options.timeout && ref.closeTimer) {
+    clearTimeout(ref.closeTimer);
+    ref.closeTimer = -1;
+
+    if (ref.options.progressBar && ref.progressDom) {
+      Utils.css(ref.progressDom, {
+        transition: 'width 0ms linear',
+        width: '100%'
+      });
+    }
+  }
+}
+
+/**
+ * @param {Noty} ref
+ * @param {string} eventName
+ * @return {void}
+ */
+function fire(ref, eventName) {
+  if (ref.listeners.hasOwnProperty(eventName)) {
+    ref.listeners[eventName].forEach(function (cb) {
+      if (typeof cb === 'function') {
+        cb.apply(ref);
+      }
+    });
+  }
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function openFlow(ref) {
+  fire(ref, 'afterShow');
+  queueClose(ref);
+
+  Utils.addListener(ref.barDom, 'mouseenter', function () {
+    dequeueClose(ref);
+  });
+
+  Utils.addListener(ref.barDom, 'mouseleave', function () {
+    queueClose(ref);
+  });
+}
+
+/**
+ * @param {Noty} ref
+ * @return {void}
+ */
+function closeFlow(ref) {
+  delete Store[ref.id];
+  ref.closing = false;
+  fire(ref, 'afterClose');
+
+  Utils.remove(ref.barDom);
+
+  if (ref.layoutDom.querySelectorAll('.noty_bar').length === 0 && !ref.options.container) {
+    Utils.remove(ref.layoutDom);
+  }
+
+  if (Utils.inArray('docVisible', ref.options.titleCount.conditions) || Utils.inArray('docHidden', ref.options.titleCount.conditions)) {
+    docTitle.decrement();
+  }
+
+  queueRender(ref.options.queue);
+}
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NotyButton = undefined;
+
+var _utils = __webpack_require__(0);
+
+var Utils = _interopRequireWildcard(_utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NotyButton = exports.NotyButton = function NotyButton(html, classes, cb) {
+  var _this = this;
+
+  var attributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  _classCallCheck(this, NotyButton);
+
+  this.dom = document.createElement('button');
+  this.dom.innerHTML = html;
+  this.id = attributes.id = attributes.id || Utils.generateID('button');
+  this.cb = cb;
+  Object.keys(attributes).forEach(function (propertyName) {
+    _this.dom.setAttribute(propertyName, attributes[propertyName]);
+  });
+  Utils.addClass(this.dom, classes || 'noty_btn');
+
+  return this;
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Push = exports.Push = function () {
+  function Push() {
+    var workerPath = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '/service-worker.js';
+
+    _classCallCheck(this, Push);
+
+    this.subData = {};
+    this.workerPath = workerPath;
+    this.listeners = {
+      onPermissionGranted: [],
+      onPermissionDenied: [],
+      onSubscriptionSuccess: [],
+      onSubscriptionCancel: [],
+      onWorkerError: [],
+      onWorkerSuccess: [],
+      onWorkerNotSupported: []
+    };
+    return this;
+  }
+
+  /**
+   * @param {string} eventName
+   * @param {function} cb
+   * @return {Push}
+   */
+
+
+  _createClass(Push, [{
+    key: 'on',
+    value: function on(eventName) {
+      var cb = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
+
+      if (typeof cb === 'function' && this.listeners.hasOwnProperty(eventName)) {
+        this.listeners[eventName].push(cb);
+      }
+
+      return this;
+    }
+  }, {
+    key: 'fire',
+    value: function fire(eventName) {
+      var _this = this;
+
+      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+      if (this.listeners.hasOwnProperty(eventName)) {
+        this.listeners[eventName].forEach(function (cb) {
+          if (typeof cb === 'function') {
+            cb.apply(_this, params);
+          }
+        });
+      }
+    }
+  }, {
+    key: 'create',
+    value: function create() {
+      console.log('NOT IMPLEMENTED YET');
+    }
+
+    /**
+     * @return {boolean}
+     */
+
+  }, {
+    key: 'isSupported',
+    value: function isSupported() {
+      var result = false;
+
+      try {
+        result = window.Notification || window.webkitNotifications || navigator.mozNotification || window.external && window.external.msIsSiteMode() !== undefined;
+      } catch (e) {}
+
+      return result;
+    }
+
+    /**
+     * @return {string}
+     */
+
+  }, {
+    key: 'getPermissionStatus',
+    value: function getPermissionStatus() {
+      var perm = 'default';
+
+      if (window.Notification && window.Notification.permissionLevel) {
+        perm = window.Notification.permissionLevel;
+      } else if (window.webkitNotifications && window.webkitNotifications.checkPermission) {
+        switch (window.webkitNotifications.checkPermission()) {
+          case 1:
+            perm = 'default';
+            break;
+          case 0:
+            perm = 'granted';
+            break;
+          default:
+            perm = 'denied';
+        }
+      } else if (window.Notification && window.Notification.permission) {
+        perm = window.Notification.permission;
+      } else if (navigator.mozNotification) {
+        perm = 'granted';
+      } else if (window.external && window.external.msIsSiteMode() !== undefined) {
+        perm = window.external.msIsSiteMode() ? 'granted' : 'default';
+      }
+
+      return perm.toString().toLowerCase();
+    }
+
+    /**
+     * @return {string}
+     */
+
+  }, {
+    key: 'getEndpoint',
+    value: function getEndpoint(subscription) {
+      var endpoint = subscription.endpoint;
+      var subscriptionId = subscription.subscriptionId;
+
+      // fix for Chrome < 45
+      if (subscriptionId && endpoint.indexOf(subscriptionId) === -1) {
+        endpoint += '/' + subscriptionId;
+      }
+
+      return endpoint;
+    }
+
+    /**
+     * @return {boolean}
+     */
+
+  }, {
+    key: 'isSWRegistered',
+    value: function isSWRegistered() {
+      try {
+        return navigator.serviceWorker.controller.state === 'activated';
+      } catch (e) {
+        return false;
+      }
+    }
+
+    /**
+     * @return {void}
+     */
+
+  }, {
+    key: 'unregisterWorker',
+    value: function unregisterWorker() {
+      var self = this;
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = registrations[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var registration = _step.value;
+
+              registration.unregister();
+              self.fire('onSubscriptionCancel');
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        });
+      }
+    }
+
+    /**
+     * @return {void}
+     */
+
+  }, {
+    key: 'requestSubscription',
+    value: function requestSubscription() {
+      var _this2 = this;
+
+      var userVisibleOnly = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+      var self = this;
+      var current = this.getPermissionStatus();
+      var cb = function cb(result) {
+        if (result === 'granted') {
+          _this2.fire('onPermissionGranted');
+
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register(_this2.workerPath).then(function () {
+              navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
+                self.fire('onWorkerSuccess');
+                serviceWorkerRegistration.pushManager.subscribe({
+                  userVisibleOnly: userVisibleOnly
+                }).then(function (subscription) {
+                  var key = subscription.getKey('p256dh');
+                  var token = subscription.getKey('auth');
+
+                  self.subData = {
+                    endpoint: self.getEndpoint(subscription),
+                    p256dh: key ? window.btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
+                    auth: token ? window.btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null
+                  };
+
+                  self.fire('onSubscriptionSuccess', [self.subData]);
+                }).catch(function (err) {
+                  self.fire('onWorkerError', [err]);
+                });
+              });
+            });
+          } else {
+            self.fire('onWorkerNotSupported');
+          }
+        } else if (result === 'denied') {
+          _this2.fire('onPermissionDenied');
+          _this2.unregisterWorker();
+        }
+      };
+
+      if (current === 'default') {
+        if (window.Notification && window.Notification.requestPermission) {
+          window.Notification.requestPermission(cb);
+        } else if (window.webkitNotifications && window.webkitNotifications.checkPermission) {
+          window.webkitNotifications.requestPermission(cb);
+        }
+      } else {
+        cb(current);
+      }
+    }
+  }]);
+
+  return Push;
+}();
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process, global) {var require;/*!
+ * @overview es6-promise - a tiny implementation of Promises/A+.
+ * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
+ * @license   Licensed under MIT license
+ *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
+ * @version   4.1.0
+ */
+
+(function (global, factory) {
+     true ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.ES6Promise = factory());
+}(this, (function () { 'use strict';
+
+function objectOrFunction(x) {
+  return typeof x === 'function' || typeof x === 'object' && x !== null;
+}
+
+function isFunction(x) {
+  return typeof x === 'function';
+}
+
+var _isArray = undefined;
+if (!Array.isArray) {
+  _isArray = function (x) {
+    return Object.prototype.toString.call(x) === '[object Array]';
+  };
+} else {
+  _isArray = Array.isArray;
+}
+
+var isArray = _isArray;
+
+var len = 0;
+var vertxNext = undefined;
+var customSchedulerFn = undefined;
+
+var asap = function asap(callback, arg) {
+  queue[len] = callback;
+  queue[len + 1] = arg;
+  len += 2;
+  if (len === 2) {
+    // If len is 2, that means that we need to schedule an async flush.
+    // If additional callbacks are queued before the queue is flushed, they
+    // will be processed by this flush that we are scheduling.
+    if (customSchedulerFn) {
+      customSchedulerFn(flush);
+    } else {
+      scheduleFlush();
+    }
+  }
+};
+
+function setScheduler(scheduleFn) {
+  customSchedulerFn = scheduleFn;
+}
+
+function setAsap(asapFn) {
+  asap = asapFn;
+}
+
+var browserWindow = typeof window !== 'undefined' ? window : undefined;
+var browserGlobal = browserWindow || {};
+var BrowserMutationObserver = browserGlobal.MutationObserver || browserGlobal.WebKitMutationObserver;
+var isNode = typeof self === 'undefined' && typeof process !== 'undefined' && ({}).toString.call(process) === '[object process]';
+
+// test for web worker but not in IE10
+var isWorker = typeof Uint8ClampedArray !== 'undefined' && typeof importScripts !== 'undefined' && typeof MessageChannel !== 'undefined';
+
+// node
+function useNextTick() {
+  // node version 0.10.x displays a deprecation warning when nextTick is used recursively
+  // see https://github.com/cujojs/when/issues/410 for details
+  return function () {
+    return process.nextTick(flush);
+  };
+}
+
+// vertx
+function useVertxTimer() {
+  if (typeof vertxNext !== 'undefined') {
+    return function () {
+      vertxNext(flush);
+    };
+  }
+
+  return useSetTimeout();
+}
+
+function useMutationObserver() {
+  var iterations = 0;
+  var observer = new BrowserMutationObserver(flush);
+  var node = document.createTextNode('');
+  observer.observe(node, { characterData: true });
+
+  return function () {
+    node.data = iterations = ++iterations % 2;
+  };
+}
+
+// web worker
+function useMessageChannel() {
+  var channel = new MessageChannel();
+  channel.port1.onmessage = flush;
+  return function () {
+    return channel.port2.postMessage(0);
+  };
+}
+
+function useSetTimeout() {
+  // Store setTimeout reference so es6-promise will be unaffected by
+  // other code modifying setTimeout (like sinon.useFakeTimers())
+  var globalSetTimeout = setTimeout;
+  return function () {
+    return globalSetTimeout(flush, 1);
+  };
+}
+
+var queue = new Array(1000);
+function flush() {
+  for (var i = 0; i < len; i += 2) {
+    var callback = queue[i];
+    var arg = queue[i + 1];
+
+    callback(arg);
+
+    queue[i] = undefined;
+    queue[i + 1] = undefined;
+  }
+
+  len = 0;
+}
+
+function attemptVertx() {
+  try {
+    var r = require;
+    var vertx = __webpack_require__(9);
+    vertxNext = vertx.runOnLoop || vertx.runOnContext;
+    return useVertxTimer();
+  } catch (e) {
+    return useSetTimeout();
+  }
+}
+
+var scheduleFlush = undefined;
+// Decide what async method to use to triggering processing of queued callbacks:
+if (isNode) {
+  scheduleFlush = useNextTick();
+} else if (BrowserMutationObserver) {
+  scheduleFlush = useMutationObserver();
+} else if (isWorker) {
+  scheduleFlush = useMessageChannel();
+} else if (browserWindow === undefined && "function" === 'function') {
+  scheduleFlush = attemptVertx();
+} else {
+  scheduleFlush = useSetTimeout();
+}
+
+function then(onFulfillment, onRejection) {
+  var _arguments = arguments;
+
+  var parent = this;
+
+  var child = new this.constructor(noop);
+
+  if (child[PROMISE_ID] === undefined) {
+    makePromise(child);
+  }
+
+  var _state = parent._state;
+
+  if (_state) {
+    (function () {
+      var callback = _arguments[_state - 1];
+      asap(function () {
+        return invokeCallback(_state, child, callback, parent._result);
+      });
+    })();
+  } else {
+    subscribe(parent, child, onFulfillment, onRejection);
+  }
+
+  return child;
+}
+
+/**
+  `Promise.resolve` returns a promise that will become resolved with the
+  passed `value`. It is shorthand for the following:
+
+  ```javascript
+  let promise = new Promise(function(resolve, reject){
+    resolve(1);
+  });
+
+  promise.then(function(value){
+    // value === 1
+  });
+  ```
+
+  Instead of writing the above, your code now simply becomes the following:
+
+  ```javascript
+  let promise = Promise.resolve(1);
+
+  promise.then(function(value){
+    // value === 1
+  });
+  ```
+
+  @method resolve
+  @static
+  @param {Any} value value that the returned promise will be resolved with
+  Useful for tooling.
+  @return {Promise} a promise that will become fulfilled with the given
+  `value`
+*/
+function resolve(object) {
+  /*jshint validthis:true */
+  var Constructor = this;
+
+  if (object && typeof object === 'object' && object.constructor === Constructor) {
+    return object;
+  }
+
+  var promise = new Constructor(noop);
+  _resolve(promise, object);
+  return promise;
+}
+
+var PROMISE_ID = Math.random().toString(36).substring(16);
+
+function noop() {}
+
+var PENDING = void 0;
+var FULFILLED = 1;
+var REJECTED = 2;
+
+var GET_THEN_ERROR = new ErrorObject();
+
+function selfFulfillment() {
+  return new TypeError("You cannot resolve a promise with itself");
+}
+
+function cannotReturnOwn() {
+  return new TypeError('A promises callback cannot return that same promise.');
+}
+
+function getThen(promise) {
+  try {
+    return promise.then;
+  } catch (error) {
+    GET_THEN_ERROR.error = error;
+    return GET_THEN_ERROR;
+  }
+}
+
+function tryThen(then, value, fulfillmentHandler, rejectionHandler) {
+  try {
+    then.call(value, fulfillmentHandler, rejectionHandler);
+  } catch (e) {
+    return e;
+  }
+}
+
+function handleForeignThenable(promise, thenable, then) {
+  asap(function (promise) {
+    var sealed = false;
+    var error = tryThen(then, thenable, function (value) {
+      if (sealed) {
+        return;
+      }
+      sealed = true;
+      if (thenable !== value) {
+        _resolve(promise, value);
+      } else {
+        fulfill(promise, value);
+      }
+    }, function (reason) {
+      if (sealed) {
+        return;
+      }
+      sealed = true;
+
+      _reject(promise, reason);
+    }, 'Settle: ' + (promise._label || ' unknown promise'));
+
+    if (!sealed && error) {
+      sealed = true;
+      _reject(promise, error);
+    }
+  }, promise);
+}
+
+function handleOwnThenable(promise, thenable) {
+  if (thenable._state === FULFILLED) {
+    fulfill(promise, thenable._result);
+  } else if (thenable._state === REJECTED) {
+    _reject(promise, thenable._result);
+  } else {
+    subscribe(thenable, undefined, function (value) {
+      return _resolve(promise, value);
+    }, function (reason) {
+      return _reject(promise, reason);
+    });
+  }
+}
+
+function handleMaybeThenable(promise, maybeThenable, then$$) {
+  if (maybeThenable.constructor === promise.constructor && then$$ === then && maybeThenable.constructor.resolve === resolve) {
+    handleOwnThenable(promise, maybeThenable);
+  } else {
+    if (then$$ === GET_THEN_ERROR) {
+      _reject(promise, GET_THEN_ERROR.error);
+      GET_THEN_ERROR.error = null;
+    } else if (then$$ === undefined) {
+      fulfill(promise, maybeThenable);
+    } else if (isFunction(then$$)) {
+      handleForeignThenable(promise, maybeThenable, then$$);
+    } else {
+      fulfill(promise, maybeThenable);
+    }
+  }
+}
+
+function _resolve(promise, value) {
+  if (promise === value) {
+    _reject(promise, selfFulfillment());
+  } else if (objectOrFunction(value)) {
+    handleMaybeThenable(promise, value, getThen(value));
+  } else {
+    fulfill(promise, value);
+  }
+}
+
+function publishRejection(promise) {
+  if (promise._onerror) {
+    promise._onerror(promise._result);
+  }
+
+  publish(promise);
+}
+
+function fulfill(promise, value) {
+  if (promise._state !== PENDING) {
+    return;
+  }
+
+  promise._result = value;
+  promise._state = FULFILLED;
+
+  if (promise._subscribers.length !== 0) {
+    asap(publish, promise);
+  }
+}
+
+function _reject(promise, reason) {
+  if (promise._state !== PENDING) {
+    return;
+  }
+  promise._state = REJECTED;
+  promise._result = reason;
+
+  asap(publishRejection, promise);
+}
+
+function subscribe(parent, child, onFulfillment, onRejection) {
+  var _subscribers = parent._subscribers;
+  var length = _subscribers.length;
+
+  parent._onerror = null;
+
+  _subscribers[length] = child;
+  _subscribers[length + FULFILLED] = onFulfillment;
+  _subscribers[length + REJECTED] = onRejection;
+
+  if (length === 0 && parent._state) {
+    asap(publish, parent);
+  }
+}
+
+function publish(promise) {
+  var subscribers = promise._subscribers;
+  var settled = promise._state;
+
+  if (subscribers.length === 0) {
+    return;
+  }
+
+  var child = undefined,
+      callback = undefined,
+      detail = promise._result;
+
+  for (var i = 0; i < subscribers.length; i += 3) {
+    child = subscribers[i];
+    callback = subscribers[i + settled];
+
+    if (child) {
+      invokeCallback(settled, child, callback, detail);
+    } else {
+      callback(detail);
+    }
+  }
+
+  promise._subscribers.length = 0;
+}
+
+function ErrorObject() {
+  this.error = null;
+}
+
+var TRY_CATCH_ERROR = new ErrorObject();
+
+function tryCatch(callback, detail) {
+  try {
+    return callback(detail);
+  } catch (e) {
+    TRY_CATCH_ERROR.error = e;
+    return TRY_CATCH_ERROR;
+  }
+}
+
+function invokeCallback(settled, promise, callback, detail) {
+  var hasCallback = isFunction(callback),
+      value = undefined,
+      error = undefined,
+      succeeded = undefined,
+      failed = undefined;
+
+  if (hasCallback) {
+    value = tryCatch(callback, detail);
+
+    if (value === TRY_CATCH_ERROR) {
+      failed = true;
+      error = value.error;
+      value.error = null;
+    } else {
+      succeeded = true;
+    }
+
+    if (promise === value) {
+      _reject(promise, cannotReturnOwn());
+      return;
+    }
+  } else {
+    value = detail;
+    succeeded = true;
+  }
+
+  if (promise._state !== PENDING) {
+    // noop
+  } else if (hasCallback && succeeded) {
+      _resolve(promise, value);
+    } else if (failed) {
+      _reject(promise, error);
+    } else if (settled === FULFILLED) {
+      fulfill(promise, value);
+    } else if (settled === REJECTED) {
+      _reject(promise, value);
+    }
+}
+
+function initializePromise(promise, resolver) {
+  try {
+    resolver(function resolvePromise(value) {
+      _resolve(promise, value);
+    }, function rejectPromise(reason) {
+      _reject(promise, reason);
+    });
+  } catch (e) {
+    _reject(promise, e);
+  }
+}
+
+var id = 0;
+function nextId() {
+  return id++;
+}
+
+function makePromise(promise) {
+  promise[PROMISE_ID] = id++;
+  promise._state = undefined;
+  promise._result = undefined;
+  promise._subscribers = [];
+}
+
+function Enumerator(Constructor, input) {
+  this._instanceConstructor = Constructor;
+  this.promise = new Constructor(noop);
+
+  if (!this.promise[PROMISE_ID]) {
+    makePromise(this.promise);
+  }
+
+  if (isArray(input)) {
+    this._input = input;
+    this.length = input.length;
+    this._remaining = input.length;
+
+    this._result = new Array(this.length);
+
+    if (this.length === 0) {
+      fulfill(this.promise, this._result);
+    } else {
+      this.length = this.length || 0;
+      this._enumerate();
+      if (this._remaining === 0) {
+        fulfill(this.promise, this._result);
+      }
+    }
+  } else {
+    _reject(this.promise, validationError());
+  }
+}
+
+function validationError() {
+  return new Error('Array Methods must be provided an Array');
+};
+
+Enumerator.prototype._enumerate = function () {
+  var length = this.length;
+  var _input = this._input;
+
+  for (var i = 0; this._state === PENDING && i < length; i++) {
+    this._eachEntry(_input[i], i);
+  }
+};
+
+Enumerator.prototype._eachEntry = function (entry, i) {
+  var c = this._instanceConstructor;
+  var resolve$$ = c.resolve;
+
+  if (resolve$$ === resolve) {
+    var _then = getThen(entry);
+
+    if (_then === then && entry._state !== PENDING) {
+      this._settledAt(entry._state, i, entry._result);
+    } else if (typeof _then !== 'function') {
+      this._remaining--;
+      this._result[i] = entry;
+    } else if (c === Promise) {
+      var promise = new c(noop);
+      handleMaybeThenable(promise, entry, _then);
+      this._willSettleAt(promise, i);
+    } else {
+      this._willSettleAt(new c(function (resolve$$) {
+        return resolve$$(entry);
+      }), i);
+    }
+  } else {
+    this._willSettleAt(resolve$$(entry), i);
+  }
+};
+
+Enumerator.prototype._settledAt = function (state, i, value) {
+  var promise = this.promise;
+
+  if (promise._state === PENDING) {
+    this._remaining--;
+
+    if (state === REJECTED) {
+      _reject(promise, value);
+    } else {
+      this._result[i] = value;
+    }
+  }
+
+  if (this._remaining === 0) {
+    fulfill(promise, this._result);
+  }
+};
+
+Enumerator.prototype._willSettleAt = function (promise, i) {
+  var enumerator = this;
+
+  subscribe(promise, undefined, function (value) {
+    return enumerator._settledAt(FULFILLED, i, value);
+  }, function (reason) {
+    return enumerator._settledAt(REJECTED, i, reason);
+  });
+};
+
+/**
+  `Promise.all` accepts an array of promises, and returns a new promise which
+  is fulfilled with an array of fulfillment values for the passed promises, or
+  rejected with the reason of the first passed promise to be rejected. It casts all
+  elements of the passed iterable to promises as it runs this algorithm.
+
+  Example:
+
+  ```javascript
+  let promise1 = resolve(1);
+  let promise2 = resolve(2);
+  let promise3 = resolve(3);
+  let promises = [ promise1, promise2, promise3 ];
+
+  Promise.all(promises).then(function(array){
+    // The array here would be [ 1, 2, 3 ];
+  });
+  ```
+
+  If any of the `promises` given to `all` are rejected, the first promise
+  that is rejected will be given as an argument to the returned promises's
+  rejection handler. For example:
+
+  Example:
+
+  ```javascript
+  let promise1 = resolve(1);
+  let promise2 = reject(new Error("2"));
+  let promise3 = reject(new Error("3"));
+  let promises = [ promise1, promise2, promise3 ];
+
+  Promise.all(promises).then(function(array){
+    // Code here never runs because there are rejected promises!
+  }, function(error) {
+    // error.message === "2"
+  });
+  ```
+
+  @method all
+  @static
+  @param {Array} entries array of promises
+  @param {String} label optional string for labeling the promise.
+  Useful for tooling.
+  @return {Promise} promise that is fulfilled when all `promises` have been
+  fulfilled, or rejected if any of them become rejected.
+  @static
+*/
+function all(entries) {
+  return new Enumerator(this, entries).promise;
+}
+
+/**
+  `Promise.race` returns a new promise which is settled in the same way as the
+  first passed promise to settle.
+
+  Example:
+
+  ```javascript
+  let promise1 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      resolve('promise 1');
+    }, 200);
+  });
+
+  let promise2 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      resolve('promise 2');
+    }, 100);
+  });
+
+  Promise.race([promise1, promise2]).then(function(result){
+    // result === 'promise 2' because it was resolved before promise1
+    // was resolved.
+  });
+  ```
+
+  `Promise.race` is deterministic in that only the state of the first
+  settled promise matters. For example, even if other promises given to the
+  `promises` array argument are resolved, but the first settled promise has
+  become rejected before the other promises became fulfilled, the returned
+  promise will become rejected:
+
+  ```javascript
+  let promise1 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      resolve('promise 1');
+    }, 200);
+  });
+
+  let promise2 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      reject(new Error('promise 2'));
+    }, 100);
+  });
+
+  Promise.race([promise1, promise2]).then(function(result){
+    // Code here never runs
+  }, function(reason){
+    // reason.message === 'promise 2' because promise 2 became rejected before
+    // promise 1 became fulfilled
+  });
+  ```
+
+  An example real-world use case is implementing timeouts:
+
+  ```javascript
+  Promise.race([ajax('foo.json'), timeout(5000)])
+  ```
+
+  @method race
+  @static
+  @param {Array} promises array of promises to observe
+  Useful for tooling.
+  @return {Promise} a promise which settles in the same way as the first passed
+  promise to settle.
+*/
+function race(entries) {
+  /*jshint validthis:true */
+  var Constructor = this;
+
+  if (!isArray(entries)) {
+    return new Constructor(function (_, reject) {
+      return reject(new TypeError('You must pass an array to race.'));
+    });
+  } else {
+    return new Constructor(function (resolve, reject) {
+      var length = entries.length;
+      for (var i = 0; i < length; i++) {
+        Constructor.resolve(entries[i]).then(resolve, reject);
+      }
+    });
+  }
+}
+
+/**
+  `Promise.reject` returns a promise rejected with the passed `reason`.
+  It is shorthand for the following:
+
+  ```javascript
+  let promise = new Promise(function(resolve, reject){
+    reject(new Error('WHOOPS'));
+  });
+
+  promise.then(function(value){
+    // Code here doesn't run because the promise is rejected!
+  }, function(reason){
+    // reason.message === 'WHOOPS'
+  });
+  ```
+
+  Instead of writing the above, your code now simply becomes the following:
+
+  ```javascript
+  let promise = Promise.reject(new Error('WHOOPS'));
+
+  promise.then(function(value){
+    // Code here doesn't run because the promise is rejected!
+  }, function(reason){
+    // reason.message === 'WHOOPS'
+  });
+  ```
+
+  @method reject
+  @static
+  @param {Any} reason value that the returned promise will be rejected with.
+  Useful for tooling.
+  @return {Promise} a promise rejected with the given `reason`.
+*/
+function reject(reason) {
+  /*jshint validthis:true */
+  var Constructor = this;
+  var promise = new Constructor(noop);
+  _reject(promise, reason);
+  return promise;
+}
+
+function needsResolver() {
+  throw new TypeError('You must pass a resolver function as the first argument to the promise constructor');
+}
+
+function needsNew() {
+  throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
+}
+
+/**
+  Promise objects represent the eventual result of an asynchronous operation. The
+  primary way of interacting with a promise is through its `then` method, which
+  registers callbacks to receive either a promise's eventual value or the reason
+  why the promise cannot be fulfilled.
+
+  Terminology
+  -----------
+
+  - `promise` is an object or function with a `then` method whose behavior conforms to this specification.
+  - `thenable` is an object or function that defines a `then` method.
+  - `value` is any legal JavaScript value (including undefined, a thenable, or a promise).
+  - `exception` is a value that is thrown using the throw statement.
+  - `reason` is a value that indicates why a promise was rejected.
+  - `settled` the final resting state of a promise, fulfilled or rejected.
+
+  A promise can be in one of three states: pending, fulfilled, or rejected.
+
+  Promises that are fulfilled have a fulfillment value and are in the fulfilled
+  state.  Promises that are rejected have a rejection reason and are in the
+  rejected state.  A fulfillment value is never a thenable.
+
+  Promises can also be said to *resolve* a value.  If this value is also a
+  promise, then the original promise's settled state will match the value's
+  settled state.  So a promise that *resolves* a promise that rejects will
+  itself reject, and a promise that *resolves* a promise that fulfills will
+  itself fulfill.
+
+
+  Basic Usage:
+  ------------
+
+  ```js
+  let promise = new Promise(function(resolve, reject) {
+    // on success
+    resolve(value);
+
+    // on failure
+    reject(reason);
+  });
+
+  promise.then(function(value) {
+    // on fulfillment
+  }, function(reason) {
+    // on rejection
+  });
+  ```
+
+  Advanced Usage:
+  ---------------
+
+  Promises shine when abstracting away asynchronous interactions such as
+  `XMLHttpRequest`s.
+
+  ```js
+  function getJSON(url) {
+    return new Promise(function(resolve, reject){
+      let xhr = new XMLHttpRequest();
+
+      xhr.open('GET', url);
+      xhr.onreadystatechange = handler;
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.send();
+
+      function handler() {
+        if (this.readyState === this.DONE) {
+          if (this.status === 200) {
+            resolve(this.response);
+          } else {
+            reject(new Error('getJSON: `' + url + '` failed with status: [' + this.status + ']'));
+          }
+        }
+      };
+    });
+  }
+
+  getJSON('/posts.json').then(function(json) {
+    // on fulfillment
+  }, function(reason) {
+    // on rejection
+  });
+  ```
+
+  Unlike callbacks, promises are great composable primitives.
+
+  ```js
+  Promise.all([
+    getJSON('/posts'),
+    getJSON('/comments')
+  ]).then(function(values){
+    values[0] // => postsJSON
+    values[1] // => commentsJSON
+
+    return values;
+  });
+  ```
+
+  @class Promise
+  @param {function} resolver
+  Useful for tooling.
+  @constructor
+*/
+function Promise(resolver) {
+  this[PROMISE_ID] = nextId();
+  this._result = this._state = undefined;
+  this._subscribers = [];
+
+  if (noop !== resolver) {
+    typeof resolver !== 'function' && needsResolver();
+    this instanceof Promise ? initializePromise(this, resolver) : needsNew();
+  }
+}
+
+Promise.all = all;
+Promise.race = race;
+Promise.resolve = resolve;
+Promise.reject = reject;
+Promise._setScheduler = setScheduler;
+Promise._setAsap = setAsap;
+Promise._asap = asap;
+
+Promise.prototype = {
+  constructor: Promise,
+
+  /**
+    The primary way of interacting with a promise is through its `then` method,
+    which registers callbacks to receive either a promise's eventual value or the
+    reason why the promise cannot be fulfilled.
+
+    ```js
+    findUser().then(function(user){
+      // user is available
+    }, function(reason){
+      // user is unavailable, and you are given the reason why
+    });
+    ```
+
+    Chaining
+    --------
+
+    The return value of `then` is itself a promise.  This second, 'downstream'
+    promise is resolved with the return value of the first promise's fulfillment
+    or rejection handler, or rejected if the handler throws an exception.
+
+    ```js
+    findUser().then(function (user) {
+      return user.name;
+    }, function (reason) {
+      return 'default name';
+    }).then(function (userName) {
+      // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
+      // will be `'default name'`
+    });
+
+    findUser().then(function (user) {
+      throw new Error('Found user, but still unhappy');
+    }, function (reason) {
+      throw new Error('`findUser` rejected and we're unhappy');
+    }).then(function (value) {
+      // never reached
+    }, function (reason) {
+      // if `findUser` fulfilled, `reason` will be 'Found user, but still unhappy'.
+      // If `findUser` rejected, `reason` will be '`findUser` rejected and we're unhappy'.
+    });
+    ```
+    If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
+
+    ```js
+    findUser().then(function (user) {
+      throw new PedagogicalException('Upstream error');
+    }).then(function (value) {
+      // never reached
+    }).then(function (value) {
+      // never reached
+    }, function (reason) {
+      // The `PedgagocialException` is propagated all the way down to here
+    });
+    ```
+
+    Assimilation
+    ------------
+
+    Sometimes the value you want to propagate to a downstream promise can only be
+    retrieved asynchronously. This can be achieved by returning a promise in the
+    fulfillment or rejection handler. The downstream promise will then be pending
+    until the returned promise is settled. This is called *assimilation*.
+
+    ```js
+    findUser().then(function (user) {
+      return findCommentsByAuthor(user);
+    }).then(function (comments) {
+      // The user's comments are now available
+    });
+    ```
+
+    If the assimliated promise rejects, then the downstream promise will also reject.
+
+    ```js
+    findUser().then(function (user) {
+      return findCommentsByAuthor(user);
+    }).then(function (comments) {
+      // If `findCommentsByAuthor` fulfills, we'll have the value here
+    }, function (reason) {
+      // If `findCommentsByAuthor` rejects, we'll have the reason here
+    });
+    ```
+
+    Simple Example
+    --------------
+
+    Synchronous Example
+
+    ```javascript
+    let result;
+
+    try {
+      result = findResult();
+      // success
+    } catch(reason) {
+      // failure
+    }
+    ```
+
+    Errback Example
+
+    ```js
+    findResult(function(result, err){
+      if (err) {
+        // failure
+      } else {
+        // success
+      }
+    });
+    ```
+
+    Promise Example;
+
+    ```javascript
+    findResult().then(function(result){
+      // success
+    }, function(reason){
+      // failure
+    });
+    ```
+
+    Advanced Example
+    --------------
+
+    Synchronous Example
+
+    ```javascript
+    let author, books;
+
+    try {
+      author = findAuthor();
+      books  = findBooksByAuthor(author);
+      // success
+    } catch(reason) {
+      // failure
+    }
+    ```
+
+    Errback Example
+
+    ```js
+
+    function foundBooks(books) {
+
+    }
+
+    function failure(reason) {
+
+    }
+
+    findAuthor(function(author, err){
+      if (err) {
+        failure(err);
+        // failure
+      } else {
+        try {
+          findBoooksByAuthor(author, function(books, err) {
+            if (err) {
+              failure(err);
+            } else {
+              try {
+                foundBooks(books);
+              } catch(reason) {
+                failure(reason);
+              }
+            }
+          });
+        } catch(error) {
+          failure(err);
+        }
+        // success
+      }
+    });
+    ```
+
+    Promise Example;
+
+    ```javascript
+    findAuthor().
+      then(findBooksByAuthor).
+      then(function(books){
+        // found books
+    }).catch(function(reason){
+      // something went wrong
+    });
+    ```
+
+    @method then
+    @param {Function} onFulfilled
+    @param {Function} onRejected
+    Useful for tooling.
+    @return {Promise}
+  */
+  then: then,
+
+  /**
+    `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
+    as the catch block of a try/catch statement.
+
+    ```js
+    function findAuthor(){
+      throw new Error('couldn't find that author');
+    }
+
+    // synchronous
+    try {
+      findAuthor();
+    } catch(reason) {
+      // something went wrong
+    }
+
+    // async with promises
+    findAuthor().catch(function(reason){
+      // something went wrong
+    });
+    ```
+
+    @method catch
+    @param {Function} onRejection
+    Useful for tooling.
+    @return {Promise}
+  */
+  'catch': function _catch(onRejection) {
+    return this.then(null, onRejection);
+  }
+};
+
+function polyfill() {
+    var local = undefined;
+
+    if (typeof global !== 'undefined') {
+        local = global;
+    } else if (typeof self !== 'undefined') {
+        local = self;
+    } else {
+        try {
+            local = Function('return this')();
+        } catch (e) {
+            throw new Error('polyfill failed because global object is unavailable in this environment');
+        }
+    }
+
+    var P = local.Promise;
+
+    if (P) {
+        var promiseToString = null;
+        try {
+            promiseToString = Object.prototype.toString.call(P.resolve());
+        } catch (e) {
+            // silently ignored
+        }
+
+        if (promiseToString === '[object Promise]' && !P.cast) {
+            return;
+        }
+    }
+
+    local.Promise = Promise;
+}
+
+// Strange compat..
+Promise.polyfill = polyfill;
+Promise.Promise = Promise;
+
+return Promise;
+
+})));
+//# sourceMappingURL=es6-promise.map
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(8)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global VERSION */
+
+__webpack_require__(5);
+
+var _es6Promise = __webpack_require__(4);
+
+var _es6Promise2 = _interopRequireDefault(_es6Promise);
+
+var _utils = __webpack_require__(0);
+
+var Utils = _interopRequireWildcard(_utils);
+
+var _api = __webpack_require__(1);
+
+var API = _interopRequireWildcard(_api);
+
+var _button = __webpack_require__(2);
+
+var _push = __webpack_require__(3);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Noty = function () {
+  /**
+   * @param {object} options
+   * @return {Noty}
+   */
+  function Noty() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Noty);
+
+    this.options = Utils.deepExtend({}, API.Defaults, options);
+    this.id = this.options.id || Utils.generateID('bar');
+    this.closeTimer = -1;
+    this.barDom = null;
+    this.layoutDom = null;
+    this.progressDom = null;
+    this.showing = false;
+    this.shown = false;
+    this.closed = false;
+    this.closing = false;
+    this.killable = this.options.timeout || this.options.closeWith.length > 0;
+    this.hasSound = this.options.sounds.sources.length > 0;
+    this.soundPlayed = false;
+    this.listeners = {
+      beforeShow: [],
+      onShow: [],
+      afterShow: [],
+      onClose: [],
+      afterClose: [],
+      onClick: [],
+      onHover: [],
+      onTemplate: []
+    };
+    this.promises = {
+      show: null,
+      close: null
+    };
+    this.on('beforeShow', this.options.callbacks.beforeShow);
+    this.on('onShow', this.options.callbacks.onShow);
+    this.on('afterShow', this.options.callbacks.afterShow);
+    this.on('onClose', this.options.callbacks.onClose);
+    this.on('afterClose', this.options.callbacks.afterClose);
+    this.on('onClick', this.options.callbacks.onClick);
+    this.on('onHover', this.options.callbacks.onHover);
+    this.on('onTemplate', this.options.callbacks.onTemplate);
+
+    return this;
+  }
+
+  /**
+   * @param {string} eventName
+   * @param {function} cb
+   * @return {Noty}
+   */
+
+
+  _createClass(Noty, [{
+    key: 'on',
+    value: function on(eventName) {
+      var cb = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
+
+      if (typeof cb === 'function' && this.listeners.hasOwnProperty(eventName)) {
+        this.listeners[eventName].push(cb);
+      }
+
+      return this;
+    }
+
+    /**
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'show',
+    value: function show() {
+      var _this = this;
+
+      if (this.options.killer === true) {
+        Noty.closeAll();
+      } else if (typeof this.options.killer === 'string') {
+        Noty.closeAll(this.options.killer);
+      }
+
+      var queueCounts = API.getQueueCounts(this.options.queue);
+
+      if (queueCounts.current >= queueCounts.maxVisible || API.PageHidden && this.options.visibilityControl) {
+        API.addToQueue(this);
+
+        if (API.PageHidden && this.hasSound && Utils.inArray('docHidden', this.options.sounds.conditions)) {
+          Utils.createAudioElements(this);
+        }
+
+        if (API.PageHidden && Utils.inArray('docHidden', this.options.titleCount.conditions)) {
+          API.docTitle.increment();
+        }
+
+        return this;
+      }
+
+      API.Store[this.id] = this;
+
+      API.fire(this, 'beforeShow');
+
+      this.showing = true;
+
+      if (this.closing) {
+        this.showing = false;
+        return this;
+      }
+
+      API.build(this);
+      API.handleModal(this);
+
+      if (this.options.force) {
+        this.layoutDom.insertBefore(this.barDom, this.layoutDom.firstChild);
+      } else {
+        this.layoutDom.appendChild(this.barDom);
+      }
+
+      if (this.hasSound && !this.soundPlayed && Utils.inArray('docVisible', this.options.sounds.conditions)) {
+        Utils.createAudioElements(this);
+      }
+
+      if (Utils.inArray('docVisible', this.options.titleCount.conditions)) {
+        API.docTitle.increment();
+      }
+
+      this.shown = true;
+      this.closed = false;
+
+      // bind button events if any
+      if (API.hasButtons(this)) {
+        Object.keys(this.options.buttons).forEach(function (key) {
+          var btn = _this.barDom.querySelector('#' + _this.options.buttons[key].id);
+          Utils.addListener(btn, 'click', function (e) {
+            Utils.stopPropagation(e);
+            _this.options.buttons[key].cb();
+          });
+        });
+      }
+
+      this.progressDom = this.barDom.querySelector('.noty_progressbar');
+
+      if (Utils.inArray('click', this.options.closeWith)) {
+        Utils.addClass(this.barDom, 'noty_close_with_click');
+        Utils.addListener(this.barDom, 'click', function (e) {
+          Utils.stopPropagation(e);
+          API.fire(_this, 'onClick');
+          _this.close();
+        }, false);
+      }
+
+      Utils.addListener(this.barDom, 'mouseenter', function () {
+        API.fire(_this, 'onHover');
+      }, false);
+
+      if (this.options.timeout) Utils.addClass(this.barDom, 'noty_has_timeout');
+      if (this.options.progressBar) {
+        Utils.addClass(this.barDom, 'noty_has_progressbar');
+      }
+
+      if (Utils.inArray('button', this.options.closeWith)) {
+        Utils.addClass(this.barDom, 'noty_close_with_button');
+
+        var closeButton = document.createElement('div');
+        Utils.addClass(closeButton, 'noty_close_button');
+        closeButton.innerHTML = '×';
+        this.barDom.appendChild(closeButton);
+
+        Utils.addListener(closeButton, 'click', function (e) {
+          Utils.stopPropagation(e);
+          _this.close();
+        }, false);
+      }
+
+      API.fire(this, 'onShow');
+
+      if (this.options.animation.open === null) {
+        this.promises.show = new _es6Promise2.default(function (resolve) {
+          resolve();
+        });
+      } else if (typeof this.options.animation.open === 'function') {
+        this.promises.show = new _es6Promise2.default(this.options.animation.open.bind(this));
+      } else {
+        Utils.addClass(this.barDom, this.options.animation.open);
+        this.promises.show = new _es6Promise2.default(function (resolve) {
+          Utils.addListener(_this.barDom, Utils.animationEndEvents, function () {
+            Utils.removeClass(_this.barDom, _this.options.animation.open);
+            resolve();
+          });
+        });
+      }
+
+      this.promises.show.then(function () {
+        var _t = _this;
+        setTimeout(function () {
+          API.openFlow(_t);
+        }, 100);
+      });
+
+      return this;
+    }
+
+    /**
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'stop',
+    value: function stop() {
+      API.dequeueClose(this);
+      return this;
+    }
+
+    /**
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'resume',
+    value: function resume() {
+      API.queueClose(this);
+      return this;
+    }
+
+    /**
+     * @param {int|boolean} ms
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'setTimeout',
+    value: function (_setTimeout) {
+      function setTimeout(_x) {
+        return _setTimeout.apply(this, arguments);
+      }
+
+      setTimeout.toString = function () {
+        return _setTimeout.toString();
+      };
+
+      return setTimeout;
+    }(function (ms) {
+      this.stop();
+      this.options.timeout = ms;
+
+      if (this.barDom) {
+        if (this.options.timeout) {
+          Utils.addClass(this.barDom, 'noty_has_timeout');
+        } else {
+          Utils.removeClass(this.barDom, 'noty_has_timeout');
+        }
+
+        var _t = this;
+        setTimeout(function () {
+          // ugly fix for progressbar display bug
+          _t.resume();
+        }, 100);
+      }
+
+      return this;
+    })
+
+    /**
+     * @param {string} html
+     * @param {boolean} optionsOverride
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'setText',
+    value: function setText(html) {
+      var optionsOverride = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      if (this.barDom) {
+        this.barDom.querySelector('.noty_body').innerHTML = html;
+      }
+
+      if (optionsOverride) this.options.text = html;
+
+      return this;
+    }
+
+    /**
+     * @param {string} type
+     * @param {boolean} optionsOverride
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'setType',
+    value: function setType(type) {
+      var _this2 = this;
+
+      var optionsOverride = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      if (this.barDom) {
+        var classList = Utils.classList(this.barDom).split(' ');
+
+        classList.forEach(function (c) {
+          if (c.substring(0, 11) === 'noty_type__') {
+            Utils.removeClass(_this2.barDom, c);
+          }
+        });
+
+        Utils.addClass(this.barDom, 'noty_type__' + type);
+      }
+
+      if (optionsOverride) this.options.type = type;
+
+      return this;
+    }
+
+    /**
+     * @param {string} theme
+     * @param {boolean} optionsOverride
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'setTheme',
+    value: function setTheme(theme) {
+      var _this3 = this;
+
+      var optionsOverride = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      if (this.barDom) {
+        var classList = Utils.classList(this.barDom).split(' ');
+
+        classList.forEach(function (c) {
+          if (c.substring(0, 12) === 'noty_theme__') {
+            Utils.removeClass(_this3.barDom, c);
+          }
+        });
+
+        Utils.addClass(this.barDom, 'noty_theme__' + theme);
+      }
+
+      if (optionsOverride) this.options.theme = theme;
+
+      return this;
+    }
+
+    /**
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'close',
+    value: function close() {
+      var _this4 = this;
+
+      if (this.closed) return this;
+
+      if (!this.shown) {
+        // it's in the queue
+        API.removeFromQueue(this);
+        return this;
+      }
+
+      API.fire(this, 'onClose');
+
+      this.closing = true;
+
+      if (this.options.animation.close === null) {
+        this.promises.close = new _es6Promise2.default(function (resolve) {
+          resolve();
+        });
+      } else if (typeof this.options.animation.close === 'function') {
+        this.promises.close = new _es6Promise2.default(this.options.animation.close.bind(this));
+      } else {
+        Utils.addClass(this.barDom, this.options.animation.close);
+        this.promises.close = new _es6Promise2.default(function (resolve) {
+          Utils.addListener(_this4.barDom, Utils.animationEndEvents, function () {
+            if (_this4.options.force) {
+              Utils.remove(_this4.barDom);
+            } else {
+              API.ghostFix(_this4);
+            }
+            resolve();
+          });
+        });
+      }
+
+      this.promises.close.then(function () {
+        API.closeFlow(_this4);
+        API.handleModalClose(_this4);
+      });
+
+      this.closed = true;
+
+      return this;
+    }
+
+    // API functions
+
+    /**
+     * @param {boolean|string} queueName
+     * @return {Noty}
+     */
+
+  }], [{
+    key: 'closeAll',
+    value: function closeAll() {
+      var queueName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      Object.keys(API.Store).forEach(function (id) {
+        if (queueName) {
+          if (API.Store[id].options.queue === queueName && API.Store[id].killable) {
+            API.Store[id].close();
+          }
+        } else if (API.Store[id].killable) {
+          API.Store[id].close();
+        }
+      });
+      return this;
+    }
+
+    /**
+     * @param {Object} obj
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'overrideDefaults',
+    value: function overrideDefaults(obj) {
+      API.Defaults = Utils.deepExtend({}, API.Defaults, obj);
+      return this;
+    }
+
+    /**
+     * @param {int} amount
+     * @param {string} queueName
+     * @return {Noty}
+     */
+
+  }, {
+    key: 'setMaxVisible',
+    value: function setMaxVisible() {
+      var amount = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : API.DefaultMaxVisible;
+      var queueName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global';
+
+      if (!API.Queues.hasOwnProperty(queueName)) {
+        API.Queues[queueName] = { maxVisible: amount, queue: [] };
+      }
+
+      API.Queues[queueName].maxVisible = amount;
+      return this;
+    }
+
+    /**
+     * @param {string} innerHtml
+     * @param {String} classes
+     * @param {Function} cb
+     * @param {Object} attributes
+     * @return {NotyButton}
+     */
+
+  }, {
+    key: 'button',
+    value: function button(innerHtml) {
+      var classes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var cb = arguments[2];
+      var attributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+      return new _button.NotyButton(innerHtml, classes, cb, attributes);
+    }
+
+    /**
+     * @return {string}
+     */
+
+  }, {
+    key: 'version',
+    value: function version() {
+      return "3.1.3";
+    }
+
+    /**
+     * @param {String} workerPath
+     * @return {Push}
+     */
+
+  }, {
+    key: 'Push',
+    value: function Push(workerPath) {
+      return new _push.Push(workerPath);
+    }
+  }]);
+
+  return Noty;
+}();
+
+// Document visibility change controller
+
+
+exports.default = Noty;
+Utils.visibilityChangeFlow();
+module.exports = exports['default'];
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ })
+/******/ ]);
+});
+//# sourceMappingURL=noty.js.map
+;
 /****************************************************************************
-	jquery-bootstrap-accordion.js, 
+	jquery-bootstrap-accordion.js,
 
 	(c) 2017, FCOO
 
@@ -51900,17 +54999,17 @@ TODO:
 
 (function ($ /*, window, document, undefined*/) {
 	"use strict";
-	
+
     //Add/Remove class "show" to .card
-    function card_onShown(){ 
+    function card_onShown(){
         var $this = $(this);
         if ($this.children('.collapse.show').length)
-            $this.addClass('show'); 
+            $this.addClass('show');
     }
-    function card_onHidden(){ 
+    function card_onHidden(){
         var $this = $(this);
         if (!$this.children('.collapse.show').length)
-            $this.removeClass('show'); 
+            $this.removeClass('show');
     }
 
     /**********************************************************
@@ -51942,10 +55041,10 @@ TODO:
     var accordionId = 0;
 
     function bsAccordion_asModal( options ){
-        return $.bsModal( $.extend( { 
-                              flex   : true,  
+        return $.bsModal( $.extend( {
+                              flex   : true,
                               content: this,
-                          }, options) 
+                          }, options)
                );
     }
 
@@ -51953,7 +55052,7 @@ TODO:
 
         var id = 'bsAccordion'+ accordionId++;
 
-        options = 
+        options =
             $._bsAdjustOptions( options, {}, {
                 baseClass   : 'accordion',
                 styleClass  : '',
@@ -51964,17 +55063,17 @@ TODO:
 
         var $result = $('<div/>')
                         ._bsAddBaseClassAndSize( options )
-                        .attr({ 
+                        .attr({
                             'id'  : id,
-                            'tabindex'   : -1, 
+                            'tabindex'   : -1,
                             'role': "tablist",
                             'aria-multiselectable': true
                         });
-                            
+
         //Adding the children {icon, text, content}
         $.each( options.list, function( index, opt ){
             //Create the header
-            opt = $._bsAdjustOptions( opt ); 
+            opt = $._bsAdjustOptions( opt );
 
             var headerId   = id + 'header'+index,
                 collapseId = id + 'collapse'+index,
@@ -51991,7 +55090,7 @@ TODO:
                     .attr({
                         'id'           : headerId,
                         'role'         : 'tab',
-                        'data-toggle'  : "collapse", 
+                        'data-toggle'  : "collapse",
                         'data-parent'  : '#'+id,
                         'href'         : '#'+collapseId,
                         'aria-expanded': true,
@@ -52001,11 +55100,11 @@ TODO:
                     ._bsAddHtml( opt.header )
                     //Add chevrolet-icon
                     .append( $('<i/>').addClass('fa chevrolet') )
-                    
+
             );
 
             //Add content-container
-            var $outer = 
+            var $outer =
                 $('<div/>')
 //                    .addClass('collapse show REMOVE_SHOW')
                     .addClass('collapse')
@@ -52015,7 +55114,7 @@ TODO:
                         'aria-labelledby': headerId
                     })
                     .appendTo( $card ),
-                
+
                 $contentContainer =
                     $('<div/>')
                         .addClass('card-block')
@@ -52027,13 +55126,13 @@ TODO:
                     .addClass('card-footer')
                     ._bsAddHtml( opt.footer )
                     .appendTo( $outer );
-                    
+
             //Add content: string, element, function or children (=accordion)
             if (opt.content){
                 if ($.isFunction( opt.content ))
                     opt.content( $contentContainer );
                 else
-                    $contentContainer.append( opt.content );                                
+                    $contentContainer.append( opt.content );
             }
 
             //If opt.list exists => create a accordion inside $contentContainer
@@ -52041,7 +55140,7 @@ TODO:
                 $.bsAccordion( { list: opt.list } )
                     .appendTo( $contentContainer );
         });
-        
+
 
         $result.collapse(/*options*/);
 
@@ -52272,7 +55371,7 @@ TODO:
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	jquery-bootstrap-checkbox.js, 
+	jquery-bootstrap-checkbox.js,
 
 	(c) 2017, FCOO
 
@@ -52283,17 +55382,17 @@ TODO:
 
 (function (/*$, window/*, document, undefined*/) {
 	"use strict";
-	
+
     /**********************************************************
     bsCheckbox( options ) - create a Bootstrap checkbox
     **********************************************************/
-    $.bsCheckbox = function( options ){ 
-        options = 
+    $.bsCheckbox = function( options ){
+        options =
             $._bsAdjustOptions( options, {
                 useTouchSize: true,
                 baseClass   : options.type || 'checkbox'
             });
-        
+
         //Create outer div
         var $result = $('<div/>')._bsAddBaseClassAndSize( options ),
 
@@ -52306,7 +55405,7 @@ TODO:
                         .appendTo( $result );
 
         //Create input-element as checkbox from jquery-checkbox-radio-group
-        $input.checkbox( options );        
+        $input.checkbox( options );
 
         //Get id and update input.id
         var id = $input.data('cbx_options').id;
@@ -52325,12 +55424,12 @@ TODO:
 
 
 	/******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
+	$(function() {
 
-	
-	}); 
+
+	});
 	//******************************************
 
 
@@ -52368,11 +55467,13 @@ TODO:
     $.fn._bsHeaderAndIcons = function(options){
         var $this = this;
 
-        options = $.extend( true, {
-            headerClassName: '',    
-            icons          : {}
-            
-        }, options );
+        options = $.extend( true,
+            {
+                headerClassName: '',
+                icons          : {}
+            },
+            options
+        );
 
         this
             .addClass( options.headerClassName )
@@ -52413,6 +55514,73 @@ TODO:
 }(jQuery, this, document));
 ;
 /****************************************************************************
+	jquery-bootstrap-modal-backdrop.js,
+
+	(c) 2017, FCOO
+
+	https://github.com/fcoo/jquery-bootstrap
+	https://github.com/fcoo
+
+
+    Global methods to provide backdrop for modal windows and noty
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    var zindexModalBackdrop = 1040, //MUST be equal to $zindex-modal-backdrop in bootstrap/scss/_variables.scss
+        modalBackdropLevels = 0,
+        $modalBackdrop = null;
+
+    /******************************************************
+    $.fn._setModalBackdropZIndex
+    Set the z-index of this to the current level
+    ******************************************************/
+    $.fn._setModalBackdropZIndex = function( delta ){
+        this.css('z-index', zindexModalBackdrop + modalBackdropLevels*10  + (delta?delta:0));
+        return this;
+    };
+
+    /******************************************************
+    $._addModalBackdropLevel
+    Move the backdrop up in z-index
+    ******************************************************/
+    $._addModalBackdropLevel = function(){
+        modalBackdropLevels++;
+
+        if (!$modalBackdrop)
+            $modalBackdrop =
+                $('<div/>')
+                    .addClass('global-backdrop')
+                    .appendTo( $('body') );
+
+        $modalBackdrop
+            ._setModalBackdropZIndex( -1 )
+            .removeClass('hidden')
+            .addClass('show');
+    };
+
+    /******************************************************
+    $._removeModalBackdropLevel
+    Move the backdrop up in z-index
+    ******************************************************/
+    $._removeModalBackdropLevel = function(){
+        modalBackdropLevels--;
+
+        $modalBackdrop._setModalBackdropZIndex( -1 );
+        if (!modalBackdropLevels){
+            $modalBackdrop
+                .removeClass('show');
+            window.setTimeout( function(){
+                $modalBackdrop.addClass('hidden');
+            }, 200 );
+
+        }
+    };
+}(jQuery, this, document));
+;
+/****************************************************************************
 	jquery-bootstrap-modal.js,
 
 	(c) 2017, FCOO
@@ -52425,7 +55593,6 @@ TODO:
 (function ($, window, document/*, undefined*/) {
 	"use strict";
 
-
     /**********************************************************
     bsModal( options ) - create a Bootstrap-modal
 
@@ -52435,13 +55602,14 @@ TODO:
             close   : {onClick, attr, className, attr, data }
             extend  : {onClick, attr, className, attr, data }
             diminish: {onClick, attr, className, attr, data }
-}
+}       type //"", "alert", "success", "warning", "error", "info"
         fixedContent
         flex
         noVerticalPadding
         content
         scroll: boolean | 'vertical' | 'horizontal'
         extended: {
+            type
             fixedContent
             flex
             noVerticalPadding
@@ -52456,13 +55624,14 @@ TODO:
 
     **********************************************************/
     var modalId = 0,
-        modalStackClassName = 'fv-modal-stack', //class-name for modals when added to the stack
-        openModalDataId = 'bs_open_modals',     //Merthods to allow multi modal-windows
-        modalVerticalMargin = 20;               //Top and bottom margin for modal windows      
+        openModals = 0,
+        modalVerticalMargin = 10; //Top and bottom margin for modal windows
+
+
 
     /**********************************************************
     MAX-HEIGHT ISSUES ON SAFARI (AND OTHER BROWSER ON IOS)
-    Due to an intended design in Safari it is not possible to 
+    Due to an intended design in Safari it is not possible to
     use style a la max-height: calc(100vh - 20px) is not working
     as expected/needed
     Instead a resize-event is added to update the max-height of
@@ -52480,36 +55649,27 @@ TODO:
     }
     window.addEventListener('resize',            function(){ adjustModalMaxHeight(); }, false );
     window.addEventListener('orientationchange', function(){ adjustModalMaxHeight(); }, false );
-    
-    //******************************************************
-    function incOpenModals( number ){
-        $('body').data(
-            openModalDataId,
-            ($('body').data( openModalDataId  ) || 0)
-                + (number || 0)
-        );
-        return $('body').data( openModalDataId  );
-     }
+
 
     //******************************************************
     //show_bs_modal - called when a modal is opening
     function show_bs_modal( /*event*/ ) {
-
         //Close all popover
         $('.popover.show').popover('hide');
 
         var $this = $(this);
-        // if the z-index of this modal has been set, ignore.
-        if ( $this.hasClass( modalStackClassName ) )
-            return;
 
-        $this.addClass( modalStackClassName );
+        openModals++;
 
-        // keep track of the number of open modals
-        var modalNumber = incOpenModals( +1 );
+        //Move up the backdrop
+        $._addModalBackdropLevel();
+
+        //Add layer for noty on the modal
+        $._bsNotyAddLayer( true );
 
         //Move the modal to the front
-        $this.css('z-index', 1040 + 10*modalNumber );
+        $this._setModalBackdropZIndex();
+
     }
 
     //******************************************************
@@ -52519,15 +55679,6 @@ TODO:
 
         //Adjust max-height
         adjustModalMaxHeight( $this );
-
-        //Update other backdrop
-        var modalNumber = incOpenModals();
-        $( '.modal-backdrop' ).not( '.'+modalStackClassName )
-            .css( 'z-index', 1039 + 10*modalNumber );
-
-        //Set current backdrop
-        $( '.modal-backdrop' ).not( '.'+modalStackClassName )
-            .addClass( modalStackClassName );
 
         //Focus on focus-element
         var $focusElement = $this.find('.init_focus').last();
@@ -52540,16 +55691,15 @@ TODO:
     //******************************************************
     //hide_bs_modal - called when a modal is closing
     function hide_bs_modal( /*event*/ ) {
-
+        //Remove all noty added on the modal and move down global backdrop
+        $._bsNotyRemoveLayer();
     }
 
     //******************************************************
     //hidden_bs_modal - called when a modal is closed/hidden
     function hidden_bs_modal( /*event*/ ) {
-        var $this = $(this);
+        openModals--;
 
-        $this.removeClass( modalStackClassName );
-        var openModals = incOpenModals( -1 );
         if (openModals){
             //Move focus to previous modal on top
             var $modal = $('.modal.show').last(),
@@ -52584,7 +55734,7 @@ TODO:
 
     /******************************************************
     _bsModalBodyAndFooter
-    Create the body and footer content (exc header and bottoms) 
+    Create the body and footer content (exc header and bottoms)
     of a modal inside this. Created elements are saved in parts
     ******************************************************/
     $.fn._bsModalBodyAndFooter = function(options, parts, className){
@@ -52608,6 +55758,7 @@ TODO:
         var $modalBody = parts.$body =
                 $('<div/>')
                     .addClass('modal-body ' + className)
+                    .toggleClass('modal-type-' + options.type, !!options.type)
                     .appendTo( this ),
 
             $modalContent = parts.$content =
@@ -52634,7 +55785,7 @@ TODO:
                     ._bsAddHtml( options.footer );
         return this;
     };
-    
+
     /******************************************************
     _bsModalExtend, _bsModalDiminish, _bsModalToggle
     Methods to change extended-mode
@@ -52642,22 +55793,22 @@ TODO:
     $.fn._bsModalExtend = function( event ){
         if (this.hasClass('no-modal-extended'))
             this._bsModalToggle( event );
-    };        
+    };
     $.fn._bsModalDiminish = function( event ){
         if (this.hasClass('modal-extended'))
             this._bsModalToggle( event );
-    };        
+    };
 
-    
+
     $.fn._bsModalToggle = function( event ){
         var $this = $(this),
             oldHeight = $this.outerHeight(),
             newHeight;
-        
+
         this.modernizrToggle('modal-extended');
 
         newHeight = $this.outerHeight();
-        $this.height( oldHeight); 
+        $this.height( oldHeight);
 
         $this.animate({height: newHeight}, 'fast', function() { $this.height('auto'); });
 
@@ -52674,13 +55825,13 @@ TODO:
     $.fn._bsModalContent = function( options ){
         options = options || {};
 
-        
+
         //this.bsModal contains all created elements
         this.bsModal = {};
 
         var $modalContainer = this.bsModal.$container =
                 $('<div/>')
-                    .addClass('modal-content') 
+                    .addClass('modal-content')
                     .modernizrToggle('modal-extended', !!options.isExtended )
                     .appendTo( this );
 
@@ -52688,7 +55839,7 @@ TODO:
         var modalExtend   = $.proxy( $modalContainer._bsModalExtend,   $modalContainer ),
             modalDiminish = $.proxy( $modalContainer._bsModalDiminish, $modalContainer ),
             modalToggle   = $.proxy( $modalContainer._bsModalToggle,   $modalContainer );
-        
+
         options = $.extend( true, {
             headerClassName: 'modal-header',
             //Buttons
@@ -52704,6 +55855,9 @@ TODO:
             }
         }, options );
 
+        //Adjust for options.buttons: null
+        options.buttons = options.buttons || [];
+
         //Add close-botton. Avoid by setting options.closeButton = false
         if (options.closeButton)
             options.buttons.push({
@@ -52716,10 +55870,10 @@ TODO:
 
         //If the modal has extended content: Normal and extended content get same scroll-options to have same horizontal padding in normal and extended mode
         if (options.extended){
-            options.scroll = options.scroll || options.extended.scroll;            
-            options.extended.scroll = options.scroll;            
+            options.scroll = options.scroll || options.extended.scroll;
+            options.extended.scroll = options.scroll;
         }
-        
+
         //Append header
         if (!options.noHeader &&  (options.header || !$.isEmptyObject(options.icons) ) ){
             var $modalHeader = this.bsModal.$header =
@@ -52733,16 +55887,16 @@ TODO:
                     .addClass('clickable')
                     .on('doubletap', modalToggle );
         }
-        
+
         //Create normal content
         $modalContainer._bsModalBodyAndFooter( options, this.bsModal, 'hide-for-modal-extended' );
 
         //Create extended content (if any)
         if (options.extended){
-            this.bsModal.extended = {};            
+            this.bsModal.extended = {};
             $modalContainer._bsModalBodyAndFooter( options.extended, this.bsModal.extended, 'show-for-modal-extended' );
         }
-      
+
         //Add buttons (if any)
         var $modalButtonContainer = this.bsModal.$buttonContainer =
                 $('<div/>')
@@ -52768,19 +55922,19 @@ TODO:
 
             //Add same onClick as close-icon if closeOnClick: true
             if (buttonOptions.closeOnClick)
-                buttonOptions.equalIconId = (buttonOptions.equalIconId || '') + ' close';                    
-            
+                buttonOptions.equalIconId = (buttonOptions.equalIconId || '') + ' close';
+
             buttonOptions.class = defaultButtonClass + ' ' + (buttonOptions.className || '');
-            
+
             var $button =
                 $.bsButton( $.extend({}, defaultButtonOptions, buttonOptions ) )
                     .appendTo( $modalButtonContainer );
-        
+
             //Add onClick from icons (if any)
             buttonOptions.equalIconId = buttonOptions.equalIconId || '';
             $.each( buttonOptions.equalIconId.split(' '), function( index, iconId ){
                 if (iconId && options.icons[iconId] && options.icons[iconId].onClick)
-                    $button.on('click', options.icons[iconId].onClick);                    
+                    $button.on('click', options.icons[iconId].onClick);
             });
 
             $modalButtons.push( $button );
@@ -52873,6 +56027,307 @@ TODO:
 }(jQuery, this, document));
 ;
 /****************************************************************************
+	jquery-bootstrap-noty.js,
+
+	(c) 2017, FCOO
+
+	https://github.com/fcoo/jquery-bootstrap
+	https://github.com/fcoo
+
+****************************************************************************/
+
+(function ($, Noty, window/*, document, undefined*/) {
+	"use strict";
+
+
+    /******************************************************
+    To be able to have Noty on top of modal-windows the notys are
+    placed in different containers with increasing and decreasing
+    z-index.
+    A new container is added when a modal-window or modal noty is open
+    All noty in the top container is closed when the modal-window or
+    modal noty is closed. E.q. all noty opened on top of a modal-window is automatic
+    closed when the modal-window is closed
+    ******************************************************/
+    var bsNotyLayerList = [];
+    var $bsNotyLayer = null;
+
+    function notyQueueName(){
+        return 'bsNotyQueue'+ bsNotyLayerList.length;
+    }
+
+    //$._bsNotyAddLayer: add a new container for noty-containers
+    $._bsNotyAddLayer = function(){
+
+        $bsNotyLayer =
+            $('<div/>')
+                .addClass('noty-layer')
+                .appendTo( $('body') );
+
+        bsNotyLayerList.push( $bsNotyLayer );
+
+        $bsNotyLayer
+            .attr('id', notyQueueName())
+            ._setModalBackdropZIndex();
+    };
+
+
+    //$._bsNotyRemoveLayer: close all noty in current layer and remove the layer
+    $._bsNotyRemoveLayer = function(){
+        //Close all noty in current layer
+        Noty.closeAll(notyQueueName());
+
+        //Remove the layer
+        bsNotyLayerList.pop().remove();
+
+        $bsNotyLayer = bsNotyLayerList[ bsNotyLayerList.length - 1];
+
+        //Move down or hide the backdrop
+        $._removeModalBackdropLevel();
+    };
+
+
+    /******************************************************
+    Setting default options for Noty
+    ******************************************************/
+    Noty.overrideDefaults({
+        theme: 'jquery-bootstrap'
+    });
+
+
+    var defaultNotyOptions = {
+        layout   : 'topCenter',
+        type     : 'info',
+        closeWith: ['click', 'button'],
+        textAlign: 'left',
+        show     : true,
+    };
+
+
+    $.bsNoty = function(options){
+        options = $.extend({}, defaultNotyOptions, options );
+
+        if (options.type == 'information')
+            options.type = 'info';
+
+        //Set animation from layout
+        var animateOpen = 'fadeIn',
+            animateClose = 'fadeOut';
+        if (options.layout.indexOf('top') == 0){
+            //top, topLeft, topCenter, topRight
+            animateOpen  = 'fadeInDown';
+            animateClose = 'fadeOutUp';
+        }
+        else
+        if (options.layout.indexOf('bottom') == 0){
+            //bottom, bottomLeft, bottomCenter, bottomRight
+            animateOpen  = 'fadeInUp';
+            animateClose = 'fadeOutDown';
+        }
+        else
+        if (options.layout == 'centerLeft'){
+            //centerLeft
+            animateOpen  = 'fadeInLeft';
+            animateClose = 'fadeOutLeft';
+        }
+        else
+        if (options.layout == 'centerRight'){
+            //centerRight
+            animateOpen  = 'fadeInRight';
+            animateClose = 'fadeOutRight';
+        }
+        else
+        if (options.layout == 'center'){
+            //centerRight
+            animateOpen  = 'fadeIn';
+            animateClose = 'fadeOut';
+        }
+
+        options.animation = {
+            open : 'animated ' + animateOpen,
+            close: 'animated ' + animateClose
+        };
+
+        //Save closeWith and remove 'button' to prevent default close-button
+        var closeWith = options.closeWith;
+        options.closeWith = closeWith.includes('click') ? ['click'] : [];
+
+        //Save show and create the noty hidden
+        var show = options.show;
+        options.show = false;
+
+        //Create the noty empty and create the content in options.content
+        options.content = options.content || options.text;
+        options.text = '';
+
+        //Add header (if any)
+        if (options.header || options.defaultHeader){
+            if (!$.isArray(options.content))
+                options.content = [options.content];
+
+            options.header = options.header || {};
+
+            var headerOptions =
+                options.defaultHeader ?
+                $.extend({},
+                    {
+                        icon: $.bsNotyIcon[options.type],
+                        text: $.bsNotyName[options.type]
+                    }, options.header || {})
+                : options.header || {};
+
+            options.content.unshift('<br>');
+            options.content.unshift({
+                icon     : headerOptions.icon,
+                textClass: 'text-capitalize font-weight-bold',
+                text     : headerOptions.text
+            });
+        }
+
+        //Force no progressBar
+        options.progressBar = false;
+
+        //Always force when modal
+        options.force = options.force || options.modal;
+
+        //Add callbacks.onTemplate to add content (and close-icon)
+        options.callbacks = options.callbacks || {};
+        options.callbacks.onTemplate = function() {
+            var _this = this,
+                $barDom = $(this.barDom),
+                $body = $barDom.find('.noty_body');
+
+            //Replace content with text as object {icon, txt,etc}
+            $body._bsAddHtml( options.content );
+
+            //Add footer (if any)
+            if (options.footer){
+                $body.append( $('<hr/>') );
+                $('<div/>')
+                    .addClass('noty_footer')
+                    .addClass('text-' + (options.footer.textAlign || 'left'))
+                    ._bsAddHtml( options.footer )
+                    .appendTo($body);
+            }
+
+            $body.addClass('text-'+options.textAlign);
+
+            if (closeWith.includes('button'))
+                //Add same close-icon as for modal-windows
+                $('<div/>')
+                    ._bsAddBaseClassAndSize( {
+                        baseClass   :'header-icon-container',
+                        useTouchSize: true
+                    })
+                    .appendTo($barDom)
+                    .append(
+                        $('<i/>')
+                            .addClass("header-icon header-icon-close")
+                            .on('click', function( event ){
+                                event.stopPropagation();
+                                _this.close();
+                            })
+                    );
+        };
+
+
+        //If it is a modal noty => add/move up backdrop
+        if (options.modal)
+            $._addModalBackdropLevel();
+
+        //Find or create layer and container for the noty
+        if (!$bsNotyLayer || options.modal){
+            $._bsNotyAddLayer();
+        }
+        var classNames = '.noty-container.noty-container-'+options.layout,
+            $container = $bsNotyLayer.find(classNames);
+        if (!$container.length){
+            $container =
+                $('<div/>')
+                    .addClass( classNames.split('.').join(' ') )
+                    .appendTo( $bsNotyLayer );
+        }
+
+        options.container = '#' + notyQueueName() + ' ' + classNames;
+
+        var result = new Noty( options );
+
+        //If it is a modal noty => remove/move down backdrop when closed
+        if (options.modal)
+            result.on('afterClose', $._bsNotyRemoveLayer);
+
+        if (show)
+            result.show();
+        return result;
+    };
+
+
+    /******************************************************
+    Create standard variations of sbNoty
+    ******************************************************/
+    //$.bsNotyIcon = icon-class for different noty-type
+    $.bsNotyIcon = {
+        info        : 'fa-info-circle',
+        information : 'fa-info-circle',
+        alert       : '',
+        success     : 'fa-check',
+        error       : 'fa-ban',
+        warning     : 'fa-exclamation-triangle',
+        help        : 'fa-question-circle'
+    };
+
+    //$.bsNotyName = Name for different noty-type
+    $.bsNotyName = {
+        info        : {da:'Information', en:'Information'},
+        information : {da:'Information', en:'Information'},
+        alert       : {da:'Bemærk', en:'Note'},
+        success     : {da:'Succes', en:'Success'},
+        error       : {da:'Fejl', en:'Error'},
+        warning     : {da:'Advarsel', en:'Warning'},
+        help        : {da:'Hjælp', en:'Help'}
+    };
+
+    //window.notyOk / $.bsNotyOk: Simple centered noty with centered text
+    window.notyOk = $.bsNotyOk = function( text, options ){
+        return $.bsNoty($.extend({}, {
+            type     : 'success',
+            layout   : 'center',
+            closeWith: ['click'],
+            content  : {
+                icon: $.bsNotyIcon['success'],
+                text: text
+            },
+            textAlign: 'center',
+            force    : true,
+            timeout  : 3000,
+            show     : true
+        }, options));
+    };
+
+    //window.notyError / $.bsNotyError: Simple error noty with header
+    window.notyError = $.bsNotyError = function( text, options ){
+        return $.bsNoty($.extend({}, {
+            type         : 'error',
+            defaultHeader: true,
+            content      : text,
+            show         : true
+        }, options));
+    };
+
+    //window.notyError / $.bsNotyError: Simple warning noty with header
+    window.notyWarning = $.bsNotyWarning = function( text, options ){
+        return $.bsNoty($.extend({}, {
+            type         : 'warning',
+            defaultHeader: true,
+            content      : text,
+            show         : true
+        }, options));
+    };
+
+
+}(jQuery, this.Noty, this, document));
+;
+/****************************************************************************
 	jquery-bootstrap-popover.js,
 
 	(c) 2017, FCOO
@@ -52944,8 +56399,8 @@ TODO:
             options.icons = options.icons || {};
             options.headerClassName = 'popover-header-content';
             if (options.close)
-                options.icons.close = { 
-                    onClick: function(){ $this.popover('hide'); } 
+                options.icons.close = {
+                    onClick: function(){ $this.popover('hide'); }
                 };
 
             $header =
@@ -53075,7 +56530,7 @@ TODO:
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	jquery-bootstrap-select.js, 
+	jquery-bootstrap-select.js,
 
 	(c) 2017, FCOO
 
@@ -53091,7 +56546,7 @@ TODO:
 
 (function (/*$, window/*, document, undefined*/) {
 	"use strict";
-	
+
     /**********************************************************
     bsSelectbox( options ) - create a Bootstrap-selectbox
     **********************************************************/
@@ -53107,7 +56562,7 @@ TODO:
             return;
         //Clone the new content from the selected element and replace the original content with the new
         var newContent = $selectedItem.find('._content').clone(true).addClass('selected-content');
-        
+
         //Old content
         $selectedItem.closest( '.selectbox').find('.selected-content')
             .after( newContent ) //Insert new content after
@@ -53119,16 +56574,16 @@ TODO:
     function scrollSelectedItemIntoView(){
         $(this).find( '.dropdown-item.active' ).first().scrollIntoView();
     }
-    
+
     //addSelectItems( $container, items,  ) - Create radioGroup and adds items
     function addSelectItems( $container, options, inSpan ){
-        var radioGroup = $.radioGroup( 
+        var radioGroup = $.radioGroup(
                             $.extend({}, options, {
-                                radioGroupId     : options.id, 
-                                className        : 'active', 
+                                radioGroupId     : options.id,
+                                className        : 'active',
                                 allowZeroSelected: false
                             })
-                         ); 
+                         );
 
         $.each( options.list, function( index, itemOptions ){
             var isItem = (itemOptions.id != undefined ),
@@ -53155,10 +56610,10 @@ TODO:
         return $container;
     }
 
-    
-    
+
+
     $.bsSelectbox = function( options ){
-        options = 
+        options =
             $._bsAdjustOptions( options, {
                 id          : getSelectId(),
                 baseClass   : 'selectbox',
@@ -53176,30 +56631,30 @@ TODO:
 
         //Create the dropdown-button
         $.bsButton({
-                tagName     : 'div', 
+                tagName     : 'div',
                 class       : '',
                 addOnClick  : false
             })
-            .attr({ 
+            .attr({
                 'id'           : options.id,
                 'role'         : 'botton',
                 'tabindex'     : 0,
                 'data-toggle'  : 'dropdown',
                 'aria-haspopup': true,
                 'aria-expanded': false
-               
+
             })
 
             //Append span with selected content or placeholder
-            .append( 
+            .append(
                 $('<span/>')
                     .addClass( 'selected-content empty' )
                     ._bsAddHtml( {text: placeholder } )
              )
 
             //Append open-icon
-            .append( 
-                $('<i/>').addClass('fa arrow') 
+            .append(
+                $('<i/>').addClass('fa arrow')
             )
 
             .appendTo( $result );
@@ -53212,10 +56667,10 @@ TODO:
         //Updates dropdownmenu-button with selected contents (if any)
         postOnChange( $dropdown_menu.find( '.dropdown-item.active' ).first() );
 
-        //Scroll selected item into view when opened        
+        //Scroll selected item into view when opened
         $result.on('shown.bs.dropdown', scrollSelectedItemIntoView );
 
-/* REMOVED        
+/* REMOVED
         //Setting the width of the dropdown-button equal the width of the item-box. Need timeout to allow DOM in some browser to finish adding elements
         setTimeout(function(){
             var bodyFontSize = parseFloat( $('body').css('font-size') ),
@@ -53231,8 +56686,8 @@ TODO:
     /**********************************************************
     bsSelectList( options ) - create a Bootstrap-list with selection
     **********************************************************/
-    $.bsSelectList = function( options ){ 
-        options = 
+    $.bsSelectList = function( options ){
+        options =
             $._bsAdjustOptions( options, {
                 id          : getSelectId(),
                 baseClass   : 'selectList',
@@ -53252,12 +56707,12 @@ TODO:
 
 
 	/******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
+	$(function() {
 
-	
-	}); 
+
+	});
 	//******************************************
 
 
@@ -53265,7 +56720,7 @@ TODO:
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	jquery-bootstrap-table.js, 
+	jquery-bootstrap-table.js,
 
 	(c) 2017, FCOO
 
@@ -53276,17 +56731,23 @@ TODO:
 
 (function ($/*, window, document, undefined*/) {
 	"use strict";
-	
+
 /******************************************************************
 bsTable( options )
 options
     columns = [] of {
         id,
-        header       : {icon, text, link, textStyle} or [] of {text,...}
-        contentType  : '', 'date', 'date-time',...
-        contentFormat: '', //Depends on contentType
-        align        : 'left','center','right'
-        sortable     : [boolean] false
+        header   :  {icon, text, link, textStyle} or [] of {text,...}
+        vfFormat,
+        vfOptions:  The content of a element can be set and updated using [jquery-value-format].
+                    The options vfFormat and (optional) vfOptions defines witch format used to display the content
+
+        align        :  'left','center','right'. Defalut = 'left'
+        verticalAlign: 'top', 'middle','bottom'. Default = 'middle'
+        noWrap       : false. If true the column will not be wrapped = fixed width
+TODO:         truncate     : false. If true the column will be truncated. Normally only one column get truncate: true
+
+        sortable :  [boolean] false
     }
     showHeader: [boolean] true
     verticalBorder [boolean] true
@@ -53294,13 +56755,13 @@ options
     selectedId [string] "" id for selected row
     onChange          [function(id, selected, trElement)] null Called when a row is selected or unselected (if options.allowZeroSelected == true)
 	allowZeroSelected [boolean] false. If true it is allowed to un-select a selected row
-
+    allowReselect     [Boolean] false. If true the onChange is called when a selected item is reselected/clicked
 
 TODO
 Add sort-functions + save col-index for sorted column
 
 
-*******************************************************************/    
+*******************************************************************/
     var defaultOptions = {
             baseClass     : 'table',
             styleClass    : 'fixed',
@@ -53309,12 +56770,34 @@ Add sort-functions + save col-index for sorted column
         },
 
         defaultColunmOptions = {
-            contentType: 'default',
-            align      : 'left',
-            sortable   : false
+            align        : 'left',
+            verticalAlign: 'middle',
+            noWrap       : false,
+            truncate     : false,
+            sortable     : false
         },
 
         dataTableId = 'bsTable_options';
+
+
+    //********************************************************************
+    function adjustThOrTd( $element, columnOptions, addWidth ){
+        $element
+            ._bsAddStyleClasses( columnOptions.textStyle )
+            .addClass('align-' + columnOptions.verticalAlign )
+            ._bsAddStyleClasses( columnOptions.align )
+            .toggleClass('text-nowrap', !!columnOptions.noWrap )
+//TODO            .toggleClass('text-truncate', !!columnOptions.truncate )
+            .toggleClass('no-horizontal-padding', !!columnOptions.noHorizontalPadding );
+
+        if (addWidth && columnOptions.width)
+            $element.css({
+                'width'    : columnOptions.width,
+                'max-width': columnOptions.width
+            });
+
+        return $element;
+    }
 
     /**********************************************************
     Prototype for bsTable
@@ -53329,19 +56812,17 @@ Add sort-functions + save col-index for sorted column
                 $tr     = $('<tr/>').appendTo( $tbody );
 
             if (options.selectable)
-                $tr.attr('id', rowContent.id || 'rowId_'+rowId++);                
+                $tr.attr('id', rowContent.id || 'rowId_'+rowId++);
 
-            $.each( options.columns, function( index, column ){
-                var content = rowContent[column.id],
+            $.each( options.columns, function( index, columnOptions ){
+                var content = rowContent[columnOptions.id],
                     $td = $('<td/>')
-                            ._bsAddStyleClasses( column.textStyle ) 
-                            .addClass('align-middle')
-                            ._bsAddStyleClasses( column.align )
                             .appendTo($tr);
+                adjustThOrTd( $td, columnOptions, !options.showHeader );
 
-                //Build the content using _bsAddHtml or jquery-value-format                    
-                if (column.vfFormat)
-                    $td.vfValueFormat( content, column.vfFormat, column.vfOptions );
+                //Build the content using _bsAddHtml or jquery-value-format
+                if (columnOptions.vfFormat)
+                    $td.vfValueFormat( content, columnOptions.vfFormat, columnOptions.vfOptions );
                 else
                     $td._bsAddHtml( content );
             });
@@ -53357,14 +56838,14 @@ Add sort-functions + save col-index for sorted column
         asModal: function( modalOptions ){
             var showHeader = this.find('.no-header').length == 0,
                 _this      = this,
-                $theadClone, 
-                $tableWithHeader = null, 
+                $theadClone,
+                $tableWithHeader = null,
                 $result, $thead, count;
-                
+
             if (showHeader){
                 //Clone the header and place them in fixed-body of the modal. Hide the original header by padding the table
                 $theadClone = this.find('thead').clone( true );
-                $tableWithHeader =  
+                $tableWithHeader =
                     $('<table/>')
                         ._bsAddBaseClassAndSize( this.data(dataTableId) )
                         .addClass('table-with-header')
@@ -53374,7 +56855,7 @@ Add sort-functions + save col-index for sorted column
             }
 
 
-            $result = $.bsModal( 
+            $result = $.bsModal(
                             $.extend( modalOptions || {}, {
                                 flex             : true,
                                 noVerticalPadding: true,
@@ -53385,8 +56866,8 @@ Add sort-functions + save col-index for sorted column
 
             if (showHeader){
                 //Using timeout to wait for the browser to update DOM and get height of the header
-                var setHeaderHeight = function(){ 
-                        var height = $tableWithHeader.outerHeight(); 
+                var setHeaderHeight = function(){
+                        var height = $tableWithHeader.outerHeight();
                         if (height <= 0){
                             count--;
                             if (count){
@@ -53395,14 +56876,14 @@ Add sort-functions + save col-index for sorted column
                                 return;
                             }
                         }
-                   
+
                         _this.css('margin-top', -height+'px');
                         setHeaderWidth();
 
                         //Only set header-height once
                         $result.off('shown.bs.modal.table', setHeaderHeight );
                     },
-                
+
                     setHeaderWidth = function(){
                         $thead.find('th').each(function( index, th ){
                             $theadClone.find('th:nth-child(' + (index+1) + ')')
@@ -53414,7 +56895,7 @@ Add sort-functions + save col-index for sorted column
                 $result.on('shown.bs.modal.table', setHeaderHeight );
                 $thead.resize( setHeaderWidth );
             }
-            
+
             return $result;
         }
 
@@ -53432,7 +56913,7 @@ Add sort-functions + save col-index for sorted column
             $th.addClass(newClass);
         }
     }
-    
+
     /**********************************************************
     bsTable( options ) - create a Bootstrap-table
     **********************************************************/
@@ -53440,16 +56921,16 @@ Add sort-functions + save col-index for sorted column
         rowId    = 0;
 
     $.bsTable = function( options ){
-        options = $._bsAdjustOptions( options, defaultOptions ); 
-        options.class = 
-            (options.small ? 'table-sm ' : '' ) + 
-            (options.verticalBorder ? 'table-bordered ' : '' ) + 
-            (options.selectable ? 'table-selectable ' : '' ) + 
+        options = $._bsAdjustOptions( options, defaultOptions );
+        options.class =
+            (options.small ? 'table-sm ' : '' ) +
+            (options.verticalBorder ? 'table-bordered ' : '' ) +
+            (options.selectable ? 'table-selectable ' : '' ) +
             (options.allowZeroSelected ? 'allow-zero-selected ' : '' ),
 
         //Adjust text-style for each column
         $.each( options.columns, function( index, column ){
-            column = $.extend( true, {}, defaultColunmOptions, column ); 
+            column = $.extend( true, {}, defaultColunmOptions, column );
 
             column.index = index;
 
@@ -53459,7 +56940,7 @@ Add sort-functions + save col-index for sorted column
         var id = 'bsTable'+ tableId++,
             $table = $('<table/>')
                         ._bsAddBaseClassAndSize( options )
-                        .attr({ 
+                        .attr({
                             'id': id
                         }),
             $thead = $('<thead/>')
@@ -53473,31 +56954,25 @@ Add sort-functions + save col-index for sorted column
 
         //Create headers
         if (options.showHeader)
-            $.each( options.columns, function( index, column ){
+            $.each( options.columns, function( index, columnOptions ){
                 var $th = $('<th/>')
-                            ._bsAddStyleClasses( column.textStyle ) 
-                            .addClass('align-middle')
-                            .toggleClass('sortable', !!column.sortable )
+                            .toggleClass('sortable', !!columnOptions.sortable )
                             .on('click', table_th_onClick )
                             .appendTo( $tr );
 
-                //Adding sort-direction icons
-                if (column.sortable)
-                    $th.addClass('sortable');
+                adjustThOrTd( $th, columnOptions, true );
 
-                $th
-                    ._bsAddStyleClasses( column.align )
-                    ._bsAddHtml( column.header );
+                $th._bsAddHtml( columnOptions.header );
             });
-      
+
         if (options.selectable){
-            var radioGroupOptions = $.extend( true, options );
+            var radioGroupOptions = $.extend( true, {}, options );
             radioGroupOptions.className = 'active';
-            options.radioGroup = $.radioGroup( radioGroupOptions );            
+            options.radioGroup = $.radioGroup( radioGroupOptions );
         }
 
         $table.data(dataTableId, options);
-        
+
 
         //Create tbody and all rows
         $table.append( $('<tbody/>') );
@@ -53505,20 +56980,20 @@ Add sort-functions + save col-index for sorted column
         $.each( options.content, function( index, rowContent ){
             $table.addRow( rowContent );
         });
-        
 
-        return $table; 
+
+        return $table;
     };
 
 
 
 	/******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
+	$(function() {
 
-	
-	}); 
+
+	});
 	//******************************************
 
 
@@ -53526,7 +57001,7 @@ Add sort-functions + save col-index for sorted column
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	jquery-bootstrap.js, 
+	jquery-bootstrap.js,
 
 	(c) 2017, FCOO
 
@@ -53539,7 +57014,7 @@ Add sort-functions + save col-index for sorted column
 	"use strict";
 
     /*
-    
+
     Almost all elements comes in two sizes: normal and small set by options.small: false/true
 
     In jquery-bootstrap.scss sizing class-postfix -xs is added (from Bootstrap 3)
@@ -53553,7 +57028,7 @@ Add sort-functions + save col-index for sorted column
     */
 
     //Create namespace
-	var ns = window; 
+	var ns = window;
 
     ns.bsIsTouch =  true;
 
@@ -53567,12 +57042,12 @@ Add sort-functions + save col-index for sorted column
             options.icon     = options.icon || options.headerIcon || options.titleIcon;
             options.text     = options.text || options.header || options.title || options.name;
 
-            options.iconClass = options.iconClass       || options.iconClassName       || 
+            options.iconClass = options.iconClass       || options.iconClassName       ||
                                 options.headerIconClass || options.headerIconClassName ||
                                 options.titleIconClass  || options.titleIconClassName;
 
-            options.textClass = options.textClass   || options.textClassName   || 
-                                options.headerClass || options.headerClassName || 
+            options.textClass = options.textClass   || options.textClassName   ||
+                                options.headerClass || options.headerClassName ||
                                 options.titleClass  || options.titleClassName;
 
             //If context is given => convert all function to proxy
@@ -53581,12 +57056,12 @@ Add sort-functions + save col-index for sorted column
                     if ($.isFunction( value ))
                         options[id] = $.proxy( value, context );
                 });
-            
+
             return options;
         }
         //*********************************************************************
-        
-        options = $.extend( true, defaultOptions || {}, options, forceOptions || {} );
+
+        options = $.extend( true, {}, defaultOptions || {}, options, forceOptions || {} );
 
         options.selected = options.selected || options.checked || options.active;
         options.list     = options.list     || options.buttons || options.items || options.children;
@@ -53606,7 +57081,7 @@ Add sort-functions + save col-index for sorted column
 
         //Sert context = null to avoid "double" proxy
         options.context = null;
-        
+
         return options;
     };
 
@@ -53631,8 +57106,8 @@ Add sort-functions + save col-index for sorted column
         baseClass: "BASE" useTouchSize: true
             small: false => sizeClass = 'BASE-sm'
             small: true  => sizeClass = "BASE-xs"
-        
-        
+
+
         ****************************************************************************************/
         _bsAddBaseClassAndSize: function( options ){
             var classNames = options.baseClass ? [options.baseClass + (options.baseClassPostfix || '')] : [],
@@ -53649,17 +57124,17 @@ Add sort-functions + save col-index for sorted column
 
 
             if (sizeClassPostfix && options.baseClass)
-              classNames.push( options.baseClass + '-' + sizeClassPostfix );                
-            
+              classNames.push( options.baseClass + '-' + sizeClassPostfix );
+
             if (options.styleClass)
-                classNames.push( options.styleClass ); 
+                classNames.push( options.styleClass );
 
             if (options.class)
-                classNames.push( options.class ); 
+                classNames.push( options.class );
 
             this.addClass( classNames.join(' ') );
 
-            this._bsAddStyleClasses( options.textStyle );    
+            this._bsAddStyleClasses( options.textStyle );
 
             return this;
         },
@@ -53668,9 +57143,9 @@ Add sort-functions + save col-index for sorted column
         _bsAddStyleClasses
         Add classes for text-styel
 
-        options [string] or [object]    
+        options [string] or [object]
             Style for the contents. String or object with part of the following
-            "left right center lowercase uppercase capitalize normal bold italic" or 
+            "left right center lowercase uppercase capitalize normal bold italic" or
             {left: true, right: true, center: true, lowercase: true, uppercase: true, capitalize: true, normal: true, bold: true, italic: true}
         ****************************************************************************************/
         _bsAddStyleClasses: function( options ){
@@ -53706,11 +57181,11 @@ Add sort-functions + save col-index for sorted column
                 };
 
             $.each( bsStyleClass, function( style, className ){
-                if (  
+                if (
                       ( (typeof options == 'string') && (options.indexOf(style) > -1 )  ) ||
-                      ( (typeof options == 'object') && (options[style]) ) 
+                      ( (typeof options == 'object') && (options[style]) )
                     )
-                    _this.addClass( className );                    
+                    _this.addClass( className );
             });
             return this;
         },
@@ -53744,7 +57219,7 @@ Add sort-functions + save col-index for sorted column
                         $text
                             .prop('href', 'javascript:undefined')
                             .on('click', link );
-                    else 
+                    else
                         $text
                             .i18n(link, 'href')
                             .prop('target', '_blank');
@@ -53763,34 +57238,34 @@ Add sort-functions + save col-index for sorted column
                 return $text;
             }
             //**************************************************
-            function getArray( input ){ 
-                return input ? $.isArray( input ) ? input : [input] : []; 
+            function getArray( input ){
+                return input ? $.isArray( input ) ? input : [input] : [];
             }
             //**************************************************
 
 
             if (checkForContent && (options.content != null))
-                return this._bsAddHtml( options.content );     
+                return this._bsAddHtml( options.content );
 
             options = options || '';
 
             var _this = this;
 
-            //options = array => add each with space between            
+            //options = array => add each with space between
             if ($.isArray( options )){
                 $.each( options, function( index, textOptions ){
                     if (index)
-                        _this.append('&nbsp;');                      
+                        _this.append('&nbsp;');
                     _this._bsAddHtml( textOptions );
-                });        
-                return this;    
+                });
+                return this;
             }
 
             //Simple version: options == string
             if ($.type( options ) != "object")
-                return this._bsAddHtml( {text: options} );              
-            
-           
+                return this._bsAddHtml( {text: options} );
+
+
             //options = simple textOptions
             var iconArray       = getArray( options.icon ),
                 textArray       = getArray( options.text ),
@@ -53808,12 +57283,12 @@ Add sort-functions + save col-index for sorted column
                 var $icon = $('<i/>').addClass('fa '+icon);
                 if (index < iconClassArray.length)
                     $icon.addClass( iconClassArray[index] );
-                //$icon.appendTo( _this );                
+                //$icon.appendTo( _this );
 
                 create$element( 'i', null, titleArray[ index ], null, 'fa '+icon + ' ' + (iconClassArray[index] || '') )
                     .appendTo( _this );
             });
-                
+
             //Add color (optional)
             if (options.color)
                 _this.addClass('text-'+ options.color);
@@ -53824,27 +57299,27 @@ Add sort-functions + save col-index for sorted column
             //Add text
             $.each( textArray, function( index, text ){
                 var $text = create$element( 'span', linkArray[ index ], titleArray[ index ], textStyleArray[ index ], textClassArray[index] );
-               
+
                 if ($.isFunction( text ))
                     text( $text );
                 else
                     if (text == $.EMPTY_TEXT)
                         $text.html( '&nbsp;');
                     else
-                        $text.i18n( text );
+                        $text.i18n( text, 'html' );
 
                 if (index < textClassArray.length)
                     $text.addClass( textClassArray[index] );
-                $text.appendTo( _this );                
+                $text.appendTo( _this );
             });
-            
+
             //Add value-format content
             $.each( vfValueArray, function( index, vfValue ){
                 create$element( 'span', linkArray[ index ], titleArray[ index ], textStyleArray[ index ], textClassArray[index] )
                     .vfValueFormat( vfValue || '', vfFormatArray[index], vfOptionsArray[index] )
-                    .appendTo( _this );                
+                    .appendTo( _this );
             });
-            
+
             return this;
         },
 
@@ -53860,1894 +57335,11478 @@ Add sort-functions + save col-index for sorted column
 
 
 	/******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
+	$(function() {
 
-	
-	}); 
+
+	});
 	//******************************************
 
 
 
 }(jQuery, this, document));
 ;
-!function(root, factory) {
-	 if (typeof define === 'function' && define.amd) {
-		 define(['jquery'], factory);
-	 } else if (typeof exports === 'object') {
-		 module.exports = factory(require('jquery'));
-	 } else {
-		 factory(root.jQuery);
-	 }
-}(this, function($) {
-
-/*!
- @package noty - jQuery Notification Plugin
- @version version: 2.4.1
- @contributors https://github.com/needim/noty/graphs/contributors
-
- @documentation Examples and Documentation - http://needim.github.com/noty/
-
- @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
+/* @preserve
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2013-2017 Petka Antonov
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
  */
+/**
+ * bluebird build version 3.5.1
+ * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
+*/
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise) {
+var SomePromiseArray = Promise._SomePromiseArray;
+function any(promises) {
+    var ret = new SomePromiseArray(promises);
+    var promise = ret.promise();
+    ret.setHowMany(1);
+    ret.setUnwrap();
+    ret.init();
+    return promise;
+}
 
-if (typeof Object.create !== 'function') {
-  Object.create = function (o) {
-    function F() {
+Promise.any = function (promises) {
+    return any(promises);
+};
+
+Promise.prototype.any = function () {
+    return any(this);
+};
+
+};
+
+},{}],2:[function(_dereq_,module,exports){
+"use strict";
+var firstLineError;
+try {throw new Error(); } catch (e) {firstLineError = e;}
+var schedule = _dereq_("./schedule");
+var Queue = _dereq_("./queue");
+var util = _dereq_("./util");
+
+function Async() {
+    this._customScheduler = false;
+    this._isTickUsed = false;
+    this._lateQueue = new Queue(16);
+    this._normalQueue = new Queue(16);
+    this._haveDrainedQueues = false;
+    this._trampolineEnabled = true;
+    var self = this;
+    this.drainQueues = function () {
+        self._drainQueues();
+    };
+    this._schedule = schedule;
+}
+
+Async.prototype.setScheduler = function(fn) {
+    var prev = this._schedule;
+    this._schedule = fn;
+    this._customScheduler = true;
+    return prev;
+};
+
+Async.prototype.hasCustomScheduler = function() {
+    return this._customScheduler;
+};
+
+Async.prototype.enableTrampoline = function() {
+    this._trampolineEnabled = true;
+};
+
+Async.prototype.disableTrampolineIfNecessary = function() {
+    if (util.hasDevTools) {
+        this._trampolineEnabled = false;
+    }
+};
+
+Async.prototype.haveItemsQueued = function () {
+    return this._isTickUsed || this._haveDrainedQueues;
+};
+
+
+Async.prototype.fatalError = function(e, isNode) {
+    if (isNode) {
+        process.stderr.write("Fatal " + (e instanceof Error ? e.stack : e) +
+            "\n");
+        process.exit(2);
+    } else {
+        this.throwLater(e);
+    }
+};
+
+Async.prototype.throwLater = function(fn, arg) {
+    if (arguments.length === 1) {
+        arg = fn;
+        fn = function () { throw arg; };
+    }
+    if (typeof setTimeout !== "undefined") {
+        setTimeout(function() {
+            fn(arg);
+        }, 0);
+    } else try {
+        this._schedule(function() {
+            fn(arg);
+        });
+    } catch (e) {
+        throw new Error("No async scheduler available\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+};
+
+function AsyncInvokeLater(fn, receiver, arg) {
+    this._lateQueue.push(fn, receiver, arg);
+    this._queueTick();
+}
+
+function AsyncInvoke(fn, receiver, arg) {
+    this._normalQueue.push(fn, receiver, arg);
+    this._queueTick();
+}
+
+function AsyncSettlePromises(promise) {
+    this._normalQueue._pushOne(promise);
+    this._queueTick();
+}
+
+if (!util.hasDevTools) {
+    Async.prototype.invokeLater = AsyncInvokeLater;
+    Async.prototype.invoke = AsyncInvoke;
+    Async.prototype.settlePromises = AsyncSettlePromises;
+} else {
+    Async.prototype.invokeLater = function (fn, receiver, arg) {
+        if (this._trampolineEnabled) {
+            AsyncInvokeLater.call(this, fn, receiver, arg);
+        } else {
+            this._schedule(function() {
+                setTimeout(function() {
+                    fn.call(receiver, arg);
+                }, 100);
+            });
+        }
+    };
+
+    Async.prototype.invoke = function (fn, receiver, arg) {
+        if (this._trampolineEnabled) {
+            AsyncInvoke.call(this, fn, receiver, arg);
+        } else {
+            this._schedule(function() {
+                fn.call(receiver, arg);
+            });
+        }
+    };
+
+    Async.prototype.settlePromises = function(promise) {
+        if (this._trampolineEnabled) {
+            AsyncSettlePromises.call(this, promise);
+        } else {
+            this._schedule(function() {
+                promise._settlePromises();
+            });
+        }
+    };
+}
+
+Async.prototype._drainQueue = function(queue) {
+    while (queue.length() > 0) {
+        var fn = queue.shift();
+        if (typeof fn !== "function") {
+            fn._settlePromises();
+            continue;
+        }
+        var receiver = queue.shift();
+        var arg = queue.shift();
+        fn.call(receiver, arg);
+    }
+};
+
+Async.prototype._drainQueues = function () {
+    this._drainQueue(this._normalQueue);
+    this._reset();
+    this._haveDrainedQueues = true;
+    this._drainQueue(this._lateQueue);
+};
+
+Async.prototype._queueTick = function () {
+    if (!this._isTickUsed) {
+        this._isTickUsed = true;
+        this._schedule(this.drainQueues);
+    }
+};
+
+Async.prototype._reset = function () {
+    this._isTickUsed = false;
+};
+
+module.exports = Async;
+module.exports.firstLineError = firstLineError;
+
+},{"./queue":26,"./schedule":29,"./util":36}],3:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, INTERNAL, tryConvertToPromise, debug) {
+var calledBind = false;
+var rejectThis = function(_, e) {
+    this._reject(e);
+};
+
+var targetRejected = function(e, context) {
+    context.promiseRejectionQueued = true;
+    context.bindingPromise._then(rejectThis, rejectThis, null, this, e);
+};
+
+var bindingResolved = function(thisArg, context) {
+    if (((this._bitField & 50397184) === 0)) {
+        this._resolveCallback(context.target);
+    }
+};
+
+var bindingRejected = function(e, context) {
+    if (!context.promiseRejectionQueued) this._reject(e);
+};
+
+Promise.prototype.bind = function (thisArg) {
+    if (!calledBind) {
+        calledBind = true;
+        Promise.prototype._propagateFrom = debug.propagateFromFunction();
+        Promise.prototype._boundValue = debug.boundValueFunction();
+    }
+    var maybePromise = tryConvertToPromise(thisArg);
+    var ret = new Promise(INTERNAL);
+    ret._propagateFrom(this, 1);
+    var target = this._target();
+    ret._setBoundTo(maybePromise);
+    if (maybePromise instanceof Promise) {
+        var context = {
+            promiseRejectionQueued: false,
+            promise: ret,
+            target: target,
+            bindingPromise: maybePromise
+        };
+        target._then(INTERNAL, targetRejected, undefined, ret, context);
+        maybePromise._then(
+            bindingResolved, bindingRejected, undefined, ret, context);
+        ret._setOnCancel(maybePromise);
+    } else {
+        ret._resolveCallback(target);
+    }
+    return ret;
+};
+
+Promise.prototype._setBoundTo = function (obj) {
+    if (obj !== undefined) {
+        this._bitField = this._bitField | 2097152;
+        this._boundTo = obj;
+    } else {
+        this._bitField = this._bitField & (~2097152);
+    }
+};
+
+Promise.prototype._isBound = function () {
+    return (this._bitField & 2097152) === 2097152;
+};
+
+Promise.bind = function (thisArg, value) {
+    return Promise.resolve(value).bind(thisArg);
+};
+};
+
+},{}],4:[function(_dereq_,module,exports){
+"use strict";
+var old;
+if (typeof Promise !== "undefined") old = Promise;
+function noConflict() {
+    try { if (Promise === bluebird) Promise = old; }
+    catch (e) {}
+    return bluebird;
+}
+var bluebird = _dereq_("./promise")();
+bluebird.noConflict = noConflict;
+module.exports = bluebird;
+
+},{"./promise":22}],5:[function(_dereq_,module,exports){
+"use strict";
+var cr = Object.create;
+if (cr) {
+    var callerCache = cr(null);
+    var getterCache = cr(null);
+    callerCache[" size"] = getterCache[" size"] = 0;
+}
+
+module.exports = function(Promise) {
+var util = _dereq_("./util");
+var canEvaluate = util.canEvaluate;
+var isIdentifier = util.isIdentifier;
+
+var getMethodCaller;
+var getGetter;
+if (!true) {
+var makeMethodCaller = function (methodName) {
+    return new Function("ensureMethod", "                                    \n\
+        return function(obj) {                                               \n\
+            'use strict'                                                     \n\
+            var len = this.length;                                           \n\
+            ensureMethod(obj, 'methodName');                                 \n\
+            switch(len) {                                                    \n\
+                case 1: return obj.methodName(this[0]);                      \n\
+                case 2: return obj.methodName(this[0], this[1]);             \n\
+                case 3: return obj.methodName(this[0], this[1], this[2]);    \n\
+                case 0: return obj.methodName();                             \n\
+                default:                                                     \n\
+                    return obj.methodName.apply(obj, this);                  \n\
+            }                                                                \n\
+        };                                                                   \n\
+        ".replace(/methodName/g, methodName))(ensureMethod);
+};
+
+var makeGetter = function (propertyName) {
+    return new Function("obj", "                                             \n\
+        'use strict';                                                        \n\
+        return obj.propertyName;                                             \n\
+        ".replace("propertyName", propertyName));
+};
+
+var getCompiled = function(name, compiler, cache) {
+    var ret = cache[name];
+    if (typeof ret !== "function") {
+        if (!isIdentifier(name)) {
+            return null;
+        }
+        ret = compiler(name);
+        cache[name] = ret;
+        cache[" size"]++;
+        if (cache[" size"] > 512) {
+            var keys = Object.keys(cache);
+            for (var i = 0; i < 256; ++i) delete cache[keys[i]];
+            cache[" size"] = keys.length - 256;
+        }
+    }
+    return ret;
+};
+
+getMethodCaller = function(name) {
+    return getCompiled(name, makeMethodCaller, callerCache);
+};
+
+getGetter = function(name) {
+    return getCompiled(name, makeGetter, getterCache);
+};
+}
+
+function ensureMethod(obj, methodName) {
+    var fn;
+    if (obj != null) fn = obj[methodName];
+    if (typeof fn !== "function") {
+        var message = "Object " + util.classString(obj) + " has no method '" +
+            util.toString(methodName) + "'";
+        throw new Promise.TypeError(message);
+    }
+    return fn;
+}
+
+function caller(obj) {
+    var methodName = this.pop();
+    var fn = ensureMethod(obj, methodName);
+    return fn.apply(obj, this);
+}
+Promise.prototype.call = function (methodName) {
+    var args = [].slice.call(arguments, 1);;
+    if (!true) {
+        if (canEvaluate) {
+            var maybeCaller = getMethodCaller(methodName);
+            if (maybeCaller !== null) {
+                return this._then(
+                    maybeCaller, undefined, undefined, args, undefined);
+            }
+        }
+    }
+    args.push(methodName);
+    return this._then(caller, undefined, undefined, args, undefined);
+};
+
+function namedGetter(obj) {
+    return obj[this];
+}
+function indexedGetter(obj) {
+    var index = +this;
+    if (index < 0) index = Math.max(0, index + obj.length);
+    return obj[index];
+}
+Promise.prototype.get = function (propertyName) {
+    var isIndex = (typeof propertyName === "number");
+    var getter;
+    if (!isIndex) {
+        if (canEvaluate) {
+            var maybeGetter = getGetter(propertyName);
+            getter = maybeGetter !== null ? maybeGetter : namedGetter;
+        } else {
+            getter = namedGetter;
+        }
+    } else {
+        getter = indexedGetter;
+    }
+    return this._then(getter, undefined, undefined, propertyName, undefined);
+};
+};
+
+},{"./util":36}],6:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, PromiseArray, apiRejection, debug) {
+var util = _dereq_("./util");
+var tryCatch = util.tryCatch;
+var errorObj = util.errorObj;
+var async = Promise._async;
+
+Promise.prototype["break"] = Promise.prototype.cancel = function() {
+    if (!debug.cancellation()) return this._warn("cancellation is disabled");
+
+    var promise = this;
+    var child = promise;
+    while (promise._isCancellable()) {
+        if (!promise._cancelBy(child)) {
+            if (child._isFollowing()) {
+                child._followee().cancel();
+            } else {
+                child._cancelBranched();
+            }
+            break;
+        }
+
+        var parent = promise._cancellationParent;
+        if (parent == null || !parent._isCancellable()) {
+            if (promise._isFollowing()) {
+                promise._followee().cancel();
+            } else {
+                promise._cancelBranched();
+            }
+            break;
+        } else {
+            if (promise._isFollowing()) promise._followee().cancel();
+            promise._setWillBeCancelled();
+            child = promise;
+            promise = parent;
+        }
+    }
+};
+
+Promise.prototype._branchHasCancelled = function() {
+    this._branchesRemainingToCancel--;
+};
+
+Promise.prototype._enoughBranchesHaveCancelled = function() {
+    return this._branchesRemainingToCancel === undefined ||
+           this._branchesRemainingToCancel <= 0;
+};
+
+Promise.prototype._cancelBy = function(canceller) {
+    if (canceller === this) {
+        this._branchesRemainingToCancel = 0;
+        this._invokeOnCancel();
+        return true;
+    } else {
+        this._branchHasCancelled();
+        if (this._enoughBranchesHaveCancelled()) {
+            this._invokeOnCancel();
+            return true;
+        }
+    }
+    return false;
+};
+
+Promise.prototype._cancelBranched = function() {
+    if (this._enoughBranchesHaveCancelled()) {
+        this._cancel();
+    }
+};
+
+Promise.prototype._cancel = function() {
+    if (!this._isCancellable()) return;
+    this._setCancelled();
+    async.invoke(this._cancelPromises, this, undefined);
+};
+
+Promise.prototype._cancelPromises = function() {
+    if (this._length() > 0) this._settlePromises();
+};
+
+Promise.prototype._unsetOnCancel = function() {
+    this._onCancelField = undefined;
+};
+
+Promise.prototype._isCancellable = function() {
+    return this.isPending() && !this._isCancelled();
+};
+
+Promise.prototype.isCancellable = function() {
+    return this.isPending() && !this.isCancelled();
+};
+
+Promise.prototype._doInvokeOnCancel = function(onCancelCallback, internalOnly) {
+    if (util.isArray(onCancelCallback)) {
+        for (var i = 0; i < onCancelCallback.length; ++i) {
+            this._doInvokeOnCancel(onCancelCallback[i], internalOnly);
+        }
+    } else if (onCancelCallback !== undefined) {
+        if (typeof onCancelCallback === "function") {
+            if (!internalOnly) {
+                var e = tryCatch(onCancelCallback).call(this._boundValue());
+                if (e === errorObj) {
+                    this._attachExtraTrace(e.e);
+                    async.throwLater(e.e);
+                }
+            }
+        } else {
+            onCancelCallback._resultCancelled(this);
+        }
+    }
+};
+
+Promise.prototype._invokeOnCancel = function() {
+    var onCancelCallback = this._onCancel();
+    this._unsetOnCancel();
+    async.invoke(this._doInvokeOnCancel, this, onCancelCallback);
+};
+
+Promise.prototype._invokeInternalOnCancel = function() {
+    if (this._isCancellable()) {
+        this._doInvokeOnCancel(this._onCancel(), true);
+        this._unsetOnCancel();
+    }
+};
+
+Promise.prototype._resultCancelled = function() {
+    this.cancel();
+};
+
+};
+
+},{"./util":36}],7:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(NEXT_FILTER) {
+var util = _dereq_("./util");
+var getKeys = _dereq_("./es5").keys;
+var tryCatch = util.tryCatch;
+var errorObj = util.errorObj;
+
+function catchFilter(instances, cb, promise) {
+    return function(e) {
+        var boundTo = promise._boundValue();
+        predicateLoop: for (var i = 0; i < instances.length; ++i) {
+            var item = instances[i];
+
+            if (item === Error ||
+                (item != null && item.prototype instanceof Error)) {
+                if (e instanceof item) {
+                    return tryCatch(cb).call(boundTo, e);
+                }
+            } else if (typeof item === "function") {
+                var matchesPredicate = tryCatch(item).call(boundTo, e);
+                if (matchesPredicate === errorObj) {
+                    return matchesPredicate;
+                } else if (matchesPredicate) {
+                    return tryCatch(cb).call(boundTo, e);
+                }
+            } else if (util.isObject(e)) {
+                var keys = getKeys(item);
+                for (var j = 0; j < keys.length; ++j) {
+                    var key = keys[j];
+                    if (item[key] != e[key]) {
+                        continue predicateLoop;
+                    }
+                }
+                return tryCatch(cb).call(boundTo, e);
+            }
+        }
+        return NEXT_FILTER;
+    };
+}
+
+return catchFilter;
+};
+
+},{"./es5":13,"./util":36}],8:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise) {
+var longStackTraces = false;
+var contextStack = [];
+
+Promise.prototype._promiseCreated = function() {};
+Promise.prototype._pushContext = function() {};
+Promise.prototype._popContext = function() {return null;};
+Promise._peekContext = Promise.prototype._peekContext = function() {};
+
+function Context() {
+    this._trace = new Context.CapturedTrace(peekContext());
+}
+Context.prototype._pushContext = function () {
+    if (this._trace !== undefined) {
+        this._trace._promiseCreated = null;
+        contextStack.push(this._trace);
+    }
+};
+
+Context.prototype._popContext = function () {
+    if (this._trace !== undefined) {
+        var trace = contextStack.pop();
+        var ret = trace._promiseCreated;
+        trace._promiseCreated = null;
+        return ret;
+    }
+    return null;
+};
+
+function createContext() {
+    if (longStackTraces) return new Context();
+}
+
+function peekContext() {
+    var lastIndex = contextStack.length - 1;
+    if (lastIndex >= 0) {
+        return contextStack[lastIndex];
+    }
+    return undefined;
+}
+Context.CapturedTrace = null;
+Context.create = createContext;
+Context.deactivateLongStackTraces = function() {};
+Context.activateLongStackTraces = function() {
+    var Promise_pushContext = Promise.prototype._pushContext;
+    var Promise_popContext = Promise.prototype._popContext;
+    var Promise_PeekContext = Promise._peekContext;
+    var Promise_peekContext = Promise.prototype._peekContext;
+    var Promise_promiseCreated = Promise.prototype._promiseCreated;
+    Context.deactivateLongStackTraces = function() {
+        Promise.prototype._pushContext = Promise_pushContext;
+        Promise.prototype._popContext = Promise_popContext;
+        Promise._peekContext = Promise_PeekContext;
+        Promise.prototype._peekContext = Promise_peekContext;
+        Promise.prototype._promiseCreated = Promise_promiseCreated;
+        longStackTraces = false;
+    };
+    longStackTraces = true;
+    Promise.prototype._pushContext = Context.prototype._pushContext;
+    Promise.prototype._popContext = Context.prototype._popContext;
+    Promise._peekContext = Promise.prototype._peekContext = peekContext;
+    Promise.prototype._promiseCreated = function() {
+        var ctx = this._peekContext();
+        if (ctx && ctx._promiseCreated == null) ctx._promiseCreated = this;
+    };
+};
+return Context;
+};
+
+},{}],9:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, Context) {
+var getDomain = Promise._getDomain;
+var async = Promise._async;
+var Warning = _dereq_("./errors").Warning;
+var util = _dereq_("./util");
+var canAttachTrace = util.canAttachTrace;
+var unhandledRejectionHandled;
+var possiblyUnhandledRejection;
+var bluebirdFramePattern =
+    /[\\\/]bluebird[\\\/]js[\\\/](release|debug|instrumented)/;
+var nodeFramePattern = /\((?:timers\.js):\d+:\d+\)/;
+var parseLinePattern = /[\/<\(](.+?):(\d+):(\d+)\)?\s*$/;
+var stackFramePattern = null;
+var formatStack = null;
+var indentStackFrames = false;
+var printWarning;
+var debugging = !!(util.env("BLUEBIRD_DEBUG") != 0 &&
+                        (true ||
+                         util.env("BLUEBIRD_DEBUG") ||
+                         util.env("NODE_ENV") === "development"));
+
+var warnings = !!(util.env("BLUEBIRD_WARNINGS") != 0 &&
+    (debugging || util.env("BLUEBIRD_WARNINGS")));
+
+var longStackTraces = !!(util.env("BLUEBIRD_LONG_STACK_TRACES") != 0 &&
+    (debugging || util.env("BLUEBIRD_LONG_STACK_TRACES")));
+
+var wForgottenReturn = util.env("BLUEBIRD_W_FORGOTTEN_RETURN") != 0 &&
+    (warnings || !!util.env("BLUEBIRD_W_FORGOTTEN_RETURN"));
+
+Promise.prototype.suppressUnhandledRejections = function() {
+    var target = this._target();
+    target._bitField = ((target._bitField & (~1048576)) |
+                      524288);
+};
+
+Promise.prototype._ensurePossibleRejectionHandled = function () {
+    if ((this._bitField & 524288) !== 0) return;
+    this._setRejectionIsUnhandled();
+    var self = this;
+    setTimeout(function() {
+        self._notifyUnhandledRejection();
+    }, 1);
+};
+
+Promise.prototype._notifyUnhandledRejectionIsHandled = function () {
+    fireRejectionEvent("rejectionHandled",
+                                  unhandledRejectionHandled, undefined, this);
+};
+
+Promise.prototype._setReturnedNonUndefined = function() {
+    this._bitField = this._bitField | 268435456;
+};
+
+Promise.prototype._returnedNonUndefined = function() {
+    return (this._bitField & 268435456) !== 0;
+};
+
+Promise.prototype._notifyUnhandledRejection = function () {
+    if (this._isRejectionUnhandled()) {
+        var reason = this._settledValue();
+        this._setUnhandledRejectionIsNotified();
+        fireRejectionEvent("unhandledRejection",
+                                      possiblyUnhandledRejection, reason, this);
+    }
+};
+
+Promise.prototype._setUnhandledRejectionIsNotified = function () {
+    this._bitField = this._bitField | 262144;
+};
+
+Promise.prototype._unsetUnhandledRejectionIsNotified = function () {
+    this._bitField = this._bitField & (~262144);
+};
+
+Promise.prototype._isUnhandledRejectionNotified = function () {
+    return (this._bitField & 262144) > 0;
+};
+
+Promise.prototype._setRejectionIsUnhandled = function () {
+    this._bitField = this._bitField | 1048576;
+};
+
+Promise.prototype._unsetRejectionIsUnhandled = function () {
+    this._bitField = this._bitField & (~1048576);
+    if (this._isUnhandledRejectionNotified()) {
+        this._unsetUnhandledRejectionIsNotified();
+        this._notifyUnhandledRejectionIsHandled();
+    }
+};
+
+Promise.prototype._isRejectionUnhandled = function () {
+    return (this._bitField & 1048576) > 0;
+};
+
+Promise.prototype._warn = function(message, shouldUseOwnTrace, promise) {
+    return warn(message, shouldUseOwnTrace, promise || this);
+};
+
+Promise.onPossiblyUnhandledRejection = function (fn) {
+    var domain = getDomain();
+    possiblyUnhandledRejection =
+        typeof fn === "function" ? (domain === null ?
+                                            fn : util.domainBind(domain, fn))
+                                 : undefined;
+};
+
+Promise.onUnhandledRejectionHandled = function (fn) {
+    var domain = getDomain();
+    unhandledRejectionHandled =
+        typeof fn === "function" ? (domain === null ?
+                                            fn : util.domainBind(domain, fn))
+                                 : undefined;
+};
+
+var disableLongStackTraces = function() {};
+Promise.longStackTraces = function () {
+    if (async.haveItemsQueued() && !config.longStackTraces) {
+        throw new Error("cannot enable long stack traces after promises have been created\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    if (!config.longStackTraces && longStackTracesIsSupported()) {
+        var Promise_captureStackTrace = Promise.prototype._captureStackTrace;
+        var Promise_attachExtraTrace = Promise.prototype._attachExtraTrace;
+        config.longStackTraces = true;
+        disableLongStackTraces = function() {
+            if (async.haveItemsQueued() && !config.longStackTraces) {
+                throw new Error("cannot enable long stack traces after promises have been created\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+            }
+            Promise.prototype._captureStackTrace = Promise_captureStackTrace;
+            Promise.prototype._attachExtraTrace = Promise_attachExtraTrace;
+            Context.deactivateLongStackTraces();
+            async.enableTrampoline();
+            config.longStackTraces = false;
+        };
+        Promise.prototype._captureStackTrace = longStackTracesCaptureStackTrace;
+        Promise.prototype._attachExtraTrace = longStackTracesAttachExtraTrace;
+        Context.activateLongStackTraces();
+        async.disableTrampolineIfNecessary();
+    }
+};
+
+Promise.hasLongStackTraces = function () {
+    return config.longStackTraces && longStackTracesIsSupported();
+};
+
+var fireDomEvent = (function() {
+    try {
+        if (typeof CustomEvent === "function") {
+            var event = new CustomEvent("CustomEvent");
+            util.global.dispatchEvent(event);
+            return function(name, event) {
+                var domEvent = new CustomEvent(name.toLowerCase(), {
+                    detail: event,
+                    cancelable: true
+                });
+                return !util.global.dispatchEvent(domEvent);
+            };
+        } else if (typeof Event === "function") {
+            var event = new Event("CustomEvent");
+            util.global.dispatchEvent(event);
+            return function(name, event) {
+                var domEvent = new Event(name.toLowerCase(), {
+                    cancelable: true
+                });
+                domEvent.detail = event;
+                return !util.global.dispatchEvent(domEvent);
+            };
+        } else {
+            var event = document.createEvent("CustomEvent");
+            event.initCustomEvent("testingtheevent", false, true, {});
+            util.global.dispatchEvent(event);
+            return function(name, event) {
+                var domEvent = document.createEvent("CustomEvent");
+                domEvent.initCustomEvent(name.toLowerCase(), false, true,
+                    event);
+                return !util.global.dispatchEvent(domEvent);
+            };
+        }
+    } catch (e) {}
+    return function() {
+        return false;
+    };
+})();
+
+var fireGlobalEvent = (function() {
+    if (util.isNode) {
+        return function() {
+            return process.emit.apply(process, arguments);
+        };
+    } else {
+        if (!util.global) {
+            return function() {
+                return false;
+            };
+        }
+        return function(name) {
+            var methodName = "on" + name.toLowerCase();
+            var method = util.global[methodName];
+            if (!method) return false;
+            method.apply(util.global, [].slice.call(arguments, 1));
+            return true;
+        };
+    }
+})();
+
+function generatePromiseLifecycleEventObject(name, promise) {
+    return {promise: promise};
+}
+
+var eventToObjectGenerator = {
+    promiseCreated: generatePromiseLifecycleEventObject,
+    promiseFulfilled: generatePromiseLifecycleEventObject,
+    promiseRejected: generatePromiseLifecycleEventObject,
+    promiseResolved: generatePromiseLifecycleEventObject,
+    promiseCancelled: generatePromiseLifecycleEventObject,
+    promiseChained: function(name, promise, child) {
+        return {promise: promise, child: child};
+    },
+    warning: function(name, warning) {
+        return {warning: warning};
+    },
+    unhandledRejection: function (name, reason, promise) {
+        return {reason: reason, promise: promise};
+    },
+    rejectionHandled: generatePromiseLifecycleEventObject
+};
+
+var activeFireEvent = function (name) {
+    var globalEventFired = false;
+    try {
+        globalEventFired = fireGlobalEvent.apply(null, arguments);
+    } catch (e) {
+        async.throwLater(e);
+        globalEventFired = true;
     }
 
-    F.prototype = o;
-    return new F();
+    var domEventFired = false;
+    try {
+        domEventFired = fireDomEvent(name,
+                    eventToObjectGenerator[name].apply(null, arguments));
+    } catch (e) {
+        async.throwLater(e);
+        domEventFired = true;
+    }
+
+    return domEventFired || globalEventFired;
+};
+
+Promise.config = function(opts) {
+    opts = Object(opts);
+    if ("longStackTraces" in opts) {
+        if (opts.longStackTraces) {
+            Promise.longStackTraces();
+        } else if (!opts.longStackTraces && Promise.hasLongStackTraces()) {
+            disableLongStackTraces();
+        }
+    }
+    if ("warnings" in opts) {
+        var warningsOption = opts.warnings;
+        config.warnings = !!warningsOption;
+        wForgottenReturn = config.warnings;
+
+        if (util.isObject(warningsOption)) {
+            if ("wForgottenReturn" in warningsOption) {
+                wForgottenReturn = !!warningsOption.wForgottenReturn;
+            }
+        }
+    }
+    if ("cancellation" in opts && opts.cancellation && !config.cancellation) {
+        if (async.haveItemsQueued()) {
+            throw new Error(
+                "cannot enable cancellation after promises are in use");
+        }
+        Promise.prototype._clearCancellationData =
+            cancellationClearCancellationData;
+        Promise.prototype._propagateFrom = cancellationPropagateFrom;
+        Promise.prototype._onCancel = cancellationOnCancel;
+        Promise.prototype._setOnCancel = cancellationSetOnCancel;
+        Promise.prototype._attachCancellationCallback =
+            cancellationAttachCancellationCallback;
+        Promise.prototype._execute = cancellationExecute;
+        propagateFromFunction = cancellationPropagateFrom;
+        config.cancellation = true;
+    }
+    if ("monitoring" in opts) {
+        if (opts.monitoring && !config.monitoring) {
+            config.monitoring = true;
+            Promise.prototype._fireEvent = activeFireEvent;
+        } else if (!opts.monitoring && config.monitoring) {
+            config.monitoring = false;
+            Promise.prototype._fireEvent = defaultFireEvent;
+        }
+    }
+    return Promise;
+};
+
+function defaultFireEvent() { return false; }
+
+Promise.prototype._fireEvent = defaultFireEvent;
+Promise.prototype._execute = function(executor, resolve, reject) {
+    try {
+        executor(resolve, reject);
+    } catch (e) {
+        return e;
+    }
+};
+Promise.prototype._onCancel = function () {};
+Promise.prototype._setOnCancel = function (handler) { ; };
+Promise.prototype._attachCancellationCallback = function(onCancel) {
+    ;
+};
+Promise.prototype._captureStackTrace = function () {};
+Promise.prototype._attachExtraTrace = function () {};
+Promise.prototype._clearCancellationData = function() {};
+Promise.prototype._propagateFrom = function (parent, flags) {
+    ;
+    ;
+};
+
+function cancellationExecute(executor, resolve, reject) {
+    var promise = this;
+    try {
+        executor(resolve, reject, function(onCancel) {
+            if (typeof onCancel !== "function") {
+                throw new TypeError("onCancel must be a function, got: " +
+                                    util.toString(onCancel));
+            }
+            promise._attachCancellationCallback(onCancel);
+        });
+    } catch (e) {
+        return e;
+    }
+}
+
+function cancellationAttachCancellationCallback(onCancel) {
+    if (!this._isCancellable()) return this;
+
+    var previousOnCancel = this._onCancel();
+    if (previousOnCancel !== undefined) {
+        if (util.isArray(previousOnCancel)) {
+            previousOnCancel.push(onCancel);
+        } else {
+            this._setOnCancel([previousOnCancel, onCancel]);
+        }
+    } else {
+        this._setOnCancel(onCancel);
+    }
+}
+
+function cancellationOnCancel() {
+    return this._onCancelField;
+}
+
+function cancellationSetOnCancel(onCancel) {
+    this._onCancelField = onCancel;
+}
+
+function cancellationClearCancellationData() {
+    this._cancellationParent = undefined;
+    this._onCancelField = undefined;
+}
+
+function cancellationPropagateFrom(parent, flags) {
+    if ((flags & 1) !== 0) {
+        this._cancellationParent = parent;
+        var branchesRemainingToCancel = parent._branchesRemainingToCancel;
+        if (branchesRemainingToCancel === undefined) {
+            branchesRemainingToCancel = 0;
+        }
+        parent._branchesRemainingToCancel = branchesRemainingToCancel + 1;
+    }
+    if ((flags & 2) !== 0 && parent._isBound()) {
+        this._setBoundTo(parent._boundTo);
+    }
+}
+
+function bindingPropagateFrom(parent, flags) {
+    if ((flags & 2) !== 0 && parent._isBound()) {
+        this._setBoundTo(parent._boundTo);
+    }
+}
+var propagateFromFunction = bindingPropagateFrom;
+
+function boundValueFunction() {
+    var ret = this._boundTo;
+    if (ret !== undefined) {
+        if (ret instanceof Promise) {
+            if (ret.isFulfilled()) {
+                return ret.value();
+            } else {
+                return undefined;
+            }
+        }
+    }
+    return ret;
+}
+
+function longStackTracesCaptureStackTrace() {
+    this._trace = new CapturedTrace(this._peekContext());
+}
+
+function longStackTracesAttachExtraTrace(error, ignoreSelf) {
+    if (canAttachTrace(error)) {
+        var trace = this._trace;
+        if (trace !== undefined) {
+            if (ignoreSelf) trace = trace._parent;
+        }
+        if (trace !== undefined) {
+            trace.attachExtraTrace(error);
+        } else if (!error.__stackCleaned__) {
+            var parsed = parseStackAndMessage(error);
+            util.notEnumerableProp(error, "stack",
+                parsed.message + "\n" + parsed.stack.join("\n"));
+            util.notEnumerableProp(error, "__stackCleaned__", true);
+        }
+    }
+}
+
+function checkForgottenReturns(returnValue, promiseCreated, name, promise,
+                               parent) {
+    if (returnValue === undefined && promiseCreated !== null &&
+        wForgottenReturn) {
+        if (parent !== undefined && parent._returnedNonUndefined()) return;
+        if ((promise._bitField & 65535) === 0) return;
+
+        if (name) name = name + " ";
+        var handlerLine = "";
+        var creatorLine = "";
+        if (promiseCreated._trace) {
+            var traceLines = promiseCreated._trace.stack.split("\n");
+            var stack = cleanStack(traceLines);
+            for (var i = stack.length - 1; i >= 0; --i) {
+                var line = stack[i];
+                if (!nodeFramePattern.test(line)) {
+                    var lineMatches = line.match(parseLinePattern);
+                    if (lineMatches) {
+                        handlerLine  = "at " + lineMatches[1] +
+                            ":" + lineMatches[2] + ":" + lineMatches[3] + " ";
+                    }
+                    break;
+                }
+            }
+
+            if (stack.length > 0) {
+                var firstUserLine = stack[0];
+                for (var i = 0; i < traceLines.length; ++i) {
+
+                    if (traceLines[i] === firstUserLine) {
+                        if (i > 0) {
+                            creatorLine = "\n" + traceLines[i - 1];
+                        }
+                        break;
+                    }
+                }
+
+            }
+        }
+        var msg = "a promise was created in a " + name +
+            "handler " + handlerLine + "but was not returned from it, " +
+            "see http://goo.gl/rRqMUw" +
+            creatorLine;
+        promise._warn(msg, true, promiseCreated);
+    }
+}
+
+function deprecated(name, replacement) {
+    var message = name +
+        " is deprecated and will be removed in a future version.";
+    if (replacement) message += " Use " + replacement + " instead.";
+    return warn(message);
+}
+
+function warn(message, shouldUseOwnTrace, promise) {
+    if (!config.warnings) return;
+    var warning = new Warning(message);
+    var ctx;
+    if (shouldUseOwnTrace) {
+        promise._attachExtraTrace(warning);
+    } else if (config.longStackTraces && (ctx = Promise._peekContext())) {
+        ctx.attachExtraTrace(warning);
+    } else {
+        var parsed = parseStackAndMessage(warning);
+        warning.stack = parsed.message + "\n" + parsed.stack.join("\n");
+    }
+
+    if (!activeFireEvent("warning", warning)) {
+        formatAndLogError(warning, "", true);
+    }
+}
+
+function reconstructStack(message, stacks) {
+    for (var i = 0; i < stacks.length - 1; ++i) {
+        stacks[i].push("From previous event:");
+        stacks[i] = stacks[i].join("\n");
+    }
+    if (i < stacks.length) {
+        stacks[i] = stacks[i].join("\n");
+    }
+    return message + "\n" + stacks.join("\n");
+}
+
+function removeDuplicateOrEmptyJumps(stacks) {
+    for (var i = 0; i < stacks.length; ++i) {
+        if (stacks[i].length === 0 ||
+            ((i + 1 < stacks.length) && stacks[i][0] === stacks[i+1][0])) {
+            stacks.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+function removeCommonRoots(stacks) {
+    var current = stacks[0];
+    for (var i = 1; i < stacks.length; ++i) {
+        var prev = stacks[i];
+        var currentLastIndex = current.length - 1;
+        var currentLastLine = current[currentLastIndex];
+        var commonRootMeetPoint = -1;
+
+        for (var j = prev.length - 1; j >= 0; --j) {
+            if (prev[j] === currentLastLine) {
+                commonRootMeetPoint = j;
+                break;
+            }
+        }
+
+        for (var j = commonRootMeetPoint; j >= 0; --j) {
+            var line = prev[j];
+            if (current[currentLastIndex] === line) {
+                current.pop();
+                currentLastIndex--;
+            } else {
+                break;
+            }
+        }
+        current = prev;
+    }
+}
+
+function cleanStack(stack) {
+    var ret = [];
+    for (var i = 0; i < stack.length; ++i) {
+        var line = stack[i];
+        var isTraceLine = "    (No stack trace)" === line ||
+            stackFramePattern.test(line);
+        var isInternalFrame = isTraceLine && shouldIgnore(line);
+        if (isTraceLine && !isInternalFrame) {
+            if (indentStackFrames && line.charAt(0) !== " ") {
+                line = "    " + line;
+            }
+            ret.push(line);
+        }
+    }
+    return ret;
+}
+
+function stackFramesAsArray(error) {
+    var stack = error.stack.replace(/\s+$/g, "").split("\n");
+    for (var i = 0; i < stack.length; ++i) {
+        var line = stack[i];
+        if ("    (No stack trace)" === line || stackFramePattern.test(line)) {
+            break;
+        }
+    }
+    if (i > 0 && error.name != "SyntaxError") {
+        stack = stack.slice(i);
+    }
+    return stack;
+}
+
+function parseStackAndMessage(error) {
+    var stack = error.stack;
+    var message = error.toString();
+    stack = typeof stack === "string" && stack.length > 0
+                ? stackFramesAsArray(error) : ["    (No stack trace)"];
+    return {
+        message: message,
+        stack: error.name == "SyntaxError" ? stack : cleanStack(stack)
+    };
+}
+
+function formatAndLogError(error, title, isSoft) {
+    if (typeof console !== "undefined") {
+        var message;
+        if (util.isObject(error)) {
+            var stack = error.stack;
+            message = title + formatStack(stack, error);
+        } else {
+            message = title + String(error);
+        }
+        if (typeof printWarning === "function") {
+            printWarning(message, isSoft);
+        } else if (typeof console.log === "function" ||
+            typeof console.log === "object") {
+            console.log(message);
+        }
+    }
+}
+
+function fireRejectionEvent(name, localHandler, reason, promise) {
+    var localEventFired = false;
+    try {
+        if (typeof localHandler === "function") {
+            localEventFired = true;
+            if (name === "rejectionHandled") {
+                localHandler(promise);
+            } else {
+                localHandler(reason, promise);
+            }
+        }
+    } catch (e) {
+        async.throwLater(e);
+    }
+
+    if (name === "unhandledRejection") {
+        if (!activeFireEvent(name, reason, promise) && !localEventFired) {
+            formatAndLogError(reason, "Unhandled rejection ");
+        }
+    } else {
+        activeFireEvent(name, promise);
+    }
+}
+
+function formatNonError(obj) {
+    var str;
+    if (typeof obj === "function") {
+        str = "[function " +
+            (obj.name || "anonymous") +
+            "]";
+    } else {
+        str = obj && typeof obj.toString === "function"
+            ? obj.toString() : util.toString(obj);
+        var ruselessToString = /\[object [a-zA-Z0-9$_]+\]/;
+        if (ruselessToString.test(str)) {
+            try {
+                var newStr = JSON.stringify(obj);
+                str = newStr;
+            }
+            catch(e) {
+
+            }
+        }
+        if (str.length === 0) {
+            str = "(empty array)";
+        }
+    }
+    return ("(<" + snip(str) + ">, no stack trace)");
+}
+
+function snip(str) {
+    var maxChars = 41;
+    if (str.length < maxChars) {
+        return str;
+    }
+    return str.substr(0, maxChars - 3) + "...";
+}
+
+function longStackTracesIsSupported() {
+    return typeof captureStackTrace === "function";
+}
+
+var shouldIgnore = function() { return false; };
+var parseLineInfoRegex = /[\/<\(]([^:\/]+):(\d+):(?:\d+)\)?\s*$/;
+function parseLineInfo(line) {
+    var matches = line.match(parseLineInfoRegex);
+    if (matches) {
+        return {
+            fileName: matches[1],
+            line: parseInt(matches[2], 10)
+        };
+    }
+}
+
+function setBounds(firstLineError, lastLineError) {
+    if (!longStackTracesIsSupported()) return;
+    var firstStackLines = firstLineError.stack.split("\n");
+    var lastStackLines = lastLineError.stack.split("\n");
+    var firstIndex = -1;
+    var lastIndex = -1;
+    var firstFileName;
+    var lastFileName;
+    for (var i = 0; i < firstStackLines.length; ++i) {
+        var result = parseLineInfo(firstStackLines[i]);
+        if (result) {
+            firstFileName = result.fileName;
+            firstIndex = result.line;
+            break;
+        }
+    }
+    for (var i = 0; i < lastStackLines.length; ++i) {
+        var result = parseLineInfo(lastStackLines[i]);
+        if (result) {
+            lastFileName = result.fileName;
+            lastIndex = result.line;
+            break;
+        }
+    }
+    if (firstIndex < 0 || lastIndex < 0 || !firstFileName || !lastFileName ||
+        firstFileName !== lastFileName || firstIndex >= lastIndex) {
+        return;
+    }
+
+    shouldIgnore = function(line) {
+        if (bluebirdFramePattern.test(line)) return true;
+        var info = parseLineInfo(line);
+        if (info) {
+            if (info.fileName === firstFileName &&
+                (firstIndex <= info.line && info.line <= lastIndex)) {
+                return true;
+            }
+        }
+        return false;
+    };
+}
+
+function CapturedTrace(parent) {
+    this._parent = parent;
+    this._promisesCreated = 0;
+    var length = this._length = 1 + (parent === undefined ? 0 : parent._length);
+    captureStackTrace(this, CapturedTrace);
+    if (length > 32) this.uncycle();
+}
+util.inherits(CapturedTrace, Error);
+Context.CapturedTrace = CapturedTrace;
+
+CapturedTrace.prototype.uncycle = function() {
+    var length = this._length;
+    if (length < 2) return;
+    var nodes = [];
+    var stackToIndex = {};
+
+    for (var i = 0, node = this; node !== undefined; ++i) {
+        nodes.push(node);
+        node = node._parent;
+    }
+    length = this._length = i;
+    for (var i = length - 1; i >= 0; --i) {
+        var stack = nodes[i].stack;
+        if (stackToIndex[stack] === undefined) {
+            stackToIndex[stack] = i;
+        }
+    }
+    for (var i = 0; i < length; ++i) {
+        var currentStack = nodes[i].stack;
+        var index = stackToIndex[currentStack];
+        if (index !== undefined && index !== i) {
+            if (index > 0) {
+                nodes[index - 1]._parent = undefined;
+                nodes[index - 1]._length = 1;
+            }
+            nodes[i]._parent = undefined;
+            nodes[i]._length = 1;
+            var cycleEdgeNode = i > 0 ? nodes[i - 1] : this;
+
+            if (index < length - 1) {
+                cycleEdgeNode._parent = nodes[index + 1];
+                cycleEdgeNode._parent.uncycle();
+                cycleEdgeNode._length =
+                    cycleEdgeNode._parent._length + 1;
+            } else {
+                cycleEdgeNode._parent = undefined;
+                cycleEdgeNode._length = 1;
+            }
+            var currentChildLength = cycleEdgeNode._length + 1;
+            for (var j = i - 2; j >= 0; --j) {
+                nodes[j]._length = currentChildLength;
+                currentChildLength++;
+            }
+            return;
+        }
+    }
+};
+
+CapturedTrace.prototype.attachExtraTrace = function(error) {
+    if (error.__stackCleaned__) return;
+    this.uncycle();
+    var parsed = parseStackAndMessage(error);
+    var message = parsed.message;
+    var stacks = [parsed.stack];
+
+    var trace = this;
+    while (trace !== undefined) {
+        stacks.push(cleanStack(trace.stack.split("\n")));
+        trace = trace._parent;
+    }
+    removeCommonRoots(stacks);
+    removeDuplicateOrEmptyJumps(stacks);
+    util.notEnumerableProp(error, "stack", reconstructStack(message, stacks));
+    util.notEnumerableProp(error, "__stackCleaned__", true);
+};
+
+var captureStackTrace = (function stackDetection() {
+    var v8stackFramePattern = /^\s*at\s*/;
+    var v8stackFormatter = function(stack, error) {
+        if (typeof stack === "string") return stack;
+
+        if (error.name !== undefined &&
+            error.message !== undefined) {
+            return error.toString();
+        }
+        return formatNonError(error);
+    };
+
+    if (typeof Error.stackTraceLimit === "number" &&
+        typeof Error.captureStackTrace === "function") {
+        Error.stackTraceLimit += 6;
+        stackFramePattern = v8stackFramePattern;
+        formatStack = v8stackFormatter;
+        var captureStackTrace = Error.captureStackTrace;
+
+        shouldIgnore = function(line) {
+            return bluebirdFramePattern.test(line);
+        };
+        return function(receiver, ignoreUntil) {
+            Error.stackTraceLimit += 6;
+            captureStackTrace(receiver, ignoreUntil);
+            Error.stackTraceLimit -= 6;
+        };
+    }
+    var err = new Error();
+
+    if (typeof err.stack === "string" &&
+        err.stack.split("\n")[0].indexOf("stackDetection@") >= 0) {
+        stackFramePattern = /@/;
+        formatStack = v8stackFormatter;
+        indentStackFrames = true;
+        return function captureStackTrace(o) {
+            o.stack = new Error().stack;
+        };
+    }
+
+    var hasStackAfterThrow;
+    try { throw new Error(); }
+    catch(e) {
+        hasStackAfterThrow = ("stack" in e);
+    }
+    if (!("stack" in err) && hasStackAfterThrow &&
+        typeof Error.stackTraceLimit === "number") {
+        stackFramePattern = v8stackFramePattern;
+        formatStack = v8stackFormatter;
+        return function captureStackTrace(o) {
+            Error.stackTraceLimit += 6;
+            try { throw new Error(); }
+            catch(e) { o.stack = e.stack; }
+            Error.stackTraceLimit -= 6;
+        };
+    }
+
+    formatStack = function(stack, error) {
+        if (typeof stack === "string") return stack;
+
+        if ((typeof error === "object" ||
+            typeof error === "function") &&
+            error.name !== undefined &&
+            error.message !== undefined) {
+            return error.toString();
+        }
+        return formatNonError(error);
+    };
+
+    return null;
+
+})([]);
+
+if (typeof console !== "undefined" && typeof console.warn !== "undefined") {
+    printWarning = function (message) {
+        console.warn(message);
+    };
+    if (util.isNode && process.stderr.isTTY) {
+        printWarning = function(message, isSoft) {
+            var color = isSoft ? "\u001b[33m" : "\u001b[31m";
+            console.warn(color + message + "\u001b[0m\n");
+        };
+    } else if (!util.isNode && typeof (new Error().stack) === "string") {
+        printWarning = function(message, isSoft) {
+            console.warn("%c" + message,
+                        isSoft ? "color: darkorange" : "color: red");
+        };
+    }
+}
+
+var config = {
+    warnings: warnings,
+    longStackTraces: false,
+    cancellation: false,
+    monitoring: false
+};
+
+if (longStackTraces) Promise.longStackTraces();
+
+return {
+    longStackTraces: function() {
+        return config.longStackTraces;
+    },
+    warnings: function() {
+        return config.warnings;
+    },
+    cancellation: function() {
+        return config.cancellation;
+    },
+    monitoring: function() {
+        return config.monitoring;
+    },
+    propagateFromFunction: function() {
+        return propagateFromFunction;
+    },
+    boundValueFunction: function() {
+        return boundValueFunction;
+    },
+    checkForgottenReturns: checkForgottenReturns,
+    setBounds: setBounds,
+    warn: warn,
+    deprecated: deprecated,
+    CapturedTrace: CapturedTrace,
+    fireDomEvent: fireDomEvent,
+    fireGlobalEvent: fireGlobalEvent
+};
+};
+
+},{"./errors":12,"./util":36}],10:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise) {
+function returner() {
+    return this.value;
+}
+function thrower() {
+    throw this.reason;
+}
+
+Promise.prototype["return"] =
+Promise.prototype.thenReturn = function (value) {
+    if (value instanceof Promise) value.suppressUnhandledRejections();
+    return this._then(
+        returner, undefined, undefined, {value: value}, undefined);
+};
+
+Promise.prototype["throw"] =
+Promise.prototype.thenThrow = function (reason) {
+    return this._then(
+        thrower, undefined, undefined, {reason: reason}, undefined);
+};
+
+Promise.prototype.catchThrow = function (reason) {
+    if (arguments.length <= 1) {
+        return this._then(
+            undefined, thrower, undefined, {reason: reason}, undefined);
+    } else {
+        var _reason = arguments[1];
+        var handler = function() {throw _reason;};
+        return this.caught(reason, handler);
+    }
+};
+
+Promise.prototype.catchReturn = function (value) {
+    if (arguments.length <= 1) {
+        if (value instanceof Promise) value.suppressUnhandledRejections();
+        return this._then(
+            undefined, returner, undefined, {value: value}, undefined);
+    } else {
+        var _value = arguments[1];
+        if (_value instanceof Promise) _value.suppressUnhandledRejections();
+        var handler = function() {return _value;};
+        return this.caught(value, handler);
+    }
+};
+};
+
+},{}],11:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, INTERNAL) {
+var PromiseReduce = Promise.reduce;
+var PromiseAll = Promise.all;
+
+function promiseAllThis() {
+    return PromiseAll(this);
+}
+
+function PromiseMapSeries(promises, fn) {
+    return PromiseReduce(promises, fn, INTERNAL, INTERNAL);
+}
+
+Promise.prototype.each = function (fn) {
+    return PromiseReduce(this, fn, INTERNAL, 0)
+              ._then(promiseAllThis, undefined, undefined, this, undefined);
+};
+
+Promise.prototype.mapSeries = function (fn) {
+    return PromiseReduce(this, fn, INTERNAL, INTERNAL);
+};
+
+Promise.each = function (promises, fn) {
+    return PromiseReduce(promises, fn, INTERNAL, 0)
+              ._then(promiseAllThis, undefined, undefined, promises, undefined);
+};
+
+Promise.mapSeries = PromiseMapSeries;
+};
+
+
+},{}],12:[function(_dereq_,module,exports){
+"use strict";
+var es5 = _dereq_("./es5");
+var Objectfreeze = es5.freeze;
+var util = _dereq_("./util");
+var inherits = util.inherits;
+var notEnumerableProp = util.notEnumerableProp;
+
+function subError(nameProperty, defaultMessage) {
+    function SubError(message) {
+        if (!(this instanceof SubError)) return new SubError(message);
+        notEnumerableProp(this, "message",
+            typeof message === "string" ? message : defaultMessage);
+        notEnumerableProp(this, "name", nameProperty);
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            Error.call(this);
+        }
+    }
+    inherits(SubError, Error);
+    return SubError;
+}
+
+var _TypeError, _RangeError;
+var Warning = subError("Warning", "warning");
+var CancellationError = subError("CancellationError", "cancellation error");
+var TimeoutError = subError("TimeoutError", "timeout error");
+var AggregateError = subError("AggregateError", "aggregate error");
+try {
+    _TypeError = TypeError;
+    _RangeError = RangeError;
+} catch(e) {
+    _TypeError = subError("TypeError", "type error");
+    _RangeError = subError("RangeError", "range error");
+}
+
+var methods = ("join pop push shift unshift slice filter forEach some " +
+    "every map indexOf lastIndexOf reduce reduceRight sort reverse").split(" ");
+
+for (var i = 0; i < methods.length; ++i) {
+    if (typeof Array.prototype[methods[i]] === "function") {
+        AggregateError.prototype[methods[i]] = Array.prototype[methods[i]];
+    }
+}
+
+es5.defineProperty(AggregateError.prototype, "length", {
+    value: 0,
+    configurable: false,
+    writable: true,
+    enumerable: true
+});
+AggregateError.prototype["isOperational"] = true;
+var level = 0;
+AggregateError.prototype.toString = function() {
+    var indent = Array(level * 4 + 1).join(" ");
+    var ret = "\n" + indent + "AggregateError of:" + "\n";
+    level++;
+    indent = Array(level * 4 + 1).join(" ");
+    for (var i = 0; i < this.length; ++i) {
+        var str = this[i] === this ? "[Circular AggregateError]" : this[i] + "";
+        var lines = str.split("\n");
+        for (var j = 0; j < lines.length; ++j) {
+            lines[j] = indent + lines[j];
+        }
+        str = lines.join("\n");
+        ret += str + "\n";
+    }
+    level--;
+    return ret;
+};
+
+function OperationalError(message) {
+    if (!(this instanceof OperationalError))
+        return new OperationalError(message);
+    notEnumerableProp(this, "name", "OperationalError");
+    notEnumerableProp(this, "message", message);
+    this.cause = message;
+    this["isOperational"] = true;
+
+    if (message instanceof Error) {
+        notEnumerableProp(this, "message", message.message);
+        notEnumerableProp(this, "stack", message.stack);
+    } else if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, this.constructor);
+    }
+
+}
+inherits(OperationalError, Error);
+
+var errorTypes = Error["__BluebirdErrorTypes__"];
+if (!errorTypes) {
+    errorTypes = Objectfreeze({
+        CancellationError: CancellationError,
+        TimeoutError: TimeoutError,
+        OperationalError: OperationalError,
+        RejectionError: OperationalError,
+        AggregateError: AggregateError
+    });
+    es5.defineProperty(Error, "__BluebirdErrorTypes__", {
+        value: errorTypes,
+        writable: false,
+        enumerable: false,
+        configurable: false
+    });
+}
+
+module.exports = {
+    Error: Error,
+    TypeError: _TypeError,
+    RangeError: _RangeError,
+    CancellationError: errorTypes.CancellationError,
+    OperationalError: errorTypes.OperationalError,
+    TimeoutError: errorTypes.TimeoutError,
+    AggregateError: errorTypes.AggregateError,
+    Warning: Warning
+};
+
+},{"./es5":13,"./util":36}],13:[function(_dereq_,module,exports){
+var isES5 = (function(){
+    "use strict";
+    return this === undefined;
+})();
+
+if (isES5) {
+    module.exports = {
+        freeze: Object.freeze,
+        defineProperty: Object.defineProperty,
+        getDescriptor: Object.getOwnPropertyDescriptor,
+        keys: Object.keys,
+        names: Object.getOwnPropertyNames,
+        getPrototypeOf: Object.getPrototypeOf,
+        isArray: Array.isArray,
+        isES5: isES5,
+        propertyIsWritable: function(obj, prop) {
+            var descriptor = Object.getOwnPropertyDescriptor(obj, prop);
+            return !!(!descriptor || descriptor.writable || descriptor.set);
+        }
+    };
+} else {
+    var has = {}.hasOwnProperty;
+    var str = {}.toString;
+    var proto = {}.constructor.prototype;
+
+    var ObjectKeys = function (o) {
+        var ret = [];
+        for (var key in o) {
+            if (has.call(o, key)) {
+                ret.push(key);
+            }
+        }
+        return ret;
+    };
+
+    var ObjectGetDescriptor = function(o, key) {
+        return {value: o[key]};
+    };
+
+    var ObjectDefineProperty = function (o, key, desc) {
+        o[key] = desc.value;
+        return o;
+    };
+
+    var ObjectFreeze = function (obj) {
+        return obj;
+    };
+
+    var ObjectGetPrototypeOf = function (obj) {
+        try {
+            return Object(obj).constructor.prototype;
+        }
+        catch (e) {
+            return proto;
+        }
+    };
+
+    var ArrayIsArray = function (obj) {
+        try {
+            return str.call(obj) === "[object Array]";
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
+    module.exports = {
+        isArray: ArrayIsArray,
+        keys: ObjectKeys,
+        names: ObjectKeys,
+        defineProperty: ObjectDefineProperty,
+        getDescriptor: ObjectGetDescriptor,
+        freeze: ObjectFreeze,
+        getPrototypeOf: ObjectGetPrototypeOf,
+        isES5: isES5,
+        propertyIsWritable: function() {
+            return true;
+        }
+    };
+}
+
+},{}],14:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, INTERNAL) {
+var PromiseMap = Promise.map;
+
+Promise.prototype.filter = function (fn, options) {
+    return PromiseMap(this, fn, options, INTERNAL);
+};
+
+Promise.filter = function (promises, fn, options) {
+    return PromiseMap(promises, fn, options, INTERNAL);
+};
+};
+
+},{}],15:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, tryConvertToPromise, NEXT_FILTER) {
+var util = _dereq_("./util");
+var CancellationError = Promise.CancellationError;
+var errorObj = util.errorObj;
+var catchFilter = _dereq_("./catch_filter")(NEXT_FILTER);
+
+function PassThroughHandlerContext(promise, type, handler) {
+    this.promise = promise;
+    this.type = type;
+    this.handler = handler;
+    this.called = false;
+    this.cancelPromise = null;
+}
+
+PassThroughHandlerContext.prototype.isFinallyHandler = function() {
+    return this.type === 0;
+};
+
+function FinallyHandlerCancelReaction(finallyHandler) {
+    this.finallyHandler = finallyHandler;
+}
+
+FinallyHandlerCancelReaction.prototype._resultCancelled = function() {
+    checkCancel(this.finallyHandler);
+};
+
+function checkCancel(ctx, reason) {
+    if (ctx.cancelPromise != null) {
+        if (arguments.length > 1) {
+            ctx.cancelPromise._reject(reason);
+        } else {
+            ctx.cancelPromise._cancel();
+        }
+        ctx.cancelPromise = null;
+        return true;
+    }
+    return false;
+}
+
+function succeed() {
+    return finallyHandler.call(this, this.promise._target()._settledValue());
+}
+function fail(reason) {
+    if (checkCancel(this, reason)) return;
+    errorObj.e = reason;
+    return errorObj;
+}
+function finallyHandler(reasonOrValue) {
+    var promise = this.promise;
+    var handler = this.handler;
+
+    if (!this.called) {
+        this.called = true;
+        var ret = this.isFinallyHandler()
+            ? handler.call(promise._boundValue())
+            : handler.call(promise._boundValue(), reasonOrValue);
+        if (ret === NEXT_FILTER) {
+            return ret;
+        } else if (ret !== undefined) {
+            promise._setReturnedNonUndefined();
+            var maybePromise = tryConvertToPromise(ret, promise);
+            if (maybePromise instanceof Promise) {
+                if (this.cancelPromise != null) {
+                    if (maybePromise._isCancelled()) {
+                        var reason =
+                            new CancellationError("late cancellation observer");
+                        promise._attachExtraTrace(reason);
+                        errorObj.e = reason;
+                        return errorObj;
+                    } else if (maybePromise.isPending()) {
+                        maybePromise._attachCancellationCallback(
+                            new FinallyHandlerCancelReaction(this));
+                    }
+                }
+                return maybePromise._then(
+                    succeed, fail, undefined, this, undefined);
+            }
+        }
+    }
+
+    if (promise.isRejected()) {
+        checkCancel(this);
+        errorObj.e = reasonOrValue;
+        return errorObj;
+    } else {
+        checkCancel(this);
+        return reasonOrValue;
+    }
+}
+
+Promise.prototype._passThrough = function(handler, type, success, fail) {
+    if (typeof handler !== "function") return this.then();
+    return this._then(success,
+                      fail,
+                      undefined,
+                      new PassThroughHandlerContext(this, type, handler),
+                      undefined);
+};
+
+Promise.prototype.lastly =
+Promise.prototype["finally"] = function (handler) {
+    return this._passThrough(handler,
+                             0,
+                             finallyHandler,
+                             finallyHandler);
+};
+
+
+Promise.prototype.tap = function (handler) {
+    return this._passThrough(handler, 1, finallyHandler);
+};
+
+Promise.prototype.tapCatch = function (handlerOrPredicate) {
+    var len = arguments.length;
+    if(len === 1) {
+        return this._passThrough(handlerOrPredicate,
+                                 1,
+                                 undefined,
+                                 finallyHandler);
+    } else {
+         var catchInstances = new Array(len - 1),
+            j = 0, i;
+        for (i = 0; i < len - 1; ++i) {
+            var item = arguments[i];
+            if (util.isObject(item)) {
+                catchInstances[j++] = item;
+            } else {
+                return Promise.reject(new TypeError(
+                    "tapCatch statement predicate: "
+                    + "expecting an object but got " + util.classString(item)
+                ));
+            }
+        }
+        catchInstances.length = j;
+        var handler = arguments[i];
+        return this._passThrough(catchFilter(catchInstances, handler, this),
+                                 1,
+                                 undefined,
+                                 finallyHandler);
+    }
+
+};
+
+return PassThroughHandlerContext;
+};
+
+},{"./catch_filter":7,"./util":36}],16:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise,
+                          apiRejection,
+                          INTERNAL,
+                          tryConvertToPromise,
+                          Proxyable,
+                          debug) {
+var errors = _dereq_("./errors");
+var TypeError = errors.TypeError;
+var util = _dereq_("./util");
+var errorObj = util.errorObj;
+var tryCatch = util.tryCatch;
+var yieldHandlers = [];
+
+function promiseFromYieldHandler(value, yieldHandlers, traceParent) {
+    for (var i = 0; i < yieldHandlers.length; ++i) {
+        traceParent._pushContext();
+        var result = tryCatch(yieldHandlers[i])(value);
+        traceParent._popContext();
+        if (result === errorObj) {
+            traceParent._pushContext();
+            var ret = Promise.reject(errorObj.e);
+            traceParent._popContext();
+            return ret;
+        }
+        var maybePromise = tryConvertToPromise(result, traceParent);
+        if (maybePromise instanceof Promise) return maybePromise;
+    }
+    return null;
+}
+
+function PromiseSpawn(generatorFunction, receiver, yieldHandler, stack) {
+    if (debug.cancellation()) {
+        var internal = new Promise(INTERNAL);
+        var _finallyPromise = this._finallyPromise = new Promise(INTERNAL);
+        this._promise = internal.lastly(function() {
+            return _finallyPromise;
+        });
+        internal._captureStackTrace();
+        internal._setOnCancel(this);
+    } else {
+        var promise = this._promise = new Promise(INTERNAL);
+        promise._captureStackTrace();
+    }
+    this._stack = stack;
+    this._generatorFunction = generatorFunction;
+    this._receiver = receiver;
+    this._generator = undefined;
+    this._yieldHandlers = typeof yieldHandler === "function"
+        ? [yieldHandler].concat(yieldHandlers)
+        : yieldHandlers;
+    this._yieldedPromise = null;
+    this._cancellationPhase = false;
+}
+util.inherits(PromiseSpawn, Proxyable);
+
+PromiseSpawn.prototype._isResolved = function() {
+    return this._promise === null;
+};
+
+PromiseSpawn.prototype._cleanup = function() {
+    this._promise = this._generator = null;
+    if (debug.cancellation() && this._finallyPromise !== null) {
+        this._finallyPromise._fulfill();
+        this._finallyPromise = null;
+    }
+};
+
+PromiseSpawn.prototype._promiseCancelled = function() {
+    if (this._isResolved()) return;
+    var implementsReturn = typeof this._generator["return"] !== "undefined";
+
+    var result;
+    if (!implementsReturn) {
+        var reason = new Promise.CancellationError(
+            "generator .return() sentinel");
+        Promise.coroutine.returnSentinel = reason;
+        this._promise._attachExtraTrace(reason);
+        this._promise._pushContext();
+        result = tryCatch(this._generator["throw"]).call(this._generator,
+                                                         reason);
+        this._promise._popContext();
+    } else {
+        this._promise._pushContext();
+        result = tryCatch(this._generator["return"]).call(this._generator,
+                                                          undefined);
+        this._promise._popContext();
+    }
+    this._cancellationPhase = true;
+    this._yieldedPromise = null;
+    this._continue(result);
+};
+
+PromiseSpawn.prototype._promiseFulfilled = function(value) {
+    this._yieldedPromise = null;
+    this._promise._pushContext();
+    var result = tryCatch(this._generator.next).call(this._generator, value);
+    this._promise._popContext();
+    this._continue(result);
+};
+
+PromiseSpawn.prototype._promiseRejected = function(reason) {
+    this._yieldedPromise = null;
+    this._promise._attachExtraTrace(reason);
+    this._promise._pushContext();
+    var result = tryCatch(this._generator["throw"])
+        .call(this._generator, reason);
+    this._promise._popContext();
+    this._continue(result);
+};
+
+PromiseSpawn.prototype._resultCancelled = function() {
+    if (this._yieldedPromise instanceof Promise) {
+        var promise = this._yieldedPromise;
+        this._yieldedPromise = null;
+        promise.cancel();
+    }
+};
+
+PromiseSpawn.prototype.promise = function () {
+    return this._promise;
+};
+
+PromiseSpawn.prototype._run = function () {
+    this._generator = this._generatorFunction.call(this._receiver);
+    this._receiver =
+        this._generatorFunction = undefined;
+    this._promiseFulfilled(undefined);
+};
+
+PromiseSpawn.prototype._continue = function (result) {
+    var promise = this._promise;
+    if (result === errorObj) {
+        this._cleanup();
+        if (this._cancellationPhase) {
+            return promise.cancel();
+        } else {
+            return promise._rejectCallback(result.e, false);
+        }
+    }
+
+    var value = result.value;
+    if (result.done === true) {
+        this._cleanup();
+        if (this._cancellationPhase) {
+            return promise.cancel();
+        } else {
+            return promise._resolveCallback(value);
+        }
+    } else {
+        var maybePromise = tryConvertToPromise(value, this._promise);
+        if (!(maybePromise instanceof Promise)) {
+            maybePromise =
+                promiseFromYieldHandler(maybePromise,
+                                        this._yieldHandlers,
+                                        this._promise);
+            if (maybePromise === null) {
+                this._promiseRejected(
+                    new TypeError(
+                        "A value %s was yielded that could not be treated as a promise\u000a\u000a    See http://goo.gl/MqrFmX\u000a\u000a".replace("%s", String(value)) +
+                        "From coroutine:\u000a" +
+                        this._stack.split("\n").slice(1, -7).join("\n")
+                    )
+                );
+                return;
+            }
+        }
+        maybePromise = maybePromise._target();
+        var bitField = maybePromise._bitField;
+        ;
+        if (((bitField & 50397184) === 0)) {
+            this._yieldedPromise = maybePromise;
+            maybePromise._proxy(this, null);
+        } else if (((bitField & 33554432) !== 0)) {
+            Promise._async.invoke(
+                this._promiseFulfilled, this, maybePromise._value()
+            );
+        } else if (((bitField & 16777216) !== 0)) {
+            Promise._async.invoke(
+                this._promiseRejected, this, maybePromise._reason()
+            );
+        } else {
+            this._promiseCancelled();
+        }
+    }
+};
+
+Promise.coroutine = function (generatorFunction, options) {
+    if (typeof generatorFunction !== "function") {
+        throw new TypeError("generatorFunction must be a function\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    var yieldHandler = Object(options).yieldHandler;
+    var PromiseSpawn$ = PromiseSpawn;
+    var stack = new Error().stack;
+    return function () {
+        var generator = generatorFunction.apply(this, arguments);
+        var spawn = new PromiseSpawn$(undefined, undefined, yieldHandler,
+                                      stack);
+        var ret = spawn.promise();
+        spawn._generator = generator;
+        spawn._promiseFulfilled(undefined);
+        return ret;
+    };
+};
+
+Promise.coroutine.addYieldHandler = function(fn) {
+    if (typeof fn !== "function") {
+        throw new TypeError("expecting a function but got " + util.classString(fn));
+    }
+    yieldHandlers.push(fn);
+};
+
+Promise.spawn = function (generatorFunction) {
+    debug.deprecated("Promise.spawn()", "Promise.coroutine()");
+    if (typeof generatorFunction !== "function") {
+        return apiRejection("generatorFunction must be a function\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    var spawn = new PromiseSpawn(generatorFunction, this);
+    var ret = spawn.promise();
+    spawn._run(Promise.spawn);
+    return ret;
+};
+};
+
+},{"./errors":12,"./util":36}],17:[function(_dereq_,module,exports){
+"use strict";
+module.exports =
+function(Promise, PromiseArray, tryConvertToPromise, INTERNAL, async,
+         getDomain) {
+var util = _dereq_("./util");
+var canEvaluate = util.canEvaluate;
+var tryCatch = util.tryCatch;
+var errorObj = util.errorObj;
+var reject;
+
+if (!true) {
+if (canEvaluate) {
+    var thenCallback = function(i) {
+        return new Function("value", "holder", "                             \n\
+            'use strict';                                                    \n\
+            holder.pIndex = value;                                           \n\
+            holder.checkFulfillment(this);                                   \n\
+            ".replace(/Index/g, i));
+    };
+
+    var promiseSetter = function(i) {
+        return new Function("promise", "holder", "                           \n\
+            'use strict';                                                    \n\
+            holder.pIndex = promise;                                         \n\
+            ".replace(/Index/g, i));
+    };
+
+    var generateHolderClass = function(total) {
+        var props = new Array(total);
+        for (var i = 0; i < props.length; ++i) {
+            props[i] = "this.p" + (i+1);
+        }
+        var assignment = props.join(" = ") + " = null;";
+        var cancellationCode= "var promise;\n" + props.map(function(prop) {
+            return "                                                         \n\
+                promise = " + prop + ";                                      \n\
+                if (promise instanceof Promise) {                            \n\
+                    promise.cancel();                                        \n\
+                }                                                            \n\
+            ";
+        }).join("\n");
+        var passedArguments = props.join(", ");
+        var name = "Holder$" + total;
+
+
+        var code = "return function(tryCatch, errorObj, Promise, async) {    \n\
+            'use strict';                                                    \n\
+            function [TheName](fn) {                                         \n\
+                [TheProperties]                                              \n\
+                this.fn = fn;                                                \n\
+                this.asyncNeeded = true;                                     \n\
+                this.now = 0;                                                \n\
+            }                                                                \n\
+                                                                             \n\
+            [TheName].prototype._callFunction = function(promise) {          \n\
+                promise._pushContext();                                      \n\
+                var ret = tryCatch(this.fn)([ThePassedArguments]);           \n\
+                promise._popContext();                                       \n\
+                if (ret === errorObj) {                                      \n\
+                    promise._rejectCallback(ret.e, false);                   \n\
+                } else {                                                     \n\
+                    promise._resolveCallback(ret);                           \n\
+                }                                                            \n\
+            };                                                               \n\
+                                                                             \n\
+            [TheName].prototype.checkFulfillment = function(promise) {       \n\
+                var now = ++this.now;                                        \n\
+                if (now === [TheTotal]) {                                    \n\
+                    if (this.asyncNeeded) {                                  \n\
+                        async.invoke(this._callFunction, this, promise);     \n\
+                    } else {                                                 \n\
+                        this._callFunction(promise);                         \n\
+                    }                                                        \n\
+                                                                             \n\
+                }                                                            \n\
+            };                                                               \n\
+                                                                             \n\
+            [TheName].prototype._resultCancelled = function() {              \n\
+                [CancellationCode]                                           \n\
+            };                                                               \n\
+                                                                             \n\
+            return [TheName];                                                \n\
+        }(tryCatch, errorObj, Promise, async);                               \n\
+        ";
+
+        code = code.replace(/\[TheName\]/g, name)
+            .replace(/\[TheTotal\]/g, total)
+            .replace(/\[ThePassedArguments\]/g, passedArguments)
+            .replace(/\[TheProperties\]/g, assignment)
+            .replace(/\[CancellationCode\]/g, cancellationCode);
+
+        return new Function("tryCatch", "errorObj", "Promise", "async", code)
+                           (tryCatch, errorObj, Promise, async);
+    };
+
+    var holderClasses = [];
+    var thenCallbacks = [];
+    var promiseSetters = [];
+
+    for (var i = 0; i < 8; ++i) {
+        holderClasses.push(generateHolderClass(i + 1));
+        thenCallbacks.push(thenCallback(i + 1));
+        promiseSetters.push(promiseSetter(i + 1));
+    }
+
+    reject = function (reason) {
+        this._reject(reason);
+    };
+}}
+
+Promise.join = function () {
+    var last = arguments.length - 1;
+    var fn;
+    if (last > 0 && typeof arguments[last] === "function") {
+        fn = arguments[last];
+        if (!true) {
+            if (last <= 8 && canEvaluate) {
+                var ret = new Promise(INTERNAL);
+                ret._captureStackTrace();
+                var HolderClass = holderClasses[last - 1];
+                var holder = new HolderClass(fn);
+                var callbacks = thenCallbacks;
+
+                for (var i = 0; i < last; ++i) {
+                    var maybePromise = tryConvertToPromise(arguments[i], ret);
+                    if (maybePromise instanceof Promise) {
+                        maybePromise = maybePromise._target();
+                        var bitField = maybePromise._bitField;
+                        ;
+                        if (((bitField & 50397184) === 0)) {
+                            maybePromise._then(callbacks[i], reject,
+                                               undefined, ret, holder);
+                            promiseSetters[i](maybePromise, holder);
+                            holder.asyncNeeded = false;
+                        } else if (((bitField & 33554432) !== 0)) {
+                            callbacks[i].call(ret,
+                                              maybePromise._value(), holder);
+                        } else if (((bitField & 16777216) !== 0)) {
+                            ret._reject(maybePromise._reason());
+                        } else {
+                            ret._cancel();
+                        }
+                    } else {
+                        callbacks[i].call(ret, maybePromise, holder);
+                    }
+                }
+
+                if (!ret._isFateSealed()) {
+                    if (holder.asyncNeeded) {
+                        var domain = getDomain();
+                        if (domain !== null) {
+                            holder.fn = util.domainBind(domain, holder.fn);
+                        }
+                    }
+                    ret._setAsyncGuaranteed();
+                    ret._setOnCancel(holder);
+                }
+                return ret;
+            }
+        }
+    }
+    var args = [].slice.call(arguments);;
+    if (fn) args.pop();
+    var ret = new PromiseArray(args).promise();
+    return fn !== undefined ? ret.spread(fn) : ret;
+};
+
+};
+
+},{"./util":36}],18:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise,
+                          PromiseArray,
+                          apiRejection,
+                          tryConvertToPromise,
+                          INTERNAL,
+                          debug) {
+var getDomain = Promise._getDomain;
+var util = _dereq_("./util");
+var tryCatch = util.tryCatch;
+var errorObj = util.errorObj;
+var async = Promise._async;
+
+function MappingPromiseArray(promises, fn, limit, _filter) {
+    this.constructor$(promises);
+    this._promise._captureStackTrace();
+    var domain = getDomain();
+    this._callback = domain === null ? fn : util.domainBind(domain, fn);
+    this._preservedValues = _filter === INTERNAL
+        ? new Array(this.length())
+        : null;
+    this._limit = limit;
+    this._inFlight = 0;
+    this._queue = [];
+    async.invoke(this._asyncInit, this, undefined);
+}
+util.inherits(MappingPromiseArray, PromiseArray);
+
+MappingPromiseArray.prototype._asyncInit = function() {
+    this._init$(undefined, -2);
+};
+
+MappingPromiseArray.prototype._init = function () {};
+
+MappingPromiseArray.prototype._promiseFulfilled = function (value, index) {
+    var values = this._values;
+    var length = this.length();
+    var preservedValues = this._preservedValues;
+    var limit = this._limit;
+
+    if (index < 0) {
+        index = (index * -1) - 1;
+        values[index] = value;
+        if (limit >= 1) {
+            this._inFlight--;
+            this._drainQueue();
+            if (this._isResolved()) return true;
+        }
+    } else {
+        if (limit >= 1 && this._inFlight >= limit) {
+            values[index] = value;
+            this._queue.push(index);
+            return false;
+        }
+        if (preservedValues !== null) preservedValues[index] = value;
+
+        var promise = this._promise;
+        var callback = this._callback;
+        var receiver = promise._boundValue();
+        promise._pushContext();
+        var ret = tryCatch(callback).call(receiver, value, index, length);
+        var promiseCreated = promise._popContext();
+        debug.checkForgottenReturns(
+            ret,
+            promiseCreated,
+            preservedValues !== null ? "Promise.filter" : "Promise.map",
+            promise
+        );
+        if (ret === errorObj) {
+            this._reject(ret.e);
+            return true;
+        }
+
+        var maybePromise = tryConvertToPromise(ret, this._promise);
+        if (maybePromise instanceof Promise) {
+            maybePromise = maybePromise._target();
+            var bitField = maybePromise._bitField;
+            ;
+            if (((bitField & 50397184) === 0)) {
+                if (limit >= 1) this._inFlight++;
+                values[index] = maybePromise;
+                maybePromise._proxy(this, (index + 1) * -1);
+                return false;
+            } else if (((bitField & 33554432) !== 0)) {
+                ret = maybePromise._value();
+            } else if (((bitField & 16777216) !== 0)) {
+                this._reject(maybePromise._reason());
+                return true;
+            } else {
+                this._cancel();
+                return true;
+            }
+        }
+        values[index] = ret;
+    }
+    var totalResolved = ++this._totalResolved;
+    if (totalResolved >= length) {
+        if (preservedValues !== null) {
+            this._filter(values, preservedValues);
+        } else {
+            this._resolve(values);
+        }
+        return true;
+    }
+    return false;
+};
+
+MappingPromiseArray.prototype._drainQueue = function () {
+    var queue = this._queue;
+    var limit = this._limit;
+    var values = this._values;
+    while (queue.length > 0 && this._inFlight < limit) {
+        if (this._isResolved()) return;
+        var index = queue.pop();
+        this._promiseFulfilled(values[index], index);
+    }
+};
+
+MappingPromiseArray.prototype._filter = function (booleans, values) {
+    var len = values.length;
+    var ret = new Array(len);
+    var j = 0;
+    for (var i = 0; i < len; ++i) {
+        if (booleans[i]) ret[j++] = values[i];
+    }
+    ret.length = j;
+    this._resolve(ret);
+};
+
+MappingPromiseArray.prototype.preservedValues = function () {
+    return this._preservedValues;
+};
+
+function map(promises, fn, options, _filter) {
+    if (typeof fn !== "function") {
+        return apiRejection("expecting a function but got " + util.classString(fn));
+    }
+
+    var limit = 0;
+    if (options !== undefined) {
+        if (typeof options === "object" && options !== null) {
+            if (typeof options.concurrency !== "number") {
+                return Promise.reject(
+                    new TypeError("'concurrency' must be a number but it is " +
+                                    util.classString(options.concurrency)));
+            }
+            limit = options.concurrency;
+        } else {
+            return Promise.reject(new TypeError(
+                            "options argument must be an object but it is " +
+                             util.classString(options)));
+        }
+    }
+    limit = typeof limit === "number" &&
+        isFinite(limit) && limit >= 1 ? limit : 0;
+    return new MappingPromiseArray(promises, fn, limit, _filter).promise();
+}
+
+Promise.prototype.map = function (fn, options) {
+    return map(this, fn, options, null);
+};
+
+Promise.map = function (promises, fn, options, _filter) {
+    return map(promises, fn, options, _filter);
+};
+
+
+};
+
+},{"./util":36}],19:[function(_dereq_,module,exports){
+"use strict";
+module.exports =
+function(Promise, INTERNAL, tryConvertToPromise, apiRejection, debug) {
+var util = _dereq_("./util");
+var tryCatch = util.tryCatch;
+
+Promise.method = function (fn) {
+    if (typeof fn !== "function") {
+        throw new Promise.TypeError("expecting a function but got " + util.classString(fn));
+    }
+    return function () {
+        var ret = new Promise(INTERNAL);
+        ret._captureStackTrace();
+        ret._pushContext();
+        var value = tryCatch(fn).apply(this, arguments);
+        var promiseCreated = ret._popContext();
+        debug.checkForgottenReturns(
+            value, promiseCreated, "Promise.method", ret);
+        ret._resolveFromSyncValue(value);
+        return ret;
+    };
+};
+
+Promise.attempt = Promise["try"] = function (fn) {
+    if (typeof fn !== "function") {
+        return apiRejection("expecting a function but got " + util.classString(fn));
+    }
+    var ret = new Promise(INTERNAL);
+    ret._captureStackTrace();
+    ret._pushContext();
+    var value;
+    if (arguments.length > 1) {
+        debug.deprecated("calling Promise.try with more than 1 argument");
+        var arg = arguments[1];
+        var ctx = arguments[2];
+        value = util.isArray(arg) ? tryCatch(fn).apply(ctx, arg)
+                                  : tryCatch(fn).call(ctx, arg);
+    } else {
+        value = tryCatch(fn)();
+    }
+    var promiseCreated = ret._popContext();
+    debug.checkForgottenReturns(
+        value, promiseCreated, "Promise.try", ret);
+    ret._resolveFromSyncValue(value);
+    return ret;
+};
+
+Promise.prototype._resolveFromSyncValue = function (value) {
+    if (value === util.errorObj) {
+        this._rejectCallback(value.e, false);
+    } else {
+        this._resolveCallback(value, true);
+    }
+};
+};
+
+},{"./util":36}],20:[function(_dereq_,module,exports){
+"use strict";
+var util = _dereq_("./util");
+var maybeWrapAsError = util.maybeWrapAsError;
+var errors = _dereq_("./errors");
+var OperationalError = errors.OperationalError;
+var es5 = _dereq_("./es5");
+
+function isUntypedError(obj) {
+    return obj instanceof Error &&
+        es5.getPrototypeOf(obj) === Error.prototype;
+}
+
+var rErrorKey = /^(?:name|message|stack|cause)$/;
+function wrapAsOperationalError(obj) {
+    var ret;
+    if (isUntypedError(obj)) {
+        ret = new OperationalError(obj);
+        ret.name = obj.name;
+        ret.message = obj.message;
+        ret.stack = obj.stack;
+        var keys = es5.keys(obj);
+        for (var i = 0; i < keys.length; ++i) {
+            var key = keys[i];
+            if (!rErrorKey.test(key)) {
+                ret[key] = obj[key];
+            }
+        }
+        return ret;
+    }
+    util.markAsOriginatingFromRejection(obj);
+    return obj;
+}
+
+function nodebackForPromise(promise, multiArgs) {
+    return function(err, value) {
+        if (promise === null) return;
+        if (err) {
+            var wrapped = wrapAsOperationalError(maybeWrapAsError(err));
+            promise._attachExtraTrace(wrapped);
+            promise._reject(wrapped);
+        } else if (!multiArgs) {
+            promise._fulfill(value);
+        } else {
+            var args = [].slice.call(arguments, 1);;
+            promise._fulfill(args);
+        }
+        promise = null;
+    };
+}
+
+module.exports = nodebackForPromise;
+
+},{"./errors":12,"./es5":13,"./util":36}],21:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise) {
+var util = _dereq_("./util");
+var async = Promise._async;
+var tryCatch = util.tryCatch;
+var errorObj = util.errorObj;
+
+function spreadAdapter(val, nodeback) {
+    var promise = this;
+    if (!util.isArray(val)) return successAdapter.call(promise, val, nodeback);
+    var ret =
+        tryCatch(nodeback).apply(promise._boundValue(), [null].concat(val));
+    if (ret === errorObj) {
+        async.throwLater(ret.e);
+    }
+}
+
+function successAdapter(val, nodeback) {
+    var promise = this;
+    var receiver = promise._boundValue();
+    var ret = val === undefined
+        ? tryCatch(nodeback).call(receiver, null)
+        : tryCatch(nodeback).call(receiver, null, val);
+    if (ret === errorObj) {
+        async.throwLater(ret.e);
+    }
+}
+function errorAdapter(reason, nodeback) {
+    var promise = this;
+    if (!reason) {
+        var newReason = new Error(reason + "");
+        newReason.cause = reason;
+        reason = newReason;
+    }
+    var ret = tryCatch(nodeback).call(promise._boundValue(), reason);
+    if (ret === errorObj) {
+        async.throwLater(ret.e);
+    }
+}
+
+Promise.prototype.asCallback = Promise.prototype.nodeify = function (nodeback,
+                                                                     options) {
+    if (typeof nodeback == "function") {
+        var adapter = successAdapter;
+        if (options !== undefined && Object(options).spread) {
+            adapter = spreadAdapter;
+        }
+        this._then(
+            adapter,
+            errorAdapter,
+            undefined,
+            this,
+            nodeback
+        );
+    }
+    return this;
+};
+};
+
+},{"./util":36}],22:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function() {
+var makeSelfResolutionError = function () {
+    return new TypeError("circular promise resolution chain\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+};
+var reflectHandler = function() {
+    return new Promise.PromiseInspection(this._target());
+};
+var apiRejection = function(msg) {
+    return Promise.reject(new TypeError(msg));
+};
+function Proxyable() {}
+var UNDEFINED_BINDING = {};
+var util = _dereq_("./util");
+
+var getDomain;
+if (util.isNode) {
+    getDomain = function() {
+        var ret = process.domain;
+        if (ret === undefined) ret = null;
+        return ret;
+    };
+} else {
+    getDomain = function() {
+        return null;
+    };
+}
+util.notEnumerableProp(Promise, "_getDomain", getDomain);
+
+var es5 = _dereq_("./es5");
+var Async = _dereq_("./async");
+var async = new Async();
+es5.defineProperty(Promise, "_async", {value: async});
+var errors = _dereq_("./errors");
+var TypeError = Promise.TypeError = errors.TypeError;
+Promise.RangeError = errors.RangeError;
+var CancellationError = Promise.CancellationError = errors.CancellationError;
+Promise.TimeoutError = errors.TimeoutError;
+Promise.OperationalError = errors.OperationalError;
+Promise.RejectionError = errors.OperationalError;
+Promise.AggregateError = errors.AggregateError;
+var INTERNAL = function(){};
+var APPLY = {};
+var NEXT_FILTER = {};
+var tryConvertToPromise = _dereq_("./thenables")(Promise, INTERNAL);
+var PromiseArray =
+    _dereq_("./promise_array")(Promise, INTERNAL,
+                               tryConvertToPromise, apiRejection, Proxyable);
+var Context = _dereq_("./context")(Promise);
+ /*jshint unused:false*/
+var createContext = Context.create;
+var debug = _dereq_("./debuggability")(Promise, Context);
+var CapturedTrace = debug.CapturedTrace;
+var PassThroughHandlerContext =
+    _dereq_("./finally")(Promise, tryConvertToPromise, NEXT_FILTER);
+var catchFilter = _dereq_("./catch_filter")(NEXT_FILTER);
+var nodebackForPromise = _dereq_("./nodeback");
+var errorObj = util.errorObj;
+var tryCatch = util.tryCatch;
+function check(self, executor) {
+    if (self == null || self.constructor !== Promise) {
+        throw new TypeError("the promise constructor cannot be invoked directly\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    if (typeof executor !== "function") {
+        throw new TypeError("expecting a function but got " + util.classString(executor));
+    }
+
+}
+
+function Promise(executor) {
+    if (executor !== INTERNAL) {
+        check(this, executor);
+    }
+    this._bitField = 0;
+    this._fulfillmentHandler0 = undefined;
+    this._rejectionHandler0 = undefined;
+    this._promise0 = undefined;
+    this._receiver0 = undefined;
+    this._resolveFromExecutor(executor);
+    this._promiseCreated();
+    this._fireEvent("promiseCreated", this);
+}
+
+Promise.prototype.toString = function () {
+    return "[object Promise]";
+};
+
+Promise.prototype.caught = Promise.prototype["catch"] = function (fn) {
+    var len = arguments.length;
+    if (len > 1) {
+        var catchInstances = new Array(len - 1),
+            j = 0, i;
+        for (i = 0; i < len - 1; ++i) {
+            var item = arguments[i];
+            if (util.isObject(item)) {
+                catchInstances[j++] = item;
+            } else {
+                return apiRejection("Catch statement predicate: " +
+                    "expecting an object but got " + util.classString(item));
+            }
+        }
+        catchInstances.length = j;
+        fn = arguments[i];
+        return this.then(undefined, catchFilter(catchInstances, fn, this));
+    }
+    return this.then(undefined, fn);
+};
+
+Promise.prototype.reflect = function () {
+    return this._then(reflectHandler,
+        reflectHandler, undefined, this, undefined);
+};
+
+Promise.prototype.then = function (didFulfill, didReject) {
+    if (debug.warnings() && arguments.length > 0 &&
+        typeof didFulfill !== "function" &&
+        typeof didReject !== "function") {
+        var msg = ".then() only accepts functions but was passed: " +
+                util.classString(didFulfill);
+        if (arguments.length > 1) {
+            msg += ", " + util.classString(didReject);
+        }
+        this._warn(msg);
+    }
+    return this._then(didFulfill, didReject, undefined, undefined, undefined);
+};
+
+Promise.prototype.done = function (didFulfill, didReject) {
+    var promise =
+        this._then(didFulfill, didReject, undefined, undefined, undefined);
+    promise._setIsFinal();
+};
+
+Promise.prototype.spread = function (fn) {
+    if (typeof fn !== "function") {
+        return apiRejection("expecting a function but got " + util.classString(fn));
+    }
+    return this.all()._then(fn, undefined, undefined, APPLY, undefined);
+};
+
+Promise.prototype.toJSON = function () {
+    var ret = {
+        isFulfilled: false,
+        isRejected: false,
+        fulfillmentValue: undefined,
+        rejectionReason: undefined
+    };
+    if (this.isFulfilled()) {
+        ret.fulfillmentValue = this.value();
+        ret.isFulfilled = true;
+    } else if (this.isRejected()) {
+        ret.rejectionReason = this.reason();
+        ret.isRejected = true;
+    }
+    return ret;
+};
+
+Promise.prototype.all = function () {
+    if (arguments.length > 0) {
+        this._warn(".all() was passed arguments but it does not take any");
+    }
+    return new PromiseArray(this).promise();
+};
+
+Promise.prototype.error = function (fn) {
+    return this.caught(util.originatesFromRejection, fn);
+};
+
+Promise.getNewLibraryCopy = module.exports;
+
+Promise.is = function (val) {
+    return val instanceof Promise;
+};
+
+Promise.fromNode = Promise.fromCallback = function(fn) {
+    var ret = new Promise(INTERNAL);
+    ret._captureStackTrace();
+    var multiArgs = arguments.length > 1 ? !!Object(arguments[1]).multiArgs
+                                         : false;
+    var result = tryCatch(fn)(nodebackForPromise(ret, multiArgs));
+    if (result === errorObj) {
+        ret._rejectCallback(result.e, true);
+    }
+    if (!ret._isFateSealed()) ret._setAsyncGuaranteed();
+    return ret;
+};
+
+Promise.all = function (promises) {
+    return new PromiseArray(promises).promise();
+};
+
+Promise.cast = function (obj) {
+    var ret = tryConvertToPromise(obj);
+    if (!(ret instanceof Promise)) {
+        ret = new Promise(INTERNAL);
+        ret._captureStackTrace();
+        ret._setFulfilled();
+        ret._rejectionHandler0 = obj;
+    }
+    return ret;
+};
+
+Promise.resolve = Promise.fulfilled = Promise.cast;
+
+Promise.reject = Promise.rejected = function (reason) {
+    var ret = new Promise(INTERNAL);
+    ret._captureStackTrace();
+    ret._rejectCallback(reason, true);
+    return ret;
+};
+
+Promise.setScheduler = function(fn) {
+    if (typeof fn !== "function") {
+        throw new TypeError("expecting a function but got " + util.classString(fn));
+    }
+    return async.setScheduler(fn);
+};
+
+Promise.prototype._then = function (
+    didFulfill,
+    didReject,
+    _,    receiver,
+    internalData
+) {
+    var haveInternalData = internalData !== undefined;
+    var promise = haveInternalData ? internalData : new Promise(INTERNAL);
+    var target = this._target();
+    var bitField = target._bitField;
+
+    if (!haveInternalData) {
+        promise._propagateFrom(this, 3);
+        promise._captureStackTrace();
+        if (receiver === undefined &&
+            ((this._bitField & 2097152) !== 0)) {
+            if (!((bitField & 50397184) === 0)) {
+                receiver = this._boundValue();
+            } else {
+                receiver = target === this ? undefined : this._boundTo;
+            }
+        }
+        this._fireEvent("promiseChained", this, promise);
+    }
+
+    var domain = getDomain();
+    if (!((bitField & 50397184) === 0)) {
+        var handler, value, settler = target._settlePromiseCtx;
+        if (((bitField & 33554432) !== 0)) {
+            value = target._rejectionHandler0;
+            handler = didFulfill;
+        } else if (((bitField & 16777216) !== 0)) {
+            value = target._fulfillmentHandler0;
+            handler = didReject;
+            target._unsetRejectionIsUnhandled();
+        } else {
+            settler = target._settlePromiseLateCancellationObserver;
+            value = new CancellationError("late cancellation observer");
+            target._attachExtraTrace(value);
+            handler = didReject;
+        }
+
+        async.invoke(settler, target, {
+            handler: domain === null ? handler
+                : (typeof handler === "function" &&
+                    util.domainBind(domain, handler)),
+            promise: promise,
+            receiver: receiver,
+            value: value
+        });
+    } else {
+        target._addCallbacks(didFulfill, didReject, promise, receiver, domain);
+    }
+
+    return promise;
+};
+
+Promise.prototype._length = function () {
+    return this._bitField & 65535;
+};
+
+Promise.prototype._isFateSealed = function () {
+    return (this._bitField & 117506048) !== 0;
+};
+
+Promise.prototype._isFollowing = function () {
+    return (this._bitField & 67108864) === 67108864;
+};
+
+Promise.prototype._setLength = function (len) {
+    this._bitField = (this._bitField & -65536) |
+        (len & 65535);
+};
+
+Promise.prototype._setFulfilled = function () {
+    this._bitField = this._bitField | 33554432;
+    this._fireEvent("promiseFulfilled", this);
+};
+
+Promise.prototype._setRejected = function () {
+    this._bitField = this._bitField | 16777216;
+    this._fireEvent("promiseRejected", this);
+};
+
+Promise.prototype._setFollowing = function () {
+    this._bitField = this._bitField | 67108864;
+    this._fireEvent("promiseResolved", this);
+};
+
+Promise.prototype._setIsFinal = function () {
+    this._bitField = this._bitField | 4194304;
+};
+
+Promise.prototype._isFinal = function () {
+    return (this._bitField & 4194304) > 0;
+};
+
+Promise.prototype._unsetCancelled = function() {
+    this._bitField = this._bitField & (~65536);
+};
+
+Promise.prototype._setCancelled = function() {
+    this._bitField = this._bitField | 65536;
+    this._fireEvent("promiseCancelled", this);
+};
+
+Promise.prototype._setWillBeCancelled = function() {
+    this._bitField = this._bitField | 8388608;
+};
+
+Promise.prototype._setAsyncGuaranteed = function() {
+    if (async.hasCustomScheduler()) return;
+    this._bitField = this._bitField | 134217728;
+};
+
+Promise.prototype._receiverAt = function (index) {
+    var ret = index === 0 ? this._receiver0 : this[
+            index * 4 - 4 + 3];
+    if (ret === UNDEFINED_BINDING) {
+        return undefined;
+    } else if (ret === undefined && this._isBound()) {
+        return this._boundValue();
+    }
+    return ret;
+};
+
+Promise.prototype._promiseAt = function (index) {
+    return this[
+            index * 4 - 4 + 2];
+};
+
+Promise.prototype._fulfillmentHandlerAt = function (index) {
+    return this[
+            index * 4 - 4 + 0];
+};
+
+Promise.prototype._rejectionHandlerAt = function (index) {
+    return this[
+            index * 4 - 4 + 1];
+};
+
+Promise.prototype._boundValue = function() {};
+
+Promise.prototype._migrateCallback0 = function (follower) {
+    var bitField = follower._bitField;
+    var fulfill = follower._fulfillmentHandler0;
+    var reject = follower._rejectionHandler0;
+    var promise = follower._promise0;
+    var receiver = follower._receiverAt(0);
+    if (receiver === undefined) receiver = UNDEFINED_BINDING;
+    this._addCallbacks(fulfill, reject, promise, receiver, null);
+};
+
+Promise.prototype._migrateCallbackAt = function (follower, index) {
+    var fulfill = follower._fulfillmentHandlerAt(index);
+    var reject = follower._rejectionHandlerAt(index);
+    var promise = follower._promiseAt(index);
+    var receiver = follower._receiverAt(index);
+    if (receiver === undefined) receiver = UNDEFINED_BINDING;
+    this._addCallbacks(fulfill, reject, promise, receiver, null);
+};
+
+Promise.prototype._addCallbacks = function (
+    fulfill,
+    reject,
+    promise,
+    receiver,
+    domain
+) {
+    var index = this._length();
+
+    if (index >= 65535 - 4) {
+        index = 0;
+        this._setLength(0);
+    }
+
+    if (index === 0) {
+        this._promise0 = promise;
+        this._receiver0 = receiver;
+        if (typeof fulfill === "function") {
+            this._fulfillmentHandler0 =
+                domain === null ? fulfill : util.domainBind(domain, fulfill);
+        }
+        if (typeof reject === "function") {
+            this._rejectionHandler0 =
+                domain === null ? reject : util.domainBind(domain, reject);
+        }
+    } else {
+        var base = index * 4 - 4;
+        this[base + 2] = promise;
+        this[base + 3] = receiver;
+        if (typeof fulfill === "function") {
+            this[base + 0] =
+                domain === null ? fulfill : util.domainBind(domain, fulfill);
+        }
+        if (typeof reject === "function") {
+            this[base + 1] =
+                domain === null ? reject : util.domainBind(domain, reject);
+        }
+    }
+    this._setLength(index + 1);
+    return index;
+};
+
+Promise.prototype._proxy = function (proxyable, arg) {
+    this._addCallbacks(undefined, undefined, arg, proxyable, null);
+};
+
+Promise.prototype._resolveCallback = function(value, shouldBind) {
+    if (((this._bitField & 117506048) !== 0)) return;
+    if (value === this)
+        return this._rejectCallback(makeSelfResolutionError(), false);
+    var maybePromise = tryConvertToPromise(value, this);
+    if (!(maybePromise instanceof Promise)) return this._fulfill(value);
+
+    if (shouldBind) this._propagateFrom(maybePromise, 2);
+
+    var promise = maybePromise._target();
+
+    if (promise === this) {
+        this._reject(makeSelfResolutionError());
+        return;
+    }
+
+    var bitField = promise._bitField;
+    if (((bitField & 50397184) === 0)) {
+        var len = this._length();
+        if (len > 0) promise._migrateCallback0(this);
+        for (var i = 1; i < len; ++i) {
+            promise._migrateCallbackAt(this, i);
+        }
+        this._setFollowing();
+        this._setLength(0);
+        this._setFollowee(promise);
+    } else if (((bitField & 33554432) !== 0)) {
+        this._fulfill(promise._value());
+    } else if (((bitField & 16777216) !== 0)) {
+        this._reject(promise._reason());
+    } else {
+        var reason = new CancellationError("late cancellation observer");
+        promise._attachExtraTrace(reason);
+        this._reject(reason);
+    }
+};
+
+Promise.prototype._rejectCallback =
+function(reason, synchronous, ignoreNonErrorWarnings) {
+    var trace = util.ensureErrorObject(reason);
+    var hasStack = trace === reason;
+    if (!hasStack && !ignoreNonErrorWarnings && debug.warnings()) {
+        var message = "a promise was rejected with a non-error: " +
+            util.classString(reason);
+        this._warn(message, true);
+    }
+    this._attachExtraTrace(trace, synchronous ? hasStack : false);
+    this._reject(reason);
+};
+
+Promise.prototype._resolveFromExecutor = function (executor) {
+    if (executor === INTERNAL) return;
+    var promise = this;
+    this._captureStackTrace();
+    this._pushContext();
+    var synchronous = true;
+    var r = this._execute(executor, function(value) {
+        promise._resolveCallback(value);
+    }, function (reason) {
+        promise._rejectCallback(reason, synchronous);
+    });
+    synchronous = false;
+    this._popContext();
+
+    if (r !== undefined) {
+        promise._rejectCallback(r, true);
+    }
+};
+
+Promise.prototype._settlePromiseFromHandler = function (
+    handler, receiver, value, promise
+) {
+    var bitField = promise._bitField;
+    if (((bitField & 65536) !== 0)) return;
+    promise._pushContext();
+    var x;
+    if (receiver === APPLY) {
+        if (!value || typeof value.length !== "number") {
+            x = errorObj;
+            x.e = new TypeError("cannot .spread() a non-array: " +
+                                    util.classString(value));
+        } else {
+            x = tryCatch(handler).apply(this._boundValue(), value);
+        }
+    } else {
+        x = tryCatch(handler).call(receiver, value);
+    }
+    var promiseCreated = promise._popContext();
+    bitField = promise._bitField;
+    if (((bitField & 65536) !== 0)) return;
+
+    if (x === NEXT_FILTER) {
+        promise._reject(value);
+    } else if (x === errorObj) {
+        promise._rejectCallback(x.e, false);
+    } else {
+        debug.checkForgottenReturns(x, promiseCreated, "",  promise, this);
+        promise._resolveCallback(x);
+    }
+};
+
+Promise.prototype._target = function() {
+    var ret = this;
+    while (ret._isFollowing()) ret = ret._followee();
+    return ret;
+};
+
+Promise.prototype._followee = function() {
+    return this._rejectionHandler0;
+};
+
+Promise.prototype._setFollowee = function(promise) {
+    this._rejectionHandler0 = promise;
+};
+
+Promise.prototype._settlePromise = function(promise, handler, receiver, value) {
+    var isPromise = promise instanceof Promise;
+    var bitField = this._bitField;
+    var asyncGuaranteed = ((bitField & 134217728) !== 0);
+    if (((bitField & 65536) !== 0)) {
+        if (isPromise) promise._invokeInternalOnCancel();
+
+        if (receiver instanceof PassThroughHandlerContext &&
+            receiver.isFinallyHandler()) {
+            receiver.cancelPromise = promise;
+            if (tryCatch(handler).call(receiver, value) === errorObj) {
+                promise._reject(errorObj.e);
+            }
+        } else if (handler === reflectHandler) {
+            promise._fulfill(reflectHandler.call(receiver));
+        } else if (receiver instanceof Proxyable) {
+            receiver._promiseCancelled(promise);
+        } else if (isPromise || promise instanceof PromiseArray) {
+            promise._cancel();
+        } else {
+            receiver.cancel();
+        }
+    } else if (typeof handler === "function") {
+        if (!isPromise) {
+            handler.call(receiver, value, promise);
+        } else {
+            if (asyncGuaranteed) promise._setAsyncGuaranteed();
+            this._settlePromiseFromHandler(handler, receiver, value, promise);
+        }
+    } else if (receiver instanceof Proxyable) {
+        if (!receiver._isResolved()) {
+            if (((bitField & 33554432) !== 0)) {
+                receiver._promiseFulfilled(value, promise);
+            } else {
+                receiver._promiseRejected(value, promise);
+            }
+        }
+    } else if (isPromise) {
+        if (asyncGuaranteed) promise._setAsyncGuaranteed();
+        if (((bitField & 33554432) !== 0)) {
+            promise._fulfill(value);
+        } else {
+            promise._reject(value);
+        }
+    }
+};
+
+Promise.prototype._settlePromiseLateCancellationObserver = function(ctx) {
+    var handler = ctx.handler;
+    var promise = ctx.promise;
+    var receiver = ctx.receiver;
+    var value = ctx.value;
+    if (typeof handler === "function") {
+        if (!(promise instanceof Promise)) {
+            handler.call(receiver, value, promise);
+        } else {
+            this._settlePromiseFromHandler(handler, receiver, value, promise);
+        }
+    } else if (promise instanceof Promise) {
+        promise._reject(value);
+    }
+};
+
+Promise.prototype._settlePromiseCtx = function(ctx) {
+    this._settlePromise(ctx.promise, ctx.handler, ctx.receiver, ctx.value);
+};
+
+Promise.prototype._settlePromise0 = function(handler, value, bitField) {
+    var promise = this._promise0;
+    var receiver = this._receiverAt(0);
+    this._promise0 = undefined;
+    this._receiver0 = undefined;
+    this._settlePromise(promise, handler, receiver, value);
+};
+
+Promise.prototype._clearCallbackDataAtIndex = function(index) {
+    var base = index * 4 - 4;
+    this[base + 2] =
+    this[base + 3] =
+    this[base + 0] =
+    this[base + 1] = undefined;
+};
+
+Promise.prototype._fulfill = function (value) {
+    var bitField = this._bitField;
+    if (((bitField & 117506048) >>> 16)) return;
+    if (value === this) {
+        var err = makeSelfResolutionError();
+        this._attachExtraTrace(err);
+        return this._reject(err);
+    }
+    this._setFulfilled();
+    this._rejectionHandler0 = value;
+
+    if ((bitField & 65535) > 0) {
+        if (((bitField & 134217728) !== 0)) {
+            this._settlePromises();
+        } else {
+            async.settlePromises(this);
+        }
+    }
+};
+
+Promise.prototype._reject = function (reason) {
+    var bitField = this._bitField;
+    if (((bitField & 117506048) >>> 16)) return;
+    this._setRejected();
+    this._fulfillmentHandler0 = reason;
+
+    if (this._isFinal()) {
+        return async.fatalError(reason, util.isNode);
+    }
+
+    if ((bitField & 65535) > 0) {
+        async.settlePromises(this);
+    } else {
+        this._ensurePossibleRejectionHandled();
+    }
+};
+
+Promise.prototype._fulfillPromises = function (len, value) {
+    for (var i = 1; i < len; i++) {
+        var handler = this._fulfillmentHandlerAt(i);
+        var promise = this._promiseAt(i);
+        var receiver = this._receiverAt(i);
+        this._clearCallbackDataAtIndex(i);
+        this._settlePromise(promise, handler, receiver, value);
+    }
+};
+
+Promise.prototype._rejectPromises = function (len, reason) {
+    for (var i = 1; i < len; i++) {
+        var handler = this._rejectionHandlerAt(i);
+        var promise = this._promiseAt(i);
+        var receiver = this._receiverAt(i);
+        this._clearCallbackDataAtIndex(i);
+        this._settlePromise(promise, handler, receiver, reason);
+    }
+};
+
+Promise.prototype._settlePromises = function () {
+    var bitField = this._bitField;
+    var len = (bitField & 65535);
+
+    if (len > 0) {
+        if (((bitField & 16842752) !== 0)) {
+            var reason = this._fulfillmentHandler0;
+            this._settlePromise0(this._rejectionHandler0, reason, bitField);
+            this._rejectPromises(len, reason);
+        } else {
+            var value = this._rejectionHandler0;
+            this._settlePromise0(this._fulfillmentHandler0, value, bitField);
+            this._fulfillPromises(len, value);
+        }
+        this._setLength(0);
+    }
+    this._clearCancellationData();
+};
+
+Promise.prototype._settledValue = function() {
+    var bitField = this._bitField;
+    if (((bitField & 33554432) !== 0)) {
+        return this._rejectionHandler0;
+    } else if (((bitField & 16777216) !== 0)) {
+        return this._fulfillmentHandler0;
+    }
+};
+
+function deferResolve(v) {this.promise._resolveCallback(v);}
+function deferReject(v) {this.promise._rejectCallback(v, false);}
+
+Promise.defer = Promise.pending = function() {
+    debug.deprecated("Promise.defer", "new Promise");
+    var promise = new Promise(INTERNAL);
+    return {
+        promise: promise,
+        resolve: deferResolve,
+        reject: deferReject
+    };
+};
+
+util.notEnumerableProp(Promise,
+                       "_makeSelfResolutionError",
+                       makeSelfResolutionError);
+
+_dereq_("./method")(Promise, INTERNAL, tryConvertToPromise, apiRejection,
+    debug);
+_dereq_("./bind")(Promise, INTERNAL, tryConvertToPromise, debug);
+_dereq_("./cancel")(Promise, PromiseArray, apiRejection, debug);
+_dereq_("./direct_resolve")(Promise);
+_dereq_("./synchronous_inspection")(Promise);
+_dereq_("./join")(
+    Promise, PromiseArray, tryConvertToPromise, INTERNAL, async, getDomain);
+Promise.Promise = Promise;
+Promise.version = "3.5.1";
+_dereq_('./map.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
+_dereq_('./call_get.js')(Promise);
+_dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext, INTERNAL, debug);
+_dereq_('./timers.js')(Promise, INTERNAL, debug);
+_dereq_('./generators.js')(Promise, apiRejection, INTERNAL, tryConvertToPromise, Proxyable, debug);
+_dereq_('./nodeify.js')(Promise);
+_dereq_('./promisify.js')(Promise, INTERNAL);
+_dereq_('./props.js')(Promise, PromiseArray, tryConvertToPromise, apiRejection);
+_dereq_('./race.js')(Promise, INTERNAL, tryConvertToPromise, apiRejection);
+_dereq_('./reduce.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
+_dereq_('./settle.js')(Promise, PromiseArray, debug);
+_dereq_('./some.js')(Promise, PromiseArray, apiRejection);
+_dereq_('./filter.js')(Promise, INTERNAL);
+_dereq_('./each.js')(Promise, INTERNAL);
+_dereq_('./any.js')(Promise);
+
+    util.toFastProperties(Promise);
+    util.toFastProperties(Promise.prototype);
+    function fillTypes(value) {
+        var p = new Promise(INTERNAL);
+        p._fulfillmentHandler0 = value;
+        p._rejectionHandler0 = value;
+        p._promise0 = value;
+        p._receiver0 = value;
+    }
+    // Complete slack tracking, opt out of field-type tracking and
+    // stabilize map
+    fillTypes({a: 1});
+    fillTypes({b: 2});
+    fillTypes({c: 3});
+    fillTypes(1);
+    fillTypes(function(){});
+    fillTypes(undefined);
+    fillTypes(false);
+    fillTypes(new Promise(INTERNAL));
+    debug.setBounds(Async.firstLineError, util.lastLineError);
+    return Promise;
+
+};
+
+},{"./any.js":1,"./async":2,"./bind":3,"./call_get.js":5,"./cancel":6,"./catch_filter":7,"./context":8,"./debuggability":9,"./direct_resolve":10,"./each.js":11,"./errors":12,"./es5":13,"./filter.js":14,"./finally":15,"./generators.js":16,"./join":17,"./map.js":18,"./method":19,"./nodeback":20,"./nodeify.js":21,"./promise_array":23,"./promisify.js":24,"./props.js":25,"./race.js":27,"./reduce.js":28,"./settle.js":30,"./some.js":31,"./synchronous_inspection":32,"./thenables":33,"./timers.js":34,"./using.js":35,"./util":36}],23:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, INTERNAL, tryConvertToPromise,
+    apiRejection, Proxyable) {
+var util = _dereq_("./util");
+var isArray = util.isArray;
+
+function toResolutionValue(val) {
+    switch(val) {
+    case -2: return [];
+    case -3: return {};
+    case -6: return new Map();
+    }
+}
+
+function PromiseArray(values) {
+    var promise = this._promise = new Promise(INTERNAL);
+    if (values instanceof Promise) {
+        promise._propagateFrom(values, 3);
+    }
+    promise._setOnCancel(this);
+    this._values = values;
+    this._length = 0;
+    this._totalResolved = 0;
+    this._init(undefined, -2);
+}
+util.inherits(PromiseArray, Proxyable);
+
+PromiseArray.prototype.length = function () {
+    return this._length;
+};
+
+PromiseArray.prototype.promise = function () {
+    return this._promise;
+};
+
+PromiseArray.prototype._init = function init(_, resolveValueIfEmpty) {
+    var values = tryConvertToPromise(this._values, this._promise);
+    if (values instanceof Promise) {
+        values = values._target();
+        var bitField = values._bitField;
+        ;
+        this._values = values;
+
+        if (((bitField & 50397184) === 0)) {
+            this._promise._setAsyncGuaranteed();
+            return values._then(
+                init,
+                this._reject,
+                undefined,
+                this,
+                resolveValueIfEmpty
+           );
+        } else if (((bitField & 33554432) !== 0)) {
+            values = values._value();
+        } else if (((bitField & 16777216) !== 0)) {
+            return this._reject(values._reason());
+        } else {
+            return this._cancel();
+        }
+    }
+    values = util.asArray(values);
+    if (values === null) {
+        var err = apiRejection(
+            "expecting an array or an iterable object but got " + util.classString(values)).reason();
+        this._promise._rejectCallback(err, false);
+        return;
+    }
+
+    if (values.length === 0) {
+        if (resolveValueIfEmpty === -5) {
+            this._resolveEmptyArray();
+        }
+        else {
+            this._resolve(toResolutionValue(resolveValueIfEmpty));
+        }
+        return;
+    }
+    this._iterate(values);
+};
+
+PromiseArray.prototype._iterate = function(values) {
+    var len = this.getActualLength(values.length);
+    this._length = len;
+    this._values = this.shouldCopyValues() ? new Array(len) : this._values;
+    var result = this._promise;
+    var isResolved = false;
+    var bitField = null;
+    for (var i = 0; i < len; ++i) {
+        var maybePromise = tryConvertToPromise(values[i], result);
+
+        if (maybePromise instanceof Promise) {
+            maybePromise = maybePromise._target();
+            bitField = maybePromise._bitField;
+        } else {
+            bitField = null;
+        }
+
+        if (isResolved) {
+            if (bitField !== null) {
+                maybePromise.suppressUnhandledRejections();
+            }
+        } else if (bitField !== null) {
+            if (((bitField & 50397184) === 0)) {
+                maybePromise._proxy(this, i);
+                this._values[i] = maybePromise;
+            } else if (((bitField & 33554432) !== 0)) {
+                isResolved = this._promiseFulfilled(maybePromise._value(), i);
+            } else if (((bitField & 16777216) !== 0)) {
+                isResolved = this._promiseRejected(maybePromise._reason(), i);
+            } else {
+                isResolved = this._promiseCancelled(i);
+            }
+        } else {
+            isResolved = this._promiseFulfilled(maybePromise, i);
+        }
+    }
+    if (!isResolved) result._setAsyncGuaranteed();
+};
+
+PromiseArray.prototype._isResolved = function () {
+    return this._values === null;
+};
+
+PromiseArray.prototype._resolve = function (value) {
+    this._values = null;
+    this._promise._fulfill(value);
+};
+
+PromiseArray.prototype._cancel = function() {
+    if (this._isResolved() || !this._promise._isCancellable()) return;
+    this._values = null;
+    this._promise._cancel();
+};
+
+PromiseArray.prototype._reject = function (reason) {
+    this._values = null;
+    this._promise._rejectCallback(reason, false);
+};
+
+PromiseArray.prototype._promiseFulfilled = function (value, index) {
+    this._values[index] = value;
+    var totalResolved = ++this._totalResolved;
+    if (totalResolved >= this._length) {
+        this._resolve(this._values);
+        return true;
+    }
+    return false;
+};
+
+PromiseArray.prototype._promiseCancelled = function() {
+    this._cancel();
+    return true;
+};
+
+PromiseArray.prototype._promiseRejected = function (reason) {
+    this._totalResolved++;
+    this._reject(reason);
+    return true;
+};
+
+PromiseArray.prototype._resultCancelled = function() {
+    if (this._isResolved()) return;
+    var values = this._values;
+    this._cancel();
+    if (values instanceof Promise) {
+        values.cancel();
+    } else {
+        for (var i = 0; i < values.length; ++i) {
+            if (values[i] instanceof Promise) {
+                values[i].cancel();
+            }
+        }
+    }
+};
+
+PromiseArray.prototype.shouldCopyValues = function () {
+    return true;
+};
+
+PromiseArray.prototype.getActualLength = function (len) {
+    return len;
+};
+
+return PromiseArray;
+};
+
+},{"./util":36}],24:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, INTERNAL) {
+var THIS = {};
+var util = _dereq_("./util");
+var nodebackForPromise = _dereq_("./nodeback");
+var withAppended = util.withAppended;
+var maybeWrapAsError = util.maybeWrapAsError;
+var canEvaluate = util.canEvaluate;
+var TypeError = _dereq_("./errors").TypeError;
+var defaultSuffix = "Async";
+var defaultPromisified = {__isPromisified__: true};
+var noCopyProps = [
+    "arity",    "length",
+    "name",
+    "arguments",
+    "caller",
+    "callee",
+    "prototype",
+    "__isPromisified__"
+];
+var noCopyPropsPattern = new RegExp("^(?:" + noCopyProps.join("|") + ")$");
+
+var defaultFilter = function(name) {
+    return util.isIdentifier(name) &&
+        name.charAt(0) !== "_" &&
+        name !== "constructor";
+};
+
+function propsFilter(key) {
+    return !noCopyPropsPattern.test(key);
+}
+
+function isPromisified(fn) {
+    try {
+        return fn.__isPromisified__ === true;
+    }
+    catch (e) {
+        return false;
+    }
+}
+
+function hasPromisified(obj, key, suffix) {
+    var val = util.getDataPropertyOrDefault(obj, key + suffix,
+                                            defaultPromisified);
+    return val ? isPromisified(val) : false;
+}
+function checkValid(ret, suffix, suffixRegexp) {
+    for (var i = 0; i < ret.length; i += 2) {
+        var key = ret[i];
+        if (suffixRegexp.test(key)) {
+            var keyWithoutAsyncSuffix = key.replace(suffixRegexp, "");
+            for (var j = 0; j < ret.length; j += 2) {
+                if (ret[j] === keyWithoutAsyncSuffix) {
+                    throw new TypeError("Cannot promisify an API that has normal methods with '%s'-suffix\u000a\u000a    See http://goo.gl/MqrFmX\u000a"
+                        .replace("%s", suffix));
+                }
+            }
+        }
+    }
+}
+
+function promisifiableMethods(obj, suffix, suffixRegexp, filter) {
+    var keys = util.inheritedDataKeys(obj);
+    var ret = [];
+    for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i];
+        var value = obj[key];
+        var passesDefaultFilter = filter === defaultFilter
+            ? true : defaultFilter(key, value, obj);
+        if (typeof value === "function" &&
+            !isPromisified(value) &&
+            !hasPromisified(obj, key, suffix) &&
+            filter(key, value, obj, passesDefaultFilter)) {
+            ret.push(key, value);
+        }
+    }
+    checkValid(ret, suffix, suffixRegexp);
+    return ret;
+}
+
+var escapeIdentRegex = function(str) {
+    return str.replace(/([$])/, "\\$");
+};
+
+var makeNodePromisifiedEval;
+if (!true) {
+var switchCaseArgumentOrder = function(likelyArgumentCount) {
+    var ret = [likelyArgumentCount];
+    var min = Math.max(0, likelyArgumentCount - 1 - 3);
+    for(var i = likelyArgumentCount - 1; i >= min; --i) {
+        ret.push(i);
+    }
+    for(var i = likelyArgumentCount + 1; i <= 3; ++i) {
+        ret.push(i);
+    }
+    return ret;
+};
+
+var argumentSequence = function(argumentCount) {
+    return util.filledRange(argumentCount, "_arg", "");
+};
+
+var parameterDeclaration = function(parameterCount) {
+    return util.filledRange(
+        Math.max(parameterCount, 3), "_arg", "");
+};
+
+var parameterCount = function(fn) {
+    if (typeof fn.length === "number") {
+        return Math.max(Math.min(fn.length, 1023 + 1), 0);
+    }
+    return 0;
+};
+
+makeNodePromisifiedEval =
+function(callback, receiver, originalName, fn, _, multiArgs) {
+    var newParameterCount = Math.max(0, parameterCount(fn) - 1);
+    var argumentOrder = switchCaseArgumentOrder(newParameterCount);
+    var shouldProxyThis = typeof callback === "string" || receiver === THIS;
+
+    function generateCallForArgumentCount(count) {
+        var args = argumentSequence(count).join(", ");
+        var comma = count > 0 ? ", " : "";
+        var ret;
+        if (shouldProxyThis) {
+            ret = "ret = callback.call(this, {{args}}, nodeback); break;\n";
+        } else {
+            ret = receiver === undefined
+                ? "ret = callback({{args}}, nodeback); break;\n"
+                : "ret = callback.call(receiver, {{args}}, nodeback); break;\n";
+        }
+        return ret.replace("{{args}}", args).replace(", ", comma);
+    }
+
+    function generateArgumentSwitchCase() {
+        var ret = "";
+        for (var i = 0; i < argumentOrder.length; ++i) {
+            ret += "case " + argumentOrder[i] +":" +
+                generateCallForArgumentCount(argumentOrder[i]);
+        }
+
+        ret += "                                                             \n\
+        default:                                                             \n\
+            var args = new Array(len + 1);                                   \n\
+            var i = 0;                                                       \n\
+            for (var i = 0; i < len; ++i) {                                  \n\
+               args[i] = arguments[i];                                       \n\
+            }                                                                \n\
+            args[i] = nodeback;                                              \n\
+            [CodeForCall]                                                    \n\
+            break;                                                           \n\
+        ".replace("[CodeForCall]", (shouldProxyThis
+                                ? "ret = callback.apply(this, args);\n"
+                                : "ret = callback.apply(receiver, args);\n"));
+        return ret;
+    }
+
+    var getFunctionCode = typeof callback === "string"
+                                ? ("this != null ? this['"+callback+"'] : fn")
+                                : "fn";
+    var body = "'use strict';                                                \n\
+        var ret = function (Parameters) {                                    \n\
+            'use strict';                                                    \n\
+            var len = arguments.length;                                      \n\
+            var promise = new Promise(INTERNAL);                             \n\
+            promise._captureStackTrace();                                    \n\
+            var nodeback = nodebackForPromise(promise, " + multiArgs + ");   \n\
+            var ret;                                                         \n\
+            var callback = tryCatch([GetFunctionCode]);                      \n\
+            switch(len) {                                                    \n\
+                [CodeForSwitchCase]                                          \n\
+            }                                                                \n\
+            if (ret === errorObj) {                                          \n\
+                promise._rejectCallback(maybeWrapAsError(ret.e), true, true);\n\
+            }                                                                \n\
+            if (!promise._isFateSealed()) promise._setAsyncGuaranteed();     \n\
+            return promise;                                                  \n\
+        };                                                                   \n\
+        notEnumerableProp(ret, '__isPromisified__', true);                   \n\
+        return ret;                                                          \n\
+    ".replace("[CodeForSwitchCase]", generateArgumentSwitchCase())
+        .replace("[GetFunctionCode]", getFunctionCode);
+    body = body.replace("Parameters", parameterDeclaration(newParameterCount));
+    return new Function("Promise",
+                        "fn",
+                        "receiver",
+                        "withAppended",
+                        "maybeWrapAsError",
+                        "nodebackForPromise",
+                        "tryCatch",
+                        "errorObj",
+                        "notEnumerableProp",
+                        "INTERNAL",
+                        body)(
+                    Promise,
+                    fn,
+                    receiver,
+                    withAppended,
+                    maybeWrapAsError,
+                    nodebackForPromise,
+                    util.tryCatch,
+                    util.errorObj,
+                    util.notEnumerableProp,
+                    INTERNAL);
+};
+}
+
+function makeNodePromisifiedClosure(callback, receiver, _, fn, __, multiArgs) {
+    var defaultThis = (function() {return this;})();
+    var method = callback;
+    if (typeof method === "string") {
+        callback = fn;
+    }
+    function promisified() {
+        var _receiver = receiver;
+        if (receiver === THIS) _receiver = this;
+        var promise = new Promise(INTERNAL);
+        promise._captureStackTrace();
+        var cb = typeof method === "string" && this !== defaultThis
+            ? this[method] : callback;
+        var fn = nodebackForPromise(promise, multiArgs);
+        try {
+            cb.apply(_receiver, withAppended(arguments, fn));
+        } catch(e) {
+            promise._rejectCallback(maybeWrapAsError(e), true, true);
+        }
+        if (!promise._isFateSealed()) promise._setAsyncGuaranteed();
+        return promise;
+    }
+    util.notEnumerableProp(promisified, "__isPromisified__", true);
+    return promisified;
+}
+
+var makeNodePromisified = canEvaluate
+    ? makeNodePromisifiedEval
+    : makeNodePromisifiedClosure;
+
+function promisifyAll(obj, suffix, filter, promisifier, multiArgs) {
+    var suffixRegexp = new RegExp(escapeIdentRegex(suffix) + "$");
+    var methods =
+        promisifiableMethods(obj, suffix, suffixRegexp, filter);
+
+    for (var i = 0, len = methods.length; i < len; i+= 2) {
+        var key = methods[i];
+        var fn = methods[i+1];
+        var promisifiedKey = key + suffix;
+        if (promisifier === makeNodePromisified) {
+            obj[promisifiedKey] =
+                makeNodePromisified(key, THIS, key, fn, suffix, multiArgs);
+        } else {
+            var promisified = promisifier(fn, function() {
+                return makeNodePromisified(key, THIS, key,
+                                           fn, suffix, multiArgs);
+            });
+            util.notEnumerableProp(promisified, "__isPromisified__", true);
+            obj[promisifiedKey] = promisified;
+        }
+    }
+    util.toFastProperties(obj);
+    return obj;
+}
+
+function promisify(callback, receiver, multiArgs) {
+    return makeNodePromisified(callback, receiver, undefined,
+                                callback, null, multiArgs);
+}
+
+Promise.promisify = function (fn, options) {
+    if (typeof fn !== "function") {
+        throw new TypeError("expecting a function but got " + util.classString(fn));
+    }
+    if (isPromisified(fn)) {
+        return fn;
+    }
+    options = Object(options);
+    var receiver = options.context === undefined ? THIS : options.context;
+    var multiArgs = !!options.multiArgs;
+    var ret = promisify(fn, receiver, multiArgs);
+    util.copyDescriptors(fn, ret, propsFilter);
+    return ret;
+};
+
+Promise.promisifyAll = function (target, options) {
+    if (typeof target !== "function" && typeof target !== "object") {
+        throw new TypeError("the target of promisifyAll must be an object or a function\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    options = Object(options);
+    var multiArgs = !!options.multiArgs;
+    var suffix = options.suffix;
+    if (typeof suffix !== "string") suffix = defaultSuffix;
+    var filter = options.filter;
+    if (typeof filter !== "function") filter = defaultFilter;
+    var promisifier = options.promisifier;
+    if (typeof promisifier !== "function") promisifier = makeNodePromisified;
+
+    if (!util.isIdentifier(suffix)) {
+        throw new RangeError("suffix must be a valid identifier\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+
+    var keys = util.inheritedDataKeys(target);
+    for (var i = 0; i < keys.length; ++i) {
+        var value = target[keys[i]];
+        if (keys[i] !== "constructor" &&
+            util.isClass(value)) {
+            promisifyAll(value.prototype, suffix, filter, promisifier,
+                multiArgs);
+            promisifyAll(value, suffix, filter, promisifier, multiArgs);
+        }
+    }
+
+    return promisifyAll(target, suffix, filter, promisifier, multiArgs);
+};
+};
+
+
+},{"./errors":12,"./nodeback":20,"./util":36}],25:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(
+    Promise, PromiseArray, tryConvertToPromise, apiRejection) {
+var util = _dereq_("./util");
+var isObject = util.isObject;
+var es5 = _dereq_("./es5");
+var Es6Map;
+if (typeof Map === "function") Es6Map = Map;
+
+var mapToEntries = (function() {
+    var index = 0;
+    var size = 0;
+
+    function extractEntry(value, key) {
+        this[index] = value;
+        this[index + size] = key;
+        index++;
+    }
+
+    return function mapToEntries(map) {
+        size = map.size;
+        index = 0;
+        var ret = new Array(map.size * 2);
+        map.forEach(extractEntry, ret);
+        return ret;
+    };
+})();
+
+var entriesToMap = function(entries) {
+    var ret = new Es6Map();
+    var length = entries.length / 2 | 0;
+    for (var i = 0; i < length; ++i) {
+        var key = entries[length + i];
+        var value = entries[i];
+        ret.set(key, value);
+    }
+    return ret;
+};
+
+function PropertiesPromiseArray(obj) {
+    var isMap = false;
+    var entries;
+    if (Es6Map !== undefined && obj instanceof Es6Map) {
+        entries = mapToEntries(obj);
+        isMap = true;
+    } else {
+        var keys = es5.keys(obj);
+        var len = keys.length;
+        entries = new Array(len * 2);
+        for (var i = 0; i < len; ++i) {
+            var key = keys[i];
+            entries[i] = obj[key];
+            entries[i + len] = key;
+        }
+    }
+    this.constructor$(entries);
+    this._isMap = isMap;
+    this._init$(undefined, isMap ? -6 : -3);
+}
+util.inherits(PropertiesPromiseArray, PromiseArray);
+
+PropertiesPromiseArray.prototype._init = function () {};
+
+PropertiesPromiseArray.prototype._promiseFulfilled = function (value, index) {
+    this._values[index] = value;
+    var totalResolved = ++this._totalResolved;
+    if (totalResolved >= this._length) {
+        var val;
+        if (this._isMap) {
+            val = entriesToMap(this._values);
+        } else {
+            val = {};
+            var keyOffset = this.length();
+            for (var i = 0, len = this.length(); i < len; ++i) {
+                val[this._values[i + keyOffset]] = this._values[i];
+            }
+        }
+        this._resolve(val);
+        return true;
+    }
+    return false;
+};
+
+PropertiesPromiseArray.prototype.shouldCopyValues = function () {
+    return false;
+};
+
+PropertiesPromiseArray.prototype.getActualLength = function (len) {
+    return len >> 1;
+};
+
+function props(promises) {
+    var ret;
+    var castValue = tryConvertToPromise(promises);
+
+    if (!isObject(castValue)) {
+        return apiRejection("cannot await properties of a non-object\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    } else if (castValue instanceof Promise) {
+        ret = castValue._then(
+            Promise.props, undefined, undefined, undefined, undefined);
+    } else {
+        ret = new PropertiesPromiseArray(castValue).promise();
+    }
+
+    if (castValue instanceof Promise) {
+        ret._propagateFrom(castValue, 2);
+    }
+    return ret;
+}
+
+Promise.prototype.props = function () {
+    return props(this);
+};
+
+Promise.props = function (promises) {
+    return props(promises);
+};
+};
+
+},{"./es5":13,"./util":36}],26:[function(_dereq_,module,exports){
+"use strict";
+function arrayMove(src, srcIndex, dst, dstIndex, len) {
+    for (var j = 0; j < len; ++j) {
+        dst[j + dstIndex] = src[j + srcIndex];
+        src[j + srcIndex] = void 0;
+    }
+}
+
+function Queue(capacity) {
+    this._capacity = capacity;
+    this._length = 0;
+    this._front = 0;
+}
+
+Queue.prototype._willBeOverCapacity = function (size) {
+    return this._capacity < size;
+};
+
+Queue.prototype._pushOne = function (arg) {
+    var length = this.length();
+    this._checkCapacity(length + 1);
+    var i = (this._front + length) & (this._capacity - 1);
+    this[i] = arg;
+    this._length = length + 1;
+};
+
+Queue.prototype.push = function (fn, receiver, arg) {
+    var length = this.length() + 3;
+    if (this._willBeOverCapacity(length)) {
+        this._pushOne(fn);
+        this._pushOne(receiver);
+        this._pushOne(arg);
+        return;
+    }
+    var j = this._front + length - 3;
+    this._checkCapacity(length);
+    var wrapMask = this._capacity - 1;
+    this[(j + 0) & wrapMask] = fn;
+    this[(j + 1) & wrapMask] = receiver;
+    this[(j + 2) & wrapMask] = arg;
+    this._length = length;
+};
+
+Queue.prototype.shift = function () {
+    var front = this._front,
+        ret = this[front];
+
+    this[front] = undefined;
+    this._front = (front + 1) & (this._capacity - 1);
+    this._length--;
+    return ret;
+};
+
+Queue.prototype.length = function () {
+    return this._length;
+};
+
+Queue.prototype._checkCapacity = function (size) {
+    if (this._capacity < size) {
+        this._resizeTo(this._capacity << 1);
+    }
+};
+
+Queue.prototype._resizeTo = function (capacity) {
+    var oldCapacity = this._capacity;
+    this._capacity = capacity;
+    var front = this._front;
+    var length = this._length;
+    var moveItemsCount = (front + length) & (oldCapacity - 1);
+    arrayMove(this, 0, this, oldCapacity, moveItemsCount);
+};
+
+module.exports = Queue;
+
+},{}],27:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(
+    Promise, INTERNAL, tryConvertToPromise, apiRejection) {
+var util = _dereq_("./util");
+
+var raceLater = function (promise) {
+    return promise.then(function(array) {
+        return race(array, promise);
+    });
+};
+
+function race(promises, parent) {
+    var maybePromise = tryConvertToPromise(promises);
+
+    if (maybePromise instanceof Promise) {
+        return raceLater(maybePromise);
+    } else {
+        promises = util.asArray(promises);
+        if (promises === null)
+            return apiRejection("expecting an array or an iterable object but got " + util.classString(promises));
+    }
+
+    var ret = new Promise(INTERNAL);
+    if (parent !== undefined) {
+        ret._propagateFrom(parent, 3);
+    }
+    var fulfill = ret._fulfill;
+    var reject = ret._reject;
+    for (var i = 0, len = promises.length; i < len; ++i) {
+        var val = promises[i];
+
+        if (val === undefined && !(i in promises)) {
+            continue;
+        }
+
+        Promise.cast(val)._then(fulfill, reject, undefined, ret, null);
+    }
+    return ret;
+}
+
+Promise.race = function (promises) {
+    return race(promises, undefined);
+};
+
+Promise.prototype.race = function () {
+    return race(this, undefined);
+};
+
+};
+
+},{"./util":36}],28:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise,
+                          PromiseArray,
+                          apiRejection,
+                          tryConvertToPromise,
+                          INTERNAL,
+                          debug) {
+var getDomain = Promise._getDomain;
+var util = _dereq_("./util");
+var tryCatch = util.tryCatch;
+
+function ReductionPromiseArray(promises, fn, initialValue, _each) {
+    this.constructor$(promises);
+    var domain = getDomain();
+    this._fn = domain === null ? fn : util.domainBind(domain, fn);
+    if (initialValue !== undefined) {
+        initialValue = Promise.resolve(initialValue);
+        initialValue._attachCancellationCallback(this);
+    }
+    this._initialValue = initialValue;
+    this._currentCancellable = null;
+    if(_each === INTERNAL) {
+        this._eachValues = Array(this._length);
+    } else if (_each === 0) {
+        this._eachValues = null;
+    } else {
+        this._eachValues = undefined;
+    }
+    this._promise._captureStackTrace();
+    this._init$(undefined, -5);
+}
+util.inherits(ReductionPromiseArray, PromiseArray);
+
+ReductionPromiseArray.prototype._gotAccum = function(accum) {
+    if (this._eachValues !== undefined &&
+        this._eachValues !== null &&
+        accum !== INTERNAL) {
+        this._eachValues.push(accum);
+    }
+};
+
+ReductionPromiseArray.prototype._eachComplete = function(value) {
+    if (this._eachValues !== null) {
+        this._eachValues.push(value);
+    }
+    return this._eachValues;
+};
+
+ReductionPromiseArray.prototype._init = function() {};
+
+ReductionPromiseArray.prototype._resolveEmptyArray = function() {
+    this._resolve(this._eachValues !== undefined ? this._eachValues
+                                                 : this._initialValue);
+};
+
+ReductionPromiseArray.prototype.shouldCopyValues = function () {
+    return false;
+};
+
+ReductionPromiseArray.prototype._resolve = function(value) {
+    this._promise._resolveCallback(value);
+    this._values = null;
+};
+
+ReductionPromiseArray.prototype._resultCancelled = function(sender) {
+    if (sender === this._initialValue) return this._cancel();
+    if (this._isResolved()) return;
+    this._resultCancelled$();
+    if (this._currentCancellable instanceof Promise) {
+        this._currentCancellable.cancel();
+    }
+    if (this._initialValue instanceof Promise) {
+        this._initialValue.cancel();
+    }
+};
+
+ReductionPromiseArray.prototype._iterate = function (values) {
+    this._values = values;
+    var value;
+    var i;
+    var length = values.length;
+    if (this._initialValue !== undefined) {
+        value = this._initialValue;
+        i = 0;
+    } else {
+        value = Promise.resolve(values[0]);
+        i = 1;
+    }
+
+    this._currentCancellable = value;
+
+    if (!value.isRejected()) {
+        for (; i < length; ++i) {
+            var ctx = {
+                accum: null,
+                value: values[i],
+                index: i,
+                length: length,
+                array: this
+            };
+            value = value._then(gotAccum, undefined, undefined, ctx, undefined);
+        }
+    }
+
+    if (this._eachValues !== undefined) {
+        value = value
+            ._then(this._eachComplete, undefined, undefined, this, undefined);
+    }
+    value._then(completed, completed, undefined, value, this);
+};
+
+Promise.prototype.reduce = function (fn, initialValue) {
+    return reduce(this, fn, initialValue, null);
+};
+
+Promise.reduce = function (promises, fn, initialValue, _each) {
+    return reduce(promises, fn, initialValue, _each);
+};
+
+function completed(valueOrReason, array) {
+    if (this.isFulfilled()) {
+        array._resolve(valueOrReason);
+    } else {
+        array._reject(valueOrReason);
+    }
+}
+
+function reduce(promises, fn, initialValue, _each) {
+    if (typeof fn !== "function") {
+        return apiRejection("expecting a function but got " + util.classString(fn));
+    }
+    var array = new ReductionPromiseArray(promises, fn, initialValue, _each);
+    return array.promise();
+}
+
+function gotAccum(accum) {
+    this.accum = accum;
+    this.array._gotAccum(accum);
+    var value = tryConvertToPromise(this.value, this.array._promise);
+    if (value instanceof Promise) {
+        this.array._currentCancellable = value;
+        return value._then(gotValue, undefined, undefined, this, undefined);
+    } else {
+        return gotValue.call(this, value);
+    }
+}
+
+function gotValue(value) {
+    var array = this.array;
+    var promise = array._promise;
+    var fn = tryCatch(array._fn);
+    promise._pushContext();
+    var ret;
+    if (array._eachValues !== undefined) {
+        ret = fn.call(promise._boundValue(), value, this.index, this.length);
+    } else {
+        ret = fn.call(promise._boundValue(),
+                              this.accum, value, this.index, this.length);
+    }
+    if (ret instanceof Promise) {
+        array._currentCancellable = ret;
+    }
+    var promiseCreated = promise._popContext();
+    debug.checkForgottenReturns(
+        ret,
+        promiseCreated,
+        array._eachValues !== undefined ? "Promise.each" : "Promise.reduce",
+        promise
+    );
+    return ret;
+}
+};
+
+},{"./util":36}],29:[function(_dereq_,module,exports){
+"use strict";
+var util = _dereq_("./util");
+var schedule;
+var noAsyncScheduler = function() {
+    throw new Error("No async scheduler available\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+};
+var NativePromise = util.getNativePromise();
+if (util.isNode && typeof MutationObserver === "undefined") {
+    var GlobalSetImmediate = global.setImmediate;
+    var ProcessNextTick = process.nextTick;
+    schedule = util.isRecentNode
+                ? function(fn) { GlobalSetImmediate.call(global, fn); }
+                : function(fn) { ProcessNextTick.call(process, fn); };
+} else if (typeof NativePromise === "function" &&
+           typeof NativePromise.resolve === "function") {
+    var nativePromise = NativePromise.resolve();
+    schedule = function(fn) {
+        nativePromise.then(fn);
+    };
+} else if ((typeof MutationObserver !== "undefined") &&
+          !(typeof window !== "undefined" &&
+            window.navigator &&
+            (window.navigator.standalone || window.cordova))) {
+    schedule = (function() {
+        var div = document.createElement("div");
+        var opts = {attributes: true};
+        var toggleScheduled = false;
+        var div2 = document.createElement("div");
+        var o2 = new MutationObserver(function() {
+            div.classList.toggle("foo");
+            toggleScheduled = false;
+        });
+        o2.observe(div2, opts);
+
+        var scheduleToggle = function() {
+            if (toggleScheduled) return;
+            toggleScheduled = true;
+            div2.classList.toggle("foo");
+        };
+
+        return function schedule(fn) {
+            var o = new MutationObserver(function() {
+                o.disconnect();
+                fn();
+            });
+            o.observe(div, opts);
+            scheduleToggle();
+        };
+    })();
+} else if (typeof setImmediate !== "undefined") {
+    schedule = function (fn) {
+        setImmediate(fn);
+    };
+} else if (typeof setTimeout !== "undefined") {
+    schedule = function (fn) {
+        setTimeout(fn, 0);
+    };
+} else {
+    schedule = noAsyncScheduler;
+}
+module.exports = schedule;
+
+},{"./util":36}],30:[function(_dereq_,module,exports){
+"use strict";
+module.exports =
+    function(Promise, PromiseArray, debug) {
+var PromiseInspection = Promise.PromiseInspection;
+var util = _dereq_("./util");
+
+function SettledPromiseArray(values) {
+    this.constructor$(values);
+}
+util.inherits(SettledPromiseArray, PromiseArray);
+
+SettledPromiseArray.prototype._promiseResolved = function (index, inspection) {
+    this._values[index] = inspection;
+    var totalResolved = ++this._totalResolved;
+    if (totalResolved >= this._length) {
+        this._resolve(this._values);
+        return true;
+    }
+    return false;
+};
+
+SettledPromiseArray.prototype._promiseFulfilled = function (value, index) {
+    var ret = new PromiseInspection();
+    ret._bitField = 33554432;
+    ret._settledValueField = value;
+    return this._promiseResolved(index, ret);
+};
+SettledPromiseArray.prototype._promiseRejected = function (reason, index) {
+    var ret = new PromiseInspection();
+    ret._bitField = 16777216;
+    ret._settledValueField = reason;
+    return this._promiseResolved(index, ret);
+};
+
+Promise.settle = function (promises) {
+    debug.deprecated(".settle()", ".reflect()");
+    return new SettledPromiseArray(promises).promise();
+};
+
+Promise.prototype.settle = function () {
+    return Promise.settle(this);
+};
+};
+
+},{"./util":36}],31:[function(_dereq_,module,exports){
+"use strict";
+module.exports =
+function(Promise, PromiseArray, apiRejection) {
+var util = _dereq_("./util");
+var RangeError = _dereq_("./errors").RangeError;
+var AggregateError = _dereq_("./errors").AggregateError;
+var isArray = util.isArray;
+var CANCELLATION = {};
+
+
+function SomePromiseArray(values) {
+    this.constructor$(values);
+    this._howMany = 0;
+    this._unwrap = false;
+    this._initialized = false;
+}
+util.inherits(SomePromiseArray, PromiseArray);
+
+SomePromiseArray.prototype._init = function () {
+    if (!this._initialized) {
+        return;
+    }
+    if (this._howMany === 0) {
+        this._resolve([]);
+        return;
+    }
+    this._init$(undefined, -5);
+    var isArrayResolved = isArray(this._values);
+    if (!this._isResolved() &&
+        isArrayResolved &&
+        this._howMany > this._canPossiblyFulfill()) {
+        this._reject(this._getRangeError(this.length()));
+    }
+};
+
+SomePromiseArray.prototype.init = function () {
+    this._initialized = true;
+    this._init();
+};
+
+SomePromiseArray.prototype.setUnwrap = function () {
+    this._unwrap = true;
+};
+
+SomePromiseArray.prototype.howMany = function () {
+    return this._howMany;
+};
+
+SomePromiseArray.prototype.setHowMany = function (count) {
+    this._howMany = count;
+};
+
+SomePromiseArray.prototype._promiseFulfilled = function (value) {
+    this._addFulfilled(value);
+    if (this._fulfilled() === this.howMany()) {
+        this._values.length = this.howMany();
+        if (this.howMany() === 1 && this._unwrap) {
+            this._resolve(this._values[0]);
+        } else {
+            this._resolve(this._values);
+        }
+        return true;
+    }
+    return false;
+
+};
+SomePromiseArray.prototype._promiseRejected = function (reason) {
+    this._addRejected(reason);
+    return this._checkOutcome();
+};
+
+SomePromiseArray.prototype._promiseCancelled = function () {
+    if (this._values instanceof Promise || this._values == null) {
+        return this._cancel();
+    }
+    this._addRejected(CANCELLATION);
+    return this._checkOutcome();
+};
+
+SomePromiseArray.prototype._checkOutcome = function() {
+    if (this.howMany() > this._canPossiblyFulfill()) {
+        var e = new AggregateError();
+        for (var i = this.length(); i < this._values.length; ++i) {
+            if (this._values[i] !== CANCELLATION) {
+                e.push(this._values[i]);
+            }
+        }
+        if (e.length > 0) {
+            this._reject(e);
+        } else {
+            this._cancel();
+        }
+        return true;
+    }
+    return false;
+};
+
+SomePromiseArray.prototype._fulfilled = function () {
+    return this._totalResolved;
+};
+
+SomePromiseArray.prototype._rejected = function () {
+    return this._values.length - this.length();
+};
+
+SomePromiseArray.prototype._addRejected = function (reason) {
+    this._values.push(reason);
+};
+
+SomePromiseArray.prototype._addFulfilled = function (value) {
+    this._values[this._totalResolved++] = value;
+};
+
+SomePromiseArray.prototype._canPossiblyFulfill = function () {
+    return this.length() - this._rejected();
+};
+
+SomePromiseArray.prototype._getRangeError = function (count) {
+    var message = "Input array must contain at least " +
+            this._howMany + " items but contains only " + count + " items";
+    return new RangeError(message);
+};
+
+SomePromiseArray.prototype._resolveEmptyArray = function () {
+    this._reject(this._getRangeError(0));
+};
+
+function some(promises, howMany) {
+    if ((howMany | 0) !== howMany || howMany < 0) {
+        return apiRejection("expecting a positive integer\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    var ret = new SomePromiseArray(promises);
+    var promise = ret.promise();
+    ret.setHowMany(howMany);
+    ret.init();
+    return promise;
+}
+
+Promise.some = function (promises, howMany) {
+    return some(promises, howMany);
+};
+
+Promise.prototype.some = function (howMany) {
+    return some(this, howMany);
+};
+
+Promise._SomePromiseArray = SomePromiseArray;
+};
+
+},{"./errors":12,"./util":36}],32:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise) {
+function PromiseInspection(promise) {
+    if (promise !== undefined) {
+        promise = promise._target();
+        this._bitField = promise._bitField;
+        this._settledValueField = promise._isFateSealed()
+            ? promise._settledValue() : undefined;
+    }
+    else {
+        this._bitField = 0;
+        this._settledValueField = undefined;
+    }
+}
+
+PromiseInspection.prototype._settledValue = function() {
+    return this._settledValueField;
+};
+
+var value = PromiseInspection.prototype.value = function () {
+    if (!this.isFulfilled()) {
+        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    return this._settledValue();
+};
+
+var reason = PromiseInspection.prototype.error =
+PromiseInspection.prototype.reason = function () {
+    if (!this.isRejected()) {
+        throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
+    }
+    return this._settledValue();
+};
+
+var isFulfilled = PromiseInspection.prototype.isFulfilled = function() {
+    return (this._bitField & 33554432) !== 0;
+};
+
+var isRejected = PromiseInspection.prototype.isRejected = function () {
+    return (this._bitField & 16777216) !== 0;
+};
+
+var isPending = PromiseInspection.prototype.isPending = function () {
+    return (this._bitField & 50397184) === 0;
+};
+
+var isResolved = PromiseInspection.prototype.isResolved = function () {
+    return (this._bitField & 50331648) !== 0;
+};
+
+PromiseInspection.prototype.isCancelled = function() {
+    return (this._bitField & 8454144) !== 0;
+};
+
+Promise.prototype.__isCancelled = function() {
+    return (this._bitField & 65536) === 65536;
+};
+
+Promise.prototype._isCancelled = function() {
+    return this._target().__isCancelled();
+};
+
+Promise.prototype.isCancelled = function() {
+    return (this._target()._bitField & 8454144) !== 0;
+};
+
+Promise.prototype.isPending = function() {
+    return isPending.call(this._target());
+};
+
+Promise.prototype.isRejected = function() {
+    return isRejected.call(this._target());
+};
+
+Promise.prototype.isFulfilled = function() {
+    return isFulfilled.call(this._target());
+};
+
+Promise.prototype.isResolved = function() {
+    return isResolved.call(this._target());
+};
+
+Promise.prototype.value = function() {
+    return value.call(this._target());
+};
+
+Promise.prototype.reason = function() {
+    var target = this._target();
+    target._unsetRejectionIsUnhandled();
+    return reason.call(target);
+};
+
+Promise.prototype._value = function() {
+    return this._settledValue();
+};
+
+Promise.prototype._reason = function() {
+    this._unsetRejectionIsUnhandled();
+    return this._settledValue();
+};
+
+Promise.PromiseInspection = PromiseInspection;
+};
+
+},{}],33:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, INTERNAL) {
+var util = _dereq_("./util");
+var errorObj = util.errorObj;
+var isObject = util.isObject;
+
+function tryConvertToPromise(obj, context) {
+    if (isObject(obj)) {
+        if (obj instanceof Promise) return obj;
+        var then = getThen(obj);
+        if (then === errorObj) {
+            if (context) context._pushContext();
+            var ret = Promise.reject(then.e);
+            if (context) context._popContext();
+            return ret;
+        } else if (typeof then === "function") {
+            if (isAnyBluebirdPromise(obj)) {
+                var ret = new Promise(INTERNAL);
+                obj._then(
+                    ret._fulfill,
+                    ret._reject,
+                    undefined,
+                    ret,
+                    null
+                );
+                return ret;
+            }
+            return doThenable(obj, then, context);
+        }
+    }
+    return obj;
+}
+
+function doGetThen(obj) {
+    return obj.then;
+}
+
+function getThen(obj) {
+    try {
+        return doGetThen(obj);
+    } catch (e) {
+        errorObj.e = e;
+        return errorObj;
+    }
+}
+
+var hasProp = {}.hasOwnProperty;
+function isAnyBluebirdPromise(obj) {
+    try {
+        return hasProp.call(obj, "_promise0");
+    } catch (e) {
+        return false;
+    }
+}
+
+function doThenable(x, then, context) {
+    var promise = new Promise(INTERNAL);
+    var ret = promise;
+    if (context) context._pushContext();
+    promise._captureStackTrace();
+    if (context) context._popContext();
+    var synchronous = true;
+    var result = util.tryCatch(then).call(x, resolve, reject);
+    synchronous = false;
+
+    if (promise && result === errorObj) {
+        promise._rejectCallback(result.e, true, true);
+        promise = null;
+    }
+
+    function resolve(value) {
+        if (!promise) return;
+        promise._resolveCallback(value);
+        promise = null;
+    }
+
+    function reject(reason) {
+        if (!promise) return;
+        promise._rejectCallback(reason, synchronous, true);
+        promise = null;
+    }
+    return ret;
+}
+
+return tryConvertToPromise;
+};
+
+},{"./util":36}],34:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function(Promise, INTERNAL, debug) {
+var util = _dereq_("./util");
+var TimeoutError = Promise.TimeoutError;
+
+function HandleWrapper(handle)  {
+    this.handle = handle;
+}
+
+HandleWrapper.prototype._resultCancelled = function() {
+    clearTimeout(this.handle);
+};
+
+var afterValue = function(value) { return delay(+this).thenReturn(value); };
+var delay = Promise.delay = function (ms, value) {
+    var ret;
+    var handle;
+    if (value !== undefined) {
+        ret = Promise.resolve(value)
+                ._then(afterValue, null, null, ms, undefined);
+        if (debug.cancellation() && value instanceof Promise) {
+            ret._setOnCancel(value);
+        }
+    } else {
+        ret = new Promise(INTERNAL);
+        handle = setTimeout(function() { ret._fulfill(); }, +ms);
+        if (debug.cancellation()) {
+            ret._setOnCancel(new HandleWrapper(handle));
+        }
+        ret._captureStackTrace();
+    }
+    ret._setAsyncGuaranteed();
+    return ret;
+};
+
+Promise.prototype.delay = function (ms) {
+    return delay(ms, this);
+};
+
+var afterTimeout = function (promise, message, parent) {
+    var err;
+    if (typeof message !== "string") {
+        if (message instanceof Error) {
+            err = message;
+        } else {
+            err = new TimeoutError("operation timed out");
+        }
+    } else {
+        err = new TimeoutError(message);
+    }
+    util.markAsOriginatingFromRejection(err);
+    promise._attachExtraTrace(err);
+    promise._reject(err);
+
+    if (parent != null) {
+        parent.cancel();
+    }
+};
+
+function successClear(value) {
+    clearTimeout(this.handle);
+    return value;
+}
+
+function failureClear(reason) {
+    clearTimeout(this.handle);
+    throw reason;
+}
+
+Promise.prototype.timeout = function (ms, message) {
+    ms = +ms;
+    var ret, parent;
+
+    var handleWrapper = new HandleWrapper(setTimeout(function timeoutTimeout() {
+        if (ret.isPending()) {
+            afterTimeout(ret, message, parent);
+        }
+    }, ms));
+
+    if (debug.cancellation()) {
+        parent = this.then();
+        ret = parent._then(successClear, failureClear,
+                            undefined, handleWrapper, undefined);
+        ret._setOnCancel(handleWrapper);
+    } else {
+        ret = this._then(successClear, failureClear,
+                            undefined, handleWrapper, undefined);
+    }
+
+    return ret;
+};
+
+};
+
+},{"./util":36}],35:[function(_dereq_,module,exports){
+"use strict";
+module.exports = function (Promise, apiRejection, tryConvertToPromise,
+    createContext, INTERNAL, debug) {
+    var util = _dereq_("./util");
+    var TypeError = _dereq_("./errors").TypeError;
+    var inherits = _dereq_("./util").inherits;
+    var errorObj = util.errorObj;
+    var tryCatch = util.tryCatch;
+    var NULL = {};
+
+    function thrower(e) {
+        setTimeout(function(){throw e;}, 0);
+    }
+
+    function castPreservingDisposable(thenable) {
+        var maybePromise = tryConvertToPromise(thenable);
+        if (maybePromise !== thenable &&
+            typeof thenable._isDisposable === "function" &&
+            typeof thenable._getDisposer === "function" &&
+            thenable._isDisposable()) {
+            maybePromise._setDisposable(thenable._getDisposer());
+        }
+        return maybePromise;
+    }
+    function dispose(resources, inspection) {
+        var i = 0;
+        var len = resources.length;
+        var ret = new Promise(INTERNAL);
+        function iterator() {
+            if (i >= len) return ret._fulfill();
+            var maybePromise = castPreservingDisposable(resources[i++]);
+            if (maybePromise instanceof Promise &&
+                maybePromise._isDisposable()) {
+                try {
+                    maybePromise = tryConvertToPromise(
+                        maybePromise._getDisposer().tryDispose(inspection),
+                        resources.promise);
+                } catch (e) {
+                    return thrower(e);
+                }
+                if (maybePromise instanceof Promise) {
+                    return maybePromise._then(iterator, thrower,
+                                              null, null, null);
+                }
+            }
+            iterator();
+        }
+        iterator();
+        return ret;
+    }
+
+    function Disposer(data, promise, context) {
+        this._data = data;
+        this._promise = promise;
+        this._context = context;
+    }
+
+    Disposer.prototype.data = function () {
+        return this._data;
+    };
+
+    Disposer.prototype.promise = function () {
+        return this._promise;
+    };
+
+    Disposer.prototype.resource = function () {
+        if (this.promise().isFulfilled()) {
+            return this.promise().value();
+        }
+        return NULL;
+    };
+
+    Disposer.prototype.tryDispose = function(inspection) {
+        var resource = this.resource();
+        var context = this._context;
+        if (context !== undefined) context._pushContext();
+        var ret = resource !== NULL
+            ? this.doDispose(resource, inspection) : null;
+        if (context !== undefined) context._popContext();
+        this._promise._unsetDisposable();
+        this._data = null;
+        return ret;
+    };
+
+    Disposer.isDisposer = function (d) {
+        return (d != null &&
+                typeof d.resource === "function" &&
+                typeof d.tryDispose === "function");
+    };
+
+    function FunctionDisposer(fn, promise, context) {
+        this.constructor$(fn, promise, context);
+    }
+    inherits(FunctionDisposer, Disposer);
+
+    FunctionDisposer.prototype.doDispose = function (resource, inspection) {
+        var fn = this.data();
+        return fn.call(resource, resource, inspection);
+    };
+
+    function maybeUnwrapDisposer(value) {
+        if (Disposer.isDisposer(value)) {
+            this.resources[this.index]._setDisposable(value);
+            return value.promise();
+        }
+        return value;
+    }
+
+    function ResourceList(length) {
+        this.length = length;
+        this.promise = null;
+        this[length-1] = null;
+    }
+
+    ResourceList.prototype._resultCancelled = function() {
+        var len = this.length;
+        for (var i = 0; i < len; ++i) {
+            var item = this[i];
+            if (item instanceof Promise) {
+                item.cancel();
+            }
+        }
+    };
+
+    Promise.using = function () {
+        var len = arguments.length;
+        if (len < 2) return apiRejection(
+                        "you must pass at least 2 arguments to Promise.using");
+        var fn = arguments[len - 1];
+        if (typeof fn !== "function") {
+            return apiRejection("expecting a function but got " + util.classString(fn));
+        }
+        var input;
+        var spreadArgs = true;
+        if (len === 2 && Array.isArray(arguments[0])) {
+            input = arguments[0];
+            len = input.length;
+            spreadArgs = false;
+        } else {
+            input = arguments;
+            len--;
+        }
+        var resources = new ResourceList(len);
+        for (var i = 0; i < len; ++i) {
+            var resource = input[i];
+            if (Disposer.isDisposer(resource)) {
+                var disposer = resource;
+                resource = resource.promise();
+                resource._setDisposable(disposer);
+            } else {
+                var maybePromise = tryConvertToPromise(resource);
+                if (maybePromise instanceof Promise) {
+                    resource =
+                        maybePromise._then(maybeUnwrapDisposer, null, null, {
+                            resources: resources,
+                            index: i
+                    }, undefined);
+                }
+            }
+            resources[i] = resource;
+        }
+
+        var reflectedResources = new Array(resources.length);
+        for (var i = 0; i < reflectedResources.length; ++i) {
+            reflectedResources[i] = Promise.resolve(resources[i]).reflect();
+        }
+
+        var resultPromise = Promise.all(reflectedResources)
+            .then(function(inspections) {
+                for (var i = 0; i < inspections.length; ++i) {
+                    var inspection = inspections[i];
+                    if (inspection.isRejected()) {
+                        errorObj.e = inspection.error();
+                        return errorObj;
+                    } else if (!inspection.isFulfilled()) {
+                        resultPromise.cancel();
+                        return;
+                    }
+                    inspections[i] = inspection.value();
+                }
+                promise._pushContext();
+
+                fn = tryCatch(fn);
+                var ret = spreadArgs
+                    ? fn.apply(undefined, inspections) : fn(inspections);
+                var promiseCreated = promise._popContext();
+                debug.checkForgottenReturns(
+                    ret, promiseCreated, "Promise.using", promise);
+                return ret;
+            });
+
+        var promise = resultPromise.lastly(function() {
+            var inspection = new Promise.PromiseInspection(resultPromise);
+            return dispose(resources, inspection);
+        });
+        resources.promise = promise;
+        promise._setOnCancel(resources);
+        return promise;
+    };
+
+    Promise.prototype._setDisposable = function (disposer) {
+        this._bitField = this._bitField | 131072;
+        this._disposer = disposer;
+    };
+
+    Promise.prototype._isDisposable = function () {
+        return (this._bitField & 131072) > 0;
+    };
+
+    Promise.prototype._getDisposer = function () {
+        return this._disposer;
+    };
+
+    Promise.prototype._unsetDisposable = function () {
+        this._bitField = this._bitField & (~131072);
+        this._disposer = undefined;
+    };
+
+    Promise.prototype.disposer = function (fn) {
+        if (typeof fn === "function") {
+            return new FunctionDisposer(fn, this, createContext());
+        }
+        throw new TypeError();
+    };
+
+};
+
+},{"./errors":12,"./util":36}],36:[function(_dereq_,module,exports){
+"use strict";
+var es5 = _dereq_("./es5");
+var canEvaluate = typeof navigator == "undefined";
+
+var errorObj = {e: {}};
+var tryCatchTarget;
+var globalObject = typeof self !== "undefined" ? self :
+    typeof window !== "undefined" ? window :
+    typeof global !== "undefined" ? global :
+    this !== undefined ? this : null;
+
+function tryCatcher() {
+    try {
+        var target = tryCatchTarget;
+        tryCatchTarget = null;
+        return target.apply(this, arguments);
+    } catch (e) {
+        errorObj.e = e;
+        return errorObj;
+    }
+}
+function tryCatch(fn) {
+    tryCatchTarget = fn;
+    return tryCatcher;
+}
+
+var inherits = function(Child, Parent) {
+    var hasProp = {}.hasOwnProperty;
+
+    function T() {
+        this.constructor = Child;
+        this.constructor$ = Parent;
+        for (var propertyName in Parent.prototype) {
+            if (hasProp.call(Parent.prototype, propertyName) &&
+                propertyName.charAt(propertyName.length-1) !== "$"
+           ) {
+                this[propertyName + "$"] = Parent.prototype[propertyName];
+            }
+        }
+    }
+    T.prototype = Parent.prototype;
+    Child.prototype = new T();
+    return Child.prototype;
+};
+
+
+function isPrimitive(val) {
+    return val == null || val === true || val === false ||
+        typeof val === "string" || typeof val === "number";
+
+}
+
+function isObject(value) {
+    return typeof value === "function" ||
+           typeof value === "object" && value !== null;
+}
+
+function maybeWrapAsError(maybeError) {
+    if (!isPrimitive(maybeError)) return maybeError;
+
+    return new Error(safeToString(maybeError));
+}
+
+function withAppended(target, appendee) {
+    var len = target.length;
+    var ret = new Array(len + 1);
+    var i;
+    for (i = 0; i < len; ++i) {
+        ret[i] = target[i];
+    }
+    ret[i] = appendee;
+    return ret;
+}
+
+function getDataPropertyOrDefault(obj, key, defaultValue) {
+    if (es5.isES5) {
+        var desc = Object.getOwnPropertyDescriptor(obj, key);
+
+        if (desc != null) {
+            return desc.get == null && desc.set == null
+                    ? desc.value
+                    : defaultValue;
+        }
+    } else {
+        return {}.hasOwnProperty.call(obj, key) ? obj[key] : undefined;
+    }
+}
+
+function notEnumerableProp(obj, name, value) {
+    if (isPrimitive(obj)) return obj;
+    var descriptor = {
+        value: value,
+        configurable: true,
+        enumerable: false,
+        writable: true
+    };
+    es5.defineProperty(obj, name, descriptor);
+    return obj;
+}
+
+function thrower(r) {
+    throw r;
+}
+
+var inheritedDataKeys = (function() {
+    var excludedPrototypes = [
+        Array.prototype,
+        Object.prototype,
+        Function.prototype
+    ];
+
+    var isExcludedProto = function(val) {
+        for (var i = 0; i < excludedPrototypes.length; ++i) {
+            if (excludedPrototypes[i] === val) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    if (es5.isES5) {
+        var getKeys = Object.getOwnPropertyNames;
+        return function(obj) {
+            var ret = [];
+            var visitedKeys = Object.create(null);
+            while (obj != null && !isExcludedProto(obj)) {
+                var keys;
+                try {
+                    keys = getKeys(obj);
+                } catch (e) {
+                    return ret;
+                }
+                for (var i = 0; i < keys.length; ++i) {
+                    var key = keys[i];
+                    if (visitedKeys[key]) continue;
+                    visitedKeys[key] = true;
+                    var desc = Object.getOwnPropertyDescriptor(obj, key);
+                    if (desc != null && desc.get == null && desc.set == null) {
+                        ret.push(key);
+                    }
+                }
+                obj = es5.getPrototypeOf(obj);
+            }
+            return ret;
+        };
+    } else {
+        var hasProp = {}.hasOwnProperty;
+        return function(obj) {
+            if (isExcludedProto(obj)) return [];
+            var ret = [];
+
+            /*jshint forin:false */
+            enumeration: for (var key in obj) {
+                if (hasProp.call(obj, key)) {
+                    ret.push(key);
+                } else {
+                    for (var i = 0; i < excludedPrototypes.length; ++i) {
+                        if (hasProp.call(excludedPrototypes[i], key)) {
+                            continue enumeration;
+                        }
+                    }
+                    ret.push(key);
+                }
+            }
+            return ret;
+        };
+    }
+
+})();
+
+var thisAssignmentPattern = /this\s*\.\s*\S+\s*=/;
+function isClass(fn) {
+    try {
+        if (typeof fn === "function") {
+            var keys = es5.names(fn.prototype);
+
+            var hasMethods = es5.isES5 && keys.length > 1;
+            var hasMethodsOtherThanConstructor = keys.length > 0 &&
+                !(keys.length === 1 && keys[0] === "constructor");
+            var hasThisAssignmentAndStaticMethods =
+                thisAssignmentPattern.test(fn + "") && es5.names(fn).length > 0;
+
+            if (hasMethods || hasMethodsOtherThanConstructor ||
+                hasThisAssignmentAndStaticMethods) {
+                return true;
+            }
+        }
+        return false;
+    } catch (e) {
+        return false;
+    }
+}
+
+function toFastProperties(obj) {
+    /*jshint -W027,-W055,-W031*/
+    function FakeConstructor() {}
+    FakeConstructor.prototype = obj;
+    var l = 8;
+    while (l--) new FakeConstructor();
+    return obj;
+    eval(obj);
+}
+
+var rident = /^[a-z$_][a-z$_0-9]*$/i;
+function isIdentifier(str) {
+    return rident.test(str);
+}
+
+function filledRange(count, prefix, suffix) {
+    var ret = new Array(count);
+    for(var i = 0; i < count; ++i) {
+        ret[i] = prefix + i + suffix;
+    }
+    return ret;
+}
+
+function safeToString(obj) {
+    try {
+        return obj + "";
+    } catch (e) {
+        return "[no string representation]";
+    }
+}
+
+function isError(obj) {
+    return obj instanceof Error ||
+        (obj !== null &&
+           typeof obj === "object" &&
+           typeof obj.message === "string" &&
+           typeof obj.name === "string");
+}
+
+function markAsOriginatingFromRejection(e) {
+    try {
+        notEnumerableProp(e, "isOperational", true);
+    }
+    catch(ignore) {}
+}
+
+function originatesFromRejection(e) {
+    if (e == null) return false;
+    return ((e instanceof Error["__BluebirdErrorTypes__"].OperationalError) ||
+        e["isOperational"] === true);
+}
+
+function canAttachTrace(obj) {
+    return isError(obj) && es5.propertyIsWritable(obj, "stack");
+}
+
+var ensureErrorObject = (function() {
+    if (!("stack" in new Error())) {
+        return function(value) {
+            if (canAttachTrace(value)) return value;
+            try {throw new Error(safeToString(value));}
+            catch(err) {return err;}
+        };
+    } else {
+        return function(value) {
+            if (canAttachTrace(value)) return value;
+            return new Error(safeToString(value));
+        };
+    }
+})();
+
+function classString(obj) {
+    return {}.toString.call(obj);
+}
+
+function copyDescriptors(from, to, filter) {
+    var keys = es5.names(from);
+    for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i];
+        if (filter(key)) {
+            try {
+                es5.defineProperty(to, key, es5.getDescriptor(from, key));
+            } catch (ignore) {}
+        }
+    }
+}
+
+var asArray = function(v) {
+    if (es5.isArray(v)) {
+        return v;
+    }
+    return null;
+};
+
+if (typeof Symbol !== "undefined" && Symbol.iterator) {
+    var ArrayFrom = typeof Array.from === "function" ? function(v) {
+        return Array.from(v);
+    } : function(v) {
+        var ret = [];
+        var it = v[Symbol.iterator]();
+        var itResult;
+        while (!((itResult = it.next()).done)) {
+            ret.push(itResult.value);
+        }
+        return ret;
+    };
+
+    asArray = function(v) {
+        if (es5.isArray(v)) {
+            return v;
+        } else if (v != null && typeof v[Symbol.iterator] === "function") {
+            return ArrayFrom(v);
+        }
+        return null;
+    };
+}
+
+var isNode = typeof process !== "undefined" &&
+        classString(process).toLowerCase() === "[object process]";
+
+var hasEnvVariables = typeof process !== "undefined" &&
+    typeof process.env !== "undefined";
+
+function env(key) {
+    return hasEnvVariables ? process.env[key] : undefined;
+}
+
+function getNativePromise() {
+    if (typeof Promise === "function") {
+        try {
+            var promise = new Promise(function(){});
+            if ({}.toString.call(promise) === "[object Promise]") {
+                return Promise;
+            }
+        } catch (e) {}
+    }
+}
+
+function domainBind(self, cb) {
+    return self.bind(cb);
+}
+
+var ret = {
+    isClass: isClass,
+    isIdentifier: isIdentifier,
+    inheritedDataKeys: inheritedDataKeys,
+    getDataPropertyOrDefault: getDataPropertyOrDefault,
+    thrower: thrower,
+    isArray: es5.isArray,
+    asArray: asArray,
+    notEnumerableProp: notEnumerableProp,
+    isPrimitive: isPrimitive,
+    isObject: isObject,
+    isError: isError,
+    canEvaluate: canEvaluate,
+    errorObj: errorObj,
+    tryCatch: tryCatch,
+    inherits: inherits,
+    withAppended: withAppended,
+    maybeWrapAsError: maybeWrapAsError,
+    toFastProperties: toFastProperties,
+    filledRange: filledRange,
+    toString: safeToString,
+    canAttachTrace: canAttachTrace,
+    ensureErrorObject: ensureErrorObject,
+    originatesFromRejection: originatesFromRejection,
+    markAsOriginatingFromRejection: markAsOriginatingFromRejection,
+    classString: classString,
+    copyDescriptors: copyDescriptors,
+    hasDevTools: typeof chrome !== "undefined" && chrome &&
+                 typeof chrome.loadTimes === "function",
+    isNode: isNode,
+    hasEnvVariables: hasEnvVariables,
+    env: env,
+    global: globalObject,
+    getNativePromise: getNativePromise,
+    domainBind: domainBind
+};
+ret.isRecentNode = ret.isNode && (function() {
+    var version = process.versions.node.split(".").map(Number);
+    return (version[0] === 0 && version[1] > 10) || (version[0] > 0);
+})();
+
+if (ret.isNode) ret.toFastProperties(process);
+
+try {throw new Error(); } catch (e) {ret.lastLineError = e;}
+module.exports = ret;
+
+},{"./es5":13}]},{},[4])(4)
+});                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
+;
+(function(self) {
+  'use strict';
+
+  if (self.fetch) {
+    return
+  }
+
+  var support = {
+    searchParams: 'URLSearchParams' in self,
+    iterable: 'Symbol' in self && 'iterator' in Symbol,
+    blob: 'FileReader' in self && 'Blob' in self && (function() {
+      try {
+        new Blob()
+        return true
+      } catch(e) {
+        return false
+      }
+    })(),
+    formData: 'FormData' in self,
+    arrayBuffer: 'ArrayBuffer' in self
+  }
+
+  if (support.arrayBuffer) {
+    var viewClasses = [
+      '[object Int8Array]',
+      '[object Uint8Array]',
+      '[object Uint8ClampedArray]',
+      '[object Int16Array]',
+      '[object Uint16Array]',
+      '[object Int32Array]',
+      '[object Uint32Array]',
+      '[object Float32Array]',
+      '[object Float64Array]'
+    ]
+
+    var isDataView = function(obj) {
+      return obj && DataView.prototype.isPrototypeOf(obj)
+    }
+
+    var isArrayBufferView = ArrayBuffer.isView || function(obj) {
+      return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
+    }
+  }
+
+  function normalizeName(name) {
+    if (typeof name !== 'string') {
+      name = String(name)
+    }
+    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+      throw new TypeError('Invalid character in header field name')
+    }
+    return name.toLowerCase()
+  }
+
+  function normalizeValue(value) {
+    if (typeof value !== 'string') {
+      value = String(value)
+    }
+    return value
+  }
+
+  // Build a destructive iterator for the value list
+  function iteratorFor(items) {
+    var iterator = {
+      next: function() {
+        var value = items.shift()
+        return {done: value === undefined, value: value}
+      }
+    }
+
+    if (support.iterable) {
+      iterator[Symbol.iterator] = function() {
+        return iterator
+      }
+    }
+
+    return iterator
+  }
+
+  function Headers(headers) {
+    this.map = {}
+
+    if (headers instanceof Headers) {
+      headers.forEach(function(value, name) {
+        this.append(name, value)
+      }, this)
+    } else if (Array.isArray(headers)) {
+      headers.forEach(function(header) {
+        this.append(header[0], header[1])
+      }, this)
+    } else if (headers) {
+      Object.getOwnPropertyNames(headers).forEach(function(name) {
+        this.append(name, headers[name])
+      }, this)
+    }
+  }
+
+  Headers.prototype.append = function(name, value) {
+    name = normalizeName(name)
+    value = normalizeValue(value)
+    var oldValue = this.map[name]
+    this.map[name] = oldValue ? oldValue+','+value : value
+  }
+
+  Headers.prototype['delete'] = function(name) {
+    delete this.map[normalizeName(name)]
+  }
+
+  Headers.prototype.get = function(name) {
+    name = normalizeName(name)
+    return this.has(name) ? this.map[name] : null
+  }
+
+  Headers.prototype.has = function(name) {
+    return this.map.hasOwnProperty(normalizeName(name))
+  }
+
+  Headers.prototype.set = function(name, value) {
+    this.map[normalizeName(name)] = normalizeValue(value)
+  }
+
+  Headers.prototype.forEach = function(callback, thisArg) {
+    for (var name in this.map) {
+      if (this.map.hasOwnProperty(name)) {
+        callback.call(thisArg, this.map[name], name, this)
+      }
+    }
+  }
+
+  Headers.prototype.keys = function() {
+    var items = []
+    this.forEach(function(value, name) { items.push(name) })
+    return iteratorFor(items)
+  }
+
+  Headers.prototype.values = function() {
+    var items = []
+    this.forEach(function(value) { items.push(value) })
+    return iteratorFor(items)
+  }
+
+  Headers.prototype.entries = function() {
+    var items = []
+    this.forEach(function(value, name) { items.push([name, value]) })
+    return iteratorFor(items)
+  }
+
+  if (support.iterable) {
+    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
+  }
+
+  function consumed(body) {
+    if (body.bodyUsed) {
+      return Promise.reject(new TypeError('Already read'))
+    }
+    body.bodyUsed = true
+  }
+
+  function fileReaderReady(reader) {
+    return new Promise(function(resolve, reject) {
+      reader.onload = function() {
+        resolve(reader.result)
+      }
+      reader.onerror = function() {
+        reject(reader.error)
+      }
+    })
+  }
+
+  function readBlobAsArrayBuffer(blob) {
+    var reader = new FileReader()
+    var promise = fileReaderReady(reader)
+    reader.readAsArrayBuffer(blob)
+    return promise
+  }
+
+  function readBlobAsText(blob) {
+    var reader = new FileReader()
+    var promise = fileReaderReady(reader)
+    reader.readAsText(blob)
+    return promise
+  }
+
+  function readArrayBufferAsText(buf) {
+    var view = new Uint8Array(buf)
+    var chars = new Array(view.length)
+
+    for (var i = 0; i < view.length; i++) {
+      chars[i] = String.fromCharCode(view[i])
+    }
+    return chars.join('')
+  }
+
+  function bufferClone(buf) {
+    if (buf.slice) {
+      return buf.slice(0)
+    } else {
+      var view = new Uint8Array(buf.byteLength)
+      view.set(new Uint8Array(buf))
+      return view.buffer
+    }
+  }
+
+  function Body() {
+    this.bodyUsed = false
+
+    this._initBody = function(body) {
+      this._bodyInit = body
+      if (!body) {
+        this._bodyText = ''
+      } else if (typeof body === 'string') {
+        this._bodyText = body
+      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+        this._bodyBlob = body
+      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+        this._bodyFormData = body
+      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+        this._bodyText = body.toString()
+      } else if (support.arrayBuffer && support.blob && isDataView(body)) {
+        this._bodyArrayBuffer = bufferClone(body.buffer)
+        // IE 10-11 can't handle a DataView body.
+        this._bodyInit = new Blob([this._bodyArrayBuffer])
+      } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
+        this._bodyArrayBuffer = bufferClone(body)
+      } else {
+        throw new Error('unsupported BodyInit type')
+      }
+
+      if (!this.headers.get('content-type')) {
+        if (typeof body === 'string') {
+          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+        } else if (this._bodyBlob && this._bodyBlob.type) {
+          this.headers.set('content-type', this._bodyBlob.type)
+        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+        }
+      }
+    }
+
+    if (support.blob) {
+      this.blob = function() {
+        var rejected = consumed(this)
+        if (rejected) {
+          return rejected
+        }
+
+        if (this._bodyBlob) {
+          return Promise.resolve(this._bodyBlob)
+        } else if (this._bodyArrayBuffer) {
+          return Promise.resolve(new Blob([this._bodyArrayBuffer]))
+        } else if (this._bodyFormData) {
+          throw new Error('could not read FormData body as blob')
+        } else {
+          return Promise.resolve(new Blob([this._bodyText]))
+        }
+      }
+
+      this.arrayBuffer = function() {
+        if (this._bodyArrayBuffer) {
+          return consumed(this) || Promise.resolve(this._bodyArrayBuffer)
+        } else {
+          return this.blob().then(readBlobAsArrayBuffer)
+        }
+      }
+    }
+
+    this.text = function() {
+      var rejected = consumed(this)
+      if (rejected) {
+        return rejected
+      }
+
+      if (this._bodyBlob) {
+        return readBlobAsText(this._bodyBlob)
+      } else if (this._bodyArrayBuffer) {
+        return Promise.resolve(readArrayBufferAsText(this._bodyArrayBuffer))
+      } else if (this._bodyFormData) {
+        throw new Error('could not read FormData body as text')
+      } else {
+        return Promise.resolve(this._bodyText)
+      }
+    }
+
+    if (support.formData) {
+      this.formData = function() {
+        return this.text().then(decode)
+      }
+    }
+
+    this.json = function() {
+      return this.text().then(JSON.parse)
+    }
+
+    return this
+  }
+
+  // HTTP methods whose capitalization should be normalized
+  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+
+  function normalizeMethod(method) {
+    var upcased = method.toUpperCase()
+    return (methods.indexOf(upcased) > -1) ? upcased : method
+  }
+
+  function Request(input, options) {
+    options = options || {}
+    var body = options.body
+
+    if (input instanceof Request) {
+      if (input.bodyUsed) {
+        throw new TypeError('Already read')
+      }
+      this.url = input.url
+      this.credentials = input.credentials
+      if (!options.headers) {
+        this.headers = new Headers(input.headers)
+      }
+      this.method = input.method
+      this.mode = input.mode
+      if (!body && input._bodyInit != null) {
+        body = input._bodyInit
+        input.bodyUsed = true
+      }
+    } else {
+      this.url = String(input)
+    }
+
+    this.credentials = options.credentials || this.credentials || 'omit'
+    if (options.headers || !this.headers) {
+      this.headers = new Headers(options.headers)
+    }
+    this.method = normalizeMethod(options.method || this.method || 'GET')
+    this.mode = options.mode || this.mode || null
+    this.referrer = null
+
+    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+      throw new TypeError('Body not allowed for GET or HEAD requests')
+    }
+    this._initBody(body)
+  }
+
+  Request.prototype.clone = function() {
+    return new Request(this, { body: this._bodyInit })
+  }
+
+  function decode(body) {
+    var form = new FormData()
+    body.trim().split('&').forEach(function(bytes) {
+      if (bytes) {
+        var split = bytes.split('=')
+        var name = split.shift().replace(/\+/g, ' ')
+        var value = split.join('=').replace(/\+/g, ' ')
+        form.append(decodeURIComponent(name), decodeURIComponent(value))
+      }
+    })
+    return form
+  }
+
+  function parseHeaders(rawHeaders) {
+    var headers = new Headers()
+    rawHeaders.split(/\r?\n/).forEach(function(line) {
+      var parts = line.split(':')
+      var key = parts.shift().trim()
+      if (key) {
+        var value = parts.join(':').trim()
+        headers.append(key, value)
+      }
+    })
+    return headers
+  }
+
+  Body.call(Request.prototype)
+
+  function Response(bodyInit, options) {
+    if (!options) {
+      options = {}
+    }
+
+    this.type = 'default'
+    this.status = 'status' in options ? options.status : 200
+    this.ok = this.status >= 200 && this.status < 300
+    this.statusText = 'statusText' in options ? options.statusText : 'OK'
+    this.headers = new Headers(options.headers)
+    this.url = options.url || ''
+    this._initBody(bodyInit)
+  }
+
+  Body.call(Response.prototype)
+
+  Response.prototype.clone = function() {
+    return new Response(this._bodyInit, {
+      status: this.status,
+      statusText: this.statusText,
+      headers: new Headers(this.headers),
+      url: this.url
+    })
+  }
+
+  Response.error = function() {
+    var response = new Response(null, {status: 0, statusText: ''})
+    response.type = 'error'
+    return response
+  }
+
+  var redirectStatuses = [301, 302, 303, 307, 308]
+
+  Response.redirect = function(url, status) {
+    if (redirectStatuses.indexOf(status) === -1) {
+      throw new RangeError('Invalid status code')
+    }
+
+    return new Response(null, {status: status, headers: {location: url}})
+  }
+
+  self.Headers = Headers
+  self.Request = Request
+  self.Response = Response
+
+  self.fetch = function(input, init) {
+    return new Promise(function(resolve, reject) {
+      var request = new Request(input, init)
+      var xhr = new XMLHttpRequest()
+
+      xhr.onload = function() {
+        var options = {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          headers: parseHeaders(xhr.getAllResponseHeaders() || '')
+        }
+        options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL')
+        var body = 'response' in xhr ? xhr.response : xhr.responseText
+        resolve(new Response(body, options))
+      }
+
+      xhr.onerror = function() {
+        reject(new TypeError('Network request failed'))
+      }
+
+      xhr.ontimeout = function() {
+        reject(new TypeError('Network request failed'))
+      }
+
+      xhr.open(request.method, request.url, true)
+
+      if (request.credentials === 'include') {
+        xhr.withCredentials = true
+      }
+
+      if ('responseType' in xhr && support.blob) {
+        xhr.responseType = 'blob'
+      }
+
+      request.headers.forEach(function(value, name) {
+        xhr.setRequestHeader(name, value)
+      })
+
+      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+    })
+  }
+  self.fetch.polyfill = true
+})(typeof self !== 'undefined' ? self : this);
+
+;
+/****************************************************************************
+    promise-get.js,
+
+    (c) 2017, FCOO
+
+    https://github.com/FCOO/promise-get
+    https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window, Promise/*, document, undefined*/) {
+    "use strict";
+
+    //Convert a reason to error-object
+    Promise.convertReasonToError = function( reason ){
+        var result = new Error(),
+            response = reason ? reason.response || {} : {};
+
+        result.name    = 'Error';
+        result.message = reason.message || '';
+        result.url     = response.url || '';
+        result.status  = response.status || '';
+//TODO            error.responseText = ???
+        return result;
+    };
+
+    //Create a default error-handle. Can be overwritten
+    Promise.defaultErrorHandler = Promise.defaultErrorHandler || function( /* reason */ ){};
+
+    //Set event handler for unhandled rejections
+    window.onunhandledrejection = function(e){
+        if (e && e.preventDefault)
+            e.preventDefault();
+
+        if (e && e.detail)
+            //Call default error handler
+            Promise.defaultErrorHandler( e.detail.reason || {} );
+    };
+
+    /**************************************************************
+    Promise.fetch( url, options )
+    Fetch the url.
+    Retries up to options.retries times with delay between of options.retryDeday ms
+    **************************************************************/
+    Promise.fetch = function(url, options) {
+        options = $.extend( {}, {
+            retries   : 3,
+            retryDelay: 1000,
+            cache     : 'reload',  //TODO: Check if it works
+            headers   : {
+                "Cache-Control": 'no-cache'    //TODO: Check if this works
+
+            }
+        }, options || {});
+
+        return new Promise(function(resolve, reject) {
+            var wrappedFetch = function(n) {
+                fetch(url, options)
+                    .then(function(response) {
+                        resolve(response);
+                    })
+                    .catch(function(error) {
+                        if (n > 0) {
+                            setTimeout(function() {
+                                wrappedFetch(--n);
+                            }, options.retryDelay);
+                        }
+                        else {
+                            reject(error);
+                        }
+                    });
+            };
+            wrappedFetch(options.retries);
+        });
+    };
+
+
+
+    /**************************************************************
+    Promise.get( url, options[, resolve[, reject[, finally]]] )
+    Get the file at url.
+
+    resolve || options.resolve || options.done = function( response )
+    reject  || options.reject || options.fail = function( error )
+    finally || options.finally || options.always = function( ?? )
+
+    options
+        retries: 0
+        context: null
+        format: null (text,json, xml)
+        useDefaultErrorHandler: true => use defaultErrorHandler even if a reject-function is given
+
+    **************************************************************/
+    function checkStatus(response) {
+        if (response.status >= 200 && response.status < 300) {
+            return response;
+        }
+        else {
+            var error = new Error(response.statusText);
+            error.response = response;
+            throw error;
+        }
+    }
+
+
+    function parseXML( response ){
+        //Adjusted xml-parser from jQuery.jQuery.parseXML
+        var xml;
+
+        // Support: IE 9 - 11 only
+        // IE throws on parseFromString with invalid input.
+        try {
+            xml = ( new window.DOMParser() ).parseFromString( response, "text/xml" );
+        }
+        catch ( e ) {
+            xml = undefined;
+        }
+
+        if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
+            var error = new Error("Invalid XML");
+            error.response = response;
+            throw error;
+        }
+        return xml;
+    }
+
+
+    Promise.get = function(url, options, resolve, reject, fin) {
+        options = $.extend({}, {
+            //Default options
+            useDefaultErrorHandler: true,
+            retries               : 0
+        }, options || {} );
+
+
+        resolve = resolve || options.resolve || options.done;
+        reject  = reject  || options.reject  || options.fail;
+        fin     = fin     || options.finally || options.always;
+
+        if (options.context){
+            resolve = resolve ? $.proxy( resolve, options.context ) : null;
+            reject = reject   ? $.proxy( reject,  options.context ) : null;
+            fin    = fin      ? $.proxy( fin,     options.context ) : null;
+        }
+
+        var result =
+            Promise.fetch(url, options) //Get the file
+            .then(checkStatus);         //Check for status of the response
+
+        switch (options.format){
+            case 'text':
+                result =
+                    result
+                        .then( function(response) { return response.text(); });
+                break;
+            case 'json':
+                result =
+                    result
+                        .then( function(response) { return response.text(); })
+                        .then( JSON.parse );
+                break;
+            case 'xml' :
+                result =
+                    result
+                        .then( function(response) { return response.text(); })
+                        .then( parseXML );
+                break;
+        }
+
+        if (resolve)
+            result = result.then( resolve );
+
+        //Adding error/reject promise
+        if (reject){
+            //If options.useDefaultErrorHandler => also needs to call => Promise.defaultErrorHandler
+            if (options.useDefaultErrorHandler)
+                result = result.catch( function(){
+                    reject.apply( null, arguments );
+                    return Promise.defaultErrorHandler.apply( null, arguments );
+                });
+            else
+                //Just use reject as catch
+                result = result.catch( reject );
+
+        }
+        else {
+            if (!options.useDefaultErrorHandler)
+                //Prevent the use of Promise.defaultErrorHandler
+                result = result.catch( function(){} );
+
+        }
+
+        //Adding finally (if any)
+        if (fin)
+            result = result.finally( fin );
+
+
+        return result;
+    };
+
+    /**************************************************************
+    Promise.getText( url, options[, resolve[, reject[, finally]]] )
+    Same as Promise.get with format = 'text'
+    **************************************************************/
+    Promise.getText = function(url, options, resolve, reject, fin) {
+        return Promise.get( url,
+                            $.extend( {}, options , { format: 'text' }),
+                            resolve, reject, fin );
+    };
+
+    /**************************************************************
+    Promise.getJSON( url, options[, resolve[, reject[, finally]]] )
+    Same as Promise.get with format = 'json'
+    **************************************************************/
+    Promise.getJSON = function(url, options, resolve, reject, fin) {
+        return Promise.get( url,
+                            $.extend( {}, options , { format: 'json' }),
+                            resolve, reject, fin );
+    };
+
+    /**************************************************************
+    Promise.getXML( url, options[, resolve[, reject[, finally]]] )
+    Same as Promise.get with format = 'xml'
+    **************************************************************/
+    Promise.getXML = function(url, options, resolve, reject, fin) {
+        return Promise.get( url,
+                            $.extend( {}, options , { format: 'xml' }),
+                            resolve, reject, fin );
+    };
+
+
+    //Initialize/ready
+    $(function() {
+
+    });
+
+}(jQuery, this, Promise, document));
+
+
+;
+;/*! showdown v 1.8.1 - 01-11-2017 */
+(function(){
+/**
+ * Created by Tivie on 13-07-2015.
+ */
+
+function getDefaultOpts (simple) {
+  'use strict';
+
+  var defaultOptions = {
+    omitExtraWLInCodeBlocks: {
+      defaultValue: false,
+      describe: 'Omit the default extra whiteline added to code blocks',
+      type: 'boolean'
+    },
+    noHeaderId: {
+      defaultValue: false,
+      describe: 'Turn on/off generated header id',
+      type: 'boolean'
+    },
+    prefixHeaderId: {
+      defaultValue: false,
+      describe: 'Add a prefix to the generated header ids. Passing a string will prefix that string to the header id. Setting to true will add a generic \'section-\' prefix',
+      type: 'string'
+    },
+    rawPrefixHeaderId: {
+      defaultValue: false,
+      describe: 'Setting this option to true will prevent showdown from modifying the prefix. This might result in malformed IDs (if, for instance, the " char is used in the prefix)',
+      type: 'boolean'
+    },
+    ghCompatibleHeaderId: {
+      defaultValue: false,
+      describe: 'Generate header ids compatible with github style (spaces are replaced with dashes, a bunch of non alphanumeric chars are removed)',
+      type: 'boolean'
+    },
+    rawHeaderId: {
+      defaultValue: false,
+      describe: 'Remove only spaces, \' and " from generated header ids (including prefixes), replacing them with dashes (-). WARNING: This might result in malformed ids',
+      type: 'boolean'
+    },
+    headerLevelStart: {
+      defaultValue: false,
+      describe: 'The header blocks level start',
+      type: 'integer'
+    },
+    parseImgDimensions: {
+      defaultValue: false,
+      describe: 'Turn on/off image dimension parsing',
+      type: 'boolean'
+    },
+    simplifiedAutoLink: {
+      defaultValue: false,
+      describe: 'Turn on/off GFM autolink style',
+      type: 'boolean'
+    },
+    excludeTrailingPunctuationFromURLs: {
+      defaultValue: false,
+      describe: 'Excludes trailing punctuation from links generated with autoLinking',
+      type: 'boolean'
+    },
+    literalMidWordUnderscores: {
+      defaultValue: false,
+      describe: 'Parse midword underscores as literal underscores',
+      type: 'boolean'
+    },
+    literalMidWordAsterisks: {
+      defaultValue: false,
+      describe: 'Parse midword asterisks as literal asterisks',
+      type: 'boolean'
+    },
+    strikethrough: {
+      defaultValue: false,
+      describe: 'Turn on/off strikethrough support',
+      type: 'boolean'
+    },
+    tables: {
+      defaultValue: false,
+      describe: 'Turn on/off tables support',
+      type: 'boolean'
+    },
+    tablesHeaderId: {
+      defaultValue: false,
+      describe: 'Add an id to table headers',
+      type: 'boolean'
+    },
+    ghCodeBlocks: {
+      defaultValue: true,
+      describe: 'Turn on/off GFM fenced code blocks support',
+      type: 'boolean'
+    },
+    tasklists: {
+      defaultValue: false,
+      describe: 'Turn on/off GFM tasklist support',
+      type: 'boolean'
+    },
+    smoothLivePreview: {
+      defaultValue: false,
+      describe: 'Prevents weird effects in live previews due to incomplete input',
+      type: 'boolean'
+    },
+    smartIndentationFix: {
+      defaultValue: false,
+      description: 'Tries to smartly fix indentation in es6 strings',
+      type: 'boolean'
+    },
+    disableForced4SpacesIndentedSublists: {
+      defaultValue: false,
+      description: 'Disables the requirement of indenting nested sublists by 4 spaces',
+      type: 'boolean'
+    },
+    simpleLineBreaks: {
+      defaultValue: false,
+      description: 'Parses simple line breaks as <br> (GFM Style)',
+      type: 'boolean'
+    },
+    requireSpaceBeforeHeadingText: {
+      defaultValue: false,
+      description: 'Makes adding a space between `#` and the header text mandatory (GFM Style)',
+      type: 'boolean'
+    },
+    ghMentions: {
+      defaultValue: false,
+      description: 'Enables github @mentions',
+      type: 'boolean'
+    },
+    ghMentionsLink: {
+      defaultValue: 'https://github.com/{u}',
+      description: 'Changes the link generated by @mentions. Only applies if ghMentions option is enabled.',
+      type: 'string'
+    },
+    encodeEmails: {
+      defaultValue: true,
+      description: 'Encode e-mail addresses through the use of Character Entities, transforming ASCII e-mail addresses into its equivalent decimal entities',
+      type: 'boolean'
+    },
+    openLinksInNewWindow: {
+      defaultValue: false,
+      description: 'Open all links in new windows',
+      type: 'boolean'
+    },
+    backslashEscapesHTMLTags: {
+      defaultValue: false,
+      description: 'Support for HTML Tag escaping. ex: \<div>foo\</div>',
+      type: 'boolean'
+    },
+    emoji: {
+      defaultValue: false,
+      description: 'Enable emoji support. Ex: `this is a :smile: emoji`',
+      type: 'boolean'
+    },
+    underline: {
+      defaultValue: false,
+      description: 'Enable support for underline. Syntax is double or triple underscores: `__underline word__`. With this option enabled, underscores no longer parses into `<em>` and `<strong>`',
+      type: 'boolean'
+    }
+  };
+  if (simple === false) {
+    return JSON.parse(JSON.stringify(defaultOptions));
+  }
+  var ret = {};
+  for (var opt in defaultOptions) {
+    if (defaultOptions.hasOwnProperty(opt)) {
+      ret[opt] = defaultOptions[opt].defaultValue;
+    }
+  }
+  return ret;
+}
+
+function allOptionsOn () {
+  'use strict';
+  var options = getDefaultOpts(true),
+      ret = {};
+  for (var opt in options) {
+    if (options.hasOwnProperty(opt)) {
+      ret[opt] = true;
+    }
+  }
+  return ret;
+}
+
+/**
+ * Created by Tivie on 06-01-2015.
+ */
+
+// Private properties
+var showdown = {},
+    parsers = {},
+    extensions = {},
+    globalOptions = getDefaultOpts(true),
+    setFlavor = 'vanilla',
+    flavor = {
+      github: {
+        omitExtraWLInCodeBlocks:              true,
+        simplifiedAutoLink:                   true,
+        excludeTrailingPunctuationFromURLs:   true,
+        literalMidWordUnderscores:            true,
+        strikethrough:                        true,
+        tables:                               true,
+        tablesHeaderId:                       true,
+        ghCodeBlocks:                         true,
+        tasklists:                            true,
+        disableForced4SpacesIndentedSublists: true,
+        simpleLineBreaks:                     true,
+        requireSpaceBeforeHeadingText:        true,
+        ghCompatibleHeaderId:                 true,
+        ghMentions:                           true,
+        backslashEscapesHTMLTags:             true,
+        emoji:                                true
+      },
+      original: {
+        noHeaderId:                           true,
+        ghCodeBlocks:                         false
+      },
+      ghost: {
+        omitExtraWLInCodeBlocks:              true,
+        parseImgDimensions:                   true,
+        simplifiedAutoLink:                   true,
+        excludeTrailingPunctuationFromURLs:   true,
+        literalMidWordUnderscores:            true,
+        strikethrough:                        true,
+        tables:                               true,
+        tablesHeaderId:                       true,
+        ghCodeBlocks:                         true,
+        tasklists:                            true,
+        smoothLivePreview:                    true,
+        simpleLineBreaks:                     true,
+        requireSpaceBeforeHeadingText:        true,
+        ghMentions:                           false,
+        encodeEmails:                         true
+      },
+      vanilla: getDefaultOpts(true),
+      allOn: allOptionsOn()
+    };
+
+/**
+ * helper namespace
+ * @type {{}}
+ */
+showdown.helper = {};
+
+/**
+ * TODO LEGACY SUPPORT CODE
+ * @type {{}}
+ */
+showdown.extensions = {};
+
+/**
+ * Set a global option
+ * @static
+ * @param {string} key
+ * @param {*} value
+ * @returns {showdown}
+ */
+showdown.setOption = function (key, value) {
+  'use strict';
+  globalOptions[key] = value;
+  return this;
+};
+
+/**
+ * Get a global option
+ * @static
+ * @param {string} key
+ * @returns {*}
+ */
+showdown.getOption = function (key) {
+  'use strict';
+  return globalOptions[key];
+};
+
+/**
+ * Get the global options
+ * @static
+ * @returns {{}}
+ */
+showdown.getOptions = function () {
+  'use strict';
+  return globalOptions;
+};
+
+/**
+ * Reset global options to the default values
+ * @static
+ */
+showdown.resetOptions = function () {
+  'use strict';
+  globalOptions = getDefaultOpts(true);
+};
+
+/**
+ * Set the flavor showdown should use as default
+ * @param {string} name
+ */
+showdown.setFlavor = function (name) {
+  'use strict';
+  if (!flavor.hasOwnProperty(name)) {
+    throw Error(name + ' flavor was not found');
+  }
+  showdown.resetOptions();
+  var preset = flavor[name];
+  setFlavor = name;
+  for (var option in preset) {
+    if (preset.hasOwnProperty(option)) {
+      globalOptions[option] = preset[option];
+    }
+  }
+};
+
+/**
+ * Get the currently set flavor
+ * @returns {string}
+ */
+showdown.getFlavor = function () {
+  'use strict';
+  return setFlavor;
+};
+
+/**
+ * Get the options of a specified flavor. Returns undefined if the flavor was not found
+ * @param {string} name Name of the flavor
+ * @returns {{}|undefined}
+ */
+showdown.getFlavorOptions = function (name) {
+  'use strict';
+  if (flavor.hasOwnProperty(name)) {
+    return flavor[name];
+  }
+};
+
+/**
+ * Get the default options
+ * @static
+ * @param {boolean} [simple=true]
+ * @returns {{}}
+ */
+showdown.getDefaultOptions = function (simple) {
+  'use strict';
+  return getDefaultOpts(simple);
+};
+
+/**
+ * Get or set a subParser
+ *
+ * subParser(name)       - Get a registered subParser
+ * subParser(name, func) - Register a subParser
+ * @static
+ * @param {string} name
+ * @param {function} [func]
+ * @returns {*}
+ */
+showdown.subParser = function (name, func) {
+  'use strict';
+  if (showdown.helper.isString(name)) {
+    if (typeof func !== 'undefined') {
+      parsers[name] = func;
+    } else {
+      if (parsers.hasOwnProperty(name)) {
+        return parsers[name];
+      } else {
+        throw Error('SubParser named ' + name + ' not registered!');
+      }
+    }
+  }
+};
+
+/**
+ * Gets or registers an extension
+ * @static
+ * @param {string} name
+ * @param {object|function=} ext
+ * @returns {*}
+ */
+showdown.extension = function (name, ext) {
+  'use strict';
+
+  if (!showdown.helper.isString(name)) {
+    throw Error('Extension \'name\' must be a string');
+  }
+
+  name = showdown.helper.stdExtName(name);
+
+  // Getter
+  if (showdown.helper.isUndefined(ext)) {
+    if (!extensions.hasOwnProperty(name)) {
+      throw Error('Extension named ' + name + ' is not registered!');
+    }
+    return extensions[name];
+
+    // Setter
+  } else {
+    // Expand extension if it's wrapped in a function
+    if (typeof ext === 'function') {
+      ext = ext();
+    }
+
+    // Ensure extension is an array
+    if (!showdown.helper.isArray(ext)) {
+      ext = [ext];
+    }
+
+    var validExtension = validate(ext, name);
+
+    if (validExtension.valid) {
+      extensions[name] = ext;
+    } else {
+      throw Error(validExtension.error);
+    }
+  }
+};
+
+/**
+ * Gets all extensions registered
+ * @returns {{}}
+ */
+showdown.getAllExtensions = function () {
+  'use strict';
+  return extensions;
+};
+
+/**
+ * Remove an extension
+ * @param {string} name
+ */
+showdown.removeExtension = function (name) {
+  'use strict';
+  delete extensions[name];
+};
+
+/**
+ * Removes all extensions
+ */
+showdown.resetExtensions = function () {
+  'use strict';
+  extensions = {};
+};
+
+/**
+ * Validate extension
+ * @param {array} extension
+ * @param {string} name
+ * @returns {{valid: boolean, error: string}}
+ */
+function validate (extension, name) {
+  'use strict';
+
+  var errMsg = (name) ? 'Error in ' + name + ' extension->' : 'Error in unnamed extension',
+      ret = {
+        valid: true,
+        error: ''
+      };
+
+  if (!showdown.helper.isArray(extension)) {
+    extension = [extension];
+  }
+
+  for (var i = 0; i < extension.length; ++i) {
+    var baseMsg = errMsg + ' sub-extension ' + i + ': ',
+        ext = extension[i];
+    if (typeof ext !== 'object') {
+      ret.valid = false;
+      ret.error = baseMsg + 'must be an object, but ' + typeof ext + ' given';
+      return ret;
+    }
+
+    if (!showdown.helper.isString(ext.type)) {
+      ret.valid = false;
+      ret.error = baseMsg + 'property "type" must be a string, but ' + typeof ext.type + ' given';
+      return ret;
+    }
+
+    var type = ext.type = ext.type.toLowerCase();
+
+    // normalize extension type
+    if (type === 'language') {
+      type = ext.type = 'lang';
+    }
+
+    if (type === 'html') {
+      type = ext.type = 'output';
+    }
+
+    if (type !== 'lang' && type !== 'output' && type !== 'listener') {
+      ret.valid = false;
+      ret.error = baseMsg + 'type ' + type + ' is not recognized. Valid values: "lang/language", "output/html" or "listener"';
+      return ret;
+    }
+
+    if (type === 'listener') {
+      if (showdown.helper.isUndefined(ext.listeners)) {
+        ret.valid = false;
+        ret.error = baseMsg + '. Extensions of type "listener" must have a property called "listeners"';
+        return ret;
+      }
+    } else {
+      if (showdown.helper.isUndefined(ext.filter) && showdown.helper.isUndefined(ext.regex)) {
+        ret.valid = false;
+        ret.error = baseMsg + type + ' extensions must define either a "regex" property or a "filter" method';
+        return ret;
+      }
+    }
+
+    if (ext.listeners) {
+      if (typeof ext.listeners !== 'object') {
+        ret.valid = false;
+        ret.error = baseMsg + '"listeners" property must be an object but ' + typeof ext.listeners + ' given';
+        return ret;
+      }
+      for (var ln in ext.listeners) {
+        if (ext.listeners.hasOwnProperty(ln)) {
+          if (typeof ext.listeners[ln] !== 'function') {
+            ret.valid = false;
+            ret.error = baseMsg + '"listeners" property must be an hash of [event name]: [callback]. listeners.' + ln +
+              ' must be a function but ' + typeof ext.listeners[ln] + ' given';
+            return ret;
+          }
+        }
+      }
+    }
+
+    if (ext.filter) {
+      if (typeof ext.filter !== 'function') {
+        ret.valid = false;
+        ret.error = baseMsg + '"filter" must be a function, but ' + typeof ext.filter + ' given';
+        return ret;
+      }
+    } else if (ext.regex) {
+      if (showdown.helper.isString(ext.regex)) {
+        ext.regex = new RegExp(ext.regex, 'g');
+      }
+      if (!(ext.regex instanceof RegExp)) {
+        ret.valid = false;
+        ret.error = baseMsg + '"regex" property must either be a string or a RegExp object, but ' + typeof ext.regex + ' given';
+        return ret;
+      }
+      if (showdown.helper.isUndefined(ext.replace)) {
+        ret.valid = false;
+        ret.error = baseMsg + '"regex" extensions must implement a replace string or function';
+        return ret;
+      }
+    }
+  }
+  return ret;
+}
+
+/**
+ * Validate extension
+ * @param {object} ext
+ * @returns {boolean}
+ */
+showdown.validateExtension = function (ext) {
+  'use strict';
+
+  var validateExtension = validate(ext, null);
+  if (!validateExtension.valid) {
+    console.warn(validateExtension.error);
+    return false;
+  }
+  return true;
+};
+
+/**
+ * showdownjs helper functions
+ */
+
+if (!showdown.hasOwnProperty('helper')) {
+  showdown.helper = {};
+}
+
+/**
+ * Check if var is string
+ * @static
+ * @param {string} a
+ * @returns {boolean}
+ */
+showdown.helper.isString = function (a) {
+  'use strict';
+  return (typeof a === 'string' || a instanceof String);
+};
+
+/**
+ * Check if var is a function
+ * @static
+ * @param {*} a
+ * @returns {boolean}
+ */
+showdown.helper.isFunction = function (a) {
+  'use strict';
+  var getType = {};
+  return a && getType.toString.call(a) === '[object Function]';
+};
+
+/**
+ * isArray helper function
+ * @static
+ * @param {*} a
+ * @returns {boolean}
+ */
+showdown.helper.isArray = function (a) {
+  'use strict';
+  return Array.isArray(a);
+};
+
+/**
+ * Check if value is undefined
+ * @static
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is `undefined`, else `false`.
+ */
+showdown.helper.isUndefined = function (value) {
+  'use strict';
+  return typeof value === 'undefined';
+};
+
+/**
+ * ForEach helper function
+ * Iterates over Arrays and Objects (own properties only)
+ * @static
+ * @param {*} obj
+ * @param {function} callback Accepts 3 params: 1. value, 2. key, 3. the original array/object
+ */
+showdown.helper.forEach = function (obj, callback) {
+  'use strict';
+  // check if obj is defined
+  if (showdown.helper.isUndefined(obj)) {
+    throw new Error('obj param is required');
+  }
+
+  if (showdown.helper.isUndefined(callback)) {
+    throw new Error('callback param is required');
+  }
+
+  if (!showdown.helper.isFunction(callback)) {
+    throw new Error('callback param must be a function/closure');
+  }
+
+  if (typeof obj.forEach === 'function') {
+    obj.forEach(callback);
+  } else if (showdown.helper.isArray(obj)) {
+    for (var i = 0; i < obj.length; i++) {
+      callback(obj[i], i, obj);
+    }
+  } else if (typeof (obj) === 'object') {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        callback(obj[prop], prop, obj);
+      }
+    }
+  } else {
+    throw new Error('obj does not seem to be an array or an iterable object');
+  }
+};
+
+/**
+ * Standardidize extension name
+ * @static
+ * @param {string} s extension name
+ * @returns {string}
+ */
+showdown.helper.stdExtName = function (s) {
+  'use strict';
+  return s.replace(/[_?*+\/\\.^-]/g, '').replace(/\s/g, '').toLowerCase();
+};
+
+function escapeCharactersCallback (wholeMatch, m1) {
+  'use strict';
+  var charCodeToEscape = m1.charCodeAt(0);
+  return '¨E' + charCodeToEscape + 'E';
+}
+
+/**
+ * Callback used to escape characters when passing through String.replace
+ * @static
+ * @param {string} wholeMatch
+ * @param {string} m1
+ * @returns {string}
+ */
+showdown.helper.escapeCharactersCallback = escapeCharactersCallback;
+
+/**
+ * Escape characters in a string
+ * @static
+ * @param {string} text
+ * @param {string} charsToEscape
+ * @param {boolean} afterBackslash
+ * @returns {XML|string|void|*}
+ */
+showdown.helper.escapeCharacters = function (text, charsToEscape, afterBackslash) {
+  'use strict';
+  // First we have to escape the escape characters so that
+  // we can build a character class out of them
+  var regexString = '([' + charsToEscape.replace(/([\[\]\\])/g, '\\$1') + '])';
+
+  if (afterBackslash) {
+    regexString = '\\\\' + regexString;
+  }
+
+  var regex = new RegExp(regexString, 'g');
+  text = text.replace(regex, escapeCharactersCallback);
+
+  return text;
+};
+
+var rgxFindMatchPos = function (str, left, right, flags) {
+  'use strict';
+  var f = flags || '',
+      g = f.indexOf('g') > -1,
+      x = new RegExp(left + '|' + right, 'g' + f.replace(/g/g, '')),
+      l = new RegExp(left, f.replace(/g/g, '')),
+      pos = [],
+      t, s, m, start, end;
+
+  do {
+    t = 0;
+    while ((m = x.exec(str))) {
+      if (l.test(m[0])) {
+        if (!(t++)) {
+          s = x.lastIndex;
+          start = s - m[0].length;
+        }
+      } else if (t) {
+        if (!--t) {
+          end = m.index + m[0].length;
+          var obj = {
+            left: {start: start, end: s},
+            match: {start: s, end: m.index},
+            right: {start: m.index, end: end},
+            wholeMatch: {start: start, end: end}
+          };
+          pos.push(obj);
+          if (!g) {
+            return pos;
+          }
+        }
+      }
+    }
+  } while (t && (x.lastIndex = s));
+
+  return pos;
+};
+
+/**
+ * matchRecursiveRegExp
+ *
+ * (c) 2007 Steven Levithan <stevenlevithan.com>
+ * MIT License
+ *
+ * Accepts a string to search, a left and right format delimiter
+ * as regex patterns, and optional regex flags. Returns an array
+ * of matches, allowing nested instances of left/right delimiters.
+ * Use the "g" flag to return all matches, otherwise only the
+ * first is returned. Be careful to ensure that the left and
+ * right format delimiters produce mutually exclusive matches.
+ * Backreferences are not supported within the right delimiter
+ * due to how it is internally combined with the left delimiter.
+ * When matching strings whose format delimiters are unbalanced
+ * to the left or right, the output is intentionally as a
+ * conventional regex library with recursion support would
+ * produce, e.g. "<<x>" and "<x>>" both produce ["x"] when using
+ * "<" and ">" as the delimiters (both strings contain a single,
+ * balanced instance of "<x>").
+ *
+ * examples:
+ * matchRecursiveRegExp("test", "\\(", "\\)")
+ * returns: []
+ * matchRecursiveRegExp("<t<<e>><s>>t<>", "<", ">", "g")
+ * returns: ["t<<e>><s>", ""]
+ * matchRecursiveRegExp("<div id=\"x\">test</div>", "<div\\b[^>]*>", "</div>", "gi")
+ * returns: ["test"]
+ */
+showdown.helper.matchRecursiveRegExp = function (str, left, right, flags) {
+  'use strict';
+
+  var matchPos = rgxFindMatchPos (str, left, right, flags),
+      results = [];
+
+  for (var i = 0; i < matchPos.length; ++i) {
+    results.push([
+      str.slice(matchPos[i].wholeMatch.start, matchPos[i].wholeMatch.end),
+      str.slice(matchPos[i].match.start, matchPos[i].match.end),
+      str.slice(matchPos[i].left.start, matchPos[i].left.end),
+      str.slice(matchPos[i].right.start, matchPos[i].right.end)
+    ]);
+  }
+  return results;
+};
+
+/**
+ *
+ * @param {string} str
+ * @param {string|function} replacement
+ * @param {string} left
+ * @param {string} right
+ * @param {string} flags
+ * @returns {string}
+ */
+showdown.helper.replaceRecursiveRegExp = function (str, replacement, left, right, flags) {
+  'use strict';
+
+  if (!showdown.helper.isFunction(replacement)) {
+    var repStr = replacement;
+    replacement = function () {
+      return repStr;
+    };
+  }
+
+  var matchPos = rgxFindMatchPos(str, left, right, flags),
+      finalStr = str,
+      lng = matchPos.length;
+
+  if (lng > 0) {
+    var bits = [];
+    if (matchPos[0].wholeMatch.start !== 0) {
+      bits.push(str.slice(0, matchPos[0].wholeMatch.start));
+    }
+    for (var i = 0; i < lng; ++i) {
+      bits.push(
+        replacement(
+          str.slice(matchPos[i].wholeMatch.start, matchPos[i].wholeMatch.end),
+          str.slice(matchPos[i].match.start, matchPos[i].match.end),
+          str.slice(matchPos[i].left.start, matchPos[i].left.end),
+          str.slice(matchPos[i].right.start, matchPos[i].right.end)
+        )
+      );
+      if (i < lng - 1) {
+        bits.push(str.slice(matchPos[i].wholeMatch.end, matchPos[i + 1].wholeMatch.start));
+      }
+    }
+    if (matchPos[lng - 1].wholeMatch.end < str.length) {
+      bits.push(str.slice(matchPos[lng - 1].wholeMatch.end));
+    }
+    finalStr = bits.join('');
+  }
+  return finalStr;
+};
+
+/**
+ * Returns the index within the passed String object of the first occurrence of the specified regex,
+ * starting the search at fromIndex. Returns -1 if the value is not found.
+ *
+ * @param {string} str string to search
+ * @param {RegExp} regex Regular expression to search
+ * @param {int} [fromIndex = 0] Index to start the search
+ * @returns {Number}
+ * @throws InvalidArgumentError
+ */
+showdown.helper.regexIndexOf = function (str, regex, fromIndex) {
+  'use strict';
+  if (!showdown.helper.isString(str)) {
+    throw 'InvalidArgumentError: first parameter of showdown.helper.regexIndexOf function must be a string';
+  }
+  if (regex instanceof RegExp === false) {
+    throw 'InvalidArgumentError: second parameter of showdown.helper.regexIndexOf function must be an instance of RegExp';
+  }
+  var indexOf = str.substring(fromIndex || 0).search(regex);
+  return (indexOf >= 0) ? (indexOf + (fromIndex || 0)) : indexOf;
+};
+
+/**
+ * Splits the passed string object at the defined index, and returns an array composed of the two substrings
+ * @param {string} str string to split
+ * @param {int} index index to split string at
+ * @returns {[string,string]}
+ * @throws InvalidArgumentError
+ */
+showdown.helper.splitAtIndex = function (str, index) {
+  'use strict';
+  if (!showdown.helper.isString(str)) {
+    throw 'InvalidArgumentError: first parameter of showdown.helper.regexIndexOf function must be a string';
+  }
+  return [str.substring(0, index), str.substring(index)];
+};
+
+/**
+ * Obfuscate an e-mail address through the use of Character Entities,
+ * transforming ASCII characters into their equivalent decimal or hex entities.
+ *
+ * Since it has a random component, subsequent calls to this function produce different results
+ *
+ * @param {string} mail
+ * @returns {string}
+ */
+showdown.helper.encodeEmailAddress = function (mail) {
+  'use strict';
+  var encode = [
+    function (ch) {
+      return '&#' + ch.charCodeAt(0) + ';';
+    },
+    function (ch) {
+      return '&#x' + ch.charCodeAt(0).toString(16) + ';';
+    },
+    function (ch) {
+      return ch;
+    }
+  ];
+
+  mail = mail.replace(/./g, function (ch) {
+    if (ch === '@') {
+      // this *must* be encoded. I insist.
+      ch = encode[Math.floor(Math.random() * 2)](ch);
+    } else {
+      var r = Math.random();
+      // roughly 10% raw, 45% hex, 45% dec
+      ch = (
+        r > 0.9 ? encode[2](ch) : r > 0.45 ? encode[1](ch) : encode[0](ch)
+      );
+    }
+    return ch;
+  });
+
+  return mail;
+};
+
+/**
+ * POLYFILLS
+ */
+// use this instead of builtin is undefined for IE8 compatibility
+if (typeof(console) === 'undefined') {
+  console = {
+    warn: function (msg) {
+      'use strict';
+      alert(msg);
+    },
+    log: function (msg) {
+      'use strict';
+      alert(msg);
+    },
+    error: function (msg) {
+      'use strict';
+      throw msg;
+    }
   };
 }
 
-var NotyObject = {
+/**
+ * Common regexes.
+ * We declare some common regexes to improve performance
+ */
+showdown.helper.regexes = {
+  asteriskDashAndColon: /([*_:~])/g
+};
 
-  init: function (options) {
+/**
+ * EMOJIS LIST
+ */
+showdown.helper.emojis = {
+  '+1':'\ud83d\udc4d',
+  '-1':'\ud83d\udc4e',
+  '100':'\ud83d\udcaf',
+  '1234':'\ud83d\udd22',
+  '1st_place_medal':'\ud83e\udd47',
+  '2nd_place_medal':'\ud83e\udd48',
+  '3rd_place_medal':'\ud83e\udd49',
+  '8ball':'\ud83c\udfb1',
+  'a':'\ud83c\udd70\ufe0f',
+  'ab':'\ud83c\udd8e',
+  'abc':'\ud83d\udd24',
+  'abcd':'\ud83d\udd21',
+  'accept':'\ud83c\ude51',
+  'aerial_tramway':'\ud83d\udea1',
+  'airplane':'\u2708\ufe0f',
+  'alarm_clock':'\u23f0',
+  'alembic':'\u2697\ufe0f',
+  'alien':'\ud83d\udc7d',
+  'ambulance':'\ud83d\ude91',
+  'amphora':'\ud83c\udffa',
+  'anchor':'\u2693\ufe0f',
+  'angel':'\ud83d\udc7c',
+  'anger':'\ud83d\udca2',
+  'angry':'\ud83d\ude20',
+  'anguished':'\ud83d\ude27',
+  'ant':'\ud83d\udc1c',
+  'apple':'\ud83c\udf4e',
+  'aquarius':'\u2652\ufe0f',
+  'aries':'\u2648\ufe0f',
+  'arrow_backward':'\u25c0\ufe0f',
+  'arrow_double_down':'\u23ec',
+  'arrow_double_up':'\u23eb',
+  'arrow_down':'\u2b07\ufe0f',
+  'arrow_down_small':'\ud83d\udd3d',
+  'arrow_forward':'\u25b6\ufe0f',
+  'arrow_heading_down':'\u2935\ufe0f',
+  'arrow_heading_up':'\u2934\ufe0f',
+  'arrow_left':'\u2b05\ufe0f',
+  'arrow_lower_left':'\u2199\ufe0f',
+  'arrow_lower_right':'\u2198\ufe0f',
+  'arrow_right':'\u27a1\ufe0f',
+  'arrow_right_hook':'\u21aa\ufe0f',
+  'arrow_up':'\u2b06\ufe0f',
+  'arrow_up_down':'\u2195\ufe0f',
+  'arrow_up_small':'\ud83d\udd3c',
+  'arrow_upper_left':'\u2196\ufe0f',
+  'arrow_upper_right':'\u2197\ufe0f',
+  'arrows_clockwise':'\ud83d\udd03',
+  'arrows_counterclockwise':'\ud83d\udd04',
+  'art':'\ud83c\udfa8',
+  'articulated_lorry':'\ud83d\ude9b',
+  'artificial_satellite':'\ud83d\udef0',
+  'astonished':'\ud83d\ude32',
+  'athletic_shoe':'\ud83d\udc5f',
+  'atm':'\ud83c\udfe7',
+  'atom_symbol':'\u269b\ufe0f',
+  'avocado':'\ud83e\udd51',
+  'b':'\ud83c\udd71\ufe0f',
+  'baby':'\ud83d\udc76',
+  'baby_bottle':'\ud83c\udf7c',
+  'baby_chick':'\ud83d\udc24',
+  'baby_symbol':'\ud83d\udebc',
+  'back':'\ud83d\udd19',
+  'bacon':'\ud83e\udd53',
+  'badminton':'\ud83c\udff8',
+  'baggage_claim':'\ud83d\udec4',
+  'baguette_bread':'\ud83e\udd56',
+  'balance_scale':'\u2696\ufe0f',
+  'balloon':'\ud83c\udf88',
+  'ballot_box':'\ud83d\uddf3',
+  'ballot_box_with_check':'\u2611\ufe0f',
+  'bamboo':'\ud83c\udf8d',
+  'banana':'\ud83c\udf4c',
+  'bangbang':'\u203c\ufe0f',
+  'bank':'\ud83c\udfe6',
+  'bar_chart':'\ud83d\udcca',
+  'barber':'\ud83d\udc88',
+  'baseball':'\u26be\ufe0f',
+  'basketball':'\ud83c\udfc0',
+  'basketball_man':'\u26f9\ufe0f',
+  'basketball_woman':'\u26f9\ufe0f&zwj;\u2640\ufe0f',
+  'bat':'\ud83e\udd87',
+  'bath':'\ud83d\udec0',
+  'bathtub':'\ud83d\udec1',
+  'battery':'\ud83d\udd0b',
+  'beach_umbrella':'\ud83c\udfd6',
+  'bear':'\ud83d\udc3b',
+  'bed':'\ud83d\udecf',
+  'bee':'\ud83d\udc1d',
+  'beer':'\ud83c\udf7a',
+  'beers':'\ud83c\udf7b',
+  'beetle':'\ud83d\udc1e',
+  'beginner':'\ud83d\udd30',
+  'bell':'\ud83d\udd14',
+  'bellhop_bell':'\ud83d\udece',
+  'bento':'\ud83c\udf71',
+  'biking_man':'\ud83d\udeb4',
+  'bike':'\ud83d\udeb2',
+  'biking_woman':'\ud83d\udeb4&zwj;\u2640\ufe0f',
+  'bikini':'\ud83d\udc59',
+  'biohazard':'\u2623\ufe0f',
+  'bird':'\ud83d\udc26',
+  'birthday':'\ud83c\udf82',
+  'black_circle':'\u26ab\ufe0f',
+  'black_flag':'\ud83c\udff4',
+  'black_heart':'\ud83d\udda4',
+  'black_joker':'\ud83c\udccf',
+  'black_large_square':'\u2b1b\ufe0f',
+  'black_medium_small_square':'\u25fe\ufe0f',
+  'black_medium_square':'\u25fc\ufe0f',
+  'black_nib':'\u2712\ufe0f',
+  'black_small_square':'\u25aa\ufe0f',
+  'black_square_button':'\ud83d\udd32',
+  'blonde_man':'\ud83d\udc71',
+  'blonde_woman':'\ud83d\udc71&zwj;\u2640\ufe0f',
+  'blossom':'\ud83c\udf3c',
+  'blowfish':'\ud83d\udc21',
+  'blue_book':'\ud83d\udcd8',
+  'blue_car':'\ud83d\ude99',
+  'blue_heart':'\ud83d\udc99',
+  'blush':'\ud83d\ude0a',
+  'boar':'\ud83d\udc17',
+  'boat':'\u26f5\ufe0f',
+  'bomb':'\ud83d\udca3',
+  'book':'\ud83d\udcd6',
+  'bookmark':'\ud83d\udd16',
+  'bookmark_tabs':'\ud83d\udcd1',
+  'books':'\ud83d\udcda',
+  'boom':'\ud83d\udca5',
+  'boot':'\ud83d\udc62',
+  'bouquet':'\ud83d\udc90',
+  'bowing_man':'\ud83d\ude47',
+  'bow_and_arrow':'\ud83c\udff9',
+  'bowing_woman':'\ud83d\ude47&zwj;\u2640\ufe0f',
+  'bowling':'\ud83c\udfb3',
+  'boxing_glove':'\ud83e\udd4a',
+  'boy':'\ud83d\udc66',
+  'bread':'\ud83c\udf5e',
+  'bride_with_veil':'\ud83d\udc70',
+  'bridge_at_night':'\ud83c\udf09',
+  'briefcase':'\ud83d\udcbc',
+  'broken_heart':'\ud83d\udc94',
+  'bug':'\ud83d\udc1b',
+  'building_construction':'\ud83c\udfd7',
+  'bulb':'\ud83d\udca1',
+  'bullettrain_front':'\ud83d\ude85',
+  'bullettrain_side':'\ud83d\ude84',
+  'burrito':'\ud83c\udf2f',
+  'bus':'\ud83d\ude8c',
+  'business_suit_levitating':'\ud83d\udd74',
+  'busstop':'\ud83d\ude8f',
+  'bust_in_silhouette':'\ud83d\udc64',
+  'busts_in_silhouette':'\ud83d\udc65',
+  'butterfly':'\ud83e\udd8b',
+  'cactus':'\ud83c\udf35',
+  'cake':'\ud83c\udf70',
+  'calendar':'\ud83d\udcc6',
+  'call_me_hand':'\ud83e\udd19',
+  'calling':'\ud83d\udcf2',
+  'camel':'\ud83d\udc2b',
+  'camera':'\ud83d\udcf7',
+  'camera_flash':'\ud83d\udcf8',
+  'camping':'\ud83c\udfd5',
+  'cancer':'\u264b\ufe0f',
+  'candle':'\ud83d\udd6f',
+  'candy':'\ud83c\udf6c',
+  'canoe':'\ud83d\udef6',
+  'capital_abcd':'\ud83d\udd20',
+  'capricorn':'\u2651\ufe0f',
+  'car':'\ud83d\ude97',
+  'card_file_box':'\ud83d\uddc3',
+  'card_index':'\ud83d\udcc7',
+  'card_index_dividers':'\ud83d\uddc2',
+  'carousel_horse':'\ud83c\udfa0',
+  'carrot':'\ud83e\udd55',
+  'cat':'\ud83d\udc31',
+  'cat2':'\ud83d\udc08',
+  'cd':'\ud83d\udcbf',
+  'chains':'\u26d3',
+  'champagne':'\ud83c\udf7e',
+  'chart':'\ud83d\udcb9',
+  'chart_with_downwards_trend':'\ud83d\udcc9',
+  'chart_with_upwards_trend':'\ud83d\udcc8',
+  'checkered_flag':'\ud83c\udfc1',
+  'cheese':'\ud83e\uddc0',
+  'cherries':'\ud83c\udf52',
+  'cherry_blossom':'\ud83c\udf38',
+  'chestnut':'\ud83c\udf30',
+  'chicken':'\ud83d\udc14',
+  'children_crossing':'\ud83d\udeb8',
+  'chipmunk':'\ud83d\udc3f',
+  'chocolate_bar':'\ud83c\udf6b',
+  'christmas_tree':'\ud83c\udf84',
+  'church':'\u26ea\ufe0f',
+  'cinema':'\ud83c\udfa6',
+  'circus_tent':'\ud83c\udfaa',
+  'city_sunrise':'\ud83c\udf07',
+  'city_sunset':'\ud83c\udf06',
+  'cityscape':'\ud83c\udfd9',
+  'cl':'\ud83c\udd91',
+  'clamp':'\ud83d\udddc',
+  'clap':'\ud83d\udc4f',
+  'clapper':'\ud83c\udfac',
+  'classical_building':'\ud83c\udfdb',
+  'clinking_glasses':'\ud83e\udd42',
+  'clipboard':'\ud83d\udccb',
+  'clock1':'\ud83d\udd50',
+  'clock10':'\ud83d\udd59',
+  'clock1030':'\ud83d\udd65',
+  'clock11':'\ud83d\udd5a',
+  'clock1130':'\ud83d\udd66',
+  'clock12':'\ud83d\udd5b',
+  'clock1230':'\ud83d\udd67',
+  'clock130':'\ud83d\udd5c',
+  'clock2':'\ud83d\udd51',
+  'clock230':'\ud83d\udd5d',
+  'clock3':'\ud83d\udd52',
+  'clock330':'\ud83d\udd5e',
+  'clock4':'\ud83d\udd53',
+  'clock430':'\ud83d\udd5f',
+  'clock5':'\ud83d\udd54',
+  'clock530':'\ud83d\udd60',
+  'clock6':'\ud83d\udd55',
+  'clock630':'\ud83d\udd61',
+  'clock7':'\ud83d\udd56',
+  'clock730':'\ud83d\udd62',
+  'clock8':'\ud83d\udd57',
+  'clock830':'\ud83d\udd63',
+  'clock9':'\ud83d\udd58',
+  'clock930':'\ud83d\udd64',
+  'closed_book':'\ud83d\udcd5',
+  'closed_lock_with_key':'\ud83d\udd10',
+  'closed_umbrella':'\ud83c\udf02',
+  'cloud':'\u2601\ufe0f',
+  'cloud_with_lightning':'\ud83c\udf29',
+  'cloud_with_lightning_and_rain':'\u26c8',
+  'cloud_with_rain':'\ud83c\udf27',
+  'cloud_with_snow':'\ud83c\udf28',
+  'clown_face':'\ud83e\udd21',
+  'clubs':'\u2663\ufe0f',
+  'cocktail':'\ud83c\udf78',
+  'coffee':'\u2615\ufe0f',
+  'coffin':'\u26b0\ufe0f',
+  'cold_sweat':'\ud83d\ude30',
+  'comet':'\u2604\ufe0f',
+  'computer':'\ud83d\udcbb',
+  'computer_mouse':'\ud83d\uddb1',
+  'confetti_ball':'\ud83c\udf8a',
+  'confounded':'\ud83d\ude16',
+  'confused':'\ud83d\ude15',
+  'congratulations':'\u3297\ufe0f',
+  'construction':'\ud83d\udea7',
+  'construction_worker_man':'\ud83d\udc77',
+  'construction_worker_woman':'\ud83d\udc77&zwj;\u2640\ufe0f',
+  'control_knobs':'\ud83c\udf9b',
+  'convenience_store':'\ud83c\udfea',
+  'cookie':'\ud83c\udf6a',
+  'cool':'\ud83c\udd92',
+  'policeman':'\ud83d\udc6e',
+  'copyright':'\u00a9\ufe0f',
+  'corn':'\ud83c\udf3d',
+  'couch_and_lamp':'\ud83d\udecb',
+  'couple':'\ud83d\udc6b',
+  'couple_with_heart_woman_man':'\ud83d\udc91',
+  'couple_with_heart_man_man':'\ud83d\udc68&zwj;\u2764\ufe0f&zwj;\ud83d\udc68',
+  'couple_with_heart_woman_woman':'\ud83d\udc69&zwj;\u2764\ufe0f&zwj;\ud83d\udc69',
+  'couplekiss_man_man':'\ud83d\udc68&zwj;\u2764\ufe0f&zwj;\ud83d\udc8b&zwj;\ud83d\udc68',
+  'couplekiss_man_woman':'\ud83d\udc8f',
+  'couplekiss_woman_woman':'\ud83d\udc69&zwj;\u2764\ufe0f&zwj;\ud83d\udc8b&zwj;\ud83d\udc69',
+  'cow':'\ud83d\udc2e',
+  'cow2':'\ud83d\udc04',
+  'cowboy_hat_face':'\ud83e\udd20',
+  'crab':'\ud83e\udd80',
+  'crayon':'\ud83d\udd8d',
+  'credit_card':'\ud83d\udcb3',
+  'crescent_moon':'\ud83c\udf19',
+  'cricket':'\ud83c\udfcf',
+  'crocodile':'\ud83d\udc0a',
+  'croissant':'\ud83e\udd50',
+  'crossed_fingers':'\ud83e\udd1e',
+  'crossed_flags':'\ud83c\udf8c',
+  'crossed_swords':'\u2694\ufe0f',
+  'crown':'\ud83d\udc51',
+  'cry':'\ud83d\ude22',
+  'crying_cat_face':'\ud83d\ude3f',
+  'crystal_ball':'\ud83d\udd2e',
+  'cucumber':'\ud83e\udd52',
+  'cupid':'\ud83d\udc98',
+  'curly_loop':'\u27b0',
+  'currency_exchange':'\ud83d\udcb1',
+  'curry':'\ud83c\udf5b',
+  'custard':'\ud83c\udf6e',
+  'customs':'\ud83d\udec3',
+  'cyclone':'\ud83c\udf00',
+  'dagger':'\ud83d\udde1',
+  'dancer':'\ud83d\udc83',
+  'dancing_women':'\ud83d\udc6f',
+  'dancing_men':'\ud83d\udc6f&zwj;\u2642\ufe0f',
+  'dango':'\ud83c\udf61',
+  'dark_sunglasses':'\ud83d\udd76',
+  'dart':'\ud83c\udfaf',
+  'dash':'\ud83d\udca8',
+  'date':'\ud83d\udcc5',
+  'deciduous_tree':'\ud83c\udf33',
+  'deer':'\ud83e\udd8c',
+  'department_store':'\ud83c\udfec',
+  'derelict_house':'\ud83c\udfda',
+  'desert':'\ud83c\udfdc',
+  'desert_island':'\ud83c\udfdd',
+  'desktop_computer':'\ud83d\udda5',
+  'male_detective':'\ud83d\udd75\ufe0f',
+  'diamond_shape_with_a_dot_inside':'\ud83d\udca0',
+  'diamonds':'\u2666\ufe0f',
+  'disappointed':'\ud83d\ude1e',
+  'disappointed_relieved':'\ud83d\ude25',
+  'dizzy':'\ud83d\udcab',
+  'dizzy_face':'\ud83d\ude35',
+  'do_not_litter':'\ud83d\udeaf',
+  'dog':'\ud83d\udc36',
+  'dog2':'\ud83d\udc15',
+  'dollar':'\ud83d\udcb5',
+  'dolls':'\ud83c\udf8e',
+  'dolphin':'\ud83d\udc2c',
+  'door':'\ud83d\udeaa',
+  'doughnut':'\ud83c\udf69',
+  'dove':'\ud83d\udd4a',
+  'dragon':'\ud83d\udc09',
+  'dragon_face':'\ud83d\udc32',
+  'dress':'\ud83d\udc57',
+  'dromedary_camel':'\ud83d\udc2a',
+  'drooling_face':'\ud83e\udd24',
+  'droplet':'\ud83d\udca7',
+  'drum':'\ud83e\udd41',
+  'duck':'\ud83e\udd86',
+  'dvd':'\ud83d\udcc0',
+  'e-mail':'\ud83d\udce7',
+  'eagle':'\ud83e\udd85',
+  'ear':'\ud83d\udc42',
+  'ear_of_rice':'\ud83c\udf3e',
+  'earth_africa':'\ud83c\udf0d',
+  'earth_americas':'\ud83c\udf0e',
+  'earth_asia':'\ud83c\udf0f',
+  'egg':'\ud83e\udd5a',
+  'eggplant':'\ud83c\udf46',
+  'eight_pointed_black_star':'\u2734\ufe0f',
+  'eight_spoked_asterisk':'\u2733\ufe0f',
+  'electric_plug':'\ud83d\udd0c',
+  'elephant':'\ud83d\udc18',
+  'email':'\u2709\ufe0f',
+  'end':'\ud83d\udd1a',
+  'envelope_with_arrow':'\ud83d\udce9',
+  'euro':'\ud83d\udcb6',
+  'european_castle':'\ud83c\udff0',
+  'european_post_office':'\ud83c\udfe4',
+  'evergreen_tree':'\ud83c\udf32',
+  'exclamation':'\u2757\ufe0f',
+  'expressionless':'\ud83d\ude11',
+  'eye':'\ud83d\udc41',
+  'eye_speech_bubble':'\ud83d\udc41&zwj;\ud83d\udde8',
+  'eyeglasses':'\ud83d\udc53',
+  'eyes':'\ud83d\udc40',
+  'face_with_head_bandage':'\ud83e\udd15',
+  'face_with_thermometer':'\ud83e\udd12',
+  'fist_oncoming':'\ud83d\udc4a',
+  'factory':'\ud83c\udfed',
+  'fallen_leaf':'\ud83c\udf42',
+  'family_man_woman_boy':'\ud83d\udc6a',
+  'family_man_boy':'\ud83d\udc68&zwj;\ud83d\udc66',
+  'family_man_boy_boy':'\ud83d\udc68&zwj;\ud83d\udc66&zwj;\ud83d\udc66',
+  'family_man_girl':'\ud83d\udc68&zwj;\ud83d\udc67',
+  'family_man_girl_boy':'\ud83d\udc68&zwj;\ud83d\udc67&zwj;\ud83d\udc66',
+  'family_man_girl_girl':'\ud83d\udc68&zwj;\ud83d\udc67&zwj;\ud83d\udc67',
+  'family_man_man_boy':'\ud83d\udc68&zwj;\ud83d\udc68&zwj;\ud83d\udc66',
+  'family_man_man_boy_boy':'\ud83d\udc68&zwj;\ud83d\udc68&zwj;\ud83d\udc66&zwj;\ud83d\udc66',
+  'family_man_man_girl':'\ud83d\udc68&zwj;\ud83d\udc68&zwj;\ud83d\udc67',
+  'family_man_man_girl_boy':'\ud83d\udc68&zwj;\ud83d\udc68&zwj;\ud83d\udc67&zwj;\ud83d\udc66',
+  'family_man_man_girl_girl':'\ud83d\udc68&zwj;\ud83d\udc68&zwj;\ud83d\udc67&zwj;\ud83d\udc67',
+  'family_man_woman_boy_boy':'\ud83d\udc68&zwj;\ud83d\udc69&zwj;\ud83d\udc66&zwj;\ud83d\udc66',
+  'family_man_woman_girl':'\ud83d\udc68&zwj;\ud83d\udc69&zwj;\ud83d\udc67',
+  'family_man_woman_girl_boy':'\ud83d\udc68&zwj;\ud83d\udc69&zwj;\ud83d\udc67&zwj;\ud83d\udc66',
+  'family_man_woman_girl_girl':'\ud83d\udc68&zwj;\ud83d\udc69&zwj;\ud83d\udc67&zwj;\ud83d\udc67',
+  'family_woman_boy':'\ud83d\udc69&zwj;\ud83d\udc66',
+  'family_woman_boy_boy':'\ud83d\udc69&zwj;\ud83d\udc66&zwj;\ud83d\udc66',
+  'family_woman_girl':'\ud83d\udc69&zwj;\ud83d\udc67',
+  'family_woman_girl_boy':'\ud83d\udc69&zwj;\ud83d\udc67&zwj;\ud83d\udc66',
+  'family_woman_girl_girl':'\ud83d\udc69&zwj;\ud83d\udc67&zwj;\ud83d\udc67',
+  'family_woman_woman_boy':'\ud83d\udc69&zwj;\ud83d\udc69&zwj;\ud83d\udc66',
+  'family_woman_woman_boy_boy':'\ud83d\udc69&zwj;\ud83d\udc69&zwj;\ud83d\udc66&zwj;\ud83d\udc66',
+  'family_woman_woman_girl':'\ud83d\udc69&zwj;\ud83d\udc69&zwj;\ud83d\udc67',
+  'family_woman_woman_girl_boy':'\ud83d\udc69&zwj;\ud83d\udc69&zwj;\ud83d\udc67&zwj;\ud83d\udc66',
+  'family_woman_woman_girl_girl':'\ud83d\udc69&zwj;\ud83d\udc69&zwj;\ud83d\udc67&zwj;\ud83d\udc67',
+  'fast_forward':'\u23e9',
+  'fax':'\ud83d\udce0',
+  'fearful':'\ud83d\ude28',
+  'feet':'\ud83d\udc3e',
+  'female_detective':'\ud83d\udd75\ufe0f&zwj;\u2640\ufe0f',
+  'ferris_wheel':'\ud83c\udfa1',
+  'ferry':'\u26f4',
+  'field_hockey':'\ud83c\udfd1',
+  'file_cabinet':'\ud83d\uddc4',
+  'file_folder':'\ud83d\udcc1',
+  'film_projector':'\ud83d\udcfd',
+  'film_strip':'\ud83c\udf9e',
+  'fire':'\ud83d\udd25',
+  'fire_engine':'\ud83d\ude92',
+  'fireworks':'\ud83c\udf86',
+  'first_quarter_moon':'\ud83c\udf13',
+  'first_quarter_moon_with_face':'\ud83c\udf1b',
+  'fish':'\ud83d\udc1f',
+  'fish_cake':'\ud83c\udf65',
+  'fishing_pole_and_fish':'\ud83c\udfa3',
+  'fist_raised':'\u270a',
+  'fist_left':'\ud83e\udd1b',
+  'fist_right':'\ud83e\udd1c',
+  'flags':'\ud83c\udf8f',
+  'flashlight':'\ud83d\udd26',
+  'fleur_de_lis':'\u269c\ufe0f',
+  'flight_arrival':'\ud83d\udeec',
+  'flight_departure':'\ud83d\udeeb',
+  'floppy_disk':'\ud83d\udcbe',
+  'flower_playing_cards':'\ud83c\udfb4',
+  'flushed':'\ud83d\ude33',
+  'fog':'\ud83c\udf2b',
+  'foggy':'\ud83c\udf01',
+  'football':'\ud83c\udfc8',
+  'footprints':'\ud83d\udc63',
+  'fork_and_knife':'\ud83c\udf74',
+  'fountain':'\u26f2\ufe0f',
+  'fountain_pen':'\ud83d\udd8b',
+  'four_leaf_clover':'\ud83c\udf40',
+  'fox_face':'\ud83e\udd8a',
+  'framed_picture':'\ud83d\uddbc',
+  'free':'\ud83c\udd93',
+  'fried_egg':'\ud83c\udf73',
+  'fried_shrimp':'\ud83c\udf64',
+  'fries':'\ud83c\udf5f',
+  'frog':'\ud83d\udc38',
+  'frowning':'\ud83d\ude26',
+  'frowning_face':'\u2639\ufe0f',
+  'frowning_man':'\ud83d\ude4d&zwj;\u2642\ufe0f',
+  'frowning_woman':'\ud83d\ude4d',
+  'middle_finger':'\ud83d\udd95',
+  'fuelpump':'\u26fd\ufe0f',
+  'full_moon':'\ud83c\udf15',
+  'full_moon_with_face':'\ud83c\udf1d',
+  'funeral_urn':'\u26b1\ufe0f',
+  'game_die':'\ud83c\udfb2',
+  'gear':'\u2699\ufe0f',
+  'gem':'\ud83d\udc8e',
+  'gemini':'\u264a\ufe0f',
+  'ghost':'\ud83d\udc7b',
+  'gift':'\ud83c\udf81',
+  'gift_heart':'\ud83d\udc9d',
+  'girl':'\ud83d\udc67',
+  'globe_with_meridians':'\ud83c\udf10',
+  'goal_net':'\ud83e\udd45',
+  'goat':'\ud83d\udc10',
+  'golf':'\u26f3\ufe0f',
+  'golfing_man':'\ud83c\udfcc\ufe0f',
+  'golfing_woman':'\ud83c\udfcc\ufe0f&zwj;\u2640\ufe0f',
+  'gorilla':'\ud83e\udd8d',
+  'grapes':'\ud83c\udf47',
+  'green_apple':'\ud83c\udf4f',
+  'green_book':'\ud83d\udcd7',
+  'green_heart':'\ud83d\udc9a',
+  'green_salad':'\ud83e\udd57',
+  'grey_exclamation':'\u2755',
+  'grey_question':'\u2754',
+  'grimacing':'\ud83d\ude2c',
+  'grin':'\ud83d\ude01',
+  'grinning':'\ud83d\ude00',
+  'guardsman':'\ud83d\udc82',
+  'guardswoman':'\ud83d\udc82&zwj;\u2640\ufe0f',
+  'guitar':'\ud83c\udfb8',
+  'gun':'\ud83d\udd2b',
+  'haircut_woman':'\ud83d\udc87',
+  'haircut_man':'\ud83d\udc87&zwj;\u2642\ufe0f',
+  'hamburger':'\ud83c\udf54',
+  'hammer':'\ud83d\udd28',
+  'hammer_and_pick':'\u2692',
+  'hammer_and_wrench':'\ud83d\udee0',
+  'hamster':'\ud83d\udc39',
+  'hand':'\u270b',
+  'handbag':'\ud83d\udc5c',
+  'handshake':'\ud83e\udd1d',
+  'hankey':'\ud83d\udca9',
+  'hatched_chick':'\ud83d\udc25',
+  'hatching_chick':'\ud83d\udc23',
+  'headphones':'\ud83c\udfa7',
+  'hear_no_evil':'\ud83d\ude49',
+  'heart':'\u2764\ufe0f',
+  'heart_decoration':'\ud83d\udc9f',
+  'heart_eyes':'\ud83d\ude0d',
+  'heart_eyes_cat':'\ud83d\ude3b',
+  'heartbeat':'\ud83d\udc93',
+  'heartpulse':'\ud83d\udc97',
+  'hearts':'\u2665\ufe0f',
+  'heavy_check_mark':'\u2714\ufe0f',
+  'heavy_division_sign':'\u2797',
+  'heavy_dollar_sign':'\ud83d\udcb2',
+  'heavy_heart_exclamation':'\u2763\ufe0f',
+  'heavy_minus_sign':'\u2796',
+  'heavy_multiplication_x':'\u2716\ufe0f',
+  'heavy_plus_sign':'\u2795',
+  'helicopter':'\ud83d\ude81',
+  'herb':'\ud83c\udf3f',
+  'hibiscus':'\ud83c\udf3a',
+  'high_brightness':'\ud83d\udd06',
+  'high_heel':'\ud83d\udc60',
+  'hocho':'\ud83d\udd2a',
+  'hole':'\ud83d\udd73',
+  'honey_pot':'\ud83c\udf6f',
+  'horse':'\ud83d\udc34',
+  'horse_racing':'\ud83c\udfc7',
+  'hospital':'\ud83c\udfe5',
+  'hot_pepper':'\ud83c\udf36',
+  'hotdog':'\ud83c\udf2d',
+  'hotel':'\ud83c\udfe8',
+  'hotsprings':'\u2668\ufe0f',
+  'hourglass':'\u231b\ufe0f',
+  'hourglass_flowing_sand':'\u23f3',
+  'house':'\ud83c\udfe0',
+  'house_with_garden':'\ud83c\udfe1',
+  'houses':'\ud83c\udfd8',
+  'hugs':'\ud83e\udd17',
+  'hushed':'\ud83d\ude2f',
+  'ice_cream':'\ud83c\udf68',
+  'ice_hockey':'\ud83c\udfd2',
+  'ice_skate':'\u26f8',
+  'icecream':'\ud83c\udf66',
+  'id':'\ud83c\udd94',
+  'ideograph_advantage':'\ud83c\ude50',
+  'imp':'\ud83d\udc7f',
+  'inbox_tray':'\ud83d\udce5',
+  'incoming_envelope':'\ud83d\udce8',
+  'tipping_hand_woman':'\ud83d\udc81',
+  'information_source':'\u2139\ufe0f',
+  'innocent':'\ud83d\ude07',
+  'interrobang':'\u2049\ufe0f',
+  'iphone':'\ud83d\udcf1',
+  'izakaya_lantern':'\ud83c\udfee',
+  'jack_o_lantern':'\ud83c\udf83',
+  'japan':'\ud83d\uddfe',
+  'japanese_castle':'\ud83c\udfef',
+  'japanese_goblin':'\ud83d\udc7a',
+  'japanese_ogre':'\ud83d\udc79',
+  'jeans':'\ud83d\udc56',
+  'joy':'\ud83d\ude02',
+  'joy_cat':'\ud83d\ude39',
+  'joystick':'\ud83d\udd79',
+  'kaaba':'\ud83d\udd4b',
+  'key':'\ud83d\udd11',
+  'keyboard':'\u2328\ufe0f',
+  'keycap_ten':'\ud83d\udd1f',
+  'kick_scooter':'\ud83d\udef4',
+  'kimono':'\ud83d\udc58',
+  'kiss':'\ud83d\udc8b',
+  'kissing':'\ud83d\ude17',
+  'kissing_cat':'\ud83d\ude3d',
+  'kissing_closed_eyes':'\ud83d\ude1a',
+  'kissing_heart':'\ud83d\ude18',
+  'kissing_smiling_eyes':'\ud83d\ude19',
+  'kiwi_fruit':'\ud83e\udd5d',
+  'koala':'\ud83d\udc28',
+  'koko':'\ud83c\ude01',
+  'label':'\ud83c\udff7',
+  'large_blue_circle':'\ud83d\udd35',
+  'large_blue_diamond':'\ud83d\udd37',
+  'large_orange_diamond':'\ud83d\udd36',
+  'last_quarter_moon':'\ud83c\udf17',
+  'last_quarter_moon_with_face':'\ud83c\udf1c',
+  'latin_cross':'\u271d\ufe0f',
+  'laughing':'\ud83d\ude06',
+  'leaves':'\ud83c\udf43',
+  'ledger':'\ud83d\udcd2',
+  'left_luggage':'\ud83d\udec5',
+  'left_right_arrow':'\u2194\ufe0f',
+  'leftwards_arrow_with_hook':'\u21a9\ufe0f',
+  'lemon':'\ud83c\udf4b',
+  'leo':'\u264c\ufe0f',
+  'leopard':'\ud83d\udc06',
+  'level_slider':'\ud83c\udf9a',
+  'libra':'\u264e\ufe0f',
+  'light_rail':'\ud83d\ude88',
+  'link':'\ud83d\udd17',
+  'lion':'\ud83e\udd81',
+  'lips':'\ud83d\udc44',
+  'lipstick':'\ud83d\udc84',
+  'lizard':'\ud83e\udd8e',
+  'lock':'\ud83d\udd12',
+  'lock_with_ink_pen':'\ud83d\udd0f',
+  'lollipop':'\ud83c\udf6d',
+  'loop':'\u27bf',
+  'loud_sound':'\ud83d\udd0a',
+  'loudspeaker':'\ud83d\udce2',
+  'love_hotel':'\ud83c\udfe9',
+  'love_letter':'\ud83d\udc8c',
+  'low_brightness':'\ud83d\udd05',
+  'lying_face':'\ud83e\udd25',
+  'm':'\u24c2\ufe0f',
+  'mag':'\ud83d\udd0d',
+  'mag_right':'\ud83d\udd0e',
+  'mahjong':'\ud83c\udc04\ufe0f',
+  'mailbox':'\ud83d\udceb',
+  'mailbox_closed':'\ud83d\udcea',
+  'mailbox_with_mail':'\ud83d\udcec',
+  'mailbox_with_no_mail':'\ud83d\udced',
+  'man':'\ud83d\udc68',
+  'man_artist':'\ud83d\udc68&zwj;\ud83c\udfa8',
+  'man_astronaut':'\ud83d\udc68&zwj;\ud83d\ude80',
+  'man_cartwheeling':'\ud83e\udd38&zwj;\u2642\ufe0f',
+  'man_cook':'\ud83d\udc68&zwj;\ud83c\udf73',
+  'man_dancing':'\ud83d\udd7a',
+  'man_facepalming':'\ud83e\udd26&zwj;\u2642\ufe0f',
+  'man_factory_worker':'\ud83d\udc68&zwj;\ud83c\udfed',
+  'man_farmer':'\ud83d\udc68&zwj;\ud83c\udf3e',
+  'man_firefighter':'\ud83d\udc68&zwj;\ud83d\ude92',
+  'man_health_worker':'\ud83d\udc68&zwj;\u2695\ufe0f',
+  'man_in_tuxedo':'\ud83e\udd35',
+  'man_judge':'\ud83d\udc68&zwj;\u2696\ufe0f',
+  'man_juggling':'\ud83e\udd39&zwj;\u2642\ufe0f',
+  'man_mechanic':'\ud83d\udc68&zwj;\ud83d\udd27',
+  'man_office_worker':'\ud83d\udc68&zwj;\ud83d\udcbc',
+  'man_pilot':'\ud83d\udc68&zwj;\u2708\ufe0f',
+  'man_playing_handball':'\ud83e\udd3e&zwj;\u2642\ufe0f',
+  'man_playing_water_polo':'\ud83e\udd3d&zwj;\u2642\ufe0f',
+  'man_scientist':'\ud83d\udc68&zwj;\ud83d\udd2c',
+  'man_shrugging':'\ud83e\udd37&zwj;\u2642\ufe0f',
+  'man_singer':'\ud83d\udc68&zwj;\ud83c\udfa4',
+  'man_student':'\ud83d\udc68&zwj;\ud83c\udf93',
+  'man_teacher':'\ud83d\udc68&zwj;\ud83c\udfeb',
+  'man_technologist':'\ud83d\udc68&zwj;\ud83d\udcbb',
+  'man_with_gua_pi_mao':'\ud83d\udc72',
+  'man_with_turban':'\ud83d\udc73',
+  'tangerine':'\ud83c\udf4a',
+  'mans_shoe':'\ud83d\udc5e',
+  'mantelpiece_clock':'\ud83d\udd70',
+  'maple_leaf':'\ud83c\udf41',
+  'martial_arts_uniform':'\ud83e\udd4b',
+  'mask':'\ud83d\ude37',
+  'massage_woman':'\ud83d\udc86',
+  'massage_man':'\ud83d\udc86&zwj;\u2642\ufe0f',
+  'meat_on_bone':'\ud83c\udf56',
+  'medal_military':'\ud83c\udf96',
+  'medal_sports':'\ud83c\udfc5',
+  'mega':'\ud83d\udce3',
+  'melon':'\ud83c\udf48',
+  'memo':'\ud83d\udcdd',
+  'men_wrestling':'\ud83e\udd3c&zwj;\u2642\ufe0f',
+  'menorah':'\ud83d\udd4e',
+  'mens':'\ud83d\udeb9',
+  'metal':'\ud83e\udd18',
+  'metro':'\ud83d\ude87',
+  'microphone':'\ud83c\udfa4',
+  'microscope':'\ud83d\udd2c',
+  'milk_glass':'\ud83e\udd5b',
+  'milky_way':'\ud83c\udf0c',
+  'minibus':'\ud83d\ude90',
+  'minidisc':'\ud83d\udcbd',
+  'mobile_phone_off':'\ud83d\udcf4',
+  'money_mouth_face':'\ud83e\udd11',
+  'money_with_wings':'\ud83d\udcb8',
+  'moneybag':'\ud83d\udcb0',
+  'monkey':'\ud83d\udc12',
+  'monkey_face':'\ud83d\udc35',
+  'monorail':'\ud83d\ude9d',
+  'moon':'\ud83c\udf14',
+  'mortar_board':'\ud83c\udf93',
+  'mosque':'\ud83d\udd4c',
+  'motor_boat':'\ud83d\udee5',
+  'motor_scooter':'\ud83d\udef5',
+  'motorcycle':'\ud83c\udfcd',
+  'motorway':'\ud83d\udee3',
+  'mount_fuji':'\ud83d\uddfb',
+  'mountain':'\u26f0',
+  'mountain_biking_man':'\ud83d\udeb5',
+  'mountain_biking_woman':'\ud83d\udeb5&zwj;\u2640\ufe0f',
+  'mountain_cableway':'\ud83d\udea0',
+  'mountain_railway':'\ud83d\ude9e',
+  'mountain_snow':'\ud83c\udfd4',
+  'mouse':'\ud83d\udc2d',
+  'mouse2':'\ud83d\udc01',
+  'movie_camera':'\ud83c\udfa5',
+  'moyai':'\ud83d\uddff',
+  'mrs_claus':'\ud83e\udd36',
+  'muscle':'\ud83d\udcaa',
+  'mushroom':'\ud83c\udf44',
+  'musical_keyboard':'\ud83c\udfb9',
+  'musical_note':'\ud83c\udfb5',
+  'musical_score':'\ud83c\udfbc',
+  'mute':'\ud83d\udd07',
+  'nail_care':'\ud83d\udc85',
+  'name_badge':'\ud83d\udcdb',
+  'national_park':'\ud83c\udfde',
+  'nauseated_face':'\ud83e\udd22',
+  'necktie':'\ud83d\udc54',
+  'negative_squared_cross_mark':'\u274e',
+  'nerd_face':'\ud83e\udd13',
+  'neutral_face':'\ud83d\ude10',
+  'new':'\ud83c\udd95',
+  'new_moon':'\ud83c\udf11',
+  'new_moon_with_face':'\ud83c\udf1a',
+  'newspaper':'\ud83d\udcf0',
+  'newspaper_roll':'\ud83d\uddde',
+  'next_track_button':'\u23ed',
+  'ng':'\ud83c\udd96',
+  'no_good_man':'\ud83d\ude45&zwj;\u2642\ufe0f',
+  'no_good_woman':'\ud83d\ude45',
+  'night_with_stars':'\ud83c\udf03',
+  'no_bell':'\ud83d\udd15',
+  'no_bicycles':'\ud83d\udeb3',
+  'no_entry':'\u26d4\ufe0f',
+  'no_entry_sign':'\ud83d\udeab',
+  'no_mobile_phones':'\ud83d\udcf5',
+  'no_mouth':'\ud83d\ude36',
+  'no_pedestrians':'\ud83d\udeb7',
+  'no_smoking':'\ud83d\udead',
+  'non-potable_water':'\ud83d\udeb1',
+  'nose':'\ud83d\udc43',
+  'notebook':'\ud83d\udcd3',
+  'notebook_with_decorative_cover':'\ud83d\udcd4',
+  'notes':'\ud83c\udfb6',
+  'nut_and_bolt':'\ud83d\udd29',
+  'o':'\u2b55\ufe0f',
+  'o2':'\ud83c\udd7e\ufe0f',
+  'ocean':'\ud83c\udf0a',
+  'octopus':'\ud83d\udc19',
+  'oden':'\ud83c\udf62',
+  'office':'\ud83c\udfe2',
+  'oil_drum':'\ud83d\udee2',
+  'ok':'\ud83c\udd97',
+  'ok_hand':'\ud83d\udc4c',
+  'ok_man':'\ud83d\ude46&zwj;\u2642\ufe0f',
+  'ok_woman':'\ud83d\ude46',
+  'old_key':'\ud83d\udddd',
+  'older_man':'\ud83d\udc74',
+  'older_woman':'\ud83d\udc75',
+  'om':'\ud83d\udd49',
+  'on':'\ud83d\udd1b',
+  'oncoming_automobile':'\ud83d\ude98',
+  'oncoming_bus':'\ud83d\ude8d',
+  'oncoming_police_car':'\ud83d\ude94',
+  'oncoming_taxi':'\ud83d\ude96',
+  'open_file_folder':'\ud83d\udcc2',
+  'open_hands':'\ud83d\udc50',
+  'open_mouth':'\ud83d\ude2e',
+  'open_umbrella':'\u2602\ufe0f',
+  'ophiuchus':'\u26ce',
+  'orange_book':'\ud83d\udcd9',
+  'orthodox_cross':'\u2626\ufe0f',
+  'outbox_tray':'\ud83d\udce4',
+  'owl':'\ud83e\udd89',
+  'ox':'\ud83d\udc02',
+  'package':'\ud83d\udce6',
+  'page_facing_up':'\ud83d\udcc4',
+  'page_with_curl':'\ud83d\udcc3',
+  'pager':'\ud83d\udcdf',
+  'paintbrush':'\ud83d\udd8c',
+  'palm_tree':'\ud83c\udf34',
+  'pancakes':'\ud83e\udd5e',
+  'panda_face':'\ud83d\udc3c',
+  'paperclip':'\ud83d\udcce',
+  'paperclips':'\ud83d\udd87',
+  'parasol_on_ground':'\u26f1',
+  'parking':'\ud83c\udd7f\ufe0f',
+  'part_alternation_mark':'\u303d\ufe0f',
+  'partly_sunny':'\u26c5\ufe0f',
+  'passenger_ship':'\ud83d\udef3',
+  'passport_control':'\ud83d\udec2',
+  'pause_button':'\u23f8',
+  'peace_symbol':'\u262e\ufe0f',
+  'peach':'\ud83c\udf51',
+  'peanuts':'\ud83e\udd5c',
+  'pear':'\ud83c\udf50',
+  'pen':'\ud83d\udd8a',
+  'pencil2':'\u270f\ufe0f',
+  'penguin':'\ud83d\udc27',
+  'pensive':'\ud83d\ude14',
+  'performing_arts':'\ud83c\udfad',
+  'persevere':'\ud83d\ude23',
+  'person_fencing':'\ud83e\udd3a',
+  'pouting_woman':'\ud83d\ude4e',
+  'phone':'\u260e\ufe0f',
+  'pick':'\u26cf',
+  'pig':'\ud83d\udc37',
+  'pig2':'\ud83d\udc16',
+  'pig_nose':'\ud83d\udc3d',
+  'pill':'\ud83d\udc8a',
+  'pineapple':'\ud83c\udf4d',
+  'ping_pong':'\ud83c\udfd3',
+  'pisces':'\u2653\ufe0f',
+  'pizza':'\ud83c\udf55',
+  'place_of_worship':'\ud83d\uded0',
+  'plate_with_cutlery':'\ud83c\udf7d',
+  'play_or_pause_button':'\u23ef',
+  'point_down':'\ud83d\udc47',
+  'point_left':'\ud83d\udc48',
+  'point_right':'\ud83d\udc49',
+  'point_up':'\u261d\ufe0f',
+  'point_up_2':'\ud83d\udc46',
+  'police_car':'\ud83d\ude93',
+  'policewoman':'\ud83d\udc6e&zwj;\u2640\ufe0f',
+  'poodle':'\ud83d\udc29',
+  'popcorn':'\ud83c\udf7f',
+  'post_office':'\ud83c\udfe3',
+  'postal_horn':'\ud83d\udcef',
+  'postbox':'\ud83d\udcee',
+  'potable_water':'\ud83d\udeb0',
+  'potato':'\ud83e\udd54',
+  'pouch':'\ud83d\udc5d',
+  'poultry_leg':'\ud83c\udf57',
+  'pound':'\ud83d\udcb7',
+  'rage':'\ud83d\ude21',
+  'pouting_cat':'\ud83d\ude3e',
+  'pouting_man':'\ud83d\ude4e&zwj;\u2642\ufe0f',
+  'pray':'\ud83d\ude4f',
+  'prayer_beads':'\ud83d\udcff',
+  'pregnant_woman':'\ud83e\udd30',
+  'previous_track_button':'\u23ee',
+  'prince':'\ud83e\udd34',
+  'princess':'\ud83d\udc78',
+  'printer':'\ud83d\udda8',
+  'purple_heart':'\ud83d\udc9c',
+  'purse':'\ud83d\udc5b',
+  'pushpin':'\ud83d\udccc',
+  'put_litter_in_its_place':'\ud83d\udeae',
+  'question':'\u2753',
+  'rabbit':'\ud83d\udc30',
+  'rabbit2':'\ud83d\udc07',
+  'racehorse':'\ud83d\udc0e',
+  'racing_car':'\ud83c\udfce',
+  'radio':'\ud83d\udcfb',
+  'radio_button':'\ud83d\udd18',
+  'radioactive':'\u2622\ufe0f',
+  'railway_car':'\ud83d\ude83',
+  'railway_track':'\ud83d\udee4',
+  'rainbow':'\ud83c\udf08',
+  'rainbow_flag':'\ud83c\udff3\ufe0f&zwj;\ud83c\udf08',
+  'raised_back_of_hand':'\ud83e\udd1a',
+  'raised_hand_with_fingers_splayed':'\ud83d\udd90',
+  'raised_hands':'\ud83d\ude4c',
+  'raising_hand_woman':'\ud83d\ude4b',
+  'raising_hand_man':'\ud83d\ude4b&zwj;\u2642\ufe0f',
+  'ram':'\ud83d\udc0f',
+  'ramen':'\ud83c\udf5c',
+  'rat':'\ud83d\udc00',
+  'record_button':'\u23fa',
+  'recycle':'\u267b\ufe0f',
+  'red_circle':'\ud83d\udd34',
+  'registered':'\u00ae\ufe0f',
+  'relaxed':'\u263a\ufe0f',
+  'relieved':'\ud83d\ude0c',
+  'reminder_ribbon':'\ud83c\udf97',
+  'repeat':'\ud83d\udd01',
+  'repeat_one':'\ud83d\udd02',
+  'rescue_worker_helmet':'\u26d1',
+  'restroom':'\ud83d\udebb',
+  'revolving_hearts':'\ud83d\udc9e',
+  'rewind':'\u23ea',
+  'rhinoceros':'\ud83e\udd8f',
+  'ribbon':'\ud83c\udf80',
+  'rice':'\ud83c\udf5a',
+  'rice_ball':'\ud83c\udf59',
+  'rice_cracker':'\ud83c\udf58',
+  'rice_scene':'\ud83c\udf91',
+  'right_anger_bubble':'\ud83d\uddef',
+  'ring':'\ud83d\udc8d',
+  'robot':'\ud83e\udd16',
+  'rocket':'\ud83d\ude80',
+  'rofl':'\ud83e\udd23',
+  'roll_eyes':'\ud83d\ude44',
+  'roller_coaster':'\ud83c\udfa2',
+  'rooster':'\ud83d\udc13',
+  'rose':'\ud83c\udf39',
+  'rosette':'\ud83c\udff5',
+  'rotating_light':'\ud83d\udea8',
+  'round_pushpin':'\ud83d\udccd',
+  'rowing_man':'\ud83d\udea3',
+  'rowing_woman':'\ud83d\udea3&zwj;\u2640\ufe0f',
+  'rugby_football':'\ud83c\udfc9',
+  'running_man':'\ud83c\udfc3',
+  'running_shirt_with_sash':'\ud83c\udfbd',
+  'running_woman':'\ud83c\udfc3&zwj;\u2640\ufe0f',
+  'sa':'\ud83c\ude02\ufe0f',
+  'sagittarius':'\u2650\ufe0f',
+  'sake':'\ud83c\udf76',
+  'sandal':'\ud83d\udc61',
+  'santa':'\ud83c\udf85',
+  'satellite':'\ud83d\udce1',
+  'saxophone':'\ud83c\udfb7',
+  'school':'\ud83c\udfeb',
+  'school_satchel':'\ud83c\udf92',
+  'scissors':'\u2702\ufe0f',
+  'scorpion':'\ud83e\udd82',
+  'scorpius':'\u264f\ufe0f',
+  'scream':'\ud83d\ude31',
+  'scream_cat':'\ud83d\ude40',
+  'scroll':'\ud83d\udcdc',
+  'seat':'\ud83d\udcba',
+  'secret':'\u3299\ufe0f',
+  'see_no_evil':'\ud83d\ude48',
+  'seedling':'\ud83c\udf31',
+  'selfie':'\ud83e\udd33',
+  'shallow_pan_of_food':'\ud83e\udd58',
+  'shamrock':'\u2618\ufe0f',
+  'shark':'\ud83e\udd88',
+  'shaved_ice':'\ud83c\udf67',
+  'sheep':'\ud83d\udc11',
+  'shell':'\ud83d\udc1a',
+  'shield':'\ud83d\udee1',
+  'shinto_shrine':'\u26e9',
+  'ship':'\ud83d\udea2',
+  'shirt':'\ud83d\udc55',
+  'shopping':'\ud83d\udecd',
+  'shopping_cart':'\ud83d\uded2',
+  'shower':'\ud83d\udebf',
+  'shrimp':'\ud83e\udd90',
+  'signal_strength':'\ud83d\udcf6',
+  'six_pointed_star':'\ud83d\udd2f',
+  'ski':'\ud83c\udfbf',
+  'skier':'\u26f7',
+  'skull':'\ud83d\udc80',
+  'skull_and_crossbones':'\u2620\ufe0f',
+  'sleeping':'\ud83d\ude34',
+  'sleeping_bed':'\ud83d\udecc',
+  'sleepy':'\ud83d\ude2a',
+  'slightly_frowning_face':'\ud83d\ude41',
+  'slightly_smiling_face':'\ud83d\ude42',
+  'slot_machine':'\ud83c\udfb0',
+  'small_airplane':'\ud83d\udee9',
+  'small_blue_diamond':'\ud83d\udd39',
+  'small_orange_diamond':'\ud83d\udd38',
+  'small_red_triangle':'\ud83d\udd3a',
+  'small_red_triangle_down':'\ud83d\udd3b',
+  'smile':'\ud83d\ude04',
+  'smile_cat':'\ud83d\ude38',
+  'smiley':'\ud83d\ude03',
+  'smiley_cat':'\ud83d\ude3a',
+  'smiling_imp':'\ud83d\ude08',
+  'smirk':'\ud83d\ude0f',
+  'smirk_cat':'\ud83d\ude3c',
+  'smoking':'\ud83d\udeac',
+  'snail':'\ud83d\udc0c',
+  'snake':'\ud83d\udc0d',
+  'sneezing_face':'\ud83e\udd27',
+  'snowboarder':'\ud83c\udfc2',
+  'snowflake':'\u2744\ufe0f',
+  'snowman':'\u26c4\ufe0f',
+  'snowman_with_snow':'\u2603\ufe0f',
+  'sob':'\ud83d\ude2d',
+  'soccer':'\u26bd\ufe0f',
+  'soon':'\ud83d\udd1c',
+  'sos':'\ud83c\udd98',
+  'sound':'\ud83d\udd09',
+  'space_invader':'\ud83d\udc7e',
+  'spades':'\u2660\ufe0f',
+  'spaghetti':'\ud83c\udf5d',
+  'sparkle':'\u2747\ufe0f',
+  'sparkler':'\ud83c\udf87',
+  'sparkles':'\u2728',
+  'sparkling_heart':'\ud83d\udc96',
+  'speak_no_evil':'\ud83d\ude4a',
+  'speaker':'\ud83d\udd08',
+  'speaking_head':'\ud83d\udde3',
+  'speech_balloon':'\ud83d\udcac',
+  'speedboat':'\ud83d\udea4',
+  'spider':'\ud83d\udd77',
+  'spider_web':'\ud83d\udd78',
+  'spiral_calendar':'\ud83d\uddd3',
+  'spiral_notepad':'\ud83d\uddd2',
+  'spoon':'\ud83e\udd44',
+  'squid':'\ud83e\udd91',
+  'stadium':'\ud83c\udfdf',
+  'star':'\u2b50\ufe0f',
+  'star2':'\ud83c\udf1f',
+  'star_and_crescent':'\u262a\ufe0f',
+  'star_of_david':'\u2721\ufe0f',
+  'stars':'\ud83c\udf20',
+  'station':'\ud83d\ude89',
+  'statue_of_liberty':'\ud83d\uddfd',
+  'steam_locomotive':'\ud83d\ude82',
+  'stew':'\ud83c\udf72',
+  'stop_button':'\u23f9',
+  'stop_sign':'\ud83d\uded1',
+  'stopwatch':'\u23f1',
+  'straight_ruler':'\ud83d\udccf',
+  'strawberry':'\ud83c\udf53',
+  'stuck_out_tongue':'\ud83d\ude1b',
+  'stuck_out_tongue_closed_eyes':'\ud83d\ude1d',
+  'stuck_out_tongue_winking_eye':'\ud83d\ude1c',
+  'studio_microphone':'\ud83c\udf99',
+  'stuffed_flatbread':'\ud83e\udd59',
+  'sun_behind_large_cloud':'\ud83c\udf25',
+  'sun_behind_rain_cloud':'\ud83c\udf26',
+  'sun_behind_small_cloud':'\ud83c\udf24',
+  'sun_with_face':'\ud83c\udf1e',
+  'sunflower':'\ud83c\udf3b',
+  'sunglasses':'\ud83d\ude0e',
+  'sunny':'\u2600\ufe0f',
+  'sunrise':'\ud83c\udf05',
+  'sunrise_over_mountains':'\ud83c\udf04',
+  'surfing_man':'\ud83c\udfc4',
+  'surfing_woman':'\ud83c\udfc4&zwj;\u2640\ufe0f',
+  'sushi':'\ud83c\udf63',
+  'suspension_railway':'\ud83d\ude9f',
+  'sweat':'\ud83d\ude13',
+  'sweat_drops':'\ud83d\udca6',
+  'sweat_smile':'\ud83d\ude05',
+  'sweet_potato':'\ud83c\udf60',
+  'swimming_man':'\ud83c\udfca',
+  'swimming_woman':'\ud83c\udfca&zwj;\u2640\ufe0f',
+  'symbols':'\ud83d\udd23',
+  'synagogue':'\ud83d\udd4d',
+  'syringe':'\ud83d\udc89',
+  'taco':'\ud83c\udf2e',
+  'tada':'\ud83c\udf89',
+  'tanabata_tree':'\ud83c\udf8b',
+  'taurus':'\u2649\ufe0f',
+  'taxi':'\ud83d\ude95',
+  'tea':'\ud83c\udf75',
+  'telephone_receiver':'\ud83d\udcde',
+  'telescope':'\ud83d\udd2d',
+  'tennis':'\ud83c\udfbe',
+  'tent':'\u26fa\ufe0f',
+  'thermometer':'\ud83c\udf21',
+  'thinking':'\ud83e\udd14',
+  'thought_balloon':'\ud83d\udcad',
+  'ticket':'\ud83c\udfab',
+  'tickets':'\ud83c\udf9f',
+  'tiger':'\ud83d\udc2f',
+  'tiger2':'\ud83d\udc05',
+  'timer_clock':'\u23f2',
+  'tipping_hand_man':'\ud83d\udc81&zwj;\u2642\ufe0f',
+  'tired_face':'\ud83d\ude2b',
+  'tm':'\u2122\ufe0f',
+  'toilet':'\ud83d\udebd',
+  'tokyo_tower':'\ud83d\uddfc',
+  'tomato':'\ud83c\udf45',
+  'tongue':'\ud83d\udc45',
+  'top':'\ud83d\udd1d',
+  'tophat':'\ud83c\udfa9',
+  'tornado':'\ud83c\udf2a',
+  'trackball':'\ud83d\uddb2',
+  'tractor':'\ud83d\ude9c',
+  'traffic_light':'\ud83d\udea5',
+  'train':'\ud83d\ude8b',
+  'train2':'\ud83d\ude86',
+  'tram':'\ud83d\ude8a',
+  'triangular_flag_on_post':'\ud83d\udea9',
+  'triangular_ruler':'\ud83d\udcd0',
+  'trident':'\ud83d\udd31',
+  'triumph':'\ud83d\ude24',
+  'trolleybus':'\ud83d\ude8e',
+  'trophy':'\ud83c\udfc6',
+  'tropical_drink':'\ud83c\udf79',
+  'tropical_fish':'\ud83d\udc20',
+  'truck':'\ud83d\ude9a',
+  'trumpet':'\ud83c\udfba',
+  'tulip':'\ud83c\udf37',
+  'tumbler_glass':'\ud83e\udd43',
+  'turkey':'\ud83e\udd83',
+  'turtle':'\ud83d\udc22',
+  'tv':'\ud83d\udcfa',
+  'twisted_rightwards_arrows':'\ud83d\udd00',
+  'two_hearts':'\ud83d\udc95',
+  'two_men_holding_hands':'\ud83d\udc6c',
+  'two_women_holding_hands':'\ud83d\udc6d',
+  'u5272':'\ud83c\ude39',
+  'u5408':'\ud83c\ude34',
+  'u55b6':'\ud83c\ude3a',
+  'u6307':'\ud83c\ude2f\ufe0f',
+  'u6708':'\ud83c\ude37\ufe0f',
+  'u6709':'\ud83c\ude36',
+  'u6e80':'\ud83c\ude35',
+  'u7121':'\ud83c\ude1a\ufe0f',
+  'u7533':'\ud83c\ude38',
+  'u7981':'\ud83c\ude32',
+  'u7a7a':'\ud83c\ude33',
+  'umbrella':'\u2614\ufe0f',
+  'unamused':'\ud83d\ude12',
+  'underage':'\ud83d\udd1e',
+  'unicorn':'\ud83e\udd84',
+  'unlock':'\ud83d\udd13',
+  'up':'\ud83c\udd99',
+  'upside_down_face':'\ud83d\ude43',
+  'v':'\u270c\ufe0f',
+  'vertical_traffic_light':'\ud83d\udea6',
+  'vhs':'\ud83d\udcfc',
+  'vibration_mode':'\ud83d\udcf3',
+  'video_camera':'\ud83d\udcf9',
+  'video_game':'\ud83c\udfae',
+  'violin':'\ud83c\udfbb',
+  'virgo':'\u264d\ufe0f',
+  'volcano':'\ud83c\udf0b',
+  'volleyball':'\ud83c\udfd0',
+  'vs':'\ud83c\udd9a',
+  'vulcan_salute':'\ud83d\udd96',
+  'walking_man':'\ud83d\udeb6',
+  'walking_woman':'\ud83d\udeb6&zwj;\u2640\ufe0f',
+  'waning_crescent_moon':'\ud83c\udf18',
+  'waning_gibbous_moon':'\ud83c\udf16',
+  'warning':'\u26a0\ufe0f',
+  'wastebasket':'\ud83d\uddd1',
+  'watch':'\u231a\ufe0f',
+  'water_buffalo':'\ud83d\udc03',
+  'watermelon':'\ud83c\udf49',
+  'wave':'\ud83d\udc4b',
+  'wavy_dash':'\u3030\ufe0f',
+  'waxing_crescent_moon':'\ud83c\udf12',
+  'wc':'\ud83d\udebe',
+  'weary':'\ud83d\ude29',
+  'wedding':'\ud83d\udc92',
+  'weight_lifting_man':'\ud83c\udfcb\ufe0f',
+  'weight_lifting_woman':'\ud83c\udfcb\ufe0f&zwj;\u2640\ufe0f',
+  'whale':'\ud83d\udc33',
+  'whale2':'\ud83d\udc0b',
+  'wheel_of_dharma':'\u2638\ufe0f',
+  'wheelchair':'\u267f\ufe0f',
+  'white_check_mark':'\u2705',
+  'white_circle':'\u26aa\ufe0f',
+  'white_flag':'\ud83c\udff3\ufe0f',
+  'white_flower':'\ud83d\udcae',
+  'white_large_square':'\u2b1c\ufe0f',
+  'white_medium_small_square':'\u25fd\ufe0f',
+  'white_medium_square':'\u25fb\ufe0f',
+  'white_small_square':'\u25ab\ufe0f',
+  'white_square_button':'\ud83d\udd33',
+  'wilted_flower':'\ud83e\udd40',
+  'wind_chime':'\ud83c\udf90',
+  'wind_face':'\ud83c\udf2c',
+  'wine_glass':'\ud83c\udf77',
+  'wink':'\ud83d\ude09',
+  'wolf':'\ud83d\udc3a',
+  'woman':'\ud83d\udc69',
+  'woman_artist':'\ud83d\udc69&zwj;\ud83c\udfa8',
+  'woman_astronaut':'\ud83d\udc69&zwj;\ud83d\ude80',
+  'woman_cartwheeling':'\ud83e\udd38&zwj;\u2640\ufe0f',
+  'woman_cook':'\ud83d\udc69&zwj;\ud83c\udf73',
+  'woman_facepalming':'\ud83e\udd26&zwj;\u2640\ufe0f',
+  'woman_factory_worker':'\ud83d\udc69&zwj;\ud83c\udfed',
+  'woman_farmer':'\ud83d\udc69&zwj;\ud83c\udf3e',
+  'woman_firefighter':'\ud83d\udc69&zwj;\ud83d\ude92',
+  'woman_health_worker':'\ud83d\udc69&zwj;\u2695\ufe0f',
+  'woman_judge':'\ud83d\udc69&zwj;\u2696\ufe0f',
+  'woman_juggling':'\ud83e\udd39&zwj;\u2640\ufe0f',
+  'woman_mechanic':'\ud83d\udc69&zwj;\ud83d\udd27',
+  'woman_office_worker':'\ud83d\udc69&zwj;\ud83d\udcbc',
+  'woman_pilot':'\ud83d\udc69&zwj;\u2708\ufe0f',
+  'woman_playing_handball':'\ud83e\udd3e&zwj;\u2640\ufe0f',
+  'woman_playing_water_polo':'\ud83e\udd3d&zwj;\u2640\ufe0f',
+  'woman_scientist':'\ud83d\udc69&zwj;\ud83d\udd2c',
+  'woman_shrugging':'\ud83e\udd37&zwj;\u2640\ufe0f',
+  'woman_singer':'\ud83d\udc69&zwj;\ud83c\udfa4',
+  'woman_student':'\ud83d\udc69&zwj;\ud83c\udf93',
+  'woman_teacher':'\ud83d\udc69&zwj;\ud83c\udfeb',
+  'woman_technologist':'\ud83d\udc69&zwj;\ud83d\udcbb',
+  'woman_with_turban':'\ud83d\udc73&zwj;\u2640\ufe0f',
+  'womans_clothes':'\ud83d\udc5a',
+  'womans_hat':'\ud83d\udc52',
+  'women_wrestling':'\ud83e\udd3c&zwj;\u2640\ufe0f',
+  'womens':'\ud83d\udeba',
+  'world_map':'\ud83d\uddfa',
+  'worried':'\ud83d\ude1f',
+  'wrench':'\ud83d\udd27',
+  'writing_hand':'\u270d\ufe0f',
+  'x':'\u274c',
+  'yellow_heart':'\ud83d\udc9b',
+  'yen':'\ud83d\udcb4',
+  'yin_yang':'\u262f\ufe0f',
+  'yum':'\ud83d\ude0b',
+  'zap':'\u26a1\ufe0f',
+  'zipper_mouth_face':'\ud83e\udd10',
+  'zzz':'\ud83d\udca4',
 
-    // Mix in the passed in options with the default options
-    this.options = $.extend({}, $.noty.defaults, options);
+  /* special emojis :P */
+  'octocat':  '<img width="20" height="20" align="absmiddle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAOwUlEQVR42uVbCVyO6RbPmn0sw9gZS0aZO4y5GTEUE2ObxjZjrbHEJVy3sWS5pkaWxjLEkCVDSbSgFLdESaWSLIVUSIi4kvb9f895vi/zbbR+yZ339/tbnu99n/ec/3Oe85xznufV0CjDBaAdwZqwnzCJ0FXjHV70/i8J5oQDhCFV8cJdq1atwqxZs+Ds7Iz4+HhqwgXCLELNKlK6G2Ej4e6lS5ewZcsWzJgxA+fOnWNZFqvzxT1v3boF/qcsBg0ahP3796OwsJAFWKYuIqjfPoS9cXFxWL58Obp06SInh5aWFr//jjoJWLlu3TolAorRuXNn7Ny5k4W4Spgj81xrgj5hLmED4RDhlNRygglBhADCSakpWxFMCHoETUJTwrYHDx7A1NT0je9nPHz4kN/fXl0EeI0aNeqtAjB69+4NPz8/FsSdlXvy5An8/f1hZ2cHCwsLGBsbY/To0cJy9PT0MGDAAAwePBhGRkbClNesWYODBw8iODgYOTk53M/d9evXo27duiW++8iRI3z/ZHURENOjR48ShSjGuHHjhHJ16tQp9TOKaNWqlZKpvw1MHluQOpSvk5eXh5YtW5ZbmarAvHnzmIBd6iCgXnZ2Npo1a1atCWAfwY5SHQTUKCoqQocOHao1AebmHBJgi7p8QBDP6epMwKFDvMDAWF0ELLS1ta3WBNy9e5cJMFIXAdvt7e2rNQHDhw9nAv5D+KKylV9y8+bNCi1pVYWZM2cyCfaVTcDdsqzH7xpBQRxcwqyylLdi5/K+KM/Q0dFhAqIri4Bn1T0AUgVpdmhYUeVHnD59+r1TnjF27Fgm4HhFCThoYmLyXhLQoEGD4mRKsyIE3OrZs+d7SQCDCyZcNSqv8k1evXoFTU3NUr+wzUcfYqRBf8yb/C2WzfoBFoTF08fBdMIITDD8CsP1+kL30x7Q6dYZH7drjfZ0f4fWLdG1Q1t81qMLBvTRwejB/TBl1BDMnzQGS2dMxKo5k7Fs9iSY/jAaBvR8Pc26pZaH02quLZSXgO6xsbGlelGnli1wZKcVMqN8gKcRwItrf+K/VB95doXaLwOJIVSzOU/+2Re5kV7IuuyJrIhTyLt6mmztLBBPNZLHoUAy9fE8UvJ8ikxfj8PwJPQErJeYlkquTZs2MQFLykuANgc/Jb2kn3Z3ZMaQUrmxwO1zyAo7gfRAJ6RfOIyMEFdkXj5F8BTK5lzxQv610yi8QcFatI8gQoCIK7x+hojwRnaE5H4JTiEj9Pjr/rJDqcZyn9b4ovu45LYbdWvXeqtsXMHiSlZ5CegRExPz1hd83PYj5POo0QinXyLFg48hnZTOiQ1Dzr1IZEaeQRoJn0HKZIR7lA2kfHrQUerXHTlx4ZL+rnjjFRGRGeYB5MUj2GnbW+XbuJFrp1heXgI6JCYmvvUFN1x3Aek3SWkapRAXMeJFGS8ge2Xfuog0toaykED3Mpk8+shOk+sv68Y50V9WuKewBKt5094o39atW/mRf5WXgIYZGRlo3Lixys4nj6A6Z1YMcqRCpwU4ouDlUyHk/QA/hNttR25Wlvh/ZthJUsil9ATQ/axkYbqEzDgfL0Ts/x35+aLyTES7IY36Q6w/+Q4/tP6wuUoZ9+7dy7ebVmQZjO/atavKzn32rAdeXkd6KCkXdAxZ13yFcLFnvPD73zrDVrsdTs6eggKSuSjjORHkUGoC0i86Iyc6QPQX7eqMnTodYNuzHU4vnosiaitMSUSavwMy6d3IvEUrzViVMrq5uXEX4ytCgL++vr5Sx7Vr1cIDX0dKkQJfj37Rs3jw1sBxkwlwGD4Ax3+ciN1faCHW76xQRFgAOcjSEMBkIe0x8nLzcez7kTg8Rh/uxuOxR/cTJISFSfq7eATpZCk8CAfXLVFJwIULXHnHoIoQYLtw4UKljps2aogXQcQuef/XAiMDKY+S4DhyEFwpDnCj9f+Afl8EbbWRTANaAdihlYoAMn8aZzyNuYODX/eD29TvRH/7v+qN8H27JdOAyWQfQQ74xPafVRLAPox9WUlK6hIGEgx4f00Kg2JcvHhRqeP6FIwknXemyen/2gLIIeC/CYk49M0AuE4xgtu0sThg8AUCN62TEuBdRgJo2Y+Kxh9D/k59SQiwH9QHobt3SAk4KSGA4oWjm1YqyVi8U6Soj4yOrHM/jTAyKVby/PnzIoNi8L+L4eXlpXoFcLcTgc1rAlISkJeXDxeK2A6P1hdTwI6mQPTJE+WbAlnJyE7PhNO3Q3BkrKGYWtxfHMkkmQLO0ilwA7+vXqAkn66urtBLUZ9iHfm30NBQaPAf165dA0d9vP2UlJSEp0+f4vHjx3j06JH4e+rUqUovcNmyGkiNEkLwklXsBG+ecMUOnfbYod1emG5uboFKJ8jPFVD0l0dBUHqoPDHpQeQEb0qc4FUHe3KAbYUT9JgzDbwOFL5MfN0fXkXhJ5PxSvLt2LFD1Ah5u4z1YJ14l4qnBe8v3rhxAzz4PAVG8nLHivIP0dHRiIiIQGRkpEgmrl69ClW1QBMjQ7LDW8hmU+RRI69ckJIkhL7jfRJBm62R+TJVYq6h0jhBRslsivqenT2MF/7OyI70VmkFhWnPJaS6OyPkt43IycqR9EfWlH7JDQUUTuNhCHR7Ke9YcRp/5coVoQPrcvnyZURFRYmBZlLS0kR8MVLD29sbnp6e8PHxQUBAgCgn8YO8E3z79m3BGKeVc+bMkXuBZt06SA12F/F5Go0gR4C8HBalPZMPXKL8lQKhPAqF+f97KXFyNx6HQsoPsshJ/kmAp2TKkJLISpXvjyxNhMYcDVLOEO+lPDi8B5mamipkZx1YF9YpJCRErAy+vr5CZ9ZdWABhDGEYYTBhAOFz3g4nfMJelNCbkNCpUye5F034mvxIPi1/FM+zQCw0k5B9O0iEr5kRXkqhMJOVf9NXIHjtT7hmaymSoBzKETimkAuFpaF1dkwI9RcmIYaXv3BJXoGCuyIgk5WpefPmKCgoYK46SmX/RKoL69Sfl0WuFEl1HlmWJXE5z6WmTZvKJxxmxkIQ3AuU5APk6NICj4hRT6eITTEEzqWk55HHPjz3cxJhNF5cxeNT9kj2cRDTQjEkzpDtjyyCic5l5fEA7uSHFEefR5pPsahrb2B9QkICFHeJ51HunkdLIg0VLY0BFKdLwllVHp4dHyvst3QuEiiju21vA/+VZkiluIKt4I3RIfWXQ4QgKUxkni47LJWUP3PmjHo2RxVI+CebmKJP6EiFDVurxUgmExe5PHlnPAkn8w4QqW62NCVmYopozid5H0CI9RKE21ggJeAYEeMnfitOnRn5XCfgeJ+VTosWQU8MOc6ZE0cqnUm4fv165SrPBVHCfMI4TowUfmOfsIcdJh92kBWmUcP6GDt8EDZbzIffH5tx3/ewSFjw5LKk0MEFEkZenDBjgew7Yiog5brkt+QrknvJmhIp4Apw/A1bVpjhG/0v5d7Vrl07bNu2TelUSqUoz8uI3Z49OEtBAy+TdP1CqKtwHzvQUxxgTJs2TeX5gdq1a0ObSmCjh+jB+NuvRamL1+3ls77HCip1rTSdJP5eNnMizKndjMLoH42G4bthX+FzHS3UVVEC69evH3799VeKMXJZrlWKclUGAZ5jxoxB02ZNsNlxH74aagBHZyex986HlVTczyGmI58h4CjL2toa48ePFxsUPEotWrQoc0GT0/C2bduiY8eO4ISMcxLeoOFYhS6qm2EpoZG65jmbv+dPSyRZlt5QfVjvtX19AOFNL+aDFNI4m0eFc9Ho5ORkaGtrl5kAVp6DMOk88efEjLe++ZhclZwHTJHEHbs4YOCmLj2645fdvwnTK42zoXtaEHwNDQ3LXdZm5yad3/2r+gQmDsRnIF5KAldX6zdsgG/GG8F44Vzcu3eP2y1K6GPr2rVrK1zbnz59Or/LoaoJCPZ4kCZsjw9GECL79OmDj9q2wb+320C3/5fgPQO6Vrzh+fpcDqxXr16lbHBwgkZXm6okYJr0ECMrX5vraiJ1lArEjrEnzWuOqemiYj9spGd2ee478XkiPsJakmJ83qA05/8qXNurJFLiunXrhpo1a6LxB02wyHIFZpovgOHwYfjZ0hK2lH5u2rwZ5suWYv5ycyUlmjRpgl69eimlrFy3kwuoyOvXr19frm3RokVMwPZ3TYC57E6xVq+e6KzVDSaL/oEp82Zh8IhhWLjGAp/p9oX5ujVKBNjY2MDV1VWuzd3dXaTesm2biUQuZ8u28elSPmKr8a4vdog8GnJpcT1N1KHUuBbt0jSgWuGbzJh3mVhh2TYHBwdxjFa2jVcZnvPVlQBOLXdZWlqW2ZFxNYYVlm07fPgwAgMD5dr4OD5HeHLFFxM+O42DGtXhIkFaMQlcUjIzM0P37t1Ro0YNpZPjPJcVK7SOjo5ybU5OTqIAo0gAh97VlgAZIj4l8Pn4WFaO64ocuXG6zJtDbMqySnC7IgF8uptLVrJtq1evFuWqak+A4j4i4TNpltiJ8LPiNFFFwNGjRyWFyfedAFUny/joekkEuLi4KK0CfykCeFnkiu1flgBeFtl3/D8SsMbKykpOifv37ysRcPz4cVHKUiSA8wwNdR9/VTMBSh9Y8S4Nf2qnSICiBbDzVCRg9uzZTMC+94kAv6FDh8opwRsVHPjItnl4eEDxHNLKlStFXV+2javQ/M1SpZe+1KA4L4G7WDG57fSm/OUbXiqG0ewAFYOeYcN4fwZhvLkp2y4tftrxcltdlf/w+fPn4qNGxTCYU2m6nrRu3VqunT/EoiuZvw6TTZHpyuNNmEaNGsndP3fu3OJAq1N1JOAHDmyKheVtNP4OkE2crULRAW7fvl20EyyLy24a8p+/7WISFixYIMLt4t82bNhQYjXqXREgPq3j74mlX3AmSL8E1eOPIBXnuVT5OsVZpuLnOMeOHeN7vifwiYhYzhC5IpwlOXj1QXWdBmy/XWU/X+UqMZfKBw4cKAobHPlJlZe9h6tOu+7cuSN2dg0MDMSSyZUpmXvaSD+crq/xvl0k9BTCRa7qEPq+5T4t6ffF52WVV+f1P6zyLG30bsU4AAAAAElFTkSuQmCC">',
+  'showdown': '<img width="20" height="20" align="absmiddle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAECtaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjYtYzA2NyA3OS4xNTc3NDcsIDIwMTUvMDMvMzAtMjM6NDA6NDIgICAgICAgICI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgICAgICAgICB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNSAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMTUtMDEtMTVUMjE6MDE6MTlaPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNy0xMC0yNFQxMzozMTozMCswMTowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTctMTAtMjRUMTM6MzE6MzArMDE6MDA8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8cGhvdG9zaG9wOkNvbG9yTW9kZT4zPC9waG90b3Nob3A6Q29sb3JNb2RlPgogICAgICAgICA8cGhvdG9zaG9wOklDQ1Byb2ZpbGU+c1JHQiBJRUM2MTk2Ni0yLjE8L3Bob3Rvc2hvcDpJQ0NQcm9maWxlPgogICAgICAgICA8cGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgICAgIDxyZGY6QmFnPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllck5hbWU+UyAtPC9waG90b3Nob3A6TGF5ZXJOYW1lPgogICAgICAgICAgICAgICAgICA8cGhvdG9zaG9wOkxheWVyVGV4dD5TIC08L3Bob3Rvc2hvcDpMYXllclRleHQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6N2NkMzQxNzctOWYyZi0yNDRiLWEyYjQtMzU1MzJkY2Y1MWJiPC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6M2E1YzgxYmYtYjhiNy0xMWU3LTk0NDktYTQ2MzdlZjJkNjMzPC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6NjBDNUFFNjVGNjlDRTQxMTk0NUE4NTVFM0JDQTdFRUI8L3htcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkhpc3Rvcnk+CiAgICAgICAgICAgIDxyZGY6U2VxPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5jcmVhdGVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6NjBDNUFFNjVGNjlDRTQxMTk0NUE4NTVFM0JDQTdFRUI8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTUtMDEtMTVUMjE6MDE6MTlaPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6ODZjNjBkMGQtOGY0Yy01ZTRlLWEwMjQtODI4ZWQyNTIwZDc3PC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEwLTI0VDEzOjMxOjMwKzAxOjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNSAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5jb252ZXJ0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+ZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZzwvc3RFdnQ6cGFyYW1ldGVycz4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmRlcml2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+Y29udmVydGVkIGZyb20gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcCB0byBpbWFnZS9wbmc8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjdjZDM0MTc3LTlmMmYtMjQ0Yi1hMmI0LTM1NTMyZGNmNTFiYjwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMC0yNFQxMzozMTozMCswMTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6U2VxPgogICAgICAgICA8L3htcE1NOkhpc3Rvcnk+CiAgICAgICAgIDx4bXBNTTpEZXJpdmVkRnJvbSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgIDxzdFJlZjppbnN0YW5jZUlEPnhtcC5paWQ6ODZjNjBkMGQtOGY0Yy01ZTRlLWEwMjQtODI4ZWQyNTIwZDc3PC9zdFJlZjppbnN0YW5jZUlEPgogICAgICAgICAgICA8c3RSZWY6ZG9jdW1lbnRJRD54bXAuZGlkOjYwQzVBRTY1RjY5Q0U0MTE5NDVBODU1RTNCQ0E3RUVCPC9zdFJlZjpkb2N1bWVudElEPgogICAgICAgICAgICA8c3RSZWY6b3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6NjBDNUFFNjVGNjlDRTQxMTk0NUE4NTVFM0JDQTdFRUI8L3N0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPC94bXBNTTpEZXJpdmVkRnJvbT4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzIwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+MTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+NjQ8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NjQ8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/Pse7bzcAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAA1JJREFUeNrsm1+OmlAUhz+aeS9dwZggJn1AnRUMO6jpBgZXULuC2hWUWUGZBTSxKyiuoA4mfUBMnB04K5g+9DihRBHlyh/lJLwIXLgf99xzzu9etZeXFy7Z3nDh1gBoAFy4XeVtQNO0zNcapmUDfUBPnFoBfhQGq6IBaHmjwD4Ahmk5wAD4kKG5J8CNwsAFaHe6DvA9cc0wCgOv8gDka3vA9RHNPgo0D7hNnJtGYWBXxgV2dH4MfMnRRA+Y1WIO2NJ5F/ikoKm3tYsChmkNFHW+fmHQMC1dfHaXPQP3wM1yMdc2B/AOGALTWobBmI1Shu0UGCwX83XyRBQGawHntTtdG5gUNfxVu4CTNqNv6/wWGL7kCc+1AmCYVisl3I2ydD4GYZUCs7IjoLXrxHIx9w9tLAqDCfBwDrXAY457x+cAoCfuwRGjYFUnAGk+PsjR7s8Dn1VeLWCYVlpDw+VivjVHSHt+u9PVJbzGzZXQWTkAkz0V31fATUaEsjVJlQBs4FeGcteLgzgbAALBA+4y3voAeJL8nA0AHfClnM1qm1HhnYUidCSE+KzvSSJUTwAxCOMcpfETMFYpfRUKIAbCFhC3OTJJJwqDWS0BxED0JZ4Pjix1P2+E0loCSMBwyK4S/xc1ojBwag8gMU84cvTKGgmlAYhngu1O9xAXuVE5J1QCQCz3bwHuHvdQui5QKQAxEO6eEKpsFCgTRSXkvdoxSlBMCxhJJbgrrbZRtHCiShN0pRB6PeQ3ckBw2K0oKXMBVYJIP+Nvh9qulFivGoBt1lLQxowT2ykBXCfnhZIglgYACWmqXQv+baioBYCeiCQHm+QEg1O7RhF7hO4OhSAhcJKSFU7qBGADwZeqMMuXn6TUBw8qlaMrirNb4LdhWlP+SWD+cjFfxTpuS2GUpik+o3jFSEkqbJiWn0P0OMSGqlWiOu0TvD+FRHZKAE+oW+cfRmEwqlsesJJEJs8y91QqP+9UL6lqEtz2gpuNEY5sm9sIHln2DRa2aFKGJtiXkZEMiWtgVvRKUSUFkSKt2S7fAGgAXLYpmQQXf36MUChTZdUa2u8/rkvPA6Tz30r4eH3ybcBS5gJ6SaNXb+aABkA1AMxKenclBZLW/He4cYEGwEXb3wEASelexk6LIIIAAAAASUVORK5CYII=">'
+};
 
-    this.options.layout = (this.options.custom) ? $.noty.layouts['inline'] : $.noty.layouts[this.options.layout];
+/**
+ * Created by Estevao on 31-05-2015.
+ */
 
-    if ($.noty.themes[this.options.theme]) {
-      this.options.theme = $.noty.themes[this.options.theme];
-      if (this.options.theme.template)
-        this.options.template = this.options.theme.template;
+/**
+ * Showdown Converter class
+ * @class
+ * @param {object} [converterOptions]
+ * @returns {Converter}
+ */
+showdown.Converter = function (converterOptions) {
+  'use strict';
 
-      if (this.options.theme.animation)
-        this.options.animation = this.options.theme.animation;
+  var
+      /**
+       * Options used by this converter
+       * @private
+       * @type {{}}
+       */
+      options = {},
+
+      /**
+       * Language extensions used by this converter
+       * @private
+       * @type {Array}
+       */
+      langExtensions = [],
+
+      /**
+       * Output modifiers extensions used by this converter
+       * @private
+       * @type {Array}
+       */
+      outputModifiers = [],
+
+      /**
+       * Event listeners
+       * @private
+       * @type {{}}
+       */
+      listeners = {},
+
+      /**
+       * The flavor set in this converter
+       */
+      setConvFlavor = setFlavor;
+
+  _constructor();
+
+  /**
+   * Converter constructor
+   * @private
+   */
+  function _constructor () {
+    converterOptions = converterOptions || {};
+
+    for (var gOpt in globalOptions) {
+      if (globalOptions.hasOwnProperty(gOpt)) {
+        options[gOpt] = globalOptions[gOpt];
+      }
     }
-    else {
-      this.options.themeClassName = this.options.theme;
-    }
 
-    this.options = $.extend({}, this.options, this.options.layout.options);
-
-    if (this.options.id) {
-      if ($.noty.store[this.options.id]) {
-        return $.noty.store[this.options.id];
+    // Merge options
+    if (typeof converterOptions === 'object') {
+      for (var opt in converterOptions) {
+        if (converterOptions.hasOwnProperty(opt)) {
+          options[opt] = converterOptions[opt];
+        }
       }
     } else {
-      this.options.id = 'noty_' + (new Date().getTime() * Math.floor(Math.random() * 1000000));
+      throw Error('Converter expects the passed parameter to be an object, but ' + typeof converterOptions +
+      ' was passed instead.');
     }
 
-    // Build the noty dom initial structure
-    this._build();
+    if (options.extensions) {
+      showdown.helper.forEach(options.extensions, _parseExtension);
+    }
+  }
 
-    // return this so we can chain/use the bridge with less code.
-    return this;
-  }, // end init
+  /**
+   * Parse extension
+   * @param {*} ext
+   * @param {string} [name='']
+   * @private
+   */
+  function _parseExtension (ext, name) {
 
-  _build: function () {
+    name = name || null;
+    // If it's a string, the extension was previously loaded
+    if (showdown.helper.isString(ext)) {
+      ext = showdown.helper.stdExtName(ext);
+      name = ext;
 
-    // Generating noty bar
-    var $bar = $('<div class="noty_bar noty_type_' + this.options.type + '"></div>').attr('id', this.options.id);
-    $bar.append(this.options.template).find('.noty_text').html(this.options.text);
+      // LEGACY_SUPPORT CODE
+      if (showdown.extensions[ext]) {
+        console.warn('DEPRECATION WARNING: ' + ext + ' is an old extension that uses a deprecated loading method.' +
+          'Please inform the developer that the extension should be updated!');
+        legacyExtensionLoading(showdown.extensions[ext], ext);
+        return;
+      // END LEGACY SUPPORT CODE
 
-    this.$bar = (this.options.layout.parent.object !== null) ? $(this.options.layout.parent.object).css(this.options.layout.parent.css).append($bar) : $bar;
+      } else if (!showdown.helper.isUndefined(extensions[ext])) {
+        ext = extensions[ext];
 
-    if (this.options.themeClassName)
-      this.$bar.addClass(this.options.themeClassName).addClass('noty_container_type_' + this.options.type);
-
-    // Set buttons if available
-    if (this.options.buttons) {
-
-      var $buttons;
-      // Try find container for buttons in presented template, and create it if not found
-      if (this.$bar.find('.noty_buttons').length > 0) {
-        $buttons = this.$bar.find('.noty_buttons');
       } else {
-        $buttons = $('<div/>').addClass('noty_buttons');
-        (this.options.layout.parent.object !== null) ? this.$bar.find('.noty_bar').append($buttons) : this.$bar.append($buttons);
+        throw Error('Extension "' + ext + '" could not be loaded. It was either not found or is not a valid extension.');
       }
-
-      var self = this;
-
-      $.each(this.options.buttons, function (i, button) {
-        var $button = $('<button/>').addClass((button.addClass) ? button.addClass : 'gray').html(button.text).attr('id', button.id ? button.id : 'button-' + i)
-            .attr('title', button.title)
-            .appendTo($buttons)
-            .on('click', function (event) {
-              if ($.isFunction(button.onClick)) {
-                button.onClick.call($button, self, event);
-              }
-            });
-      });
-    } else {
-      // If buttons is not available, then remove containers if exist
-      this.$bar.find('.noty_buttons').remove();
     }
 
-    if (this.options.progressBar && this.options.timeout) {
-      var $progressBar = $('<div/>').addClass('noty_progress_bar');
-      (this.options.layout.parent.object !== null) ? this.$bar.find('.noty_bar').append($progressBar) : this.$bar.append($progressBar);
+    if (typeof ext === 'function') {
+      ext = ext();
     }
 
-    // For easy access
-    this.$message     = this.$bar.find('.noty_message');
-    this.$closeButton = this.$bar.find('.noty_close');
-    this.$buttons     = this.$bar.find('.noty_buttons');
-    this.$progressBar = this.$bar.find('.noty_progress_bar');
-
-    $.noty.store[this.options.id] = this; // store noty for api
-
-  }, // end _build
-
-  show: function () {
-
-    var self = this;
-
-    (self.options.custom) ? self.options.custom.find(self.options.layout.container.selector).append(self.$bar) : $(self.options.layout.container.selector).append(self.$bar);
-
-    if (self.options.theme && self.options.theme.style)
-      self.options.theme.style.apply(self);
-
-    ($.type(self.options.layout.css) === 'function') ? this.options.layout.css.apply(self.$bar) : self.$bar.css(this.options.layout.css || {});
-
-    self.$bar.addClass(self.options.layout.addClass);
-
-    self.options.layout.container.style.apply($(self.options.layout.container.selector), [self.options.within]);
-
-    self.showing = true;
-
-    if (self.options.theme && self.options.theme.style)
-      self.options.theme.callback.onShow.apply(this);
-
-    if ($.inArray('click', self.options.closeWith) > -1)
-      self.$bar.css('cursor', 'pointer').on('click', function (evt) {
-        self.stopPropagation(evt);
-        if (self.options.callback.onCloseClick) {
-          self.options.callback.onCloseClick.apply(self);
-        }
-        self.close();
-      });
-
-    if ($.inArray('hover', self.options.closeWith) > -1)
-      self.$bar.one('mouseenter', function () {
-        self.close();
-      });
-
-    if ($.inArray('button', self.options.closeWith) > -1)
-      self.$closeButton.one('click', function (evt) {
-        self.stopPropagation(evt);
-        self.close();
-      });
-
-    if ($.inArray('button', self.options.closeWith) == -1)
-      self.$closeButton.remove();
-
-    if (self.options.callback.beforeShow)
-      self.options.callback.beforeShow.apply(self);
-
-    if (typeof self.options.animation.open == 'string') {
-      self.animationTypeOpen = 'css';
-      self.$bar.css('min-height', self.$bar.innerHeight());
-      self.$bar.on('click', function (e) {
-        self.wasClicked = true;
-      });
-      self.$bar.show();
-
-      if (self.options.callback.onShow)
-        self.options.callback.onShow.apply(self);
-
-      self.$bar.addClass(self.options.animation.open).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-        if (self.options.callback.afterShow) self.options.callback.afterShow.apply(self);
-        self.showing = false;
-        self.shown   = true;
-        self.bindTimeout();
-        if (self.hasOwnProperty('wasClicked')) {
-          self.$bar.off('click', function (e) {
-            self.wasClicked = true;
-          });
-          self.close();
-        }
-      });
-
-    } else if (typeof self.options.animation.open == 'object' && self.options.animation.open == null) {
-      self.animationTypeOpen = 'none';
-      self.showing           = false;
-      self.shown             = true;
-      self.$bar.show();
-      self.bindTimeout();
-
-      if (self.options.callback.onShow)
-        self.options.callback.onShow.apply(self);
-
-      self.$bar.queue(function () {
-        if (self.options.callback.afterShow)
-          self.options.callback.afterShow.apply(self);
-      });
-
-    } else {
-      self.animationTypeOpen = 'anim';
-
-      if (self.options.callback.onShow)
-        self.options.callback.onShow.apply(self);
-
-      self.$bar.animate(
-          self.options.animation.open,
-          self.options.animation.speed,
-          self.options.animation.easing,
-          function () {
-            if (self.options.callback.afterShow) self.options.callback.afterShow.apply(self);
-            self.showing = false;
-            self.shown   = true;
-            self.bindTimeout();
-          });
+    if (!showdown.helper.isArray(ext)) {
+      ext = [ext];
     }
 
-    return this;
+    var validExt = validate(ext, name);
+    if (!validExt.valid) {
+      throw Error(validExt.error);
+    }
 
-  }, // end show
+    for (var i = 0; i < ext.length; ++i) {
+      switch (ext[i].type) {
 
-  bindTimeout: function () {
-    var self = this;
+        case 'lang':
+          langExtensions.push(ext[i]);
+          break;
 
-    // If noty is have a timeout option
-    if (self.options.timeout) {
-
-      if (self.options.progressBar && self.$progressBar) {
-        self.$progressBar.css({
-          transition: 'all ' + self.options.timeout + 'ms linear',
-          width: '0%'
-        });
+        case 'output':
+          outputModifiers.push(ext[i]);
+          break;
       }
-
-      self.queueClose(self.options.timeout);
-      self.$bar.on('mouseenter', self.dequeueClose.bind(self));
-      self.$bar.on('mouseleave', self.queueClose.bind(self, self.options.timeout));
-    }
-
-  },
-
-  dequeueClose: function () {
-    var self = this;
-
-    if (self.options.progressBar) {
-      this.$progressBar.css({
-        transition: 'none',
-        width: '100%'
-      });
-    }
-
-    if (!this.closeTimer) return;
-    clearTimeout(this.closeTimer);
-    this.closeTimer = null;
-  },
-
-  queueClose: function (timeout) {
-    var self = this;
-
-    if (self.options.progressBar) {
-      self.$progressBar.css({
-        transition: 'all ' + self.options.timeout + 'ms linear',
-        width: '0%'
-      });
-    }
-
-    if (this.closeTimer) return;
-    self.closeTimer = window.setTimeout(function () {
-      self.close();
-    }, timeout);
-    return self.closeTimer;
-  },
-
-  close: function () {
-    if (this.$progressBar) {
-      this.$progressBar.remove();
-    }
-
-    if (this.closeTimer) this.dequeueClose();
-
-    if (this.closed) return;
-    if (this.$bar && this.$bar.hasClass('i-am-closing-now')) return;
-
-    var self = this;
-
-    if (this.showing && (this.animationTypeOpen == 'anim' || this.animationTypeOpen == 'none')) {
-      self.$bar.queue(
-          function () {
-            self.close.apply(self);
+      if (ext[i].hasOwnProperty('listeners')) {
+        for (var ln in ext[i].listeners) {
+          if (ext[i].listeners.hasOwnProperty(ln)) {
+            listen(ln, ext[i].listeners[ln]);
           }
-      );
-      return;
-    } else if (this.showing && this.animationTypeOpen == 'css') {
-      self.$bar.on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-        self.close();
-      });
-    }
-
-    if (!this.shown && !this.showing) { // If we are still waiting in the queue just delete from queue
-      var queue = [];
-      $.each($.noty.queue, function (i, n) {
-        if (n.options.id != self.options.id) {
-          queue.push(n);
-        }
-      });
-      $.noty.queue = queue;
-      return;
-    }
-
-    self.$bar.addClass('i-am-closing-now');
-
-    if (self.options.callback.onClose) {
-      self.options.callback.onClose.apply(self);
-    }
-
-    if (typeof self.options.animation.close == 'string') {
-      self.$bar.removeClass(self.options.animation.open).addClass(self.options.animation.close).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-        if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
-        self.closeCleanUp();
-      });
-
-    } else if (typeof self.options.animation.close == 'object' && self.options.animation.close == null) {
-      self.$bar.dequeue().hide(0, function () {
-        if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
-        self.closeCleanUp();
-      });
-
-    } else {
-      self.$bar.clearQueue().stop().animate(
-          self.options.animation.close,
-          self.options.animation.speed,
-          self.options.animation.easing,
-          function () {
-            if (self.options.callback.afterClose) self.options.callback.afterClose.apply(self);
-          })
-          .promise().done(function () {
-        self.closeCleanUp();
-      });
-    }
-
-  }, // end close
-
-  closeCleanUp: function () {
-
-    var self = this;
-
-    // Modal Cleaning
-    if (self.options.modal) {
-      $.notyRenderer.setModalCount(-1);
-      if ($.notyRenderer.getModalCount() == 0 && !$.noty.queue.length) $('.noty_modal').fadeOut(self.options.animation.fadeSpeed, function () {
-        $(this).remove();
-      });
-    }
-
-    // Layout Cleaning
-    $.notyRenderer.setLayoutCountFor(self, -1);
-    if ($.notyRenderer.getLayoutCountFor(self) == 0) $(self.options.layout.container.selector).remove();
-
-    // Make sure self.$bar has not been removed before attempting to remove it
-    if (typeof self.$bar !== 'undefined' && self.$bar !== null) {
-
-      if (typeof self.options.animation.close == 'string') {
-        self.$bar.css('transition', 'all 10ms ease').css('border', 0).css('margin', 0).height(0);
-        self.$bar.one('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
-          self.$bar.remove();
-          self.$bar   = null;
-          self.closed = true;
-
-          if (self.options.theme.callback && self.options.theme.callback.onClose) {
-            self.options.theme.callback.onClose.apply(self);
-          }
-
-          self.handleNext();
-        });
-      } else {
-        self.$bar.remove();
-        self.$bar   = null;
-        self.closed = true;
-
-        self.handleNext();
-      }
-    } else {
-      self.handleNext();
-    }
-
-  }, // end close clean up
-
-  handleNext: function () {
-    var self = this;
-
-    delete $.noty.store[self.options.id]; // deleting noty from store
-
-    if (self.options.theme.callback && self.options.theme.callback.onClose) {
-      self.options.theme.callback.onClose.apply(self);
-    }
-
-    if (!self.options.dismissQueue) {
-      // Queue render
-      $.noty.ontap = true;
-
-      $.notyRenderer.render();
-    }
-
-    if (self.options.maxVisible > 0 && self.options.dismissQueue) {
-      $.notyRenderer.render();
-    }
-  },
-
-  setText: function (text) {
-    if (!this.closed) {
-      this.options.text = text;
-      this.$bar.find('.noty_text').html(text);
-    }
-    return this;
-  },
-
-  setType: function (type) {
-    if (!this.closed) {
-      this.options.type = type;
-      this.options.theme.style.apply(this);
-      this.options.theme.callback.onShow.apply(this);
-    }
-    return this;
-  },
-
-  setTimeout: function (time) {
-    if (!this.closed) {
-      var self             = this;
-      this.options.timeout = time;
-      self.$bar.delay(self.options.timeout).promise().done(function () {
-        self.close();
-      });
-    }
-    return this;
-  },
-
-  stopPropagation: function (evt) {
-    evt = evt || window.event;
-    if (typeof evt.stopPropagation !== "undefined") {
-      evt.stopPropagation();
-    }
-    else {
-      evt.cancelBubble = true;
-    }
-  },
-
-  closed : false,
-  showing: false,
-  shown  : false
-
-}; // end NotyObject
-
-$.notyRenderer = {};
-
-$.notyRenderer.init = function (options) {
-
-  // Renderer creates a new noty
-  var notification = Object.create(NotyObject).init(options);
-
-  if (notification.options.killer)
-    $.noty.closeAll();
-
-  (notification.options.force) ? $.noty.queue.unshift(notification) : $.noty.queue.push(notification);
-
-  $.notyRenderer.render();
-
-  return ($.noty.returns == 'object') ? notification : notification.options.id;
-};
-
-$.notyRenderer.render = function () {
-
-  var instance = $.noty.queue[0];
-
-  if ($.type(instance) === 'object') {
-    if (instance.options.dismissQueue) {
-      if (instance.options.maxVisible > 0) {
-        if ($(instance.options.layout.container.selector + ' > li').length < instance.options.maxVisible) {
-          $.notyRenderer.show($.noty.queue.shift());
-        }
-        else {
-
         }
       }
-      else {
-        $.notyRenderer.show($.noty.queue.shift());
+    }
+
+  }
+
+  /**
+   * LEGACY_SUPPORT
+   * @param {*} ext
+   * @param {string} name
+   */
+  function legacyExtensionLoading (ext, name) {
+    if (typeof ext === 'function') {
+      ext = ext(new showdown.Converter());
+    }
+    if (!showdown.helper.isArray(ext)) {
+      ext = [ext];
+    }
+    var valid = validate(ext, name);
+
+    if (!valid.valid) {
+      throw Error(valid.error);
+    }
+
+    for (var i = 0; i < ext.length; ++i) {
+      switch (ext[i].type) {
+        case 'lang':
+          langExtensions.push(ext[i]);
+          break;
+        case 'output':
+          outputModifiers.push(ext[i]);
+          break;
+        default:// should never reach here
+          throw Error('Extension loader error: Type unrecognized!!!');
       }
     }
-    else {
-      if ($.noty.ontap) {
-        $.notyRenderer.show($.noty.queue.shift());
-        $.noty.ontap = false;
+  }
+
+  /**
+   * Listen to an event
+   * @param {string} name
+   * @param {function} callback
+   */
+  function listen (name, callback) {
+    if (!showdown.helper.isString(name)) {
+      throw Error('Invalid argument in converter.listen() method: name must be a string, but ' + typeof name + ' given');
+    }
+
+    if (typeof callback !== 'function') {
+      throw Error('Invalid argument in converter.listen() method: callback must be a function, but ' + typeof callback + ' given');
+    }
+
+    if (!listeners.hasOwnProperty(name)) {
+      listeners[name] = [];
+    }
+    listeners[name].push(callback);
+  }
+
+  function rTrimInputText (text) {
+    var rsp = text.match(/^\s*/)[0].length,
+        rgx = new RegExp('^\\s{0,' + rsp + '}', 'gm');
+    return text.replace(rgx, '');
+  }
+
+  /**
+   * Dispatch an event
+   * @private
+   * @param {string} evtName Event name
+   * @param {string} text Text
+   * @param {{}} options Converter Options
+   * @param {{}} globals
+   * @returns {string}
+   */
+  this._dispatch = function dispatch (evtName, text, options, globals) {
+    if (listeners.hasOwnProperty(evtName)) {
+      for (var ei = 0; ei < listeners[evtName].length; ++ei) {
+        var nText = listeners[evtName][ei](evtName, text, this, options, globals);
+        if (nText && typeof nText !== 'undefined') {
+          text = nText;
+        }
       }
     }
-  }
-  else {
-    $.noty.ontap = true; // Queue is over
-  }
+    return text;
+  };
 
-};
+  /**
+   * Listen to an event
+   * @param {string} name
+   * @param {function} callback
+   * @returns {showdown.Converter}
+   */
+  this.listen = function (name, callback) {
+    listen(name, callback);
+    return this;
+  };
 
-$.notyRenderer.show = function (notification) {
-
-  if (notification.options.modal) {
-    $.notyRenderer.createModalFor(notification);
-    $.notyRenderer.setModalCount(+1);
-  }
-
-  // Where is the container?
-  if (notification.options.custom) {
-    if (notification.options.custom.find(notification.options.layout.container.selector).length == 0) {
-      notification.options.custom.append($(notification.options.layout.container.object).addClass('i-am-new'));
+  /**
+   * Converts a markdown string into HTML
+   * @param {string} text
+   * @returns {*}
+   */
+  this.makeHtml = function (text) {
+    //check if text is not falsy
+    if (!text) {
+      return text;
     }
-    else {
-      notification.options.custom.find(notification.options.layout.container.selector).removeClass('i-am-new');
+
+    var globals = {
+      gHtmlBlocks:     [],
+      gHtmlMdBlocks:   [],
+      gHtmlSpans:      [],
+      gUrls:           {},
+      gTitles:         {},
+      gDimensions:     {},
+      gListLevel:      0,
+      hashLinkCounts:  {},
+      langExtensions:  langExtensions,
+      outputModifiers: outputModifiers,
+      converter:       this,
+      ghCodeBlocks:    []
+    };
+
+    // This lets us use ¨ trema as an escape char to avoid md5 hashes
+    // The choice of character is arbitrary; anything that isn't
+    // magic in Markdown will work.
+    text = text.replace(/¨/g, '¨T');
+
+    // Replace $ with ¨D
+    // RegExp interprets $ as a special character
+    // when it's in a replacement string
+    text = text.replace(/\$/g, '¨D');
+
+    // Standardize line endings
+    text = text.replace(/\r\n/g, '\n'); // DOS to Unix
+    text = text.replace(/\r/g, '\n'); // Mac to Unix
+
+    // Stardardize line spaces (nbsp causes trouble in older browsers and some regex flavors)
+    text = text.replace(/\u00A0/g, ' ');
+
+    if (options.smartIndentationFix) {
+      text = rTrimInputText(text);
     }
-  }
-  else {
-    if ($(notification.options.layout.container.selector).length == 0) {
-      $('body').append($(notification.options.layout.container.object).addClass('i-am-new'));
+
+    // Make sure text begins and ends with a couple of newlines:
+    text = '\n\n' + text + '\n\n';
+
+    // detab
+    text = showdown.subParser('detab')(text, options, globals);
+
+    /**
+     * Strip any lines consisting only of spaces and tabs.
+     * This makes subsequent regexs easier to write, because we can
+     * match consecutive blank lines with /\n+/ instead of something
+     * contorted like /[ \t]*\n+/
+     */
+    text = text.replace(/^[ \t]+$/mg, '');
+
+    //run languageExtensions
+    showdown.helper.forEach(langExtensions, function (ext) {
+      text = showdown.subParser('runExtension')(ext, text, options, globals);
+    });
+
+    // run the sub parsers
+    text = showdown.subParser('hashPreCodeTags')(text, options, globals);
+    text = showdown.subParser('githubCodeBlocks')(text, options, globals);
+    text = showdown.subParser('hashHTMLBlocks')(text, options, globals);
+    text = showdown.subParser('hashCodeTags')(text, options, globals);
+    text = showdown.subParser('stripLinkDefinitions')(text, options, globals);
+    text = showdown.subParser('blockGamut')(text, options, globals);
+    text = showdown.subParser('unhashHTMLSpans')(text, options, globals);
+    text = showdown.subParser('unescapeSpecialChars')(text, options, globals);
+
+    // attacklab: Restore dollar signs
+    text = text.replace(/¨D/g, '$$');
+
+    // attacklab: Restore tremas
+    text = text.replace(/¨T/g, '¨');
+
+    // Run output modifiers
+    showdown.helper.forEach(outputModifiers, function (ext) {
+      text = showdown.subParser('runExtension')(ext, text, options, globals);
+    });
+
+    return text;
+  };
+
+  /**
+   * Set an option of this Converter instance
+   * @param {string} key
+   * @param {*} value
+   */
+  this.setOption = function (key, value) {
+    options[key] = value;
+  };
+
+  /**
+   * Get the option of this Converter instance
+   * @param {string} key
+   * @returns {*}
+   */
+  this.getOption = function (key) {
+    return options[key];
+  };
+
+  /**
+   * Get the options of this Converter instance
+   * @returns {{}}
+   */
+  this.getOptions = function () {
+    return options;
+  };
+
+  /**
+   * Add extension to THIS converter
+   * @param {{}} extension
+   * @param {string} [name=null]
+   */
+  this.addExtension = function (extension, name) {
+    name = name || null;
+    _parseExtension(extension, name);
+  };
+
+  /**
+   * Use a global registered extension with THIS converter
+   * @param {string} extensionName Name of the previously registered extension
+   */
+  this.useExtension = function (extensionName) {
+    _parseExtension(extensionName);
+  };
+
+  /**
+   * Set the flavor THIS converter should use
+   * @param {string} name
+   */
+  this.setFlavor = function (name) {
+    if (!flavor.hasOwnProperty(name)) {
+      throw Error(name + ' flavor was not found');
     }
-    else {
-      $(notification.options.layout.container.selector).removeClass('i-am-new');
+    var preset = flavor[name];
+    setConvFlavor = name;
+    for (var option in preset) {
+      if (preset.hasOwnProperty(option)) {
+        options[option] = preset[option];
+      }
     }
-  }
+  };
 
-  $.notyRenderer.setLayoutCountFor(notification, +1);
+  /**
+   * Get the currently set flavor of this converter
+   * @returns {string}
+   */
+  this.getFlavor = function () {
+    return setConvFlavor;
+  };
 
-  notification.show();
-};
+  /**
+   * Remove an extension from THIS converter.
+   * Note: This is a costly operation. It's better to initialize a new converter
+   * and specify the extensions you wish to use
+   * @param {Array} extension
+   */
+  this.removeExtension = function (extension) {
+    if (!showdown.helper.isArray(extension)) {
+      extension = [extension];
+    }
+    for (var a = 0; a < extension.length; ++a) {
+      var ext = extension[a];
+      for (var i = 0; i < langExtensions.length; ++i) {
+        if (langExtensions[i] === ext) {
+          langExtensions[i].splice(i, 1);
+        }
+      }
+      for (var ii = 0; ii < outputModifiers.length; ++i) {
+        if (outputModifiers[ii] === ext) {
+          outputModifiers[ii].splice(i, 1);
+        }
+      }
+    }
+  };
 
-$.notyRenderer.createModalFor = function (notification) {
-  if ($('.noty_modal').length == 0) {
-    var modal = $('<div/>').addClass('noty_modal').addClass(notification.options.theme).data('noty_modal_count', 0);
-
-    if (notification.options.theme.modal && notification.options.theme.modal.css)
-      modal.css(notification.options.theme.modal.css);
-
-    modal.prependTo($('body')).fadeIn(notification.options.animation.fadeSpeed);
-
-    if ($.inArray('backdrop', notification.options.closeWith) > -1)
-      modal.on('click', function () {
-        $.noty.closeAll();
-      });
-  }
-};
-
-$.notyRenderer.getLayoutCountFor = function (notification) {
-  return $(notification.options.layout.container.selector).data('noty_layout_count') || 0;
-};
-
-$.notyRenderer.setLayoutCountFor = function (notification, arg) {
-  return $(notification.options.layout.container.selector).data('noty_layout_count', $.notyRenderer.getLayoutCountFor(notification) + arg);
-};
-
-$.notyRenderer.getModalCount = function () {
-  return $('.noty_modal').data('noty_modal_count') || 0;
-};
-
-$.notyRenderer.setModalCount = function (arg) {
-  return $('.noty_modal').data('noty_modal_count', $.notyRenderer.getModalCount() + arg);
-};
-
-// This is for custom container
-$.fn.noty = function (options) {
-  options.custom = $(this);
-  return $.notyRenderer.init(options);
-};
-
-$.noty         = {};
-$.noty.queue   = [];
-$.noty.ontap   = true;
-$.noty.layouts = {};
-$.noty.themes  = {};
-$.noty.returns = 'object';
-$.noty.store   = {};
-
-$.noty.get = function (id) {
-  return $.noty.store.hasOwnProperty(id) ? $.noty.store[id] : false;
-};
-
-$.noty.close = function (id) {
-  return $.noty.get(id) ? $.noty.get(id).close() : false;
-};
-
-$.noty.setText = function (id, text) {
-  return $.noty.get(id) ? $.noty.get(id).setText(text) : false;
-};
-
-$.noty.setType = function (id, type) {
-  return $.noty.get(id) ? $.noty.get(id).setType(type) : false;
-};
-
-$.noty.clearQueue = function () {
-  $.noty.queue = [];
-};
-
-$.noty.closeAll = function () {
-  $.noty.clearQueue();
-  $.each($.noty.store, function (id, noty) {
-    noty.close();
-  });
-};
-
-var windowAlert = window.alert;
-
-$.noty.consumeAlert = function (options) {
-  window.alert = function (text) {
-    if (options)
-      options.text = text;
-    else
-      options = {text: text};
-
-    $.notyRenderer.init(options);
+  /**
+   * Get all extension of THIS converter
+   * @returns {{language: Array, output: Array}}
+   */
+  this.getAllExtensions = function () {
+    return {
+      language: langExtensions,
+      output: outputModifiers
+    };
   };
 };
 
-$.noty.stopConsumeAlert = function () {
-  window.alert = windowAlert;
-};
+/**
+ * Turn Markdown link shortcuts into XHTML <a> tags.
+ */
+showdown.subParser('anchors', function (text, options, globals) {
+  'use strict';
 
-$.noty.defaults = {
-  layout      : 'topRight',
-  theme       : 'relax',
-  type        : 'alert',
-  text        : '',
-  progressBar : false,
-  dismissQueue: true,
-  template    : '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
-  animation   : {
-    open     : {height: 'toggle'},
-    close    : {height: 'toggle'},
-    easing   : 'swing',
-    speed    : 500,
-    fadeSpeed: 'fast'
-  },
-  timeout     : false,
-  force       : false,
-  modal       : false,
-  maxVisible  : 5,
-  killer      : false,
-  closeWith   : ['click'],
-  callback    : {
-    beforeShow  : function () {
-    },
-    onShow      : function () {
-    },
-    afterShow   : function () {
-    },
-    onClose     : function () {
-    },
-    afterClose  : function () {
-    },
-    onCloseClick: function () {
+  text = globals.converter._dispatch('anchors.before', text, options, globals);
+
+  var writeAnchorTag = function (wholeMatch, linkText, linkId, url, m5, m6, title) {
+    if (showdown.helper.isUndefined(title)) {
+      title = '';
     }
-  },
-  buttons     : false
-};
+    linkId = linkId.toLowerCase();
 
-$(window).on('resize', function () {
-  $.each($.noty.layouts, function (index, layout) {
-    layout.container.style.apply($(layout.container.selector));
+    // Special case for explicit empty url
+    if (wholeMatch.search(/\(<?\s*>? ?(['"].*['"])?\)$/m) > -1) {
+      url = '';
+    } else if (!url) {
+      if (!linkId) {
+        // lower-case and turn embedded newlines into spaces
+        linkId = linkText.toLowerCase().replace(/ ?\n/g, ' ');
+      }
+      url = '#' + linkId;
+
+      if (!showdown.helper.isUndefined(globals.gUrls[linkId])) {
+        url = globals.gUrls[linkId];
+        if (!showdown.helper.isUndefined(globals.gTitles[linkId])) {
+          title = globals.gTitles[linkId];
+        }
+      } else {
+        return wholeMatch;
+      }
+    }
+
+    //url = showdown.helper.escapeCharacters(url, '*_', false); // replaced line to improve performance
+    url = url.replace(showdown.helper.regexes.asteriskDashAndColon, showdown.helper.escapeCharactersCallback);
+
+    var result = '<a href="' + url + '"';
+
+    if (title !== '' && title !== null) {
+      title = title.replace(/"/g, '&quot;');
+      //title = showdown.helper.escapeCharacters(title, '*_', false); // replaced line to improve performance
+      title = title.replace(showdown.helper.regexes.asteriskDashAndColon, showdown.helper.escapeCharactersCallback);
+      result += ' title="' + title + '"';
+    }
+
+    if (options.openLinksInNewWindow) {
+      // escaped _
+      result += ' target="¨E95Eblank"';
+    }
+
+    result += '>' + linkText + '</a>';
+
+    return result;
+  };
+
+  // First, handle reference-style links: [link text] [id]
+  text = text.replace(/\[((?:\[[^\]]*]|[^\[\]])*)] ?(?:\n *)?\[(.*?)]()()()()/g, writeAnchorTag);
+
+  // Next, inline-style links: [link text](url "optional title")
+  // cases with crazy urls like ./image/cat1).png
+  text = text.replace(/\[((?:\[[^\]]*]|[^\[\]])*)]()[ \t]*\([ \t]?<([^>]*)>(?:[ \t]*((["'])([^"]*?)\5))?[ \t]?\)/g,
+    writeAnchorTag);
+
+  // normal cases
+  text = text.replace(/\[((?:\[[^\]]*]|[^\[\]])*)]()[ \t]*\([ \t]?<?([\S]+?(?:\([\S]*?\)[\S]*?)?)>?(?:[ \t]*((["'])([^"]*?)\5))?[ \t]?\)/g,
+                      writeAnchorTag);
+
+  // handle reference-style shortcuts: [link text]
+  // These must come last in case you've also got [link test][1]
+  // or [link test](/foo)
+  text = text.replace(/\[([^\[\]]+)]()()()()()/g, writeAnchorTag);
+
+  // Lastly handle GithubMentions if option is enabled
+  if (options.ghMentions) {
+    text = text.replace(/(^|\s)(\\)?(@([a-z\d\-]+))(?=[.!?;,[\]()]|\s|$)/gmi, function (wm, st, escape, mentions, username) {
+      if (escape === '\\') {
+        return st + mentions;
+      }
+
+      //check if options.ghMentionsLink is a string
+      if (!showdown.helper.isString(options.ghMentionsLink)) {
+        throw new Error('ghMentionsLink option must be a string');
+      }
+      var lnk = options.ghMentionsLink.replace(/\{u}/g, username),
+          target = '';
+      if (options.openLinksInNewWindow) {
+        target = ' target="¨E95Eblank"';
+      }
+      return st + '<a href="' + lnk + '"' + target + '>' + mentions + '</a>';
+    });
+  }
+
+  text = globals.converter._dispatch('anchors.after', text, options, globals);
+  return text;
+});
+
+// url allowed chars [a-z\d_.~:/?#[]@!$&'()*+,;=-]
+
+var simpleURLRegex  = /([*~_]+|\b)(((https?|ftp|dict):\/\/|www\.)[^'">\s]+?\.[^'">\s]+?)()(\1)?(?=\s|$)(?!["<>])/gi,
+    simpleURLRegex2 = /([*~_]+|\b)(((https?|ftp|dict):\/\/|www\.)[^'">\s]+\.[^'">\s]+?)([.!?,()\[\]])?(\1)?(?=\s|$)(?!["<>])/gi,
+    delimUrlRegex   = /()<(((https?|ftp|dict):\/\/|www\.)[^'">\s]+)()>()/gi,
+    simpleMailRegex = /(^|\s)(?:mailto:)?([A-Za-z0-9!#$%&'*+-/=?^_`{|}~.]+@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)(?=$|\s)/gmi,
+    delimMailRegex  = /<()(?:mailto:)?([-.\w]+@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)>/gi,
+
+    replaceLink = function (options) {
+      'use strict';
+      return function (wm, leadingMagicChars, link, m2, m3, trailingPunctuation, trailingMagicChars) {
+        link = link.replace(showdown.helper.regexes.asteriskDashAndColon, showdown.helper.escapeCharactersCallback);
+        var lnkTxt = link,
+            append = '',
+            target = '',
+            lmc    = leadingMagicChars || '',
+            tmc    = trailingMagicChars || '';
+        if (/^www\./i.test(link)) {
+          link = link.replace(/^www\./i, 'http://www.');
+        }
+        if (options.excludeTrailingPunctuationFromURLs && trailingPunctuation) {
+          append = trailingPunctuation;
+        }
+        if (options.openLinksInNewWindow) {
+          target = ' target="¨E95Eblank"';
+        }
+        return lmc + '<a href="' + link + '"' + target + '>' + lnkTxt + '</a>' + append + tmc;
+      };
+    },
+
+    replaceMail = function (options, globals) {
+      'use strict';
+      return function (wholeMatch, b, mail) {
+        var href = 'mailto:';
+        b = b || '';
+        mail = showdown.subParser('unescapeSpecialChars')(mail, options, globals);
+        if (options.encodeEmails) {
+          href = showdown.helper.encodeEmailAddress(href + mail);
+          mail = showdown.helper.encodeEmailAddress(mail);
+        } else {
+          href = href + mail;
+        }
+        return b + '<a href="' + href + '">' + mail + '</a>';
+      };
+    };
+
+showdown.subParser('autoLinks', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('autoLinks.before', text, options, globals);
+
+  text = text.replace(delimUrlRegex, replaceLink(options));
+  text = text.replace(delimMailRegex, replaceMail(options, globals));
+
+  text = globals.converter._dispatch('autoLinks.after', text, options, globals);
+
+  return text;
+});
+
+showdown.subParser('simplifiedAutoLinks', function (text, options, globals) {
+  'use strict';
+
+  if (!options.simplifiedAutoLink) {
+    return text;
+  }
+
+  text = globals.converter._dispatch('simplifiedAutoLinks.before', text, options, globals);
+
+  if (options.excludeTrailingPunctuationFromURLs) {
+    text = text.replace(simpleURLRegex2, replaceLink(options));
+  } else {
+    text = text.replace(simpleURLRegex, replaceLink(options));
+  }
+  text = text.replace(simpleMailRegex, replaceMail(options, globals));
+
+  text = globals.converter._dispatch('simplifiedAutoLinks.after', text, options, globals);
+
+  return text;
+});
+
+/**
+ * These are all the transformations that form block-level
+ * tags like paragraphs, headers, and list items.
+ */
+showdown.subParser('blockGamut', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('blockGamut.before', text, options, globals);
+
+  // we parse blockquotes first so that we can have headings and hrs
+  // inside blockquotes
+  text = showdown.subParser('blockQuotes')(text, options, globals);
+  text = showdown.subParser('headers')(text, options, globals);
+
+  // Do Horizontal Rules:
+  text = showdown.subParser('horizontalRule')(text, options, globals);
+
+  text = showdown.subParser('lists')(text, options, globals);
+  text = showdown.subParser('codeBlocks')(text, options, globals);
+  text = showdown.subParser('tables')(text, options, globals);
+
+  // We already ran _HashHTMLBlocks() before, in Markdown(), but that
+  // was to escape raw HTML in the original Markdown source. This time,
+  // we're escaping the markup we've just created, so that we don't wrap
+  // <p> tags around block-level tags.
+  text = showdown.subParser('hashHTMLBlocks')(text, options, globals);
+  text = showdown.subParser('paragraphs')(text, options, globals);
+
+  text = globals.converter._dispatch('blockGamut.after', text, options, globals);
+
+  return text;
+});
+
+showdown.subParser('blockQuotes', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('blockQuotes.before', text, options, globals);
+
+  text = text.replace(/((^ {0,3}>[ \t]?.+\n(.+\n)*\n*)+)/gm, function (wholeMatch, m1) {
+    var bq = m1;
+
+    // attacklab: hack around Konqueror 3.5.4 bug:
+    // "----------bug".replace(/^-/g,"") == "bug"
+    bq = bq.replace(/^[ \t]*>[ \t]?/gm, '¨0'); // trim one level of quoting
+
+    // attacklab: clean up hack
+    bq = bq.replace(/¨0/g, '');
+
+    bq = bq.replace(/^[ \t]+$/gm, ''); // trim whitespace-only lines
+    bq = showdown.subParser('githubCodeBlocks')(bq, options, globals);
+    bq = showdown.subParser('blockGamut')(bq, options, globals); // recurse
+
+    bq = bq.replace(/(^|\n)/g, '$1  ');
+    // These leading spaces screw with <pre> content, so we need to fix that:
+    bq = bq.replace(/(\s*<pre>[^\r]+?<\/pre>)/gm, function (wholeMatch, m1) {
+      var pre = m1;
+      // attacklab: hack around Konqueror 3.5.4 bug:
+      pre = pre.replace(/^  /mg, '¨0');
+      pre = pre.replace(/¨0/g, '');
+      return pre;
+    });
+
+    return showdown.subParser('hashBlock')('<blockquote>\n' + bq + '\n</blockquote>', options, globals);
   });
+
+  text = globals.converter._dispatch('blockQuotes.after', text, options, globals);
+  return text;
 });
 
-// Helpers
-window.noty = function noty(options) {
-  return $.notyRenderer.init(options);
-};
+/**
+ * Process Markdown `<pre><code>` blocks.
+ */
+showdown.subParser('codeBlocks', function (text, options, globals) {
+  'use strict';
 
-$.noty.layouts.bottom = {
-    name     : 'bottom',
-    options  : {},
-    container: {
-        object  : '<ul id="noty_bottom_layout_container" />',
-        selector: 'ul#noty_bottom_layout_container',
-        style   : function() {
-            $(this).css({
-                bottom       : 0,
-                left         : '5%',
-                position     : 'fixed',
-                width        : '90%',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 9999999
-            });
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none'
-    },
-    addClass : ''
-};
+  text = globals.converter._dispatch('codeBlocks.before', text, options, globals);
 
-$.noty.layouts.bottomCenter = {
-    name     : 'bottomCenter',
-    options  : { // overrides options
+  // sentinel workarounds for lack of \A and \Z, safari\khtml bug
+  text += '¨0';
 
-    },
-    container: {
-        object  : '<ul id="noty_bottomCenter_layout_container" />',
-        selector: 'ul#noty_bottomCenter_layout_container',
-        style   : function() {
-            $(this).css({
-                bottom       : 20,
-                left         : 0,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
+  var pattern = /(?:\n\n|^)((?:(?:[ ]{4}|\t).*\n+)+)(\n*[ ]{0,3}[^ \t\n]|(?=¨0))/g;
+  text = text.replace(pattern, function (wholeMatch, m1, m2) {
+    var codeblock = m1,
+        nextChar = m2,
+        end = '\n';
 
-            $(this).css({
-                left: ($(window).width() - $(this).outerWidth(false)) / 2 + 'px'
-            });
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
+    codeblock = showdown.subParser('outdent')(codeblock, options, globals);
+    codeblock = showdown.subParser('encodeCode')(codeblock, options, globals);
+    codeblock = showdown.subParser('detab')(codeblock, options, globals);
+    codeblock = codeblock.replace(/^\n+/g, ''); // trim leading newlines
+    codeblock = codeblock.replace(/\n+$/g, ''); // trim trailing newlines
 
-
-$.noty.layouts.bottomLeft = {
-    name     : 'bottomLeft',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_bottomLeft_layout_container" />',
-        selector: 'ul#noty_bottomLeft_layout_container',
-        style   : function() {
-            $(this).css({
-                bottom       : 20,
-                left         : 20,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            if(window.innerWidth < 600) {
-                $(this).css({
-                    left: 5
-                });
-            }
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-$.noty.layouts.bottomRight = {
-    name     : 'bottomRight',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_bottomRight_layout_container" />',
-        selector: 'ul#noty_bottomRight_layout_container',
-        style   : function() {
-            $(this).css({
-                bottom       : 20,
-                right        : 20,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            if(window.innerWidth < 600) {
-                $(this).css({
-                    right: 5
-                });
-            }
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-$.noty.layouts.center = {
-    name     : 'center',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_center_layout_container" />',
-        selector: 'ul#noty_center_layout_container',
-        style   : function() {
-            $(this).css({
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            // getting hidden height
-            var dupe = $(this).clone().css({visibility: "hidden", display: "block", position: "absolute", top: 0, left: 0}).attr('id', 'dupe');
-            $("body").append(dupe);
-            dupe.find('.i-am-closing-now').remove();
-            dupe.find('li').css('display', 'block');
-            var actual_height = dupe.height();
-            dupe.remove();
-
-            if($(this).hasClass('i-am-new')) {
-                $(this).css({
-                    left: ($(window).width() - $(this).outerWidth(false)) / 2 + 'px',
-                    top : ($(window).height() - actual_height) / 2 + 'px'
-                });
-            }
-            else {
-                $(this).animate({
-                    left: ($(window).width() - $(this).outerWidth(false)) / 2 + 'px',
-                    top : ($(window).height() - actual_height) / 2 + 'px'
-                }, 500);
-            }
-
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-$.noty.layouts.centerLeft = {
-    name     : 'centerLeft',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_centerLeft_layout_container" />',
-        selector: 'ul#noty_centerLeft_layout_container',
-        style   : function() {
-            $(this).css({
-                left         : 20,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            // getting hidden height
-            var dupe = $(this).clone().css({visibility: "hidden", display: "block", position: "absolute", top: 0, left: 0}).attr('id', 'dupe');
-            $("body").append(dupe);
-            dupe.find('.i-am-closing-now').remove();
-            dupe.find('li').css('display', 'block');
-            var actual_height = dupe.height();
-            dupe.remove();
-
-            if($(this).hasClass('i-am-new')) {
-                $(this).css({
-                    top: ($(window).height() - actual_height) / 2 + 'px'
-                });
-            }
-            else {
-                $(this).animate({
-                    top: ($(window).height() - actual_height) / 2 + 'px'
-                }, 500);
-            }
-
-            if(window.innerWidth < 600) {
-                $(this).css({
-                    left: 5
-                });
-            }
-
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-
-$.noty.layouts.centerRight = {
-    name     : 'centerRight',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_centerRight_layout_container" />',
-        selector: 'ul#noty_centerRight_layout_container',
-        style   : function() {
-            $(this).css({
-                right        : 20,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            // getting hidden height
-            var dupe = $(this).clone().css({visibility: "hidden", display: "block", position: "absolute", top: 0, left: 0}).attr('id', 'dupe');
-            $("body").append(dupe);
-            dupe.find('.i-am-closing-now').remove();
-            dupe.find('li').css('display', 'block');
-            var actual_height = dupe.height();
-            dupe.remove();
-
-            if($(this).hasClass('i-am-new')) {
-                $(this).css({
-                    top: ($(window).height() - actual_height) / 2 + 'px'
-                });
-            }
-            else {
-                $(this).animate({
-                    top: ($(window).height() - actual_height) / 2 + 'px'
-                }, 500);
-            }
-
-            if(window.innerWidth < 600) {
-                $(this).css({
-                    right: 5
-                });
-            }
-
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-$.noty.layouts.inline = {
-    name     : 'inline',
-    options  : {},
-    container: {
-        object  : '<ul class="noty_inline_layout_container" />',
-        selector: 'ul.noty_inline_layout_container',
-        style   : function() {
-            $(this).css({
-                width        : '100%',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 9999999
-            });
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none'
-    },
-    addClass : ''
-};
-$.noty.layouts.top = {
-    name     : 'top',
-    options  : {},
-    container: {
-        object  : '<ul id="noty_top_layout_container" />',
-        selector: 'ul#noty_top_layout_container',
-        style   : function() {
-            $(this).css({
-                top          : 0,
-                left         : '5%',
-                position     : 'fixed',
-                width        : '90%',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 9999999
-            });
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none'
-    },
-    addClass : ''
-};
-$.noty.layouts.topCenter = {
-    name     : 'topCenter',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_topCenter_layout_container" />',
-        selector: 'ul#noty_topCenter_layout_container',
-        style   : function() {
-            $(this).css({
-                top          : 20,
-                left         : 0,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            $(this).css({
-                left: ($(window).width() - $(this).outerWidth(false)) / 2 + 'px'
-            });
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-
-$.noty.layouts.topLeft = {
-    name     : 'topLeft',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_topLeft_layout_container" />',
-        selector: 'ul#noty_topLeft_layout_container',
-        style   : function() {
-            $(this).css({
-                top          : 20,
-                left         : 20,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            if(window.innerWidth < 600) {
-                $(this).css({
-                    left: 5
-                });
-            }
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-$.noty.layouts.topRight = {
-    name     : 'topRight',
-    options  : { // overrides options
-
-    },
-    container: {
-        object  : '<ul id="noty_topRight_layout_container" />',
-        selector: 'ul#noty_topRight_layout_container',
-        style   : function() {
-            $(this).css({
-                top          : 20,
-                right        : 20,
-                position     : 'fixed',
-                width        : '310px',
-                height       : 'auto',
-                margin       : 0,
-                padding      : 0,
-                listStyleType: 'none',
-                zIndex       : 10000000
-            });
-
-            if(window.innerWidth < 600) {
-                $(this).css({
-                    right: 5
-                });
-            }
-        }
-    },
-    parent   : {
-        object  : '<li />',
-        selector: 'li',
-        css     : {}
-    },
-    css      : {
-        display: 'none',
-        width  : '310px'
-    },
-    addClass : ''
-};
-$.noty.themes.bootstrapTheme = {
-  name    : 'bootstrapTheme',
-  modal   : {
-    css: {
-      position       : 'fixed',
-      width          : '100%',
-      height         : '100%',
-      backgroundColor: '#000',
-      zIndex         : 10000,
-      opacity        : 0.6,
-      display        : 'none',
-      left           : 0,
-      top            : 0,
-      wordBreak      : 'break-all'
-    }
-  },
-  style   : function () {
-
-    var containerSelector = this.options.layout.container.selector;
-    $(containerSelector).addClass('list-group');
-
-    this.$closeButton.append('<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>');
-    this.$closeButton.addClass('close');
-
-    this.$bar.addClass("list-group-item").css('padding', '0px').css('position', 'relative');
-
-    this.$progressBar.css({
-      position       : 'absolute',
-      left           : 0,
-      bottom         : 0,
-      height         : 4,
-      width          : '100%',
-      backgroundColor: '#000000',
-      opacity        : 0.2,
-      '-ms-filter'   : 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)',
-      filter         : 'alpha(opacity=20)'
-    });
-
-    switch (this.options.type) {
-      case 'alert':
-      case 'notification':
-        this.$bar.addClass("list-group-item-info");
-        break;
-      case 'warning':
-        this.$bar.addClass("list-group-item-warning");
-        break;
-      case 'error':
-        this.$bar.addClass("list-group-item-danger");
-        break;
-      case 'information':
-        this.$bar.addClass("list-group-item-info");
-        break;
-      case 'success':
-        this.$bar.addClass("list-group-item-success");
-        break;
+    if (options.omitExtraWLInCodeBlocks) {
+      end = '';
     }
 
-    this.$message.css({
-      textAlign: 'center',
-      padding  : '8px 10px 9px',
-      width    : 'auto',
-      position : 'relative'
-    });
-  },
-  callback: {
-    onShow : function () { },
-    onClose: function () { }
-  }
-};
+    codeblock = '<pre><code>' + codeblock + end + '</code></pre>';
 
+    return showdown.subParser('hashBlock')(codeblock, options, globals) + nextChar;
+  });
 
-$.noty.themes.defaultTheme = {
-  name    : 'defaultTheme',
-  helpers : {
-    borderFix: function () {
-      if (this.options.dismissQueue) {
-        var selector = this.options.layout.container.selector + ' ' + this.options.layout.parent.selector;
-        switch (this.options.layout.name) {
-          case 'top':
-            $(selector).css({borderRadius: '0px 0px 0px 0px'});
-            $(selector).last().css({borderRadius: '0px 0px 5px 5px'});
-            break;
-          case 'topCenter':
-          case 'topLeft':
-          case 'topRight':
-          case 'bottomCenter':
-          case 'bottomLeft':
-          case 'bottomRight':
-          case 'center':
-          case 'centerLeft':
-          case 'centerRight':
-          case 'inline':
-            $(selector).css({borderRadius: '0px 0px 0px 0px'});
-            $(selector).first().css({'border-top-left-radius': '5px', 'border-top-right-radius': '5px'});
-            $(selector).last().css({'border-bottom-left-radius': '5px', 'border-bottom-right-radius': '5px'});
-            break;
-          case 'bottom':
-            $(selector).css({borderRadius: '0px 0px 0px 0px'});
-            $(selector).first().css({borderRadius: '5px 5px 0px 0px'});
-            break;
-          default:
-            break;
-        }
-      }
-    }
-  },
-  modal   : {
-    css: {
-      position       : 'fixed',
-      width          : '100%',
-      height         : '100%',
-      backgroundColor: '#000',
-      zIndex         : 10000,
-      opacity        : 0.6,
-      display        : 'none',
-      left           : 0,
-      top            : 0
-    }
-  },
-  style   : function () {
+  // strip sentinel
+  text = text.replace(/¨0/, '');
 
-    this.$bar.css({
-      overflow  : 'hidden',
-      background: "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAoCAQAAAClM0ndAAAAhklEQVR4AdXO0QrCMBBE0bttkk38/w8WRERpdyjzVOc+HxhIHqJGMQcFFkpYRQotLLSw0IJ5aBdovruMYDA/kT8plF9ZKLFQcgF18hDj1SbQOMlCA4kao0iiXmah7qBWPdxpohsgVZyj7e5I9KcID+EhiDI5gxBYKLBQYKHAQoGFAoEks/YEGHYKB7hFxf0AAAAASUVORK5CYII=') repeat-x scroll left top #fff",
-      position  : 'relative'
-    });
-
-    this.$progressBar.css({
-      position       : 'absolute',
-      left           : 0,
-      bottom         : 0,
-      height         : 4,
-      width          : '100%',
-      backgroundColor: '#000000',
-      opacity        : 0.2,
-      '-ms-filter'   : 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)',
-      filter         : 'alpha(opacity=20)'
-    });
-
-    this.$message.css({
-      textAlign: 'center',
-      padding  : '8px 10px 9px',
-      width    : 'auto',
-      position : 'relative'
-    });
-
-    this.$closeButton.css({
-      position  : 'absolute',
-      top       : 4, right: 4,
-      width     : 10, height: 10,
-      background: "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAAAnOwc2AAAAxUlEQVR4AR3MPUoDURSA0e++uSkkOxC3IAOWNtaCIDaChfgXBMEZbQRByxCwk+BasgQRZLSYoLgDQbARxry8nyumPcVRKDfd0Aa8AsgDv1zp6pYd5jWOwhvebRTbzNNEw5BSsIpsj/kurQBnmk7sIFcCF5yyZPDRG6trQhujXYosaFoc+2f1MJ89uc76IND6F9BvlXUdpb6xwD2+4q3me3bysiHvtLYrUJto7PD/ve7LNHxSg/woN2kSz4txasBdhyiz3ugPGetTjm3XRokAAAAASUVORK5CYII=)",
-      display   : 'none',
-      cursor    : 'pointer'
-    });
-
-    this.$buttons.css({
-      padding        : 5,
-      textAlign      : 'right',
-      borderTop      : '1px solid #ccc',
-      backgroundColor: '#fff'
-    });
-
-    this.$buttons.find('button').css({
-      marginLeft: 5
-    });
-
-    this.$buttons.find('button:first').css({
-      marginLeft: 0
-    });
-
-    this.$bar.on({
-      mouseenter: function () {
-        $(this).find('.noty_close').stop().fadeTo('normal', 1);
-      },
-      mouseleave: function () {
-        $(this).find('.noty_close').stop().fadeTo('normal', 0);
-      }
-    });
-
-    switch (this.options.layout.name) {
-      case 'top':
-        this.$bar.css({
-          borderRadius: '0px 0px 5px 5px',
-          borderBottom: '2px solid #eee',
-          borderLeft  : '2px solid #eee',
-          borderRight : '2px solid #eee',
-          boxShadow   : "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        break;
-      case 'topCenter':
-      case 'center':
-      case 'bottomCenter':
-      case 'inline':
-        this.$bar.css({
-          borderRadius: '5px',
-          border      : '1px solid #eee',
-          boxShadow   : "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        this.$message.css({textAlign: 'center'});
-        break;
-      case 'topLeft':
-      case 'topRight':
-      case 'bottomLeft':
-      case 'bottomRight':
-      case 'centerLeft':
-      case 'centerRight':
-        this.$bar.css({
-          borderRadius: '5px',
-          border      : '1px solid #eee',
-          boxShadow   : "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        this.$message.css({textAlign: 'left'});
-        break;
-      case 'bottom':
-        this.$bar.css({
-          borderRadius: '5px 5px 0px 0px',
-          borderTop   : '2px solid #eee',
-          borderLeft  : '2px solid #eee',
-          borderRight : '2px solid #eee',
-          boxShadow   : "0 -2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        break;
-      default:
-        this.$bar.css({
-          border   : '2px solid #eee',
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        break;
-    }
-
-    switch (this.options.type) {
-      case 'alert':
-      case 'notification':
-        this.$bar.css({backgroundColor: '#FFF', borderColor: '#CCC', color: '#444'});
-        break;
-      case 'warning':
-        this.$bar.css({backgroundColor: '#FFEAA8', borderColor: '#FFC237', color: '#826200'});
-        this.$buttons.css({borderTop: '1px solid #FFC237'});
-        break;
-      case 'error':
-        this.$bar.css({backgroundColor: 'red', borderColor: 'darkred', color: '#FFF'});
-        this.$message.css({fontWeight: 'bold'});
-        this.$buttons.css({borderTop: '1px solid darkred'});
-        break;
-      case 'information':
-        this.$bar.css({backgroundColor: '#57B7E2', borderColor: '#0B90C4', color: '#FFF'});
-        this.$buttons.css({borderTop: '1px solid #0B90C4'});
-        break;
-      case 'success':
-        this.$bar.css({backgroundColor: 'lightgreen', borderColor: '#50C24E', color: 'darkgreen'});
-        this.$buttons.css({borderTop: '1px solid #50C24E'});
-        break;
-      default:
-        this.$bar.css({backgroundColor: '#FFF', borderColor: '#CCC', color: '#444'});
-        break;
-    }
-  },
-  callback: {
-    onShow : function () {
-      $.noty.themes.defaultTheme.helpers.borderFix.apply(this);
-    },
-    onClose: function () {
-      $.noty.themes.defaultTheme.helpers.borderFix.apply(this);
-    }
-  }
-};
-
-$.noty.themes.metroui = {
-  name    : 'metroui',
-  helpers : {},
-  modal   : {
-    css: {
-      position       : 'fixed',
-      width          : '100%',
-      height         : '100%',
-      backgroundColor: '#000',
-      zIndex         : 10000,
-      opacity        : 0.6,
-      display        : 'none',
-      left           : 0,
-      top            : 0
-    }
-  },
-  style   : function () {
-
-    this.$bar.css({
-      overflow    : 'hidden',
-      margin      : '4px 0',
-      borderRadius: '0',
-      position    : 'relative'
-    });
-
-    this.$progressBar.css({
-      position       : 'absolute',
-      left           : 0,
-      bottom         : 0,
-      height         : 4,
-      width          : '100%',
-      backgroundColor: '#000000',
-      opacity        : 0.2,
-      '-ms-filter'   : 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)',
-      filter         : 'alpha(opacity=20)'
-    });
-
-    this.$message.css({
-      textAlign: 'center',
-      padding  : '1.25rem',
-      width    : 'auto',
-      position : 'relative'
-    });
-
-    this.$closeButton.css({
-      position  : 'absolute',
-      top       : '.25rem', right: '.25rem',
-      width     : 10, height: 10,
-      background: "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAAAnOwc2AAAAxUlEQVR4AR3MPUoDURSA0e++uSkkOxC3IAOWNtaCIDaChfgXBMEZbQRByxCwk+BasgQRZLSYoLgDQbARxry8nyumPcVRKDfd0Aa8AsgDv1zp6pYd5jWOwhvebRTbzNNEw5BSsIpsj/kurQBnmk7sIFcCF5yyZPDRG6trQhujXYosaFoc+2f1MJ89uc76IND6F9BvlXUdpb6xwD2+4q3me3bysiHvtLYrUJto7PD/ve7LNHxSg/woN2kSz4txasBdhyiz3ugPGetTjm3XRokAAAAASUVORK5CYII=)",
-      display   : 'none',
-      cursor    : 'pointer'
-    });
-
-    this.$buttons.css({
-      padding        : 5,
-      textAlign      : 'right',
-      borderTop      : '1px solid #ccc',
-      backgroundColor: '#fff'
-    });
-
-    this.$buttons.find('button').css({
-      marginLeft: 5
-    });
-
-    this.$buttons.find('button:first').css({
-      marginLeft: 0
-    });
-
-    this.$bar.on({
-      mouseenter: function () {
-        $(this).find('.noty_close').stop().fadeTo('normal', 1);
-      },
-      mouseleave: function () {
-        $(this).find('.noty_close').stop().fadeTo('normal', 0);
-      }
-    });
-
-    switch (this.options.layout.name) {
-      case 'top':
-        this.$bar.css({
-          border   : 'none',
-          boxShadow: "0 0 5px 0 rgba(0, 0, 0, 0.3)"
-        });
-        break;
-      case 'topCenter':
-      case 'center':
-      case 'bottomCenter':
-      case 'inline':
-        this.$bar.css({
-          border   : 'none',
-          boxShadow: "0 0 5px 0 rgba(0, 0, 0, 0.3)"
-        });
-        this.$message.css({textAlign: 'center'});
-        break;
-      case 'topLeft':
-      case 'topRight':
-      case 'bottomLeft':
-      case 'bottomRight':
-      case 'centerLeft':
-      case 'centerRight':
-        this.$bar.css({
-          border   : 'none',
-          boxShadow: "0 0 5px 0 rgba(0, 0, 0, 0.3)"
-        });
-        this.$message.css({textAlign: 'left'});
-        break;
-      case 'bottom':
-        this.$bar.css({
-          border   : 'none',
-          boxShadow: "0 0 5px 0 rgba(0, 0, 0, 0.3)"
-        });
-        break;
-      default:
-        this.$bar.css({
-          border   : 'none',
-          boxShadow: "0 0 5px 0 rgba(0, 0, 0, 0.3)"
-        });
-        break;
-    }
-
-    switch (this.options.type) {
-      case 'alert':
-      case 'notification':
-        this.$bar.css({backgroundColor: '#fff', border: 'none', color: '#1d1d1d'});
-        break;
-      case 'warning':
-        this.$bar.css({backgroundColor: '#FA6800', border: 'none', color: '#fff'});
-        this.$buttons.css({borderTop: '1px solid #FA6800'});
-        break;
-      case 'error':
-        this.$bar.css({backgroundColor: '#CE352C', border: 'none', color: '#fff'});
-        this.$message.css({fontWeight: 'bold'});
-        this.$buttons.css({borderTop: '1px solid #CE352C'});
-        break;
-      case 'information':
-        this.$bar.css({backgroundColor: '#1BA1E2', border: 'none', color: '#fff'});
-        this.$buttons.css({borderTop: '1px solid #1BA1E2'});
-        break;
-      case 'success':
-        this.$bar.css({backgroundColor: '#60A917', border: 'none', color: '#fff'});
-        this.$buttons.css({borderTop: '1px solid #50C24E'});
-        break;
-      default:
-        this.$bar.css({backgroundColor: '#fff', border: 'none', color: '#1d1d1d'});
-        break;
-    }
-  },
-  callback: {
-    onShow : function () {
-
-    },
-    onClose: function () {
-
-    }
-  }
-};
-$.noty.themes.relax = {
-  name    : 'relax',
-  helpers : {},
-  modal   : {
-    css: {
-      position       : 'fixed',
-      width          : '100%',
-      height         : '100%',
-      backgroundColor: '#000',
-      zIndex         : 10000,
-      opacity        : 0.6,
-      display        : 'none',
-      left           : 0,
-      top            : 0
-    }
-  },
-  style   : function () {
-
-    this.$bar.css({
-      overflow    : 'hidden',
-      margin      : '4px 0',
-      borderRadius: '2px',
-      position    : 'relative'
-    });
-
-    this.$progressBar.css({
-      position       : 'absolute',
-      left           : 0,
-      bottom         : 0,
-      height         : 4,
-      width          : '100%',
-      backgroundColor: '#000000',
-      opacity        : 0.2,
-      '-ms-filter'   : 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)',
-      filter         : 'alpha(opacity=20)'
-    });
-
-    this.$message.css({
-      textAlign: 'center',
-      padding  : '10px',
-      width    : 'auto',
-      position : 'relative'
-    });
-
-    this.$closeButton.css({
-      position  : 'absolute',
-      top       : 4, right: 4,
-      width     : 10, height: 10,
-      background: "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAAAnOwc2AAAAxUlEQVR4AR3MPUoDURSA0e++uSkkOxC3IAOWNtaCIDaChfgXBMEZbQRByxCwk+BasgQRZLSYoLgDQbARxry8nyumPcVRKDfd0Aa8AsgDv1zp6pYd5jWOwhvebRTbzNNEw5BSsIpsj/kurQBnmk7sIFcCF5yyZPDRG6trQhujXYosaFoc+2f1MJ89uc76IND6F9BvlXUdpb6xwD2+4q3me3bysiHvtLYrUJto7PD/ve7LNHxSg/woN2kSz4txasBdhyiz3ugPGetTjm3XRokAAAAASUVORK5CYII=)",
-      display   : 'none',
-      cursor    : 'pointer'
-    });
-
-    this.$buttons.css({
-      padding        : 5,
-      textAlign      : 'right',
-      borderTop      : '1px solid #ccc',
-      backgroundColor: '#fff'
-    });
-
-    this.$buttons.find('button').css({
-      marginLeft: 5
-    });
-
-    this.$buttons.find('button:first').css({
-      marginLeft: 0
-    });
-
-    this.$bar.on({
-      mouseenter: function () {
-        $(this).find('.noty_close').stop().fadeTo('normal', 1);
-      },
-      mouseleave: function () {
-        $(this).find('.noty_close').stop().fadeTo('normal', 0);
-      }
-    });
-
-    switch (this.options.layout.name) {
-      case 'top':
-        this.$bar.css({
-          borderBottom: '2px solid #eee',
-          borderLeft  : '2px solid #eee',
-          borderRight : '2px solid #eee',
-          borderTop   : '2px solid #eee',
-          boxShadow   : "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        break;
-      case 'topCenter':
-      case 'center':
-      case 'bottomCenter':
-      case 'inline':
-        this.$bar.css({
-          border   : '1px solid #eee',
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        this.$message.css({textAlign: 'center'});
-        break;
-      case 'topLeft':
-      case 'topRight':
-      case 'bottomLeft':
-      case 'bottomRight':
-      case 'centerLeft':
-      case 'centerRight':
-        this.$bar.css({
-          border   : '1px solid #eee',
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        this.$message.css({textAlign: 'left'});
-        break;
-      case 'bottom':
-        this.$bar.css({
-          borderTop   : '2px solid #eee',
-          borderLeft  : '2px solid #eee',
-          borderRight : '2px solid #eee',
-          borderBottom: '2px solid #eee',
-          boxShadow   : "0 -2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        break;
-      default:
-        this.$bar.css({
-          border   : '2px solid #eee',
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
-        });
-        break;
-    }
-
-    switch (this.options.type) {
-      case 'alert':
-      case 'notification':
-        this.$bar.css({backgroundColor: '#FFF', borderColor: '#dedede', color: '#444'});
-        break;
-      case 'warning':
-        this.$bar.css({backgroundColor: '#FFEAA8', borderColor: '#FFC237', color: '#826200'});
-        this.$buttons.css({borderTop: '1px solid #FFC237'});
-        break;
-      case 'error':
-        this.$bar.css({backgroundColor: '#FF8181', borderColor: '#e25353', color: '#FFF'});
-        this.$message.css({fontWeight: 'bold'});
-        this.$buttons.css({borderTop: '1px solid darkred'});
-        break;
-      case 'information':
-        this.$bar.css({backgroundColor: '#78C5E7', borderColor: '#3badd6', color: '#FFF'});
-        this.$buttons.css({borderTop: '1px solid #0B90C4'});
-        break;
-      case 'success':
-        this.$bar.css({backgroundColor: '#BCF5BC', borderColor: '#7cdd77', color: 'darkgreen'});
-        this.$buttons.css({borderTop: '1px solid #50C24E'});
-        break;
-      default:
-        this.$bar.css({backgroundColor: '#FFF', borderColor: '#CCC', color: '#444'});
-        break;
-    }
-  },
-  callback: {
-    onShow : function () {
-
-    },
-    onClose: function () {
-
-    }
-  }
-};
-
-$.noty.themes.semanticUI = {
-  name: 'semanticUI',
-
-  template: '<div class="ui message"><div class="content"><div class="header"></div></div></div>',
-
-  animation: {
-    open : {
-      animation: 'fade',
-      duration : '800ms'
-    },
-    close: {
-      animation: 'fade left',
-      duration : '800ms'
-    }
-  },
-
-  modal   : {
-    css: {
-      position       : 'fixed',
-      width          : '100%',
-      height         : '100%',
-      backgroundColor: '#000',
-      zIndex         : 10000,
-      opacity        : 0.6,
-      display        : 'none',
-      left           : 0,
-      top            : 0
-    }
-  },
-  style   : function () {
-    this.$message = this.$bar.find('.ui.message');
-
-    this.$message.find('.header').html(this.options.header);
-    this.$message.find('.content').append(this.options.text);
-
-    this.$bar.css({
-      margin  : '0.5em',
-      position: 'relative'
-    });
-
-    if (this.options.icon) {
-      this.$message.addClass('icon').prepend($('<i/>').addClass(this.options.icon));
-    }
-
-    this.$progressBar.css({
-      position       : 'absolute',
-      left           : 0,
-      bottom         : 0,
-      height         : 4,
-      width          : '100%',
-      backgroundColor: '#000000',
-      opacity        : 0.2,
-      '-ms-filter'   : 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)',
-      filter         : 'alpha(opacity=20)'
-    });
-
-    switch (this.options.size) {
-      case 'mini':
-        this.$message.addClass('mini');
-        break;
-      case 'tiny':
-        this.$message.addClass('tiny');
-        break;
-      case 'small':
-        this.$message.addClass('small');
-        break;
-      case 'large':
-        this.$message.addClass('large');
-        break;
-      case 'big':
-        this.$message.addClass('big');
-        break;
-      case 'huge':
-        this.$message.addClass('huge');
-        break;
-      case 'massive':
-        this.$message.addClass('massive');
-        break;
-    }
-
-    switch (this.options.type) {
-      case 'info':
-        this.$message.addClass('info');
-        break;
-      case 'warning':
-        this.$message.addClass('warning');
-        break;
-      case 'error':
-        this.$message.addClass('error');
-        break;
-      case 'negative':
-        this.$message.addClass('negative');
-        break;
-      case 'success':
-        this.$message.addClass('success');
-        break;
-      case 'positive':
-        this.$message.addClass('positive');
-        break;
-      case 'floating':
-        this.$message.addClass('floating');
-        break;
-    }
-  },
-  callback: {
-    onShow : function () {
-      // Enable transition
-      this.$bar.addClass('transition');
-      // Actual transition
-      this.$bar.transition(this.options.animation.open);
-    },
-    onClose: function () {
-      this.$bar.transition(this.options.animation.close);
-    }
-  }
-};
-
-
-return window.noty;
-
+  text = globals.converter._dispatch('codeBlocks.after', text, options, globals);
+  return text;
 });
+
+/**
+ *
+ *   *  Backtick quotes are used for <code></code> spans.
+ *
+ *   *  You can use multiple backticks as the delimiters if you want to
+ *     include literal backticks in the code span. So, this input:
+ *
+ *         Just type ``foo `bar` baz`` at the prompt.
+ *
+ *       Will translate to:
+ *
+ *         <p>Just type <code>foo `bar` baz</code> at the prompt.</p>
+ *
+ *    There's no arbitrary limit to the number of backticks you
+ *    can use as delimters. If you need three consecutive backticks
+ *    in your code, use four for delimiters, etc.
+ *
+ *  *  You can use spaces to get literal backticks at the edges:
+ *
+ *         ... type `` `bar` `` ...
+ *
+ *       Turns to:
+ *
+ *         ... type <code>`bar`</code> ...
+ */
+showdown.subParser('codeSpans', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('codeSpans.before', text, options, globals);
+
+  if (typeof(text) === 'undefined') {
+    text = '';
+  }
+  text = text.replace(/(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/gm,
+    function (wholeMatch, m1, m2, m3) {
+      var c = m3;
+      c = c.replace(/^([ \t]*)/g, '');	// leading whitespace
+      c = c.replace(/[ \t]*$/g, '');	// trailing whitespace
+      c = showdown.subParser('encodeCode')(c, options, globals);
+      return m1 + '<code>' + c + '</code>';
+    }
+  );
+
+  text = globals.converter._dispatch('codeSpans.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Convert all tabs to spaces
+ */
+showdown.subParser('detab', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('detab.before', text, options, globals);
+
+  // expand first n-1 tabs
+  text = text.replace(/\t(?=\t)/g, '    '); // g_tab_width
+
+  // replace the nth with two sentinels
+  text = text.replace(/\t/g, '¨A¨B');
+
+  // use the sentinel to anchor our regex so it doesn't explode
+  text = text.replace(/¨B(.+?)¨A/g, function (wholeMatch, m1) {
+    var leadingText = m1,
+        numSpaces = 4 - leadingText.length % 4;  // g_tab_width
+
+    // there *must* be a better way to do this:
+    for (var i = 0; i < numSpaces; i++) {
+      leadingText += ' ';
+    }
+
+    return leadingText;
+  });
+
+  // clean up sentinels
+  text = text.replace(/¨A/g, '    ');  // g_tab_width
+  text = text.replace(/¨B/g, '');
+
+  text = globals.converter._dispatch('detab.after', text, options, globals);
+  return text;
+});
+
+showdown.subParser('ellipsis', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('ellipsis.before', text, options, globals);
+
+  text = text.replace(/\.\.\./g, '…');
+
+  text = globals.converter._dispatch('ellipsis.after', text, options, globals);
+
+  return text;
+});
+
+/**
+ * These are all the transformations that occur *within* block-level
+ * tags like paragraphs, headers, and list items.
+ */
+showdown.subParser('emoji', function (text, options, globals) {
+  'use strict';
+
+  if (!options.emoji) {
+    return text;
+  }
+
+  text = globals.converter._dispatch('emoji.before', text, options, globals);
+
+  var emojiRgx = /:([\S]+?):/g;
+
+  text = text.replace(emojiRgx, function (wm, emojiCode) {
+    if (showdown.helper.emojis.hasOwnProperty(emojiCode)) {
+      return showdown.helper.emojis[emojiCode];
+    }
+    return wm;
+  });
+
+  text = globals.converter._dispatch('emoji.after', text, options, globals);
+
+  return text;
+});
+
+/**
+ * Smart processing for ampersands and angle brackets that need to be encoded.
+ */
+showdown.subParser('encodeAmpsAndAngles', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('encodeAmpsAndAngles.before', text, options, globals);
+
+  // Ampersand-encoding based entirely on Nat Irons's Amputator MT plugin:
+  // http://bumppo.net/projects/amputator/
+  text = text.replace(/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/g, '&amp;');
+
+  // Encode naked <'s
+  text = text.replace(/<(?![a-z\/?$!])/gi, '&lt;');
+
+  // Encode <
+  text = text.replace(/</g, '&lt;');
+
+  // Encode >
+  text = text.replace(/>/g, '&gt;');
+
+  text = globals.converter._dispatch('encodeAmpsAndAngles.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Returns the string, with after processing the following backslash escape sequences.
+ *
+ * attacklab: The polite way to do this is with the new escapeCharacters() function:
+ *
+ *    text = escapeCharacters(text,"\\",true);
+ *    text = escapeCharacters(text,"`*_{}[]()>#+-.!",true);
+ *
+ * ...but we're sidestepping its use of the (slow) RegExp constructor
+ * as an optimization for Firefox.  This function gets called a LOT.
+ */
+showdown.subParser('encodeBackslashEscapes', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('encodeBackslashEscapes.before', text, options, globals);
+
+  text = text.replace(/\\(\\)/g, showdown.helper.escapeCharactersCallback);
+  text = text.replace(/\\([`*_{}\[\]()>#+.!~=|-])/g, showdown.helper.escapeCharactersCallback);
+
+  text = globals.converter._dispatch('encodeBackslashEscapes.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Encode/escape certain characters inside Markdown code runs.
+ * The point is that in code, these characters are literals,
+ * and lose their special Markdown meanings.
+ */
+showdown.subParser('encodeCode', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('encodeCode.before', text, options, globals);
+
+  // Encode all ampersands; HTML entities are not
+  // entities within a Markdown code span.
+  text = text
+    .replace(/&/g, '&amp;')
+  // Do the angle bracket song and dance:
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+  // Now, escape characters that are magic in Markdown:
+    .replace(/([*_{}\[\]\\=~-])/g, showdown.helper.escapeCharactersCallback);
+
+  text = globals.converter._dispatch('encodeCode.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Within tags -- meaning between < and > -- encode [\ ` * _ ~ =] so they
+ * don't conflict with their use in Markdown for code, italics and strong.
+ */
+showdown.subParser('escapeSpecialCharsWithinTagAttributes', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('escapeSpecialCharsWithinTagAttributes.before', text, options, globals);
+
+  // Build a regex to find HTML tags.
+  var tags     = /<\/?[a-z\d_:-]+(?:[\s]+[\s\S]+?)?>/gi,
+      comments = /<!(--(?:(?:[^>-]|-[^>])(?:[^-]|-[^-])*)--)>/gi;
+
+  text = text.replace(tags, function (wholeMatch) {
+    return wholeMatch
+      .replace(/(.)<\/?code>(?=.)/g, '$1`')
+      .replace(/([\\`*_~=|])/g, showdown.helper.escapeCharactersCallback);
+  });
+
+  text = text.replace(comments, function (wholeMatch) {
+    return wholeMatch
+      .replace(/([\\`*_~=|])/g, showdown.helper.escapeCharactersCallback);
+  });
+
+  text = globals.converter._dispatch('escapeSpecialCharsWithinTagAttributes.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Handle github codeblocks prior to running HashHTML so that
+ * HTML contained within the codeblock gets escaped properly
+ * Example:
+ * ```ruby
+ *     def hello_world(x)
+ *       puts "Hello, #{x}"
+ *     end
+ * ```
+ */
+showdown.subParser('githubCodeBlocks', function (text, options, globals) {
+  'use strict';
+
+  // early exit if option is not enabled
+  if (!options.ghCodeBlocks) {
+    return text;
+  }
+
+  text = globals.converter._dispatch('githubCodeBlocks.before', text, options, globals);
+
+  text += '¨0';
+
+  text = text.replace(/(?:^|\n)```(.*)\n([\s\S]*?)\n```/g, function (wholeMatch, language, codeblock) {
+    var end = (options.omitExtraWLInCodeBlocks) ? '' : '\n';
+
+    // First parse the github code block
+    codeblock = showdown.subParser('encodeCode')(codeblock, options, globals);
+    codeblock = showdown.subParser('detab')(codeblock, options, globals);
+    codeblock = codeblock.replace(/^\n+/g, ''); // trim leading newlines
+    codeblock = codeblock.replace(/\n+$/g, ''); // trim trailing whitespace
+
+    codeblock = '<pre><code' + (language ? ' class="' + language + ' language-' + language + '"' : '') + '>' + codeblock + end + '</code></pre>';
+
+    codeblock = showdown.subParser('hashBlock')(codeblock, options, globals);
+
+    // Since GHCodeblocks can be false positives, we need to
+    // store the primitive text and the parsed text in a global var,
+    // and then return a token
+    return '\n\n¨G' + (globals.ghCodeBlocks.push({text: wholeMatch, codeblock: codeblock}) - 1) + 'G\n\n';
+  });
+
+  // attacklab: strip sentinel
+  text = text.replace(/¨0/, '');
+
+  return globals.converter._dispatch('githubCodeBlocks.after', text, options, globals);
+});
+
+showdown.subParser('hashBlock', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('hashBlock.before', text, options, globals);
+  text = text.replace(/(^\n+|\n+$)/g, '');
+  text = '\n\n¨K' + (globals.gHtmlBlocks.push(text) - 1) + 'K\n\n';
+  text = globals.converter._dispatch('hashBlock.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Hash and escape <code> elements that should not be parsed as markdown
+ */
+showdown.subParser('hashCodeTags', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('hashCodeTags.before', text, options, globals);
+
+  var repFunc = function (wholeMatch, match, left, right) {
+    var codeblock = left + showdown.subParser('encodeCode')(match, options, globals) + right;
+    return '¨C' + (globals.gHtmlSpans.push(codeblock) - 1) + 'C';
+  };
+
+  // Hash naked <code>
+  text = showdown.helper.replaceRecursiveRegExp(text, repFunc, '<code\\b[^>]*>', '</code>', 'gim');
+
+  text = globals.converter._dispatch('hashCodeTags.after', text, options, globals);
+  return text;
+});
+
+showdown.subParser('hashElement', function (text, options, globals) {
+  'use strict';
+
+  return function (wholeMatch, m1) {
+    var blockText = m1;
+
+    // Undo double lines
+    blockText = blockText.replace(/\n\n/g, '\n');
+    blockText = blockText.replace(/^\n/, '');
+
+    // strip trailing blank lines
+    blockText = blockText.replace(/\n+$/g, '');
+
+    // Replace the element text with a marker ("¨KxK" where x is its key)
+    blockText = '\n\n¨K' + (globals.gHtmlBlocks.push(blockText) - 1) + 'K\n\n';
+
+    return blockText;
+  };
+});
+
+showdown.subParser('hashHTMLBlocks', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('hashHTMLBlocks.before', text, options, globals);
+
+  var blockTags = [
+        'pre',
+        'div',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'blockquote',
+        'table',
+        'dl',
+        'ol',
+        'ul',
+        'script',
+        'noscript',
+        'form',
+        'fieldset',
+        'iframe',
+        'math',
+        'style',
+        'section',
+        'header',
+        'footer',
+        'nav',
+        'article',
+        'aside',
+        'address',
+        'audio',
+        'canvas',
+        'figure',
+        'hgroup',
+        'output',
+        'video',
+        'p'
+      ],
+      repFunc = function (wholeMatch, match, left, right) {
+        var txt = wholeMatch;
+        // check if this html element is marked as markdown
+        // if so, it's contents should be parsed as markdown
+        if (left.search(/\bmarkdown\b/) !== -1) {
+          txt = left + globals.converter.makeHtml(match) + right;
+        }
+        return '\n\n¨K' + (globals.gHtmlBlocks.push(txt) - 1) + 'K\n\n';
+      };
+
+  if (options.backslashEscapesHTMLTags) {
+    // encode backslash escaped HTML tags
+    text = text.replace(/\\<(\/?[^>]+?)>/g, function (wm, inside) {
+      return '&lt;' + inside + '&gt;';
+    });
+  }
+
+  // hash HTML Blocks
+  for (var i = 0; i < blockTags.length; ++i) {
+
+    var opTagPos,
+        rgx1     = new RegExp('^ {0,3}(<' + blockTags[i] + '\\b[^>]*>)', 'im'),
+        patLeft  = '<' + blockTags[i] + '\\b[^>]*>',
+        patRight = '</' + blockTags[i] + '>';
+    // 1. Look for the first position of the first opening HTML tag in the text
+    while ((opTagPos = showdown.helper.regexIndexOf(text, rgx1)) !== -1) {
+
+      // if the HTML tag is \ escaped, we need to escape it and break
+
+
+      //2. Split the text in that position
+      var subTexts = showdown.helper.splitAtIndex(text, opTagPos),
+      //3. Match recursively
+          newSubText1 = showdown.helper.replaceRecursiveRegExp(subTexts[1], repFunc, patLeft, patRight, 'im');
+
+      // prevent an infinite loop
+      if (newSubText1 === subTexts[1]) {
+        break;
+      }
+      text = subTexts[0].concat(newSubText1);
+    }
+  }
+  // HR SPECIAL CASE
+  text = text.replace(/(\n {0,3}(<(hr)\b([^<>])*?\/?>)[ \t]*(?=\n{2,}))/g,
+    showdown.subParser('hashElement')(text, options, globals));
+
+  // Special case for standalone HTML comments
+  text = showdown.helper.replaceRecursiveRegExp(text, function (txt) {
+    return '\n\n¨K' + (globals.gHtmlBlocks.push(txt) - 1) + 'K\n\n';
+  }, '^ {0,3}<!--', '-->', 'gm');
+
+  // PHP and ASP-style processor instructions (<?...?> and <%...%>)
+  text = text.replace(/(?:\n\n)( {0,3}(?:<([?%])[^\r]*?\2>)[ \t]*(?=\n{2,}))/g,
+    showdown.subParser('hashElement')(text, options, globals));
+
+  text = globals.converter._dispatch('hashHTMLBlocks.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Hash span elements that should not be parsed as markdown
+ */
+showdown.subParser('hashHTMLSpans', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('hashHTMLSpans.before', text, options, globals);
+
+  function hashHTMLSpan (html) {
+    return '¨C' + (globals.gHtmlSpans.push(html) - 1) + 'C';
+  }
+
+  // Hash Self Closing tags
+  text = text.replace(/<[^>]+?\/>/gi, function (wm) {
+    return hashHTMLSpan(wm);
+  });
+
+  // Hash tags without properties
+  text = text.replace(/<([^>]+?)>[\s\S]*?<\/\1>/g, function (wm) {
+    return hashHTMLSpan(wm);
+  });
+
+  // Hash tags with properties
+  text = text.replace(/<([^>]+?)\s[^>]+?>[\s\S]*?<\/\1>/g, function (wm) {
+    return hashHTMLSpan(wm);
+  });
+
+  // Hash self closing tags without />
+  text = text.replace(/<[^>]+?>/gi, function (wm) {
+    return hashHTMLSpan(wm);
+  });
+
+  /*showdown.helper.matchRecursiveRegExp(text, '<code\\b[^>]*>', '</code>', 'gi');*/
+
+  text = globals.converter._dispatch('hashHTMLSpans.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Unhash HTML spans
+ */
+showdown.subParser('unhashHTMLSpans', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('unhashHTMLSpans.before', text, options, globals);
+
+  for (var i = 0; i < globals.gHtmlSpans.length; ++i) {
+    var repText = globals.gHtmlSpans[i],
+        // limiter to prevent infinite loop (assume 10 as limit for recurse)
+        limit = 0;
+
+    while (/¨C(\d+)C/.test(repText)) {
+      var num = RegExp.$1;
+      repText = repText.replace('¨C' + num + 'C', globals.gHtmlSpans[num]);
+      if (limit === 10) {
+        break;
+      }
+      ++limit;
+    }
+    text = text.replace('¨C' + i + 'C', repText);
+  }
+
+  text = globals.converter._dispatch('unhashHTMLSpans.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Hash and escape <pre><code> elements that should not be parsed as markdown
+ */
+showdown.subParser('hashPreCodeTags', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('hashPreCodeTags.before', text, options, globals);
+
+  var repFunc = function (wholeMatch, match, left, right) {
+    // encode html entities
+    var codeblock = left + showdown.subParser('encodeCode')(match, options, globals) + right;
+    return '\n\n¨G' + (globals.ghCodeBlocks.push({text: wholeMatch, codeblock: codeblock}) - 1) + 'G\n\n';
+  };
+
+  // Hash <pre><code>
+  text = showdown.helper.replaceRecursiveRegExp(text, repFunc, '^ {0,3}<pre\\b[^>]*>\\s*<code\\b[^>]*>', '^ {0,3}</code>\\s*</pre>', 'gim');
+
+  text = globals.converter._dispatch('hashPreCodeTags.after', text, options, globals);
+  return text;
+});
+
+showdown.subParser('headers', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('headers.before', text, options, globals);
+
+  var headerLevelStart = (isNaN(parseInt(options.headerLevelStart))) ? 1 : parseInt(options.headerLevelStart),
+
+  // Set text-style headers:
+  //	Header 1
+  //	========
+  //
+  //	Header 2
+  //	--------
+  //
+      setextRegexH1 = (options.smoothLivePreview) ? /^(.+)[ \t]*\n={2,}[ \t]*\n+/gm : /^(.+)[ \t]*\n=+[ \t]*\n+/gm,
+      setextRegexH2 = (options.smoothLivePreview) ? /^(.+)[ \t]*\n-{2,}[ \t]*\n+/gm : /^(.+)[ \t]*\n-+[ \t]*\n+/gm;
+
+  text = text.replace(setextRegexH1, function (wholeMatch, m1) {
+
+    var spanGamut = showdown.subParser('spanGamut')(m1, options, globals),
+        hID = (options.noHeaderId) ? '' : ' id="' + headerId(m1) + '"',
+        hLevel = headerLevelStart,
+        hashBlock = '<h' + hLevel + hID + '>' + spanGamut + '</h' + hLevel + '>';
+    return showdown.subParser('hashBlock')(hashBlock, options, globals);
+  });
+
+  text = text.replace(setextRegexH2, function (matchFound, m1) {
+    var spanGamut = showdown.subParser('spanGamut')(m1, options, globals),
+        hID = (options.noHeaderId) ? '' : ' id="' + headerId(m1) + '"',
+        hLevel = headerLevelStart + 1,
+        hashBlock = '<h' + hLevel + hID + '>' + spanGamut + '</h' + hLevel + '>';
+    return showdown.subParser('hashBlock')(hashBlock, options, globals);
+  });
+
+  // atx-style headers:
+  //  # Header 1
+  //  ## Header 2
+  //  ## Header 2 with closing hashes ##
+  //  ...
+  //  ###### Header 6
+  //
+  var atxStyle = (options.requireSpaceBeforeHeadingText) ? /^(#{1,6})[ \t]+(.+?)[ \t]*#*\n+/gm : /^(#{1,6})[ \t]*(.+?)[ \t]*#*\n+/gm;
+
+  text = text.replace(atxStyle, function (wholeMatch, m1, m2) {
+    var hText = m2;
+    if (options.customizedHeaderId) {
+      hText = m2.replace(/\s?\{([^{]+?)}\s*$/, '');
+    }
+
+    var span = showdown.subParser('spanGamut')(hText, options, globals),
+        hID = (options.noHeaderId) ? '' : ' id="' + headerId(m2) + '"',
+        hLevel = headerLevelStart - 1 + m1.length,
+        header = '<h' + hLevel + hID + '>' + span + '</h' + hLevel + '>';
+
+    return showdown.subParser('hashBlock')(header, options, globals);
+  });
+
+  function headerId (m) {
+    var title,
+        prefix;
+
+    // It is separate from other options to allow combining prefix and customized
+    if (options.customizedHeaderId) {
+      var match = m.match(/\{([^{]+?)}\s*$/);
+      if (match && match[1]) {
+        m = match[1];
+      }
+    }
+
+    title = m;
+
+    // Prefix id to prevent causing inadvertent pre-existing style matches.
+    if (showdown.helper.isString(options.prefixHeaderId)) {
+      prefix = options.prefixHeaderId;
+    } else if (options.prefixHeaderId === true) {
+      prefix = 'section-';
+    } else {
+      prefix = '';
+    }
+
+    if (!options.rawPrefixHeaderId) {
+      title = prefix + title;
+    }
+
+    if (options.ghCompatibleHeaderId) {
+      title = title
+        .replace(/ /g, '-')
+        // replace previously escaped chars (&, ¨ and $)
+        .replace(/&amp;/g, '')
+        .replace(/¨T/g, '')
+        .replace(/¨D/g, '')
+        // replace rest of the chars (&~$ are repeated as they might have been escaped)
+        // borrowed from github's redcarpet (some they should produce similar results)
+        .replace(/[&+$,\/:;=?@"#{}|^¨~\[\]`\\*)(%.!'<>]/g, '')
+        .toLowerCase();
+    } else if (options.rawHeaderId) {
+      title = title
+        .replace(/ /g, '-')
+        // replace previously escaped chars (&, ¨ and $)
+        .replace(/&amp;/g, '&')
+        .replace(/¨T/g, '¨')
+        .replace(/¨D/g, '$')
+        // replace " and '
+        .replace(/["']/g, '-')
+        .toLowerCase();
+    } else {
+      title = title
+        .replace(/[^\w]/g, '')
+        .toLowerCase();
+    }
+
+    if (options.rawPrefixHeaderId) {
+      title = prefix + title;
+    }
+
+    if (globals.hashLinkCounts[title]) {
+      title = title + '-' + (globals.hashLinkCounts[title]++);
+    } else {
+      globals.hashLinkCounts[title] = 1;
+    }
+    return title;
+  }
+
+  text = globals.converter._dispatch('headers.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Turn Markdown link shortcuts into XHTML <a> tags.
+ */
+showdown.subParser('horizontalRule', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('horizontalRule.before', text, options, globals);
+
+  var key = showdown.subParser('hashBlock')('<hr />', options, globals);
+  text = text.replace(/^ {0,2}( ?-){3,}[ \t]*$/gm, key);
+  text = text.replace(/^ {0,2}( ?\*){3,}[ \t]*$/gm, key);
+  text = text.replace(/^ {0,2}( ?_){3,}[ \t]*$/gm, key);
+
+  text = globals.converter._dispatch('horizontalRule.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Turn Markdown image shortcuts into <img> tags.
+ */
+showdown.subParser('images', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('images.before', text, options, globals);
+
+  var inlineRegExp      = /!\[([^\]]*?)][ \t]*()\([ \t]?<?([\S]+?(?:\([\S]*?\)[\S]*?)?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(["'])([^"]*?)\6)?[ \t]?\)/g,
+      crazyRegExp       = /!\[([^\]]*?)][ \t]*()\([ \t]?<([^>]*)>(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(?:(["'])([^"]*?)\6))?[ \t]?\)/g,
+      base64RegExp      = /!\[([^\]]*?)][ \t]*()\([ \t]?<?(data:.+?\/.+?;base64,[A-Za-z0-9+/=\n]+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(["'])([^"]*?)\6)?[ \t]?\)/g,
+      referenceRegExp   = /!\[([^\]]*?)] ?(?:\n *)?\[([\s\S]*?)]()()()()()/g,
+      refShortcutRegExp = /!\[([^\[\]]+)]()()()()()/g;
+
+  function writeImageTagBase64 (wholeMatch, altText, linkId, url, width, height, m5, title) {
+    url = url.replace(/\s/g, '');
+    return writeImageTag (wholeMatch, altText, linkId, url, width, height, m5, title);
+  }
+
+  function writeImageTag (wholeMatch, altText, linkId, url, width, height, m5, title) {
+
+    var gUrls   = globals.gUrls,
+        gTitles = globals.gTitles,
+        gDims   = globals.gDimensions;
+
+    linkId = linkId.toLowerCase();
+
+    if (!title) {
+      title = '';
+    }
+    // Special case for explicit empty url
+    if (wholeMatch.search(/\(<?\s*>? ?(['"].*['"])?\)$/m) > -1) {
+      url = '';
+
+    } else if (url === '' || url === null) {
+      if (linkId === '' || linkId === null) {
+        // lower-case and turn embedded newlines into spaces
+        linkId = altText.toLowerCase().replace(/ ?\n/g, ' ');
+      }
+      url = '#' + linkId;
+
+      if (!showdown.helper.isUndefined(gUrls[linkId])) {
+        url = gUrls[linkId];
+        if (!showdown.helper.isUndefined(gTitles[linkId])) {
+          title = gTitles[linkId];
+        }
+        if (!showdown.helper.isUndefined(gDims[linkId])) {
+          width = gDims[linkId].width;
+          height = gDims[linkId].height;
+        }
+      } else {
+        return wholeMatch;
+      }
+    }
+
+    altText = altText
+      .replace(/"/g, '&quot;')
+    //altText = showdown.helper.escapeCharacters(altText, '*_', false);
+      .replace(showdown.helper.regexes.asteriskDashAndColon, showdown.helper.escapeCharactersCallback);
+    //url = showdown.helper.escapeCharacters(url, '*_', false);
+    url = url.replace(showdown.helper.regexes.asteriskDashAndColon, showdown.helper.escapeCharactersCallback);
+    var result = '<img src="' + url + '" alt="' + altText + '"';
+
+    if (title) {
+      title = title
+        .replace(/"/g, '&quot;')
+      //title = showdown.helper.escapeCharacters(title, '*_', false);
+        .replace(showdown.helper.regexes.asteriskDashAndColon, showdown.helper.escapeCharactersCallback);
+      result += ' title="' + title + '"';
+    }
+
+    if (width && height) {
+      width  = (width === '*') ? 'auto' : width;
+      height = (height === '*') ? 'auto' : height;
+
+      result += ' width="' + width + '"';
+      result += ' height="' + height + '"';
+    }
+
+    result += ' />';
+
+    return result;
+  }
+
+  // First, handle reference-style labeled images: ![alt text][id]
+  text = text.replace(referenceRegExp, writeImageTag);
+
+  // Next, handle inline images:  ![alt text](url =<width>x<height> "optional title")
+
+  // base64 encoded images
+  text = text.replace(base64RegExp, writeImageTagBase64);
+
+  // cases with crazy urls like ./image/cat1).png
+  text = text.replace(crazyRegExp, writeImageTag);
+
+  // normal cases
+  text = text.replace(inlineRegExp, writeImageTag);
+
+  // handle reference-style shortcuts: ![img text]
+  text = text.replace(refShortcutRegExp, writeImageTag);
+
+  text = globals.converter._dispatch('images.after', text, options, globals);
+  return text;
+});
+
+showdown.subParser('italicsAndBold', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('italicsAndBold.before', text, options, globals);
+
+  // it's faster to have 3 separate regexes for each case than have just one
+  // because of backtracing, in some cases, it could lead to an exponential effect
+  // called "catastrophic backtrace". Ominous!
+
+  function parseInside (txt, left, right) {
+    /*
+    if (options.simplifiedAutoLink) {
+      txt = showdown.subParser('simplifiedAutoLinks')(txt, options, globals);
+    }
+    */
+    return left + txt + right;
+  }
+
+  // Parse underscores
+  if (options.literalMidWordUnderscores) {
+    text = text.replace(/\b___(\S[\s\S]*)___\b/g, function (wm, txt) {
+      return parseInside (txt, '<strong><em>', '</em></strong>');
+    });
+    text = text.replace(/\b__(\S[\s\S]*)__\b/g, function (wm, txt) {
+      return parseInside (txt, '<strong>', '</strong>');
+    });
+    text = text.replace(/\b_(\S[\s\S]*?)_\b/g, function (wm, txt) {
+      return parseInside (txt, '<em>', '</em>');
+    });
+  } else {
+    text = text.replace(/___(\S[\s\S]*?)___/g, function (wm, m) {
+      return (/\S$/.test(m)) ? parseInside (m, '<strong><em>', '</em></strong>') : wm;
+    });
+    text = text.replace(/__(\S[\s\S]*?)__/g, function (wm, m) {
+      return (/\S$/.test(m)) ? parseInside (m, '<strong>', '</strong>') : wm;
+    });
+    text = text.replace(/_([^\s_][\s\S]*?)_/g, function (wm, m) {
+      // !/^_[^_]/.test(m) - test if it doesn't start with __ (since it seems redundant, we removed it)
+      return (/\S$/.test(m)) ? parseInside (m, '<em>', '</em>') : wm;
+    });
+  }
+
+  // Now parse asterisks
+  if (options.literalMidWordAsterisks) {
+    text = text.trim().replace(/(^| )\*{3}(\S[\s\S]*?)\*{3}([ ,;!?.]|$)/g, function (wm, lead, txt, trail) {
+      return parseInside (txt, lead + '<strong><em>', '</em></strong>' + trail);
+    });
+    text = text.trim().replace(/(^| )\*{2}(\S[\s\S]*?)\*{2}([ ,;!?.]|$)/g, function (wm, lead, txt, trail) {
+      return parseInside (txt, lead + '<strong>', '</strong>' + trail);
+    });
+    text = text.trim().replace(/(^| )\*(\S[\s\S]*?)\*([ ,;!?.]|$)/g, function (wm, lead, txt, trail) {
+      return parseInside (txt, lead + '<em>', '</em>' + trail);
+    });
+  } else {
+    text = text.replace(/\*\*\*(\S[\s\S]*?)\*\*\*/g, function (wm, m) {
+      return (/\S$/.test(m)) ? parseInside (m, '<strong><em>', '</em></strong>') : wm;
+    });
+    text = text.replace(/\*\*(\S[\s\S]*?)\*\*/g, function (wm, m) {
+      return (/\S$/.test(m)) ? parseInside (m, '<strong>', '</strong>') : wm;
+    });
+    text = text.replace(/\*([^\s*][\s\S]*?)\*/g, function (wm, m) {
+      // !/^\*[^*]/.test(m) - test if it doesn't start with ** (since it seems redundant, we removed it)
+      return (/\S$/.test(m)) ? parseInside (m, '<em>', '</em>') : wm;
+    });
+  }
+
+
+  text = globals.converter._dispatch('italicsAndBold.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Form HTML ordered (numbered) and unordered (bulleted) lists.
+ */
+showdown.subParser('lists', function (text, options, globals) {
+  'use strict';
+
+  /**
+   * Process the contents of a single ordered or unordered list, splitting it
+   * into individual list items.
+   * @param {string} listStr
+   * @param {boolean} trimTrailing
+   * @returns {string}
+   */
+  function processListItems (listStr, trimTrailing) {
+    // The $g_list_level global keeps track of when we're inside a list.
+    // Each time we enter a list, we increment it; when we leave a list,
+    // we decrement. If it's zero, we're not in a list anymore.
+    //
+    // We do this because when we're not inside a list, we want to treat
+    // something like this:
+    //
+    //    I recommend upgrading to version
+    //    8. Oops, now this line is treated
+    //    as a sub-list.
+    //
+    // As a single paragraph, despite the fact that the second line starts
+    // with a digit-period-space sequence.
+    //
+    // Whereas when we're inside a list (or sub-list), that line will be
+    // treated as the start of a sub-list. What a kludge, huh? This is
+    // an aspect of Markdown's syntax that's hard to parse perfectly
+    // without resorting to mind-reading. Perhaps the solution is to
+    // change the syntax rules such that sub-lists must start with a
+    // starting cardinal number; e.g. "1." or "a.".
+    globals.gListLevel++;
+
+    // trim trailing blank lines:
+    listStr = listStr.replace(/\n{2,}$/, '\n');
+
+    // attacklab: add sentinel to emulate \z
+    listStr += '¨0';
+
+    var rgx = /(\n)?(^ {0,3})([*+-]|\d+[.])[ \t]+((\[(x|X| )?])?[ \t]*[^\r]+?(\n{1,2}))(?=\n*(¨0| {0,3}([*+-]|\d+[.])[ \t]+))/gm,
+        isParagraphed = (/\n[ \t]*\n(?!¨0)/.test(listStr));
+
+    // Since version 1.5, nesting sublists requires 4 spaces (or 1 tab) indentation,
+    // which is a syntax breaking change
+    // activating this option reverts to old behavior
+    if (options.disableForced4SpacesIndentedSublists) {
+      rgx = /(\n)?(^ {0,3})([*+-]|\d+[.])[ \t]+((\[(x|X| )?])?[ \t]*[^\r]+?(\n{1,2}))(?=\n*(¨0|\2([*+-]|\d+[.])[ \t]+))/gm;
+    }
+
+    listStr = listStr.replace(rgx, function (wholeMatch, m1, m2, m3, m4, taskbtn, checked) {
+      checked = (checked && checked.trim() !== '');
+
+      var item = showdown.subParser('outdent')(m4, options, globals),
+          bulletStyle = '';
+
+      // Support for github tasklists
+      if (taskbtn && options.tasklists) {
+        bulletStyle = ' class="task-list-item" style="list-style-type: none;"';
+        item = item.replace(/^[ \t]*\[(x|X| )?]/m, function () {
+          var otp = '<input type="checkbox" disabled style="margin: 0px 0.35em 0.25em -1.6em; vertical-align: middle;"';
+          if (checked) {
+            otp += ' checked';
+          }
+          otp += '>';
+          return otp;
+        });
+      }
+
+      // ISSUE #312
+      // This input: - - - a
+      // causes trouble to the parser, since it interprets it as:
+      // <ul><li><li><li>a</li></li></li></ul>
+      // instead of:
+      // <ul><li>- - a</li></ul>
+      // So, to prevent it, we will put a marker (¨A)in the beginning of the line
+      // Kind of hackish/monkey patching, but seems more effective than overcomplicating the list parser
+      item = item.replace(/^([-*+]|\d\.)[ \t]+[\S\n ]*/g, function (wm2) {
+        return '¨A' + wm2;
+      });
+
+      // m1 - Leading line or
+      // Has a double return (multi paragraph) or
+      // Has sublist
+      if (m1 || (item.search(/\n{2,}/) > -1)) {
+        item = showdown.subParser('githubCodeBlocks')(item, options, globals);
+        item = showdown.subParser('blockGamut')(item, options, globals);
+      } else {
+        // Recursion for sub-lists:
+        item = showdown.subParser('lists')(item, options, globals);
+        item = item.replace(/\n$/, ''); // chomp(item)
+        item = showdown.subParser('hashHTMLBlocks')(item, options, globals);
+
+        // Colapse double linebreaks
+        item = item.replace(/\n\n+/g, '\n\n');
+        if (isParagraphed) {
+          item = showdown.subParser('paragraphs')(item, options, globals);
+        } else {
+          item = showdown.subParser('spanGamut')(item, options, globals);
+        }
+      }
+
+      // now we need to remove the marker (¨A)
+      item = item.replace('¨A', '');
+      // we can finally wrap the line in list item tags
+      item =  '<li' + bulletStyle + '>' + item + '</li>\n';
+
+      return item;
+    });
+
+    // attacklab: strip sentinel
+    listStr = listStr.replace(/¨0/g, '');
+
+    globals.gListLevel--;
+
+    if (trimTrailing) {
+      listStr = listStr.replace(/\s+$/, '');
+    }
+
+    return listStr;
+  }
+
+  function styleStartNumber (list, listType) {
+    // check if ol and starts by a number different than 1
+    if (listType === 'ol') {
+      var res = list.match(/^ *(\d+)\./);
+      if (res && res[1] !== '1') {
+        return ' start="' + res[1] + '"';
+      }
+    }
+    return '';
+  }
+
+  /**
+   * Check and parse consecutive lists (better fix for issue #142)
+   * @param {string} list
+   * @param {string} listType
+   * @param {boolean} trimTrailing
+   * @returns {string}
+   */
+  function parseConsecutiveLists (list, listType, trimTrailing) {
+    // check if we caught 2 or more consecutive lists by mistake
+    // we use the counterRgx, meaning if listType is UL we look for OL and vice versa
+    var olRgx = (options.disableForced4SpacesIndentedSublists) ? /^ ?\d+\.[ \t]/gm : /^ {0,3}\d+\.[ \t]/gm,
+        ulRgx = (options.disableForced4SpacesIndentedSublists) ? /^ ?[*+-][ \t]/gm : /^ {0,3}[*+-][ \t]/gm,
+        counterRxg = (listType === 'ul') ? olRgx : ulRgx,
+        result = '';
+
+    if (list.search(counterRxg) !== -1) {
+      (function parseCL (txt) {
+        var pos = txt.search(counterRxg),
+            style = styleStartNumber(list, listType);
+        if (pos !== -1) {
+          // slice
+          result += '\n<' + listType + style + '>\n' + processListItems(txt.slice(0, pos), !!trimTrailing) + '</' + listType + '>\n';
+
+          // invert counterType and listType
+          listType = (listType === 'ul') ? 'ol' : 'ul';
+          counterRxg = (listType === 'ul') ? olRgx : ulRgx;
+
+          //recurse
+          parseCL(txt.slice(pos));
+        } else {
+          result += '\n<' + listType + style + '>\n' + processListItems(txt, !!trimTrailing) + '</' + listType + '>\n';
+        }
+      })(list);
+    } else {
+      var style = styleStartNumber(list, listType);
+      result = '\n<' + listType + style + '>\n' + processListItems(list, !!trimTrailing) + '</' + listType + '>\n';
+    }
+
+    return result;
+  }
+
+  /** Start of list parsing **/
+  text = globals.converter._dispatch('lists.before', text, options, globals);
+  // add sentinel to hack around khtml/safari bug:
+  // http://bugs.webkit.org/show_bug.cgi?id=11231
+  text += '¨0';
+
+  if (globals.gListLevel) {
+    text = text.replace(/^(( {0,3}([*+-]|\d+[.])[ \t]+)[^\r]+?(¨0|\n{2,}(?=\S)(?![ \t]*(?:[*+-]|\d+[.])[ \t]+)))/gm,
+      function (wholeMatch, list, m2) {
+        var listType = (m2.search(/[*+-]/g) > -1) ? 'ul' : 'ol';
+        return parseConsecutiveLists(list, listType, true);
+      }
+    );
+  } else {
+    text = text.replace(/(\n\n|^\n?)(( {0,3}([*+-]|\d+[.])[ \t]+)[^\r]+?(¨0|\n{2,}(?=\S)(?![ \t]*(?:[*+-]|\d+[.])[ \t]+)))/gm,
+      function (wholeMatch, m1, list, m3) {
+        var listType = (m3.search(/[*+-]/g) > -1) ? 'ul' : 'ol';
+        return parseConsecutiveLists(list, listType, false);
+      }
+    );
+  }
+
+  // strip sentinel
+  text = text.replace(/¨0/, '');
+  text = globals.converter._dispatch('lists.after', text, options, globals);
+  return text;
+});
+
+/**
+ * Remove one level of line-leading tabs or spaces
+ */
+showdown.subParser('outdent', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('outdent.before', text, options, globals);
+
+  // attacklab: hack around Konqueror 3.5.4 bug:
+  // "----------bug".replace(/^-/g,"") == "bug"
+  text = text.replace(/^(\t|[ ]{1,4})/gm, '¨0'); // attacklab: g_tab_width
+
+  // attacklab: clean up hack
+  text = text.replace(/¨0/g, '');
+
+  text = globals.converter._dispatch('outdent.after', text, options, globals);
+  return text;
+});
+
+/**
+ *
+ */
+showdown.subParser('paragraphs', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('paragraphs.before', text, options, globals);
+  // Strip leading and trailing lines:
+  text = text.replace(/^\n+/g, '');
+  text = text.replace(/\n+$/g, '');
+
+  var grafs = text.split(/\n{2,}/g),
+      grafsOut = [],
+      end = grafs.length; // Wrap <p> tags
+
+  for (var i = 0; i < end; i++) {
+    var str = grafs[i];
+    // if this is an HTML marker, copy it
+    if (str.search(/¨(K|G)(\d+)\1/g) >= 0) {
+      grafsOut.push(str);
+
+    // test for presence of characters to prevent empty lines being parsed
+    // as paragraphs (resulting in undesired extra empty paragraphs)
+    } else if (str.search(/\S/) >= 0) {
+      str = showdown.subParser('spanGamut')(str, options, globals);
+      str = str.replace(/^([ \t]*)/g, '<p>');
+      str += '</p>';
+      grafsOut.push(str);
+    }
+  }
+
+  /** Unhashify HTML blocks */
+  end = grafsOut.length;
+  for (i = 0; i < end; i++) {
+    var blockText = '',
+        grafsOutIt = grafsOut[i],
+        codeFlag = false;
+    // if this is a marker for an html block...
+    // use RegExp.test instead of string.search because of QML bug
+    while (/¨(K|G)(\d+)\1/.test(grafsOutIt)) {
+      var delim = RegExp.$1,
+          num   = RegExp.$2;
+
+      if (delim === 'K') {
+        blockText = globals.gHtmlBlocks[num];
+      } else {
+        // we need to check if ghBlock is a false positive
+        if (codeFlag) {
+          // use encoded version of all text
+          blockText = showdown.subParser('encodeCode')(globals.ghCodeBlocks[num].text, options, globals);
+        } else {
+          blockText = globals.ghCodeBlocks[num].codeblock;
+        }
+      }
+      blockText = blockText.replace(/\$/g, '$$$$'); // Escape any dollar signs
+
+      grafsOutIt = grafsOutIt.replace(/(\n\n)?¨(K|G)\d+\2(\n\n)?/, blockText);
+      // Check if grafsOutIt is a pre->code
+      if (/^<pre\b[^>]*>\s*<code\b[^>]*>/.test(grafsOutIt)) {
+        codeFlag = true;
+      }
+    }
+    grafsOut[i] = grafsOutIt;
+  }
+  text = grafsOut.join('\n');
+  // Strip leading and trailing lines:
+  text = text.replace(/^\n+/g, '');
+  text = text.replace(/\n+$/g, '');
+  return globals.converter._dispatch('paragraphs.after', text, options, globals);
+});
+
+/**
+ * Run extension
+ */
+showdown.subParser('runExtension', function (ext, text, options, globals) {
+  'use strict';
+
+  if (ext.filter) {
+    text = ext.filter(text, globals.converter, options);
+
+  } else if (ext.regex) {
+    // TODO remove this when old extension loading mechanism is deprecated
+    var re = ext.regex;
+    if (!(re instanceof RegExp)) {
+      re = new RegExp(re, 'g');
+    }
+    text = text.replace(re, ext.replace);
+  }
+
+  return text;
+});
+
+/**
+ * These are all the transformations that occur *within* block-level
+ * tags like paragraphs, headers, and list items.
+ */
+showdown.subParser('spanGamut', function (text, options, globals) {
+  'use strict';
+
+  text = globals.converter._dispatch('spanGamut.before', text, options, globals);
+  text = showdown.subParser('codeSpans')(text, options, globals);
+  text = showdown.subParser('escapeSpecialCharsWithinTagAttributes')(text, options, globals);
+  text = showdown.subParser('encodeBackslashEscapes')(text, options, globals);
+
+  // Process anchor and image tags. Images must come first,
+  // because ![foo][f] looks like an anchor.
+  text = showdown.subParser('images')(text, options, globals);
+  text = showdown.subParser('anchors')(text, options, globals);
+
+  // Make links out of things like `<http://example.com/>`
+  // Must come after anchors, because you can use < and >
+  // delimiters in inline links like [this](<url>).
+  text = showdown.subParser('autoLinks')(text, options, globals);
+  text = showdown.subParser('simplifiedAutoLinks')(text, options, globals);
+  text = showdown.subParser('emoji')(text, options, globals);
+  text = showdown.subParser('underline')(text, options, globals);
+  text = showdown.subParser('italicsAndBold')(text, options, globals);
+  text = showdown.subParser('strikethrough')(text, options, globals);
+  text = showdown.subParser('ellipsis')(text, options, globals);
+
+  // we need to hash HTML tags inside spans
+  text = showdown.subParser('hashHTMLSpans')(text, options, globals);
+
+  // now we encode amps and angles
+  text = showdown.subParser('encodeAmpsAndAngles')(text, options, globals);
+
+  // Do hard breaks
+  if (options.simpleLineBreaks) {
+    // GFM style hard breaks
+    // only add line breaks if the text does not contain a block (special case for lists)
+    if (!/\n\n¨K/.test(text)) {
+      text = text.replace(/\n+/g, '<br />\n');
+    }
+  } else {
+    // Vanilla hard breaks
+    text = text.replace(/  +\n/g, '<br />\n');
+  }
+
+  text = globals.converter._dispatch('spanGamut.after', text, options, globals);
+  return text;
+});
+
+showdown.subParser('strikethrough', function (text, options, globals) {
+  'use strict';
+
+  function parseInside (txt) {
+    if (options.simplifiedAutoLink) {
+      txt = showdown.subParser('simplifiedAutoLinks')(txt, options, globals);
+    }
+    return '<del>' + txt + '</del>';
+  }
+
+  if (options.strikethrough) {
+    text = globals.converter._dispatch('strikethrough.before', text, options, globals);
+    text = text.replace(/(?:~){2}([\s\S]+?)(?:~){2}/g, function (wm, txt) { return parseInside(txt); });
+    text = globals.converter._dispatch('strikethrough.after', text, options, globals);
+  }
+
+  return text;
+});
+
+/**
+ * Strips link definitions from text, stores the URLs and titles in
+ * hash references.
+ * Link defs are in the form: ^[id]: url "optional title"
+ */
+showdown.subParser('stripLinkDefinitions', function (text, options, globals) {
+  'use strict';
+
+  var regex       = /^ {0,3}\[(.+)]:[ \t]*\n?[ \t]*<?([^>\s]+)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n+|(?=¨0))/gm,
+      base64Regex = /^ {0,3}\[(.+)]:[ \t]*\n?[ \t]*<?(data:.+?\/.+?;base64,[A-Za-z0-9+/=\n]+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n\n|(?=¨0)|(?=\n\[))/gm;
+
+  // attacklab: sentinel workarounds for lack of \A and \Z, safari\khtml bug
+  text += '¨0';
+
+  var replaceFunc = function (wholeMatch, linkId, url, width, height, blankLines, title) {
+    linkId = linkId.toLowerCase();
+    if (url.match(/^data:.+?\/.+?;base64,/)) {
+      // remove newlines
+      globals.gUrls[linkId] = url.replace(/\s/g, '');
+    } else {
+      globals.gUrls[linkId] = showdown.subParser('encodeAmpsAndAngles')(url, options, globals);  // Link IDs are case-insensitive
+    }
+
+    if (blankLines) {
+      // Oops, found blank lines, so it's not a title.
+      // Put back the parenthetical statement we stole.
+      return blankLines + title;
+
+    } else {
+      if (title) {
+        globals.gTitles[linkId] = title.replace(/"|'/g, '&quot;');
+      }
+      if (options.parseImgDimensions && width && height) {
+        globals.gDimensions[linkId] = {
+          width:  width,
+          height: height
+        };
+      }
+    }
+    // Completely remove the definition from the text
+    return '';
+  };
+
+  // first we try to find base64 link references
+  text = text.replace(base64Regex, replaceFunc);
+
+  text = text.replace(regex, replaceFunc);
+
+  // attacklab: strip sentinel
+  text = text.replace(/¨0/, '');
+
+  return text;
+});
+
+showdown.subParser('tables', function (text, options, globals) {
+  'use strict';
+
+  if (!options.tables) {
+    return text;
+  }
+
+  var tableRgx       = /^ {0,3}\|?.+\|.+\n {0,3}\|?[ \t]*:?[ \t]*(?:[-=]){2,}[ \t]*:?[ \t]*\|[ \t]*:?[ \t]*(?:[-=]){2,}[\s\S]+?(?:\n\n|<ol|<ul|¨0)/gm,
+    //singeColTblRgx = /^ {0,3}\|.+\|\n {0,3}\|[ \t]*:?[ \t]*(?:[-=]){2,}[ \t]*:?[ \t]*\|[ \t]*\n(?: {0,3}\|.+\|\n)+(?:\n\n|¨0)/gm;
+      singeColTblRgx = /^ {0,3}\|.+\|[ \t]*\n {0,3}\|[ \t]*:?[ \t]*(?:[-=]){2,}[ \t]*:?[ \t]*\|[ \t]*\n( {0,3}\|.+\|[ \t]*\n)*(?:\n|<ol|<ul|¨0)/gm;
+
+  function parseStyles (sLine) {
+    if (/^:[ \t]*--*$/.test(sLine)) {
+      return ' style="text-align:left;"';
+    } else if (/^--*[ \t]*:[ \t]*$/.test(sLine)) {
+      return ' style="text-align:right;"';
+    } else if (/^:[ \t]*--*[ \t]*:$/.test(sLine)) {
+      return ' style="text-align:center;"';
+    } else {
+      return '';
+    }
+  }
+
+  function parseHeaders (header, style) {
+    var id = '';
+    header = header.trim();
+    // support both tablesHeaderId and tableHeaderId due to error in documention so we don't break backwards compatibility
+    if (options.tablesHeaderId || options.tableHeaderId) {
+      id = ' id="' + header.replace(/ /g, '_').toLowerCase() + '"';
+    }
+    header = showdown.subParser('spanGamut')(header, options, globals);
+
+    return '<th' + id + style + '>' + header + '</th>\n';
+  }
+
+  function parseCells (cell, style) {
+    var subText = showdown.subParser('spanGamut')(cell, options, globals);
+    return '<td' + style + '>' + subText + '</td>\n';
+  }
+
+  function buildTable (headers, cells) {
+    var tb = '<table>\n<thead>\n<tr>\n',
+        tblLgn = headers.length;
+
+    for (var i = 0; i < tblLgn; ++i) {
+      tb += headers[i];
+    }
+    tb += '</tr>\n</thead>\n<tbody>\n';
+
+    for (i = 0; i < cells.length; ++i) {
+      tb += '<tr>\n';
+      for (var ii = 0; ii < tblLgn; ++ii) {
+        tb += cells[i][ii];
+      }
+      tb += '</tr>\n';
+    }
+    tb += '</tbody>\n</table>\n';
+    return tb;
+  }
+
+  function parseTable (rawTable) {
+    var i, tableLines = rawTable.split('\n');
+
+    // strip wrong first and last column if wrapped tables are used
+    for (i = 0; i < tableLines.length; ++i) {
+      if (/^ {0,3}\|/.test(tableLines[i])) {
+        tableLines[i] = tableLines[i].replace(/^ {0,3}\|/, '');
+      }
+      if (/\|[ \t]*$/.test(tableLines[i])) {
+        tableLines[i] = tableLines[i].replace(/\|[ \t]*$/, '');
+      }
+    }
+
+    var rawHeaders = tableLines[0].split('|').map(function (s) { return s.trim();}),
+        rawStyles = tableLines[1].split('|').map(function (s) { return s.trim();}),
+        rawCells = [],
+        headers = [],
+        styles = [],
+        cells = [];
+
+    tableLines.shift();
+    tableLines.shift();
+
+    for (i = 0; i < tableLines.length; ++i) {
+      if (tableLines[i].trim() === '') {
+        continue;
+      }
+      rawCells.push(
+        tableLines[i]
+          .split('|')
+          .map(function (s) {
+            return s.trim();
+          })
+      );
+    }
+
+    if (rawHeaders.length < rawStyles.length) {
+      return rawTable;
+    }
+
+    for (i = 0; i < rawStyles.length; ++i) {
+      styles.push(parseStyles(rawStyles[i]));
+    }
+
+    for (i = 0; i < rawHeaders.length; ++i) {
+      if (showdown.helper.isUndefined(styles[i])) {
+        styles[i] = '';
+      }
+      headers.push(parseHeaders(rawHeaders[i], styles[i]));
+    }
+
+    for (i = 0; i < rawCells.length; ++i) {
+      var row = [];
+      for (var ii = 0; ii < headers.length; ++ii) {
+        if (showdown.helper.isUndefined(rawCells[i][ii])) {
+
+        }
+        row.push(parseCells(rawCells[i][ii], styles[ii]));
+      }
+      cells.push(row);
+    }
+
+    return buildTable(headers, cells);
+  }
+
+  function hackFixTableFollowedByList (rawTable) {
+    var lastChars = rawTable.slice(-3);
+    if (lastChars === '<ol' || lastChars === '<ul') {
+      rawTable = rawTable.slice(0, -3) + '\n\n' + rawTable.slice(-3);
+    }
+    return rawTable;
+  }
+
+  text = globals.converter._dispatch('tables.before', text, options, globals);
+
+  // find escaped pipe characters
+  text = text.replace(/\\(\|)/g, showdown.helper.escapeCharactersCallback);
+
+  // hackfix issue #443. Due to lists only having a linebreak before them, we need to manually insert a linebreak to prevent
+  // tables not being parsed when followed by a list
+  text = text.replace(tableRgx, hackFixTableFollowedByList);
+  text = text.replace(singeColTblRgx, hackFixTableFollowedByList);
+
+  // parse multi column tables
+  text = text.replace(tableRgx, parseTable);
+
+  // parse one column tables
+  text = text.replace(singeColTblRgx, parseTable);
+
+  text = globals.converter._dispatch('tables.after', text, options, globals);
+
+  return text;
+});
+
+showdown.subParser('underline', function (text, options, globals) {
+  'use strict';
+
+  if (!options.underline) {
+    return text;
+  }
+
+  text = globals.converter._dispatch('underline.before', text, options, globals);
+
+  if (options.literalMidWordUnderscores) {
+    text = text.replace(/\b_?__(\S[\s\S]*)___?\b/g, function (wm, txt) {
+      return '<u>' + txt + '</u>';
+    });
+  } else {
+    text = text.replace(/_?__(\S[\s\S]*?)___?/g, function (wm, m) {
+      return (/\S$/.test(m)) ? '<u>' + m + '</u>' : wm;
+    });
+  }
+
+  // escape remaining underscores to prevent them being parsed by italic and bold
+  text = text.replace(/(_)/g, showdown.helper.escapeCharactersCallback);
+
+  text = globals.converter._dispatch('underline.after', text, options, globals);
+
+  return text;
+});
+
+/**
+ * Swap back in all the special characters we've hidden.
+ */
+showdown.subParser('unescapeSpecialChars', function (text, options, globals) {
+  'use strict';
+  text = globals.converter._dispatch('unescapeSpecialChars.before', text, options, globals);
+
+  text = text.replace(/¨E(\d+)E/g, function (wholeMatch, m1) {
+    var charCodeToReplace = parseInt(m1);
+    return String.fromCharCode(charCodeToReplace);
+  });
+
+  text = globals.converter._dispatch('unescapeSpecialChars.after', text, options, globals);
+  return text;
+});
+
+var root = this;
+
+// AMD Loader
+if (typeof define === 'function' && define.amd) {
+  define(function () {
+    'use strict';
+    return showdown;
+  });
+
+// CommonJS/nodeJS Loader
+} else if (typeof module !== 'undefined' && module.exports) {
+  module.exports = showdown;
+
+// Regular Browser loader
+} else {
+  root.showdown = showdown;
+}
+}).call(this);
+
+//# sourceMappingURL=showdown.js.map
+
+;
+/****************************************************************************
+	jquery-bootstrap-markdown.js,
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/jquery-bootstrap-markdown
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    /******************************************************
+    SHOWDOWN
+    Creating extensions and setting default options and plugins
+    See https://github.com/showdownjs/showdown/wiki/Showdown-Options for details
+
+    ******************************************************/
+    var showDownExtensions = [];
+    function addExtension( name, ext ){
+        window.showdown.extension(name, ext);
+        showDownExtensions.push(name);
+    }
+
+    //Add extentions to add default class-names to tags.
+    const classMap = {
+        table: 'table table-striped table-hover table-bordered table-responsive',
+        h1    : 'd-none', //Hide header
+        //td   : 'text-nowrap'
+    };
+    addExtension('bindings',
+            Object.keys(classMap).map(key => ({
+                type: 'output',
+                regex: new RegExp(`<${key}`, 'g'),
+                replace: `<${key} class="${classMap[key]}"`
+            }))
+    );
+
+    //Replace all internal href (href="#ID") with a javascript-function to scroll the element into view - prevent hashtags in the main window
+    window._showdownScrollToElement = function( _this ){
+        var id = $(_this).data('showdownscrollto'),
+            $elem = id ? $('#'+id) : null;
+        if ($elem && $elem.length)
+            $elem.scrollIntoView();
+    };
+    addExtension('scrollTo',{
+        type: 'output',
+        regex: /<a href="\#/g,
+        replace: '<a href="javascript:undefined" onClick="javascript:_showdownScrollToElement(this);" data-showdownscrollto="'
+    });
+
+    //Force all href to go to new window
+    addExtension('hrefTarget', {
+        type: 'output',
+        regex: /<a href="/g,
+        replace: '<a target="_blank" href="'
+    });
+
+    //Convert all relative paths to absolute path using the path of the md-file
+    addExtension('relativetoabsolute', {
+        type: 'output',
+        filter: function (text, converter/*, options*/) {
+            var tags = [
+                    {start: 'url(', end:')'},
+                    {start: 'src="', end:'"'}
+                ],
+                path = converter.getOption('url').split('/');
+            path.pop();
+            path = path.join('/');
+
+            $.each( tags, function( index, tag ){
+                var list = text.split( tag.start );
+                $.each( list, function( index, subStr ){
+                    if (index){
+                        var subStrList = subStr.split( tag.end ),
+                            url = subStrList[0];
+
+                        //Convert relative url by adding the path of the md-file
+                        if (url.indexOf('http') != 0){
+                            subStrList[0] = path + (url.charAt(0) == '/' ? '' : '/') + url;
+                            list[index] = subStrList.join( tag.end );
+                        }
+                    }
+                });
+                text = list.join( tag.start );
+            });
+            return text;
+        }
+    });
+
+    //Default showdown options
+    var showdownOptions = {
+            extensions                          : showDownExtensions,
+            simplifiedAutoLink                  : true, //Enable automatic linking in plain text urls
+            excludeTrailingPunctuationFromURLs  : true, //Excludes trailing punctuation from autolinked urls
+            literalMidWordUnderscores           : true, //Treats underscores in middle of words as literal characters
+            strikethrough                       : true, //Enable support for strikethrough syntax
+            tables                              : true, //Enable support for tables syntax
+            takslists                           : true, //Enable support for GFM takslists
+            ghMentions                          : true, //Enable support for github @mentions
+            simpleLineBreaks                    : true, //Parse line breaks as <br/> in paragraphs (like GitHub does)
+        };
+
+
+    /******************************************************
+    BsMarkdown
+    ******************************************************/
+    function BsMarkdown( options ) {
+		this.options = $.extend({}, {
+            url         : '',
+            link        : '',           //Url to standalone version of the file
+            languages   : ['en', 'da'], //List of possible language-codes in the md-file. E.q. <da>Dette er på dansk</de><en>This is in English</en>
+            language    : 'en',         //Current language-code
+            reload      : false,        //If true the file is reloaded every time it is displayed
+
+            header      : '',
+            fixedContent: null,         //fixed content for the modal-window
+            footer      : null,         //footer for the modal-window
+            loading     : null,         //Default icon and text displayed in the modal-window during loading
+		}, options || {} );
+
+
+        this.content = '';
+        this.$loading =
+            this.options.loading ?
+                $('<div/>')
+                    .addClass('text-center')
+                    ._bsAddHtml( this.options.loading )
+            : null;
+        this.options.language = this.options.language || this.options.languages[0];
+    }
+
+    // expose access to the constructor
+    $.BsMarkdown = BsMarkdown;
+
+    $.bsMarkdown = function( options ){
+        return new $.BsMarkdown( options );
+    };
+
+	//Extend the prototype
+	$.BsMarkdown.prototype = {
+
+        load: function(){
+            var _this = this;
+
+            this.content = '';
+
+            //Add 'loading...' to modal (if any)
+            if (this.$modalContainer)
+                this.$modalContainer
+                    .empty()
+                    .append( this.$loading );
+
+            Promise.getText(
+                this.options.url, {
+                    "resolve": function( content ){ _this.content = content; },
+                    "finally": this._onLoad.bind(this)
+                }
+            );
+        },
+
+        _onLoad: function(){
+            //If no expected content was loaded => close the modal-window
+            if (!this.content){
+                this.bsModal.modal('hide');
+                return;
+            }
+
+            this.$modalContainer.empty();
+
+            //Convert content (if any) to html OR use header as content
+            this.converter = this.converter || new window.showdown.Converter(showdownOptions);
+            this.converter.setOption('url', this.options.url);
+
+            this.$modalContainer.append(
+                this.converter.makeHtml(
+                    this._adjustLanguage( this.content, this.options.language )
+                )
+            );
+        },
+
+
+        //_adjustLanguage - Remove contents in <en>..</en> in danish versions and <da>..</da> in english versions and remove the tags <da> and </da> TODO: Skal gøre de forskellige dele skjulte
+        _adjustLanguage: function( src, lang ){
+
+            //Remove contents in <xx>..</xx> where xx is any language-code in options.languages except lang
+            $.each( this.options.languages, function( index, language ){
+                if (language == lang)
+                    return true;
+
+                var startTag = '<' + language + '>',
+                    endTag   = '</' + language + '>',
+                    list     = src.split( startTag );
+
+                $.each( list, function( index, listItem ){
+                    var subList = listItem.split( endTag );
+                    if (subList.length > 1)
+                        subList = subList.slice(1);
+                    list[index] = subList.join( endTag );
+                });
+                src = list.join( startTag );
+            });
+
+            //Remove all language-tags
+            $.each( this.options.languages, function( index, language ){
+                src = src
+                        .split( '<'+language+'>')
+                        .join('')
+                        .split( '</'+language+'>')
+                        .join('');
+            });
+            return src;
+        },
+
+
+        setLanguage( language ){
+            this.options.language  = language;
+            if (this.content)
+                this.load();
+        },
+
+
+        /**********************************************
+        asBsModal - return a bsModal with all messages
+        **********************************************/
+        asBsModal: function( show ){
+            var _this = this;
+            this.bsModal =
+                this.bsModal ||
+                $.bsModal({
+                    header  : this.options.header,
+                    show    : false,
+//                    icons: {
+//                        close   : {onClick, attr, className, attr, data }
+//                        extend  : {onClick, attr, className, attr, data }
+//                        diminish: {onClick, attr, className, attr, data }
+//                    }
+                    fixedContent : this.options.fixedContent,
+                    flex         : true,
+//                    noVerticalPadding
+                    content      : function( $container ){ _this.$modalContainer = $container; },
+                    scroll       : true,
+/*
+                    extended: {
+                        fixedContent
+                        flex
+                        noVerticalPadding
+                        content
+                        scroll: boolean | 'vertical' | 'horizontal'
+                        footer
+                    }
+                    isExtended: boolean
+*/
+                    footer  : this.options.footer,
+
+                    buttons : this.options.link ? [{
+                                 icon   : 'fa-external-link',
+                                 text   : {da:'Vis i nyt vindue', en:'Show in new window'},
+                                 onClick: function(){
+                                              var win = window.open(_this.options.link, '_blank');
+                                              win.focus();
+                                          }
+                              }] : [],
+//                    closeText
+
+                });
+
+            if (show)
+                this.bsModal.show();
+
+            if (!this.content)
+                this.load();
+
+            return this.bsModal;
+        }
+
+
+	};
+
+}(jQuery, this, document));
+
+;
+/****************************************************************************
+    jquery-bootstrap-message-BsMessage.js
+
+    (c) 2017, FCOO
+
+	https://github.com/FCOO/jquery-bootstrap-message
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($ /*, window, document, undefined*/) {
+	"use strict";
+
+    function periodOrMomentToBoolean(value, checkForIsAfter, refMoment, invalidReturnValue ){
+        //value = moment-string or period-string
+        var valueMoment;
+        refMoment = refMoment || moment();
+        invalidReturnValue = invalidReturnValue || false;
+
+        //First check if value is a moment
+        valueMoment = moment.isMoment(value) ? value : moment( value );
+        if (!valueMoment.isValid()){
+            //Check if value is a period
+            var duration = moment.duration(value);
+
+            if (moment.isDuration(duration))
+                valueMoment = refMoment.clone().add(duration);
+            else
+                return invalidReturnValue;
+        }
+
+        //valueMoment is now a valid moment => test relative to compareWithMoment
+        return checkForIsAfter ? valueMoment.isAfter( moment() ) : valueMoment.isSameOrBefore( moment() );
+    }
+
+
+    function BsMessage( options, parent ) {
+		this.options =
+            $.extend( {},{
+                type      : 'info',
+                status    : false,
+                publish   : true,   //false/true/moment-string/period-string
+                expire    : '',     //moment-string/period-string
+                becomeRead: '',     //moment-string/period-string
+                url       : '',     //url to markdown-file
+                link      : '',     //Url to standalone version of the file
+                date      : moment().utc().format()
+
+            }, options || {} );
+
+        this.parent = parent;
+        this.options.date = moment( this.options.date );
+        this.options.index = this.parent.list.length;
+        this.options.id = this.options.id || 'index_' + this.options.index;
+        this.options.status = this.parent.options.loadStatus( this );
+
+
+        /*
+        Find the publishMoment = the moment where the message is published
+        Used with options.expire and options.becomeRead to determinate if the messsage is expired or read
+        As publishMoment use
+            1: options.publish if it is a valid moment
+            2: options.date if it is a valid moment
+            3: now = moment()
+        */
+        var publishMoment = null;
+        if ( ($.type(this.options.publish) == 'string') && moment(this.options.publish).isValid() )
+            publishMoment = moment(this.options.publish);
+        else
+            if ( this.options.date.isValid() )
+                publishMoment = this.options.date;
+            else
+                publishMoment = moment();
+
+        //If publish = moment-string or duration-stirng => convert and check against publishMoment
+        if ($.type(this.options.publish) == 'string')
+            this.options.publish = periodOrMomentToBoolean(this.options.publish, false, publishMoment);
+
+        //Check for valid expire-string
+        if (this.options.expire && this.options.publish)
+            this.options.publish = periodOrMomentToBoolean(this.options.expire, true, publishMoment, this.options.publish );
+
+        //Check for valid becomeRead-string
+        if (this.options.becomeRead && !this.options.status){
+            this.options.status = periodOrMomentToBoolean(this.options.becomeRead, false, publishMoment);
+
+            if (this.options.status)
+                this.setStatus( true );
+        }
+
+    } //End of constructor
+
+    // expose access to the constructor
+    $.BsMessage = BsMessage;
+
+    $.bsMessage = function( options, parent ){
+        return new $.BsMessage( options, parent );
+    };
+
+	//Extend the prototype
+	$.BsMessage.prototype = {
+        //getStatus() - return true if the message is read
+        getStatus: function(){
+            return this.options.status;
+        },
+
+        setStatus: function( status ){
+            this.parent.setStatus( this, status );
+        },
+
+
+        //_asBsTableContent - return the options adjusted to be shown in a table
+        _asBsTableContent: function(){
+            var title = [{text: this.options.title}];
+            if (this.options.url)
+                title.push(
+                    {text:'...'},
+                    {icon:'fa-angle-right fa-pull-right fa-border'}
+                );
+
+
+            return {
+                id    : '_' + this.options.id,
+                type  : { icon: $.bsNotyIcon[this.options.type] },
+                status: this.parent._getStatusIcon(this.options.status),
+                date  : this.options.date,
+                title : title
+            };
+
+        },
+
+        /**********************************************
+        asBsModal - return a bsModal with all messages
+        **********************************************/
+        asBsModal: function( show ){
+            this.setStatus( true );
+            var footer = this.parent.options.vfFormat ? {
+                            vfValue  : this.options.date,
+                            vfFormat : this.parent.options.vfFormat,
+                            vfOptions: this.parent.options.vfOptions,
+                            textClass: 'ml-auto'
+                         }
+                         : null;
+
+            if (this.options.url){
+                //Show the message in a BsMarkdown
+                this.bsMarkdown =
+                    this.bsMarkdown || $.bsMarkdown({
+                        url : this.options.url,
+                        link: this.options.link,
+
+                        languages: this.parent.options.languages,
+                        language : this.parent.options.language,
+
+                        header : {
+                            icon : this.parent.options.showType ? $.bsNotyIcon[this.options.type] : '',
+                            text : this.options.title
+                        },
+                        footer : footer,
+                        loading: this.parent.options.loading
+                    });
+
+                this.bsModal = this.bsMarkdown.asBsModal( false );
+            }
+
+            else {
+
+                //No file => just display the title in a BsModal
+                this.bsModal = this.bsModal || $.bsModal({
+                    scroll : false,
+                    header : this.parent.options.showTypeHeader ? {
+                                icon: $.bsNotyIcon[this.options.type],
+                                text: $.bsNotyName[this.options.type]
+                             } : null,
+                    type   : this.parent.options.showTypeColor ? this.options.type : null,
+
+                    //Create options.title as centered div
+                    content: $('<div/>')
+                                .addClass('text-center')
+                                ._bsAddHtml( {text: this.options.title }),
+                    footer : footer,
+                    show   : false
+                });
+
+            }
+
+            if (show)
+                this.bsModal.show();
+        }
+	};
+
+
+
+}(jQuery, this, document));
+
+;
+/****************************************************************************
+	jquery-bootstrap-message.js,
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/jquery-bootstrap-message
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($ /*, window, document, undefined*/) {
+	"use strict";
+
+    function BsMessageGroup( options ) {
+		this.options = $.extend({}, {
+            id            : '',
+            url           : '',
+            header        : '',
+            reloadPeriod  : '', //period-string with interval for reloading
+
+            onStartLoading : function( /*messageGroup*/){ },          //Called when loading of messages starts
+            onFinishLoading: function( /*messageGroup*/){ },          //Called when loading of messages finish
+
+            onCreate  : function( /*messageGroup*/){ },          //Called when group is created
+            onChange  : function( /*messageGroup*/){ },          //Called when the status of the group is changed. (Status=nr of messages, no of (un)read merssages)
+
+            loadStatus: function( /*message*/ ){ return true; }, //Return true if the message is read
+            saveStatus: function( /*message [,status]*/ ){},     //Save the status for message
+
+
+            sortBy    : 'INDEX', //String or array of string: 'INDEX', 'DATE', STATUS', 'TYPE'
+            sortDesc  : false,
+
+            languages   : ['en', 'da'], //List of possible language-codes in the md-file. E.q. <da>Dette er på dansk</de><en>This is in English</en>
+            language    : 'en',         //Current language-code
+
+            showType     : false, //If true the type of the messages are shown in the lists
+            showStatus   : false, //If true the status of the messages are shown
+
+            showTypeHeader: false, //If true the modal-header of no-file messages are set to type-icon + type-name
+            showTypeColor : false, //If true the modal background-color and color of no-file messages get set by the type
+
+            vfFormat  : '',     //Format-id for the date using jquery-value-format. The format must be defined in the application. If vfFormat == '' the date-column isn't shown
+            vfOptions : null,   //Optional options for the format vfFormat when displaying the date using jquery-value-format
+
+            loading   : { icon:' fa-circle-o-notch fa-spin _fa-fw', text: {da:'Indlæser...', en:'Loading...'}}        //Default icon and text displayed in the modal-window during loading
+		}, options || {} );
+
+        //Convert url to array of string
+        if (!$.isArray(this.options.url))
+            this.options.url = this.options.url.split(' ');
+
+
+        //convert reloadPeriod to ms
+        if (this.options.reloadPeriod){
+            this.options.reloadPeriod = moment.duration(this.options.reloadPeriod);
+            this.options.reloadPeriod =
+                moment.isDuration(this.options.reloadPeriod) ?
+                this.options.reloadPeriod.as('ms') :
+                0;
+        }
+
+        this.load();
+    }
+
+    // expose access to the constructor
+    $.BsMessageGroup = BsMessageGroup;
+
+    $.bsMessageGroup = function( options ){
+        return new $.BsMessageGroup( options );
+    };
+
+	//Extend the prototype
+	$.BsMessageGroup.prototype = {
+        _add: function( options ){
+            var _this = this,
+                defaultMessageOptions = options.defaults || {},
+                urlId = options.id || this.options.id || '';
+            $.each( options.messages || [], function( index, messageOptions ){
+                _this.list.push( $.bsMessage( $.extend({urlId: urlId}, defaultMessageOptions, messageOptions), _this ) );
+            });
+        },
+
+        load: function(){
+            this.isLoading = true;
+
+            $.each( this.list, function( index, message ){
+                if (message.bsModal){
+                    message.bsModal.modal('hide');
+                    message.bsModal.remove();
+                }
+            });
+            if (this.bsModal){
+                this.bsModal.modal('hide');
+                this.bsModal.remove();
+            }
+            this.bsModal = null;
+
+            this.list = [];
+            this.bsTable = null;
+            this.options.onStartLoading( this );
+            Promise
+                .each(
+                    this.options.url.map( function( url ){ return Promise.getJSON( url ); }),
+                    this._add.bind(this)
+                )
+                .finally( this._onLoad.bind(this) );
+        },
+
+        _onLoad: function(){
+            var _this = this;
+            this.isLoading = false;
+            this.sort();
+            this.options.onCreate( this );
+            this.options.onFinishLoading( this );
+            this._onChange();
+
+            if (this.options.reloadPeriod)
+                window.setTimeout( function(){ _this.load(); }, this.options.reloadPeriod );
+        },
+
+        _onChange: function(){
+            this.options.onChange( this );
+        },
+
+        _getMessageById: function( id ){
+            var result = null;
+            $.each( this.list, function( index, message ){
+                if (message.options.id == id){
+                    result = message;
+                    return false;
+                }
+            });
+            return result;
+        },
+
+        //_getTypeIcon( type ) return the icon used for type
+        _getTypeIcon: function( type, asClassName ){
+            var result = {
+                icon: $.bsNotyIcon[type]
+            };
+            return asClassName ? result.icon : result;
+        },
+
+        //_getStatusIcon( type ) return the icon used for status
+        _getStatusIcon: function( status, asClassName ){
+            var result = status ? {icon:'fa-envelope-open-o'} : {icon: 'fa-envelope'};
+            return asClassName ? result.icon : result;
+        },
+
+
+        setStatus: function( message, status ){
+            if (message.options.status != status){
+                message.options.status = status;
+                this.options.saveStatus( message, status );
+
+                //Change the status-icon in the row of this.bsTable (if any) to 'read'
+                var statusOnIcon  = this._getStatusIcon(true).icon,
+                    statusOffIcon = this._getStatusIcon(false).icon;
+
+                if (this.bsTable)
+                    this.bsTable.find('tr#_'+message.options.id+' td i.fa.'+statusOffIcon)
+                        .removeClass(statusOffIcon)
+                        .addClass(statusOnIcon);
+
+
+                this._onChange( this );
+            }
+        },
+
+        setAllStatus: function( status ){
+            var _this = this;
+            $.each( this.list, function( index, message ){
+                _this.setStatus( message, status );
+            });
+        },
+
+        //getAllStatus( type ) - return status of the group {total, read, unread}
+        getAllStatus: function( type ){
+            var result = {total: 0, publish: 0, read: 0, unread: 0 };
+
+            $.each( this.list, function( index, message ){
+                if (!type || message.options.type == type){
+                    result.total++;
+                    if (message.options.publish){
+                        result.publish++;
+                        if (message.options.status)
+                            result.read++;
+                        else
+                            result.unread++;
+                    }
+                }
+            });
+            return result;
+        },
+
+
+        setLanguage: function( language ){
+            this.options.language = language;
+            $.each( this.list, function( index, message ){
+                if (message.bsMarkdown)
+                    message.bsMarkdown.setLanguage( language );
+            });
+        },
+
+        /**********************************************
+        Sorting
+        **********************************************/
+        sort( sortBy, sortDesc ){
+            this.options.sortBy = sortBy || this.options.sortBy;
+            if ($.type(sortDesc) == 'boolean')
+                this.options.sortDesc = sortDesc;
+
+            var sortByList = $.isArray(this.options.sortBy) ? this.options.sortBy : [this.options.sortBy],
+                typeToVal = {
+                    info   : 1,
+                    help   : 2,
+                    warning: 3
+                };
+
+            function sortMessage( mess1, mess2, sortByList, desc ){
+                var result = 0, val1 = 0, val2 = 0;
+                if (desc)
+                    return sortMessage( mess2, mess1, sortByList);
+
+                $.each( sortByList, function( index, sortBy ){
+                    switch (sortBy){
+                        case 'INDEX' : val1 = mess1.options.index;              val2 = mess2.options.index;             break;
+                        case 'DATE'  : val1 = mess1.options.date.second();      val2 = mess2.options.date.second();     break;
+                        case 'STATUS': val1 = mess1.options.status ? 1 : 0;     val2 = mess2.options.status ? 1 : 0;    break;
+                        case 'TYPE'  : val1 = typeToVal[mess1.options.type];    val2 = typeToVal[mess2.options.type];   break;
+                        default      : val1 = val2 = 0;
+                    }
+                    result = val1 - val2;
+                    if (result != 0)
+                        return false;
+                });
+                return result;
+            }
+
+            var _sortDesc = this.options.sortDesc;
+            this.list.sort( function( mess1, mess2 ){
+                return sortMessage( mess1, mess2, sortByList, _sortDesc );
+            });
+        },
+
+
+        /**********************************************
+        asBsTable - return all messages in a table
+        **********************************************/
+        asBsTable: function(){
+            var _this = this,
+                options = {
+                    showHeader    : false,
+                    verticalBorder: false,
+                    selectable    : true,
+                    allowReselect : true,
+                    small         : true,
+                    onChange      : function( id ){
+                        _this._getMessageById( id.slice(1) ).asBsModal( true );
+                    },
+                    columns: [],
+                    content: []
+                };
+
+
+            if (this.options.showStatus)
+                options.columns.push({
+                    id: 'status',
+                    header: '',
+                    align: 'center',
+                    verticalAlign: 'top',
+                    width: '1.2rem',
+                    noHorizontalPadding: true
+                });
+
+            if (this.options.showType)
+                options.columns.push({
+                    id: 'type',
+                    header: '',
+                    align: 'center',
+                    verticalAlign: 'top',
+                    width: '1.2rem',
+                    noHorizontalPadding: true
+            });
+
+            if (this.options.vfFormat)
+                options.columns.push({
+                    id: 'date',
+                    header: '',
+                    align: 'center',
+                    noWrap: true,
+                    verticalAlign: 'top',
+                    vfFormat: this.options.vfFormat,
+                    vfOptions: this.options.vfOptions
+                });
+
+            options.columns.push({
+                id: 'title',
+                header: '',
+                align: 'left',
+                verticalAlign: 'top'
+            });
+
+            $.each( this.list, function( index, message ){
+                if (message.options.publish)
+                    options.content.push( message._asBsTableContent() );
+            });
+
+            this.bsTable = this.bsTable || $.bsTable( options );
+            return this.bsTable;
+        },
+
+
+
+        /**********************************************
+        asBsModal - return a bsModal with all messages
+        **********************************************/
+        asBsModal: function( show ){
+            var _this = this;
+            this.bsModal =
+                this.bsModal ||
+                this.asBsTable().asModal({
+                    header: this.options.header,
+                    buttons: this.options.showStatus ?
+                                [{
+                                    icon   : this._getStatusIcon( true, true ),
+                                    text   : {da:'Márker alle som læst', en:'Mark all as read'},
+                                    onClick: function(){ _this.setAllStatus( true ); }
+                                }]
+                             : null,
+                    show  : false
+                });
+
+            if (show)
+                this.bsModal.show();
+
+            return this.bsModal;
+        }
+
+
+	};
+
+}(jQuery, this, document));
+
 ;
 /*! offline-js 0.7.19 */
 (function() {
@@ -55761,7 +68820,7 @@ return window.noty;
       _error;
     }
     return results;
-  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{}, 
+  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{},
   defaultOptions = {
     checks:{
       xhr:{
@@ -55784,22 +68843,22 @@ return window.noty;
     deDupBody:!1
   }, grab = function(obj, key) {
     var cur, i, j, len, part, parts;
-    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i], 
+    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i],
     "object" == typeof (cur = cur[part])); i = ++j) ;
     return i === parts.length - 1 ? cur :void 0;
   }, Offline.getOption = function(key) {
     var ref, val;
-    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key), 
+    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key),
     "function" == typeof val ? val() :val;
   }, "function" == typeof window.addEventListener && window.addEventListener("online", function() {
     return setTimeout(Offline.confirmUp, 100);
   }, !1), "function" == typeof window.addEventListener && window.addEventListener("offline", function() {
     return Offline.confirmDown();
   }, !1), Offline.state = "up", Offline.markUp = function() {
-    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up", 
+    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up",
     Offline.trigger("up");
   }, Offline.markDown = function() {
-    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down", 
+    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down",
     Offline.trigger("down");
   }, handlers = {}, Offline.on = function(event, handler, ctx) {
     var e, events, j, len, results;
@@ -55812,7 +68871,7 @@ return window.noty;
     var _handler, i, ref, results;
     if (null != handlers[event]) {
       if (handler) {
-        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i], 
+        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i],
         ref[0], _handler = ref[1], _handler === handler ? results.push(handlers[event].splice(i, 1)) :results.push(i++);
         return results;
       }
@@ -55821,7 +68880,7 @@ return window.noty;
   }, Offline.trigger = function(event) {
     var ctx, handler, j, len, ref, ref1, results;
     if (null != handlers[event]) {
-      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j], 
+      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j],
       ctx = ref1[0], handler = ref1[1], results.push(handler.call(ctx));
       return results;
     }
@@ -55840,8 +68899,8 @@ return window.noty;
     });
   }, Offline.checks = {}, Offline.checks.xhr = function() {
     var xhr;
-    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0), 
-    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")), 
+    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0),
+    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")),
     checkXHR(xhr, Offline.markUp, Offline.markDown);
     try {
       xhr.send();
@@ -55851,7 +68910,7 @@ return window.noty;
     return xhr;
   }, Offline.checks.image = function() {
     var img;
-    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp, 
+    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp,
     img.src = Offline.getOption("checks.image.url");
   }, Offline.checks.down = Offline.markDown, Offline.checks.up = Offline.markUp, Offline.check = function() {
     return Offline.trigger("checking"), Offline.checks[Offline.getOption("checks.active")]();
@@ -55872,13 +68931,13 @@ return window.noty;
       };
     }, _XMLHttpRequest = window.XMLHttpRequest, window.XMLHttpRequest = function(flags) {
       var _overrideMimeType, _setRequestHeader, req;
-      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader, 
+      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader,
       req.headers = {}, req.setRequestHeader = function(name, value) {
         return req.headers[name] = value, _setRequestHeader.call(req, name, value);
       }, _overrideMimeType = req.overrideMimeType, req.overrideMimeType = function(type) {
         return req.mimeType = type, _overrideMimeType.call(req, type);
       }, req;
-    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest, 
+    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest,
     window.XDomainRequest = function() {
       var req;
       return req = new _XDomainRequest(), monitorXHR(req), req;
@@ -55894,37 +68953,37 @@ return window.noty;
   if (!window.Offline) throw new Error("Offline Reconnect brought in without offline.js");
   rc = Offline.reconnect = {}, retryIntv = null, reset = function() {
     var ref;
-    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"), 
+    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"),
     rc.state = "inactive", rc.remaining = rc.delay = null != (ref = Offline.getOption("reconnect.initialDelay")) ? ref :3;
   }, next = function() {
     var delay, ref;
-    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600), 
+    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600),
     rc.remaining = rc.delay = delay;
   }, tick = function() {
-    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"), 
+    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"),
     0 === rc.remaining ? tryNow() :void 0;
   }, tryNow = function() {
-    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting", 
+    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting",
     Offline.check();
   }, down = function() {
-    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"), 
+    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"),
     retryIntv = setInterval(tick, 1e3);
   }, up = function() {
     return null != retryIntv && clearInterval(retryIntv), reset();
   }, nope = function() {
-    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"), 
+    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"),
     rc.state = "waiting", next()) :void 0;
-  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope), 
+  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope),
   Offline.on("up", up);
 }.call(this), function() {
   var clear, flush, held, holdRequest, makeRequest, waitingOnConfirm;
   if (!window.Offline) throw new Error("Requests module brought in without offline.js");
   held = [], waitingOnConfirm = !1, holdRequest = function(req) {
-    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"), 
+    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"),
     "down" !== Offline.state && (waitingOnConfirm = !0), held.push(req);
   }, makeRequest = function(arg) {
     var body, name, password, ref, type, url, user, val, xhr;
-    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password, 
+    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password,
     body = arg.body, !1 !== Offline.getOption("requests")) {
       xhr.abort(), xhr.open(type, url, !0, user, password), ref = xhr.headers;
       for (name in ref) val = ref[name], xhr.setRequestHeader(name, val);
@@ -55935,10 +68994,10 @@ return window.noty;
   }, flush = function() {
     var body, i, key, len, request, requests, url;
     if (!1 !== Offline.getOption("requests")) {
-      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i], 
+      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i],
       url = request.url.replace(/(\?|&)_=[0-9]+/, function(match, chr) {
         return "?" === chr ? chr :"";
-      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(), 
+      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(),
       requests[request.type.toUpperCase() + " - " + url + " - " + body] = request) :requests[request.type.toUpperCase() + " - " + url] = request;
       for (key in requests) request = requests[key], makeRequest(request);
       return clear();
@@ -55954,10 +69013,10 @@ return window.noty;
         return holdRequest(request);
       }, _send = xhr.send, xhr.send = function(body) {
         return request.body = body, _send.apply(xhr, arguments);
-      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1), 
-      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange, 
+      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1),
+      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange,
       xhr.onreadystatechange = function() {
-        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(), 
+        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(),
         "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
       });
     }), Offline.requests = {
@@ -55976,12 +69035,12 @@ return window.noty;
       _error, simulate = !1;
     }
   }
-  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}), 
+  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}),
   Offline.options.checks.active = state);
 }.call(this), function() {
   var RETRY_TEMPLATE, TEMPLATE, _onreadystatechange, addClass, content, createFromHTML, el, flashClass, flashTimeouts, init, removeClass, render, roundTime;
   if (!window.Offline) throw new Error("Offline UI brought in without offline.js");
-  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>', 
+  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>',
   RETRY_TEMPLATE = '<a href class="offline-ui-retry"></a>', createFromHTML = function(html) {
     var el;
     return el = document.createElement("div"), el.innerHTML = html, el.children[0];
@@ -55990,7 +69049,7 @@ return window.noty;
   }, removeClass = function(name) {
     return el.className = el.className.replace(new RegExp("(^| )" + name.split(" ").join("|") + "( |$)", "gi"), " ");
   }, flashTimeouts = {}, flashClass = function(name, time) {
-    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]), 
+    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]),
     flashTimeouts[name] = setTimeout(function() {
       return removeClass(name), delete flashTimeouts[name];
     }, 1e3 * time);
@@ -56002,45 +69061,45 @@ return window.noty;
       minute:60,
       second:1
     };
-    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult), 
+    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult),
     [ val, unit ];
     return [ "now", "" ];
   }, render = function() {
     var button, handler;
-    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)), 
+    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)),
     button = el.querySelector(".offline-ui-retry"), handler = function(e) {
       return e.preventDefault(), Offline.reconnect.tryNow();
-    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)), 
+    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)),
     addClass("offline-ui-" + Offline.state), content = el.querySelector(".offline-ui-content");
   }, init = function() {
     return render(), Offline.on("up", function() {
-      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2), 
+      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2),
       flashClass("offline-ui-up-5s", 5);
     }), Offline.on("down", function() {
-      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2), 
+      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2),
       flashClass("offline-ui-down-5s", 5);
     }), Offline.on("reconnect:connecting", function() {
       return addClass("offline-ui-connecting"), removeClass("offline-ui-waiting");
     }), Offline.on("reconnect:tick", function() {
       var ref, time, unit;
-      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining), 
-      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time), 
+      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining),
+      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time),
       content.setAttribute("data-retry-in-unit", unit);
     }), Offline.on("reconnect:stopped", function() {
-      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null), 
+      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null),
       content.setAttribute("data-retry-in-unit", null);
     }), Offline.on("reconnect:failure", function() {
       return flashClass("offline-ui-reconnect-failed-2s", 2), flashClass("offline-ui-reconnect-failed-5s", 5);
     }), Offline.on("reconnect:success", function() {
       return flashClass("offline-ui-reconnect-succeeded-2s", 2), flashClass("offline-ui-reconnect-succeeded-5s", 5);
     });
-  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange, 
+  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange,
   document.onreadystatechange = function() {
     return "complete" === document.readyState && init(), "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
   });
 }.call(this);
 ;
-/*! Raven.js 3.17.0 (6384830) | github.com/getsentry/raven-js */
+/*! Raven.js 3.19.1 (fee3771) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -56053,11 +69112,9 @@ return window.noty;
  */
 
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Raven = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-'use strict';
-
 function RavenConfigError(message) {
-    this.name = 'RavenConfigError';
-    this.message = message;
+  this.name = 'RavenConfigError';
+  this.message = message;
 }
 RavenConfigError.prototype = new Error();
 RavenConfigError.prototype.constructor = RavenConfigError;
@@ -56065,133 +69122,154 @@ RavenConfigError.prototype.constructor = RavenConfigError;
 module.exports = RavenConfigError;
 
 },{}],2:[function(_dereq_,module,exports){
-'use strict';
-
 var wrapMethod = function(console, level, callback) {
-    var originalConsoleLevel = console[level];
-    var originalConsole = console;
+  var originalConsoleLevel = console[level];
+  var originalConsole = console;
 
-    if (!(level in console)) {
-        return;
+  if (!(level in console)) {
+    return;
+  }
+
+  var sentryLevel = level === 'warn' ? 'warning' : level;
+
+  console[level] = function() {
+    var args = [].slice.call(arguments);
+
+    var msg = '' + args.join(' ');
+    var data = {level: sentryLevel, logger: 'console', extra: {arguments: args}};
+
+    if (level === 'assert') {
+      if (args[0] === false) {
+        // Default browsers message
+        msg = 'Assertion failed: ' + (args.slice(1).join(' ') || 'console.assert');
+        data.extra.arguments = args.slice(1);
+        callback && callback(msg, data);
+      }
+    } else {
+      callback && callback(msg, data);
     }
 
-    var sentryLevel = level === 'warn'
-        ? 'warning'
-        : level;
-
-    console[level] = function () {
-        var args = [].slice.call(arguments);
-
-        var msg = '' + args.join(' ');
-        var data = {level: sentryLevel, logger: 'console', extra: {'arguments': args}};
-        callback && callback(msg, data);
-
-        // this fails for some browsers. :(
-        if (originalConsoleLevel) {
-            // IE9 doesn't allow calling apply on console functions directly
-            // See: https://stackoverflow.com/questions/5472938/does-ie9-support-console-log-and-is-it-a-real-function#answer-5473193
-            Function.prototype.apply.call(
-                originalConsoleLevel,
-                originalConsole,
-                args
-            );
-        }
-    };
+    // this fails for some browsers. :(
+    if (originalConsoleLevel) {
+      // IE9 doesn't allow calling apply on console functions directly
+      // See: https://stackoverflow.com/questions/5472938/does-ie9-support-console-log-and-is-it-a-real-function#answer-5473193
+      Function.prototype.apply.call(originalConsoleLevel, originalConsole, args);
+    }
+  };
 };
 
 module.exports = {
-    wrapMethod: wrapMethod
+  wrapMethod: wrapMethod
 };
 
 },{}],3:[function(_dereq_,module,exports){
 (function (global){
-/*global XDomainRequest:false, __DEV__:false*/
-'use strict';
+/*global XDomainRequest:false */
 
 var TraceKit = _dereq_(6);
 var stringify = _dereq_(7);
 var RavenConfigError = _dereq_(1);
-var utils = _dereq_(5);
 
-var isError = utils.isError,
-    isObject = utils.isObject;
+var utils = _dereq_(5);
+var isError = utils.isError;
+var isObject = utils.isObject;
+var isObject = utils.isObject;
+var isErrorEvent = utils.isErrorEvent;
+var isUndefined = utils.isUndefined;
+var isFunction = utils.isFunction;
+var isString = utils.isString;
+var isEmptyObject = utils.isEmptyObject;
+var each = utils.each;
+var objectMerge = utils.objectMerge;
+var truncate = utils.truncate;
+var objectFrozen = utils.objectFrozen;
+var hasKey = utils.hasKey;
+var joinRegExp = utils.joinRegExp;
+var urlencode = utils.urlencode;
+var uuid4 = utils.uuid4;
+var htmlTreeAsString = utils.htmlTreeAsString;
+var isSameException = utils.isSameException;
+var isSameStacktrace = utils.isSameStacktrace;
+var parseUrl = utils.parseUrl;
+var fill = utils.fill;
 
 var wrapConsoleMethod = _dereq_(2).wrapMethod;
 
 var dsnKeys = 'source protocol user pass host port path'.split(' '),
-    dsnPattern = /^(?:(\w+):)?\/\/(?:(\w+)(:\w+)?@)?([\w\.-]+)(?::(\d+))?(\/.*)/;
+  dsnPattern = /^(?:(\w+):)?\/\/(?:(\w+)(:\w+)?@)?([\w\.-]+)(?::(\d+))?(\/.*)/;
 
 function now() {
-    return +new Date();
+  return +new Date();
 }
 
 // This is to be defensive in environments where window does not exist (see https://github.com/getsentry/raven-js/pull/785)
-var _window = typeof window !== 'undefined' ? window
-            : typeof global !== 'undefined' ? global
-            : typeof self !== 'undefined' ? self
-            : {};
+var _window =
+  typeof window !== 'undefined'
+    ? window
+    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 var _document = _window.document;
 var _navigator = _window.navigator;
 
-
 function keepOriginalCallback(original, callback) {
-    return isFunction(callback) ?
-    function (data) { return callback(data, original) } :
-    callback;
+  return isFunction(callback)
+    ? function(data) {
+        return callback(data, original);
+      }
+    : callback;
 }
 
 // First, check for JSON support
 // If there is no JSON, we no-op the core features of Raven
 // since JSON is required to encode the payload
 function Raven() {
-    this._hasJSON = !!(typeof JSON === 'object' && JSON.stringify);
-    // Raven can run in contexts where there's no document (react-native)
-    this._hasDocument = !isUndefined(_document);
-    this._hasNavigator = !isUndefined(_navigator);
-    this._lastCapturedException = null;
-    this._lastData = null;
-    this._lastEventId = null;
-    this._globalServer = null;
-    this._globalKey = null;
-    this._globalProject = null;
-    this._globalContext = {};
-    this._globalOptions = {
-        logger: 'javascript',
-        ignoreErrors: [],
-        ignoreUrls: [],
-        whitelistUrls: [],
-        includePaths: [],
-        crossOrigin: 'anonymous',
-        collectWindowErrors: true,
-        maxMessageLength: 0,
+  this._hasJSON = !!(typeof JSON === 'object' && JSON.stringify);
+  // Raven can run in contexts where there's no document (react-native)
+  this._hasDocument = !isUndefined(_document);
+  this._hasNavigator = !isUndefined(_navigator);
+  this._lastCapturedException = null;
+  this._lastData = null;
+  this._lastEventId = null;
+  this._globalServer = null;
+  this._globalKey = null;
+  this._globalProject = null;
+  this._globalContext = {};
+  this._globalOptions = {
+    logger: 'javascript',
+    ignoreErrors: [],
+    ignoreUrls: [],
+    whitelistUrls: [],
+    includePaths: [],
+    collectWindowErrors: true,
+    maxMessageLength: 0,
 
-        // By default, truncates URL values to 250 chars
-        maxUrlLength: 250,
-        stackTraceLimit: 50,
-        autoBreadcrumbs: true,
-        instrument: true,
-        sampleRate: 1
-    };
-    this._ignoreOnError = 0;
-    this._isRavenInstalled = false;
-    this._originalErrorStackTraceLimit = Error.stackTraceLimit;
-    // capture references to window.console *and* all its methods first
-    // before the console plugin has a chance to monkey patch
-    this._originalConsole = _window.console || {};
-    this._originalConsoleMethods = {};
-    this._plugins = [];
-    this._startTime = now();
-    this._wrappedBuiltIns = [];
-    this._breadcrumbs = [];
-    this._lastCapturedEvent = null;
-    this._keypressTimeout;
-    this._location = _window.location;
-    this._lastHref = this._location && this._location.href;
-    this._resetBackoff();
+    // By default, truncates URL values to 250 chars
+    maxUrlLength: 250,
+    stackTraceLimit: 50,
+    autoBreadcrumbs: true,
+    instrument: true,
+    sampleRate: 1
+  };
+  this._ignoreOnError = 0;
+  this._isRavenInstalled = false;
+  this._originalErrorStackTraceLimit = Error.stackTraceLimit;
+  // capture references to window.console *and* all its methods first
+  // before the console plugin has a chance to monkey patch
+  this._originalConsole = _window.console || {};
+  this._originalConsoleMethods = {};
+  this._plugins = [];
+  this._startTime = now();
+  this._wrappedBuiltIns = [];
+  this._breadcrumbs = [];
+  this._lastCapturedEvent = null;
+  this._keypressTimeout;
+  this._location = _window.location;
+  this._lastHref = this._location && this._location.href;
+  this._resetBackoff();
 
-    for (var method in this._originalConsole) {  // eslint-disable-line guard-for-in
-      this._originalConsoleMethods[method] = this._originalConsole[method];
-    }
+  // eslint-disable-next-line guard-for-in
+  for (var method in this._originalConsole) {
+    this._originalConsoleMethods[method] = this._originalConsole[method];
+  }
 }
 
 /*
@@ -56201,94 +69279,101 @@ function Raven() {
  */
 
 Raven.prototype = {
-    // Hardcode version string so that raven source can be loaded directly via
-    // webpack (using a build step causes webpack #1617). Grunt verifies that
-    // this value matches package.json during build.
-    //   See: https://github.com/getsentry/raven-js/issues/465
-    VERSION: '3.17.0',
+  // Hardcode version string so that raven source can be loaded directly via
+  // webpack (using a build step causes webpack #1617). Grunt verifies that
+  // this value matches package.json during build.
+  //   See: https://github.com/getsentry/raven-js/issues/465
+  VERSION: '3.19.1',
 
-    debug: false,
+  debug: false,
 
-    TraceKit: TraceKit, // alias to TraceKit
+  TraceKit: TraceKit, // alias to TraceKit
 
-    /*
+  /*
      * Configure Raven with a DSN and extra options
      *
      * @param {string} dsn The public Sentry DSN
-     * @param {object} options Optional set of of global options [optional]
+     * @param {object} options Set of global options [optional]
      * @return {Raven}
      */
-    config: function(dsn, options) {
-        var self = this;
+  config: function(dsn, options) {
+    var self = this;
 
-        if (self._globalServer) {
-                this._logDebug('error', 'Error: Raven has already been configured');
-            return self;
+    if (self._globalServer) {
+      this._logDebug('error', 'Error: Raven has already been configured');
+      return self;
+    }
+    if (!dsn) return self;
+
+    var globalOptions = self._globalOptions;
+
+    // merge in options
+    if (options) {
+      each(options, function(key, value) {
+        // tags and extra are special and need to be put into context
+        if (key === 'tags' || key === 'extra' || key === 'user') {
+          self._globalContext[key] = value;
+        } else {
+          globalOptions[key] = value;
         }
-        if (!dsn) return self;
+      });
+    }
 
-        var globalOptions = self._globalOptions;
+    self.setDSN(dsn);
 
-        // merge in options
-        if (options) {
-            each(options, function(key, value){
-                // tags and extra are special and need to be put into context
-                if (key === 'tags' || key === 'extra' || key === 'user') {
-                    self._globalContext[key] = value;
-                } else {
-                    globalOptions[key] = value;
-                }
-            });
-        }
+    // "Script error." is hard coded into browsers for errors that it can't read.
+    // this is the result of a script being pulled in from an external domain and CORS.
+    globalOptions.ignoreErrors.push(/^Script error\.?$/);
+    globalOptions.ignoreErrors.push(/^Javascript error: Script error\.? on line 0$/);
 
-        self.setDSN(dsn);
+    // join regexp rules into one big rule
+    globalOptions.ignoreErrors = joinRegExp(globalOptions.ignoreErrors);
+    globalOptions.ignoreUrls = globalOptions.ignoreUrls.length
+      ? joinRegExp(globalOptions.ignoreUrls)
+      : false;
+    globalOptions.whitelistUrls = globalOptions.whitelistUrls.length
+      ? joinRegExp(globalOptions.whitelistUrls)
+      : false;
+    globalOptions.includePaths = joinRegExp(globalOptions.includePaths);
+    globalOptions.maxBreadcrumbs = Math.max(
+      0,
+      Math.min(globalOptions.maxBreadcrumbs || 100, 100)
+    ); // default and hard limit is 100
 
-        // "Script error." is hard coded into browsers for errors that it can't read.
-        // this is the result of a script being pulled in from an external domain and CORS.
-        globalOptions.ignoreErrors.push(/^Script error\.?$/);
-        globalOptions.ignoreErrors.push(/^Javascript error: Script error\.? on line 0$/);
+    var autoBreadcrumbDefaults = {
+      xhr: true,
+      console: true,
+      dom: true,
+      location: true
+    };
 
-        // join regexp rules into one big rule
-        globalOptions.ignoreErrors = joinRegExp(globalOptions.ignoreErrors);
-        globalOptions.ignoreUrls = globalOptions.ignoreUrls.length ? joinRegExp(globalOptions.ignoreUrls) : false;
-        globalOptions.whitelistUrls = globalOptions.whitelistUrls.length ? joinRegExp(globalOptions.whitelistUrls) : false;
-        globalOptions.includePaths = joinRegExp(globalOptions.includePaths);
-        globalOptions.maxBreadcrumbs = Math.max(0, Math.min(globalOptions.maxBreadcrumbs || 100, 100)); // default and hard limit is 100
+    var autoBreadcrumbs = globalOptions.autoBreadcrumbs;
+    if ({}.toString.call(autoBreadcrumbs) === '[object Object]') {
+      autoBreadcrumbs = objectMerge(autoBreadcrumbDefaults, autoBreadcrumbs);
+    } else if (autoBreadcrumbs !== false) {
+      autoBreadcrumbs = autoBreadcrumbDefaults;
+    }
+    globalOptions.autoBreadcrumbs = autoBreadcrumbs;
 
-        var autoBreadcrumbDefaults = {
-            xhr: true,
-            console: true,
-            dom: true,
-            location: true
-        };
+    var instrumentDefaults = {
+      tryCatch: true
+    };
 
-        var autoBreadcrumbs = globalOptions.autoBreadcrumbs;
-        if ({}.toString.call(autoBreadcrumbs) === '[object Object]') {
-            autoBreadcrumbs = objectMerge(autoBreadcrumbDefaults, autoBreadcrumbs);
-        } else if (autoBreadcrumbs !== false) {
-            autoBreadcrumbs = autoBreadcrumbDefaults;
-        }
-        globalOptions.autoBreadcrumbs = autoBreadcrumbs;
+    var instrument = globalOptions.instrument;
+    if ({}.toString.call(instrument) === '[object Object]') {
+      instrument = objectMerge(instrumentDefaults, instrument);
+    } else if (instrument !== false) {
+      instrument = instrumentDefaults;
+    }
+    globalOptions.instrument = instrument;
 
-        var instrumentDefaults = {
-            tryCatch: true
-        };
+    TraceKit.collectWindowErrors = !!globalOptions.collectWindowErrors;
 
-        var instrument = globalOptions.instrument;
-        if ({}.toString.call(instrument) === '[object Object]') {
-            instrument = objectMerge(instrumentDefaults, instrument);
-        } else if (instrument !== false) {
-            instrument = instrumentDefaults;
-        }
-        globalOptions.instrument = instrument;
+    // return for chaining
+    return self;
+  },
 
-        TraceKit.collectWindowErrors = !!globalOptions.collectWindowErrors;
-
-        // return for chaining
-        return self;
-    },
-
-    /*
+  /*
      * Installs a global window.onerror error handler
      * to capture and report uncaught exceptions.
      * At this point, install() is required to be called due
@@ -56296,56 +69381,55 @@ Raven.prototype = {
      *
      * @return {Raven}
      */
-    install: function() {
-        var self = this;
-        if (self.isSetup() && !self._isRavenInstalled) {
-            TraceKit.report.subscribe(function () {
-                self._handleOnErrorStackInfo.apply(self, arguments);
-            });
-            if (self._globalOptions.instrument && self._globalOptions.instrument.tryCatch) {
-              self._instrumentTryCatch();
-            }
+  install: function() {
+    var self = this;
+    if (self.isSetup() && !self._isRavenInstalled) {
+      TraceKit.report.subscribe(function() {
+        self._handleOnErrorStackInfo.apply(self, arguments);
+      });
+      if (self._globalOptions.instrument && self._globalOptions.instrument.tryCatch) {
+        self._instrumentTryCatch();
+      }
 
-            if (self._globalOptions.autoBreadcrumbs)
-                self._instrumentBreadcrumbs();
+      if (self._globalOptions.autoBreadcrumbs) self._instrumentBreadcrumbs();
 
-            // Install all of the plugins
-            self._drainPlugins();
+      // Install all of the plugins
+      self._drainPlugins();
 
-            self._isRavenInstalled = true;
-        }
+      self._isRavenInstalled = true;
+    }
 
-        Error.stackTraceLimit = self._globalOptions.stackTraceLimit;
-        return this;
-    },
+    Error.stackTraceLimit = self._globalOptions.stackTraceLimit;
+    return this;
+  },
 
-    /*
+  /*
      * Set the DSN (can be called multiple time unlike config)
      *
      * @param {string} dsn The public Sentry DSN
      */
-    setDSN: function(dsn) {
-        var self = this,
-            uri = self._parseDSN(dsn),
-          lastSlash = uri.path.lastIndexOf('/'),
-          path = uri.path.substr(1, lastSlash);
+  setDSN: function(dsn) {
+    var self = this,
+      uri = self._parseDSN(dsn),
+      lastSlash = uri.path.lastIndexOf('/'),
+      path = uri.path.substr(1, lastSlash);
 
-        self._dsn = dsn;
-        self._globalKey = uri.user;
-        self._globalSecret = uri.pass && uri.pass.substr(1);
-        self._globalProject = uri.path.substr(lastSlash + 1);
+    self._dsn = dsn;
+    self._globalKey = uri.user;
+    self._globalSecret = uri.pass && uri.pass.substr(1);
+    self._globalProject = uri.path.substr(lastSlash + 1);
 
-        self._globalServer = self._getGlobalServer(uri);
+    self._globalServer = self._getGlobalServer(uri);
 
-        self._globalEndpoint = self._globalServer +
-            '/' + path + 'api/' + self._globalProject + '/store/';
+    self._globalEndpoint =
+      self._globalServer + '/' + path + 'api/' + self._globalProject + '/store/';
 
-        // Reset backoff state since we may be pointing at a
-        // new project/server
-        this._resetBackoff();
-    },
+    // Reset backoff state since we may be pointing at a
+    // new project/server
+    this._resetBackoff();
+  },
 
-    /*
+  /*
      * Wrap code within a context so Raven can capture errors
      * reliably across domains that is executed immediately.
      *
@@ -56353,17 +69437,17 @@ Raven.prototype = {
      * @param {function} func The callback to be immediately executed within the context
      * @param {array} args An array of arguments to be called with the callback [optional]
      */
-    context: function(options, func, args) {
-        if (isFunction(options)) {
-            args = func || [];
-            func = options;
-            options = undefined;
-        }
+  context: function(options, func, args) {
+    if (isFunction(options)) {
+      args = func || [];
+      func = options;
+      options = undefined;
+    }
 
-        return this.wrap(options, func).apply(this, args);
-    },
+    return this.wrap(options, func).apply(this, args);
+  },
 
-    /*
+  /*
      * Wrap code within a context and returns back a new function to be executed
      *
      * @param {object} options A specific set of options for this context [optional]
@@ -56371,356 +69455,397 @@ Raven.prototype = {
      * @param {function} func A function to call before the try/catch wrapper [optional, private]
      * @return {function} The newly wrapped functions with a context
      */
-    wrap: function(options, func, _before) {
-        var self = this;
-        // 1 argument has been passed, and it's not a function
-        // so just return it
-        if (isUndefined(func) && !isFunction(options)) {
-            return options;
-        }
+  wrap: function(options, func, _before) {
+    var self = this;
+    // 1 argument has been passed, and it's not a function
+    // so just return it
+    if (isUndefined(func) && !isFunction(options)) {
+      return options;
+    }
 
-        // options is optional
-        if (isFunction(options)) {
-            func = options;
-            options = undefined;
-        }
+    // options is optional
+    if (isFunction(options)) {
+      func = options;
+      options = undefined;
+    }
 
-        // At this point, we've passed along 2 arguments, and the second one
-        // is not a function either, so we'll just return the second argument.
-        if (!isFunction(func)) {
-            return func;
-        }
+    // At this point, we've passed along 2 arguments, and the second one
+    // is not a function either, so we'll just return the second argument.
+    if (!isFunction(func)) {
+      return func;
+    }
 
-        // We don't wanna wrap it twice!
-        try {
-            if (func.__raven__) {
-                return func;
-            }
+    // We don't wanna wrap it twice!
+    try {
+      if (func.__raven__) {
+        return func;
+      }
 
-            // If this has already been wrapped in the past, return that
-            if (func.__raven_wrapper__ ){
-                return func.__raven_wrapper__ ;
-            }
-        } catch (e) {
-            // Just accessing custom props in some Selenium environments
-            // can cause a "Permission denied" exception (see raven-js#495).
-            // Bail on wrapping and return the function as-is (defers to window.onerror).
-            return func;
-        }
+      // If this has already been wrapped in the past, return that
+      if (func.__raven_wrapper__) {
+        return func.__raven_wrapper__;
+      }
+    } catch (e) {
+      // Just accessing custom props in some Selenium environments
+      // can cause a "Permission denied" exception (see raven-js#495).
+      // Bail on wrapping and return the function as-is (defers to window.onerror).
+      return func;
+    }
 
-        function wrapped() {
-            var args = [], i = arguments.length,
-                deep = !options || options && options.deep !== false;
+    function wrapped() {
+      var args = [],
+        i = arguments.length,
+        deep = !options || (options && options.deep !== false);
 
-            if (_before && isFunction(_before)) {
-                _before.apply(this, arguments);
-            }
+      if (_before && isFunction(_before)) {
+        _before.apply(this, arguments);
+      }
 
-            // Recursively wrap all of a function's arguments that are
-            // functions themselves.
-            while(i--) args[i] = deep ? self.wrap(options, arguments[i]) : arguments[i];
+      // Recursively wrap all of a function's arguments that are
+      // functions themselves.
+      while (i--) args[i] = deep ? self.wrap(options, arguments[i]) : arguments[i];
 
-            try {
-                // Attempt to invoke user-land function
-                // NOTE: If you are a Sentry user, and you are seeing this stack frame, it
-                //       means Raven caught an error invoking your application code. This is
-                //       expected behavior and NOT indicative of a bug with Raven.js.
-                return func.apply(this, args);
-            } catch(e) {
-                self._ignoreNextOnError();
-                self.captureException(e, options);
-                throw e;
-            }
-        }
+      try {
+        // Attempt to invoke user-land function
+        // NOTE: If you are a Sentry user, and you are seeing this stack frame, it
+        //       means Raven caught an error invoking your application code. This is
+        //       expected behavior and NOT indicative of a bug with Raven.js.
+        return func.apply(this, args);
+      } catch (e) {
+        self._ignoreNextOnError();
+        self.captureException(e, options);
+        throw e;
+      }
+    }
 
-        // copy over properties of the old function
-        for (var property in func) {
-            if (hasKey(func, property)) {
-                wrapped[property] = func[property];
-            }
-        }
-        wrapped.prototype = func.prototype;
+    // copy over properties of the old function
+    for (var property in func) {
+      if (hasKey(func, property)) {
+        wrapped[property] = func[property];
+      }
+    }
+    wrapped.prototype = func.prototype;
 
-        func.__raven_wrapper__ = wrapped;
-        // Signal that this function has been wrapped already
-        // for both debugging and to prevent it to being wrapped twice
-        wrapped.__raven__ = true;
-        wrapped.__inner__ = func;
+    func.__raven_wrapper__ = wrapped;
+    // Signal that this function has been wrapped already
+    // for both debugging and to prevent it to being wrapped twice
+    wrapped.__raven__ = true;
+    wrapped.__inner__ = func;
 
-        return wrapped;
-    },
+    return wrapped;
+  },
 
-    /*
+  /*
      * Uninstalls the global error handler.
      *
      * @return {Raven}
      */
-    uninstall: function() {
-        TraceKit.report.uninstall();
+  uninstall: function() {
+    TraceKit.report.uninstall();
 
-        this._restoreBuiltIns();
+    this._restoreBuiltIns();
 
-        Error.stackTraceLimit = this._originalErrorStackTraceLimit;
-        this._isRavenInstalled = false;
+    Error.stackTraceLimit = this._originalErrorStackTraceLimit;
+    this._isRavenInstalled = false;
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Manually capture an exception and send it over to Sentry
      *
      * @param {error} ex An exception to be logged
      * @param {object} options A specific set of options for this error [optional]
      * @return {Raven}
      */
-    captureException: function(ex, options) {
-        // If not an Error is passed through, recall as a message instead
-        if (!isError(ex)) {
-            return this.captureMessage(ex, objectMerge({
-                trimHeadFrames: 1,
-                stacktrace: true // if we fall back to captureMessage, default to attempting a new trace
-            }, options));
-        }
+  captureException: function(ex, options) {
+    // Cases for sending ex as a message, rather than an exception
+    var isNotError = !isError(ex);
+    var isNotErrorEvent = !isErrorEvent(ex);
+    var isErrorEventWithoutError = isErrorEvent(ex) && !ex.error;
 
-        // Store the raw exception object for potential debugging and introspection
-        this._lastCapturedException = ex;
+    if ((isNotError && isNotErrorEvent) || isErrorEventWithoutError) {
+      return this.captureMessage(
+        ex,
+        objectMerge(
+          {
+            trimHeadFrames: 1,
+            stacktrace: true // if we fall back to captureMessage, default to attempting a new trace
+          },
+          options
+        )
+      );
+    }
 
-        // TraceKit.report will re-raise any exception passed to it,
-        // which means you have to wrap it in try/catch. Instead, we
-        // can wrap it here and only re-raise if TraceKit.report
-        // raises an exception different from the one we asked to
-        // report on.
-        try {
-            var stack = TraceKit.computeStackTrace(ex);
-            this._handleStackInfo(stack, options);
-        } catch(ex1) {
-            if(ex !== ex1) {
-                throw ex1;
-            }
-        }
+    // Get actual Error from ErrorEvent
+    if (isErrorEvent(ex)) ex = ex.error;
 
-        return this;
-    },
+    // Store the raw exception object for potential debugging and introspection
+    this._lastCapturedException = ex;
 
-    /*
+    // TraceKit.report will re-raise any exception passed to it,
+    // which means you have to wrap it in try/catch. Instead, we
+    // can wrap it here and only re-raise if TraceKit.report
+    // raises an exception different from the one we asked to
+    // report on.
+    try {
+      var stack = TraceKit.computeStackTrace(ex);
+      this._handleStackInfo(stack, options);
+    } catch (ex1) {
+      if (ex !== ex1) {
+        throw ex1;
+      }
+    }
+
+    return this;
+  },
+
+  /*
      * Manually send a message to Sentry
      *
      * @param {string} msg A plain message to be captured in Sentry
      * @param {object} options A specific set of options for this message [optional]
      * @return {Raven}
      */
-    captureMessage: function(msg, options) {
-        // config() automagically converts ignoreErrors from a list to a RegExp so we need to test for an
-        // early call; we'll error on the side of logging anything called before configuration since it's
-        // probably something you should see:
-        if (!!this._globalOptions.ignoreErrors.test && this._globalOptions.ignoreErrors.test(msg)) {
-            return;
-        }
+  captureMessage: function(msg, options) {
+    // config() automagically converts ignoreErrors from a list to a RegExp so we need to test for an
+    // early call; we'll error on the side of logging anything called before configuration since it's
+    // probably something you should see:
+    if (
+      !!this._globalOptions.ignoreErrors.test &&
+      this._globalOptions.ignoreErrors.test(msg)
+    ) {
+      return;
+    }
 
-        options = options || {};
+    options = options || {};
 
-        var data = objectMerge({
-            message: msg + ''  // Make sure it's actually a string
-        }, options);
+    var data = objectMerge(
+      {
+        message: msg + '' // Make sure it's actually a string
+      },
+      options
+    );
 
-        if (this._globalOptions.stacktrace || (options && options.stacktrace)) {
-            var ex;
-            // Generate a "synthetic" stack trace from this point.
-            // NOTE: If you are a Sentry user, and you are seeing this stack frame, it is NOT indicative
-            //       of a bug with Raven.js. Sentry generates synthetic traces either by configuration,
-            //       or if it catches a thrown object without a "stack" property.
-            try {
-                throw new Error(msg);
-            } catch (ex1) {
-                ex = ex1;
-            }
+    var ex;
+    // Generate a "synthetic" stack trace from this point.
+    // NOTE: If you are a Sentry user, and you are seeing this stack frame, it is NOT indicative
+    //       of a bug with Raven.js. Sentry generates synthetic traces either by configuration,
+    //       or if it catches a thrown object without a "stack" property.
+    try {
+      throw new Error(msg);
+    } catch (ex1) {
+      ex = ex1;
+    }
 
-            // null exception name so `Error` isn't prefixed to msg
-            ex.name = null;
+    // null exception name so `Error` isn't prefixed to msg
+    ex.name = null;
+    var stack = TraceKit.computeStackTrace(ex);
 
-            options = objectMerge({
-                // fingerprint on msg, not stack trace (legacy behavior, could be
-                // revisited)
-                fingerprint: msg,
-                // since we know this is a synthetic trace, the top N-most frames
-                // MUST be from Raven.js, so mark them as in_app later by setting
-                // trimHeadFrames
-                trimHeadFrames: (options.trimHeadFrames || 0) + 1
-            }, options);
+    // stack[0] is `throw new Error(msg)` call itself, we are interested in the frame that was just before that, stack[1]
+    var initialCall = stack.stack[1];
 
-            var stack = TraceKit.computeStackTrace(ex);
-            var frames = this._prepareFrames(stack, options);
-            data.stacktrace = {
-                // Sentry expects frames oldest to newest
-                frames: frames.reverse()
-            }
-        }
+    var fileurl = (initialCall && initialCall.url) || '';
 
-        // Fire away!
-        this._send(data);
+    if (
+      !!this._globalOptions.ignoreUrls.test &&
+      this._globalOptions.ignoreUrls.test(fileurl)
+    ) {
+      return;
+    }
 
+    if (
+      !!this._globalOptions.whitelistUrls.test &&
+      !this._globalOptions.whitelistUrls.test(fileurl)
+    ) {
+      return;
+    }
+
+    if (this._globalOptions.stacktrace || (options && options.stacktrace)) {
+      options = objectMerge(
+        {
+          // fingerprint on msg, not stack trace (legacy behavior, could be
+          // revisited)
+          fingerprint: msg,
+          // since we know this is a synthetic trace, the top N-most frames
+          // MUST be from Raven.js, so mark them as in_app later by setting
+          // trimHeadFrames
+          trimHeadFrames: (options.trimHeadFrames || 0) + 1
+        },
+        options
+      );
+
+      var frames = this._prepareFrames(stack, options);
+      data.stacktrace = {
+        // Sentry expects frames oldest to newest
+        frames: frames.reverse()
+      };
+    }
+
+    // Fire away!
+    this._send(data);
+
+    return this;
+  },
+
+  captureBreadcrumb: function(obj) {
+    var crumb = objectMerge(
+      {
+        timestamp: now() / 1000
+      },
+      obj
+    );
+
+    if (isFunction(this._globalOptions.breadcrumbCallback)) {
+      var result = this._globalOptions.breadcrumbCallback(crumb);
+
+      if (isObject(result) && !isEmptyObject(result)) {
+        crumb = result;
+      } else if (result === false) {
         return this;
-    },
+      }
+    }
 
-    captureBreadcrumb: function (obj) {
-        var crumb = objectMerge({
-            timestamp: now() / 1000
-        }, obj);
+    this._breadcrumbs.push(crumb);
+    if (this._breadcrumbs.length > this._globalOptions.maxBreadcrumbs) {
+      this._breadcrumbs.shift();
+    }
+    return this;
+  },
 
-        if (isFunction(this._globalOptions.breadcrumbCallback)) {
-            var result = this._globalOptions.breadcrumbCallback(crumb);
+  addPlugin: function(plugin /*arg1, arg2, ... argN*/) {
+    var pluginArgs = [].slice.call(arguments, 1);
 
-            if (isObject(result) && !isEmptyObject(result)) {
-                crumb = result;
-            } else if (result === false) {
-                return this;
-            }
-        }
+    this._plugins.push([plugin, pluginArgs]);
+    if (this._isRavenInstalled) {
+      this._drainPlugins();
+    }
 
-        this._breadcrumbs.push(crumb);
-        if (this._breadcrumbs.length > this._globalOptions.maxBreadcrumbs) {
-            this._breadcrumbs.shift();
-        }
-        return this;
-    },
+    return this;
+  },
 
-    addPlugin: function(plugin /*arg1, arg2, ... argN*/) {
-        var pluginArgs = [].slice.call(arguments, 1);
-
-        this._plugins.push([plugin, pluginArgs]);
-        if (this._isRavenInstalled) {
-            this._drainPlugins();
-        }
-
-        return this;
-    },
-
-    /*
+  /*
      * Set/clear a user to be sent along with the payload.
      *
      * @param {object} user An object representing user data [optional]
      * @return {Raven}
      */
-    setUserContext: function(user) {
-        // Intentionally do not merge here since that's an unexpected behavior.
-        this._globalContext.user = user;
+  setUserContext: function(user) {
+    // Intentionally do not merge here since that's an unexpected behavior.
+    this._globalContext.user = user;
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Merge extra attributes to be sent along with the payload.
      *
      * @param {object} extra An object representing extra data [optional]
      * @return {Raven}
      */
-    setExtraContext: function(extra) {
-        this._mergeContext('extra', extra);
+  setExtraContext: function(extra) {
+    this._mergeContext('extra', extra);
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Merge tags to be sent along with the payload.
      *
      * @param {object} tags An object representing tags [optional]
      * @return {Raven}
      */
-    setTagsContext: function(tags) {
-        this._mergeContext('tags', tags);
+  setTagsContext: function(tags) {
+    this._mergeContext('tags', tags);
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Clear all of the context.
      *
      * @return {Raven}
      */
-    clearContext: function() {
-        this._globalContext = {};
+  clearContext: function() {
+    this._globalContext = {};
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Get a copy of the current context. This cannot be mutated.
      *
      * @return {object} copy of context
      */
-    getContext: function() {
-        // lol javascript
-        return JSON.parse(stringify(this._globalContext));
-    },
+  getContext: function() {
+    // lol javascript
+    return JSON.parse(stringify(this._globalContext));
+  },
 
-
-    /*
+  /*
      * Set environment of application
      *
      * @param {string} environment Typically something like 'production'.
      * @return {Raven}
      */
-    setEnvironment: function(environment) {
-        this._globalOptions.environment = environment;
+  setEnvironment: function(environment) {
+    this._globalOptions.environment = environment;
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Set release version of application
      *
      * @param {string} release Typically something like a git SHA to identify version
      * @return {Raven}
      */
-    setRelease: function(release) {
-        this._globalOptions.release = release;
+  setRelease: function(release) {
+    this._globalOptions.release = release;
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Set the dataCallback option
      *
      * @param {function} callback The callback to run which allows the
      *                            data blob to be mutated before sending
      * @return {Raven}
      */
-    setDataCallback: function(callback) {
-        var original = this._globalOptions.dataCallback;
-        this._globalOptions.dataCallback =
-          keepOriginalCallback(original, callback);
-        return this;
-    },
+  setDataCallback: function(callback) {
+    var original = this._globalOptions.dataCallback;
+    this._globalOptions.dataCallback = keepOriginalCallback(original, callback);
+    return this;
+  },
 
-    /*
+  /*
      * Set the breadcrumbCallback option
      *
      * @param {function} callback The callback to run which allows filtering
      *                            or mutating breadcrumbs
      * @return {Raven}
      */
-    setBreadcrumbCallback: function(callback) {
-        var original = this._globalOptions.breadcrumbCallback;
-        this._globalOptions.breadcrumbCallback =
-          keepOriginalCallback(original, callback);
-        return this;
-    },
+  setBreadcrumbCallback: function(callback) {
+    var original = this._globalOptions.breadcrumbCallback;
+    this._globalOptions.breadcrumbCallback = keepOriginalCallback(original, callback);
+    return this;
+  },
 
-    /*
+  /*
      * Set the shouldSendCallback option
      *
      * @param {function} callback The callback to run which allows
      *                            introspecting the blob before sending
      * @return {Raven}
      */
-    setShouldSendCallback: function(callback) {
-        var original = this._globalOptions.shouldSendCallback;
-        this._globalOptions.shouldSendCallback =
-          keepOriginalCallback(original, callback);
-        return this;
-    },
+  setShouldSendCallback: function(callback) {
+    var original = this._globalOptions.shouldSendCallback;
+    this._globalOptions.shouldSendCallback = keepOriginalCallback(original, callback);
+    return this;
+  },
 
-    /**
+  /**
      * Override the default HTTP transport mechanism that transmits data
      * to the Sentry server.
      *
@@ -56729,368 +69854,424 @@ Raven.prototype = {
      *
      * @return {Raven}
      */
-    setTransport: function(transport) {
-        this._globalOptions.transport = transport;
+  setTransport: function(transport) {
+    this._globalOptions.transport = transport;
 
-        return this;
-    },
+    return this;
+  },
 
-    /*
+  /*
      * Get the latest raw exception that was captured by Raven.
      *
      * @return {error}
      */
-    lastException: function() {
-        return this._lastCapturedException;
-    },
+  lastException: function() {
+    return this._lastCapturedException;
+  },
 
-    /*
+  /*
      * Get the last event id
      *
      * @return {string}
      */
-    lastEventId: function() {
-        return this._lastEventId;
-    },
+  lastEventId: function() {
+    return this._lastEventId;
+  },
 
-    /*
+  /*
      * Determine if Raven is setup and ready to go.
      *
      * @return {boolean}
      */
-    isSetup: function() {
-        if (!this._hasJSON) return false;  // needs JSON support
-        if (!this._globalServer) {
-            if (!this.ravenNotConfiguredError) {
-              this.ravenNotConfiguredError = true;
-              this._logDebug('error', 'Error: Raven has not been configured.');
-            }
-            return false;
-        }
-        return true;
-    },
+  isSetup: function() {
+    if (!this._hasJSON) return false; // needs JSON support
+    if (!this._globalServer) {
+      if (!this.ravenNotConfiguredError) {
+        this.ravenNotConfiguredError = true;
+        this._logDebug('error', 'Error: Raven has not been configured.');
+      }
+      return false;
+    }
+    return true;
+  },
 
-    afterLoad: function () {
-        // TODO: remove window dependence?
+  afterLoad: function() {
+    // TODO: remove window dependence?
 
-        // Attempt to initialize Raven on load
-        var RavenConfig = _window.RavenConfig;
-        if (RavenConfig) {
-            this.config(RavenConfig.dsn, RavenConfig.config).install();
-        }
-    },
+    // Attempt to initialize Raven on load
+    var RavenConfig = _window.RavenConfig;
+    if (RavenConfig) {
+      this.config(RavenConfig.dsn, RavenConfig.config).install();
+    }
+  },
 
-    showReportDialog: function (options) {
-        if (!_document) // doesn't work without a document (React native)
-            return;
+  showReportDialog: function(options) {
+    if (
+      !_document // doesn't work without a document (React native)
+    )
+      return;
 
-        options = options || {};
+    options = options || {};
 
-        var lastEventId = options.eventId || this.lastEventId();
-        if (!lastEventId) {
-            throw new RavenConfigError('Missing eventId');
-        }
+    var lastEventId = options.eventId || this.lastEventId();
+    if (!lastEventId) {
+      throw new RavenConfigError('Missing eventId');
+    }
 
-        var dsn = options.dsn || this._dsn;
-        if (!dsn) {
-            throw new RavenConfigError('Missing DSN');
-        }
+    var dsn = options.dsn || this._dsn;
+    if (!dsn) {
+      throw new RavenConfigError('Missing DSN');
+    }
 
-        var encode = encodeURIComponent;
-        var qs = '';
-        qs += '?eventId=' + encode(lastEventId);
-        qs += '&dsn=' + encode(dsn);
+    var encode = encodeURIComponent;
+    var qs = '';
+    qs += '?eventId=' + encode(lastEventId);
+    qs += '&dsn=' + encode(dsn);
 
-        var user = options.user || this._globalContext.user;
-        if (user) {
-            if (user.name)  qs += '&name=' + encode(user.name);
-            if (user.email) qs += '&email=' + encode(user.email);
-        }
+    var user = options.user || this._globalContext.user;
+    if (user) {
+      if (user.name) qs += '&name=' + encode(user.name);
+      if (user.email) qs += '&email=' + encode(user.email);
+    }
 
-        var globalServer = this._getGlobalServer(this._parseDSN(dsn));
+    var globalServer = this._getGlobalServer(this._parseDSN(dsn));
 
-        var script = _document.createElement('script');
-        script.async = true;
-        script.src = globalServer + '/api/embed/error-page/' + qs;
-        (_document.head || _document.body).appendChild(script);
-    },
+    var script = _document.createElement('script');
+    script.async = true;
+    script.src = globalServer + '/api/embed/error-page/' + qs;
+    (_document.head || _document.body).appendChild(script);
+  },
 
-    /**** Private functions ****/
-    _ignoreNextOnError: function () {
-        var self = this;
-        this._ignoreOnError += 1;
-        setTimeout(function () {
-            // onerror should trigger before setTimeout
-            self._ignoreOnError -= 1;
-        });
-    },
+  /**** Private functions ****/
+  _ignoreNextOnError: function() {
+    var self = this;
+    this._ignoreOnError += 1;
+    setTimeout(function() {
+      // onerror should trigger before setTimeout
+      self._ignoreOnError -= 1;
+    });
+  },
 
-    _triggerEvent: function(eventType, options) {
-        // NOTE: `event` is a native browser thing, so let's avoid conflicting wiht it
-        var evt, key;
+  _triggerEvent: function(eventType, options) {
+    // NOTE: `event` is a native browser thing, so let's avoid conflicting wiht it
+    var evt, key;
 
-        if (!this._hasDocument)
-            return;
+    if (!this._hasDocument) return;
 
-        options = options || {};
+    options = options || {};
 
-        eventType = 'raven' + eventType.substr(0,1).toUpperCase() + eventType.substr(1);
+    eventType = 'raven' + eventType.substr(0, 1).toUpperCase() + eventType.substr(1);
 
-        if (_document.createEvent) {
-            evt = _document.createEvent('HTMLEvents');
-            evt.initEvent(eventType, true, true);
-        } else {
-            evt = _document.createEventObject();
-            evt.eventType = eventType;
-        }
+    if (_document.createEvent) {
+      evt = _document.createEvent('HTMLEvents');
+      evt.initEvent(eventType, true, true);
+    } else {
+      evt = _document.createEventObject();
+      evt.eventType = eventType;
+    }
 
-        for (key in options) if (hasKey(options, key)) {
-            evt[key] = options[key];
-        }
+    for (key in options)
+      if (hasKey(options, key)) {
+        evt[key] = options[key];
+      }
 
-        if (_document.createEvent) {
-            // IE9 if standards
-            _document.dispatchEvent(evt);
-        } else {
-            // IE8 regardless of Quirks or Standards
-            // IE9 if quirks
-            try {
-                _document.fireEvent('on' + evt.eventType.toLowerCase(), evt);
-            } catch(e) {
-                // Do nothing
-            }
-        }
-    },
+    if (_document.createEvent) {
+      // IE9 if standards
+      _document.dispatchEvent(evt);
+    } else {
+      // IE8 regardless of Quirks or Standards
+      // IE9 if quirks
+      try {
+        _document.fireEvent('on' + evt.eventType.toLowerCase(), evt);
+      } catch (e) {
+        // Do nothing
+      }
+    }
+  },
 
-    /**
+  /**
      * Wraps addEventListener to capture UI breadcrumbs
      * @param evtName the event name (e.g. "click")
      * @returns {Function}
      * @private
      */
-    _breadcrumbEventHandler: function(evtName) {
-        var self = this;
-        return function (evt) {
-            // reset keypress timeout; e.g. triggering a 'click' after
-            // a 'keypress' will reset the keypress debounce so that a new
-            // set of keypresses can be recorded
-            self._keypressTimeout = null;
+  _breadcrumbEventHandler: function(evtName) {
+    var self = this;
+    return function(evt) {
+      // reset keypress timeout; e.g. triggering a 'click' after
+      // a 'keypress' will reset the keypress debounce so that a new
+      // set of keypresses can be recorded
+      self._keypressTimeout = null;
 
-            // It's possible this handler might trigger multiple times for the same
-            // event (e.g. event propagation through node ancestors). Ignore if we've
-            // already captured the event.
-            if (self._lastCapturedEvent === evt)
-                return;
+      // It's possible this handler might trigger multiple times for the same
+      // event (e.g. event propagation through node ancestors). Ignore if we've
+      // already captured the event.
+      if (self._lastCapturedEvent === evt) return;
 
-            self._lastCapturedEvent = evt;
+      self._lastCapturedEvent = evt;
 
-            // try/catch both:
-            // - accessing evt.target (see getsentry/raven-js#838, #768)
-            // - `htmlTreeAsString` because it's complex, and just accessing the DOM incorrectly
-            //   can throw an exception in some circumstances.
-            var target;
-            try {
-                target = htmlTreeAsString(evt.target);
-            } catch (e) {
-                target = '<unknown>';
-            }
+      // try/catch both:
+      // - accessing evt.target (see getsentry/raven-js#838, #768)
+      // - `htmlTreeAsString` because it's complex, and just accessing the DOM incorrectly
+      //   can throw an exception in some circumstances.
+      var target;
+      try {
+        target = htmlTreeAsString(evt.target);
+      } catch (e) {
+        target = '<unknown>';
+      }
 
-            self.captureBreadcrumb({
-                category: 'ui.' + evtName, // e.g. ui.click, ui.input
-                message: target
-            });
-        };
-    },
+      self.captureBreadcrumb({
+        category: 'ui.' + evtName, // e.g. ui.click, ui.input
+        message: target
+      });
+    };
+  },
 
-    /**
+  /**
      * Wraps addEventListener to capture keypress UI events
      * @returns {Function}
      * @private
      */
-    _keypressEventHandler: function() {
-        var self = this,
-            debounceDuration = 1000; // milliseconds
+  _keypressEventHandler: function() {
+    var self = this,
+      debounceDuration = 1000; // milliseconds
 
-        // TODO: if somehow user switches keypress target before
-        //       debounce timeout is triggered, we will only capture
-        //       a single breadcrumb from the FIRST target (acceptable?)
-        return function (evt) {
-            var target;
-            try {
-                target = evt.target;
-            } catch (e) {
-                // just accessing event properties can throw an exception in some rare circumstances
-                // see: https://github.com/getsentry/raven-js/issues/838
-                return;
-            }
-            var tagName = target && target.tagName;
+    // TODO: if somehow user switches keypress target before
+    //       debounce timeout is triggered, we will only capture
+    //       a single breadcrumb from the FIRST target (acceptable?)
+    return function(evt) {
+      var target;
+      try {
+        target = evt.target;
+      } catch (e) {
+        // just accessing event properties can throw an exception in some rare circumstances
+        // see: https://github.com/getsentry/raven-js/issues/838
+        return;
+      }
+      var tagName = target && target.tagName;
 
-            // only consider keypress events on actual input elements
-            // this will disregard keypresses targeting body (e.g. tabbing
-            // through elements, hotkeys, etc)
-            if (!tagName || tagName !== 'INPUT' && tagName !== 'TEXTAREA' && !target.isContentEditable)
-                return;
+      // only consider keypress events on actual input elements
+      // this will disregard keypresses targeting body (e.g. tabbing
+      // through elements, hotkeys, etc)
+      if (
+        !tagName ||
+        (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && !target.isContentEditable)
+      )
+        return;
 
-            // record first keypress in a series, but ignore subsequent
-            // keypresses until debounce clears
-            var timeout = self._keypressTimeout;
-            if (!timeout) {
-                self._breadcrumbEventHandler('input')(evt);
-            }
-            clearTimeout(timeout);
-            self._keypressTimeout = setTimeout(function () {
-                self._keypressTimeout = null;
-            }, debounceDuration);
-        };
-    },
+      // record first keypress in a series, but ignore subsequent
+      // keypresses until debounce clears
+      var timeout = self._keypressTimeout;
+      if (!timeout) {
+        self._breadcrumbEventHandler('input')(evt);
+      }
+      clearTimeout(timeout);
+      self._keypressTimeout = setTimeout(function() {
+        self._keypressTimeout = null;
+      }, debounceDuration);
+    };
+  },
 
-    /**
+  /**
      * Captures a breadcrumb of type "navigation", normalizing input URLs
      * @param to the originating URL
      * @param from the target URL
      * @private
      */
-    _captureUrlChange: function(from, to) {
-        var parsedLoc = parseUrl(this._location.href);
-        var parsedTo = parseUrl(to);
-        var parsedFrom = parseUrl(from);
+  _captureUrlChange: function(from, to) {
+    var parsedLoc = parseUrl(this._location.href);
+    var parsedTo = parseUrl(to);
+    var parsedFrom = parseUrl(from);
 
-        // because onpopstate only tells you the "new" (to) value of location.href, and
-        // not the previous (from) value, we need to track the value of the current URL
-        // state ourselves
-        this._lastHref = to;
+    // because onpopstate only tells you the "new" (to) value of location.href, and
+    // not the previous (from) value, we need to track the value of the current URL
+    // state ourselves
+    this._lastHref = to;
 
-        // Use only the path component of the URL if the URL matches the current
-        // document (almost all the time when using pushState)
-        if (parsedLoc.protocol === parsedTo.protocol && parsedLoc.host === parsedTo.host)
-            to = parsedTo.relative;
-        if (parsedLoc.protocol === parsedFrom.protocol && parsedLoc.host === parsedFrom.host)
-            from = parsedFrom.relative;
+    // Use only the path component of the URL if the URL matches the current
+    // document (almost all the time when using pushState)
+    if (parsedLoc.protocol === parsedTo.protocol && parsedLoc.host === parsedTo.host)
+      to = parsedTo.relative;
+    if (parsedLoc.protocol === parsedFrom.protocol && parsedLoc.host === parsedFrom.host)
+      from = parsedFrom.relative;
 
-        this.captureBreadcrumb({
-            category: 'navigation',
-            data: {
-                to: to,
-                from: from
-            }
-        });
-    },
+    this.captureBreadcrumb({
+      category: 'navigation',
+      data: {
+        to: to,
+        from: from
+      }
+    });
+  },
 
-    /**
+  /**
      * Wrap timer functions and event targets to catch errors and provide
      * better metadata.
      */
-    _instrumentTryCatch: function() {
-        var self = this;
+  _instrumentTryCatch: function() {
+    var self = this;
 
-        var wrappedBuiltIns = self._wrappedBuiltIns;
+    var wrappedBuiltIns = self._wrappedBuiltIns;
 
-        function wrapTimeFn(orig) {
-            return function (fn, t) { // preserve arity
-                // Make a copy of the arguments to prevent deoptimization
-                // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
-                var args = new Array(arguments.length);
-                for(var i = 0; i < args.length; ++i) {
-                    args[i] = arguments[i];
-                }
-                var originalCallback = args[0];
-                if (isFunction(originalCallback)) {
-                    args[0] = self.wrap(originalCallback);
-                }
-
-                // IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
-                // also supports only two arguments and doesn't care what this is, so we
-                // can just call the original function directly.
-                if (orig.apply) {
-                    return orig.apply(this, args);
-                } else {
-                    return orig(args[0], args[1]);
-                }
-            };
+    function wrapTimeFn(orig) {
+      return function(fn, t) {
+        // preserve arity
+        // Make a copy of the arguments to prevent deoptimization
+        // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
+        var args = new Array(arguments.length);
+        for (var i = 0; i < args.length; ++i) {
+          args[i] = arguments[i];
+        }
+        var originalCallback = args[0];
+        if (isFunction(originalCallback)) {
+          args[0] = self.wrap(originalCallback);
         }
 
-        var autoBreadcrumbs = this._globalOptions.autoBreadcrumbs;
-
-        function wrapEventTarget(global) {
-            var proto = _window[global] && _window[global].prototype;
-            if (proto && proto.hasOwnProperty && proto.hasOwnProperty('addEventListener')) {
-                fill(proto, 'addEventListener', function(orig) {
-                    return function (evtName, fn, capture, secure) { // preserve arity
-                        try {
-                            if (fn && fn.handleEvent) {
-                                fn.handleEvent = self.wrap(fn.handleEvent);
-                            }
-                        } catch (err) {
-                            // can sometimes get 'Permission denied to access property "handle Event'
-                        }
-
-                        // More breadcrumb DOM capture ... done here and not in `_instrumentBreadcrumbs`
-                        // so that we don't have more than one wrapper function
-                        var before,
-                            clickHandler,
-                            keypressHandler;
-
-                        if (autoBreadcrumbs && autoBreadcrumbs.dom && (global === 'EventTarget' || global === 'Node')) {
-                            // NOTE: generating multiple handlers per addEventListener invocation, should
-                            //       revisit and verify we can just use one (almost certainly)
-                            clickHandler = self._breadcrumbEventHandler('click');
-                            keypressHandler = self._keypressEventHandler();
-                            before = function (evt) {
-                                // need to intercept every DOM event in `before` argument, in case that
-                                // same wrapped method is re-used for different events (e.g. mousemove THEN click)
-                                // see #724
-                                if (!evt) return;
-
-                                var eventType;
-                                try {
-                                    eventType = evt.type
-                                } catch (e) {
-                                    // just accessing event properties can throw an exception in some rare circumstances
-                                    // see: https://github.com/getsentry/raven-js/issues/838
-                                    return;
-                                }
-                                if (eventType === 'click')
-                                    return clickHandler(evt);
-                                else if (eventType === 'keypress')
-                                    return keypressHandler(evt);
-                            };
-                        }
-                        return orig.call(this, evtName, self.wrap(fn, undefined, before), capture, secure);
-                    };
-                }, wrappedBuiltIns);
-                fill(proto, 'removeEventListener', function (orig) {
-                    return function (evt, fn, capture, secure) {
-                        try {
-                            fn = fn && (fn.__raven_wrapper__ ? fn.__raven_wrapper__  : fn);
-                        } catch (e) {
-                            // ignore, accessing __raven_wrapper__ will throw in some Selenium environments
-                        }
-                        return orig.call(this, evt, fn, capture, secure);
-                    };
-                }, wrappedBuiltIns);
-            }
+        // IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
+        // also supports only two arguments and doesn't care what this is, so we
+        // can just call the original function directly.
+        if (orig.apply) {
+          return orig.apply(this, args);
+        } else {
+          return orig(args[0], args[1]);
         }
+      };
+    }
 
-        fill(_window, 'setTimeout', wrapTimeFn, wrappedBuiltIns);
-        fill(_window, 'setInterval', wrapTimeFn, wrappedBuiltIns);
-        if (_window.requestAnimationFrame) {
-            fill(_window, 'requestAnimationFrame', function (orig) {
-                return function (cb) {
-                    return orig(self.wrap(cb));
+    var autoBreadcrumbs = this._globalOptions.autoBreadcrumbs;
+
+    function wrapEventTarget(global) {
+      var proto = _window[global] && _window[global].prototype;
+      if (proto && proto.hasOwnProperty && proto.hasOwnProperty('addEventListener')) {
+        fill(
+          proto,
+          'addEventListener',
+          function(orig) {
+            return function(evtName, fn, capture, secure) {
+              // preserve arity
+              try {
+                if (fn && fn.handleEvent) {
+                  fn.handleEvent = self.wrap(fn.handleEvent);
+                }
+              } catch (err) {
+                // can sometimes get 'Permission denied to access property "handle Event'
+              }
+
+              // More breadcrumb DOM capture ... done here and not in `_instrumentBreadcrumbs`
+              // so that we don't have more than one wrapper function
+              var before, clickHandler, keypressHandler;
+
+              if (
+                autoBreadcrumbs &&
+                autoBreadcrumbs.dom &&
+                (global === 'EventTarget' || global === 'Node')
+              ) {
+                // NOTE: generating multiple handlers per addEventListener invocation, should
+                //       revisit and verify we can just use one (almost certainly)
+                clickHandler = self._breadcrumbEventHandler('click');
+                keypressHandler = self._keypressEventHandler();
+                before = function(evt) {
+                  // need to intercept every DOM event in `before` argument, in case that
+                  // same wrapped method is re-used for different events (e.g. mousemove THEN click)
+                  // see #724
+                  if (!evt) return;
+
+                  var eventType;
+                  try {
+                    eventType = evt.type;
+                  } catch (e) {
+                    // just accessing event properties can throw an exception in some rare circumstances
+                    // see: https://github.com/getsentry/raven-js/issues/838
+                    return;
+                  }
+                  if (eventType === 'click') return clickHandler(evt);
+                  else if (eventType === 'keypress') return keypressHandler(evt);
                 };
-            }, wrappedBuiltIns);
-        }
+              }
+              return orig.call(
+                this,
+                evtName,
+                self.wrap(fn, undefined, before),
+                capture,
+                secure
+              );
+            };
+          },
+          wrappedBuiltIns
+        );
+        fill(
+          proto,
+          'removeEventListener',
+          function(orig) {
+            return function(evt, fn, capture, secure) {
+              try {
+                fn = fn && (fn.__raven_wrapper__ ? fn.__raven_wrapper__ : fn);
+              } catch (e) {
+                // ignore, accessing __raven_wrapper__ will throw in some Selenium environments
+              }
+              return orig.call(this, evt, fn, capture, secure);
+            };
+          },
+          wrappedBuiltIns
+        );
+      }
+    }
 
-        // event targets borrowed from bugsnag-js:
-        // https://github.com/bugsnag/bugsnag-js/blob/master/src/bugsnag.js#L666
-        var eventTargets = ['EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode', 'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase', 'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow', 'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList', 'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'];
-        for (var i = 0; i < eventTargets.length; i++) {
-            wrapEventTarget(eventTargets[i]);
-        }
-    },
+    fill(_window, 'setTimeout', wrapTimeFn, wrappedBuiltIns);
+    fill(_window, 'setInterval', wrapTimeFn, wrappedBuiltIns);
+    if (_window.requestAnimationFrame) {
+      fill(
+        _window,
+        'requestAnimationFrame',
+        function(orig) {
+          return function(cb) {
+            return orig(self.wrap(cb));
+          };
+        },
+        wrappedBuiltIns
+      );
+    }
 
+    // event targets borrowed from bugsnag-js:
+    // https://github.com/bugsnag/bugsnag-js/blob/master/src/bugsnag.js#L666
+    var eventTargets = [
+      'EventTarget',
+      'Window',
+      'Node',
+      'ApplicationCache',
+      'AudioTrackList',
+      'ChannelMergerNode',
+      'CryptoOperation',
+      'EventSource',
+      'FileReader',
+      'HTMLUnknownElement',
+      'IDBDatabase',
+      'IDBRequest',
+      'IDBTransaction',
+      'KeyOperation',
+      'MediaController',
+      'MessagePort',
+      'ModalWindow',
+      'Notification',
+      'SVGElementInstance',
+      'Screen',
+      'TextTrack',
+      'TextTrackCue',
+      'TextTrackList',
+      'WebSocket',
+      'WebSocketWorker',
+      'Worker',
+      'XMLHttpRequest',
+      'XMLHttpRequestEventTarget',
+      'XMLHttpRequestUpload'
+    ];
+    for (var i = 0; i < eventTargets.length; i++) {
+      wrapEventTarget(eventTargets[i]);
+    }
+  },
 
-    /**
+  /**
      * Instrument browser built-ins w/ breadcrumb capturing
      *  - XMLHttpRequests
      *  - DOM interactions (click/typing)
@@ -57099,446 +70280,515 @@ Raven.prototype = {
      *
      * Can be disabled or individually configured via the `autoBreadcrumbs` config option
      */
-    _instrumentBreadcrumbs: function () {
-        var self = this;
-        var autoBreadcrumbs = this._globalOptions.autoBreadcrumbs;
+  _instrumentBreadcrumbs: function() {
+    var self = this;
+    var autoBreadcrumbs = this._globalOptions.autoBreadcrumbs;
 
-        var wrappedBuiltIns = self._wrappedBuiltIns;
+    var wrappedBuiltIns = self._wrappedBuiltIns;
 
-        function wrapProp(prop, xhr) {
-            if (prop in xhr && isFunction(xhr[prop])) {
-                fill(xhr, prop, function (orig) {
-                    return self.wrap(orig);
-                }); // intentionally don't track filled methods on XHR instances
+    function wrapProp(prop, xhr) {
+      if (prop in xhr && isFunction(xhr[prop])) {
+        fill(xhr, prop, function(orig) {
+          return self.wrap(orig);
+        }); // intentionally don't track filled methods on XHR instances
+      }
+    }
+
+    if (autoBreadcrumbs.xhr && 'XMLHttpRequest' in _window) {
+      var xhrproto = XMLHttpRequest.prototype;
+      fill(
+        xhrproto,
+        'open',
+        function(origOpen) {
+          return function(method, url) {
+            // preserve arity
+
+            // if Sentry key appears in URL, don't capture
+            if (isString(url) && url.indexOf(self._globalKey) === -1) {
+              this.__raven_xhr = {
+                method: method,
+                url: url,
+                status_code: null
+              };
             }
-        }
 
-        if (autoBreadcrumbs.xhr && 'XMLHttpRequest' in _window) {
-            var xhrproto = XMLHttpRequest.prototype;
-            fill(xhrproto, 'open', function(origOpen) {
-                return function (method, url) { // preserve arity
+            return origOpen.apply(this, arguments);
+          };
+        },
+        wrappedBuiltIns
+      );
 
-                    // if Sentry key appears in URL, don't capture
-                    if (isString(url) && url.indexOf(self._globalKey) === -1) {
-                        this.__raven_xhr = {
-                            method: method,
-                            url: url,
-                            status_code: null
-                        };
-                    }
+      fill(
+        xhrproto,
+        'send',
+        function(origSend) {
+          return function(data) {
+            // preserve arity
+            var xhr = this;
 
-                    return origOpen.apply(this, arguments);
-                };
-            }, wrappedBuiltIns);
-
-            fill(xhrproto, 'send', function(origSend) {
-                return function (data) { // preserve arity
-                    var xhr = this;
-
-                    function onreadystatechangeHandler() {
-                        if (xhr.__raven_xhr && (xhr.readyState === 1 || xhr.readyState === 4)) {
-                            try {
-                                // touching statusCode in some platforms throws
-                                // an exception
-                                xhr.__raven_xhr.status_code = xhr.status;
-                            } catch (e) { /* do nothing */ }
-                            self.captureBreadcrumb({
-                                type: 'http',
-                                category: 'xhr',
-                                data: xhr.__raven_xhr
-                            });
-                        }
-                    }
-
-                    var props = ['onload', 'onerror', 'onprogress'];
-                    for (var j = 0; j < props.length; j++) {
-                        wrapProp(props[j], xhr);
-                    }
-
-                    if ('onreadystatechange' in xhr && isFunction(xhr.onreadystatechange)) {
-                        fill(xhr, 'onreadystatechange', function (orig) {
-                            return self.wrap(orig, undefined, onreadystatechangeHandler);
-                        } /* intentionally don't track this instrumentation */);
-                    } else {
-                        // if onreadystatechange wasn't actually set by the page on this xhr, we
-                        // are free to set our own and capture the breadcrumb
-                        xhr.onreadystatechange = onreadystatechangeHandler;
-                    }
-
-                    return origSend.apply(this, arguments);
-                };
-            }, wrappedBuiltIns);
-        }
-
-        if (autoBreadcrumbs.xhr && 'fetch' in _window) {
-            fill(_window, 'fetch', function(origFetch) {
-                return function (fn, t) { // preserve arity
-                    // Make a copy of the arguments to prevent deoptimization
-                    // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
-                    var args = new Array(arguments.length);
-                    for (var i = 0; i < args.length; ++i) {
-                        args[i] = arguments[i];
-                    }
-
-                    var fetchInput = args[0];
-                    var method = 'GET';
-                    var url;
-
-                    if (typeof fetchInput === 'string') {
-                        url = fetchInput;
-                    } else {
-                        url = fetchInput.url;
-                        if (fetchInput.method) {
-                            method = fetchInput.method;
-                        }
-                    }
-
-                    if (args[1] && args[1].method) {
-                        method = args[1].method;
-                    }
-
-                    var fetchData = {
-                        method: method,
-                        url: url,
-                        status_code: null
-                    };
-
-                    self.captureBreadcrumb({
-                        type: 'http',
-                        category: 'fetch',
-                        data: fetchData
-                    });
-
-                    return origFetch.apply(this, args).then(function (response) {
-                        fetchData.status_code = response.status;
-
-                        return response;
-                    });
-                };
-            }, wrappedBuiltIns);
-        }
-
-        // Capture breadcrumbs from any click that is unhandled / bubbled up all the way
-        // to the document. Do this before we instrument addEventListener.
-        if (autoBreadcrumbs.dom && this._hasDocument) {
-            if (_document.addEventListener) {
-                _document.addEventListener('click', self._breadcrumbEventHandler('click'), false);
-                _document.addEventListener('keypress', self._keypressEventHandler(), false);
-            }
-            else {
-                // IE8 Compatibility
-                _document.attachEvent('onclick', self._breadcrumbEventHandler('click'));
-                _document.attachEvent('onkeypress', self._keypressEventHandler());
-            }
-        }
-
-        // record navigation (URL) changes
-        // NOTE: in Chrome App environment, touching history.pushState, *even inside
-        //       a try/catch block*, will cause Chrome to output an error to console.error
-        // borrowed from: https://github.com/angular/angular.js/pull/13945/files
-        var chrome = _window.chrome;
-        var isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
-        var hasPushState = !isChromePackagedApp && _window.history && history.pushState;
-        if (autoBreadcrumbs.location && hasPushState) {
-            // TODO: remove onpopstate handler on uninstall()
-            var oldOnPopState = _window.onpopstate;
-            _window.onpopstate = function () {
-                var currentHref = self._location.href;
-                self._captureUrlChange(self._lastHref, currentHref);
-
-                if (oldOnPopState) {
-                    return oldOnPopState.apply(this, arguments);
+            function onreadystatechangeHandler() {
+              if (xhr.__raven_xhr && xhr.readyState === 4) {
+                try {
+                  // touching statusCode in some platforms throws
+                  // an exception
+                  xhr.__raven_xhr.status_code = xhr.status;
+                } catch (e) {
+                  /* do nothing */
                 }
-            };
 
-            fill(history, 'pushState', function (origPushState) {
-                // note history.pushState.length is 0; intentionally not declaring
-                // params to preserve 0 arity
-                return function (/* state, title, url */) {
-                    var url = arguments.length > 2 ? arguments[2] : undefined;
-
-                    // url argument is optional
-                    if (url) {
-                        // coerce to string (this is what pushState does)
-                        self._captureUrlChange(self._lastHref, url + '');
-                    }
-
-                    return origPushState.apply(this, arguments);
-                };
-            }, wrappedBuiltIns);
-        }
-
-        if (autoBreadcrumbs.console && 'console' in _window && console.log) {
-            // console
-            var consoleMethodCallback = function (msg, data) {
                 self.captureBreadcrumb({
-                    message: msg,
-                    level: data.level,
-                    category: 'console'
+                  type: 'http',
+                  category: 'xhr',
+                  data: xhr.__raven_xhr
                 });
+              }
+            }
+
+            var props = ['onload', 'onerror', 'onprogress'];
+            for (var j = 0; j < props.length; j++) {
+              wrapProp(props[j], xhr);
+            }
+
+            if ('onreadystatechange' in xhr && isFunction(xhr.onreadystatechange)) {
+              fill(
+                xhr,
+                'onreadystatechange',
+                function(orig) {
+                  return self.wrap(orig, undefined, onreadystatechangeHandler);
+                } /* intentionally don't track this instrumentation */
+              );
+            } else {
+              // if onreadystatechange wasn't actually set by the page on this xhr, we
+              // are free to set our own and capture the breadcrumb
+              xhr.onreadystatechange = onreadystatechangeHandler;
+            }
+
+            return origSend.apply(this, arguments);
+          };
+        },
+        wrappedBuiltIns
+      );
+    }
+
+    if (autoBreadcrumbs.xhr && 'fetch' in _window) {
+      fill(
+        _window,
+        'fetch',
+        function(origFetch) {
+          return function(fn, t) {
+            // preserve arity
+            // Make a copy of the arguments to prevent deoptimization
+            // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
+            var args = new Array(arguments.length);
+            for (var i = 0; i < args.length; ++i) {
+              args[i] = arguments[i];
+            }
+
+            var fetchInput = args[0];
+            var method = 'GET';
+            var url;
+
+            if (typeof fetchInput === 'string') {
+              url = fetchInput;
+            } else if ('Request' in _window && fetchInput instanceof _window.Request) {
+              url = fetchInput.url;
+              if (fetchInput.method) {
+                method = fetchInput.method;
+              }
+            } else {
+              url = '' + fetchInput;
+            }
+
+            if (args[1] && args[1].method) {
+              method = args[1].method;
+            }
+
+            var fetchData = {
+              method: method,
+              url: url,
+              status_code: null
             };
 
-            each(['debug', 'info', 'warn', 'error', 'log'], function (_, level) {
-                wrapConsoleMethod(console, level, consoleMethodCallback);
-            });
-        }
-
-    },
-
-    _restoreBuiltIns: function () {
-        // restore any wrapped builtins
-        var builtin;
-        while (this._wrappedBuiltIns.length) {
-            builtin = this._wrappedBuiltIns.shift();
-
-            var obj = builtin[0],
-              name = builtin[1],
-              orig = builtin[2];
-
-            obj[name] = orig;
-        }
-    },
-
-    _drainPlugins: function() {
-        var self = this;
-
-        // FIX ME TODO
-        each(this._plugins, function(_, plugin) {
-            var installer = plugin[0];
-            var args = plugin[1];
-            installer.apply(self, [self].concat(args));
-        });
-    },
-
-    _parseDSN: function(str) {
-        var m = dsnPattern.exec(str),
-            dsn = {},
-            i = 7;
-
-        try {
-            while (i--) dsn[dsnKeys[i]] = m[i] || '';
-        } catch(e) {
-            throw new RavenConfigError('Invalid DSN: ' + str);
-        }
-
-        if (dsn.pass && !this._globalOptions.allowSecretKey) {
-            throw new RavenConfigError('Do not specify your secret key in the DSN. See: http://bit.ly/raven-secret-key');
-        }
-
-        return dsn;
-    },
-
-    _getGlobalServer: function(uri) {
-        // assemble the endpoint from the uri pieces
-        var globalServer = '//' + uri.host +
-            (uri.port ? ':' + uri.port : '');
-
-        if (uri.protocol) {
-            globalServer = uri.protocol + ':' + globalServer;
-        }
-        return globalServer;
-    },
-
-    _handleOnErrorStackInfo: function() {
-        // if we are intentionally ignoring errors via onerror, bail out
-        if (!this._ignoreOnError) {
-            this._handleStackInfo.apply(this, arguments);
-        }
-    },
-
-    _handleStackInfo: function(stackInfo, options) {
-        var frames = this._prepareFrames(stackInfo, options);
-
-        this._triggerEvent('handle', {
-            stackInfo: stackInfo,
-            options: options
-        });
-
-        this._processException(
-            stackInfo.name,
-            stackInfo.message,
-            stackInfo.url,
-            stackInfo.lineno,
-            frames,
-            options
-        );
-    },
-
-    _prepareFrames: function(stackInfo, options) {
-        var self = this;
-        var frames = [];
-        if (stackInfo.stack && stackInfo.stack.length) {
-            each(stackInfo.stack, function(i, stack) {
-                var frame = self._normalizeFrame(stack);
-                if (frame) {
-                    frames.push(frame);
-                }
+            self.captureBreadcrumb({
+              type: 'http',
+              category: 'fetch',
+              data: fetchData
             });
 
-            // e.g. frames captured via captureMessage throw
-            if (options && options.trimHeadFrames) {
-                for (var j = 0; j < options.trimHeadFrames && j < frames.length; j++) {
-                    frames[j].in_app = false;
-                }
-            }
+            return origFetch.apply(this, args).then(function(response) {
+              fetchData.status_code = response.status;
+
+              return response;
+            });
+          };
+        },
+        wrappedBuiltIns
+      );
+    }
+
+    // Capture breadcrumbs from any click that is unhandled / bubbled up all the way
+    // to the document. Do this before we instrument addEventListener.
+    if (autoBreadcrumbs.dom && this._hasDocument) {
+      if (_document.addEventListener) {
+        _document.addEventListener('click', self._breadcrumbEventHandler('click'), false);
+        _document.addEventListener('keypress', self._keypressEventHandler(), false);
+      } else {
+        // IE8 Compatibility
+        _document.attachEvent('onclick', self._breadcrumbEventHandler('click'));
+        _document.attachEvent('onkeypress', self._keypressEventHandler());
+      }
+    }
+
+    // record navigation (URL) changes
+    // NOTE: in Chrome App environment, touching history.pushState, *even inside
+    //       a try/catch block*, will cause Chrome to output an error to console.error
+    // borrowed from: https://github.com/angular/angular.js/pull/13945/files
+    var chrome = _window.chrome;
+    var isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
+    var hasPushAndReplaceState =
+      !isChromePackagedApp &&
+      _window.history &&
+      history.pushState &&
+      history.replaceState;
+    if (autoBreadcrumbs.location && hasPushAndReplaceState) {
+      // TODO: remove onpopstate handler on uninstall()
+      var oldOnPopState = _window.onpopstate;
+      _window.onpopstate = function() {
+        var currentHref = self._location.href;
+        self._captureUrlChange(self._lastHref, currentHref);
+
+        if (oldOnPopState) {
+          return oldOnPopState.apply(this, arguments);
         }
-        frames = frames.slice(0, this._globalOptions.stackTraceLimit);
-        return frames;
-    },
+      };
 
+      var historyReplacementFunction = function(origHistFunction) {
+        // note history.pushState.length is 0; intentionally not declaring
+        // params to preserve 0 arity
+        return function(/* state, title, url */) {
+          var url = arguments.length > 2 ? arguments[2] : undefined;
 
-    _normalizeFrame: function(frame) {
-        if (!frame.url) return;
+          // url argument is optional
+          if (url) {
+            // coerce to string (this is what pushState does)
+            self._captureUrlChange(self._lastHref, url + '');
+          }
 
-        // normalize the frames data
-        var normalized = {
-            filename:   frame.url,
-            lineno:     frame.line,
-            colno:      frame.column,
-            'function': frame.func || '?'
+          return origHistFunction.apply(this, arguments);
         };
+      };
 
-        normalized.in_app = !( // determine if an exception came from outside of our app
-            // first we check the global includePaths list.
-            !!this._globalOptions.includePaths.test && !this._globalOptions.includePaths.test(normalized.filename) ||
-            // Now we check for fun, if the function name is Raven or TraceKit
-            /(Raven|TraceKit)\./.test(normalized['function']) ||
-            // finally, we do a last ditch effort and check for raven.min.js
-            /raven\.(min\.)?js$/.test(normalized.filename)
-        );
+      fill(history, 'pushState', historyReplacementFunction, wrappedBuiltIns);
+      fill(history, 'replaceState', historyReplacementFunction, wrappedBuiltIns);
+    }
 
-        return normalized;
-    },
+    if (autoBreadcrumbs.console && 'console' in _window && console.log) {
+      // console
+      var consoleMethodCallback = function(msg, data) {
+        self.captureBreadcrumb({
+          message: msg,
+          level: data.level,
+          category: 'console'
+        });
+      };
 
-    _processException: function(type, message, fileurl, lineno, frames, options) {
-        var stacktrace;
-        if (!!this._globalOptions.ignoreErrors.test && this._globalOptions.ignoreErrors.test(message)) return;
+      each(['debug', 'info', 'warn', 'error', 'log'], function(_, level) {
+        wrapConsoleMethod(console, level, consoleMethodCallback);
+      });
+    }
+  },
 
-        message += '';
+  _restoreBuiltIns: function() {
+    // restore any wrapped builtins
+    var builtin;
+    while (this._wrappedBuiltIns.length) {
+      builtin = this._wrappedBuiltIns.shift();
 
-        if (frames && frames.length) {
-            fileurl = frames[0].filename || fileurl;
-            // Sentry expects frames oldest to newest
-            // and JS sends them as newest to oldest
-            frames.reverse();
-            stacktrace = {frames: frames};
-        } else if (fileurl) {
-            stacktrace = {
-                frames: [{
-                    filename: fileurl,
-                    lineno: lineno,
-                    in_app: true
-                }]
-            };
+      var obj = builtin[0],
+        name = builtin[1],
+        orig = builtin[2];
+
+      obj[name] = orig;
+    }
+  },
+
+  _drainPlugins: function() {
+    var self = this;
+
+    // FIX ME TODO
+    each(this._plugins, function(_, plugin) {
+      var installer = plugin[0];
+      var args = plugin[1];
+      installer.apply(self, [self].concat(args));
+    });
+  },
+
+  _parseDSN: function(str) {
+    var m = dsnPattern.exec(str),
+      dsn = {},
+      i = 7;
+
+    try {
+      while (i--) dsn[dsnKeys[i]] = m[i] || '';
+    } catch (e) {
+      throw new RavenConfigError('Invalid DSN: ' + str);
+    }
+
+    if (dsn.pass && !this._globalOptions.allowSecretKey) {
+      throw new RavenConfigError(
+        'Do not specify your secret key in the DSN. See: http://bit.ly/raven-secret-key'
+      );
+    }
+
+    return dsn;
+  },
+
+  _getGlobalServer: function(uri) {
+    // assemble the endpoint from the uri pieces
+    var globalServer = '//' + uri.host + (uri.port ? ':' + uri.port : '');
+
+    if (uri.protocol) {
+      globalServer = uri.protocol + ':' + globalServer;
+    }
+    return globalServer;
+  },
+
+  _handleOnErrorStackInfo: function() {
+    // if we are intentionally ignoring errors via onerror, bail out
+    if (!this._ignoreOnError) {
+      this._handleStackInfo.apply(this, arguments);
+    }
+  },
+
+  _handleStackInfo: function(stackInfo, options) {
+    var frames = this._prepareFrames(stackInfo, options);
+
+    this._triggerEvent('handle', {
+      stackInfo: stackInfo,
+      options: options
+    });
+
+    this._processException(
+      stackInfo.name,
+      stackInfo.message,
+      stackInfo.url,
+      stackInfo.lineno,
+      frames,
+      options
+    );
+  },
+
+  _prepareFrames: function(stackInfo, options) {
+    var self = this;
+    var frames = [];
+    if (stackInfo.stack && stackInfo.stack.length) {
+      each(stackInfo.stack, function(i, stack) {
+        var frame = self._normalizeFrame(stack, stackInfo.url);
+        if (frame) {
+          frames.push(frame);
         }
+      });
 
-        if (!!this._globalOptions.ignoreUrls.test && this._globalOptions.ignoreUrls.test(fileurl)) return;
-        if (!!this._globalOptions.whitelistUrls.test && !this._globalOptions.whitelistUrls.test(fileurl)) return;
-
-        var data = objectMerge({
-            // sentry.interfaces.Exception
-            exception: {
-                values: [{
-                    type: type,
-                    value: message,
-                    stacktrace: stacktrace
-                }]
-            },
-            culprit: fileurl
-        }, options);
-
-        // Fire away!
-        this._send(data);
-    },
-
-    _trimPacket: function(data) {
-        // For now, we only want to truncate the two different messages
-        // but this could/should be expanded to just trim everything
-        var max = this._globalOptions.maxMessageLength;
-        if (data.message) {
-            data.message = truncate(data.message, max);
+      // e.g. frames captured via captureMessage throw
+      if (options && options.trimHeadFrames) {
+        for (var j = 0; j < options.trimHeadFrames && j < frames.length; j++) {
+          frames[j].in_app = false;
         }
-        if (data.exception) {
-            var exception = data.exception.values[0];
-            exception.value = truncate(exception.value, max);
-        }
+      }
+    }
+    frames = frames.slice(0, this._globalOptions.stackTraceLimit);
+    return frames;
+  },
 
-        var request = data.request;
-        if (request) {
-            if (request.url) {
-                request.url = truncate(request.url, this._globalOptions.maxUrlLength);
+  _normalizeFrame: function(frame, stackInfoUrl) {
+    // normalize the frames data
+    var normalized = {
+      filename: frame.url,
+      lineno: frame.line,
+      colno: frame.column,
+      function: frame.func || '?'
+    };
+
+    // Case when we don't have any information about the error
+    // E.g. throwing a string or raw object, instead of an `Error` in Firefox
+    // Generating synthetic error doesn't add any value here
+    //
+    // We should probably somehow let a user know that they should fix their code
+    if (!frame.url) {
+      normalized.filename = stackInfoUrl; // fallback to whole stacks url from onerror handler
+    }
+
+    normalized.in_app = !// determine if an exception came from outside of our app
+    // first we check the global includePaths list.
+    (
+      (!!this._globalOptions.includePaths.test &&
+        !this._globalOptions.includePaths.test(normalized.filename)) ||
+      // Now we check for fun, if the function name is Raven or TraceKit
+      /(Raven|TraceKit)\./.test(normalized['function']) ||
+      // finally, we do a last ditch effort and check for raven.min.js
+      /raven\.(min\.)?js$/.test(normalized.filename)
+    );
+
+    return normalized;
+  },
+
+  _processException: function(type, message, fileurl, lineno, frames, options) {
+    var prefixedMessage = (type ? type + ': ' : '') + (message || '');
+    if (
+      !!this._globalOptions.ignoreErrors.test &&
+      (this._globalOptions.ignoreErrors.test(message) ||
+        this._globalOptions.ignoreErrors.test(prefixedMessage))
+    ) {
+      return;
+    }
+
+    var stacktrace;
+
+    if (frames && frames.length) {
+      fileurl = frames[0].filename || fileurl;
+      // Sentry expects frames oldest to newest
+      // and JS sends them as newest to oldest
+      frames.reverse();
+      stacktrace = {frames: frames};
+    } else if (fileurl) {
+      stacktrace = {
+        frames: [
+          {
+            filename: fileurl,
+            lineno: lineno,
+            in_app: true
+          }
+        ]
+      };
+    }
+
+    if (
+      !!this._globalOptions.ignoreUrls.test &&
+      this._globalOptions.ignoreUrls.test(fileurl)
+    ) {
+      return;
+    }
+
+    if (
+      !!this._globalOptions.whitelistUrls.test &&
+      !this._globalOptions.whitelistUrls.test(fileurl)
+    ) {
+      return;
+    }
+
+    var data = objectMerge(
+      {
+        // sentry.interfaces.Exception
+        exception: {
+          values: [
+            {
+              type: type,
+              value: message,
+              stacktrace: stacktrace
             }
-            if (request.Referer) {
-                request.Referer = truncate(request.Referer, this._globalOptions.maxUrlLength);
-            }
-        }
+          ]
+        },
+        culprit: fileurl
+      },
+      options
+    );
 
-        if (data.breadcrumbs && data.breadcrumbs.values)
-            this._trimBreadcrumbs(data.breadcrumbs);
+    // Fire away!
+    this._send(data);
+  },
 
-        return data;
-    },
+  _trimPacket: function(data) {
+    // For now, we only want to truncate the two different messages
+    // but this could/should be expanded to just trim everything
+    var max = this._globalOptions.maxMessageLength;
+    if (data.message) {
+      data.message = truncate(data.message, max);
+    }
+    if (data.exception) {
+      var exception = data.exception.values[0];
+      exception.value = truncate(exception.value, max);
+    }
 
-    /**
+    var request = data.request;
+    if (request) {
+      if (request.url) {
+        request.url = truncate(request.url, this._globalOptions.maxUrlLength);
+      }
+      if (request.Referer) {
+        request.Referer = truncate(request.Referer, this._globalOptions.maxUrlLength);
+      }
+    }
+
+    if (data.breadcrumbs && data.breadcrumbs.values)
+      this._trimBreadcrumbs(data.breadcrumbs);
+
+    return data;
+  },
+
+  /**
      * Truncate breadcrumb values (right now just URLs)
      */
-    _trimBreadcrumbs: function (breadcrumbs) {
-        // known breadcrumb properties with urls
-        // TODO: also consider arbitrary prop values that start with (https?)?://
-        var urlProps = ['to', 'from', 'url'],
-            urlProp,
-            crumb,
-            data;
+  _trimBreadcrumbs: function(breadcrumbs) {
+    // known breadcrumb properties with urls
+    // TODO: also consider arbitrary prop values that start with (https?)?://
+    var urlProps = ['to', 'from', 'url'],
+      urlProp,
+      crumb,
+      data;
 
-        for (var i = 0; i < breadcrumbs.values.length; ++i) {
-            crumb = breadcrumbs.values[i];
-            if (!crumb.hasOwnProperty('data') || !isObject(crumb.data) || objectFrozen(crumb.data))
-                continue;
+    for (var i = 0; i < breadcrumbs.values.length; ++i) {
+      crumb = breadcrumbs.values[i];
+      if (
+        !crumb.hasOwnProperty('data') ||
+        !isObject(crumb.data) ||
+        objectFrozen(crumb.data)
+      )
+        continue;
 
-            data = objectMerge({}, crumb.data);
-            for (var j = 0; j < urlProps.length; ++j) {
-                urlProp = urlProps[j];
-                if (data.hasOwnProperty(urlProp)) {
-                    data[urlProp] = truncate(data[urlProp], this._globalOptions.maxUrlLength);
-                }
-            }
-            breadcrumbs.values[i].data = data;
+      data = objectMerge({}, crumb.data);
+      for (var j = 0; j < urlProps.length; ++j) {
+        urlProp = urlProps[j];
+        if (data.hasOwnProperty(urlProp) && data[urlProp]) {
+          data[urlProp] = truncate(data[urlProp], this._globalOptions.maxUrlLength);
         }
-    },
+      }
+      breadcrumbs.values[i].data = data;
+    }
+  },
 
-    _getHttpData: function() {
-        if (!this._hasNavigator && !this._hasDocument) return;
-        var httpData = {};
+  _getHttpData: function() {
+    if (!this._hasNavigator && !this._hasDocument) return;
+    var httpData = {};
 
-        if (this._hasNavigator && _navigator.userAgent) {
-            httpData.headers = {
-              'User-Agent': navigator.userAgent
-            };
-        }
+    if (this._hasNavigator && _navigator.userAgent) {
+      httpData.headers = {
+        'User-Agent': navigator.userAgent
+      };
+    }
 
-        if (this._hasDocument) {
-            if (_document.location && _document.location.href) {
-                httpData.url = _document.location.href;
-            }
-            if (_document.referrer) {
-                if (!httpData.headers) httpData.headers = {};
-                httpData.headers.Referer = _document.referrer;
-            }
-        }
+    if (this._hasDocument) {
+      if (_document.location && _document.location.href) {
+        httpData.url = _document.location.href;
+      }
+      if (_document.referrer) {
+        if (!httpData.headers) httpData.headers = {};
+        httpData.headers.Referer = _document.referrer;
+      }
+    }
 
-        return httpData;
-    },
+    return httpData;
+  },
 
-    _resetBackoff: function() {
-        this._backoffDuration = 0;
-        this._backoffStart = null;
-    },
+  _resetBackoff: function() {
+    this._backoffDuration = 0;
+    this._backoffStart = null;
+  },
 
-    _shouldBackoff: function() {
-        return this._backoffDuration && now() - this._backoffStart < this._backoffDuration;
-    },
+  _shouldBackoff: function() {
+    return this._backoffDuration && now() - this._backoffStart < this._backoffDuration;
+  },
 
-    /**
+  /**
      * Returns true if the in-process data payload matches the signature
      * of the previously-sent data
      *
@@ -57547,622 +70797,292 @@ Raven.prototype = {
      *       other old browsers). This can take the form of an "exception"
      *       data object with a single frame (derived from the onerror args).
      */
-    _isRepeatData: function (current) {
-        var last = this._lastData;
+  _isRepeatData: function(current) {
+    var last = this._lastData;
 
-        if (!last ||
-            current.message !== last.message || // defined for captureMessage
-            current.culprit !== last.culprit)   // defined for captureException/onerror
-            return false;
+    if (
+      !last ||
+      current.message !== last.message || // defined for captureMessage
+      current.culprit !== last.culprit // defined for captureException/onerror
+    )
+      return false;
 
-        // Stacktrace interface (i.e. from captureMessage)
-        if (current.stacktrace || last.stacktrace) {
-            return isSameStacktrace(current.stacktrace, last.stacktrace);
-        }
-        // Exception interface (i.e. from captureException/onerror)
-        else if (current.exception || last.exception) {
-            return isSameException(current.exception, last.exception);
-        }
-
-        return true;
-    },
-
-    _setBackoffState: function(request) {
-        // If we are already in a backoff state, don't change anything
-        if (this._shouldBackoff()) {
-            return;
-        }
-
-        var status = request.status;
-
-        // 400 - project_id doesn't exist or some other fatal
-        // 401 - invalid/revoked dsn
-        // 429 - too many requests
-        if (!(status === 400 || status === 401 || status === 429))
-            return;
-
-        var retry;
-        try {
-            // If Retry-After is not in Access-Control-Expose-Headers, most
-            // browsers will throw an exception trying to access it
-            retry = request.getResponseHeader('Retry-After');
-            retry = parseInt(retry, 10) * 1000; // Retry-After is returned in seconds
-        } catch (e) {
-            /* eslint no-empty:0 */
-        }
-
-
-        this._backoffDuration = retry
-            // If Sentry server returned a Retry-After value, use it
-            ? retry
-            // Otherwise, double the last backoff duration (starts at 1 sec)
-            : this._backoffDuration * 2 || 1000;
-
-        this._backoffStart = now();
-    },
-
-    _send: function(data) {
-        var globalOptions = this._globalOptions;
-
-        var baseData = {
-            project: this._globalProject,
-            logger: globalOptions.logger,
-            platform: 'javascript'
-        }, httpData = this._getHttpData();
-
-        if (httpData) {
-            baseData.request = httpData;
-        }
-
-        // HACK: delete `trimHeadFrames` to prevent from appearing in outbound payload
-        if (data.trimHeadFrames) delete data.trimHeadFrames;
-
-        data = objectMerge(baseData, data);
-
-        // Merge in the tags and extra separately since objectMerge doesn't handle a deep merge
-        data.tags = objectMerge(objectMerge({}, this._globalContext.tags), data.tags);
-        data.extra = objectMerge(objectMerge({}, this._globalContext.extra), data.extra);
-
-        // Send along our own collected metadata with extra
-        data.extra['session:duration'] = now() - this._startTime;
-
-        if (this._breadcrumbs && this._breadcrumbs.length > 0) {
-            // intentionally make shallow copy so that additions
-            // to breadcrumbs aren't accidentally sent in this request
-            data.breadcrumbs = {
-                values: [].slice.call(this._breadcrumbs, 0)
-            };
-        }
-
-        // If there are no tags/extra, strip the key from the payload alltogther.
-        if (isEmptyObject(data.tags)) delete data.tags;
-
-        if (this._globalContext.user) {
-            // sentry.interfaces.User
-            data.user = this._globalContext.user;
-        }
-
-        // Include the environment if it's defined in globalOptions
-        if (globalOptions.environment) data.environment = globalOptions.environment;
-
-        // Include the release if it's defined in globalOptions
-        if (globalOptions.release) data.release = globalOptions.release;
-
-        // Include server_name if it's defined in globalOptions
-        if (globalOptions.serverName) data.server_name = globalOptions.serverName;
-
-        if (isFunction(globalOptions.dataCallback)) {
-            data = globalOptions.dataCallback(data) || data;
-        }
-
-        // Why??????????
-        if (!data || isEmptyObject(data)) {
-            return;
-        }
-
-        // Check if the request should be filtered or not
-        if (isFunction(globalOptions.shouldSendCallback) && !globalOptions.shouldSendCallback(data)) {
-            return;
-        }
-
-        // Backoff state: Sentry server previously responded w/ an error (e.g. 429 - too many requests),
-        // so drop requests until "cool-off" period has elapsed.
-        if (this._shouldBackoff()) {
-            this._logDebug('warn', 'Raven dropped error due to backoff: ', data);
-            return;
-        }
-
-        if (typeof globalOptions.sampleRate === 'number') {
-            if (Math.random() < globalOptions.sampleRate) {
-                this._sendProcessedPayload(data);
-            }
-        } else {
-            this._sendProcessedPayload(data);
-        }
-    },
-
-    _getUuid: function () {
-      return uuid4();
-    },
-
-    _sendProcessedPayload: function(data, callback) {
-        var self = this;
-        var globalOptions = this._globalOptions;
-
-        if (!this.isSetup()) return;
-
-        // Send along an event_id if not explicitly passed.
-        // This event_id can be used to reference the error within Sentry itself.
-        // Set lastEventId after we know the error should actually be sent
-        this._lastEventId = data.event_id || (data.event_id = this._getUuid());
-
-        // Try and clean up the packet before sending by truncating long values
-        data = this._trimPacket(data);
-
-        // ideally duplicate error testing should occur *before* dataCallback/shouldSendCallback,
-        // but this would require copying an un-truncated copy of the data packet, which can be
-        // arbitrarily deep (extra_data) -- could be worthwhile? will revisit
-        if (!this._globalOptions.allowDuplicates && this._isRepeatData(data)) {
-            this._logDebug('warn', 'Raven dropped repeat event: ', data);
-            return;
-        }
-
-        // Store outbound payload after trim
-        this._lastData = data;
-
-        this._logDebug('debug', 'Raven about to send:', data);
-
-        var auth = {
-            sentry_version: '7',
-            sentry_client: 'raven-js/' + this.VERSION,
-            sentry_key: this._globalKey
-        };
-        if (this._globalSecret) {
-            auth.sentry_secret = this._globalSecret;
-        }
-
-        var exception = data.exception && data.exception.values[0];
-        this.captureBreadcrumb({
-            category: 'sentry',
-            message: exception
-                ? (exception.type ? exception.type + ': ' : '') + exception.value
-                : data.message,
-            event_id: data.event_id,
-            level: data.level || 'error' // presume error unless specified
-        });
-
-        var url = this._globalEndpoint;
-        (globalOptions.transport || this._makeRequest).call(this, {
-            url: url,
-            auth: auth,
-            data: data,
-            options: globalOptions,
-            onSuccess: function success() {
-                self._resetBackoff();
-
-                self._triggerEvent('success', {
-                    data: data,
-                    src: url
-                });
-                callback && callback();
-            },
-            onError: function failure(error) {
-                self._logDebug('error', 'Raven transport failed to send: ', error);
-
-                if (error.request) {
-                    self._setBackoffState(error.request);
-                }
-
-                self._triggerEvent('failure', {
-                    data: data,
-                    src: url
-                });
-                error = error || new Error('Raven send failed (no additional details provided)');
-                callback && callback(error);
-            }
-        });
-    },
-
-    _makeRequest: function(opts) {
-        var request = new XMLHttpRequest();
-
-        // if browser doesn't support CORS (e.g. IE7), we are out of luck
-        var hasCORS =
-            'withCredentials' in request ||
-            typeof XDomainRequest !== 'undefined';
-
-        if (!hasCORS) return;
-
-        var url = opts.url;
-
-        if ('withCredentials' in request) {
-            request.onreadystatechange = function () {
-                if (request.readyState !== 4) {
-                    return;
-                } else if (request.status === 200) {
-                    opts.onSuccess && opts.onSuccess();
-                } else if (opts.onError) {
-                    var err = new Error('Sentry error code: ' + request.status);
-                    err.request = request;
-                    opts.onError(err);
-                }
-            };
-        } else {
-            request = new XDomainRequest();
-            // xdomainrequest cannot go http -> https (or vice versa),
-            // so always use protocol relative
-            url = url.replace(/^https?:/, '');
-
-            // onreadystatechange not supported by XDomainRequest
-            if (opts.onSuccess) {
-                request.onload = opts.onSuccess;
-            }
-            if (opts.onError) {
-                request.onerror = function () {
-                    var err = new Error('Sentry error code: XDomainRequest');
-                    err.request = request;
-                    opts.onError(err);
-                }
-            }
-        }
-
-        // NOTE: auth is intentionally sent as part of query string (NOT as custom
-        //       HTTP header) so as to avoid preflight CORS requests
-        request.open('POST', url + '?' + urlencode(opts.auth));
-        request.send(stringify(opts.data));
-    },
-
-    _logDebug: function(level) {
-        if (this._originalConsoleMethods[level] && this.debug) {
-            // In IE<10 console methods do not have their own 'apply' method
-            Function.prototype.apply.call(
-                this._originalConsoleMethods[level],
-                this._originalConsole,
-                [].slice.call(arguments, 1)
-            );
-        }
-    },
-
-    _mergeContext: function(key, context) {
-        if (isUndefined(context)) {
-            delete this._globalContext[key];
-        } else {
-            this._globalContext[key] = objectMerge(this._globalContext[key] || {}, context);
-        }
+    // Stacktrace interface (i.e. from captureMessage)
+    if (current.stacktrace || last.stacktrace) {
+      return isSameStacktrace(current.stacktrace, last.stacktrace);
+    } else if (current.exception || last.exception) {
+      // Exception interface (i.e. from captureException/onerror)
+      return isSameException(current.exception, last.exception);
     }
-};
 
-/*------------------------------------------------
- * utils
- *
- * conditionally exported for test via Raven.utils
- =================================================
- */
-var objectPrototype = Object.prototype;
-
-function isUndefined(what) {
-    return what === void 0;
-}
-
-function isFunction(what) {
-    return typeof what === 'function';
-}
-
-function isString(what) {
-    return objectPrototype.toString.call(what) === '[object String]';
-}
-
-
-function isEmptyObject(what) {
-    for (var _ in what) return false;  // eslint-disable-line guard-for-in, no-unused-vars
     return true;
-}
+  },
 
-function each(obj, callback) {
-    var i, j;
+  _setBackoffState: function(request) {
+    // If we are already in a backoff state, don't change anything
+    if (this._shouldBackoff()) {
+      return;
+    }
 
-    if (isUndefined(obj.length)) {
-        for (i in obj) {
-            if (hasKey(obj, i)) {
-                callback.call(null, i, obj[i]);
-            }
-        }
+    var status = request.status;
+
+    // 400 - project_id doesn't exist or some other fatal
+    // 401 - invalid/revoked dsn
+    // 429 - too many requests
+    if (!(status === 400 || status === 401 || status === 429)) return;
+
+    var retry;
+    try {
+      // If Retry-After is not in Access-Control-Expose-Headers, most
+      // browsers will throw an exception trying to access it
+      retry = request.getResponseHeader('Retry-After');
+      retry = parseInt(retry, 10) * 1000; // Retry-After is returned in seconds
+    } catch (e) {
+      /* eslint no-empty:0 */
+    }
+
+    this._backoffDuration = retry
+      ? // If Sentry server returned a Retry-After value, use it
+        retry
+      : // Otherwise, double the last backoff duration (starts at 1 sec)
+        this._backoffDuration * 2 || 1000;
+
+    this._backoffStart = now();
+  },
+
+  _send: function(data) {
+    var globalOptions = this._globalOptions;
+
+    var baseData = {
+        project: this._globalProject,
+        logger: globalOptions.logger,
+        platform: 'javascript'
+      },
+      httpData = this._getHttpData();
+
+    if (httpData) {
+      baseData.request = httpData;
+    }
+
+    // HACK: delete `trimHeadFrames` to prevent from appearing in outbound payload
+    if (data.trimHeadFrames) delete data.trimHeadFrames;
+
+    data = objectMerge(baseData, data);
+
+    // Merge in the tags and extra separately since objectMerge doesn't handle a deep merge
+    data.tags = objectMerge(objectMerge({}, this._globalContext.tags), data.tags);
+    data.extra = objectMerge(objectMerge({}, this._globalContext.extra), data.extra);
+
+    // Send along our own collected metadata with extra
+    data.extra['session:duration'] = now() - this._startTime;
+
+    if (this._breadcrumbs && this._breadcrumbs.length > 0) {
+      // intentionally make shallow copy so that additions
+      // to breadcrumbs aren't accidentally sent in this request
+      data.breadcrumbs = {
+        values: [].slice.call(this._breadcrumbs, 0)
+      };
+    }
+
+    // If there are no tags/extra, strip the key from the payload alltogther.
+    if (isEmptyObject(data.tags)) delete data.tags;
+
+    if (this._globalContext.user) {
+      // sentry.interfaces.User
+      data.user = this._globalContext.user;
+    }
+
+    // Include the environment if it's defined in globalOptions
+    if (globalOptions.environment) data.environment = globalOptions.environment;
+
+    // Include the release if it's defined in globalOptions
+    if (globalOptions.release) data.release = globalOptions.release;
+
+    // Include server_name if it's defined in globalOptions
+    if (globalOptions.serverName) data.server_name = globalOptions.serverName;
+
+    if (isFunction(globalOptions.dataCallback)) {
+      data = globalOptions.dataCallback(data) || data;
+    }
+
+    // Why??????????
+    if (!data || isEmptyObject(data)) {
+      return;
+    }
+
+    // Check if the request should be filtered or not
+    if (
+      isFunction(globalOptions.shouldSendCallback) &&
+      !globalOptions.shouldSendCallback(data)
+    ) {
+      return;
+    }
+
+    // Backoff state: Sentry server previously responded w/ an error (e.g. 429 - too many requests),
+    // so drop requests until "cool-off" period has elapsed.
+    if (this._shouldBackoff()) {
+      this._logDebug('warn', 'Raven dropped error due to backoff: ', data);
+      return;
+    }
+
+    if (typeof globalOptions.sampleRate === 'number') {
+      if (Math.random() < globalOptions.sampleRate) {
+        this._sendProcessedPayload(data);
+      }
     } else {
-        j = obj.length;
-        if (j) {
-            for (i = 0; i < j; i++) {
-                callback.call(null, i, obj[i]);
-            }
-        }
+      this._sendProcessedPayload(data);
     }
-}
+  },
 
-function objectMerge(obj1, obj2) {
-    if (!obj2) {
-        return obj1;
+  _getUuid: function() {
+    return uuid4();
+  },
+
+  _sendProcessedPayload: function(data, callback) {
+    var self = this;
+    var globalOptions = this._globalOptions;
+
+    if (!this.isSetup()) return;
+
+    // Try and clean up the packet before sending by truncating long values
+    data = this._trimPacket(data);
+
+    // ideally duplicate error testing should occur *before* dataCallback/shouldSendCallback,
+    // but this would require copying an un-truncated copy of the data packet, which can be
+    // arbitrarily deep (extra_data) -- could be worthwhile? will revisit
+    if (!this._globalOptions.allowDuplicates && this._isRepeatData(data)) {
+      this._logDebug('warn', 'Raven dropped repeat event: ', data);
+      return;
     }
-    each(obj2, function(key, value){
-        obj1[key] = value;
-    });
-    return obj1;
-}
 
-/**
- * This function is only used for react-native.
- * react-native freezes object that have already been sent over the
- * js bridge. We need this function in order to check if the object is frozen.
- * So it's ok that objectFrozen returns false if Object.isFrozen is not
- * supported because it's not relevant for other "platforms". See related issue:
- * https://github.com/getsentry/react-native-sentry/issues/57
- */
-function objectFrozen(obj) {
-    if (!Object.isFrozen) {
-        return false;
-    }
-    return Object.isFrozen(obj);
-}
+    // Send along an event_id if not explicitly passed.
+    // This event_id can be used to reference the error within Sentry itself.
+    // Set lastEventId after we know the error should actually be sent
+    this._lastEventId = data.event_id || (data.event_id = this._getUuid());
 
-function truncate(str, max) {
-    return !max || str.length <= max ? str : str.substr(0, max) + '\u2026';
-}
+    // Store outbound payload after trim
+    this._lastData = data;
 
-/**
- * hasKey, a better form of hasOwnProperty
- * Example: hasKey(MainHostObject, property) === true/false
- *
- * @param {Object} host object to check property
- * @param {string} key to check
- */
-function hasKey(object, key) {
-    return objectPrototype.hasOwnProperty.call(object, key);
-}
+    this._logDebug('debug', 'Raven about to send:', data);
 
-function joinRegExp(patterns) {
-    // Combine an array of regular expressions and strings into one large regexp
-    // Be mad.
-    var sources = [],
-        i = 0, len = patterns.length,
-        pattern;
-
-    for (; i < len; i++) {
-        pattern = patterns[i];
-        if (isString(pattern)) {
-            // If it's a string, we need to escape it
-            // Taken from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-            sources.push(pattern.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'));
-        } else if (pattern && pattern.source) {
-            // If it's a regexp already, we want to extract the source
-            sources.push(pattern.source);
-        }
-        // Intentionally skip other cases
-    }
-    return new RegExp(sources.join('|'), 'i');
-}
-
-function urlencode(o) {
-    var pairs = [];
-    each(o, function(key, value) {
-        pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-    });
-    return pairs.join('&');
-}
-
-// borrowed from https://tools.ietf.org/html/rfc3986#appendix-B
-// intentionally using regex and not <a/> href parsing trick because React Native and other
-// environments where DOM might not be available
-function parseUrl(url) {
-    var match = url.match(/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/);
-    if (!match) return {};
-
-    // coerce to undefined values to empty string so we don't get 'undefined'
-    var query = match[6] || '';
-    var fragment = match[8] || '';
-    return {
-        protocol: match[2],
-        host: match[4],
-        path: match[5],
-        relative: match[5] + query + fragment // everything minus origin
+    var auth = {
+      sentry_version: '7',
+      sentry_client: 'raven-js/' + this.VERSION,
+      sentry_key: this._globalKey
     };
-}
-function uuid4() {
-    var crypto = _window.crypto || _window.msCrypto;
 
-    if (!isUndefined(crypto) && crypto.getRandomValues) {
-        // Use window.crypto API if available
-        var arr = new Uint16Array(8);
-        crypto.getRandomValues(arr);
+    if (this._globalSecret) {
+      auth.sentry_secret = this._globalSecret;
+    }
 
-        // set 4 in byte 7
-        arr[3] = arr[3] & 0xFFF | 0x4000;
-        // set 2 most significant bits of byte 9 to '10'
-        arr[4] = arr[4] & 0x3FFF | 0x8000;
+    var exception = data.exception && data.exception.values[0];
+    this.captureBreadcrumb({
+      category: 'sentry',
+      message: exception
+        ? (exception.type ? exception.type + ': ' : '') + exception.value
+        : data.message,
+      event_id: data.event_id,
+      level: data.level || 'error' // presume error unless specified
+    });
 
-        var pad = function(num) {
-            var v = num.toString(16);
-            while (v.length < 4) {
-                v = '0' + v;
-            }
-            return v;
-        };
+    var url = this._globalEndpoint;
+    (globalOptions.transport || this._makeRequest).call(this, {
+      url: url,
+      auth: auth,
+      data: data,
+      options: globalOptions,
+      onSuccess: function success() {
+        self._resetBackoff();
 
-        return pad(arr[0]) + pad(arr[1]) + pad(arr[2]) + pad(arr[3]) + pad(arr[4]) +
-        pad(arr[5]) + pad(arr[6]) + pad(arr[7]);
-    } else {
-        // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
-        return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random()*16|0,
-                v = c === 'x' ? r : r&0x3|0x8;
-            return v.toString(16);
+        self._triggerEvent('success', {
+          data: data,
+          src: url
         });
-    }
-}
+        callback && callback();
+      },
+      onError: function failure(error) {
+        self._logDebug('error', 'Raven transport failed to send: ', error);
 
-/**
- * Given a child DOM element, returns a query-selector statement describing that
- * and its ancestors
- * e.g. [HTMLElement] => body > div > input#foo.btn[name=baz]
- * @param elem
- * @returns {string}
- */
-function htmlTreeAsString(elem) {
-    /* eslint no-extra-parens:0*/
-    var MAX_TRAVERSE_HEIGHT = 5,
-        MAX_OUTPUT_LEN = 80,
-        out = [],
-        height = 0,
-        len = 0,
-        separator = ' > ',
-        sepLength = separator.length,
-        nextStr;
-
-    while (elem && height++ < MAX_TRAVERSE_HEIGHT) {
-
-        nextStr = htmlElementAsString(elem);
-        // bail out if
-        // - nextStr is the 'html' element
-        // - the length of the string that would be created exceeds MAX_OUTPUT_LEN
-        //   (ignore this limit if we are on the first iteration)
-        if (nextStr === 'html' || height > 1 && len + (out.length * sepLength) + nextStr.length >= MAX_OUTPUT_LEN) {
-            break;
+        if (error.request) {
+          self._setBackoffState(error.request);
         }
 
-        out.push(nextStr);
+        self._triggerEvent('failure', {
+          data: data,
+          src: url
+        });
+        error = error || new Error('Raven send failed (no additional details provided)');
+        callback && callback(error);
+      }
+    });
+  },
 
-        len += nextStr.length;
-        elem = elem.parentNode;
-    }
+  _makeRequest: function(opts) {
+    var request = _window.XMLHttpRequest && new _window.XMLHttpRequest();
+    if (!request) return;
 
-    return out.reverse().join(separator);
-}
+    // if browser doesn't support CORS (e.g. IE7), we are out of luck
+    var hasCORS = 'withCredentials' in request || typeof XDomainRequest !== 'undefined';
 
-/**
- * Returns a simple, query-selector representation of a DOM element
- * e.g. [HTMLElement] => input#foo.btn[name=baz]
- * @param HTMLElement
- * @returns {string}
- */
-function htmlElementAsString(elem) {
-    var out = [],
-        className,
-        classes,
-        key,
-        attr,
-        i;
+    if (!hasCORS) return;
 
-    if (!elem || !elem.tagName) {
-        return '';
-    }
+    var url = opts.url;
 
-    out.push(elem.tagName.toLowerCase());
-    if (elem.id) {
-        out.push('#' + elem.id);
-    }
-
-    className = elem.className;
-    if (className && isString(className)) {
-        classes = className.split(/\s+/);
-        for (i = 0; i < classes.length; i++) {
-            out.push('.' + classes[i]);
+    if ('withCredentials' in request) {
+      request.onreadystatechange = function() {
+        if (request.readyState !== 4) {
+          return;
+        } else if (request.status === 200) {
+          opts.onSuccess && opts.onSuccess();
+        } else if (opts.onError) {
+          var err = new Error('Sentry error code: ' + request.status);
+          err.request = request;
+          opts.onError(err);
         }
+      };
+    } else {
+      request = new XDomainRequest();
+      // xdomainrequest cannot go http -> https (or vice versa),
+      // so always use protocol relative
+      url = url.replace(/^https?:/, '');
+
+      // onreadystatechange not supported by XDomainRequest
+      if (opts.onSuccess) {
+        request.onload = opts.onSuccess;
+      }
+      if (opts.onError) {
+        request.onerror = function() {
+          var err = new Error('Sentry error code: XDomainRequest');
+          err.request = request;
+          opts.onError(err);
+        };
+      }
     }
-    var attrWhitelist = ['type', 'name', 'title', 'alt'];
-    for (i = 0; i < attrWhitelist.length; i++) {
-        key = attrWhitelist[i];
-        attr = elem.getAttribute(key);
-        if (attr) {
-            out.push('[' + key + '="' + attr + '"]');
-        }
+
+    // NOTE: auth is intentionally sent as part of query string (NOT as custom
+    //       HTTP header) so as to avoid preflight CORS requests
+    request.open('POST', url + '?' + urlencode(opts.auth));
+    request.send(stringify(opts.data));
+  },
+
+  _logDebug: function(level) {
+    if (this._originalConsoleMethods[level] && this.debug) {
+      // In IE<10 console methods do not have their own 'apply' method
+      Function.prototype.apply.call(
+        this._originalConsoleMethods[level],
+        this._originalConsole,
+        [].slice.call(arguments, 1)
+      );
     }
-    return out.join('');
-}
+  },
 
-/**
- * Returns true if either a OR b is truthy, but not both
- */
-function isOnlyOneTruthy(a, b) {
-    return !!(!!a ^ !!b);
-}
-
-/**
- * Returns true if the two input exception interfaces have the same content
- */
-function isSameException(ex1, ex2) {
-    if (isOnlyOneTruthy(ex1, ex2))
-        return false;
-
-    ex1 = ex1.values[0];
-    ex2 = ex2.values[0];
-
-    if (ex1.type !== ex2.type ||
-        ex1.value !== ex2.value)
-        return false;
-
-    return isSameStacktrace(ex1.stacktrace, ex2.stacktrace);
-}
-
-/**
- * Returns true if the two input stack trace interfaces have the same content
- */
-function isSameStacktrace(stack1, stack2) {
-    if (isOnlyOneTruthy(stack1, stack2))
-        return false;
-
-    var frames1 = stack1.frames;
-    var frames2 = stack2.frames;
-
-    // Exit early if frame count differs
-    if (frames1.length !== frames2.length)
-        return false;
-
-    // Iterate through every frame; bail out if anything differs
-    var a, b;
-    for (var i = 0; i < frames1.length; i++) {
-        a = frames1[i];
-        b = frames2[i];
-        if (a.filename !== b.filename ||
-            a.lineno !== b.lineno ||
-            a.colno !== b.colno ||
-            a['function'] !== b['function'])
-            return false;
+  _mergeContext: function(key, context) {
+    if (isUndefined(context)) {
+      delete this._globalContext[key];
+    } else {
+      this._globalContext[key] = objectMerge(this._globalContext[key] || {}, context);
     }
-    return true;
-}
-
-/**
- * Polyfill a method
- * @param obj object e.g. `document`
- * @param name method name present on object e.g. `addEventListener`
- * @param replacement replacement function
- * @param track {optional} record instrumentation to an array
- */
-function fill(obj, name, replacement, track) {
-    var orig = obj[name];
-    obj[name] = replacement(orig);
-    if (track) {
-        track.push([obj, name, orig]);
-    }
-}
-
-if (typeof __DEV__ !== 'undefined' && __DEV__) {
-    Raven.utils = {
-        isUndefined: isUndefined,
-        isFunction: isFunction,
-        isString: isString,
-        isObject: isObject,
-        isEmptyObject: isEmptyObject,
-        isError: isError,
-        each: each,
-        objectMerge: objectMerge,
-        truncate: truncate,
-        hasKey: hasKey,
-        joinRegExp: joinRegExp,
-        urlencode: urlencode,
-        uuid4: uuid4,
-        htmlTreeAsString: htmlTreeAsString,
-        htmlElementAsString: htmlElementAsString,
-        parseUrl: parseUrl,
-        fill: fill
-    };
+  }
 };
 
 // Deprecations
@@ -58180,15 +71100,13 @@ module.exports = Raven;
  * Raven library, you SHOULD load this file (vs raven.js).
  **/
 
-'use strict';
-
 var RavenConstructor = _dereq_(3);
 
 // This is to be defensive in environments where window does not exist (see https://github.com/getsentry/raven-js/pull/785)
-var _window = typeof window !== 'undefined' ? window
-            : typeof global !== 'undefined' ? global
-            : typeof self !== 'undefined' ? self
-            : {};
+var _window =
+  typeof window !== 'undefined'
+    ? window
+    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 var _Raven = _window.Raven;
 
 var Raven = new RavenConstructor();
@@ -58199,9 +71117,9 @@ var Raven = new RavenConstructor();
  *
  * @return {Raven}
  */
-Raven.noConflict = function () {
-	_window.Raven = _Raven;
-	return Raven;
+Raven.noConflict = function() {
+  _window.Raven = _Raven;
+  return Raven;
 };
 
 Raven.afterLoad();
@@ -58210,45 +71128,396 @@ module.exports = Raven;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"3":3}],5:[function(_dereq_,module,exports){
-'use strict';
+(function (global){
+var _window =
+  typeof window !== 'undefined'
+    ? window
+    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 function isObject(what) {
-    return typeof what === 'object' && what !== null;
+  return typeof what === 'object' && what !== null;
 }
 
 // Yanked from https://git.io/vS8DV re-used under CC0
 // with some tiny modifications
 function isError(value) {
   switch ({}.toString.call(value)) {
-    case '[object Error]': return true;
-    case '[object Exception]': return true;
-    case '[object DOMException]': return true;
-    default: return value instanceof Error;
+    case '[object Error]':
+      return true;
+    case '[object Exception]':
+      return true;
+    case '[object DOMException]':
+      return true;
+    default:
+      return value instanceof Error;
+  }
+}
+
+function isErrorEvent(value) {
+  return supportsErrorEvent() && {}.toString.call(value) === '[object ErrorEvent]';
+}
+
+function isUndefined(what) {
+  return what === void 0;
+}
+
+function isFunction(what) {
+  return typeof what === 'function';
+}
+
+function isString(what) {
+  return Object.prototype.toString.call(what) === '[object String]';
+}
+
+function isEmptyObject(what) {
+  for (var _ in what) return false; // eslint-disable-line guard-for-in, no-unused-vars
+  return true;
+}
+
+function supportsErrorEvent() {
+  try {
+    new ErrorEvent(''); // eslint-disable-line no-new
+    return true;
+  } catch (e) {
+    return false;
   }
 }
 
 function wrappedCallback(callback) {
-    function dataCallback(data, original) {
-      var normalizedData = callback(data) || data;
-      if (original) {
-          return original(normalizedData) || normalizedData;
+  function dataCallback(data, original) {
+    var normalizedData = callback(data) || data;
+    if (original) {
+      return original(normalizedData) || normalizedData;
+    }
+    return normalizedData;
+  }
+
+  return dataCallback;
+}
+
+function each(obj, callback) {
+  var i, j;
+
+  if (isUndefined(obj.length)) {
+    for (i in obj) {
+      if (hasKey(obj, i)) {
+        callback.call(null, i, obj[i]);
       }
-      return normalizedData;
+    }
+  } else {
+    j = obj.length;
+    if (j) {
+      for (i = 0; i < j; i++) {
+        callback.call(null, i, obj[i]);
+      }
+    }
+  }
+}
+
+function objectMerge(obj1, obj2) {
+  if (!obj2) {
+    return obj1;
+  }
+  each(obj2, function(key, value) {
+    obj1[key] = value;
+  });
+  return obj1;
+}
+
+/**
+ * This function is only used for react-native.
+ * react-native freezes object that have already been sent over the
+ * js bridge. We need this function in order to check if the object is frozen.
+ * So it's ok that objectFrozen returns false if Object.isFrozen is not
+ * supported because it's not relevant for other "platforms". See related issue:
+ * https://github.com/getsentry/react-native-sentry/issues/57
+ */
+function objectFrozen(obj) {
+  if (!Object.isFrozen) {
+    return false;
+  }
+  return Object.isFrozen(obj);
+}
+
+function truncate(str, max) {
+  return !max || str.length <= max ? str : str.substr(0, max) + '\u2026';
+}
+
+/**
+ * hasKey, a better form of hasOwnProperty
+ * Example: hasKey(MainHostObject, property) === true/false
+ *
+ * @param {Object} host object to check property
+ * @param {string} key to check
+ */
+function hasKey(object, key) {
+  return Object.prototype.hasOwnProperty.call(object, key);
+}
+
+function joinRegExp(patterns) {
+  // Combine an array of regular expressions and strings into one large regexp
+  // Be mad.
+  var sources = [],
+    i = 0,
+    len = patterns.length,
+    pattern;
+
+  for (; i < len; i++) {
+    pattern = patterns[i];
+    if (isString(pattern)) {
+      // If it's a string, we need to escape it
+      // Taken from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+      sources.push(pattern.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'));
+    } else if (pattern && pattern.source) {
+      // If it's a regexp already, we want to extract the source
+      sources.push(pattern.source);
+    }
+    // Intentionally skip other cases
+  }
+  return new RegExp(sources.join('|'), 'i');
+}
+
+function urlencode(o) {
+  var pairs = [];
+  each(o, function(key, value) {
+    pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+  });
+  return pairs.join('&');
+}
+
+// borrowed from https://tools.ietf.org/html/rfc3986#appendix-B
+// intentionally using regex and not <a/> href parsing trick because React Native and other
+// environments where DOM might not be available
+function parseUrl(url) {
+  var match = url.match(/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/);
+  if (!match) return {};
+
+  // coerce to undefined values to empty string so we don't get 'undefined'
+  var query = match[6] || '';
+  var fragment = match[8] || '';
+  return {
+    protocol: match[2],
+    host: match[4],
+    path: match[5],
+    relative: match[5] + query + fragment // everything minus origin
+  };
+}
+function uuid4() {
+  var crypto = _window.crypto || _window.msCrypto;
+
+  if (!isUndefined(crypto) && crypto.getRandomValues) {
+    // Use window.crypto API if available
+    // eslint-disable-next-line no-undef
+    var arr = new Uint16Array(8);
+    crypto.getRandomValues(arr);
+
+    // set 4 in byte 7
+    arr[3] = (arr[3] & 0xfff) | 0x4000;
+    // set 2 most significant bits of byte 9 to '10'
+    arr[4] = (arr[4] & 0x3fff) | 0x8000;
+
+    var pad = function(num) {
+      var v = num.toString(16);
+      while (v.length < 4) {
+        v = '0' + v;
+      }
+      return v;
+    };
+
+    return (
+      pad(arr[0]) +
+      pad(arr[1]) +
+      pad(arr[2]) +
+      pad(arr[3]) +
+      pad(arr[4]) +
+      pad(arr[5]) +
+      pad(arr[6]) +
+      pad(arr[7])
+    );
+  } else {
+    // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
+    return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (Math.random() * 16) | 0,
+        v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+}
+
+/**
+ * Given a child DOM element, returns a query-selector statement describing that
+ * and its ancestors
+ * e.g. [HTMLElement] => body > div > input#foo.btn[name=baz]
+ * @param elem
+ * @returns {string}
+ */
+function htmlTreeAsString(elem) {
+  /* eslint no-extra-parens:0*/
+  var MAX_TRAVERSE_HEIGHT = 5,
+    MAX_OUTPUT_LEN = 80,
+    out = [],
+    height = 0,
+    len = 0,
+    separator = ' > ',
+    sepLength = separator.length,
+    nextStr;
+
+  while (elem && height++ < MAX_TRAVERSE_HEIGHT) {
+    nextStr = htmlElementAsString(elem);
+    // bail out if
+    // - nextStr is the 'html' element
+    // - the length of the string that would be created exceeds MAX_OUTPUT_LEN
+    //   (ignore this limit if we are on the first iteration)
+    if (
+      nextStr === 'html' ||
+      (height > 1 && len + out.length * sepLength + nextStr.length >= MAX_OUTPUT_LEN)
+    ) {
+      break;
     }
 
-    return dataCallback;
+    out.push(nextStr);
+
+    len += nextStr.length;
+    elem = elem.parentNode;
+  }
+
+  return out.reverse().join(separator);
+}
+
+/**
+ * Returns a simple, query-selector representation of a DOM element
+ * e.g. [HTMLElement] => input#foo.btn[name=baz]
+ * @param HTMLElement
+ * @returns {string}
+ */
+function htmlElementAsString(elem) {
+  var out = [],
+    className,
+    classes,
+    key,
+    attr,
+    i;
+
+  if (!elem || !elem.tagName) {
+    return '';
+  }
+
+  out.push(elem.tagName.toLowerCase());
+  if (elem.id) {
+    out.push('#' + elem.id);
+  }
+
+  className = elem.className;
+  if (className && isString(className)) {
+    classes = className.split(/\s+/);
+    for (i = 0; i < classes.length; i++) {
+      out.push('.' + classes[i]);
+    }
+  }
+  var attrWhitelist = ['type', 'name', 'title', 'alt'];
+  for (i = 0; i < attrWhitelist.length; i++) {
+    key = attrWhitelist[i];
+    attr = elem.getAttribute(key);
+    if (attr) {
+      out.push('[' + key + '="' + attr + '"]');
+    }
+  }
+  return out.join('');
+}
+
+/**
+ * Returns true if either a OR b is truthy, but not both
+ */
+function isOnlyOneTruthy(a, b) {
+  return !!(!!a ^ !!b);
+}
+
+/**
+ * Returns true if the two input exception interfaces have the same content
+ */
+function isSameException(ex1, ex2) {
+  if (isOnlyOneTruthy(ex1, ex2)) return false;
+
+  ex1 = ex1.values[0];
+  ex2 = ex2.values[0];
+
+  if (ex1.type !== ex2.type || ex1.value !== ex2.value) return false;
+
+  return isSameStacktrace(ex1.stacktrace, ex2.stacktrace);
+}
+
+/**
+ * Returns true if the two input stack trace interfaces have the same content
+ */
+function isSameStacktrace(stack1, stack2) {
+  if (isOnlyOneTruthy(stack1, stack2)) return false;
+
+  var frames1 = stack1.frames;
+  var frames2 = stack2.frames;
+
+  // Exit early if frame count differs
+  if (frames1.length !== frames2.length) return false;
+
+  // Iterate through every frame; bail out if anything differs
+  var a, b;
+  for (var i = 0; i < frames1.length; i++) {
+    a = frames1[i];
+    b = frames2[i];
+    if (
+      a.filename !== b.filename ||
+      a.lineno !== b.lineno ||
+      a.colno !== b.colno ||
+      a['function'] !== b['function']
+    )
+      return false;
+  }
+  return true;
+}
+
+/**
+ * Polyfill a method
+ * @param obj object e.g. `document`
+ * @param name method name present on object e.g. `addEventListener`
+ * @param replacement replacement function
+ * @param track {optional} record instrumentation to an array
+ */
+function fill(obj, name, replacement, track) {
+  var orig = obj[name];
+  obj[name] = replacement(orig);
+  if (track) {
+    track.push([obj, name, orig]);
+  }
 }
 
 module.exports = {
-    isObject: isObject,
-    isError: isError,
-    wrappedCallback: wrappedCallback
+  isObject: isObject,
+  isError: isError,
+  isErrorEvent: isErrorEvent,
+  isUndefined: isUndefined,
+  isFunction: isFunction,
+  isString: isString,
+  isEmptyObject: isEmptyObject,
+  supportsErrorEvent: supportsErrorEvent,
+  wrappedCallback: wrappedCallback,
+  each: each,
+  objectMerge: objectMerge,
+  truncate: truncate,
+  objectFrozen: objectFrozen,
+  hasKey: hasKey,
+  joinRegExp: joinRegExp,
+  urlencode: urlencode,
+  uuid4: uuid4,
+  htmlTreeAsString: htmlTreeAsString,
+  htmlElementAsString: htmlElementAsString,
+  isSameException: isSameException,
+  isSameStacktrace: isSameStacktrace,
+  parseUrl: parseUrl,
+  fill: fill
 };
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(_dereq_,module,exports){
 (function (global){
-'use strict';
-
 var utils = _dereq_(5);
 
 /*
@@ -58262,15 +71531,15 @@ var utils = _dereq_(5);
 */
 
 var TraceKit = {
-    collectWindowErrors: true,
-    debug: false
+  collectWindowErrors: true,
+  debug: false
 };
 
 // This is to be defensive in environments where window does not exist (see https://github.com/getsentry/raven-js/pull/785)
-var _window = typeof window !== 'undefined' ? window
-            : typeof global !== 'undefined' ? global
-            : typeof self !== 'undefined' ? self
-            : {};
+var _window =
+  typeof window !== 'undefined'
+    ? window
+    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 // global reference to slice
 var _slice = [].slice;
@@ -58280,12 +71549,10 @@ var UNKNOWN_FUNCTION = '?';
 var ERROR_TYPES_RE = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/;
 
 function getLocationHref() {
-    if (typeof document === 'undefined' || typeof document.location === 'undefined')
-        return '';
+  if (typeof document === 'undefined' || document.location == null) return '';
 
-    return document.location.href;
+  return document.location.href;
 }
-
 
 /**
  * TraceKit.report: cross-browser processing of unhandled exceptions
@@ -58327,67 +71594,67 @@ function getLocationHref() {
  * TraceKit.computeStackTrace docs.
  */
 TraceKit.report = (function reportModuleWrapper() {
-    var handlers = [],
-        lastArgs = null,
-        lastException = null,
-        lastExceptionStack = null;
+  var handlers = [],
+    lastArgs = null,
+    lastException = null,
+    lastExceptionStack = null;
 
-    /**
+  /**
      * Add a crash handler.
      * @param {Function} handler
      */
-    function subscribe(handler) {
-        installGlobalHandler();
-        handlers.push(handler);
-    }
+  function subscribe(handler) {
+    installGlobalHandler();
+    handlers.push(handler);
+  }
 
-    /**
+  /**
      * Remove a crash handler.
      * @param {Function} handler
      */
-    function unsubscribe(handler) {
-        for (var i = handlers.length - 1; i >= 0; --i) {
-            if (handlers[i] === handler) {
-                handlers.splice(i, 1);
-            }
-        }
+  function unsubscribe(handler) {
+    for (var i = handlers.length - 1; i >= 0; --i) {
+      if (handlers[i] === handler) {
+        handlers.splice(i, 1);
+      }
     }
+  }
 
-    /**
+  /**
      * Remove all crash handlers.
      */
-    function unsubscribeAll() {
-        uninstallGlobalHandler();
-        handlers = [];
-    }
+  function unsubscribeAll() {
+    uninstallGlobalHandler();
+    handlers = [];
+  }
 
-    /**
+  /**
      * Dispatch stack information to all handlers.
      * @param {Object.<string, *>} stack
      */
-    function notifyHandlers(stack, isWindowError) {
-        var exception = null;
-        if (isWindowError && !TraceKit.collectWindowErrors) {
-          return;
+  function notifyHandlers(stack, isWindowError) {
+    var exception = null;
+    if (isWindowError && !TraceKit.collectWindowErrors) {
+      return;
+    }
+    for (var i in handlers) {
+      if (handlers.hasOwnProperty(i)) {
+        try {
+          handlers[i].apply(null, [stack].concat(_slice.call(arguments, 2)));
+        } catch (inner) {
+          exception = inner;
         }
-        for (var i in handlers) {
-            if (handlers.hasOwnProperty(i)) {
-                try {
-                    handlers[i].apply(null, [stack].concat(_slice.call(arguments, 2)));
-                } catch (inner) {
-                    exception = inner;
-                }
-            }
-        }
-
-        if (exception) {
-            throw exception;
-        }
+      }
     }
 
-    var _oldOnerrorHandler, _onErrorHandlerInstalled;
+    if (exception) {
+      throw exception;
+    }
+  }
 
-    /**
+  var _oldOnerrorHandler, _onErrorHandlerInstalled;
+
+  /**
      * Ensures all global unhandled exceptions are recorded.
      * Supported by Gecko and IE.
      * @param {string} message Error message.
@@ -58398,127 +71665,130 @@ TraceKit.report = (function reportModuleWrapper() {
      * occurred.
      * @param {?Error} ex The actual Error object.
      */
-    function traceKitWindowOnError(message, url, lineNo, colNo, ex) {
-        var stack = null;
+  function traceKitWindowOnError(message, url, lineNo, colNo, ex) {
+    var stack = null;
 
-        if (lastExceptionStack) {
-            TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
-            processLastException();
-        } else if (ex && utils.isError(ex)) {
-            // non-string `ex` arg; attempt to extract stack trace
+    if (lastExceptionStack) {
+      TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(
+        lastExceptionStack,
+        url,
+        lineNo,
+        message
+      );
+      processLastException();
+    } else if (ex && utils.isError(ex)) {
+      // non-string `ex` arg; attempt to extract stack trace
 
-            // New chrome and blink send along a real error object
-            // Let's just report that like a normal error.
-            // See: https://mikewest.org/2013/08/debugging-runtime-errors-with-window-onerror
-            stack = TraceKit.computeStackTrace(ex);
-            notifyHandlers(stack, true);
-        } else {
-            var location = {
-                'url': url,
-                'line': lineNo,
-                'column': colNo
-            };
+      // New chrome and blink send along a real error object
+      // Let's just report that like a normal error.
+      // See: https://mikewest.org/2013/08/debugging-runtime-errors-with-window-onerror
+      stack = TraceKit.computeStackTrace(ex);
+      notifyHandlers(stack, true);
+    } else {
+      var location = {
+        url: url,
+        line: lineNo,
+        column: colNo
+      };
 
-            var name = undefined;
-            var msg = message; // must be new var or will modify original `arguments`
-            var groups;
-            if ({}.toString.call(message) === '[object String]') {
-                var groups = message.match(ERROR_TYPES_RE);
-                if (groups) {
-                    name = groups[1];
-                    msg = groups[2];
-                }
-            }
-
-            location.func = UNKNOWN_FUNCTION;
-
-            stack = {
-                'name': name,
-                'message': msg,
-                'url': getLocationHref(),
-                'stack': [location]
-            };
-            notifyHandlers(stack, true);
+      var name = undefined;
+      var msg = message; // must be new var or will modify original `arguments`
+      var groups;
+      if ({}.toString.call(message) === '[object String]') {
+        var groups = message.match(ERROR_TYPES_RE);
+        if (groups) {
+          name = groups[1];
+          msg = groups[2];
         }
+      }
 
-        if (_oldOnerrorHandler) {
-            return _oldOnerrorHandler.apply(this, arguments);
-        }
+      location.func = UNKNOWN_FUNCTION;
 
-        return false;
+      stack = {
+        name: name,
+        message: msg,
+        url: getLocationHref(),
+        stack: [location]
+      };
+      notifyHandlers(stack, true);
     }
 
-    function installGlobalHandler ()
-    {
-        if (_onErrorHandlerInstalled) {
-            return;
-        }
-        _oldOnerrorHandler = _window.onerror;
-        _window.onerror = traceKitWindowOnError;
-        _onErrorHandlerInstalled = true;
+    if (_oldOnerrorHandler) {
+      return _oldOnerrorHandler.apply(this, arguments);
     }
 
-    function uninstallGlobalHandler ()
-    {
-        if (!_onErrorHandlerInstalled) {
-            return;
-        }
-        _window.onerror = _oldOnerrorHandler;
-        _onErrorHandlerInstalled = false;
-        _oldOnerrorHandler = undefined;
-    }
+    return false;
+  }
 
-    function processLastException() {
-        var _lastExceptionStack = lastExceptionStack,
-            _lastArgs = lastArgs;
-        lastArgs = null;
-        lastExceptionStack = null;
-        lastException = null;
-        notifyHandlers.apply(null, [_lastExceptionStack, false].concat(_lastArgs));
+  function installGlobalHandler() {
+    if (_onErrorHandlerInstalled) {
+      return;
     }
+    _oldOnerrorHandler = _window.onerror;
+    _window.onerror = traceKitWindowOnError;
+    _onErrorHandlerInstalled = true;
+  }
 
-    /**
+  function uninstallGlobalHandler() {
+    if (!_onErrorHandlerInstalled) {
+      return;
+    }
+    _window.onerror = _oldOnerrorHandler;
+    _onErrorHandlerInstalled = false;
+    _oldOnerrorHandler = undefined;
+  }
+
+  function processLastException() {
+    var _lastExceptionStack = lastExceptionStack,
+      _lastArgs = lastArgs;
+    lastArgs = null;
+    lastExceptionStack = null;
+    lastException = null;
+    notifyHandlers.apply(null, [_lastExceptionStack, false].concat(_lastArgs));
+  }
+
+  /**
      * Reports an unhandled Error to TraceKit.
      * @param {Error} ex
      * @param {?boolean} rethrow If false, do not re-throw the exception.
      * Only used for window.onerror to not cause an infinite loop of
      * rethrowing.
      */
-    function report(ex, rethrow) {
-        var args = _slice.call(arguments, 1);
-        if (lastExceptionStack) {
-            if (lastException === ex) {
-                return; // already caught by an inner catch block, ignore
-            } else {
-              processLastException();
-            }
-        }
-
-        var stack = TraceKit.computeStackTrace(ex);
-        lastExceptionStack = stack;
-        lastException = ex;
-        lastArgs = args;
-
-        // If the stack trace is incomplete, wait for 2 seconds for
-        // slow slow IE to see if onerror occurs or not before reporting
-        // this exception; otherwise, we will end up with an incomplete
-        // stack trace
-        setTimeout(function () {
-            if (lastException === ex) {
-                processLastException();
-            }
-        }, (stack.incomplete ? 2000 : 0));
-
-        if (rethrow !== false) {
-            throw ex; // re-throw to propagate to the top level (and cause window.onerror)
-        }
+  function report(ex, rethrow) {
+    var args = _slice.call(arguments, 1);
+    if (lastExceptionStack) {
+      if (lastException === ex) {
+        return; // already caught by an inner catch block, ignore
+      } else {
+        processLastException();
+      }
     }
 
-    report.subscribe = subscribe;
-    report.unsubscribe = unsubscribe;
-    report.uninstall = unsubscribeAll;
-    return report;
-}());
+    var stack = TraceKit.computeStackTrace(ex);
+    lastExceptionStack = stack;
+    lastException = ex;
+    lastArgs = args;
+
+    // If the stack trace is incomplete, wait for 2 seconds for
+    // slow slow IE to see if onerror occurs or not before reporting
+    // this exception; otherwise, we will end up with an incomplete
+    // stack trace
+    setTimeout(function() {
+      if (lastException === ex) {
+        processLastException();
+      }
+    }, stack.incomplete ? 2000 : 0);
+
+    if (rethrow !== false) {
+      throw ex; // re-throw to propagate to the top level (and cause window.onerror)
+    }
+  }
+
+  report.subscribe = subscribe;
+  report.unsubscribe = unsubscribe;
+  report.uninstall = unsubscribeAll;
+  return report;
+})();
 
 /**
  * TraceKit.computeStackTrace: cross-browser stack traces in JavaScript
@@ -58572,137 +71842,135 @@ TraceKit.report = (function reportModuleWrapper() {
  *
  */
 TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
-    // Contents of Exception in various browsers.
-    //
-    // SAFARI:
-    // ex.message = Can't find variable: qq
-    // ex.line = 59
-    // ex.sourceId = 580238192
-    // ex.sourceURL = http://...
-    // ex.expressionBeginOffset = 96
-    // ex.expressionCaretOffset = 98
-    // ex.expressionEndOffset = 98
-    // ex.name = ReferenceError
-    //
-    // FIREFOX:
-    // ex.message = qq is not defined
-    // ex.fileName = http://...
-    // ex.lineNumber = 59
-    // ex.columnNumber = 69
-    // ex.stack = ...stack trace... (see the example below)
-    // ex.name = ReferenceError
-    //
-    // CHROME:
-    // ex.message = qq is not defined
-    // ex.name = ReferenceError
-    // ex.type = not_defined
-    // ex.arguments = ['aa']
-    // ex.stack = ...stack trace...
-    //
-    // INTERNET EXPLORER:
-    // ex.message = ...
-    // ex.name = ReferenceError
-    //
-    // OPERA:
-    // ex.message = ...message... (see the example below)
-    // ex.name = ReferenceError
-    // ex.opera#sourceloc = 11  (pretty much useless, duplicates the info in ex.message)
-    // ex.stacktrace = n/a; see 'opera:config#UserPrefs|Exceptions Have Stacktrace'
+  // Contents of Exception in various browsers.
+  //
+  // SAFARI:
+  // ex.message = Can't find variable: qq
+  // ex.line = 59
+  // ex.sourceId = 580238192
+  // ex.sourceURL = http://...
+  // ex.expressionBeginOffset = 96
+  // ex.expressionCaretOffset = 98
+  // ex.expressionEndOffset = 98
+  // ex.name = ReferenceError
+  //
+  // FIREFOX:
+  // ex.message = qq is not defined
+  // ex.fileName = http://...
+  // ex.lineNumber = 59
+  // ex.columnNumber = 69
+  // ex.stack = ...stack trace... (see the example below)
+  // ex.name = ReferenceError
+  //
+  // CHROME:
+  // ex.message = qq is not defined
+  // ex.name = ReferenceError
+  // ex.type = not_defined
+  // ex.arguments = ['aa']
+  // ex.stack = ...stack trace...
+  //
+  // INTERNET EXPLORER:
+  // ex.message = ...
+  // ex.name = ReferenceError
+  //
+  // OPERA:
+  // ex.message = ...message... (see the example below)
+  // ex.name = ReferenceError
+  // ex.opera#sourceloc = 11  (pretty much useless, duplicates the info in ex.message)
+  // ex.stacktrace = n/a; see 'opera:config#UserPrefs|Exceptions Have Stacktrace'
 
-    /**
+  /**
      * Computes stack trace information from the stack property.
      * Chrome and Gecko use this property.
      * @param {Error} ex
      * @return {?Object.<string, *>} Stack trace information.
      */
-    function computeStackTraceFromStackProp(ex) {
-        if (typeof ex.stack === 'undefined' || !ex.stack) return;
+  function computeStackTraceFromStackProp(ex) {
+    if (typeof ex.stack === 'undefined' || !ex.stack) return;
 
-        var chrome = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
-            gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|\[native).*?|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i,
-            winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
+    var chrome = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|[a-z]:|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
+      gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|\[native).*?|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i,
+      winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
+      // Used to additionally parse URL/line/column from eval frames
+      geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i,
+      chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/,
+      lines = ex.stack.split('\n'),
+      stack = [],
+      submatch,
+      parts,
+      element,
+      reference = /^(.*) is undefined$/.exec(ex.message);
 
-            // Used to additionally parse URL/line/column from eval frames
-            geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i,
-            chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/,
-
-            lines = ex.stack.split('\n'),
-            stack = [],
-            submatch,
-            parts,
-            element,
-            reference = /^(.*) is undefined$/.exec(ex.message);
-
-        for (var i = 0, j = lines.length; i < j; ++i) {
-            if ((parts = chrome.exec(lines[i]))) {
-                var isNative = parts[2] && parts[2].indexOf('native') === 0; // start of line
-                var isEval = parts[2] && parts[2].indexOf('eval') === 0; // start of line
-                if (isEval && (submatch = chromeEval.exec(parts[2]))) {
-                    // throw out eval line/column and use top-most line/column number
-                    parts[2] = submatch[1]; // url
-                    parts[3] = submatch[2]; // line
-                    parts[4] = submatch[3]; // column
-                }
-                element = {
-                    'url': !isNative ? parts[2] : null,
-                    'func': parts[1] || UNKNOWN_FUNCTION,
-                    'args': isNative ? [parts[2]] : [],
-                    'line': parts[3] ? +parts[3] : null,
-                    'column': parts[4] ? +parts[4] : null
-                };
-            } else if ( parts = winjs.exec(lines[i]) ) {
-                element = {
-                    'url': parts[2],
-                    'func': parts[1] || UNKNOWN_FUNCTION,
-                    'args': [],
-                    'line': +parts[3],
-                    'column': parts[4] ? +parts[4] : null
-                };
-            } else if ((parts = gecko.exec(lines[i]))) {
-                var isEval = parts[3] && parts[3].indexOf(' > eval') > -1;
-                if (isEval && (submatch = geckoEval.exec(parts[3]))) {
-                    // throw out eval line/column and use top-most line number
-                    parts[3] = submatch[1];
-                    parts[4] = submatch[2];
-                    parts[5] = null; // no column when eval
-                } else if (i === 0 && !parts[5] && typeof ex.columnNumber !== 'undefined') {
-                    // FireFox uses this awesome columnNumber property for its top frame
-                    // Also note, Firefox's column number is 0-based and everything else expects 1-based,
-                    // so adding 1
-                    // NOTE: this hack doesn't work if top-most frame is eval
-                    stack[0].column = ex.columnNumber + 1;
-                }
-                element = {
-                    'url': parts[3],
-                    'func': parts[1] || UNKNOWN_FUNCTION,
-                    'args': parts[2] ? parts[2].split(',') : [],
-                    'line': parts[4] ? +parts[4] : null,
-                    'column': parts[5] ? +parts[5] : null
-                };
-            } else {
-                continue;
-            }
-
-            if (!element.func && element.line) {
-                element.func = UNKNOWN_FUNCTION;
-            }
-
-            stack.push(element);
+    for (var i = 0, j = lines.length; i < j; ++i) {
+      if ((parts = chrome.exec(lines[i]))) {
+        var isNative = parts[2] && parts[2].indexOf('native') === 0; // start of line
+        var isEval = parts[2] && parts[2].indexOf('eval') === 0; // start of line
+        if (isEval && (submatch = chromeEval.exec(parts[2]))) {
+          // throw out eval line/column and use top-most line/column number
+          parts[2] = submatch[1]; // url
+          parts[3] = submatch[2]; // line
+          parts[4] = submatch[3]; // column
         }
-
-        if (!stack.length) {
-            return null;
-        }
-
-        return {
-            'name': ex.name,
-            'message': ex.message,
-            'url': getLocationHref(),
-            'stack': stack
+        element = {
+          url: !isNative ? parts[2] : null,
+          func: parts[1] || UNKNOWN_FUNCTION,
+          args: isNative ? [parts[2]] : [],
+          line: parts[3] ? +parts[3] : null,
+          column: parts[4] ? +parts[4] : null
         };
+      } else if ((parts = winjs.exec(lines[i]))) {
+        element = {
+          url: parts[2],
+          func: parts[1] || UNKNOWN_FUNCTION,
+          args: [],
+          line: +parts[3],
+          column: parts[4] ? +parts[4] : null
+        };
+      } else if ((parts = gecko.exec(lines[i]))) {
+        var isEval = parts[3] && parts[3].indexOf(' > eval') > -1;
+        if (isEval && (submatch = geckoEval.exec(parts[3]))) {
+          // throw out eval line/column and use top-most line number
+          parts[3] = submatch[1];
+          parts[4] = submatch[2];
+          parts[5] = null; // no column when eval
+        } else if (i === 0 && !parts[5] && typeof ex.columnNumber !== 'undefined') {
+          // FireFox uses this awesome columnNumber property for its top frame
+          // Also note, Firefox's column number is 0-based and everything else expects 1-based,
+          // so adding 1
+          // NOTE: this hack doesn't work if top-most frame is eval
+          stack[0].column = ex.columnNumber + 1;
+        }
+        element = {
+          url: parts[3],
+          func: parts[1] || UNKNOWN_FUNCTION,
+          args: parts[2] ? parts[2].split(',') : [],
+          line: parts[4] ? +parts[4] : null,
+          column: parts[5] ? +parts[5] : null
+        };
+      } else {
+        continue;
+      }
+
+      if (!element.func && element.line) {
+        element.func = UNKNOWN_FUNCTION;
+      }
+
+      stack.push(element);
     }
 
-    /**
+    if (!stack.length) {
+      return null;
+    }
+
+    return {
+      name: ex.name,
+      message: ex.message,
+      url: getLocationHref(),
+      stack: stack
+    };
+  }
+
+  /**
      * Adds information about the first frame to incomplete stack traces.
      * Safari and IE require this to get complete data on the first frame.
      * @param {Object.<string, *>} stackInfo Stack trace information from
@@ -58715,41 +71983,44 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {boolean} Whether or not the stack information was
      * augmented.
      */
-    function augmentStackTraceWithInitialElement(stackInfo, url, lineNo, message) {
-        var initial = {
-            'url': url,
-            'line': lineNo
-        };
+  function augmentStackTraceWithInitialElement(stackInfo, url, lineNo, message) {
+    var initial = {
+      url: url,
+      line: lineNo
+    };
 
-        if (initial.url && initial.line) {
-            stackInfo.incomplete = false;
+    if (initial.url && initial.line) {
+      stackInfo.incomplete = false;
 
-            if (!initial.func) {
-                initial.func = UNKNOWN_FUNCTION;
-            }
+      if (!initial.func) {
+        initial.func = UNKNOWN_FUNCTION;
+      }
 
-            if (stackInfo.stack.length > 0) {
-                if (stackInfo.stack[0].url === initial.url) {
-                    if (stackInfo.stack[0].line === initial.line) {
-                        return false; // already in stack trace
-                    } else if (!stackInfo.stack[0].line && stackInfo.stack[0].func === initial.func) {
-                        stackInfo.stack[0].line = initial.line;
-                        return false;
-                    }
-                }
-            }
-
-            stackInfo.stack.unshift(initial);
-            stackInfo.partial = true;
-            return true;
-        } else {
-            stackInfo.incomplete = true;
+      if (stackInfo.stack.length > 0) {
+        if (stackInfo.stack[0].url === initial.url) {
+          if (stackInfo.stack[0].line === initial.line) {
+            return false; // already in stack trace
+          } else if (
+            !stackInfo.stack[0].line &&
+            stackInfo.stack[0].func === initial.func
+          ) {
+            stackInfo.stack[0].line = initial.line;
+            return false;
+          }
         }
+      }
 
-        return false;
+      stackInfo.stack.unshift(initial);
+      stackInfo.partial = true;
+      return true;
+    } else {
+      stackInfo.incomplete = true;
     }
 
-    /**
+    return false;
+  }
+
+  /**
      * Computes stack trace information by walking the arguments.caller
      * chain at the time the exception occurred. This will cause earlier
      * frames to be missed but is the only way to get any stack trace in
@@ -58758,127 +72029,134 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @param {Error} ex
      * @return {?Object.<string, *>} Stack trace information.
      */
-    function computeStackTraceByWalkingCallerChain(ex, depth) {
-        var functionName = /function\s+([_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*)?\s*\(/i,
-            stack = [],
-            funcs = {},
-            recursion = false,
-            parts,
-            item,
-            source;
+  function computeStackTraceByWalkingCallerChain(ex, depth) {
+    var functionName = /function\s+([_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*)?\s*\(/i,
+      stack = [],
+      funcs = {},
+      recursion = false,
+      parts,
+      item,
+      source;
 
-        for (var curr = computeStackTraceByWalkingCallerChain.caller; curr && !recursion; curr = curr.caller) {
-            if (curr === computeStackTrace || curr === TraceKit.report) {
-                // console.log('skipping internal function');
-                continue;
-            }
+    for (
+      var curr = computeStackTraceByWalkingCallerChain.caller;
+      curr && !recursion;
+      curr = curr.caller
+    ) {
+      if (curr === computeStackTrace || curr === TraceKit.report) {
+        // console.log('skipping internal function');
+        continue;
+      }
 
-            item = {
-                'url': null,
-                'func': UNKNOWN_FUNCTION,
-                'line': null,
-                'column': null
-            };
+      item = {
+        url: null,
+        func: UNKNOWN_FUNCTION,
+        line: null,
+        column: null
+      };
 
-            if (curr.name) {
-                item.func = curr.name;
-            } else if ((parts = functionName.exec(curr.toString()))) {
-                item.func = parts[1];
-            }
+      if (curr.name) {
+        item.func = curr.name;
+      } else if ((parts = functionName.exec(curr.toString()))) {
+        item.func = parts[1];
+      }
 
-            if (typeof item.func === 'undefined') {
-              try {
-                item.func = parts.input.substring(0, parts.input.indexOf('{'));
-              } catch (e) { }
-            }
+      if (typeof item.func === 'undefined') {
+        try {
+          item.func = parts.input.substring(0, parts.input.indexOf('{'));
+        } catch (e) {}
+      }
 
-            if (funcs['' + curr]) {
-                recursion = true;
-            }else{
-                funcs['' + curr] = true;
-            }
+      if (funcs['' + curr]) {
+        recursion = true;
+      } else {
+        funcs['' + curr] = true;
+      }
 
-            stack.push(item);
-        }
-
-        if (depth) {
-            // console.log('depth is ' + depth);
-            // console.log('stack is ' + stack.length);
-            stack.splice(0, depth);
-        }
-
-        var result = {
-            'name': ex.name,
-            'message': ex.message,
-            'url': getLocationHref(),
-            'stack': stack
-        };
-        augmentStackTraceWithInitialElement(result, ex.sourceURL || ex.fileName, ex.line || ex.lineNumber, ex.message || ex.description);
-        return result;
+      stack.push(item);
     }
 
-    /**
+    if (depth) {
+      // console.log('depth is ' + depth);
+      // console.log('stack is ' + stack.length);
+      stack.splice(0, depth);
+    }
+
+    var result = {
+      name: ex.name,
+      message: ex.message,
+      url: getLocationHref(),
+      stack: stack
+    };
+    augmentStackTraceWithInitialElement(
+      result,
+      ex.sourceURL || ex.fileName,
+      ex.line || ex.lineNumber,
+      ex.message || ex.description
+    );
+    return result;
+  }
+
+  /**
      * Computes a stack trace for an exception.
      * @param {Error} ex
      * @param {(string|number)=} depth
      */
-    function computeStackTrace(ex, depth) {
-        var stack = null;
-        depth = (depth == null ? 0 : +depth);
+  function computeStackTrace(ex, depth) {
+    var stack = null;
+    depth = depth == null ? 0 : +depth;
 
-        try {
-            stack = computeStackTraceFromStackProp(ex);
-            if (stack) {
-                return stack;
-            }
-        } catch (e) {
-            if (TraceKit.debug) {
-                throw e;
-            }
-        }
-
-        try {
-            stack = computeStackTraceByWalkingCallerChain(ex, depth + 1);
-            if (stack) {
-                return stack;
-            }
-        } catch (e) {
-            if (TraceKit.debug) {
-                throw e;
-            }
-        }
-        return {
-            'name': ex.name,
-            'message': ex.message,
-            'url': getLocationHref()
-        };
+    try {
+      stack = computeStackTraceFromStackProp(ex);
+      if (stack) {
+        return stack;
+      }
+    } catch (e) {
+      if (TraceKit.debug) {
+        throw e;
+      }
     }
 
-    computeStackTrace.augmentStackTraceWithInitialElement = augmentStackTraceWithInitialElement;
-    computeStackTrace.computeStackTraceFromStackProp = computeStackTraceFromStackProp;
+    try {
+      stack = computeStackTraceByWalkingCallerChain(ex, depth + 1);
+      if (stack) {
+        return stack;
+      }
+    } catch (e) {
+      if (TraceKit.debug) {
+        throw e;
+      }
+    }
+    return {
+      name: ex.name,
+      message: ex.message,
+      url: getLocationHref()
+    };
+  }
 
-    return computeStackTrace;
-}());
+  computeStackTrace.augmentStackTraceWithInitialElement = augmentStackTraceWithInitialElement;
+  computeStackTrace.computeStackTraceFromStackProp = computeStackTraceFromStackProp;
+
+  return computeStackTrace;
+})();
 
 module.exports = TraceKit;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"5":5}],7:[function(_dereq_,module,exports){
-'use strict';
-
 /*
  json-stringify-safe
  Like JSON.stringify, but doesn't throw on circular references.
 
  Originally forked from https://github.com/isaacs/json-stringify-safe
- version 5.0.1 on 3/8/2017 and modified for IE8 compatibility.
- Tests for this are in test/vendor.
+ version 5.0.1 on 3/8/2017 and modified to handle Errors serialization
+ and IE8 compatibility. Tests for this are in test/vendor.
 
  ISC license: https://github.com/isaacs/json-stringify-safe/blob/master/LICENSE
 */
 
-exports = module.exports = stringify
-exports.getSerialize = serializer
+exports = module.exports = stringify;
+exports.getSerialize = serializer;
 
 function indexOf(haystack, needle) {
   for (var i = 0; i < haystack.length; ++i) {
@@ -58888,28 +72166,57 @@ function indexOf(haystack, needle) {
 }
 
 function stringify(obj, replacer, spaces, cycleReplacer) {
-  return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces)
+  return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces);
+}
+
+// https://github.com/ftlabs/js-abbreviate/blob/fa709e5f139e7770a71827b1893f22418097fbda/index.js#L95-L106
+function stringifyError(value) {
+  var err = {
+    // These properties are implemented as magical getters and don't show up in for in
+    stack: value.stack,
+    message: value.message,
+    name: value.name
+  };
+
+  for (var i in value) {
+    if (Object.prototype.hasOwnProperty.call(value, i)) {
+      err[i] = value[i];
+    }
+  }
+
+  return err;
 }
 
 function serializer(replacer, cycleReplacer) {
-  var stack = [], keys = []
+  var stack = [];
+  var keys = [];
 
-  if (cycleReplacer == null) cycleReplacer = function(key, value) {
-    if (stack[0] === value) return '[Circular ~]'
-    return '[Circular ~.' + keys.slice(0, indexOf(stack, value)).join('.') + ']'
+  if (cycleReplacer == null) {
+    cycleReplacer = function(key, value) {
+      if (stack[0] === value) {
+        return '[Circular ~]';
+      }
+      return '[Circular ~.' + keys.slice(0, indexOf(stack, value)).join('.') + ']';
+    };
   }
 
   return function(key, value) {
     if (stack.length > 0) {
       var thisPos = indexOf(stack, this);
-      ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
-      ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
-      if (~indexOf(stack, value)) value = cycleReplacer.call(this, key, value)
-    }
-    else stack.push(value)
+      ~thisPos ? stack.splice(thisPos + 1) : stack.push(this);
+      ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key);
 
-    return replacer == null ? value : replacer.call(this, key, value)
-  }
+      if (~indexOf(stack, value)) {
+        value = cycleReplacer.call(this, key, value);
+      }
+    } else {
+      stack.push(value);
+    }
+
+    return replacer == null
+      ? value instanceof Error ? stringifyError(value) : value
+      : replacer.call(this, key, value);
+  };
 }
 
 },{}]},{},[4])(4)

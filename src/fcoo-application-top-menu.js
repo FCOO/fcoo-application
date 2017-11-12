@@ -1,12 +1,12 @@
 /****************************************************************************
-	fcoo-application.js,
+	fcoo-application-top-menu.js
 
-	(c) 2016, FCOO
+	(c) 2017, FCOO
 
 	https://github.com/FCOO/fcoo-application
 	https://github.com/FCOO
 
-SetCreate and manage the top-menu for FCOO web applications
+Create and manage the top-menu for FCOO web applications
 
 ****************************************************************************/
 
@@ -25,9 +25,198 @@ SetCreate and manage the top-menu for FCOO web applications
         topMenuState = 'normal';
 
 
-    /*******************************************
+    /**************************************************
+    defaultTopMenuButton
+    Create standard button for the top-menu
+    **************************************************/
+    function defaultTopMenuButton( options ){
+        options = $.extend({}, options, {
+            transparent: true,
+            bigIcon    : true,
+            square     : true
+        });
+        var $result = $.bsButton( options );
+        if (options.title)
+            $result.i18n(options.title, 'title');
+        return $result;
+    }
+
+
+    /**************************************************
+    messageGroupTopMenuButton
+    Create a button used for message-groups
+    The button can contain up to tree icons:
+    1: one that is allways displayed
+    2: one that is displayed when all messages are read
+    3: one that is displayed when one or more message is unread
+    2 and 3 are mutual excluding
+    **************************************************/
+    function messageGroupTopMenuButton( options ){
+        var $result =
+                defaultTopMenuButton( {icon:'NOT'})
+                    .addClass('fa-stack all-read'); //all-read: Default no new message
+
+        //*************************************************************
+        function addIcons( icon, allReadPrefix ){
+            icon = $.isArray( icon ) ? icon : [icon];
+            $.each( icon, function( index, iconClass ){
+                $('<i/>')
+                    .addClass('fa ' + (allReadPrefix ? allReadPrefix + '-for-all-read ' : '') + iconClass)
+                    .appendTo( $result );
+            });
+        };
+        //*************************************************************
+
+
+        //Remove default icon
+        $result.find('.NOT').remove();
+
+        if (options.iconAllRead)
+            addIcons( options.iconAllRead, 'show' );
+
+        if (options.iconNoAllRead)
+            addIcons( options.iconNoAllRead, 'hide' );
+
+        if (options.iconAllways)
+            addIcons( options.iconAllways);
+
+        return $result;
+    }
+
+
+    //Class-name to be used to hide buttons when screen-width get to small - is set later
+    var logoHideClassName = '',
+        headerHideClassName = '';
+    /**********************************************
+    topMenuElementList = list of options for elements in the top menu
+    buttonInfo = options for a button in the top-menu
+        id       : id from options passed to createTopMenu
+        rightSide: true/false. - true => the button is placed to the right
+        exclude  : true/false - if true the button is not included in claculation of the total width
+        title    : null - title for the button
+        icon     : null - icon-class for the button
+        create   : function(elementOptions, menuOptions) create and return $element. - function to create the button
+    **********************************************/
+    var topMenuElementList = [
+        {
+            id: 'leftMenu',
+            icon:'fa-bars'
+        },
+        //***************************************************************
+        {
+            id: 'logo',
+            create: function( /*elementOptions, menuOptions*/ ){
+                //FCOO logo with click to extende/diminish top-menu content
+                return $('<a/>')
+                            .addClass( 'icon-fcoo-app-logo' )
+                            .addClass( logoHideClassName )
+                            .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
+                            .on('click', function(){
+                                $topMenu.actionPanForce( topMenuState == 'normal' ? 'down' : 'up', true );
+                            });
+            },
+            exclude: true
+        },
+
+        //***************************************************************
+        {
+            id: 'header',
+            create: function( elementOptions, menuOptions ){
+                return $('<div/>')
+                           .addClass('text-nowrap header')
+                           .addClass(headerHideClassName)
+                           .i18n( menuOptions );
+            },
+            exclude: true
+        },
+
+        //***************************************************************
+        {
+            id: 'search',
+            create: function( /*elementOptions, menuOptions*/ ){
+                var $element =
+                    $('<form onsubmit="return false;"/>')
+                        .addClass('form-inline')
+                        .appendTo($topMenu);
+                $('<input type="text" class="form-control"></div>')
+                    .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
+                    .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
+                    .appendTo( $element );
+
+                defaultTopMenuButton({ icon:'fa-search' })
+                    .appendTo( $element );
+                return $element;
+            },
+            rightSide: true
+        },
+
+        //***************************************************************
+        {
+            id: 'warning',
+            create: function(  elementOptions, menuOptions ){
+                //Create yellow warning triangle by overlaying two icons
+                var $result =
+                        messageGroupTopMenuButton({
+                            iconAllRead  : 'fa-stack-1x fa fa-i-warning',
+                            iconNoAllRead: ['fa-stack-1x fa-i-warning-black text-warning', 'fa-stack-1x fa-i-warning']
+                        });
+
+                //Create message-group with warnings
+                ns.createFCOOMessageGroup( 'warning', menuOptions, $result );
+                return $result;
+            },
+            rightSide: true
+        },
+
+        //***************************************************************
+        {
+            id: 'messages',
+//            icon:'fa-envelope-o',
+            create: function( elementOptions, menuOptions ){
+                var $result =
+                        messageGroupTopMenuButton({
+                            iconAllRead  : 'fa-envelope-o',
+                            iconNoAllRead: 'fa-envelope'
+                        });
+                //Create message-group with info
+                ns.createFCOOMessageGroup( 'info', menuOptions, $result );
+                return $result;
+            },
+            rightSide: true
+        },
+
+        //***************************************************************
+        {
+            id: 'help',
+            create: function( elementOptions, menuOptions ){
+                var $result =
+                        messageGroupTopMenuButton({
+                            iconAllways: 'fa-question-circle-o'
+                        });
+                //Create message-group with help
+                ns.createFCOOMessageGroup( 'help', menuOptions, $result );
+                return $result;
+            },
+            rightSide: true
+        },
+
+        //***************************************************************
+        {
+            id: 'rightMenu',
+            icon:'fa-i-list',
+            rightSide: true
+        }
+
+    ].map( function( options ){
+        return $.extend({}, {
+            //Default options
+            create: defaultTopMenuButton
+        } ,options);
+    });
+
+    /**********************************************
     setTopMenuState( state )
-    *******************************************/
+    **********************************************/
     function setTopMenuState( state, noAction ){
         if (state == topMenuState)
             return;
@@ -41,7 +230,7 @@ SetCreate and manage the top-menu for FCOO web applications
 
         if (!noAction){
             $topMenu.actionPanToggle( 'down', topMenuState != 'extended');
-            $topMenu.actionPanToggle( 'up', topMenuState != 'hidden');
+            $topMenu.actionPanToggle( 'up',   topMenuState != 'hidden'  );
         }
     }
 
@@ -58,10 +247,10 @@ SetCreate and manage the top-menu for FCOO web applications
             //Get the application name from grunt.js
             header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Dansk - en meget laaaaaaaaaaaaaaaaaaang title", "en":"English"}'),
 
-            messages : true,
-            warning  : true,
+            messages : null,
+            warning  : null,
             search   : true,
-            help     : true,
+            help     : null,
             rightMenu: true
         }, options );
 
@@ -70,29 +259,8 @@ SetCreate and manage the top-menu for FCOO web applications
             $topMenuContainer,
             $aboutFCOO,
             $topBar,
-            //topMenuElements - info on the different possible elements/buttons on the menu.
-            //width=relative width (-1 = not included in total)
-            topMenuElements = [
-                {id: 'leftMenu'  },
-                {id: 'logo',      exclude: true }, //width   : -1   },
-                {id: 'header',    exclude: true }, //width   : -1   },
-                {id: 'search',    rightSide: true },
-                {id: 'messages',  rightSide: true },
-                {id: 'warning',   rightSide: true },
-                {id: 'help',      rightSide: true },
-                {id: 'rightMenu', rightSide: true }
-            ],
             result = {};
 
-        //**************************************************
-        function topMenuButton( options ){
-            options = $.extend({}, options, {
-                transparent: true,
-                bigIcon    : true,
-                square     : true
-            });
-            return $.bsButton( options );
-        }
         //**************************************************
         function topMenuHeight(){
             return $topMenu.outerHeight();
@@ -183,20 +351,16 @@ SetCreate and manage the top-menu for FCOO web applications
 
         //Count the number of buttons to decide the width of the screen where the header and/or the logo disappears
         var totalWidth = 0;
-        $.each( topMenuElements, function( index, elementInfo ){
-            if (options[elementInfo.id]){
-                if (!elementInfo.exclude)
+        $.each( topMenuElementList, function( index, elementOptions ){
+            if (options[elementOptions.id]){
+                if (!elementOptions.exclude)
                     totalWidth++;
-
-//                var width = elementInfo.width || 1;
-//                if (width > 0)
-//                    totalWidth += width;
             }
         });
 
         //Very rough estimate of max width where there is enuogh space to show the logo
-        var minScreenWidth = (totalWidth + 2) * 2.5 * 16, //1=extra 2=width of logo
-            logoHideClassName = '';
+        var minScreenWidth = (totalWidth + 2) * 2.5 * 16; //1=extra 2=width of logo
+        logoHideClassName = '';
 
         if (minScreenWidth > 200){
             //Find the smallest mediaQuery breakpoint larger than minScreenWidth
@@ -210,7 +374,7 @@ SetCreate and manage the top-menu for FCOO web applications
         }
 
         //Set the minimum width of the visible header to 4 times a button and calculate the breakpoint for the header
-        var headerHideClassName = '';
+        headerHideClassName = '';
         minScreenWidth = minScreenWidth + 4 * 2.5 * 16;
         mqBreakpoint = 10000;
             $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
@@ -221,97 +385,18 @@ SetCreate and manage the top-menu for FCOO web applications
             });
 
 
-        //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElements
-        var firstRightSideFound = false,
-            $element;
-        $.each( topMenuElements, function( index, elementInfo ){
-            $element = null;
-            if (!options[elementInfo.id])
+        //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
+        var firstRightSideFound = false;
+        $.each( topMenuElementList, function( index, elementOptions ){
+            var menuOptions = options[elementOptions.id];
+            if (!menuOptions)
                 return true;
-            switch (elementInfo.id){
-                case "leftMenu":
-                    $element =
-                        topMenuButton({
-                            icon:'fa-bars',
-                        });
-                    break;
 
-                case "logo":
-                    //FCOO logo with click to extende/diminish top-menu content
-                    $element =
-                        $('<a/>')
-                            .addClass( 'icon-fcoo-app-logo' )
-                            .addClass( logoHideClassName )
-                            .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
-                            .on('click', function(){
-                                $topMenu.actionPanForce( topMenuState == 'normal' ? 'down' : 'up', true );
-                            })
-                            .appendTo($topMenu);
-                    break;
-
-                case "header":
-                    $element =
-                        $('<div/>')
-                            .addClass('text-nowrap header')
-                            .addClass(headerHideClassName)
-                            .i18n( options.header )
-                            .appendTo($topMenu);
-                        break;
-
-                case "messages":
-                    $element =
-                        topMenuButton({
-                            icon:'fa-envelope-o' //'fa-envelope'
-                        });
-
-//$element.append( $('<span class="badge badge-info">12</span>') );
-//$element.append( $('<span class="badge badge-danger">!</span>') );
-
-                    break;
-
-                case "warning":
-                    //Create yellow warning triangle by overlaying two icons
-                    $element = topMenuButton({ icon: 'fa-i-warning-black fa-stack-1x text-warning' });
-                    $element.addClass('fa-stack');
-                    $('<i/>')
-                        .addClass('fa fa-i-warning fa-stack-2x')
-                        .appendTo( $element );
-                    break;
-
-                case "search":
-                    $element =
-                        $('<form onsubmit="return false;"/>')
-                            .addClass('form-inline')
-                            .appendTo($topMenu);
-                    $   ('<input type="text" class="form-control" id="exampleInputPassword1"></div>')
-                            .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
-                            .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
-                            .appendTo( $element );
-
-                    topMenuButton({ icon:'fa-search' })
-                        .appendTo( $element );
-
-                    break;
-
-                case "help":
-                    $element =
-                        topMenuButton({ icon:'fa-question-circle-o' });
-                         break;
-
-                case "rightMenu":
-                    $element =
-                        topMenuButton({ icon:'fa-i-list' });
-                    break;
-            } //end of switch (elementInfo.id){
-
-
+            var $element = elementOptions.create( elementOptions, menuOptions );
             if ($element){
-
-                result[elementInfo.id] = $element;
-
+                result[elementOptions.id] = $element;
                 $element.appendTo( $topMenu );
-
-                if ((!firstRightSideFound) && elementInfo.rightSide){
+                if ((!firstRightSideFound) && elementOptions.rightSide){
                     $element.addClass('right-side');
                     firstRightSideFound = true;
                 }

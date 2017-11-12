@@ -106,22 +106,38 @@ body {
         width: 1em;
     }
 
+//fa-bars
+//fa-search
+//fa-i-warning, fa-i-warning-black
+//fa-envelope-o,fa-envelope
+//fa-question-circle-o
+//fa-i-list
 
-    //Adjusting font-size of specific icon to make all look equal sized
+    //Adjusting font-size and/or margin-bottom of specific icon to make all look equal sized and horizontal aligned
     .btn i.fa {
-        &.fa-search { font-size: 0.85em; }
-        &.fa-i-list { font-size: 0.75em; }
-        &.fa-i-warning,
-        &.fa-i-warning-black { 
-            font-size: 0.8em; 
-        }
+//        &.fa-bars {  }
+        &.fa-search {               font-size: 0.80em; } 
+
+        &.fa-i-warning, 
+        &.fa-i-warning-black {      font-size: 0.75em; bottom: 0.15em; } 
+
+        &.fa-envelope-o, 
+        &.fa-envelope {             font-size: .90em;  margin-bottom: 0; } 
+
+        &.fa-question-circle-o {    font-size: .90em;  margin-bottom: -0.1em; } 
+
+        &.fa-i-list {               font-size: 0.75em; margin-bottom: -0.1em; }
+
     }
+
     //Special adjusment for small buttons
     .btn-sm i.fa {
-        &.fa-question-circle-o {
-            position: absolute;
-            bottom: 0.24em;
-        }
+        &.fa-envelope-o, 
+        &.fa-envelope {             margin-bottom: 0; } 
+
+        &.fa-question-circle-o {    margin-bottom: 0; } 
+
+        &.fa-i-list {               margin-bottom: -0.1em; }
     }
     
     //FCOO-logo inside top menu get fixed size and hover effect
@@ -178,21 +194,9 @@ body {
             }
         }
     }
-    
-    //Badge to show number of unread messages etc. NOT USED AT THE MOMENT
-/*
-    .badge {
-        position   : inherit; //Overwrite Bootstrap default
-        font-size  : 0.45em;
-        border     : 1px solid white;
-        margin-left: .25rem;
-        &:empty {
-            display: none;
-        }
-    }
-*/
 } //end of .top-menu
 
+//.top-bar = the bar to drag down the top-menu when it is hidden
 .top-bar {
     $width: 3rem;
     position   : absolute;
@@ -212,14 +216,16 @@ body {
     .top-menu-hidden & {
         display: block;
         opacity: 1;
-
     }
 }
 
 
-/*
-//TODO border around input and button for search: border: 1px solid $input-border-color;
-$btn-border-radius:              $border-radius !default;
-$btn-border-radius-lg:           $border-radius-lg !default;
-$btn-border-radius-sm:           $border-radius-sm !default;
-*/
+//Create display-style for modernizr test all-read used in buttons for message-groups
+@include show-and-hide-for-modernizr-test( 
+    all-read,   //$modernizr-test , 
+	a,          //$parent-element-type: '', 
+	true,       //$incl-no-selector: true, 
+	'',         //$display-value: ''
+	false       // $incl-table-display: true 
+);
+

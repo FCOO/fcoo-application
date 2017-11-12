@@ -20,18 +20,19 @@
         <select id="theSelect" style="width:200px"></select><br>
         <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>    
         <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>    
+        <button onClick="notyDemo();">Noty demo</button><br><br>    
 
         <div class="show-for-mouse">Vises kun, hvis der er en mus</div>
     </div>
 
     <script src="bower_components.js"></script>
-	<script src="../src/top-menu.js"></script>
+	<script src="../src/fcoo-application-top-menu.js"></script>
     <script src="../src/fcoo-application.js"></script>
+    <script src="../src/fcoo-application-message.js"></script>
+    <script src="../src/fcoo-application-promise.js"></script>
 
 	<script>
         var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
-
-
 
         var $select = $('#theSelect');
         var optionList = [
@@ -57,18 +58,47 @@
        
         }
         
+        function notyDemo(){
+            var layout = ['topLeft', 'topCenter', 'topRight', 'centerRight', 'bottomCenter'];
+            var type   = ['alert',   'success',   'warning',  'error',        'info' ];
+            $.each(type, function(index, type){
+                $.bsNoty({ 
+                    type: type,
+                    queue: type,
+                    layout: layout[index],
+                    //modal: (type=='info'),
+                    //force: (type=='info'),
+                    defaultHeader: true,
+                    text: [
+                        layout[index]+'<br>', 
+                        {text: {da: 'Noget tekst ', en: 'Some text '}},
+                        Math.random()
+                    ],
+                    //show: true
+                    
+                });
+            });
+            $.bsNotyOk({da: 'Noget lykkedes', en: 'Something succeeded'});
+        
+        }
 
         $(function() { 
             var topMenu = 
                 window.fcoo.createTopMenu({
                     //search: false,
-                    //help: false,
-                    messages: true, 
-                    warning: true, 
+                    help: {
+                        url: 'data/help.json'
+                    }, 
+                    messages: {
+                        url: 'data/info.json'
+                    }, 
+                    warning: {
+                        url: 'data/oceanforecast_warning.json',
+                        _reloadPeriod: 'PT20S', 
+                    }, 
                     //rightMenu: false,
                 });
 
-            topMenu.warning.addClass('shake-constant');
 
 
             $('.main-container').on('click', function( event ){

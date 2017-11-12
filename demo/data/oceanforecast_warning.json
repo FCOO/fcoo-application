@@ -1,0 +1,21 @@
+{
+    "defaults": {
+        "type": "warning"
+    },
+    "messages": [
+        {
+            "id": "error_1",
+            "date": "2017-11-02T14:20Z",
+            "publish": true,
+            "url": "",
+            "title": {"da":"Der er noget galt med...(UTC=14:20)", "en":"Something is wrong with...(UTC=14:20)"}
+        },
+        {
+            "id": "error_2",
+            "date": "2017-11-02T12:40Z",
+            "publish": true,
+            "url": "",
+            "title": {"da":"Der er noget andet galt med...(UTC=12:40)", "en":"Something else is wrong with...(UTC=12:40)"}
+        }
+    ]
+}

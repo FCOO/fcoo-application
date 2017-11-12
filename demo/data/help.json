@@ -1,0 +1,18 @@
+{
+    "defaults": {
+        "type": "help"
+    },
+    "messages": [
+        {
+            "title": {"da":"Hvordan...", "en":"How to..."},
+            "url": "data/browser/da.md",
+            "link": "http://ifm.fcoo.dk/browser/"
+        },
+        {
+            "title": {"da":"Om FCOO", "en":"About FCOO"},
+            "url": "data/browser/da.md",
+            "link": "http://ifm.fcoo.dk/browser/"
+        }
+    ]
+
+}
