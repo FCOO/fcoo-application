@@ -64,7 +64,7 @@ Set-up jquery-bootstrap-message for different type of messages
     //Extend BsMessage with method to get standard FCOO unique id
     $.BsMessage.prototype.getFCOOId = function(){
         return 'fcoo_' + this.options.urlId + '_' + this.options.id;
-    }
+    };
 
     /************************************************************
     messageGroupOptions =
@@ -76,7 +76,7 @@ Set-up jquery-bootstrap-message for different type of messages
 
     Defines the options for the tree standard FCOO type of messages
     'warning'   : Mesages about real-time production
-    'info'      : Typical new about new releases of the application
+    'info'      : Typical news about new releases of the application
     'help'      : Help to the application and generel info a la "About FCOO"
     **************************************************************/
 
@@ -168,9 +168,9 @@ Set-up jquery-bootstrap-message for different type of messages
                 id: 'help_'+ns.applicationId,
 
                 sortBy  : 'INDEX',
-                //TODO SKAL TESTES sortDesc: true,
+                sortDesc: false,
             }
-        }
+        };
 
 
 

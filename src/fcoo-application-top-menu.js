@@ -64,7 +64,7 @@ Create and manage the top-menu for FCOO web applications
                     .addClass('fa ' + (allReadPrefix ? allReadPrefix + '-for-all-read ' : '') + iconClass)
                     .appendTo( $result );
             });
-        };
+        }
         //*************************************************************
 
 
@@ -334,6 +334,7 @@ Create and manage the top-menu for FCOO web applications
             max               : aboutFCOOHeight,
             resetAfterAction  : false,
             classNameThreshold: 'top-menu-threshold-down',
+shadowClassNamePan: 'panning',
             action            : function(){ setTopMenuState( topMenuState == 'normal' ? 'extended' : 'normal' ); }
         });
 

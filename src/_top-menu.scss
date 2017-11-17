@@ -37,7 +37,12 @@ body {
     border-bottom   : 1px solid black;
     text-align      : center;
     font-size       : $font-size-base;
-    opacity         : 0.6;
+    //    opacity         : 0.6;
+    opacity         : 0;
+
+    &.panning {
+        opacity: 0.6;
+    }
 
     .top-menu-extended &, 
     .top-menu-threshold-down ~ & {

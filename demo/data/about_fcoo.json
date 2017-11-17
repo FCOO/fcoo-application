@@ -4,12 +4,12 @@
     },
     "messages": [
         {
-            "title": {"da":"Hvordan...", "en":"How to..."},
+            "title": {"da":"Data og Produkter fra FCOO", "en":"Data and Product from FCOO"},
             "url": "data/browser/da.md",
             "link": "http://ifm.fcoo.dk/browser/"
         },
         {
-            "title": {"da":"Eller hvordan...", "en":"or how to..."},
+            "title": {"da":"Om FCOO", "en":"About FCOO"},
             "url": "data/browser/da.md",
             "link": "http://ifm.fcoo.dk/browser/"
         }

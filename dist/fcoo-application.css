@@ -78,6 +78,11 @@ Style for div with controls inside modal.
 Must have tabindex:"-1" to work with focus
 ************************************************************/
 /************************************************************
+TYPE-COLOR
+Bg-color and color for different 'type' (warning, alert, info, error, success)
+Used in Noty and Modal
+************************************************************/
+/************************************************************
 HEADER AND TITLE BACKGROUND-COLOR AND COLOR
 Headers for modal, popover, popup etc.
 ************************************************************/
@@ -390,7 +395,9 @@ body.top-menu-hidden {
   border-bottom: 1px solid black;
   text-align: center;
   font-size: 1rem;
-  opacity: 0.6; }
+  opacity: 0; }
+  .about-fcoo.panning {
+    opacity: 0.6; }
   .top-menu-extended .about-fcoo,
   .top-menu-threshold-down ~ .about-fcoo {
     opacity: 1; }
@@ -427,21 +434,28 @@ body.top-menu-hidden {
     margin-right: auto !important; }
   .top-menu .right-side {
     margin-left: auto !important; }
+  .top-menu .btn.fa-stack {
+    width: 1em; }
   .top-menu .btn i.fa.fa-search {
-    font-size: 0.85em; }
-  .top-menu .btn i.fa.fa-i-list {
-    font-size: 0.75em; }
+    font-size: 0.80em; }
   .top-menu .btn i.fa.fa-i-warning, .top-menu .btn i.fa.fa-i-warning-black {
-    font-size: 0.8em;
-    position: absolute;
-    bottom: 0.35em; }
-  .top-menu .btn i.fa.fa-i-warning {
-    z-index: 2; }
-  .top-menu .btn-sm i.fa.fa-i-warning, .top-menu .btn-sm i.fa.fa-i-warning-black {
-    bottom: 0.45em; }
+    font-size: 0.75em;
+    bottom: 0.15em; }
+  .top-menu .btn i.fa.fa-envelope-o, .top-menu .btn i.fa.fa-envelope {
+    font-size: .90em;
+    margin-bottom: 0; }
+  .top-menu .btn i.fa.fa-question-circle-o {
+    font-size: .90em;
+    margin-bottom: -0.1em; }
+  .top-menu .btn i.fa.fa-i-list {
+    font-size: 0.75em;
+    margin-bottom: -0.1em; }
+  .top-menu .btn-sm i.fa.fa-envelope-o, .top-menu .btn-sm i.fa.fa-envelope {
+    margin-bottom: 0; }
   .top-menu .btn-sm i.fa.fa-question-circle-o {
-    position: absolute;
-    bottom: 0.24em; }
+    margin-bottom: 0; }
+  .top-menu .btn-sm i.fa.fa-i-list {
+    margin-bottom: -0.1em; }
   .top-menu .icon-fcoo-app-logo {
     padding: 0;
     margin: 0;
@@ -477,13 +491,6 @@ body.top-menu-hidden {
       border-left: none;
       border-bottom-left-radius: 0;
       border-top-left-radius: 0; }
-  .top-menu .badge {
-    position: inherit;
-    font-size: 0.45em;
-    border: 1px solid white;
-    margin-left: .25rem; }
-    .top-menu .badge:empty {
-      display: none; }
 
 .top-bar {
   position: absolute;
@@ -503,12 +510,18 @@ body.top-menu-hidden {
     display: block;
     opacity: 1; }
 
-/*
-//TODO border around input and button for search: border: 1px solid $input-border-color;
-$btn-border-radius:              $border-radius !default;
-$btn-border-radius-lg:           $border-radius-lg !default;
-$btn-border-radius-sm:           $border-radius-sm !default;
-*/
+a.all-read .hide-for-all-read {
+  display: none !important; }
+
+a.all-read .show-for-no-all-read {
+  display: none !important; }
+
+a.no-all-read .show-for-all-read {
+  display: none !important; }
+
+a.no-all-read .hide-for-no-all-read {
+  display: none !important; }
+
 /* TEST
 .main-container {
 
