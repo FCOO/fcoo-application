@@ -56016,6 +56016,7 @@ TODO:
             $('<div/>')
                 .addClass('modal-dialog')
                 .addClass(options.flex ? 'modal-flex' : '')
+                .addClass(options.flex && options.extraWidth ? 'extra-width' : '')
                 .attr( 'role', 'document')
                 .appendTo( $result );
 
@@ -68251,6 +68252,7 @@ if (typeof define === 'function' && define.amd) {
 //                    }
                     fixedContent : this.options.fixedContent,
                     flex         : true,
+                    extraWidth   : this.options.extraWidth,
 //                    noVerticalPadding
                     content      : function( $container ){ _this.$modalContainer = $container; },
                     scroll       : true,
@@ -68258,6 +68260,7 @@ if (typeof define === 'function' && define.amd) {
                     extended: {
                         fixedContent
                         flex
+                        extraWidth: true,
                         noVerticalPadding
                         content
                         scroll: boolean | 'vertical' | 'horizontal'
@@ -68405,7 +68408,21 @@ if (typeof define === 'function' && define.amd) {
 
         //_asBsTableContent - return the options adjusted to be shown in a table
         _asBsTableContent: function(){
-            var title = [{text: this.options.title}];
+            var title = [];
+            if (this.parent.options.vfFormat && !this.parent.options.dateInColumn)
+                title.push(
+                    {
+                        vfFormat : this.parent.options.vfFormat,
+                        vfOptions: this.parent.options.vfOptions,
+                        vfValue  : this.options.date,
+                        textClass: 'small'
+                    },
+                    '<br>'
+                );
+
+            title.push( {text: this.options.title} );
+
+
             if (this.options.url)
                 title.push(
                     {text:'...'},
@@ -68442,9 +68459,10 @@ if (typeof define === 'function' && define.amd) {
                     this.bsMarkdown || $.bsMarkdown({
                         url : this.options.url,
                         link: this.options.link,
+                        extraWidth: this.parent.options.extraWidth,
 
-                        languages: this.parent.options.languages,
-                        language : this.parent.options.language,
+                        languages : this.parent.options.languages,
+                        language  : this.parent.options.language,
 
                         header : {
                             icon : this.parent.options.showType ? $.bsNotyIcon[this.options.type] : '',
@@ -68764,7 +68782,7 @@ if (typeof define === 'function' && define.amd) {
                     verticalBorder: false,
                     selectable    : true,
                     allowReselect : true,
-                    small         : true,
+                    //small         : true,
                     onChange      : function( id ){
                         _this._getMessageById( id.slice(1) ).asBsModal( true );
                     },
@@ -68780,7 +68798,7 @@ if (typeof define === 'function' && define.amd) {
                     align: 'center',
                     verticalAlign: 'top',
                     width: '1.2rem',
-                    noHorizontalPadding: true
+                    //noHorizontalPadding: true
                 });
 
             if (this.options.showType)
@@ -68790,10 +68808,10 @@ if (typeof define === 'function' && define.amd) {
                     align: 'center',
                     verticalAlign: 'top',
                     width: '1.2rem',
-                    noHorizontalPadding: true
+                    //noHorizontalPadding: true
             });
 
-            if (this.options.vfFormat)
+            if (this.options.vfFormat && this.options.dateInColumn)
                 options.columns.push({
                     id: 'date',
                     header: '',
