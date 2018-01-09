@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /***********************************************
-    fcoo-application.scss, 
+    fcoo-application.scss,
 
     (c) 2016, FCOO
 
@@ -10,7 +10,7 @@
 
 ************************************************/
 /***************************************************
-Import Bootstrap variables and variables and the 
+Import Bootstrap variables and variables and the
 adjustments to Bootstrap from fcoo/jquery-bootstrap
 ***************************************************/
 /************************************************************
@@ -30,8 +30,8 @@ VARIABLES
 ************************************************************/
 /***********************************************
 DEFINE BOOTSTRAP BUTTON STYLE
-$btn-style-name MUST correspond with ns.bsButtonClass 
-in src/jquery-bootstrap-button.js 
+$btn-style-name MUST correspond with ns.bsButtonClass
+in src/jquery-bootstrap-button.js
 ************************************************/
 /************************************************************
 Variables bassed on bootstrop variables
@@ -375,7 +375,7 @@ TOP-MENU
 Style for top menu and items (logo, buttons etc)
 *****************************************************/
 /***************************************************
-top-menu is like Bootstrap navbar but to avoid 
+top-menu is like Bootstrap navbar but to avoid
 confussions another name is used
 ***************************************************/
 body.top-menu-hidden {
@@ -415,6 +415,20 @@ body.top-menu-hidden {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain; }
+  .about-fcoo .header {
+    width: 100%;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0.25rem;
+    text-align: center;
+    font-size: 1.3125rem;
+    line-height: 1.3125rem;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+    .about-fcoo .header:empty {
+      display: none; }
 
 .top-menu {
   margin-top: 0px;
