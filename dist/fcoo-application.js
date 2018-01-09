@@ -13,6 +13,7 @@ Set-up jquery-bootstrap-message for different type of messages
 (function ($, window/*, document, undefined*/) {
 	"use strict";
 
+
     //Create fcoo-namespace
     window.fcoo = window.fcoo || {};
     var ns = window.fcoo;

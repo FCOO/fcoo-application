@@ -86,7 +86,11 @@ Create and manage the top-menu for FCOO web applications
 
     //Class-name to be used to hide buttons when screen-width get to small - is set later
     var logoHideClassName = '',
-        headerHideClassName = '';
+        headerHideClassName = '',
+
+        aboutFCOOHeaderShowClassName = ''; //Class-name for the header in about FCOO. Is 'opposite' of headerHideClassName to ensure that only header in top-menu or header in about FCOO is visible at the same time
+
+
     /**********************************************
     topMenuElementList = list of options for elements in the top menu
     buttonInfo = options for a button in the top-menu
@@ -245,7 +249,8 @@ Create and manage the top-menu for FCOO web applications
             logo     : true,
 
             //Get the application name from grunt.js
-            header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Dansk - en meget laaaaaaaaaaaaaaaaaaang title", "en":"English"}'),
+            header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Sejladsudsigt", "en":"Marine Forecast"}'),
+//            header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Dansk - en meget laaaaaaaaaaaaaaaaaaang title", "en":"English"}'),
 
             messages : null,
             warning  : null,
@@ -283,24 +288,31 @@ Create and manage the top-menu for FCOO web applications
             .addClass("d-flex justify-content-center flex-wrap about-fcoo") //justify-content-around
             .appendTo( $topMenuContainer );
 
-            //FCOO logo
+        //FCOO logo
+        $('<div/>')
+            .addClass('fcoo-logo')
+            .appendTo( $aboutFCOO );
+
+        //FCOO name and address and email and link
+        $('<div/>')
+            .append(
+                $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
+                $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
+                $('<span/>').i18n({da:'', en:' - Denmark'}),
+                '<br>',
+                $('<a target="_blank">fcoo.dk</a>').i18n('link:fcoo', 'href'),
+                ' - ',
+                $('<a href="mailto:info@fcoo.dk" target="_top">info@fcoo.dk</a>')
+            )
+            .appendTo( $aboutFCOO );
+
+        //Bar with title of application
+        var aboutFCOOHeader =
             $('<div/>')
-                .addClass('fcoo-logo')
+                .addClass('header fcoo-app-color fcoo-app-background')
+                .i18n( options.header )
                 .appendTo( $aboutFCOO );
 
-            //FCOO name and address and email and link
-            $('<div/>')
-                .append(
-                    $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
-                    $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
-                    $('<span/>').i18n({da:'', en:' - Denmark'}),
-                    '<br>',
-                    $('<a target="_blank">fcoo.dk</a>').i18n('link:fcoo', 'href'),
-                    ' - ',
-                    $('<a href="mailto:info@fcoo.dk" target="_top">info@fcoo.dk</a>')
-
-                )
-                .appendTo( $aboutFCOO );
 
         //Create the menu-bar
         result.topMenu = $topMenu = $('<nav/>')
@@ -362,7 +374,6 @@ Create and manage the top-menu for FCOO web applications
         //Very rough estimate of max width where there is enuogh space to show the logo
         var minScreenWidth = (totalWidth + 2) * 2.5 * 16; //1=extra 2=width of logo
         logoHideClassName = '';
-
         if (minScreenWidth > 200){
             //Find the smallest mediaQuery breakpoint larger than minScreenWidth
             var mqBreakpoint = 10000;
@@ -375,16 +386,19 @@ Create and manage the top-menu for FCOO web applications
         }
 
         //Set the minimum width of the visible header to 4 times a button and calculate the breakpoint for the header
+        //Find Class-name for the header in about FCOO. Is 'opposite' of headerHideClassName to ensure that only header in top-menu or header in about FCOO is visible at the same time
         headerHideClassName = '';
+        aboutFCOOHeaderShowClassName = '';
         minScreenWidth = minScreenWidth + 4 * 2.5 * 16;
         mqBreakpoint = 10000;
-            $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
-                if ((minMax.min == 0) && (minMax.max < mqBreakpoint) && (minMax.max > minScreenWidth)){
-                    mqBreakpoint = minMax.max;
-                    headerHideClassName = 'hide-for-'+minMax.id;
-                }
-            });
-
+        $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
+            if ((minMax.min == 0) && (minMax.max < mqBreakpoint) && (minMax.max > minScreenWidth)){
+                mqBreakpoint = minMax.max;
+                headerHideClassName = 'hide-for-'+minMax.id;
+                aboutFCOOHeaderShowClassName = 'show-for-'+minMax.id;
+            }
+        });
+        aboutFCOOHeader.addClass(aboutFCOOHeaderShowClassName);
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
         var firstRightSideFound = false;

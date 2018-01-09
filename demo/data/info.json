@@ -16,7 +16,7 @@
             "type": "help",
             "url": "",
             "title": {"da":">> >> >> >> >> >> PUBLISH Dette er en meget lang hjælp-besked 5, der handler om alt muligt", "en":">> >> >> >> >> >> >> >> PUBLISH This is a HELP message 5"},
-            "date": "2016-11-01",
+            "date": "2017-01-01",
             "publish": false,
             "expire" : "P2Y"
         },

@@ -9,7 +9,7 @@ Style for top menu and items (logo, buttons etc)
 }
 
 /***************************************************
-top-menu is like Bootstrap navbar but to avoid 
+top-menu is like Bootstrap navbar but to avoid
 confussions another name is used
 ***************************************************/
 body {
@@ -17,8 +17,7 @@ body {
     &.top-menu-hidden {
         padding-top: 0 !important;
     }
-}    
-
+}
 
 //All elements inside .top-menu-container get same position and opacity
 .top-menu-container > * {
@@ -44,7 +43,7 @@ body {
         opacity: 0.6;
     }
 
-    .top-menu-extended &, 
+    .top-menu-extended &,
     .top-menu-threshold-down ~ & {
         opacity: 1;
     }
@@ -53,20 +52,37 @@ body {
     }
 
     > * {
-        margin: .5rem; 
+        margin: .5rem;
         flex-shrink: 1;
         flex-grow  : 0;
     }
-    
+
     .fcoo-logo {
         width      : 310px;
         height     : 60 / 260 * 310px;
         flex-shrink: 0;
         background-image   : url("images/FCOO_logo_260x60.jpg");
         background-repeat  : no-repeat;
-        background-position: center center; 
+        background-position: center center;
         background-size    : contain;
     }
+
+    .header {
+        width    : 100%;
+        flex-grow: 1;
+
+        margin : 0;
+        padding: $content-padding-x-sm;
+
+        text-align : center;
+        font-size  : 1.5*$font-size-sm;
+        line-height: 1.5*$font-size-sm;
+        @include text-shadow();
+        @include text-truncate();
+
+        &:empty { display: none; }
+    }
+
 }
 
 
@@ -74,7 +90,7 @@ body {
 
     margin-top: 0px;
     padding   : $content-padding-x-sm;
-    
+
     font-size: $font-size-sm;
     @include text-shadow();
 
@@ -85,7 +101,7 @@ body {
     @extend .fcoo-app-background;
     @extend .fcoo-app-color;
 
-        
+
     > * {
         flex-shrink: 0;
         flex-grow  : 0;
@@ -97,14 +113,14 @@ body {
             margin-left: $content-padding-x !important;
         }
     }
-    
+
     .left-side {
         margin-right: auto !important;
     }
     .right-side {
         margin-left: auto !important;
     }
-    
+
 
     //Prevent double icon buttons to get double width
     .btn.fa-stack {
@@ -121,15 +137,15 @@ body {
     //Adjusting font-size and/or margin-bottom of specific icon to make all look equal sized and horizontal aligned
     .btn i.fa {
 //        &.fa-bars {  }
-        &.fa-search {               font-size: 0.80em; } 
+        &.fa-search {               font-size: 0.80em; }
 
-        &.fa-i-warning, 
-        &.fa-i-warning-black {      font-size: 0.75em; bottom: 0.2em; } 
+        &.fa-i-warning,
+        &.fa-i-warning-black {      font-size: 0.75em; bottom: 0.2em; }
 
-        &.fa-envelope-o, 
-        &.fa-envelope {             font-size: .90em;  margin-bottom: 0; } 
+        &.fa-envelope-o,
+        &.fa-envelope {             font-size: .90em;  margin-bottom: 0; }
 
-        &.fa-question-circle-o {    font-size: .90em;  margin-bottom: -0.1em; } 
+        &.fa-question-circle-o {    font-size: .90em;  margin-bottom: -0.1em; }
 
         &.fa-i-list {               font-size: 0.75em; margin-bottom: -0.1em; }
 
@@ -137,14 +153,14 @@ body {
 
     //Special adjusment for small buttons
     .btn-sm i.fa {
-        &.fa-envelope-o, 
-        &.fa-envelope {             margin-bottom: 0; } 
+        &.fa-envelope-o,
+        &.fa-envelope {             margin-bottom: 0; }
 
-        &.fa-question-circle-o {    margin-bottom: 0; } 
+        &.fa-question-circle-o {    margin-bottom: 0; }
 
         &.fa-i-list {               margin-bottom: -0.1em; }
     }
-    
+
     //FCOO-logo inside top menu get fixed size and hover effect
     .icon-fcoo-app-logo {
         padding    : 0;
@@ -192,7 +208,7 @@ body {
                 display: none;
             }
 
-            .xsmall-land-up & + .btn { 
+            .xsmall-land-up & + .btn {
                 border-left: none;
                 border-bottom-left-radius: 0;
                 border-top-left-radius   : 0;
@@ -226,11 +242,11 @@ body {
 
 
 //Create display-style for modernizr test all-read used in buttons for message-groups
-@include show-and-hide-for-modernizr-test( 
-    all-read,   //$modernizr-test , 
-	a,          //$parent-element-type: '', 
-	true,       //$incl-no-selector: true, 
+@include show-and-hide-for-modernizr-test(
+    all-read,   //$modernizr-test ,
+	a,          //$parent-element-type: '',
+	true,       //$incl-no-selector: true,
 	'',         //$display-value: ''
-	false       // $incl-table-display: true 
+	false       // $incl-table-display: true
 );
 
