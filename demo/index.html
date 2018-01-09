@@ -9,8 +9,8 @@
 	<meta name='copyright' content='FCOO'>
 	<meta name='owner' content='FCOO'>
 
-  <link  href="bower_components.css" rel="stylesheet">	
-  <link  href="../src/fcoo-application.css" rel="stylesheet">	
+  <link  href="bower_components.css" rel="stylesheet">
+  <link  href="../src/fcoo-application.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,9 +18,9 @@
 
     <div class="main-container">
         <select id="theSelect" style="width:200px"></select><br>
-        <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>    
-        <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>    
-        <button onClick="notyDemo();">Noty demo</button><br><br>    
+        <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>
+        <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>
+        <button onClick="notyDemo();">Noty demo</button><br><br>
 
         <div class="show-for-mouse">Vises kun, hvis der er en mus</div>
     </div>
@@ -43,7 +43,7 @@
         ];
 
         i18next.addPhrase( 'test', 'title', {
-            da:'Dette er title for nummer {{count}}', 
+            da:'Dette er title for nummer {{count}}',
             en:'This is the title for #{{count}}'
         });
 
@@ -55,14 +55,14 @@
                             .i18n('test:item'+i )
                             .i18n('test:title', 'title', {count: i+1} )
                             .appendTo($select);
-       
+
         }
-        
+
         function notyDemo(){
             var layout = ['topLeft', 'topCenter', 'topRight', 'centerRight', 'bottomCenter'];
             var type   = ['alert',   'success',   'warning',  'error',        'info' ];
             $.each(type, function(index, type){
-                $.bsNoty({ 
+                $.bsNoty({
                     type: type,
                     queue: type,
                     layout: layout[index],
@@ -70,36 +70,36 @@
                     //force: (type=='info'),
                     defaultHeader: true,
                     text: [
-                        layout[index]+'<br>', 
+                        layout[index]+'<br>',
                         {text: {da: 'Noget tekst ', en: 'Some text '}},
                         Math.random()
                     ],
                     //show: true
-                    
+
                 });
             });
             $.bsNotyOk({da: 'Noget lykkedes', en: 'Something succeeded'});
-        
+
         }
 
-        $(function() { 
-            var topMenu = 
+        $(function() {
+            var topMenu =
                 window.fcoo.createTopMenu({
                     //search: false,
                     help: {
                         url: 'data/help.json data/about_fcoo.json'
-                    }, 
+                    },
                     messages: {
                         url: 'data/info.json'
-                    }, 
+                    },
                     warning: {
                         url: 'data/oceanforecast_warning.json',
-                        _reloadPeriod: 'PT20S', 
-                    }, 
+                        _reloadPeriod: 'PT20S',
+                    },
                     //rightMenu: false,
                 });
 
-
+consoel.log(topMenu);
 
             $('.main-container').on('click', function( event ){
                 if (event.target === this){
@@ -112,7 +112,7 @@
             document.body.innerHTML = document.body.innerHTML + '<br>' + str;
         }
         w(fcoo.localStorageExists  ? 'localStorage exists' : 'localStorage NOT exists');
-        
+
         w('localStorage.getItem("niels_test")="' + localStorage.getItem('niels_test') + '"');
 
         localStorage.setItem("niels_test", "Saved  "+ (new Date()).toString());

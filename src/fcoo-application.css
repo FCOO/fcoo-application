@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /***********************************************
-    fcoo-application.scss, 
+    fcoo-application.scss,
 
     (c) 2016, FCOO
 
@@ -10,7 +10,7 @@
 
 ************************************************/
 /***************************************************
-Import Bootstrap variables and variables and the 
+Import Bootstrap variables and variables and the
 adjustments to Bootstrap from fcoo/jquery-bootstrap
 ***************************************************/
 /************************************************************
@@ -30,8 +30,8 @@ VARIABLES
 ************************************************************/
 /***********************************************
 DEFINE BOOTSTRAP BUTTON STYLE
-$btn-style-name MUST correspond with ns.bsButtonClass 
-in src/jquery-bootstrap-button.js 
+$btn-style-name MUST correspond with ns.bsButtonClass
+in src/jquery-bootstrap-button.js
 ************************************************/
 /************************************************************
 Variables bassed on bootstrop variables
