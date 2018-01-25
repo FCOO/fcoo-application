@@ -2209,8 +2209,8 @@ grunt-eslint@^20.1.0:
     eslint "^4.0.0"
 
 grunt-fcoo-grunt-plugin@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/grunt-fcoo-grunt-plugin/-/grunt-fcoo-grunt-plugin-3.0.1.tgz#77029bd95e4eba0c7f71ac4c014f81657d098c46"
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/grunt-fcoo-grunt-plugin/-/grunt-fcoo-grunt-plugin-3.1.0.tgz#6ca9daea271534a8e5ca24908365c513e89dd897"
   dependencies:
     cssnano "^3.7.3"
     curl "^0.1.4"

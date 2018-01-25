@@ -478,7 +478,7 @@ body.top-menu-hidden {
     font-size: 4.5em; }
     .touchevents .top-menu .icon-fcoo-app-logo {
       opacity: 1; }
-    .top-menu .icon-fcoo-app-logo:focus, .top-menu .icon-fcoo-app-logo:hover {
+    .top-menu .icon-fcoo-app-logo:hover, .top-menu .icon-fcoo-app-logo:focus {
       opacity: 1; }
   .top-menu .header {
     flex-shrink: 1;
