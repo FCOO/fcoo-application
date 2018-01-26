@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "grunt": "^1.0.0",
-    "grunt-fcoo-grunt-plugin": "^3.0.0"
+    "grunt-fcoo-grunt-plugin": "^3.2.0"
   },
   "license": "MIT"
 }
