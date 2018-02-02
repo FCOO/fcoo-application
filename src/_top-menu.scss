@@ -21,13 +21,14 @@ body {
 
 //All elements inside .top-menu-container get same position and opacity
 .top-menu-container > * {
-    position: fixed;
+    position  : fixed;
     top       : 0;
     right     : 0;
     left      : 0;
     z-index   : $zindex-fixed;
     opacity   : 1;
     transition: opacity .15s ease-in-out;
+    cursor: default;
 }
 
 //Box with FCOO-logo and contact info etc.

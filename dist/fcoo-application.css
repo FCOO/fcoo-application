@@ -388,7 +388,8 @@ body.top-menu-hidden {
   left: 0;
   z-index: 1030;
   opacity: 1;
-  transition: opacity .15s ease-in-out; }
+  transition: opacity .15s ease-in-out;
+  cursor: default; }
 
 .about-fcoo {
   background-color: white;
