@@ -155,40 +155,45 @@ Sections:
     ************************************************************************
     ***********************************************************************/
 
-    //Set <body> class = 'loading' and adds logo and spinner
+    //Set <html> class = 'loading' and adds logo and spinner
+    $('html').modernizrOn('loading');
+    $(window).on( 'load', function() { $('html').modernizrOff('loading'); });
+
     var $body       = $('body'),
         $loadingDiv = $('body > div.loading'),
         $versionDiv;
 
-    $body.addClass('loading');
     if (!$loadingDiv.length){
       $loadingDiv = $('<div class="loading"></div>' );
       $loadingDiv.prependTo( $body );
     }
 
-    $loadingDiv.addClass('loading fcoo-app-color fcoo-app-background icon-fcoo-app-logo');
+    $loadingDiv
+        .addClass('loading _fcoo-app-color fcoo-app-background');
 
-    $versionDiv = $('<div class="version fcoo-app-color"></div>');
-    $loadingDiv.append( $versionDiv );
-
-    $loadingDiv.append( $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>') );
-
-
-
+    //Create and append div with version-text (ex. "DEMO")
+    $versionDiv =
+        $('<div class="version fcoo-app-color"></div>')
+            .appendTo( $loadingDiv );
     //Test if the path-name contains any of the words defining the version to be none-production
     var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
 
     $.each( ['BETA', 'STAGING','DEMO', 'TEST'], function( index, name ){
         if (urlStr.indexOf(name) > -1){
             $versionDiv.text( name );
-            $versionDiv.addClass('withContent');
+            $versionDiv.addClass('with-content');
             window.document.title = name +' - ' + window.document.title;
             return false;
         }
     });
 
+    //Create and append div with logo
+    $('<div class="logo fcoo-app-color animated fadeIn"></div>')
+        .appendTo( $loadingDiv );
 
-    $(window).on( 'load', function() { $body.removeClass("loading"); });
+    //Create and append div with working-icon
+    $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>')
+        .appendTo( $loadingDiv );
 
     //Call Url.adjustUrl() to remove broken values in the url
     window.Url.adjustUrl();

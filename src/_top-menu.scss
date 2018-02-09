@@ -204,12 +204,11 @@ body {
             .small-up & {
                 width: 10rem;
             }
-//            .xsmall-port-down & {
             .xsmall-land-down & {
                 display: none;
             }
 
-            .xsmall-land-up & + .btn {
+            .no-xsmall-land-down & + .btn {
                 border-left: none;
                 border-bottom-left-radius: 0;
                 border-top-left-radius   : 0;

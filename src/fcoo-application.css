@@ -197,9 +197,15 @@ fcoo-name = the font used for the FCOO name in the logo - TODO
 Style for the <div> covering the page during loading
 *****************************************************/
 /*****************************************************
-LOADING 
+LOADING
 Style for the <div> covering the page during loading
 *****************************************************/
+html.loading .hide-for-loading {
+  display: none !important; }
+
+html.no-loading .show-for-loading {
+  display: none !important; }
+
 div.loading {
   position: absolute;
   left: 0;
@@ -208,42 +214,47 @@ div.loading {
   background-color: #214b87;
   background-color: {APPLICATION_COLOR};
   text-align: center; }
-  body.loading div.loading {
-    cursor: progress;
+  html.loading div.loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
-    opacity: 1; }
-    body.loading div.loading:before {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 10%;
-      font-size: 280px;
-      line-height: 0.5; }
-    body.loading div.loading > div {
+    opacity: 1;
+    cursor: progress; }
+    html.loading div.loading > div {
       display: block !important;
-      cursor: progress;
-      position: absolute;
-      right: 0;
-      left: 0;
+      flex: 0 0 auto;
+      width: 100%;
       margin: 0;
       padding: 0;
+      cursor: inherit;
       text-align: center; }
-      body.loading div.loading > div.version {
-        top: 60%;
+      html.loading div.loading > div.version {
         font-family: sans-serif;
-        font-size: 200%; }
-        body.loading div.loading > div.version.withContent {
+        height: 3rem;
+        font-size: 2rem; }
+        html.loading div.loading > div.version.with-content {
           background-color: red;
           color: white; }
-      body.loading div.loading > div.working {
-        top: 80%; }
-  body:not(.loading) div.loading {
+      html.loading div.loading > div.logo {
+        flex: 1 1 auto;
+        width: 95%;
+        max-width: 600px;
+        background-image: url("images/FCOO_logo_notext.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center center; }
+      html.loading div.loading > div.working {
+        height: 3rem;
+        font-size: 1rem; }
+  html.no-loading div.loading {
     width: 0;
     height: 0;
     opacity: 0;
     transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s; }
-    body:not(.loading) div.loading:before, body:not(.loading) div.loading > div {
+    html.no-loading div.loading:before, html.no-loading div.loading > div {
       display: none !important; }
 
 /*****************************************************
@@ -502,7 +513,7 @@ body.top-menu-hidden {
       width: 10rem; }
     .xsmall-land-down .top-menu .form-inline .form-control {
       display: none; }
-    .xsmall-land-up .top-menu .form-inline .form-control + .btn {
+    .no-xsmall-land-down .top-menu .form-inline .form-control + .btn {
       border-left: none;
       border-bottom-left-radius: 0;
       border-top-left-radius: 0; }
