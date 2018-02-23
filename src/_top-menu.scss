@@ -196,9 +196,12 @@ body {
     //form and input for search. Input have no round border to the right. The search-button have no round border to the left when the input is vissible
     .form-inline {
         .form-control {
+
+            padding: $input-padding-y-sm $input-padding-x-sm; //Same padding for 'normal' and 'small'
+
             border-bottom-right-radius: 0;
             border-top-right-radius   : 0;
-            border-right: none;
+            border-right              : none;
             width: 6rem;
 
             .small-up & {

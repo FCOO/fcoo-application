@@ -141,14 +141,19 @@ Create and manage the top-menu for FCOO web applications
                 var $element =
                     $('<form onsubmit="return false;"/>')
                         .addClass('form-inline')
-                        .appendTo($topMenu);
+                        .appendTo($topMenu),
+                    $inputGroup =
+                        $('<div/>')
+                            .addClass('input-group')
+                            .appendTo($element);
+
                 $('<input type="text" class="form-control"></div>')
                     .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
                     .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
-                    .appendTo( $element );
+                    .appendTo( $inputGroup );
 
                 defaultTopMenuButton({ icon:'fa-search' })
-                    .appendTo( $element );
+                    .appendTo( $inputGroup );
                 return $element;
             },
             rightSide: true

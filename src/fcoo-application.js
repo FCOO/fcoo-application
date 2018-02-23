@@ -204,26 +204,6 @@ Sections:
     4: Set up different Modernizr tests and initialize jquery-bootstrap
     ************************************************************************
     ***********************************************************************/
-    //Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
-    //Solution by http://stackoverflow.com/users/1701813/hacktisch
-    //Mouse devices (also touch screen laptops) first fire mousemove before they can fire touchstart and hasMouse is set to TRUE.
-    //Touch devices (also for instance iOS which fires mousemove) FIRST fire touchstart upon click, and then mousemove.
-    //That is why hasMouse will be set to FALSE.
-    $(function() {
-        window.fcoo.modernizr.addTest('mouse', false);
-        $(window)
-            .bind('mousemove.fcoo.application',function(){
-                $(window).unbind('.fcoo.application');
-                window.fcoo.modernizr.mouse = true;
-                window.modernizrOn('mouse');
-            })
-            .bind('touchstart.fcoo.application',function(){
-                $(window).unbind('.fcoo.application');
-                window.fcoo.modernizr.mouse = false;
-                window.modernizrOff('mouse');
-            });
-    });
-
     //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
     //We are using the Modernizr test touchevents
     $(function() {
@@ -236,14 +216,16 @@ Sections:
     5: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
-    // Should we check the connection status immediatly on page load.
-    //checkOnLoad: false, //default = false
+    /*
+    options for offline.js
+    Should we check the connection status immediatly on page load.
+    checkOnLoad: false, //default = false
 
-    // Should we monitor AJAX requests to help decide if we have a connection.
-    //interceptRequests: true, //default = true
+     Should we monitor AJAX requests to help decide if we have a connection.
+    interceptRequests: true, //default = true
 
-    // Should we automatically retest periodically when the connection is down (set to false to disable).
-/*
+     Should we automatically retest periodically when the connection is down (set to false to disable).
+
     reconnect: {
         // How many seconds should we wait before rechecking.
         initialDelay: 3,
@@ -251,9 +233,10 @@ Sections:
         // How long should we wait between retries.
         delay: (1.5 * last delay, capped at 1 hour)
     },
-*/
-    // Should we store and attempt to remake requests which fail while the connection is down.
-    // requests: true, //defalut = true
+
+    Should we store and attempt to remake requests which fail while the connection is down.
+    requests: true, //defalut = true
+    */
 
     window.Offline.options = {
         checks: {
@@ -271,7 +254,6 @@ Sections:
     //Adds Modernizr test "connected"
     window.Offline.on('up',   function(){ window.modernizrOn( 'connected'); });
     window.Offline.on('down', function(){ window.modernizrOff('connected'); });
-
 
     /*********************************************************************
     Using imagesloaded (http://imagesloaded.desandro.com) to test if any
@@ -319,6 +301,113 @@ Sections:
         img.src = src;
     }
 
+    /*********************************************************************
+    Setting up events to use bsNoty instead of default dialog-box
+    *********************************************************************/
+
+    var offlineNotyOptions_main = {
+            layout       : 'topCenter',
+            onTop        : true,
+            queue        : 'offline_status',
+            defaultHeader: false,
+            closeWith    : [],
+            show         : false
+        },
+
+        offlineNotyOptions = {
+            layout       : 'center',
+            onTop        : true,
+            queue        :'offline_result',
+            kill         : true,
+            defaultHeader: false,
+            header       : null,
+            timeout      : 3000
+        },
+
+        //offlineNotyStatus = noty displaying status, count-down and reconnect-button
+        offlineNotyStatus = $.bsNotyInfo(
+            {icon: 'fa-circle-o-notch fa-spin', text: '&nbsp;', iconClass:'hide-for-offline-error', textClass:'hide-for-offline-error offline-remaning-text'},
+            $.extend( {
+                buttons: [{
+                    id          : 'offline_reconnect',
+                    icon        : 'fa-i-connection',
+                    text        : {da: 'Genopret', en:'Reconnect'},
+                    closeOnClick: false,
+                    onClick     : window.Offline.reconnect.tryNow
+                }]
+            }, offlineNotyOptions_main )
+        ),
+        $reconnectButton = null,
+        isFirstTick = true;
+
+    //fcoo.offlineNoty = noty displaying "No network connection" error
+    ns.offlineNoty = $.bsNotyError( {icon: $.bsNotyIcon.error, text: {da:'Ingen netværksforbindelse', en:'No network connection'}}, offlineNotyOptions_main );
+
+    //Create i18n-phrases for second(s) and minute(s) and reconnecti
+    window.i18next.addPhrases({
+        'offline_sec'         : {da: 'Genopretter om {{count}} sekund...',   en: 'Reconnecting in {{count}} second...'  },
+        'offline_sec_plural'  : {da: 'Genopretter om {{count}} sekunder...', en: 'Reconnecting in {{count}} seconds...' },
+        'offline_min'         : {da: 'Genopretter om {{count}} minut...',    en: 'Reconnecting in {{count}} minute...'  },
+        'offline_min_plural'  : {da: 'Genopretter om {{count}} minutter...', en: 'Reconnecting in {{count}} minutes...' },
+        'offline_reconnecting': {da: 'Genopretter forbindelse...', en: 'Reconnecting...'}
+    });
+
+
+    //Adding offline-events: 'down: The connection has gone from up to down => show error and offlineNoty
+    window.Offline.on('down', function(){
+        ns.offlineNoty.show();
+        isFirstTick = true;
+    });
+
+    //Adding offline-events:
+    //reconnect:tick: Fired every second during a reconnect attempt, when a check is not happening, and
+    //reconnect:connecting: We are reconnecting now => update count and set button enabled/disabled
+    window.Offline.on('reconnect:tick reconnect:connecting', function(){
+        if (isFirstTick){
+            isFirstTick = false;
+            offlineNotyStatus.show();
+        }
+
+        var remaining = window.Offline.reconnect.remaining;
+
+        $('.offline-remaning-text').text(
+            remaining >= 60 ?
+            window.i18next.t('offline_min', { count: Math.floor(remaining/60) }) :
+            remaining > 0 ?
+            window.i18next.t('offline_sec', { count: remaining                }) :
+            window.i18next.t('offline_reconnecting')
+        );
+
+        //Enable/disable reconnect-button
+        $reconnectButton = $reconnectButton || $('#offline_reconnect');
+        $reconnectButton.toggleClass('disabled', (remaining == 0) || (window.Offline.reconnect.delay == remaining));
+    });
+
+
+    //Adding offline-events: reconnect:failure: A reconnect check attempt failed
+    window.Offline.on('reconnect:failure', function(){
+        window.notyWarning( {da:'Genopretning af forbindelse fejlede', en:'Reconnecting failed'}, offlineNotyOptions );
+    });
+
+    //Adding offline-events: up: The connection has gone from down to up => hide offlineNoty adn show succes-noty
+    window.Offline.on('up', function(){
+        offlineNotyStatus.close();
+        ns.offlineNoty.close();
+        window.notySuccess( {da:'Netværksforbindelse genoprettet', en:'Network connection re-established'}, offlineNotyOptions );
+    });
+
+    /*
+    'confirmed-up',         // A connection test has succeeded, fired even if the connection was already up
+    'confirmed-down',       // A connection test has failed, fired even if the connection was already down
+    'checking',             // We are testing the connection
+    'reconnect:started',    // We are beginning the reconnect process
+    'reconnect:stopped',    // We are done attempting to reconnect
+    'reconnect:tick',       // Fired every second during a reconnect attempt, when a check is not happening
+    'reconnect:connecting', // We are reconnecting now
+    'reconnect:failure',    // A reconnect check attempt failed
+    'requests:flush',       // Any pending requests have been remade
+    'requests:capture'      // A new request is being held
+    */
 
     /***********************************************************************
     ************************************************************************
@@ -334,7 +423,7 @@ Sections:
             //Senrty options
             release      : ns.getApplicationOption( "{APPLICATION_VERSION}", null), //Track the version of your application in Sentry.
             //environment  : '', //Track the environment name inside Sentry. Eq. production/beta/staging
-            //serverName   :'', //Typically this would be the server name, but that doesn�t exist on all platforms.
+            //serverName   :'', //Typically this would be the server name, but that doesn’t exist on all platforms.
             //tags         : {id:'value'}, //Additional tags to assign to each event.
             whitelistUrls: [/https?:\/\/(.*\.)?fcoo\.dk/], //The inverse of ignoreUrls - Only report errors from whole urls matching a regex pattern or an exact string.
             ignoreUrls   : [],

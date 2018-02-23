@@ -1,4 +1,4 @@
-@charset "UTF-8";
+ "UTF-8";
 /***********************************************
     fcoo-application.scss,
 
@@ -74,7 +74,7 @@ Unifies padding for modal, accordion, popup etc.
 ************************************************************/
 /************************************************************
 CONTROL-CONTAINER
-Style for div with controls inside modal. 
+Style for div with controls inside modal.
 Must have tabindex:"-1" to work with focus
 ************************************************************/
 /************************************************************
@@ -197,7 +197,7 @@ fcoo-name = the font used for the FCOO name in the logo - TODO
 Style for the <div> covering the page during loading
 *****************************************************/
 /*****************************************************
-LOADING 
+LOADING
 Style for the <div> covering the page during loading
 *****************************************************/
 div.loading {
@@ -253,7 +253,7 @@ Style for offline.js
 OFFLINE-JS
 
 Style for offline.js with danish translations
-Use when the user has selected danish (html has class "lang-da") or 
+Use when the user has selected danish (html has class "lang-da") or
 the user has selected a no-english language and danish as 2. languages
 *****************************************************/
 html.lang-da .offline-ui .offline-ui-retry:before, html.no-lang-en.lang2-da .offline-ui .offline-ui-retry:before {

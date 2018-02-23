@@ -1,27 +1,16 @@
 /*****************************************************
 OFFLINE-JS
-
-Style for offline.js with danish translations
-Use when the user has selected danish (html has class "lang-da") or 
-the user has selected a no-english language and danish as 2. languages
 *****************************************************/
-html.lang-da, html.no-lang-en.lang2-da {
-    @import "offline-danish";
-}
 
+//Hide default offline.js elements
+.offline-ui {
+    display: none !important;
+}
 
 //Addd red shadow to the body, when there are no connections
 html.no-connected body {
     box-shadow: inset 0px 0px 10px 5px rgba(255,0,0,1);
 }
 
-
-//Create Modernizr-classe for tests
-$modernizr-test-list: (
-    connected,
-    mouse
-); 
-
-@each $modernizr-test in $modernizr-test-list {
-    @include show-and-hide-for-modernizr-test( $modernizr-test, html, false, '', false );
-}
+//Create Modernizr-classes for test connected
+@include show-and-hide-for-modernizr-test( connected, html, false, '', false );

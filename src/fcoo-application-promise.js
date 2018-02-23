@@ -13,55 +13,108 @@
 (function ($, window, Promise/*, document, undefined*/) {
 	"use strict";
 
+    //Create fcoo-namespace
+	window.fcoo = window.fcoo || {};
+	var ns = window.fcoo;
+
+    //Maintain a list of open notys with promise errors. Prevent showing the same error in multi notys
+    var promiseErrorNotys = {};
 
     //Create a default error-handle. Can be overwritten
-    Promise.defaultErrorHandler = function( reason ){
-
-
+    Promise.defaultErrorHandler = function( reason, url ){
         var error = Promise.convertReasonToError( reason );
-        window.notyError( error.status+' ('+error.message +')<br>Url='+  error.url);
-//        console.log( 'reason', reason );//error.status+' ('+error.message +')  Url='+  error.url);
-//        console.log(reason);
 
-/*
-_error_metadata: function(jqXHR, textStatus) { //, err) {
-            var msg = 'Web map metadata request for ' + jqXHR.url + ' failed. Reason: ';
-            if (jqXHR.status === 0) {
-                msg += 'No network connection.';
-                this.options.onMetadataError(new MetadataError(msg));
-            } else {
-                if (jqXHR.status == 404) {
-                    msg += 'Requested page not found. [404]';
-                } else if (jqXHR.status == 500) {
-                    msg += 'Internal Server Error [500].';
-                } else if (textStatus === 'parsererror') {
-                    msg += 'Requested JSON parse failed.';
-                } else if (textStatus === 'timeout') {
-                    msg += 'Time out error.';
-                } else if (textStatus === 'abort') {
-                    msg += 'Ajax request aborted.';
-                } else {
-                    msg += 'Unknown error.\n' + jqXHR.responseText;
-                }
-                var err = new MetadataError(msg);
-                this.options.onMetadataError(err);
-                throw err;
+        //Create the content of the error-noty like
+        //"Error"
+        //"Error-message (error-code)"
+        var message =   error.status ?
+                        window.i18next.t( 'error:'+error.status ) :
+                        error.message || '';
+        if (message && (message == error.status))
+            //No status-code or translation => use error.message
+            message = error.message || '';
 
-*/
+        //Adjust url to absolute path (very simple)
+        if (url.indexOf('http') == -1){
+            var parts = window.location.href.split('/');
+            parts.pop();
+            url = parts.join('/') + (url.indexOf('/') != 0 ? '/' : '') + url;
+        }
+
+        var content = [
+                $('<div class="font-weight-bold"/>').i18n({da:'Fejl', en:'Error'}),
+                $('<span/>').text( message ),
+                error.status ? ' (' + error.status  + ')' : null
+            ],
+            $details = $('<div style="font-family: monospace" class="d-none error-details"><hr></div>'),
+            hasDetails = false,
+            descKey = error.status ? 'error:'+error.status+'-desc' : '',
+            desc = descKey ? window.i18next.t( descKey ) : '';
+
+        if (desc == descKey)
+            desc = '';
+
+            //Create details
+        var details = [
+                {prompt: {da:'Kode', en:'Code'}              , property: error.status },
+                {prompt: 'Url'                               , property: url          },
+                {prompt: {da:'Beskrivelse', en:'Description'}, property: desc         }
+                //TODO Add rest of possible properties (if any?)
+            ];
+
+        $.each( details, function( index, detail ){
+            var content = detail.property || '';
+            if (content){
+                if (hasDetails)
+                    $details.append('<br>');
+                $details.append( $('<span/>').i18n( detail.prompt) );
+                $details.append(': '+content);
+                hasDetails = true;
+            }
+        });
+
+        if (hasDetails)
+            content.push( $details );
+
+        //Create a noty-id to prevent showing same error in more than one noty
+        var notyId = (error.status || '999') +
+                     url.replace(/\//g, "_") +
+                     message.replace(/ /g, "_");
+
+        //If a noty with same id already existe => flash if!
+        if (promiseErrorNotys[notyId])
+            promiseErrorNotys[notyId].flash();
+        else
+            //If no network connection => flash the noty with "No network connection"-error
+            if (ns.offlineNoty && ns.offlineNoty.shown && !ns.offlineNoty.closed){
+                ns.offlineNoty.flash();
+            }
+            else {
+                //Create a new noty
+                var toggleDetails = function(event){
+                        $(promiseErrorNotys[notyId].barDom).find('.noty-footer a, .error-details').toggleClass('d-none');
+                        event.stopPropagation();
+                    };
+
+                promiseErrorNotys[notyId] = $.bsNoty({
+                    id  : notyId,
+                    type: 'error',
+                    onTop: true,
+                    callbacks: { onClose: function(){ promiseErrorNotys[notyId] = null; } },
+                    layout: 'topCenter',
+                    closeWith:['button'],
+                    content: content,
+                    footer: hasDetails ? [
+                                {                    text:{da:'Vis detaljer',   en:'Show details'}, onClick: toggleDetails},
+                                {textClass:'d-none', text:{da:'Skjul detaljer', en:'Hide details'}, onClick: toggleDetails}
+                            ] : null
+                });
+            }
     };
 
 
-
-
-
-
-
-	/******************************************
-	Initialize/ready
-	*******************************************/
+    //Initialize/ready
 	$(function() {
-
 	});
-	//******************************************
 
 }(jQuery, this, this.Promise, document));

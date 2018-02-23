@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /***********************************************
     fcoo-application.scss,
 
@@ -74,7 +73,7 @@ Unifies padding for modal, accordion, popup etc.
 ************************************************************/
 /************************************************************
 CONTROL-CONTAINER
-Style for div with controls inside modal. 
+Style for div with controls inside modal.
 Must have tabindex:"-1" to work with focus
 ************************************************************/
 /************************************************************
@@ -262,76 +261,9 @@ Style for offline.js
 *****************************************************/
 /*****************************************************
 OFFLINE-JS
-
-Style for offline.js with danish translations
-Use when the user has selected danish (html has class "lang-da") or 
-the user has selected a no-english language and danish as 2. languages
 *****************************************************/
-html.lang-da .offline-ui .offline-ui-retry:before, html.no-lang-en.lang2-da .offline-ui .offline-ui-retry:before {
-  content: "Genopret"; }
-
-html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-  content: "Din computer er forbundet til internettet."; }
-  @media (max-width: 1024px) {
-    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-      content: "Din enhed er forbundet til internettet."; } }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-      content: "Din enhed har forbindelse"; } }
-
-html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-  content: "Din computer tabte forbindelsen til internettet"; }
-  @media (max-width: 1024px) {
-    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-      content: "Din enhed tabte forbindelsen til internettet"; } }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-      content: "Din enhed har tabt forbindelsen"; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before {
-  content: "Forsøger at genoprette forbindelsen..."; }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekunder..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekund..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minutter..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minut..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " timer..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " time..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry {
-  display: none; }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before {
-  content: "Genopretning af forbindelse fejlede."; }
+.offline-ui {
+  display: none !important; }
 
 html.no-connected body {
   box-shadow: inset 0px 0px 10px 5px red; }
@@ -340,12 +272,6 @@ html.connected .hide-for-connected {
   display: none !important; }
 
 html.no-connected .show-for-connected {
-  display: none !important; }
-
-html.mouse .hide-for-mouse {
-  display: none !important; }
-
-html.no-mouse .show-for-mouse {
   display: none !important; }
 
 /*****************************************************
@@ -505,6 +431,7 @@ body.top-menu-hidden {
     .touchevents .top-menu .header {
       margin-right: 0.5rem; }
   .top-menu .form-inline .form-control {
+    padding: 0.25rem 0.25rem;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
     border-right: none;
