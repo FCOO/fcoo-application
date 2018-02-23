@@ -7,10 +7,29 @@ OFFLINE-JS
     display: none !important;
 }
 
-//Addd red shadow to the body, when there are no connections
-html.no-connected body {
-    box-shadow: inset 0px 0px 10px 5px rgba(255,0,0,1);
-}
-
 //Create Modernizr-classes for test connected
 @include show-and-hide-for-modernizr-test( connected, html, false, '', false );
+
+//Overlay with red shadow when not connected
+.no-connected-shadow {
+    position: absolute;
+    left   : 0;
+    top    : 0;
+    right  : 0;
+    bottom : 0;
+    z-index: $z-index-top-1; //Below error-noty but above loading background
+
+    box-shadow: inset 0px 0px 10px 5px rgba(255,0,0,1);
+
+    pointer-events: none; //Allows "clicking trough"
+
+    opacity: 0;
+    .no-connected & {
+        opacity: 1;
+    }
+}
+
+//Class for noty with no-connected-error or promise-error: Set z-index to be on top of loading-background
+.noty-on-top {
+    z-index: $z-index-top;
+}

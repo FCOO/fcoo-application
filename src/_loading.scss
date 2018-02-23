@@ -12,9 +12,9 @@ div.loading {
     $duration: 0.4s; //Duration of the fade-in and fade-out
 
     position: absolute;
-    left:0;
-    top: 0;
-    z-index: 2147483647; //2N32
+    left   : 0;
+    top    : 0;
+    z-index: $z-index-top-2; //Below error-noty and no-conneted background
 
     background-color: $default-background-color;
     background-color: #{$app-background-color};

@@ -97,9 +97,12 @@
                     };
 
                 promiseErrorNotys[notyId] = $.bsNoty({
-                    id  : notyId,
-                    type: 'error',
-                    onTop: true,
+                    id       : notyId,
+                    type     : 'error',
+
+                    onTop    : true,
+                    onTopLayerClassName: 'noty-on-top',
+
                     callbacks: { onClose: function(){ promiseErrorNotys[notyId] = null; } },
                     layout: 'topCenter',
                     closeWith:['button'],

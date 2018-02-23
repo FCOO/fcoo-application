@@ -1,4 +1,3 @@
- "UTF-8";
 /***********************************************
     fcoo-application.scss,
 
@@ -126,6 +125,23 @@ All elements in modal-windows get same margin-bottom
   font-weight: bold; }
 
 /*****************************************************
+Global variables
+The z-index are set as:
+$z-index-top  : For top noty-messages
+$z-index-top-1: Background for page when not connected
+$z-index-top-2: Background when loading
+*****************************************************/
+/*****************************************************
+WARIABLES
+Global scss-variables for fcoo-application
+*****************************************************/
+/*
+z-index for different layers:
+    $z-index-top  : Absolute top
+    $z-index-top-N: Level N below the top-layer
+
+*/
+/*****************************************************
 Style for FCOO logo as font
 *****************************************************/
 /*****************************************************
@@ -200,50 +216,61 @@ Style for the <div> covering the page during loading
 LOADING
 Style for the <div> covering the page during loading
 *****************************************************/
+html.loading .hide-for-loading {
+  display: none !important; }
+
+html.no-loading .show-for-loading {
+  display: none !important; }
+
 div.loading {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 2147483647;
+  z-index: 2147483645;
   background-color: #214b87;
   background-color: {APPLICATION_COLOR};
   text-align: center; }
-  body.loading div.loading {
-    cursor: progress;
+  html.loading div.loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
-    opacity: 1; }
-    body.loading div.loading:before {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 10%;
-      font-size: 280px;
-      line-height: 0.5; }
-    body.loading div.loading > div {
+    opacity: 1;
+    cursor: progress; }
+    html.loading div.loading > div {
       display: block !important;
-      cursor: progress;
-      position: absolute;
-      right: 0;
-      left: 0;
+      flex: 0 0 auto;
+      width: 100%;
       margin: 0;
       padding: 0;
+      cursor: inherit;
       text-align: center; }
-      body.loading div.loading > div.version {
-        top: 60%;
+      html.loading div.loading > div.version {
         font-family: sans-serif;
-        font-size: 200%; }
-        body.loading div.loading > div.version.withContent {
+        height: 3rem;
+        font-size: 2rem; }
+        html.loading div.loading > div.version.with-content {
           background-color: red;
           color: white; }
-      body.loading div.loading > div.working {
-        top: 80%; }
-  body:not(.loading) div.loading {
+      html.loading div.loading > div.logo {
+        flex: 1 1 auto;
+        width: 95%;
+        max-width: 600px;
+        background-image: url("images/FCOO_logo_notext.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center center; }
+      html.loading div.loading > div.working {
+        height: 3rem;
+        font-size: 1rem; }
+  html.no-loading div.loading {
     width: 0;
     height: 0;
     opacity: 0;
     transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s; }
-    body:not(.loading) div.loading:before, body:not(.loading) div.loading > div {
+    html.no-loading div.loading:before, html.no-loading div.loading > div {
       display: none !important; }
 
 /*****************************************************
@@ -251,79 +278,9 @@ Style for offline.js
 *****************************************************/
 /*****************************************************
 OFFLINE-JS
-
-Style for offline.js with danish translations
-Use when the user has selected danish (html has class "lang-da") or
-the user has selected a no-english language and danish as 2. languages
 *****************************************************/
-html.lang-da .offline-ui .offline-ui-retry:before, html.no-lang-en.lang2-da .offline-ui .offline-ui-retry:before {
-  content: "Genopret"; }
-
-html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-  content: "Din computer er forbundet til internettet."; }
-  @media (max-width: 1024px) {
-    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-      content: "Din enhed er forbundet til internettet."; } }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-up .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-up .offline-ui-content:before {
-      content: "Din enhed har forbindelse"; } }
-
-html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-  content: "Din computer tabte forbindelsen til internettet"; }
-  @media (max-width: 1024px) {
-    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-      content: "Din enhed tabte forbindelsen til internettet"; } }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down .offline-ui-content:before {
-      content: "Din enhed har tabt forbindelsen"; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.lang-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-connecting-2s .offline-ui-content:before {
-  content: "Forsøger at genoprette forbindelsen..."; }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekunder..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " sekund..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="second"][data-retry-in-value="1"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "s..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minutter..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) "minut..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="minute"][data-retry-in-value="1"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "m..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " timer..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-  content: "Forbindelsen tabt. Genopretter om " attr(data-retry-in-value) " time..."; }
-  @media (max-width: 568px) {
-    html.lang-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-waiting .offline-ui-content[data-retry-in-unit="hour"][data-retry-in-value="1"]:before {
-      content: "Genopretter om " attr(data-retry-in-value) "t..."; } }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s.offline-ui-waiting .offline-ui-retry {
-  display: none; }
-
-html.lang-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before, html.no-lang-en.lang2-da .offline-ui.offline-ui-down.offline-ui-reconnect-failed-2s .offline-ui-content:before {
-  content: "Genopretning af forbindelse fejlede."; }
-
-html.no-connected body {
-  box-shadow: inset 0px 0px 10px 5px red; }
+.offline-ui {
+  display: none !important; }
 
 html.connected .hide-for-connected {
   display: none !important; }
@@ -331,11 +288,21 @@ html.connected .hide-for-connected {
 html.no-connected .show-for-connected {
   display: none !important; }
 
-html.mouse .hide-for-mouse {
-  display: none !important; }
+.no-connected-shadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2147483646;
+  box-shadow: inset 0px 0px 10px 5px red;
+  pointer-events: none;
+  opacity: 0; }
+  .no-connected .no-connected-shadow {
+    opacity: 1; }
 
-html.no-mouse .show-for-mouse {
-  display: none !important; }
+.noty-on-top {
+  z-index: 2147483647; }
 
 /*****************************************************
 Style for html, body and main structure
@@ -494,6 +461,7 @@ body.top-menu-hidden {
     .touchevents .top-menu .header {
       margin-right: 0.5rem; }
   .top-menu .form-inline .form-control {
+    padding: 0.25rem 0.25rem;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
     border-right: none;
@@ -502,7 +470,7 @@ body.top-menu-hidden {
       width: 10rem; }
     .xsmall-land-down .top-menu .form-inline .form-control {
       display: none; }
-    .xsmall-land-up .top-menu .form-inline .form-control + .btn {
+    .no-xsmall-land-down .top-menu .form-inline .form-control + .btn {
       border-left: none;
       border-bottom-left-radius: 0;
       border-top-left-radius: 0; }

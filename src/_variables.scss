@@ -1,0 +1,23 @@
+/*****************************************************
+WARIABLES
+Global scss-variables for fcoo-application
+*****************************************************/
+
+
+/*
+z-index for different layers:
+    $z-index-top  : Absolute top
+    $z-index-top-N: Level N below the top-layer
+
+*/
+
+    $z-index-top: 2147483647; // = 2N32
+    $z-index-top-1: $z-index-top - 1;
+    $z-index-top-2: $z-index-top - 2;
+    $z-index-top-3: $z-index-top - 3;
+    $z-index-top-4: $z-index-top - 4;
+    $z-index-top-5: $z-index-top - 5;
+    $z-index-top-6: $z-index-top - 6;
+    $z-index-top-7: $z-index-top - 7;
+    $z-index-top-8: $z-index-top - 8;
+    $z-index-top-9: $z-index-top - 9;

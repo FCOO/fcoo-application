@@ -216,6 +216,13 @@ Sections:
     5: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
+    //Add modernizr-test-style connected
+    window.modernizrOn('connected');
+
+    //Create background displayed when not connected
+    $('<div class="no-connected-shadow hide-for-connected"></div>')
+        .prependTo( $body );
+
     /*
     options for offline.js
     Should we check the connection status immediatly on page load.
@@ -281,7 +288,7 @@ Sections:
                         param = window.Url.parseQuery( srcSplit[1] );
                     }
                     param['_X_'] = new Date().getTime();
-                    image.img.src = src + '?' + window. Url.stringify( param );
+                    image.img.src = src + '?' + window.Url.stringify( param );
                 }
             });
         });
@@ -308,6 +315,7 @@ Sections:
     var offlineNotyOptions_main = {
             layout       : 'topCenter',
             onTop        : true,
+            onTopLayerClassName: 'noty-on-top',
             queue        : 'offline_status',
             defaultHeader: false,
             closeWith    : [],
@@ -317,6 +325,7 @@ Sections:
         offlineNotyOptions = {
             layout       : 'center',
             onTop        : true,
+            onTopLayerClassName: 'noty-on-top',
             queue        :'offline_result',
             kill         : true,
             defaultHeader: false,

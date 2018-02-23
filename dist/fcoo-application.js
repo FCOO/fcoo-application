@@ -229,56 +229,112 @@ Set-up jquery-bootstrap-message for different type of messages
 (function ($, window, Promise/*, document, undefined*/) {
 	"use strict";
 
+    //Create fcoo-namespace
+	window.fcoo = window.fcoo || {};
+	var ns = window.fcoo;
+
+    //Maintain a list of open notys with promise errors. Prevent showing the same error in multi notys
+    var promiseErrorNotys = {};
 
     //Create a default error-handle. Can be overwritten
-    Promise.defaultErrorHandler = function( reason ){
-
-
+    Promise.defaultErrorHandler = function( reason, url ){
         var error = Promise.convertReasonToError( reason );
-        window.notyError( error.status+' ('+error.message +')<br>Url='+  error.url);
-//        console.log( 'reason', reason );//error.status+' ('+error.message +')  Url='+  error.url);
-//        console.log(reason);
 
-/*
-_error_metadata: function(jqXHR, textStatus) { //, err) {
-            var msg = 'Web map metadata request for ' + jqXHR.url + ' failed. Reason: ';
-            if (jqXHR.status === 0) {
-                msg += 'No network connection.';
-                this.options.onMetadataError(new MetadataError(msg));
-            } else {
-                if (jqXHR.status == 404) {
-                    msg += 'Requested page not found. [404]';
-                } else if (jqXHR.status == 500) {
-                    msg += 'Internal Server Error [500].';
-                } else if (textStatus === 'parsererror') {
-                    msg += 'Requested JSON parse failed.';
-                } else if (textStatus === 'timeout') {
-                    msg += 'Time out error.';
-                } else if (textStatus === 'abort') {
-                    msg += 'Ajax request aborted.';
-                } else {
-                    msg += 'Unknown error.\n' + jqXHR.responseText;
-                }
-                var err = new MetadataError(msg);
-                this.options.onMetadataError(err);
-                throw err;
+        //Create the content of the error-noty like
+        //"Error"
+        //"Error-message (error-code)"
+        var message =   error.status ?
+                        window.i18next.t( 'error:'+error.status ) :
+                        error.message || '';
+        if (message && (message == error.status))
+            //No status-code or translation => use error.message
+            message = error.message || '';
 
-*/
+        //Adjust url to absolute path (very simple)
+        if (url.indexOf('http') == -1){
+            var parts = window.location.href.split('/');
+            parts.pop();
+            url = parts.join('/') + (url.indexOf('/') != 0 ? '/' : '') + url;
+        }
+
+        var content = [
+                $('<div class="font-weight-bold"/>').i18n({da:'Fejl', en:'Error'}),
+                $('<span/>').text( message ),
+                error.status ? ' (' + error.status  + ')' : null
+            ],
+            $details = $('<div style="font-family: monospace" class="d-none error-details"><hr></div>'),
+            hasDetails = false,
+            descKey = error.status ? 'error:'+error.status+'-desc' : '',
+            desc = descKey ? window.i18next.t( descKey ) : '';
+
+        if (desc == descKey)
+            desc = '';
+
+            //Create details
+        var details = [
+                {prompt: {da:'Kode', en:'Code'}              , property: error.status },
+                {prompt: 'Url'                               , property: url          },
+                {prompt: {da:'Beskrivelse', en:'Description'}, property: desc         }
+                //TODO Add rest of possible properties (if any?)
+            ];
+
+        $.each( details, function( index, detail ){
+            var content = detail.property || '';
+            if (content){
+                if (hasDetails)
+                    $details.append('<br>');
+                $details.append( $('<span/>').i18n( detail.prompt) );
+                $details.append(': '+content);
+                hasDetails = true;
+            }
+        });
+
+        if (hasDetails)
+            content.push( $details );
+
+        //Create a noty-id to prevent showing same error in more than one noty
+        var notyId = (error.status || '999') +
+                     url.replace(/\//g, "_") +
+                     message.replace(/ /g, "_");
+
+        //If a noty with same id already existe => flash if!
+        if (promiseErrorNotys[notyId])
+            promiseErrorNotys[notyId].flash();
+        else
+            //If no network connection => flash the noty with "No network connection"-error
+            if (ns.offlineNoty && ns.offlineNoty.shown && !ns.offlineNoty.closed){
+                ns.offlineNoty.flash();
+            }
+            else {
+                //Create a new noty
+                var toggleDetails = function(event){
+                        $(promiseErrorNotys[notyId].barDom).find('.noty-footer a, .error-details').toggleClass('d-none');
+                        event.stopPropagation();
+                    };
+
+                promiseErrorNotys[notyId] = $.bsNoty({
+                    id       : notyId,
+                    type     : 'error',
+
+                    onTop    : true,
+                    onTopLayerClassName: 'noty-on-top',
+
+                    callbacks: { onClose: function(){ promiseErrorNotys[notyId] = null; } },
+                    layout: 'topCenter',
+                    closeWith:['button'],
+                    content: content,
+                    footer: hasDetails ? [
+                                {                    text:{da:'Vis detaljer',   en:'Show details'}, onClick: toggleDetails},
+                                {textClass:'d-none', text:{da:'Skjul detaljer', en:'Hide details'}, onClick: toggleDetails}
+                            ] : null
+                });
+            }
     };
 
 
-
-
-
-
-
-	/******************************************
-	Initialize/ready
-	*******************************************/
+    //Initialize/ready
 	$(function() {
-
 	});
-	//******************************************
 
 }(jQuery, this, this.Promise, document));
 ;
@@ -425,14 +481,19 @@ Create and manage the top-menu for FCOO web applications
                 var $element =
                     $('<form onsubmit="return false;"/>')
                         .addClass('form-inline')
-                        .appendTo($topMenu);
+                        .appendTo($topMenu),
+                    $inputGroup =
+                        $('<div/>')
+                            .addClass('input-group')
+                            .appendTo($element);
+
                 $('<input type="text" class="form-control"></div>')
                     .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
                     .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
-                    .appendTo( $element );
+                    .appendTo( $inputGroup );
 
                 defaultTopMenuButton({ icon:'fa-search' })
-                    .appendTo( $element );
+                    .appendTo( $inputGroup );
                 return $element;
             },
             rightSide: true
@@ -910,40 +971,45 @@ Sections:
     ************************************************************************
     ***********************************************************************/
 
-    //Set <body> class = 'loading' and adds logo and spinner
+    //Set <html> class = 'loading' and adds logo and spinner
+    $('html').modernizrOn('loading');
+    $(window).on( 'load', function() { $('html').modernizrOff('loading'); });
+
     var $body       = $('body'),
         $loadingDiv = $('body > div.loading'),
         $versionDiv;
 
-    $body.addClass('loading');
     if (!$loadingDiv.length){
       $loadingDiv = $('<div class="loading"></div>' );
       $loadingDiv.prependTo( $body );
     }
 
-    $loadingDiv.addClass('loading fcoo-app-color fcoo-app-background icon-fcoo-app-logo');
+    $loadingDiv
+        .addClass('loading _fcoo-app-color fcoo-app-background');
 
-    $versionDiv = $('<div class="version fcoo-app-color"></div>');
-    $loadingDiv.append( $versionDiv );
-
-    $loadingDiv.append( $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>') );
-
-
-
+    //Create and append div with version-text (ex. "DEMO")
+    $versionDiv =
+        $('<div class="version fcoo-app-color"></div>')
+            .appendTo( $loadingDiv );
     //Test if the path-name contains any of the words defining the version to be none-production
     var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
 
     $.each( ['BETA', 'STAGING','DEMO', 'TEST'], function( index, name ){
         if (urlStr.indexOf(name) > -1){
             $versionDiv.text( name );
-            $versionDiv.addClass('withContent');
+            $versionDiv.addClass('with-content');
             window.document.title = name +' - ' + window.document.title;
             return false;
         }
     });
 
+    //Create and append div with logo
+    $('<div class="logo fcoo-app-color animated fadeIn"></div>')
+        .appendTo( $loadingDiv );
 
-    $(window).on( 'load', function() { $body.removeClass("loading"); });
+    //Create and append div with working-icon
+    $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>')
+        .appendTo( $loadingDiv );
 
     //Call Url.adjustUrl() to remove broken values in the url
     window.Url.adjustUrl();
@@ -954,26 +1020,6 @@ Sections:
     4: Set up different Modernizr tests and initialize jquery-bootstrap
     ************************************************************************
     ***********************************************************************/
-    //Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
-    //Solution by http://stackoverflow.com/users/1701813/hacktisch
-    //Mouse devices (also touch screen laptops) first fire mousemove before they can fire touchstart and hasMouse is set to TRUE.
-    //Touch devices (also for instance iOS which fires mousemove) FIRST fire touchstart upon click, and then mousemove.
-    //That is why hasMouse will be set to FALSE.
-    $(function() {
-        window.fcoo.modernizr.addTest('mouse', false);
-        $(window)
-            .bind('mousemove.fcoo.application',function(){
-                $(window).unbind('.fcoo.application');
-                window.fcoo.modernizr.mouse = true;
-                window.modernizrOn('mouse');
-            })
-            .bind('touchstart.fcoo.application',function(){
-                $(window).unbind('.fcoo.application');
-                window.fcoo.modernizr.mouse = false;
-                window.modernizrOff('mouse');
-            });
-    });
-
     //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
     //We are using the Modernizr test touchevents
     $(function() {
@@ -986,14 +1032,23 @@ Sections:
     5: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
-    // Should we check the connection status immediatly on page load.
-    //checkOnLoad: false, //default = false
+    //Add modernizr-test-style connected
+    window.modernizrOn('connected');
 
-    // Should we monitor AJAX requests to help decide if we have a connection.
-    //interceptRequests: true, //default = true
+    //Create background displayed when not connected
+    $('<div class="no-connected-shadow hide-for-connected"></div>')
+        .prependTo( $body );
 
-    // Should we automatically retest periodically when the connection is down (set to false to disable).
-/*
+    /*
+    options for offline.js
+    Should we check the connection status immediatly on page load.
+    checkOnLoad: false, //default = false
+
+     Should we monitor AJAX requests to help decide if we have a connection.
+    interceptRequests: true, //default = true
+
+     Should we automatically retest periodically when the connection is down (set to false to disable).
+
     reconnect: {
         // How many seconds should we wait before rechecking.
         initialDelay: 3,
@@ -1001,9 +1056,10 @@ Sections:
         // How long should we wait between retries.
         delay: (1.5 * last delay, capped at 1 hour)
     },
-*/
-    // Should we store and attempt to remake requests which fail while the connection is down.
-    // requests: true, //defalut = true
+
+    Should we store and attempt to remake requests which fail while the connection is down.
+    requests: true, //defalut = true
+    */
 
     window.Offline.options = {
         checks: {
@@ -1021,7 +1077,6 @@ Sections:
     //Adds Modernizr test "connected"
     window.Offline.on('up',   function(){ window.modernizrOn( 'connected'); });
     window.Offline.on('down', function(){ window.modernizrOff('connected'); });
-
 
     /*********************************************************************
     Using imagesloaded (http://imagesloaded.desandro.com) to test if any
@@ -1049,7 +1104,7 @@ Sections:
                         param = window.Url.parseQuery( srcSplit[1] );
                     }
                     param['_X_'] = new Date().getTime();
-                    image.img.src = src + '?' + window. Url.stringify( param );
+                    image.img.src = src + '?' + window.Url.stringify( param );
                 }
             });
         });
@@ -1069,6 +1124,115 @@ Sections:
         img.src = src;
     }
 
+    /*********************************************************************
+    Setting up events to use bsNoty instead of default dialog-box
+    *********************************************************************/
+
+    var offlineNotyOptions_main = {
+            layout       : 'topCenter',
+            onTop        : true,
+            onTopLayerClassName: 'noty-on-top',
+            queue        : 'offline_status',
+            defaultHeader: false,
+            closeWith    : [],
+            show         : false
+        },
+
+        offlineNotyOptions = {
+            layout       : 'center',
+            onTop        : true,
+            onTopLayerClassName: 'noty-on-top',
+            queue        :'offline_result',
+            kill         : true,
+            defaultHeader: false,
+            header       : null,
+            timeout      : 3000
+        },
+
+        //offlineNotyStatus = noty displaying status, count-down and reconnect-button
+        offlineNotyStatus = $.bsNotyInfo(
+            {icon: 'fa-circle-o-notch fa-spin', text: '&nbsp;', iconClass:'hide-for-offline-error', textClass:'hide-for-offline-error offline-remaning-text'},
+            $.extend( {
+                buttons: [{
+                    id          : 'offline_reconnect',
+                    icon        : 'fa-i-connection',
+                    text        : {da: 'Genopret', en:'Reconnect'},
+                    closeOnClick: false,
+                    onClick     : window.Offline.reconnect.tryNow
+                }]
+            }, offlineNotyOptions_main )
+        ),
+        $reconnectButton = null,
+        isFirstTick = true;
+
+    //fcoo.offlineNoty = noty displaying "No network connection" error
+    ns.offlineNoty = $.bsNotyError( {icon: $.bsNotyIcon.error, text: {da:'Ingen netværksforbindelse', en:'No network connection'}}, offlineNotyOptions_main );
+
+    //Create i18n-phrases for second(s) and minute(s) and reconnecti
+    window.i18next.addPhrases({
+        'offline_sec'         : {da: 'Genopretter om {{count}} sekund...',   en: 'Reconnecting in {{count}} second...'  },
+        'offline_sec_plural'  : {da: 'Genopretter om {{count}} sekunder...', en: 'Reconnecting in {{count}} seconds...' },
+        'offline_min'         : {da: 'Genopretter om {{count}} minut...',    en: 'Reconnecting in {{count}} minute...'  },
+        'offline_min_plural'  : {da: 'Genopretter om {{count}} minutter...', en: 'Reconnecting in {{count}} minutes...' },
+        'offline_reconnecting': {da: 'Genopretter forbindelse...', en: 'Reconnecting...'}
+    });
+
+
+    //Adding offline-events: 'down: The connection has gone from up to down => show error and offlineNoty
+    window.Offline.on('down', function(){
+        ns.offlineNoty.show();
+        isFirstTick = true;
+    });
+
+    //Adding offline-events:
+    //reconnect:tick: Fired every second during a reconnect attempt, when a check is not happening, and
+    //reconnect:connecting: We are reconnecting now => update count and set button enabled/disabled
+    window.Offline.on('reconnect:tick reconnect:connecting', function(){
+        if (isFirstTick){
+            isFirstTick = false;
+            offlineNotyStatus.show();
+        }
+
+        var remaining = window.Offline.reconnect.remaining;
+
+        $('.offline-remaning-text').text(
+            remaining >= 60 ?
+            window.i18next.t('offline_min', { count: Math.floor(remaining/60) }) :
+            remaining > 0 ?
+            window.i18next.t('offline_sec', { count: remaining                }) :
+            window.i18next.t('offline_reconnecting')
+        );
+
+        //Enable/disable reconnect-button
+        $reconnectButton = $reconnectButton || $('#offline_reconnect');
+        $reconnectButton.toggleClass('disabled', (remaining == 0) || (window.Offline.reconnect.delay == remaining));
+    });
+
+
+    //Adding offline-events: reconnect:failure: A reconnect check attempt failed
+    window.Offline.on('reconnect:failure', function(){
+        window.notyWarning( {da:'Genopretning af forbindelse fejlede', en:'Reconnecting failed'}, offlineNotyOptions );
+    });
+
+    //Adding offline-events: up: The connection has gone from down to up => hide offlineNoty adn show succes-noty
+    window.Offline.on('up', function(){
+        offlineNotyStatus.close();
+        ns.offlineNoty.close();
+        window.notySuccess( {da:'Netværksforbindelse genoprettet', en:'Network connection re-established'}, offlineNotyOptions );
+    });
+
+    /*
+    'confirmed-up',         // A connection test has succeeded, fired even if the connection was already up
+    'confirmed-down',       // A connection test has failed, fired even if the connection was already down
+    'checking',             // We are testing the connection
+    'reconnect:started',    // We are beginning the reconnect process
+    'reconnect:stopped',    // We are done attempting to reconnect
+    'reconnect:tick',       // Fired every second during a reconnect attempt, when a check is not happening
+    'reconnect:connecting', // We are reconnecting now
+    'reconnect:failure',    // A reconnect check attempt failed
+    'requests:flush',       // Any pending requests have been remade
+    'requests:capture'      // A new request is being held
+    */
 
     /***********************************************************************
     ************************************************************************
@@ -1084,7 +1248,7 @@ Sections:
             //Senrty options
             release      : ns.getApplicationOption( "{APPLICATION_VERSION}", null), //Track the version of your application in Sentry.
             //environment  : '', //Track the environment name inside Sentry. Eq. production/beta/staging
-            //serverName   :'', //Typically this would be the server name, but that doesn�t exist on all platforms.
+            //serverName   :'', //Typically this would be the server name, but that doesn’t exist on all platforms.
             //tags         : {id:'value'}, //Additional tags to assign to each event.
             whitelistUrls: [/https?:\/\/(.*\.)?fcoo\.dk/], //The inverse of ignoreUrls - Only report errors from whole urls matching a regex pattern or an exact string.
             ignoreUrls   : [],

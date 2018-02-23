@@ -43,6 +43,15 @@ adjustments to Bootstrap from fcoo/jquery-bootstrap
 
 
 /*****************************************************
+Global variables
+The z-index are set as:
+$z-index-top  : For top noty-messages
+$z-index-top-1: Background for page when not connected
+$z-index-top-2: Background when loading
+*****************************************************/
+@import "variables";
+
+/*****************************************************
 Style for FCOO logo as font
 *****************************************************/
 @import "fcoo-logo";

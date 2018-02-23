@@ -125,6 +125,23 @@ All elements in modal-windows get same margin-bottom
   font-weight: bold; }
 
 /*****************************************************
+Global variables
+The z-index are set as:
+$z-index-top  : For top noty-messages
+$z-index-top-1: Background for page when not connected
+$z-index-top-2: Background when loading
+*****************************************************/
+/*****************************************************
+WARIABLES
+Global scss-variables for fcoo-application
+*****************************************************/
+/*
+z-index for different layers:
+    $z-index-top  : Absolute top
+    $z-index-top-N: Level N below the top-layer
+
+*/
+/*****************************************************
 Style for FCOO logo as font
 *****************************************************/
 /*****************************************************
@@ -209,7 +226,7 @@ div.loading {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 2147483647;
+  z-index: 2147483645;
   background-color: #214b87;
   background-color: {APPLICATION_COLOR};
   text-align: center; }
@@ -265,14 +282,27 @@ OFFLINE-JS
 .offline-ui {
   display: none !important; }
 
-html.no-connected body {
-  box-shadow: inset 0px 0px 10px 5px red; }
-
 html.connected .hide-for-connected {
   display: none !important; }
 
 html.no-connected .show-for-connected {
   display: none !important; }
+
+.no-connected-shadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2147483646;
+  box-shadow: inset 0px 0px 10px 5px red;
+  pointer-events: none;
+  opacity: 0; }
+  .no-connected .no-connected-shadow {
+    opacity: 1; }
+
+.noty-on-top {
+  z-index: 2147483647; }
 
 /*****************************************************
 Style for html, body and main structure
