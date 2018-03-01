@@ -199,7 +199,6 @@ Set-up jquery-bootstrap-message for different type of messages
             setMessageGroupLanguage = function(){
                 messageGroup.setLanguage( ns.settings.get('language') );
             };
-
         setMessageGroupLanguage();
 
         //Change language in message-group when the global setting change
