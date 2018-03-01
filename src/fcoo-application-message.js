@@ -195,7 +195,16 @@ Set-up jquery-bootstrap-message for different type of messages
                 options
             );
 
-        var messageGroup = $.bsMessageGroup( options );
+        var messageGroup = $.bsMessageGroup( options ),
+            setMessageGroupLanguage = function(){
+                messageGroup.setLanguage( ns.settings.get('language') );
+            };
+
+        setMessageGroupLanguage();
+
+        //Change language in message-group when the global setting change
+        ns.events.on( 'languagechanged', setMessageGroupLanguage );
+
         $button.on('click', function(){ messageGroup.asBsModal( true ); });
     };
 
