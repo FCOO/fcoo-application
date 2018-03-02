@@ -254,8 +254,7 @@ Create and manage the top-menu for FCOO web applications
             logo     : true,
 
             //Get the application name from grunt.js
-            header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Sejladsudsigt", "en":"Marine Forecast"}'),
-//            header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Dansk - en meget laaaaaaaaaaaaaaaaaaang title", "en":"English"}'),
+            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'Den Danske Title', 'en':'The English Title'}"),
 
             messages : null,
             warning  : null,

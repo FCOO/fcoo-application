@@ -127,9 +127,10 @@ The position for the options must be marked with `{APPLICATION_ID` where `ID` is
 
 NOTE that all embedded options will be as strings.
 
-Tree functions is provided to use default values during development:
+Four functions is provided to use default values during development:
 
 	function getApplicationOption( fullEmbedString, developmentValue )
+	function getApplicationJSONOption( fullEmbedString, developmentValue ) //Input is a JSON-string eg. '{"id":123}' or "{'id':123}"
 	function getApplicationBooleanOption( fullEmbedString, developmentValue )
 	function getApplicationNumberOption( fullEmbedString, developmentValue )
 

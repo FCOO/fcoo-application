@@ -602,8 +602,7 @@ Create and manage the top-menu for FCOO web applications
             logo     : true,
 
             //Get the application name from grunt.js
-            header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Sejladsudsigt", "en":"Marine Forecast"}'),
-//            header   : ns.getApplicationOption( "{APPLICATION_NAME}", '{"da":"Dansk - en meget laaaaaaaaaaaaaaaaaaang title", "en":"English"}'),
+            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'Den Danske Title', 'en':'The English Title'}"),
 
             messages : null,
             warning  : null,
@@ -890,17 +889,23 @@ Sections:
     *********************************************************************/
     ns.getApplicationOption = function ( fullEmbedString, developmentValue, convertFunction ){
         convertFunction = convertFunction || function( str ){ return str; };
-        var regExp = /{APPLICATION_\w*}/g;
 
-        if (regExp.exec(fullEmbedString))
-            //fullEmbedString is hasn't been replaced => return developmentValue
-            return developmentValue;
-        else
-            //Convert the embedded value and return it
-            return convertFunction( fullEmbedString );
+        //if fullEmbedString contains "APPLICATION_" => fullEmbedString is hasn't been replaced => use developmentValue
+        var regExp = /{APPLICATION_\w*}/g;
+        return convertFunction( regExp.exec(fullEmbedString) ? developmentValue : fullEmbedString );
     };
 
-	ns.getApplicationBooleanOption = function ( fullEmbedString, developmentValue ){
+	ns.getApplicationJSONOption = function ( fullEmbedString, developmentValue ){
+        return ns.getApplicationOption( fullEmbedString, developmentValue, function( str ){
+            str = str.replace(new RegExp("\\'", 'g'), '"');
+            var result;
+            try       { result = JSON.parse(str); }
+            catch (e) { result = str; }
+            return result;
+        });
+    };
+
+    ns.getApplicationBooleanOption = function ( fullEmbedString, developmentValue ){
         return ns.getApplicationOption( fullEmbedString, developmentValue, function( value ){ return value == 'true'; });
     };
 
