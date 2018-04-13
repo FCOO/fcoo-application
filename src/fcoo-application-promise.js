@@ -41,6 +41,15 @@
             url = parts.join('/') + (url.indexOf('/') != 0 ? '/' : '') + url;
         }
 
+        //Remove any "dummy=ANYTHING" from url to prevent multi error-noty for same url (NOT PRETTY :-) )
+        if (url.indexOf('dummy=') != -1){
+            var newUrl = url.split('dummy=');
+            newUrl.pop();
+            url = newUrl.join('');
+            if ((url.charAt(url.length-1) == '&') || (url.charAt(url.length-1) == '?'))
+                url = url.slice(0, -1);
+        }
+
         var content = [
                 $('<div class="font-weight-bold"/>').i18n({da:'Fejl', en:'Error'}),
                 $('<span/>').text( message ),
@@ -54,7 +63,7 @@
         if (desc == descKey)
             desc = '';
 
-            //Create details
+        //Create details
         var details = [
                 {prompt: {da:'Kode', en:'Code'}              , property: error.status },
                 {prompt: 'Url'                               , property: url          },
@@ -80,6 +89,9 @@
         var notyId = (error.status || '999') +
                      url.replace(/\//g, "_") +
                      message.replace(/ /g, "_");
+
+
+ns.lastNotyId = notyId;
 
         //If a noty with same id already existe => flash if!
         if (promiseErrorNotys[notyId])

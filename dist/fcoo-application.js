@@ -86,7 +86,18 @@ Set-up jquery-bootstrap-message for different type of messages
                 messageGroup.options.$button.addClass('disabled');
             },
 
+            onErrorLoading : function( messageGroup ){
+                //Save the notyId
+                messageGroup.errorNotyIdList = messageGroup.errorNotyIdList || [];
+                messageGroup.errorNotyIdList.push( ns.lastNotyId );
+            },
+
             onFinishLoading: function( messageGroup ){
+                //Close all error-noty displayed during loading
+                $.each(messageGroup.errorNotyIdList || [], function(index, notyId){
+                    window.Noty.closeAll(notyId);
+                });
+
                 //Set the header to singular or plural
                 var type = messageGroup.options.type;
                 messageGroup.options.header = {
@@ -98,6 +109,7 @@ Set-up jquery-bootstrap-message for different type of messages
                 messageGroup.options.$button.removeClass('disabled');
             },
 
+
             onChange: function( messageGroup ){
                 var status = messageGroup.getAllStatus(),
                     $button = messageGroup.options.$button;
@@ -107,9 +119,10 @@ Set-up jquery-bootstrap-message for different type of messages
                         .modernizrToggle( 'all-read', !status.unread );
                     //REMOVED .toggleClass('shake-constant', !!status.unread ); //Makes button shake when there are new messages
                 }
-                else
+                else {
                     //Hide the button if there are no message
                     $button.addClass('d-none');
+                }
             }
 
         },
@@ -206,20 +219,6 @@ Set-up jquery-bootstrap-message for different type of messages
 
         $button.on('click', function(){ messageGroup.asBsModal( true ); });
     };
-
-
-
-
-
-
-
-
-
-
-	//Initialize/ready
-	$(function() {
-
-	});
 }(jQuery, this, document));
 ;
 /****************************************************************************
@@ -265,6 +264,15 @@ Set-up jquery-bootstrap-message for different type of messages
             url = parts.join('/') + (url.indexOf('/') != 0 ? '/' : '') + url;
         }
 
+        //Remove any "dummy=ANYTHING" from url to prevent multi error-noty for same url (NOT PRETTY :-) )
+        if (url.indexOf('dummy=') != -1){
+            var newUrl = url.split('dummy=');
+            newUrl.pop();
+            url = newUrl.join('');
+            if ((url.charAt(url.length-1) == '&') || (url.charAt(url.length-1) == '?'))
+                url = url.slice(0, -1);
+        }
+
         var content = [
                 $('<div class="font-weight-bold"/>').i18n({da:'Fejl', en:'Error'}),
                 $('<span/>').text( message ),
@@ -278,7 +286,7 @@ Set-up jquery-bootstrap-message for different type of messages
         if (desc == descKey)
             desc = '';
 
-            //Create details
+        //Create details
         var details = [
                 {prompt: {da:'Kode', en:'Code'}              , property: error.status },
                 {prompt: 'Url'                               , property: url          },
@@ -304,6 +312,9 @@ Set-up jquery-bootstrap-message for different type of messages
         var notyId = (error.status || '999') +
                      url.replace(/\//g, "_") +
                      message.replace(/ /g, "_");
+
+
+ns.lastNotyId = notyId;
 
         //If a noty with same id already existe => flash if!
         if (promiseErrorNotys[notyId])
@@ -1007,7 +1018,7 @@ Sections:
     //Test if the path-name contains any of the words defining the version to be none-production
     var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
 
-    $.each( ['BETA', 'STAGING','DEMO', 'TEST'], function( index, name ){
+    $.each( ['BETA', 'STAGING','DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
         if (urlStr.indexOf(name) > -1){
             $versionDiv.text( name );
             $versionDiv.addClass('with-content');

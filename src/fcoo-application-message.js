@@ -86,7 +86,18 @@ Set-up jquery-bootstrap-message for different type of messages
                 messageGroup.options.$button.addClass('disabled');
             },
 
+            onErrorLoading : function( messageGroup ){
+                //Save the notyId
+                messageGroup.errorNotyIdList = messageGroup.errorNotyIdList || [];
+                messageGroup.errorNotyIdList.push( ns.lastNotyId );
+            },
+
             onFinishLoading: function( messageGroup ){
+                //Close all error-noty displayed during loading
+                $.each(messageGroup.errorNotyIdList || [], function(index, notyId){
+                    window.Noty.closeAll(notyId);
+                });
+
                 //Set the header to singular or plural
                 var type = messageGroup.options.type;
                 messageGroup.options.header = {
@@ -98,6 +109,7 @@ Set-up jquery-bootstrap-message for different type of messages
                 messageGroup.options.$button.removeClass('disabled');
             },
 
+
             onChange: function( messageGroup ){
                 var status = messageGroup.getAllStatus(),
                     $button = messageGroup.options.$button;
@@ -107,9 +119,10 @@ Set-up jquery-bootstrap-message for different type of messages
                         .modernizrToggle( 'all-read', !status.unread );
                     //REMOVED .toggleClass('shake-constant', !!status.unread ); //Makes button shake when there are new messages
                 }
-                else
+                else {
                     //Hide the button if there are no message
                     $button.addClass('d-none');
+                }
             }
 
         },
@@ -206,18 +219,4 @@ Set-up jquery-bootstrap-message for different type of messages
 
         $button.on('click', function(){ messageGroup.asBsModal( true ); });
     };
-
-
-
-
-
-
-
-
-
-
-	//Initialize/ready
-	$(function() {
-
-	});
 }(jQuery, this, document));
