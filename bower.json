@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -45,7 +45,7 @@
     "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
     "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#^4.0.0",
-    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^3.0.0",
+    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^4.0.0",
     "noty": "^3.1.3",
     "offline": "HubSpot/offline#~0.7.18",
     "imagesloaded": "desandro/imagesloaded#~4.1.1",
@@ -76,7 +76,7 @@
     "url.js-extensions": "^2.0.0",
     "javascript-utilities": "^1.0.0",
     "fcoo-polyfill": "^3.0.0",
-    "fcoo-modernizr-mediaquery-device": "^2.0.0",
+    "fcoo-modernizr-mediaquery-device": "^4.0.0",
     "noty": "^3.1.3",
     "offline": "~0.7.18",
     "imagesloaded": "~4.1.1",

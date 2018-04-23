@@ -17733,7 +17733,7 @@ var Translator = function (_EventEmitter) {
     var _this3 = this;
 
     if (this.i18nFormat && this.i18nFormat.parse) {
-      res = this.i18nFormat.parse(res, options, resolved.usedLng, resolved.usedNS);
+      res = this.i18nFormat.parse(res, options, resolved.usedLng, resolved.usedNS, resolved.usedKey);
     } else {
       // i18next.parsing
       if (options.interpolation) this.interpolator.init(_extends({}, options, { interpolation: _extends({}, this.options.interpolation, options.interpolation) }));
@@ -18237,8 +18237,7 @@ var Interpolator = function () {
     // regular escape on demand
     while (match = this.regexp.exec(str)) {
       value = handleFormat(match[1].trim());
-      if (typeof value !== 'string') value = makeString(value);
-      if (!value) {
+      if (value === undefined) {
         if (typeof this.options.missingInterpolationHandler === 'function') {
           var temp = this.options.missingInterpolationHandler(str, match);
           value = typeof temp === 'string' ? temp : '';
@@ -18246,6 +18245,8 @@ var Interpolator = function () {
           this.logger.warn('missed to pass in variable ' + match[1] + ' for interpolating ' + str);
           value = '';
         }
+      } else if (typeof value !== 'string') {
+        value = makeString(value);
       }
       value = this.escapeValue ? regexSafe(this.escape(value)) : regexSafe(value);
       str = str.replace(match[0], value);
@@ -30487,7 +30488,7 @@ else {
     var ns = window;
 
     function ModernizrDevice( options ) {
-        this.VERSION = "3.0.2";
+        this.VERSION = "4.0.0";
 
         this.modernizr = Modernizr;
 
@@ -30536,8 +30537,8 @@ else {
         this.mobile             = function () { return this.androidPhone() || this.iphone() || this.ipod() || this.windowsPhone() || this.blackberryPhone() || this.fxosPhone() || this.meego(); };
         this.tablet             = function () { return this.ipad() || this.androidTablet() || this.blackberryTablet() || this.windowsTablet() || this.fxosTablet(); };
         this.desktop            = function () { return !this.tablet() && !this.mobile(); };
-        
-        
+
+
         if (this.options.scale){
             var docEl = document.documentElement;
             //this.devicePixelRatio = ('devicePixelRatio' in window) ? window.devicePixelRatio : 'unsupported';
@@ -30634,10 +30635,13 @@ else {
                 android: this.isAndroid
             });
 
-        if (this.options.modernizr.ie)
-            //Adding test for Internet Explore versions
-            for (var version=7; version<=10; version++ )
-                Modernizr.addTest('ie'+version, this.browser_version == 'MSIE '+version );        
+        if (this.options.modernizr.ie){
+            //Adding test for Internet Explore versions 10
+            Modernizr.addTest('ie10', this.browser_version == 'MSIE 10' );
+
+            //Adding test for Internet Explore versions 11
+            Modernizr.addTest('ie11', this.browser_version == 'IE 11');
+        }
     }
 
     // expose access to the constructor
@@ -30910,7 +30914,7 @@ else {
     /******************************************
     Initialize/ready
     *******************************************/
-    $(function() { 
+    $(function() {
 
         //Create fcoo.modernizrDevice
         ns.modernizrDevice = new window.ModernizrDevice({
@@ -30918,7 +30922,7 @@ else {
             modernizr: {
                 device: false,
                 os    : true,
-                ie    : false
+                ie    : true
             }
         });
 
@@ -34600,7 +34604,7 @@ else {
 
     addUnitAlias('date', 'D');
 
-    // PRIOROITY
+    // PRIORITY
     addUnitPriority('date', 9);
 
     // PARSING
@@ -35397,7 +35401,7 @@ else {
     // Side effect imports
 
 
-    hooks.version = '2.22.0';
+    hooks.version = '2.22.1';
 
     setHookCallback(createLocal);
 
@@ -37511,7 +37515,7 @@ else {
 }).call(this);
 ;
 //! moment-timezone.js
-//! version : 0.5.14
+//! version : 0.5.16
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -37536,7 +37540,7 @@ else {
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.14",
+	var VERSION = "0.5.16",
 		zones = {},
 		links = {},
 		names = {},
@@ -38112,7 +38116,7 @@ else {
 	}
 
 	loadData({
-		"version": "2017c",
+		"version": "2018d",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
 			"Africa/Nairobi|EAT|-30|0||47e5",
@@ -38124,6 +38128,7 @@ else {
 			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|11e6",
 			"Africa/Johannesburg|SAST|-20|0||84e5",
 			"Africa/Khartoum|EAT CAT|-30 -20|01|1Usl0|51e5",
+			"Africa/Sao_Tome|GMT WAT|0 -10|01|1UQN0",
 			"Africa/Tripoli|EET CET CEST|-20 -10 -20|0120|1IlA0 TA0 1o00|11e5",
 			"Africa/Windhoek|WAST WAT CAT|-20 -10 -20|0101010101012|1GQo0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0|32e4",
 			"America/Adak|HST HDT|a0 90|01010101010101010101010|1GIc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|326",
@@ -38133,13 +38138,13 @@ else {
 			"America/Fortaleza|-03|30|0||34e5",
 			"America/Asuncion|-03 -04|30 40|01010101010101010101010|1GTf0 1cN0 17b0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0|28e5",
 			"America/Panama|EST|50|0||15e5",
-			"America/Bahia|-02 -03|20 30|01|1GCq0|27e5",
 			"America/Mexico_City|CST CDT|60 50|01010101010101010101010|1GQw0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|20e6",
+			"America/Bahia|-02 -03|20 30|01|1GCq0|27e5",
 			"America/Managua|CST|60|0||22e5",
 			"America/La_Paz|-04|40|0||19e5",
 			"America/Lima|-05|50|0||11e6",
 			"America/Denver|MST MDT|70 60|01010101010101010101010|1GI90 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|26e5",
-			"America/Campo_Grande|-03 -04|30 40|01010101010101010101010|1GCr0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0|77e4",
+			"America/Campo_Grande|-03 -04|30 40|01010101010101010101010|1GCr0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1HB0 FX0 1HB0 FX0 1HB0 IL0 1HB0 FX0 1HB0|77e4",
 			"America/Cancun|CST CDT EST|60 50 50|01010102|1GQw0 1nX0 14p0 1lb0 14p0 1lb0 Dd0|63e4",
 			"America/Caracas|-0430 -04|4u 40|01|1QMT0|29e5",
 			"America/Chicago|CST CDT|60 50|01010101010101010101010|1GI80 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|92e5",
@@ -38160,10 +38165,10 @@ else {
 			"America/Port-au-Prince|EST EDT|50 40|010101010101010101010|1GI70 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 3iN0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|23e5",
 			"Antarctica/Palmer|-03 -04|30 40|010101010|1H3D0 Op0 1zb0 Rd0 1wn0 Rd0 46n0 Ap0|40",
 			"America/Santiago|-03 -04|30 40|010101010101010101010|1H3D0 Op0 1zb0 Rd0 1wn0 Rd0 46n0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Dd0 1Nb0 Ap0|62e5",
-			"America/Sao_Paulo|-02 -03|20 30|01010101010101010101010|1GCq0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0|20e6",
+			"America/Sao_Paulo|-02 -03|20 30|01010101010101010101010|1GCq0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1HB0 FX0 1HB0 FX0 1HB0 IL0 1HB0 FX0 1HB0|20e6",
 			"Atlantic/Azores|-01 +00|10 0|01010101010101010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|25e4",
 			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1GI5u 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|11e4",
-			"Antarctica/Casey|+11 +08|-b0 -80|010|1GAF0 blz0|10",
+			"Antarctica/Casey|+11 +08|-b0 -80|0101|1GAF0 blz0 3m10|10",
 			"Antarctica/Davis|+05 +07|-50 -70|01|1GAI0|70",
 			"Pacific/Port_Moresby|+10|-a0|0||25e4",
 			"Pacific/Guadalcanal|+11|-b0|0||11e4",
@@ -38188,7 +38193,7 @@ else {
 			"Asia/Dili|+09|-90|0||19e4",
 			"Asia/Dubai|+04|-40|0||39e5",
 			"Asia/Famagusta|EET EEST +03|-20 -30 -30|0101010101201010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 15U0 2Ks0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0",
-			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1GPy0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1220 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|18e5",
+			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1GPy0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1220 1qL0 WN0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1qL0 WN0 1qL0 WN0 1qL0|18e5",
 			"Asia/Hong_Kong|HKT|-80|0||73e5",
 			"Asia/Hovd|+07 +08|-70 -80|01010|1O8H0 1cJ0 1cP0 1cJ0|81e3",
 			"Asia/Irkutsk|+09 +08|-90 -80|01|1N7t0|60e4",
@@ -38227,6 +38232,10 @@ else {
 			"Australia/Perth|AWST|-80|0||18e5",
 			"Pacific/Easter|-05 -06|50 60|010101010101010101010|1H3D0 Op0 1zb0 Rd0 1wn0 Rd0 46n0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Dd0 1Nb0 Ap0|30e2",
 			"Europe/Dublin|GMT IST|0 -10|01010101010101010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|12e5",
+			"Etc/GMT-1|+01|-10|0|",
+			"Pacific/Fakaofo|+13|-d0|0||483",
+			"Pacific/Kiritimati|+14|-e0|0||51e2",
+			"Etc/GMT-2|+02|-20|0|",
 			"Pacific/Tahiti|-10|a0|0||18e4",
 			"Pacific/Niue|-11|b0|0||12e2",
 			"Etc/GMT+12|-12|c0|0|",
@@ -38234,10 +38243,6 @@ else {
 			"Etc/GMT+7|-07|70|0|",
 			"Pacific/Pitcairn|-08|80|0||56",
 			"Pacific/Gambier|-09|90|0||125",
-			"Etc/GMT-1|+01|-10|0|",
-			"Pacific/Fakaofo|+13|-d0|0||483",
-			"Pacific/Kiritimati|+14|-e0|0||51e2",
-			"Etc/GMT-2|+02|-20|0|",
 			"Etc/UCT|UCT|0|0|",
 			"Etc/UTC|UTC|0|0|",
 			"Europe/Astrakhan|+04 +03|-40 -30|010|1N7y0 3rd0",
@@ -38272,7 +38277,6 @@ else {
 			"Africa/Abidjan|Africa/Monrovia",
 			"Africa/Abidjan|Africa/Nouakchott",
 			"Africa/Abidjan|Africa/Ouagadougou",
-			"Africa/Abidjan|Africa/Sao_Tome",
 			"Africa/Abidjan|Africa/Timbuktu",
 			"Africa/Abidjan|America/Danmarkshavn",
 			"Africa/Abidjan|Atlantic/Reykjavik",
@@ -77565,7 +77569,7 @@ if (typeof define === 'function' && define.amd) {
   });
 }.call(this);
 ;
-/*! Raven.js 3.24.1 (f3b3500) | github.com/getsentry/raven-js */
+/*! Raven.js 3.24.2 (d92b6a2) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -77772,7 +77776,7 @@ Raven.prototype = {
   // webpack (using a build step causes webpack #1617). Grunt verifies that
   // this value matches package.json during build.
   //   See: https://github.com/getsentry/raven-js/issues/465
-  VERSION: '3.24.1',
+  VERSION: '3.24.2',
 
   debug: false,
 
@@ -78206,6 +78210,14 @@ Raven.prototype = {
 
     // stack[0] is `throw new Error(msg)` call itself, we are interested in the frame that was just before that, stack[1]
     var initialCall = isArray(stack.stack) && stack.stack[1];
+
+    // if stack[1] is `Raven.captureException`, it means that someone passed a string to it and we redirected that call
+    // to be handled by `captureMessage`, thus `initialCall` is the 3rd one, not 2nd
+    // initialCall => captureException(string) => captureMessage(string)
+    if (initialCall && initialCall.func === 'Raven.captureException') {
+      initialCall = stack.stack[2];
+    }
+
     var fileurl = (initialCall && initialCall.url) || '';
 
     if (
@@ -79003,17 +79015,30 @@ Raven.prototype = {
               status_code: null
             };
 
-            return origFetch.apply(this, args).then(function(response) {
-              fetchData.status_code = response.status;
+            return origFetch
+              .apply(this, args)
+              .then(function(response) {
+                fetchData.status_code = response.status;
 
-              self.captureBreadcrumb({
-                type: 'http',
-                category: 'fetch',
-                data: fetchData
+                self.captureBreadcrumb({
+                  type: 'http',
+                  category: 'fetch',
+                  data: fetchData
+                });
+
+                return response;
+              })
+              ['catch'](function(err) {
+                // if there is an error performing the request
+                self.captureBreadcrumb({
+                  type: 'http',
+                  category: 'fetch',
+                  data: fetchData,
+                  level: 'error'
+                });
+
+                throw err;
               });
-
-              return response;
-            });
           };
         },
         wrappedBuiltIns
@@ -79026,7 +79051,7 @@ Raven.prototype = {
       if (_document.addEventListener) {
         _document.addEventListener('click', self._breadcrumbEventHandler('click'), false);
         _document.addEventListener('keypress', self._keypressEventHandler(), false);
-      } else if(_document.attachEvent){
+      } else if (_document.attachEvent) {
         // IE8 Compatibility
         _document.attachEvent('onclick', self._breadcrumbEventHandler('click'));
         _document.attachEvent('onkeypress', self._keypressEventHandler());
@@ -79749,7 +79774,11 @@ Raven.prototype = {
   },
 
   _logDebug: function(level) {
-    if (this._originalConsoleMethods[level] && this.debug) {
+    // We allow `Raven.debug` and `Raven.config(DSN, { debug: true })` to not make backward incompatible API change
+    if (
+      this._originalConsoleMethods[level] &&
+      (this.debug || this._globalOptions.debug)
+    ) {
       // In IE<10 console methods do not have their own 'apply' method
       Function.prototype.apply.call(
         this._originalConsoleMethods[level],
@@ -80010,7 +80039,13 @@ function objectFrozen(obj) {
 }
 
 function truncate(str, max) {
-  return !max || str.length <= max ? str : str.substr(0, max) + '\u2026';
+  if (typeof max !== 'number') {
+    throw new Error('2nd argument to `truncate` function should be a number');
+  }
+  if (typeof str !== 'string' || max === 0) {
+    return str;
+  }
+  return str.length <= max ? str : str.substr(0, max) + '\u2026';
 }
 
 /**
@@ -80309,10 +80344,9 @@ function jsonSize(value) {
 }
 
 function serializeValue(value) {
-  var maxLength = 40;
-
   if (typeof value === 'string') {
-    return value.length <= maxLength ? value : value.substr(0, maxLength - 1) + '\u2026';
+    var maxLength = 40;
+    return truncate(value, maxLength);
   } else if (
     typeof value === 'number' ||
     typeof value === 'boolean' ||
