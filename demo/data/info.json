@@ -1,7 +1,7 @@
 {
     "defaults": {
         "type": "info",
-        "becomeRead": "P1Y"
+        "becomeRead": "P2Y"
     },
     "messages": [
         {
@@ -50,49 +50,49 @@
             "id": "1",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#1", "en":"This is a info message"}
         },
         {
             "id": "10",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#2", "en":"This is a info message"}
         },
         {
             "id": "11",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#11", "en":"This is a info message"}
         },
         {
             "id": "12",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#12", "en":"This is a info message"}
         },
         {
             "id": "13",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#13", "en":"This is a info message"}
         },
         {
             "id": "14",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#14", "en":"This is a info message"}
         },
         {
             "id": "15",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#15", "en":"This is a info message"}
         },
         {
             "id": "16",
             "date": "2017-01-01",
             "url": "",
-            "title": {"da":"Dette er info-besked", "en":"This is a info message"}
+            "title": {"da":"Dette er info-besked#16", "en":"This is a info message"}
         }
 
     ]
