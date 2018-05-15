@@ -373,15 +373,17 @@ body.top-menu-hidden {
   background-color: white;
   border-bottom: 1px solid black;
   text-align: center;
-  font-size: 0.9rem;
-  opacity: 0; }
-  .about-fcoo.panning {
+  font-size: 0.9rem; }
+  .about-fcoo * {
+    opacity: 1;
+    transition: opacity .2s; }
+  .about-fcoo.panning * {
     opacity: 0.6; }
-  .top-menu-extended .about-fcoo,
-  .top-menu-threshold-down ~ .about-fcoo {
+  .top-menu-extended .about-fcoo *,
+  .top-menu-threshold-down ~ .about-fcoo * {
     opacity: 1; }
-  .top-menu-threshold-up ~ .about-fcoo {
-    opacity: .6; }
+  .top-menu-threshold-up ~ .about-fcoo * {
+    opacity: 0.6; }
   .about-fcoo > * {
     margin: .5rem;
     flex-shrink: 1;

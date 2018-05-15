@@ -10365,7 +10365,7 @@ return jQuery;
 
 ;
 /*!
-  * Bootstrap v4.1.0 (https://getbootstrap.com/)
+  * Bootstrap v4.1.1 (https://getbootstrap.com/)
   * Copyright 2011-2018 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
@@ -10435,7 +10435,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): util.js
+   * Bootstrap (v4.1.1): util.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10568,7 +10568,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): alert.js
+   * Bootstrap (v4.1.1): alert.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10580,7 +10580,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'alert';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.alert';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -10617,9 +10617,11 @@ return jQuery;
 
       // Public
       _proto.close = function close(element) {
-        element = element || this._element;
+        var rootElement = this._element;
 
-        var rootElement = this._getRootElement(element);
+        if (element) {
+          rootElement = this._getRootElement(element);
+        }
 
         var customEvent = this._triggerCloseEvent(rootElement);
 
@@ -10741,7 +10743,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): button.js
+   * Bootstrap (v4.1.1): button.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10753,7 +10755,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'button';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.button';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -10905,7 +10907,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): carousel.js
+   * Bootstrap (v4.1.1): carousel.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10917,7 +10919,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'carousel';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.carousel';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -11406,7 +11408,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): collapse.js
+   * Bootstrap (v4.1.1): collapse.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -11418,7 +11420,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'collapse';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.collapse';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -11689,7 +11691,7 @@ return jQuery;
           var $this = $$$1(this);
           var data = $this.data(DATA_KEY);
 
-          var _config = _objectSpread({}, Default, $this.data(), typeof config === 'object' && config);
+          var _config = _objectSpread({}, Default, $this.data(), typeof config === 'object' && config ? config : {});
 
           if (!data && _config.toggle && /show|hide/.test(config)) {
             _config.toggle = false;
@@ -11766,7 +11768,7 @@ return jQuery;
 
   /**!
    * @fileOverview Kickass library to create and place poppers near their reference elements.
-   * @version 1.14.1
+   * @version 1.14.3
    * @license
    * Copyright (c) 2016 Federico Zivolo and contributors
    *
@@ -11789,6 +11791,7 @@ return jQuery;
    * SOFTWARE.
    */
   var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+
   var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
   var timeoutDuration = 0;
   for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
@@ -11915,40 +11918,25 @@ return jQuery;
     return getScrollParent(getParentNode(element));
   }
 
+  var isIE11 = isBrowser && !!(window.MSInputMethodContext && document.documentMode);
+  var isIE10 = isBrowser && /MSIE 10/.test(navigator.userAgent);
+
   /**
-   * Tells if you are running Internet Explorer
+   * Determines if the browser is Internet Explorer
    * @method
    * @memberof Popper.Utils
-   * @argument {number} version to check
+   * @param {Number} version to check
    * @returns {Boolean} isIE
    */
-  var cache = {};
-
-  var isIE = function () {
-    var version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
-
-    version = version.toString();
-    if (cache.hasOwnProperty(version)) {
-      return cache[version];
+  function isIE(version) {
+    if (version === 11) {
+      return isIE11;
     }
-    switch (version) {
-      case '11':
-        cache[version] = navigator.userAgent.indexOf('Trident') !== -1;
-        break;
-      case '10':
-        cache[version] = navigator.appVersion.indexOf('MSIE 10') !== -1;
-        break;
-      case 'all':
-        cache[version] = navigator.userAgent.indexOf('Trident') !== -1 || navigator.userAgent.indexOf('MSIE') !== -1;
-        break;
+    if (version === 10) {
+      return isIE10;
     }
-
-    //Set IE
-    cache.all = cache.all || Object.keys(cache).some(function (key) {
-      return cache[key];
-    });
-    return cache[version];
-  };
+    return isIE11 || isIE10;
+  }
 
   /**
    * Returns the offset parent of the given element
@@ -12701,6 +12689,7 @@ return jQuery;
 
     // compute the popper offsets
     data.offsets.popper = getPopperOffsets(this.popper, data.offsets.reference, data.placement);
+
     data.offsets.popper.position = this.options.positionFixed ? 'fixed' : 'absolute';
 
     // run the modifiers
@@ -13006,11 +12995,13 @@ return jQuery;
       position: popper.position
     };
 
-    // floor sides to avoid blurry text
+    // Avoid blurry text by using full pixel integers.
+    // For pixel-perfect positioning, top/bottom prefers rounded
+    // values, while left/right prefers floored values.
     var offsets = {
       left: Math.floor(popper.left),
-      top: Math.floor(popper.top),
-      bottom: Math.floor(popper.bottom),
+      top: Math.round(popper.top),
+      bottom: Math.round(popper.bottom),
       right: Math.floor(popper.right)
     };
 
@@ -13566,7 +13557,27 @@ return jQuery;
       boundariesElement = getOffsetParent(boundariesElement);
     }
 
+    // NOTE: DOM access here
+    // resets the popper's position so that the document size can be calculated excluding
+    // the size of the popper element itself
+    var transformProp = getSupportedPropertyName('transform');
+    var popperStyles = data.instance.popper.style; // assignment to help minification
+    var top = popperStyles.top,
+        left = popperStyles.left,
+        transform = popperStyles[transformProp];
+
+    popperStyles.top = '';
+    popperStyles.left = '';
+    popperStyles[transformProp] = '';
+
     var boundaries = getBoundaries(data.instance.popper, data.instance.reference, options.padding, boundariesElement, data.positionFixed);
+
+    // NOTE: DOM access here
+    // restores the original style properties after the offsets have been computed
+    popperStyles.top = top;
+    popperStyles.left = left;
+    popperStyles[transformProp] = transform;
+
     options.boundaries = boundaries;
 
     var order = options.priority;
@@ -14275,7 +14286,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): dropdown.js
+   * Bootstrap (v4.1.1): dropdown.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -14287,7 +14298,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'dropdown';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.dropdown';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -14757,7 +14768,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): modal.js
+   * Bootstrap (v4.1.1): modal.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -14769,7 +14780,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'modal';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.modal';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -15245,7 +15256,7 @@ return jQuery;
         return this.each(function () {
           var data = $$$1(this).data(DATA_KEY);
 
-          var _config = _objectSpread({}, Modal.Default, $$$1(this).data(), typeof config === 'object' && config);
+          var _config = _objectSpread({}, Default, $$$1(this).data(), typeof config === 'object' && config ? config : {});
 
           if (!data) {
             data = new Modal(this, _config);
@@ -15335,7 +15346,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): tooltip.js
+   * Bootstrap (v4.1.1): tooltip.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -15347,7 +15358,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'tooltip';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.tooltip';
     var EVENT_KEY = "." + DATA_KEY;
     var JQUERY_NO_CONFLICT = $$$1.fn[NAME];
@@ -15852,7 +15863,7 @@ return jQuery;
       };
 
       _proto._getConfig = function _getConfig(config) {
-        config = _objectSpread({}, this.constructor.Default, $$$1(this.element).data(), config);
+        config = _objectSpread({}, this.constructor.Default, $$$1(this.element).data(), typeof config === 'object' && config ? config : {});
 
         if (typeof config.delay === 'number') {
           config.delay = {
@@ -16002,7 +16013,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): popover.js
+   * Bootstrap (v4.1.1): popover.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -16014,7 +16025,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'popover';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.popover';
     var EVENT_KEY = "." + DATA_KEY;
     var JQUERY_NO_CONFLICT = $$$1.fn[NAME];
@@ -16199,7 +16210,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): scrollspy.js
+   * Bootstrap (v4.1.1): scrollspy.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -16211,7 +16222,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'scrollspy';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.scrollspy';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -16338,7 +16349,7 @@ return jQuery;
 
 
       _proto._getConfig = function _getConfig(config) {
-        config = _objectSpread({}, Default, config);
+        config = _objectSpread({}, Default, typeof config === 'object' && config ? config : {});
 
         if (typeof config.target !== 'string') {
           var id = $$$1(config.target).attr('id');
@@ -16511,7 +16522,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): tab.js
+   * Bootstrap (v4.1.1): tab.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -16523,7 +16534,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'tab';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.tab';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -16759,7 +16770,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.0.0): index.js
+   * Bootstrap (v4.1.1): index.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -17274,9 +17285,7 @@ var EventEmitter = function () {
     if (this.observers['*']) {
       var _cloned = [].concat(this.observers['*']);
       _cloned.forEach(function (observer) {
-        var _ref;
-
-        observer.apply(observer, (_ref = [event]).concat.apply(_ref, args));
+        observer.apply(observer, [event].concat(args));
       });
     }
   };
@@ -17402,6 +17411,9 @@ var ResourceStore = function (_EventEmitter) {
 
     _this.data = data || {};
     _this.options = options;
+    if (_this.options.keySeparator === undefined) {
+      _this.options.keySeparator = '.';
+    }
     return _this;
   }
 
@@ -17421,8 +17433,7 @@ var ResourceStore = function (_EventEmitter) {
   ResourceStore.prototype.getResource = function getResource(lng, ns, key) {
     var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
-    var keySeparator = options.keySeparator || this.options.keySeparator;
-    if (keySeparator === undefined) keySeparator = '.';
+    var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
 
     var path = [lng, ns];
     if (key && typeof key !== 'string') path = path.concat(key);
@@ -17552,6 +17563,10 @@ var Translator = function (_EventEmitter) {
     copy(['resourceStore', 'languageUtils', 'pluralResolver', 'interpolator', 'backendConnector', 'i18nFormat'], services, _this);
 
     _this.options = options;
+    if (_this.options.keySeparator === undefined) {
+      _this.options.keySeparator = '.';
+    }
+
     _this.logger = baseLogger.create('translator');
     return _this;
   }
@@ -17570,7 +17585,8 @@ var Translator = function (_EventEmitter) {
   Translator.prototype.extractFromKey = function extractFromKey(key, options) {
     var nsSeparator = options.nsSeparator || this.options.nsSeparator;
     if (nsSeparator === undefined) nsSeparator = ':';
-    var keySeparator = options.keySeparator || this.options.keySeparator || '.';
+
+    var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
 
     var namespaces = options.ns || this.options.defaultNS;
     if (nsSeparator && key.indexOf(nsSeparator) > -1) {
@@ -17601,7 +17617,7 @@ var Translator = function (_EventEmitter) {
     if (typeof keys === 'string') keys = [keys];
 
     // separators
-    var keySeparator = options.keySeparator || this.options.keySeparator || '.';
+    var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
 
     // get namespace(s)
 
@@ -17642,7 +17658,7 @@ var Translator = function (_EventEmitter) {
 
       // if we got a separator we loop over children - else we just return object as is
       // as having it set to false means no hierarchy so no lookup for nested values
-      if (options.keySeparator || this.options.keySeparator) {
+      if (keySeparator) {
         var copy$$1 = resType === '[object Array]' ? [] : {}; // apply child translation on a copy
 
         /* eslint no-restricted-syntax: 0 */
@@ -17734,7 +17750,7 @@ var Translator = function (_EventEmitter) {
 
     if (this.i18nFormat && this.i18nFormat.parse) {
       res = this.i18nFormat.parse(res, options, resolved.usedLng, resolved.usedNS, resolved.usedKey);
-    } else {
+    } else if (!options.skipInterpolation) {
       // i18next.parsing
       if (options.interpolation) this.interpolator.init(_extends({}, options, { interpolation: _extends({}, this.options.interpolation, options.interpolation) }));
 
@@ -18579,7 +18595,6 @@ function get$1() {
       if (args[2]) ret.tDescription = args[2];
       return ret;
     },
-
     interpolation: {
       escapeValue: true,
       format: function format(value, _format, lng) {
@@ -37515,7 +37530,7 @@ else {
 }).call(this);
 ;
 //! moment-timezone.js
-//! version : 0.5.16
+//! version : 0.5.17
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -37540,7 +37555,7 @@ else {
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.16",
+	var VERSION = "0.5.17",
 		zones = {},
 		links = {},
 		names = {},
@@ -38116,7 +38131,7 @@ else {
 	}
 
 	loadData({
-		"version": "2018d",
+		"version": "2018e",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
 			"Africa/Nairobi|EAT|-30|0||47e5",
@@ -38130,7 +38145,7 @@ else {
 			"Africa/Khartoum|EAT CAT|-30 -20|01|1Usl0|51e5",
 			"Africa/Sao_Tome|GMT WAT|0 -10|01|1UQN0",
 			"Africa/Tripoli|EET CET CEST|-20 -10 -20|0120|1IlA0 TA0 1o00|11e5",
-			"Africa/Windhoek|WAST WAT CAT|-20 -10 -20|0101010101012|1GQo0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0|32e4",
+			"Africa/Windhoek|CAT WAT|-20 -10|0101010101010|1GQo0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0|32e4",
 			"America/Adak|HST HDT|a0 90|01010101010101010101010|1GIc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|326",
 			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1GIb0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|30e4",
 			"America/Santo_Domingo|AST|40|0||29e5",
@@ -38211,7 +38226,7 @@ else {
 			"Europe/Athens|EET EEST|-20 -30|01010101010101010101010|1GNB0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|35e5",
 			"Asia/Novosibirsk|+07 +06|-70 -60|010|1N7v0 4eN0|15e5",
 			"Asia/Omsk|+07 +06|-70 -60|01|1N7v0|12e5",
-			"Asia/Pyongyang|KST KST|-90 -8u|01|1P4D0|29e5",
+			"Asia/Pyongyang|KST KST|-90 -8u|010|1P4D0 6BAu|29e5",
 			"Asia/Rangoon|+0630|-6u|0||48e5",
 			"Asia/Sakhalin|+11 +10|-b0 -a0|010|1N7r0 3rd0|58e4",
 			"Asia/Seoul|KST|-90|0||23e6",
@@ -77569,7 +77584,7 @@ if (typeof define === 'function' && define.amd) {
   });
 }.call(this);
 ;
-/*! Raven.js 3.24.2 (d92b6a2) | github.com/getsentry/raven-js */
+/*! Raven.js 3.25.1 (b6f3c7a) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -77645,10 +77660,12 @@ var md5 = _dereq_(8);
 var RavenConfigError = _dereq_(1);
 
 var utils = _dereq_(5);
+var isErrorEvent = utils.isErrorEvent;
+var isDOMError = utils.isDOMError;
+var isDOMException = utils.isDOMException;
 var isError = utils.isError;
 var isObject = utils.isObject;
 var isPlainObject = utils.isPlainObject;
-var isErrorEvent = utils.isErrorEvent;
 var isUndefined = utils.isUndefined;
 var isFunction = utils.isFunction;
 var isString = utils.isString;
@@ -77776,7 +77793,7 @@ Raven.prototype = {
   // webpack (using a build step causes webpack #1617). Grunt verifies that
   // this value matches package.json during build.
   //   See: https://github.com/getsentry/raven-js/issues/465
-  VERSION: '3.24.2',
+  VERSION: '3.25.1',
 
   debug: false,
 
@@ -78108,6 +78125,23 @@ Raven.prototype = {
     if (isErrorEvent(ex) && ex.error) {
       // If it is an ErrorEvent with `error` property, extract it to get actual Error
       ex = ex.error;
+    } else if (isDOMError(ex) || isDOMException(ex)) {
+      // If it is a DOMError or DOMException (which are legacy APIs, but still supported in some browsers)
+      // then we just extract the name and message, as they don't provide anything else
+      // https://developer.mozilla.org/en-US/docs/Web/API/DOMError
+      // https://developer.mozilla.org/en-US/docs/Web/API/DOMException
+      var name = ex.name || (isDOMError(ex) ? 'DOMError' : 'DOMException');
+      var message = ex.message ? name + ': ' + ex.message : name;
+
+      return this.captureMessage(
+        message,
+        objectMerge(options, {
+          // neither DOMError or DOMException provide stack trace and we most likely wont get it this way as well
+          // but it's barely any overhead so we may at least try
+          stacktrace: true,
+          trimHeadFrames: options.trimHeadFrames + 1
+        })
+      );
     } else if (isError(ex)) {
       // we have a real Error object
       ex = ex;
@@ -78119,6 +78153,7 @@ Raven.prototype = {
       ex = new Error(options.message);
     } else {
       // If none of previous checks were valid, then it means that
+      // it's not a DOMError/DOMException
       // it's not a plain Object
       // it's not a valid ErrorEvent (one with an error property)
       // it's not an Error
@@ -79067,8 +79102,8 @@ Raven.prototype = {
     var hasPushAndReplaceState =
       !isChromePackagedApp &&
       _window.history &&
-      history.pushState &&
-      history.replaceState;
+      _window.history.pushState &&
+      _window.history.replaceState;
     if (autoBreadcrumbs.location && hasPushAndReplaceState) {
       // TODO: remove onpopstate handler on uninstall()
       var oldOnPopState = _window.onpopstate;
@@ -79097,8 +79132,8 @@ Raven.prototype = {
         };
       };
 
-      fill(history, 'pushState', historyReplacementFunction, wrappedBuiltIns);
-      fill(history, 'replaceState', historyReplacementFunction, wrappedBuiltIns);
+      fill(_window.history, 'pushState', historyReplacementFunction, wrappedBuiltIns);
+      fill(_window.history, 'replaceState', historyReplacementFunction, wrappedBuiltIns);
     }
 
     if (autoBreadcrumbs.console && 'console' in _window && console.log) {
@@ -79388,7 +79423,7 @@ Raven.prototype = {
 
     if (this._hasNavigator && _navigator.userAgent) {
       httpData.headers = {
-        'User-Agent': navigator.userAgent
+        'User-Agent': _navigator.userAgent
       };
     }
 
@@ -79891,7 +79926,7 @@ function isObject(what) {
 // Yanked from https://git.io/vS8DV re-used under CC0
 // with some tiny modifications
 function isError(value) {
-  switch ({}.toString.call(value)) {
+  switch (Object.prototype.toString.call(value)) {
     case '[object Error]':
       return true;
     case '[object Exception]':
@@ -79904,7 +79939,15 @@ function isError(value) {
 }
 
 function isErrorEvent(value) {
-  return supportsErrorEvent() && {}.toString.call(value) === '[object ErrorEvent]';
+  return Object.prototype.toString.call(value) === '[object ErrorEvent]';
+}
+
+function isDOMError(value) {
+  return Object.prototype.toString.call(value) === '[object DOMError]';
+}
+
+function isDOMException(value) {
+  return Object.prototype.toString.call(value) === '[object DOMException]';
 }
 
 function isUndefined(what) {
@@ -79941,6 +79984,24 @@ function isEmptyObject(what) {
 function supportsErrorEvent() {
   try {
     new ErrorEvent(''); // eslint-disable-line no-new
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function supportsDOMError() {
+  try {
+    new DOMError(''); // eslint-disable-line no-new
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function supportsDOMException() {
+  try {
+    new DOMException(''); // eslint-disable-line no-new
     return true;
   } catch (e) {
     return false;
@@ -80462,6 +80523,8 @@ module.exports = {
   isObject: isObject,
   isError: isError,
   isErrorEvent: isErrorEvent,
+  isDOMError: isDOMError,
+  isDOMException: isDOMException,
   isUndefined: isUndefined,
   isFunction: isFunction,
   isPlainObject: isPlainObject,
@@ -80469,6 +80532,8 @@ module.exports = {
   isArray: isArray,
   isEmptyObject: isEmptyObject,
   supportsErrorEvent: supportsErrorEvent,
+  supportsDOMError: supportsDOMError,
+  supportsDOMException: supportsDOMException,
   supportsFetch: supportsFetch,
   supportsReferrerPolicy: supportsReferrerPolicy,
   supportsPromiseRejectionEvent: supportsPromiseRejectionEvent,
@@ -80528,8 +80593,22 @@ var ERROR_TYPES_RE = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Ran
 
 function getLocationHref() {
   if (typeof document === 'undefined' || document.location == null) return '';
-
   return document.location.href;
+}
+
+function getLocationOrigin() {
+  if (typeof document === 'undefined' || document.location == null) return '';
+
+  // Oh dear IE10...
+  if (!document.location.origin) {
+    document.location.origin =
+      document.location.protocol +
+      '//' +
+      document.location.hostname +
+      (document.location.port ? ':' + document.location.port : '');
+  }
+
+  return document.location.origin;
 }
 
 /**
@@ -80937,6 +81016,44 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
       if (!element.func && element.line) {
         element.func = UNKNOWN_FUNCTION;
+      }
+
+      if (element.url && element.url.substr(0, 5) === 'blob:') {
+        // Special case for handling JavaScript loaded into a blob.
+        // We use a synchronous AJAX request here as a blob is already in
+        // memory - it's not making a network request.  This will generate a warning
+        // in the browser console, but there has already been an error so that's not
+        // that much of an issue.
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', element.url, false);
+        xhr.send(null);
+
+        // If we failed to download the source, skip this patch
+        if (xhr.status === 200) {
+          var source = xhr.responseText || '';
+
+          // We trim the source down to the last 300 characters as sourceMappingURL is always at the end of the file.
+          // Why 300? To be in line with: https://github.com/getsentry/sentry/blob/4af29e8f2350e20c28a6933354e4f42437b4ba42/src/sentry/lang/javascript/processor.py#L164-L175
+          source = source.slice(-300);
+
+          // Now we dig out the source map URL
+          var sourceMaps = source.match(/\/\/# sourceMappingURL=(.*)$/);
+
+          // If we don't find a source map comment or we find more than one, continue on to the next element.
+          if (sourceMaps) {
+            var sourceMapAddress = sourceMaps[1];
+
+            // Now we check to see if it's a relative URL.
+            // If it is, convert it to an absolute one.
+            if (sourceMapAddress.charAt(0) === '~') {
+              sourceMapAddress = getLocationOrigin() + sourceMapAddress.slice(1);
+            }
+
+            // Now we strip the '.map' off of the end of the URL and update the
+            // element so that Sentry can match the map to the blob.
+            element.url = sourceMapAddress.slice(0, -4);
+          }
+        }
       }
 
       stack.push(element);
