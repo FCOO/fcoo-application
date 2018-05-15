@@ -7,6 +7,12 @@ Style for the <div> covering the page during loading
 @include show-and-hide-for-modernizr-test( loading, html, false, '', false );
 
 
+@keyframes flashingLogo {
+    0%   {opacity: 1;  }
+    50%  {opacity:  .5;}
+    100% {opacity: 1;  }
+}
+
 
 div.loading {
     $duration: 0.4s; //Duration of the fade-in and fade-out
@@ -65,12 +71,17 @@ div.loading {
                 background-repeat  : no-repeat;
                 background-size    : contain;
                 background-position: center center;
+
+                animation-name           : flashingLogo;
+                animation-duration       : 2s;
+                animation-fill-mode      : both;
+                animation-iteration-count: infinite;
             }
 
-            &.working {
-                height     : 3rem;
-                font-size  : 1rem;
-            }
+//REMOVED            &.working {
+//REMOVED                height     : 3rem;
+//REMOVED                font-size  : 1rem;
+//REMOVED            }
         }
     }
 

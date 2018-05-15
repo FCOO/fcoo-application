@@ -233,6 +233,14 @@ html.loading .hide-for-loading {
 html.no-loading .show-for-loading {
   display: none !important; }
 
+@keyframes flashingLogo {
+  0% {
+    opacity: 1; }
+  50% {
+    opacity: .5; }
+  100% {
+    opacity: 1; } }
+
 div.loading {
   position: absolute;
   left: 0;
@@ -272,10 +280,11 @@ div.loading {
         background-image: url("images/FCOO_logo_notext.svg");
         background-repeat: no-repeat;
         background-size: contain;
-        background-position: center center; }
-      html.loading div.loading > div.working {
-        height: 3rem;
-        font-size: 1rem; }
+        background-position: center center;
+        animation-name: flashingLogo;
+        animation-duration: 2s;
+        animation-fill-mode: both;
+        animation-iteration-count: infinite; }
   html.no-loading div.loading {
     width: 0;
     height: 0;

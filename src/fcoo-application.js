@@ -194,13 +194,14 @@ Sections:
         }
     });
 
-    //Create and append div with logo
-    $('<div class="logo fcoo-app-color animated fadeIn"></div>')
-        .appendTo( $loadingDiv );
+    if (!$versionDiv.find('div.logo').length)
+        //Create and append div with logo
+        $('<div class="logo fcoo-app-color"></div>')
+            .appendTo( $loadingDiv );
 
     //Create and append div with working-icon
-    $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>')
-        .appendTo( $loadingDiv );
+//REMOVED    $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>')
+//REMOVED        .appendTo( $loadingDiv );
 
     //Call Url.adjustUrl() to remove broken values in the url
     window.Url.adjustUrl();
