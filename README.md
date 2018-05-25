@@ -204,22 +204,10 @@ Sets the breakpoints as:
 See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-mediaquery-device) for a complete list of test included
 
 ---
-### [normalize.css](https://github.com/necolas/normalize.css/)
 
----
-### [noty](https://github.com/needim/noty)
-
----
 ### [Offline.js](http://github.hubspot.com/offline/docs/welcome/)
 
 *Offline.js is a library to automatically alert your users when they've lost internet connectivity, like Gmail. It captures AJAX requests which were made while the connection was down, and remakes them when it's back up, so your app reacts perfectly.*
-
-For the current version of fcoo-application `Offline.js` is:
-- using the theme named **Chrome** , and
-- supporting **English** as default
-
-A Danish translation is in `/src/_danish.sass`
-The danish text is used if `<html>` has class=`"lang-da"`
 
 #### Modernizr 
 A Modernizr test named `"connected"` is added. 

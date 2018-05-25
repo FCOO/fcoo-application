@@ -11,10 +11,10 @@ Sections:
 1: Namespace, application states, system variables
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
-4: Set up different Modernizr tests and initialize jquery-bootstrap
-5: Initialize offline.js - http://github.hubspot.com/offline/
-6: Initialize raven to report all uncaught exceptions to sentry AND
+4: Initialize offline.js - http://github.hubspot.com/offline/
+5: Initialize raven to report all uncaught exceptions to sentry AND
    Adding the Piwik Tracking Code
+6: Set up and initialize jquery-bootstrap
 7: Set-up jquery-bootstrap-message for different type of messages
 8: Set-up standard error-handler and message for promise
 ****************************************************************************/
@@ -209,19 +209,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    4: Set up different Modernizr tests and initialize jquery-bootstrap
-    ************************************************************************
-    ***********************************************************************/
-    //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
-    //We are using the Modernizr test touchevents
-    $(function() {
-        window.bsIsTouch = window.fcoo.modernizr.touchevents;
-    });
-
-
-    /***********************************************************************
-    ************************************************************************
-    5: Initialize offline.js - http://github.hubspot.com/offline/
+    4: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
     //Add modernizr-test-style connected
@@ -318,7 +306,6 @@ Sections:
     /*********************************************************************
     Setting up events to use bsNoty instead of default dialog-box
     *********************************************************************/
-
     var offlineNotyOptions_main = {
             layout       : 'topCenter',
             onTop        : true,
@@ -427,7 +414,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    6: Initialize raven to report all uncaught exceptions to sentry AND
+    5: Initialize raven to report all uncaught exceptions to sentry AND
        Adding the Piwik Tracking Code
     ************************************************************************
     ***********************************************************************/
@@ -466,6 +453,19 @@ Sections:
     }
 
 */
+    /***********************************************************************
+    ************************************************************************
+    6: Set up and initialize jquery-bootstrap
+    ************************************************************************
+    ***********************************************************************/
+    //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
+    //We are using the Modernizr test touchevents
+    $(function() {
+        window.bsIsTouch = window.fcoo.modernizr.touchevents;
+    });
+
+    //Set default fontawesome prefix to 'regular'
+    $.FONTAWESOME_PREFIX = 'far';
 
     /***********************************************************************
     ************************************************************************

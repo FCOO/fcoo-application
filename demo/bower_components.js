@@ -68919,6 +68919,20 @@ TODO:
             $this.removeClass('show');
     }
 
+
+    //card_onShow_close_siblings: Close all open siblings when card is shown
+    function card_onShow_close_siblings(){
+        $(this).siblings('.show').children('.collapse').collapse('hide');
+    }
+
+    //card_onShown_close_siblings: Close all open siblings when card is shown BUT without animation
+    function card_onShown_close_siblings(){
+        var $this = $(this);
+        $this.addClass('no-transition');
+        card_onShow_close_siblings.call(this);
+        $this.removeClass('no-transition');
+    }
+
     /**********************************************************
     bsAccordion( options ) - create a Bootstrap-accordion
 
@@ -68955,10 +68969,9 @@ TODO:
                );
     }
 
-    $.bsAccordion = function( options ){
+    $.bsAccordion = function( options, insideFormGroup ){
 
         var id = 'bsAccordion'+ accordionId++;
-
         options =
             $._bsAdjustOptions( options, {}, {
                 baseClass   : 'accordion',
@@ -68971,9 +68984,9 @@ TODO:
         var $result = $('<div/>')
                         ._bsAddBaseClassAndSize( options )
                         .attr({
-                            'id'  : id,
-                            'tabindex'   : -1,
-                            'role': "tablist",
+                            'id'      : id,
+                            'tabindex': -1,
+                            'role'    : "tablist",
                             'aria-multiselectable': true
                         });
 
@@ -68986,8 +68999,11 @@ TODO:
                 collapseId = id + 'collapse'+index,
                 $card = $('<div/>')
                             .addClass('card')
+                            .attr({'data-user-id': opt.id || null})
                             .on( 'shown.bs.collapse',  card_onShown )
-                            .on( 'hidden.bs.collapse',  card_onHidden )
+                            .on( 'hidden.bs.collapse', card_onHidden )
+                            .on( 'show.bs.collapse',   options.multiOpen ? null : card_onShow_close_siblings )
+                            .on( 'shown.bs.collapse',  options.multiOpen ? null : card_onShown_close_siblings )
                             .appendTo( $result );
 
             //Add header
@@ -69035,13 +69051,7 @@ TODO:
 
             //Add content: string, element, function or children (=accordion)
                 if (opt.content)
-                    $contentContainer._bsAppendContent( opt.content );
-//HER               if (opt.content){
-//HER                   if ($.isFunction( opt.content ))
-//HER                       opt.content( $contentContainer );
-//HER                   else
-//HER                       $contentContainer.append( opt.content );
-//HER               }
+                    $contentContainer._bsAppendContent( opt.content, insideFormGroup );
 
             //If opt.list exists => create a accordion inside $contentContainer
             if ($.isArray(opt.list))
@@ -69049,15 +69059,27 @@ TODO:
                     .appendTo( $contentContainer );
         });
 
-
         $result.collapse(/*options*/);
-
-
         $result.asModal = bsAccordion_asModal;
-
 
         return $result;
     };
+
+
+    //Extend $.fn with method to open a card given by id (string) or index (integer)
+    $.fn.bsOpenCard = function( indexOrId ){
+        this.addClass('no-transition');
+        var $card =
+                this.children(
+                    $.type(indexOrId) == 'number' ?
+                    'div.card:nth-of-type('+(indexOrId+1)+')' :
+                    'div.card[data-user-id="' + indexOrId + '"]'
+                );
+        if ($card && $card.length)
+            $card.children('.collapse').collapse('show');
+        this.removeClass('no-transition');
+    };
+
 
     /**********************************************************
     bsModalAccordion
@@ -69119,7 +69141,6 @@ TODO:
                 addOnClick    : true
             });
 
-
         var result = $('<'+ options.tagName + ' tabindex="0"/>');
 
         //Adding href that don't scroll to top to allow anchor to get focus
@@ -69127,7 +69148,7 @@ TODO:
             result.prop('href', 'javascript:undefined');
 
         result
-            ._bsAddName( options )
+            ._bsAddIdAndName( options )
             ._bsAddBaseClassAndSize( options );
 
         if (options.id)
@@ -69297,10 +69318,11 @@ TODO:
     bsCheckbox( options ) - create a Bootstrap checkbox
     **********************************************************/
     $.bsCheckbox = function( options ){
+        options.type = options.type || 'checkbox';
         options =
             $._bsAdjustOptions( options, {
                 useTouchSize: true,
-                baseClass   : options.type || 'checkbox'
+                baseClass   : options.type
             });
 
         //Create outer div
@@ -69313,7 +69335,7 @@ TODO:
                         type   : 'checkbox',
                         checked: options.selected
                     })
-                    ._bsAddName( options )
+                    ._bsAddIdAndName( options )
                     .appendTo( $result );
 
         //Create input-element as checkbox from jquery-checkbox-radio-group
@@ -69327,6 +69349,11 @@ TODO:
         var $label = $('<label/>')
                         .prop('for', id )
                         .appendTo( $result );
+
+        //Add <i> with check-icon if it is a checkbox
+        if (options.type == 'checkbox')
+            $('<i class="fas fa-check"/>').appendTo( $label );
+
         if (options.text)
             $('<span/>').i18n( options.text ).appendTo( $label );
 
@@ -69337,7 +69364,115 @@ TODO:
 
 ;
 /****************************************************************************
-	jquery-bootstrap-form.js,
+	jquery-bootstrap-header.js,
+
+	(c) 2017, FCOO
+
+	https://github.com/fcoo/jquery-bootstrap
+	https://github.com/fcoo
+
+****************************************************************************/
+
+(function ($ /*, window, document, undefined*/) {
+	"use strict";
+
+    /*
+    A header can contain any of the following icons:
+    back (<)
+    forward (>)
+    extend (^)
+    diminish
+    pin
+    pinned
+
+    close (x)
+
+    */
+
+    //$.bsHeaderIcons = class-names for the different icons on the header
+    $.bsHeaderIcons = {
+        back    : 'fa-chevron-left',
+        forward : 'fa-chevron-right',
+        extend  : 'fa-chevron-up',
+        diminish: 'fa-chevron-down',
+        pin     : 'fa-thumbtack',
+        pinned  : 'fa-thumbtack',
+        close   : 'fas fa-times',
+    };
+
+    //mandatoryHeaderIconClass = mandatory class-names and title for the different icons on the header
+    var mandatoryHeaderIconClassAndTitle = {
+        close: {class:'header-icon-close', title: {da:'Luk', en:'Close'}},
+    };
+
+    /******************************************************
+    _bsHeaderAndIcons(options)
+    Create the text and icon content of a header inside this
+    options: {
+        headerClassName: [string]
+        icons: {
+            back, forward, ..., close: { title: [string], disabled: [boolean], className: [string], altEvents: [string], onClick: [function] },
+        }
+    }
+
+    ******************************************************/
+
+    function checkDisabled( event ){
+        var $target = $(event.target);
+        if ($target.hasClass('disabled') || $target.prop('disabled'))
+            event.stopImmediatePropagation();
+    }
+
+    $.fn._bsHeaderAndIcons = function(options){
+        var $this = this;
+
+        options = $.extend( true, {headerClassName: '', icons: {} }, options );
+
+        this
+            .addClass( options.headerClassName )
+            ._bsAddHtml( options.header || $.EMPTY_TEXT );
+
+        //Add icons (if any)
+        if ( !$.isEmptyObject(options.icons) ) {
+            //Container for icons
+            var $iconContainer =
+                    $('<div/>')
+                        ._bsAddBaseClassAndSize( {
+                            baseClass   :'header-icon-container',
+                            useTouchSize: true
+                        })
+                        .appendTo( this );
+
+            //Add icons
+            $.each( ['back', 'forward', 'pin', 'extend', 'diminish', 'close'], function( index, id ){
+                var iconOptions = options.icons[id],
+                    classAndTitle = mandatoryHeaderIconClassAndTitle[id] || {};
+                if (iconOptions && iconOptions.onClick){
+
+                    $._bsCreateIcon(
+                        $.bsHeaderIcons[id] + ' header-icon ' + (classAndTitle.class || ''),
+                        $iconContainer,
+                        iconOptions.title || classAndTitle.title || '',
+                        iconOptions.className
+                    )
+                    .toggleClass('disabled', !!iconOptions.disabled)
+                    .attr('data-header-icon-id', id)
+                    .on('click', checkDisabled)
+                    .on('click', iconOptions.onClick);
+
+                    //Add alternative (swipe) event
+                    if (iconOptions.altEvents)
+                        $this.on( iconOptions.altEvents, iconOptions.onClick );
+                }
+            });
+        }
+        return this;
+    };
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+	jquery-bootstrap-input.js,
 
 	(c) 2017, FCOO
 
@@ -69356,90 +69491,16 @@ TODO:
         ******************************************************/
         bsInput: function( options ){
             return  $('<input/>')
-                        ._bsAddName( options )
+                        ._bsAddIdAndName( options )
                         .addClass('form-control-border form-control')
                         .attr('type', 'text')
                         ._wrapLabel(options);
         },
 
-        /******************************************************
-        The default bootstrap structure used for elements in a form is
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-prepend">               //optional
-                    <button class="btn btn-standard">..</buton> //optional 1-N times
-                </div>                                          //optional
-
-                <label class="has-float-label">
-                    <input class="form-control form-control-with-label" type="text" placeholder="The placeholder...">
-                    <span>The label</span>
-                </label>
-
-                <div class="input-group-append">                //optional
-                    <button class="btn btn-standard">..</buton> //optional 1-N times
-                </div>                                          //optional
-            </div>
-        </div>
-        ******************************************************/
-
-        /******************************************************
-        $.bsInputGroup
-        Create <div class="input-group"> with a input-control inside as descripted above
-        ******************************************************/
-        bsInputGroup: function( options, type ){
-            return $divXXGroup('input-group', options)
-                       ._bsAppendContent(options, type || 'input');
-        },
-
-        /******************************************************
-        $.bsFormGroup
-        Create <div class="form-group"><div class="input-group"> with a input-control inside as descripted above
-        ******************************************************/
-        bsFormGroup: function( options, type ){
-            return  $.bsInputGroup(options, type)
-                        ._wrapFormGroup(options);
-        }
-
     }); //$.extend({
 
 
-    /******************************************************
-    $divXXGroup
-    ******************************************************/
-    function $divXXGroup( groupTypeClass, options ){
-        return $('<div/>')
-                   ._bsAddBaseClassAndSize( $.extend({}, options, {
-                       baseClass   : groupTypeClass,
-                       useTouchSize: true
-                   }));
-    }
-
-
     $.fn.extend({
-        /******************************************************
-        $.fn._wrapFormGroup( options )
-        Wrap the element inside a form-group with a small-element to hold error-message
-        Return
-        <div class="form-group [form-group-sm/xs]">
-            element
-        </div>
-        ******************************************************/
-        _wrapFormGroup: function(options){
-            return $divXXGroup('form-group', options).append( this );
-        },
-
-        /******************************************************
-        $.fn._wrapInputGroup( options )
-        Wrap the element inside a input-group
-        Return
-        <div class="input-group [input-group-sm/xs]">
-            element
-        </div>
-        ******************************************************/
-        _wrapInputGroup: function(options){
-            return $divXXGroup('input-group', options).append( this );
-        },
-
         /******************************************************
         _wrapLabel( options )
         Wrap the element inside a <label> and add
@@ -69471,81 +69532,6 @@ TODO:
 
     }); //$.fn.extend({
 
-
-}(jQuery, this, document));
-;
-/****************************************************************************
-	jquery-bootstrap-header.js,
-
-	(c) 2017, FCOO
-
-	https://github.com/fcoo/jquery-bootstrap
-	https://github.com/fcoo
-
-****************************************************************************/
-
-(function ($ /*, window, document, undefined*/) {
-	"use strict";
-
-    /******************************************************
-    _bsHeaderAndIcons(options)
-    Create the text and icon content of a header inside this
-    options: {
-        headerClassName: [string]
-        icons: {
-            close   : { className: [string], altEvents: [string], onClick: [function] },
-            extend  : { className: [string], altEvents: [string], onClick: [function] },
-            diminish: { className: [string], altEvents: [string], onClick: [function] },
-        }
-    }
-
-    ******************************************************/
-    $.fn._bsHeaderAndIcons = function(options){
-        var $this = this;
-
-        options = $.extend( true,
-            {
-                headerClassName: '',
-                icons          : {}
-            },
-            options
-        );
-
-        this
-            .addClass( options.headerClassName )
-            ._bsAddHtml( options.header || $.EMPTY_TEXT );
-
-        //Add icons (if any)
-        if ( !$.isEmptyObject(options.icons) ) {
-            //Container for icons
-            var $iconContainer =
-                    $('<div/>')
-                        ._bsAddBaseClassAndSize( {
-                            baseClass   :'header-icon-container',
-                            useTouchSize: true
-                        })
-                        .appendTo( this );
-
-            //Add icons
-            $.each( ['diminish', 'extend', 'close'], function( index, id ){
-                var iconOptions = options.icons[id];
-                if (iconOptions && iconOptions.onClick){
-                    $('<i/>')
-                        .addClass('header-icon header-icon-' + id )
-                        .addClass( iconOptions.className || '')
-                        .on('click', iconOptions.onClick)
-                        .attr( iconOptions.attr || {})
-                        .data( iconOptions.data || {})
-                        .appendTo($iconContainer);
-
-                    //Add alternative (swipe) event
-                    if (iconOptions.altEvents)
-                        $this.on( iconOptions.altEvents, iconOptions.onClick );
-                }
-            });
-        }
-        return this;
-    };
 
 }(jQuery, this, document));
 ;
@@ -69780,7 +69766,22 @@ TODO:
                 'data-toggle': 'modal',
                 'data-target': '#'+this.attr('id')
             });
+        },
+
+        getHeaderIcon: function(id){
+            return this.find('[data-header-icon-id="'+id+'"]');
+        },
+
+        setHeaderIconEnabled: function(id, disabled){
+            this.getHeaderIcon(id).toggleClass('disabled', !!disabled);
+        },
+
+        setHeaderIconDisabled: function(id){
+            this.setHeaderIconEnabled(id, true);
         }
+
+
+
     };
 
     /******************************************************
@@ -69909,9 +69910,9 @@ TODO:
         //Adjust for options.buttons: null
         options.buttons = options.buttons || [];
 
-        //Add close-botton. Avoid by setting options.closeButton = false
+        //Add close-botton at beginning. Avoid by setting options.closeButton = false
         if (options.closeButton)
-            options.buttons.push({
+            options.buttons.unshift({
                 text: options.closeText,
                 icon: options.closeIcon,
 
@@ -70018,11 +70019,15 @@ TODO:
                     close   : { onClick: closeModalFunction }
                 },
 
+                //Size
+                useTouchSize: true,
+
                 //Content
                 scroll     : true,
                 content    : '',
 
                 //Modal-options
+                static     : false,
                 show       : true
             });
 
@@ -70055,11 +70060,11 @@ TODO:
 
         //Create as modal and adds methods
         $result.modal({
-           //Name       Value     Type	                Default Description
-           backdrop :   "static", //boolean or 'static' true	Includes a modal-backdrop element. Alternatively, specify static for a backdrop which doesn't close the modal on click.
-           keyboard :   true,     //boolean	            true	Closes the modal when escape key is pressed
-           focus	:   true,     //boolean	            true    Puts the focus on the modal when initialized.
-           show	    :   false     //boolean	            true	Shows the modal when initialized.
+           //Name       Value                                   Type                Default Description
+           backdrop :   options.static ? "static" : true,   //  boolean or 'static' true	Includes a modal-backdrop element. Alternatively, specify static for a backdrop which doesn't close the modal on click.
+           keyboard :   true,                               //  boolean	            true	Closes the modal when escape key is pressed
+           focus	:   true,                               //  boolean	            true    Puts the focus on the modal when initialized.
+           show	    :   false                               //  boolean	            true	Shows the modal when initialized.
         });
 
         $result.on({
@@ -70345,17 +70350,9 @@ TODO:
 
             if (closeWithButton)
                 //Add same close-icon as for modal-windows
-                $('<div/>')
-                    ._bsAddBaseClassAndSize( {
-                        baseClass   :'header-icon-container',
-                        useTouchSize: true
-                    })
-                    .appendTo($barDom)
-                    .append(
-                        $('<i/>')
-                            .addClass("header-icon header-icon-close")
-                            .on('click', closeFunc )
-                    );
+                $barDom._bsHeaderAndIcons({
+                    icons: { close: { onClick: closeFunc }}
+                });
         };
 
 
@@ -70837,12 +70834,12 @@ TODO:
         //Create result and select-element
         var $select =
                 $('<select/>')
-                    ._bsAddName( options ),
+                    ._bsAddIdAndName( options ),
             $result =
                 $('<div class="form-control-with-label"></div>')
                     .append( $select );
 
-        options.dropdownParent = $result;
+        //Seems to be working without: options.dropdownParent = $result;
 
         //Create select2
         $select.select2( options );
@@ -70884,28 +70881,10 @@ TODO:
                 options.onChange( data.id, data.selected );
             });
 
-        //Set selected id or placeholder
-        $select
-            .val(selectedIdExists ? options.selectedId : -1)
-            .trigger('change');
-
-        //Add label as attr label to placeholder to make placeholder display label when no item is selected
-        select2.$selection.find('.select2-selection__placeholder').append(
-            $('<span/>')
-                .addClass('select2-selection__placeholder_label')
-                ._bsAddHtml( options.label )
-        );
-
 
         var $label = $result._wrapLabel({ label: options.label });
-
-        //Call onChange (if it and selectedId exists
-        if (selectedIdExists && options.onChange)
-            options.onChange( options.selectedId, true );
-
-
-        function setLabelAsPlaceholder( hasFocus ){
-            var showLabelAsPlaceholder = !hasFocus && !$select.find(':selected').length;
+        function setLabelAsPlaceholder( hasFocus, TEST ){
+            var showLabelAsPlaceholder = TEST || (!hasFocus && !$select.find(':selected').length);
             $label.toggleClass('hide-float-label', showLabelAsPlaceholder);
             $result.toggleClass('show-label-as-placeholder', showLabelAsPlaceholder);
             select2.$container.toggleClass('select2-hide-placeholder', showLabelAsPlaceholder);
@@ -70920,6 +70899,20 @@ TODO:
 
         select2.on('focus', onBlurOrFocus);
         select2.on('blur', onBlurOrFocus);
+
+        $select.on('change', function(){
+            setLabelAsPlaceholder();
+        });
+
+        //Set selected id or placeholder
+        $select
+            .val(selectedIdExists ? options.selectedId : -1)
+            .trigger('change.select2');
+
+
+        //Call onChange (if it and selectedId exists
+        if (selectedIdExists && options.onChange)
+            options.onChange( options.selectedId, true );
 
         setLabelAsPlaceholder( false );
 
@@ -70970,7 +70963,7 @@ TODO:
 
         var $result =
                 $('<div tabindex="0"/>')
-                    ._bsAddName( options )
+                    ._bsAddIdAndName( options )
                     ._bsAddBaseClassAndSize( options ),
             radioGroup =
                 $.radioGroup(
@@ -71099,18 +71092,18 @@ Add sort-functions + save col-index for sorted column
             if (options.selectable)
                 $tr.attr('id', rowContent.id || 'rowId_'+rowId++);
 
-
             $.each( options.columns, function( index, columnOptions ){
                 var content = rowContent[columnOptions.id],
                     $td = $('<td/>')
                             .appendTo($tr);
                 adjustThOrTd( $td, columnOptions, !options.showHeader );
 
-                //Build the content using _bsAddHtml or jquery-value-format
+                //Build the content using _bsAppendContent or jquery-value-format
                 if (columnOptions.vfFormat)
                     $td.vfValueFormat( content, columnOptions.vfFormat, columnOptions.vfOptions );
-                else
-                    $td._bsAddHtml( content );
+                else {
+                    $td._bsAppendContent( content );
+                }
             });
 
             //Add rows to radioGroup
@@ -71327,7 +71320,7 @@ Add sort-functions + save col-index for sorted column
 </div>
     ******************************************************/
     var tabsId = 0;
-    $.bsTabs = function( options ){
+    $.bsTabs = function( options, insideFormGroup ){
         var $result = $('<div/>'),
             id = 'bsTabs'+ tabsId++,
 
@@ -71372,6 +71365,7 @@ Add sort-functions + save col-index for sorted column
                             'id'           : tabId,
                             'role'         : 'tab',
                             'data-toggle'  : "tab",
+                            'data-user-id' : opt.id || null,
                             'href'         : '#'+contentId,
                             'aria-controls': contentId
                         })
@@ -71411,7 +71405,7 @@ Add sort-functions + save col-index for sorted column
 
             //Add content: string, element, function, setup-json-object, or children (=accordion)
             if (opt.content)
-                $content._bsAppendContent( opt.content );
+                $content._bsAppendContent( opt.content, insideFormGroup );
 
         });
         $result.asModal = bsTabs_asModal;
@@ -71429,8 +71423,8 @@ Add sort-functions + save col-index for sorted column
                         noVerticalPadding  : true,
                         noHorizontalPadding: true,
                         scroll             : false,
-                        content     : this._$contents,
-                        fixedContent: this._$tabs,
+                        content            : this._$contents,
+                        fixedContent       : this._$tabs,
                     }, options)
                );
 
@@ -71441,9 +71435,19 @@ Add sort-functions + save col-index for sorted column
         });
 
         return $result;
-
     }
 
+
+    //Extend $.fn with method to select a tab given by id (string) or index (integer)
+    $.fn.bsSelectTab = function( indexOrId ){
+        var $tab =
+            $.type(indexOrId) == 'number' ?
+            this.find('.nav-tabs a.nav-item:nth-of-type('+(indexOrId+1)+')') :
+            this.find('.nav-tabs a.nav-item[data-user-id="' + indexOrId + '"]');
+
+        if ($tab && $tab.length)
+            $tab.tab('show');
+    };
 
 }(jQuery, this, document));
 ;
@@ -71462,7 +71466,7 @@ Add sort-functions + save col-index for sorted column
 
     /*
 
-    Almost all elements comes in two sizes: normal and small set by options.small: false/true
+    Almost all elements comes in two sizes: normal and small set by options.small: ?lse/true
 
     In jquery-bootstrap.scss sizing class-postfix -xs is added (from Bootstrap 3)
 
@@ -71480,6 +71484,23 @@ Add sort-functions + save col-index for sorted column
     ns.bsIsTouch =  true;
 
     $.EMPTY_TEXT = '___***EMPTY***___';
+
+    //FONTAWESOME_PREFIX = the classname-prefix used when non is given. Fontawesome 4.X: 'fa', Fontawesome 5: Free: 'fas' Pro: 'far' or 'fal'
+    $.FONTAWESOME_PREFIX = $.FONTAWESOME_PREFIX || 'fa';
+
+
+    /******************************************************
+    $divXXGroup
+    ******************************************************/
+    function $divXXGroup( groupTypeClass, options ){
+        return $('<div/>')
+                   ._bsAddBaseClassAndSize( $.extend({}, options, {
+                       baseClass   : groupTypeClass,
+                       useTouchSize: true
+                   }));
+    }
+
+
 
     //$._bsAdjustIconAndText: Adjust options to fit with {icon"...", text:{da:"", en:".."}
     // options == {da:"..", en:".."} => return {text: options}
@@ -71515,7 +71536,7 @@ Add sort-functions + save col-index for sorted column
         //adjustContentOptions: Adjust options for the content of elements
         function adjustContentAndContextOptions( options, context ){
             options.icon     = options.icon || options.headerIcon || options.titleIcon;
-            options.text     = options.text || options.header || options.title || options.name;
+            options.text     = options.text || options.header || options.title;
 
             options.iconClass = options.iconClass       || options.iconClassName       ||
                                 options.headerIconClass || options.headerIconClassName ||
@@ -71586,10 +71607,85 @@ Add sort-functions + save col-index for sorted column
         return sizeClassPostfix && options.baseClass ? options.baseClass + '-' + sizeClassPostfix : '';
     };
 
+
+    /****************************************************************************************
+    $._bsCreateElement = internal method to create $-element
+    ****************************************************************************************/
+    $._bsCreateElement = function( tagName, link, title, textStyle, className ){
+        var $result;
+        if (link){
+            $result = $('<a/>');
+            if ($.isFunction( link ))
+                $result
+                    .prop('href', 'javascript:undefined')
+                    .on('click', link );
+            else
+                $result
+                    .i18n(link, 'href')
+                    .prop('target', '_blank');
+        }
+        else
+            $result = $('<'+tagName+'/>');
+
+        if (title)
+            $result.i18n(title, 'title');
+
+        $result._bsAddStyleClasses( textStyle || '' );
+
+        if (className)
+            $result.addClass( className );
+
+        return $result;
+    };
+
+    /****************************************************************************************
+    $._bsCreateIcon = internal method to create $-icon
+    ****************************************************************************************/
+    $._bsCreateIcon = function( options, $appendTo, title, className ){
+        if ($.type(options) == 'string')
+            options = {class: options};
+
+        if ($.isArray( options)){
+            $.each( options, function( index, opt ){
+                $._bsCreateIcon( opt, $appendTo, title, className );
+            });
+            return;
+        }
+
+        options.tagName = options.tagName || 'i';
+        var allClassNames = options.icon || options.class || '';
+
+        //Append $.FONTAWESOME_PREFIX if icon don't contain fontawesome prefix ("fa?")
+        if (allClassNames.search(/(fa.?\s)|(\sfa.?(\s|$))/g) == -1)
+            allClassNames = $.FONTAWESOME_PREFIX + ' ' + allClassNames;
+
+        allClassNames = allClassNames + (className ? ' '+className : '');
+
+        var $icon = $._bsCreateElement( options.tagName, null, title, null, allClassNames ),
+            attr = options.attr || {};
+        if (options.data){
+            $icon.data(options.data);
+            $.each(options.data, function(id, value){
+                attr['data-'+id] = value;
+            });
+        }
+
+        $icon.attr(attr);
+
+        var list  = options.list || options.children;
+        if (list)
+            $._bsCreateIcon(list, $icon);
+        $icon.appendTo( $appendTo );
+        return $icon;
+    };
+
+
+
     $.fn.extend({
 
-        //_bsAddName
-        _bsAddName: function( options ){
+        //_bsAddIdAndName
+        _bsAddIdAndName: function( options ){
+            this.attr('id', options.id || '');
             this.attr('name', options.name || options.id || '');
             return this;
         },
@@ -71680,7 +71776,7 @@ Add sort-functions + save col-index for sorted column
         Internal methods to add innerHTML to button or other element
         options: array of textOptions or textOptions
         textOptions: {
-            icon     : String or array of String
+            icon     : String / {class, data, attr} or array of String / {className, data, attr}
             text     : String or array of String
             vfFormat : String or array of String
             vfValue  : any type or array of any-type
@@ -71695,33 +71791,6 @@ Add sort-functions + save col-index for sorted column
         ****************************************************************************************/
 
         _bsAddHtml:  function( options, checkForContent, ignoreLink ){
-            //**************************************************
-            function create$element( tagName, link, title, textStyle, className ){
-                var $text;
-                if (link){
-                    $text = $('<a/>');
-                    if ($.isFunction( link ))
-                        $text
-                            .prop('href', 'javascript:undefined')
-                            .on('click', link );
-                    else
-                        $text
-                            .i18n(link, 'href')
-                            .prop('target', '_blank');
-                }
-                else
-                    $text = $('<'+tagName+'/>');
-
-                if (title)
-                    $text.i18n(title, 'title');
-
-                $text._bsAddStyleClasses( textStyle || '' );
-
-                if (className)
-                    $text.addClass( className );
-
-                return $text;
-            }
             //**************************************************
             function getArray( input ){
                 return input ? $.isArray( input ) ? input : [input] : [];
@@ -71769,13 +71838,7 @@ Add sort-functions + save col-index for sorted column
 
             //Add icons (optional)
             $.each( iconArray, function( index, icon ){
-                var $icon = $('<i/>').addClass('fa '+icon);
-                if (index < iconClassArray.length)
-                    $icon.addClass( iconClassArray[index] );
-                //$icon.appendTo( _this );
-
-                create$element( 'i', null, titleArray[ index ], null, 'fa '+icon + ' ' + (iconClassArray[index] || '') )
-                    .appendTo( _this );
+                $._bsCreateIcon( icon, _this, titleArray[ index ], iconClassArray[index] );
             });
 
             //Add color (optional)
@@ -71784,7 +71847,7 @@ Add sort-functions + save col-index for sorted column
 
             //Add text
             $.each( textArray, function( index, text ){
-                var $text = create$element( 'span', linkArray[ index ], titleArray[ index ], textStyleArray[ index ], textClassArray[index] );
+                var $text = $._bsCreateElement( 'span', linkArray[ index ], titleArray[ index ], textStyleArray[ index ], textClassArray[index] );
                 if ($.isFunction( text ))
                     text( $text );
                 else
@@ -71806,7 +71869,7 @@ Add sort-functions + save col-index for sorted column
 
             //Add value-format content
             $.each( vfValueArray, function( index, vfValue ){
-                create$element( 'span', linkArray[ index ], titleArray[ index ], textStyleArray[ index ], textClassArray[index] )
+                $._bsCreateElement( 'span', linkArray[ index ], titleArray[ index ], textStyleArray[ index ], textClassArray[index] )
                     .vfValueFormat( vfValue || '', vfFormatArray[index], vfOptionsArray[index] )
                     .appendTo( _this );
             });
@@ -71822,60 +71885,97 @@ Add sort-functions + save col-index for sorted column
         },
 
         /****************************************************************************************
-        _bsAddContent( options[, defaultType] )
+        _bsAppendContent( options, insideFormGroup )
         Create and append any content to this.
         options can be $-element, function, json-object or array of same
+
+        The default bootstrap structure used for elements in a form is
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">               //optional
+                    <button class="btn btn-standard">..</buton> //optional 1-N times
+                </div>                                          //optional
+
+                <label class="has-float-label">
+                    <input class="form-control form-control-with-label" type="text" placeholder="The placeholder...">
+                    <span>The label</span>
+                </label>
+
+                <div class="input-group-append">                //optional
+                    <button class="btn btn-standard">..</buton> //optional 1-N times
+                </div>                                          //optional
+            </div>
+        </div>
+        if insideFormGroup == true OR options.
         ****************************************************************************************/
-        _bsAppendContent: function( options, defaultType ){
-            var _this = this;
+        _bsAppendContent: function( options, insideFormGroup ){
 
             if (!options)
                 return this;
 
             //Array of $-element, function etc
             if ($.isArray( options )){
+                var _this = this;
                 $.each(options, function( index, options){
-                    _this._bsAppendContent(options);
+                    _this._bsAppendContent(options, insideFormGroup);
                 });
                 return this;
             }
 
             //Function
             if ($.isFunction( options )){
-                options( this );
+                options( this, insideFormGroup );
                 return this;
             }
 
             //json-object with options to create bs-elements
             if ($.isPlainObject(options)){
-                options.type = options.type || defaultType || 'input';
-                var buildFunc;
-                switch (options.type.toLowerCase()){
-                    case 'input'        :   buildFunc = $.bsInput;          break;
-                    case 'button'       :   buildFunc = $.bsButton;         break;
-                    case 'select'       :   buildFunc = $.bsSelectBox;      break;
-                    case 'selectlist'   :   buildFunc = $.bsSelectList;     break;
-                    case 'checkbox'     :   buildFunc = $.bsCheckbox;       break;
-                    case 'tabs'         :   buildFunc = $.bsTabs;           break;
-                    case 'table'        :   buildFunc = $.bsTable;          break;
-                    case 'XX'           :   buildFunc = null;               break;
+                var buildFunc = $.fn._bsAddHtml,
+                    neverInsideFormGroup = false;
+                if (options.type)
+                    switch (options.type.toLowerCase()){
+                        case 'input'        :   buildFunc = $.bsInput;          break;
+                        case 'button'       :   buildFunc = $.bsButton;         break;
+                        case 'select'       :   buildFunc = $.bsSelectBox;      break;
+                        case 'selectlist'   :   buildFunc = $.bsSelectList;     break;
+                        case 'checkbox'     :   buildFunc = $.bsCheckbox;       break;
+                        case 'tabs'         :   buildFunc = $.bsTabs;           neverInsideFormGroup = true; break;
+                        case 'table'        :   buildFunc = $.bsTable;          neverInsideFormGroup = true; break;
+                        case 'accordion'    :   buildFunc = $.bsAccordion;      neverInsideFormGroup = true; break;
+//                        case 'xx'           :   buildFunc = $.bsXx;               break;
+                    }
 
-                    default             :   buildFunc = $._bsAddHtml;       break;
+
+                //Set the parent-element where to append to created element(s)
+                var $parent = this,
+                    insideInputGroup = false;
+                if (insideFormGroup && !neverInsideFormGroup){
+                    //Create outer form-group
+                    insideInputGroup = true;
+                    $parent = $divXXGroup('form-group', options).appendTo( $parent );
                 }
-                buildFunc.apply( this, arguments ).appendTo( this );
+
+                if (insideInputGroup || options.prepend || options.before || options.append || options.after){
+                    //Create element inside input-group
+                    $parent = $divXXGroup('input-group', options).appendTo( $parent );
+
+                }
+
+                //Build the element inside $parent
+                buildFunc.apply( this, arguments ).appendTo( $parent );
 
                 var prepend = options.prepend || options.before;
                 if (prepend)
                     $('<div/>')
                         .addClass('input-group-prepend')
                         ._bsAppendContent( prepend )
-                        .prependTo(this);
+                        .prependTo( $parent /*this*/);
                 var append = options.append || options.after;
                 if (append)
                     $('<div/>')
                         .addClass('input-group-append')
                         ._bsAppendContent( append )
-                        .appendTo(this);
+                        .appendTo( $parent /*this*/);
 
 
                 return this;
@@ -76535,6 +76635,9 @@ if (typeof define === 'function' && define.amd) {
             fixedContent: null,         //fixed content for the modal-window
             footer      : null,         //footer for the modal-window
             loading     : null,         //Default icon and text displayed in the modal-window during loading
+            icons       : {
+                externalLink: 'fa-external-link'
+            }
 		}, options || {} );
 
 
@@ -76674,7 +76777,7 @@ if (typeof define === 'function' && define.amd) {
                     footer  : this.options.footer,
 
                     buttons : this.options.link ? [{
-                                 icon   : 'fa-external-link',
+                                 icon   : this.options.icons.externalLink,
                                  text   : {da:'Vis i nyt vindue', en:'Show in new window'},
                                  onClick: function(){
                                               var win = window.open(_this.options.link, '_blank');
@@ -76757,6 +76860,7 @@ if (typeof define === 'function' && define.amd) {
         this.options.date = moment( this.options.date );
         this.options.id = this.options.id || 'index_' + this.options.index;
         this.options.status = this.parent.options.loadStatus( this );
+        this.options.icons = this.parent.options.icons;
 
         /*
         Find the publishMoment = the moment where the message is published
@@ -76831,8 +76935,8 @@ if (typeof define === 'function' && define.amd) {
 
             if (this.options.url)
                 title.push(
-                    {text:'...'},
-                    {icon:'fa-angle-right fa-pull-right fa-border'}
+                    {text: '...'},
+                    {icon: this.options.icons.angleRight}
                 );
 
 
@@ -76863,8 +76967,9 @@ if (typeof define === 'function' && define.amd) {
                 //Show the message in a BsMarkdown
                 this.bsMarkdown =
                     this.bsMarkdown || $.bsMarkdown({
-                        url : this.options.url,
-                        link: this.options.link,
+                        url  : this.options.url,
+                        icons: this.options.icons,
+                        link : this.options.link,
                         extraWidth: this.parent.options.extraWidth,
 
                         languages : this.parent.options.languages,
@@ -76930,6 +77035,12 @@ if (typeof define === 'function' && define.amd) {
             id            : '',
             url           : '',
             header        : '',
+            icons: {
+                envelopeOpen  : 'fa-envelope-open',
+                envelopeClosed: 'fa-envelope',
+                angleRight    : 'fa-angle-right fa-pull-right fa-border',
+                externalLink  : 'fa-external-link-alt',
+            },
             reloadPeriod  : '', //period-string with interval for reloading
 
             onStartLoading : function( /*messageGroup*/){ },          //Called when loading of messages starts
@@ -76958,7 +77069,7 @@ if (typeof define === 'function' && define.amd) {
             vfFormat  : '',     //Format-id for the date using jquery-value-format. The format must be defined in the application. If vfFormat == '' the date-column isn't shown
             vfOptions : null,   //Optional options for the format vfFormat when displaying the date using jquery-value-format
 
-            loading   : { icon:' fa-circle-o-notch fa-spin _fa-fw', text: {da:'Indlæser...', en:'Loading...'}}        //Default icon and text displayed in the modal-window during loading
+            loading   : { icon: 'fa-circle-notch fa-spin', text: {da:'Indlæser...', en:'Loading...'}}        //Default icon and text displayed in the modal-window during loading
 		}, options || {} );
 
         //Convert url to array of string
@@ -77093,7 +77204,7 @@ if (typeof define === 'function' && define.amd) {
 
         //_getStatusIcon( type ) return the icon used for status
         _getStatusIcon: function( status, asClassName ){
-            var result = status ? {icon:'fa-envelope-open-o'} : {icon: 'fa-envelope'};
+            var result = status ? {icon: this.options.icons.envelopeOpen} : {icon: this.options.icons.envelopeClosed};
             return asClassName ? result.icon : result;
         },
 
@@ -77108,7 +77219,7 @@ if (typeof define === 'function' && define.amd) {
                     statusOffIcon = this._getStatusIcon(false).icon;
 
                 if (this.bsTable)
-                    this.bsTable.find('tr#_'+message.options.id+' td i.fa.'+statusOffIcon)
+                    this.bsTable.find('tr#_'+message.options.id+' td i.' + $.FONTAWESOME_PREFIX + '.'+statusOffIcon)
                         .removeClass(statusOffIcon)
                         .addClass(statusOnIcon);
 
@@ -77584,7 +77695,7 @@ if (typeof define === 'function' && define.amd) {
   });
 }.call(this);
 ;
-/*! Raven.js 3.25.1 (b6f3c7a) | github.com/getsentry/raven-js */
+/*! Raven.js 3.25.2 (30b6d4e) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -77703,7 +77814,11 @@ function now() {
 var _window =
   typeof window !== 'undefined'
     ? window
-    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+    : typeof global !== 'undefined'
+      ? global
+      : typeof self !== 'undefined'
+        ? self
+        : {};
 var _document = _window.document;
 var _navigator = _window.navigator;
 
@@ -77793,7 +77908,7 @@ Raven.prototype = {
   // webpack (using a build step causes webpack #1617). Grunt verifies that
   // this value matches package.json during build.
   //   See: https://github.com/getsentry/raven-js/issues/465
-  VERSION: '3.25.1',
+  VERSION: '3.25.2',
 
   debug: false,
 
@@ -79349,7 +79464,7 @@ Raven.prototype = {
             }
           ]
         },
-        culprit: fileurl
+        transaction: fileurl
       },
       options
     );
@@ -79464,7 +79579,7 @@ Raven.prototype = {
     if (
       !last ||
       current.message !== last.message || // defined for captureMessage
-      current.culprit !== last.culprit // defined for captureException/onerror
+      current.transaction !== last.transaction // defined for captureException/onerror
     )
       return false;
 
