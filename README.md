@@ -176,7 +176,7 @@ Creates `window.fcoo.events` as a `GlobalEvents`-object
 ### [fcoo-value-format](http://github.com/fcoo/fcoo-value-format)
 
 ---
-### [fcoo-fontawesome](http://github.com/fcoo/fcoo-fontawesome)
+### [fcoo-fontawesome](http://gitlab.com/fcoo/fcoo-fontawesome)
 
 ---
 ### [url.js-extensions](https://github.com/FCOO/url.js-extensions)

@@ -41,7 +41,7 @@
     "fcoo-moment": "fcoo/fcoo-moment#^1.0.0",
     "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^1.0.0",
     "fcoo-value-format": "fcoo/fcoo-value-format#^1.1.0",
-    "fcoo-fontawesome": "fcoo/fcoo-fontawesome#^2.0.0",
+    "fcoo-fontawesome": "https://gitlab.com/fcoo/fcoo-fontawesome.git#^3.0.0",
     "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
     "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#^4.0.0",
