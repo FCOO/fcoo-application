@@ -9,10 +9,10 @@ This package is used to create a standard [FCOO] web applications with jquery, l
 
 ## Installation
 ### bower
-`bower install https://github.com/FCOO/fcoo-application.git --save`
+`bower install https://gitlab.com/FCOO/fcoo-application.git --save`
 
 ## Demo
-http://FCOO.github.io/fcoo-application/demo/ 
+http://FCOO.gitlab.io/fcoo-application/demo/  **TODO: Link not working**
 
 ## Usage
 ### Namespace `window.fcoo`
@@ -251,9 +251,9 @@ The following options are set in Raven
 
 
 ## Copyright and License
-This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-leaflet/LICENSE).
+This plugin is licensed under the [MIT license](https://choosealicense.com/licenses/mit/).
 
 Copyright (c) 2016 [FCOO]
 
 ## Contact information
-[Niels Holt](http://github.com/NielsHolt)
+[Niels Holt](http://gitlab.com/NielsHolt)
