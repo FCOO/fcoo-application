@@ -3,8 +3,8 @@
 
 	(c) 2016, FCOO
 
-	https://github.com/FCOO/fcoo-application
-	https://github.com/FCOO
+	https://gitlab.com/fcoo/fcoo-application
+	https://gitlab.com/fcoo
 
 Set-up of common systems, objects, and methods for FCOO web applications
 Sections:

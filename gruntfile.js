@@ -1,7 +1,7 @@
 /***********************************************
 gruntfile.js for fcoo-application
 
-https://github.com/FCOO/fcoo-application
+https://gitlab.com/fcoo/fcoo-application
 
 ***********************************************/
 

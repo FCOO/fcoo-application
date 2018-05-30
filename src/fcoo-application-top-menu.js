@@ -3,8 +3,8 @@
 
 	(c) 2017, FCOO
 
-	https://github.com/FCOO/fcoo-application
-	https://github.com/FCOO
+	https://gitlab.com/fcoo/fcoo-application
+	https://gitlab.com/fcoo
 
 Create and manage the top-menu for FCOO web applications
 
