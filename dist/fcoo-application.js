@@ -493,7 +493,7 @@ Create and manage the top-menu for FCOO web applications
 
 Set-up of common systems, objects, and methods for FCOO web applications
 Sections:
-1: Namespace, application states, system variables
+1: Namespace, application states, system variables, "FCOO"-variables
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
 4: Initialize offline.js - http://github.hubspot.com/offline/
@@ -509,7 +509,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    1: Namespace, application states, system variables
+    1: Namespace, application states, system variables, , "FCOO"-variables
     ************************************************************************
     ***********************************************************************/
 
@@ -585,6 +585,16 @@ Sections:
     ns.localStorageKey     = 'fcoo_' + ns.applicationId;
     ns.localStorageTempKey = ns.localStorageKey + '_temp';
 
+
+    //Global class-names for icons
+    ns.icons = {
+        working: 'far fa-spinner fa-spin',
+
+
+    };
+
+    //Alternative
+    ns.icons.spinner = ns.icons.working;
 
     /***********************************************************************
     ************************************************************************
