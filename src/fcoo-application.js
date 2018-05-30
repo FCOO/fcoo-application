@@ -462,25 +462,32 @@ Sections:
     //We are using the Modernizr test touchevents
     $(function() {
         window.bsIsTouch = window.fcoo.modernizr.touchevents;
+//        window.bsIsTouch = true; //TOO TEST
     });
 
     //Set default fontawesome prefix to 'regular'
     $.FONTAWESOME_PREFIX = 'far';
 
-    /***********************************************************************
-    ************************************************************************
-    7: Set-up jquery-bootstrap-message for different type of messages
-    ************************************************************************
-    ***********************************************************************/
+    //Set icon for the different icons on the header of modal windows etc.
+    $.bsHeaderIcons = $.extend( $.bsHeaderIcons, {
+        back    : 'fa-chevron-circle-left',
+        forward : 'fa-chevron-circle-right',
+        extend  : 'fa-chevron-circle-up',
+        diminish: 'fa-chevron-circle-down',
+        pin     : ['far fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
+        unpin   : ['fas fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
+    });
+
+
     //Set icon and name for different message type
     $.bsNotyIcon = {
-        info        : 'fa-i-info',  //TODO
-        information : 'fa-i-info',  //TODO
-        alert       : 'fa-i-notification',
-        success     : 'fa-i-ok',        //or original 'fa-check',
-        error       : 'fa-i-blocked',   //or original 'fa-ban',
-        warning     : 'fa-i-warning',   //or original 'fa-exclamation-triangle',
-        help        : 'fa-question-circle-o'
+        info        : 'fa-info-circle',
+        information : 'fa-info-circle',
+        alert       : 'fa-exclamation-circle',
+        success     : 'fa-check-circle',
+        error       : 'fa-ban',
+        warning     : 'fa-exclamation-square', //'fa-exclamation-triangle',
+        help        : 'fa-question-circle'
     };
 
     $.bsNotyName = {
@@ -505,6 +512,13 @@ Sections:
     };
 
 
+
+
+    /***********************************************************************
+    ************************************************************************
+    7: Set-up jquery-bootstrap-message for different type of messages
+    ************************************************************************
+    ***********************************************************************/
     //Add 'messages' to fcoo.settings
     ns.messageStatus = {};
     ns.settings.add({
@@ -535,6 +549,9 @@ Sections:
     **************************************************************/
 
     var messageGroupOptions = {
+
+            icons: { externalLink: 'fa-external-link' },
+
             onStartLoading : function( messageGroup ){
                 //Disable the button while reading data
                 messageGroup.options.$button.addClass('disabled');

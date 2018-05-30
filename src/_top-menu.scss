@@ -138,6 +138,7 @@ body {
 //fa-i-list
 
     //Adjusting font-size and/or margin-bottom of specific icon to make all look equal sized and horizontal aligned
+/*
     .btn i.fa {
 //        &.fa-bars {  }
         &.fa-search {               font-size: 0.80em; }
@@ -163,7 +164,7 @@ body {
 
         &.fa-i-list {               margin-bottom: -0.1em; }
     }
-
+*/
     //FCOO-logo inside top menu get fixed size and hover effect
     .icon-fcoo-app-logo {
         padding    : 0;
@@ -177,7 +178,7 @@ body {
         @include hover-focus {
             opacity: 1;
         }
-        font-size: 4.5em;
+        font-size: 4em;
     }
 
     //The header is the only element that shrink and grow on resize

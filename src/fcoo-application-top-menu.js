@@ -61,7 +61,7 @@ Create and manage the top-menu for FCOO web applications
             icon = $.isArray( icon ) ? icon : [icon];
             $.each( icon, function( index, iconClass ){
                 $('<i/>')
-                    .addClass('fa ' + (allReadPrefix ? allReadPrefix + '-for-all-read ' : '') + iconClass)
+                    .addClass((allReadPrefix ? allReadPrefix + '-for-all-read ' : '') + iconClass)
                     .appendTo( $result );
             });
         }
@@ -162,12 +162,13 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'warning',
-            create: function(  elementOptions, menuOptions ){
-                //Create yellow warning triangle by overlaying two icons
+            create: function( elementOptions, menuOptions ){
+                //Create yellow warning square by overlaying two icons
+                var iconClass = 'fa-exclamation-square fa-stack-1x';
                 var $result =
                         messageGroupTopMenuButton({
-                            iconAllRead  : 'fa-stack-1x fa fa-i-warning',
-                            iconNoAllRead: ['fa-stack-1x fa-i-warning-black text-warning', 'fa-stack-1x fa-i-warning']
+                            iconAllRead  : 'far ' + iconClass,
+                            iconNoAllRead: ['fas text-warning ' + iconClass, 'far '+iconClass]
                         });
 
                 //Create message-group with warnings
@@ -184,8 +185,8 @@ Create and manage the top-menu for FCOO web applications
             create: function( elementOptions, menuOptions ){
                 var $result =
                         messageGroupTopMenuButton({
-                            iconAllRead  : 'fa-envelope-o',
-                            iconNoAllRead: 'fa-envelope'
+                            iconAllRead  : 'far fa-envelope',
+                            iconNoAllRead: 'fas fa-envelope'
                         });
                 //Create message-group with info
                 ns.createFCOOMessageGroup( 'info', menuOptions, $result );
@@ -200,7 +201,7 @@ Create and manage the top-menu for FCOO web applications
             create: function( elementOptions, menuOptions ){
                 var $result =
                         messageGroupTopMenuButton({
-                            iconAllways: 'fa-question-circle-o'
+                            iconAllways: 'far fa-question-circle'
                         });
                 //Create message-group with help
                 ns.createFCOOMessageGroup( 'help', menuOptions, $result );
@@ -212,7 +213,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'rightMenu',
-            icon:'fa-i-list',
+            icon:'far fa-list',
             rightSide: true
         }
 
@@ -254,7 +255,16 @@ Create and manage the top-menu for FCOO web applications
             logo     : true,
 
             //Get the application name from grunt.js
-            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'Den Danske Title', 'en':'The English Title'}"),
+//HER            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'Den Danske Title', 'en':'The English Title'}"),
+//HER            header   : {da:'{APPLICATION_NAME_DA}', en:'{APPLICATION_NAME_EN}'},
+//HER            header   : {'da':'{APPLICATION_NAME_DA}', 'en':'{APPLICATION_NAME_EN}'},
+
+            //Get the application name from grunt.js
+            //Support both
+            //  { application: {name:"..."}} and
+            //  { application: {name_da:"...", name_en:"..."}}
+            //in the applications gruntfile.js
+            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'{APPLICATION_NAME_DA}', 'en':'{APPLICATION_NAME_EN}'}"),
 
             messages : null,
             warning  : null,

@@ -18,6 +18,10 @@ BOOTSTRAP-VARIABLES
 /***********************************************
 ADJUST BOOTSTRAP DEFAULT VALUES
 ************************************************/
+/*Not used. No lg-buttons
+$input-btn-padding-y-lg: .75rem;
+$input-btn-padding-x-lg: $input-btn-padding-y-lg;
+*/
 /************************************************************
 Including "size" xs as in Bootstrap 3
 ************************************************************/
@@ -127,13 +131,16 @@ MARGIN-BOTTOM FOR ELEMENTS IN MODAL
 All elements in modal-windows get same margin-bottom
 ************************************************************/
 .hide {
-  display: none !important; }
+  display: none !important;
+}
 
 .invisible {
-  visibility: hidden; }
+  visibility: hidden;
+}
 
 .bold {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 /*****************************************************
 Global variables
@@ -168,8 +175,8 @@ fcoo-app-background = background-color = application background-color
   font-family: 'fcoo-logo';
   src: url("fonts/fcoo-logo.woff?ma2cie") format("woff");
   font-weight: normal;
-  font-style: normal; }
-
+  font-style: normal;
+}
 .icon-fcoo-logo, .icon-fcoo-app-logo {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'fcoo-logo' !important;
@@ -182,24 +189,31 @@ fcoo-app-background = background-color = application background-color
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: white; }
-  .icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
-    content: "\e900"; }
+  color: white;
+}
+.icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
+  content: "\e900";
+}
 
 .icon-fcoo-app-logo {
-  color: {APPLICATION_FAVICONCOLOR} !important; }
+  color: {APPLICATION_FAVICONCOLOR} !important;
+}
 
 .fcoo-color, .fcoo-app-color, .top-menu {
-  color: white; }
+  color: white;
+}
 
 .fcoo-app-color, .top-menu {
-  color: {APPLICATION_FAVICONCOLOR} !important; }
+  color: {APPLICATION_FAVICONCOLOR} !important;
+}
 
 .fcoo-background, .fcoo-app-background, .top-menu {
-  background-color: #214b87; }
+  background-color: #214b87;
+}
 
 .fcoo-app-background, .top-menu {
-  background-color: {APPLICATION_COLOR} !important; }
+  background-color: {APPLICATION_COLOR} !important;
+}
 
 /**********************************************************
 fcoo-name = the font used for the FCOO name in the logo - TODO
@@ -212,13 +226,15 @@ fcoo-name = the font used for the FCOO name in the logo - TODO
   font-variant: normal;
   text-transform: none;
   speak: none;
-  line-height: 1; }
-
+  line-height: 1;
+}
 .fcoo-name {
-  font-family: fcoo-name; }
+  font-family: fcoo-name;
+}
 
 .fcoo-name-color {
-  color: #214b87; }
+  color: #214b87;
+}
 
 /*****************************************************
 Style for the <div> covering the page during loading
@@ -228,19 +244,24 @@ LOADING
 Style for the <div> covering the page during loading
 *****************************************************/
 html.loading .hide-for-loading {
-  display: none !important; }
+  display: none !important;
+}
 
 html.no-loading .show-for-loading {
-  display: none !important; }
+  display: none !important;
+}
 
 @keyframes flashingLogo {
   0% {
-    opacity: 1; }
+    opacity: 1;
+  }
   50% {
-    opacity: .5; }
+    opacity: .5;
+  }
   100% {
-    opacity: 1; } }
-
+    opacity: 1;
+  }
+}
 div.loading {
   position: absolute;
   left: 0;
@@ -248,50 +269,58 @@ div.loading {
   z-index: 2147483645;
   background-color: #214b87;
   background-color: {APPLICATION_COLOR};
-  text-align: center; }
-  html.loading div.loading {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-    cursor: progress; }
-    html.loading div.loading > div {
-      display: block !important;
-      flex: 0 0 auto;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      cursor: inherit;
-      text-align: center; }
-      html.loading div.loading > div.version {
-        font-family: sans-serif;
-        height: 3rem;
-        font-size: 2rem; }
-        html.loading div.loading > div.version.with-content {
-          background-color: red;
-          color: white; }
-      html.loading div.loading > div.logo {
-        flex: 1 1 auto;
-        width: 95%;
-        max-width: 600px;
-        background-image: url("images/FCOO_logo_notext.svg");
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center center;
-        animation-name: flashingLogo;
-        animation-duration: 2s;
-        animation-fill-mode: both;
-        animation-iteration-count: infinite; }
-  html.no-loading div.loading {
-    width: 0;
-    height: 0;
-    opacity: 0;
-    transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s; }
-    html.no-loading div.loading:before, html.no-loading div.loading > div {
-      display: none !important; }
+  text-align: center;
+}
+html.loading div.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  cursor: progress;
+}
+html.loading div.loading > div {
+  display: block !important;
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: inherit;
+  text-align: center;
+}
+html.loading div.loading > div.version {
+  font-family: sans-serif;
+  height: 3rem;
+  font-size: 2rem;
+}
+html.loading div.loading > div.version.with-content {
+  background-color: red;
+  color: white;
+}
+html.loading div.loading > div.logo {
+  flex: 1 1 auto;
+  width: 95%;
+  max-width: 600px;
+  background-image: url("images/FCOO_logo_notext.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  animation-name: flashingLogo;
+  animation-duration: 2s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+}
+html.no-loading div.loading {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
+}
+html.no-loading div.loading:before, html.no-loading div.loading > div {
+  display: none !important;
+}
 
 /*****************************************************
 Style for offline.js
@@ -300,13 +329,16 @@ Style for offline.js
 OFFLINE-JS
 *****************************************************/
 .offline-ui {
-  display: none !important; }
+  display: none !important;
+}
 
 html.connected .hide-for-connected {
-  display: none !important; }
+  display: none !important;
+}
 
 html.no-connected .show-for-connected {
-  display: none !important; }
+  display: none !important;
+}
 
 .no-connected-shadow {
   position: absolute;
@@ -317,12 +349,15 @@ html.no-connected .show-for-connected {
   z-index: 2147483646;
   box-shadow: inset 0px 0px 10px 5px red;
   pointer-events: none;
-  opacity: 0; }
-  .no-connected .no-connected-shadow {
-    opacity: 1; }
+  opacity: 0;
+}
+.no-connected .no-connected-shadow {
+  opacity: 1;
+}
 
 .noty-on-top {
-  z-index: 2147483647; }
+  z-index: 2147483647;
+}
 
 /*****************************************************
 Style for html, body and main structure
@@ -339,7 +374,8 @@ devices and to fix the size and prevent any scrolling in body
 html, body {
   height: 100%;
   width: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 body {
   padding: 0;
@@ -347,11 +383,13 @@ body {
   width: -webkit-calc(100% - 0px);
   height: -webkit-calc(100% - 0px);
   position: fixed;
-  transition: padding-top .15s ease-in-out; }
-  body .main-container {
-    width: 100%;
-    height: 100%;
-    background-color: gray; }
+  transition: padding-top .15s ease-in-out;
+}
+body .main-container {
+  width: 100%;
+  height: 100%;
+  background-color: gray;
+}
 
 /*****************************************************
 Style for top menu
@@ -366,7 +404,8 @@ top-menu is like Bootstrap navbar but to avoid
 confussions another name is used
 ***************************************************/
 body.top-menu-hidden {
-  padding-top: 0 !important; }
+  padding-top: 0 !important;
+}
 
 .top-menu-container > * {
   position: fixed;
@@ -376,126 +415,159 @@ body.top-menu-hidden {
   z-index: 1030;
   opacity: 1;
   transition: opacity .15s ease-in-out;
-  cursor: default; }
+  cursor: default;
+}
 
 .about-fcoo {
   background-color: white;
   border-bottom: 1px solid black;
   text-align: center;
-  font-size: 0.9rem; }
-  .about-fcoo * {
-    opacity: 1;
-    transition: opacity .2s; }
-  .about-fcoo.panning * {
-    opacity: 0.6; }
-  .top-menu-extended .about-fcoo *,
-  .top-menu-threshold-down ~ .about-fcoo * {
-    opacity: 1; }
-  .top-menu-threshold-up ~ .about-fcoo * {
-    opacity: 0.6; }
-  .about-fcoo > * {
-    margin: .5rem;
-    flex-shrink: 1;
-    flex-grow: 0; }
-  .about-fcoo .fcoo-logo {
-    width: 310px;
-    height: 71.5384615385px;
-    flex-shrink: 0;
-    background-image: url("images/FCOO_logo_260x60.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain; }
-  .about-fcoo .header {
-    width: 100%;
-    flex-grow: 1;
-    margin: 0;
-    padding: 0.25rem;
-    text-align: center;
-    font-size: 1.3125rem;
-    line-height: 1.3125rem;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; }
-    .about-fcoo .header:empty {
-      display: none; }
+  font-size: 0.9rem;
+}
+.about-fcoo * {
+  opacity: 1;
+  transition: opacity .2s;
+}
+.about-fcoo.panning * {
+  opacity: 0.6;
+}
+.top-menu-extended .about-fcoo *, .top-menu-threshold-down ~ .about-fcoo * {
+  opacity: 1;
+}
+.top-menu-threshold-up ~ .about-fcoo * {
+  opacity: 0.6;
+}
+.about-fcoo > * {
+  margin: .5rem;
+  flex-shrink: 1;
+  flex-grow: 0;
+}
+.about-fcoo .fcoo-logo {
+  width: 310px;
+  height: 71.5384615385px;
+  flex-shrink: 0;
+  background-image: url("images/FCOO_logo_260x60.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+.about-fcoo .header {
+  width: 100%;
+  flex-grow: 1;
+  margin: 0;
+  padding: 0.25rem;
+  text-align: center;
+  font-size: 1.3125rem;
+  line-height: 1.3125rem;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.about-fcoo .header:empty {
+  display: none;
+}
 
 .top-menu {
   margin-top: 0px;
   padding: 0.25rem;
   font-size: 0.875rem;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
-  .touchevents .top-menu {
-    font-size: 1rem; }
-  .top-menu > * {
-    flex-shrink: 0;
-    flex-grow: 0; }
-  .top-menu > *:not(:first-child):not(.right-side) {
-    margin-left: 0.25rem !important; }
-    .touchevents .top-menu > *:not(:first-child):not(.right-side) {
-      margin-left: 0.75rem !important; }
-  .top-menu .left-side {
-    margin-right: auto !important; }
-  .top-menu .right-side {
-    margin-left: auto !important; }
-  .top-menu .btn.fa-stack {
-    width: 1em; }
-  .top-menu .btn i.fa.fa-search {
-    font-size: 0.80em; }
-  .top-menu .btn i.fa.fa-i-warning, .top-menu .btn i.fa.fa-i-warning-black {
-    font-size: 0.75em;
-    bottom: 0.2em; }
-  .top-menu .btn i.fa.fa-envelope-o, .top-menu .btn i.fa.fa-envelope {
-    font-size: .90em;
-    margin-bottom: 0; }
-  .top-menu .btn i.fa.fa-question-circle-o {
-    font-size: .90em;
-    margin-bottom: -0.1em; }
-  .top-menu .btn i.fa.fa-i-list {
-    font-size: 0.75em;
-    margin-bottom: -0.1em; }
-  .top-menu .btn-sm i.fa.fa-envelope-o, .top-menu .btn-sm i.fa.fa-envelope {
-    margin-bottom: 0; }
-  .top-menu .btn-sm i.fa.fa-question-circle-o {
-    margin-bottom: 0; }
-  .top-menu .btn-sm i.fa.fa-i-list {
-    margin-bottom: -0.1em; }
-  .top-menu .icon-fcoo-app-logo {
-    padding: 0;
-    margin: 0;
-    line-height: .5;
-    opacity: 0.8;
-    font-size: 4.5em; }
-    .touchevents .top-menu .icon-fcoo-app-logo {
-      opacity: 1; }
-    .top-menu .icon-fcoo-app-logo:hover, .top-menu .icon-fcoo-app-logo:focus {
-      opacity: 1; }
-  .top-menu .header {
-    flex-shrink: 1;
-    flex-grow: 1;
-    text-align: center;
-    font-size: 1.5em;
-    line-height: 1.5;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-right: 0.25rem; }
-    .touchevents .top-menu .header {
-      margin-right: 0.75rem; }
-  .top-menu .form-inline .form-control {
-    padding: 0.25rem 0.25rem;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-    border-right: none;
-    width: 6rem; }
-    .small-up .top-menu .form-inline .form-control {
-      width: 10rem; }
-    .xsmall-land-down .top-menu .form-inline .form-control {
-      display: none; }
-    .no-xsmall-land-down .top-menu .form-inline .form-control + .btn {
-      border-left: none;
-      border-bottom-left-radius: 0;
-      border-top-left-radius: 0; }
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  /*
+      .btn i.fa {
+  //        &.fa-bars {  }
+          &.fa-search {               font-size: 0.80em; }
+  
+          &.fa-i-warning,
+          &.fa-i-warning-black {      font-size: 0.75em; bottom: 0.2em; }
+  
+          &.fa-envelope-o,
+          &.fa-envelope {             font-size: .90em;  margin-bottom: 0; }
+  
+          &.fa-question-circle-o {    font-size: .90em;  margin-bottom: -0.1em; }
+  
+          &.fa-i-list {               font-size: 0.75em; margin-bottom: -0.1em; }
+  
+      }
+  
+      //Special adjusment for small buttons
+      .btn-sm i.fa {
+          &.fa-envelope-o,
+          &.fa-envelope {             margin-bottom: 0; }
+  
+          &.fa-question-circle-o {    margin-bottom: 0; }
+  
+          &.fa-i-list {               margin-bottom: -0.1em; }
+      }
+  */
+}
+.touchevents .top-menu {
+  font-size: 1rem;
+}
+.top-menu > * {
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+.top-menu > *:not(:first-child):not(.right-side) {
+  margin-left: 0.25rem !important;
+}
+.touchevents .top-menu > *:not(:first-child):not(.right-side) {
+  margin-left: 0.3125rem !important;
+}
+.top-menu .left-side {
+  margin-right: auto !important;
+}
+.top-menu .right-side {
+  margin-left: auto !important;
+}
+.top-menu .btn.fa-stack {
+  width: 1em;
+}
+.top-menu .icon-fcoo-app-logo {
+  padding: 0;
+  margin: 0;
+  line-height: .5;
+  opacity: 0.8;
+  font-size: 4em;
+}
+.touchevents .top-menu .icon-fcoo-app-logo {
+  opacity: 1;
+}
+.top-menu .icon-fcoo-app-logo:hover, .top-menu .icon-fcoo-app-logo:focus {
+  opacity: 1;
+}
+.top-menu .header {
+  flex-shrink: 1;
+  flex-grow: 1;
+  text-align: center;
+  font-size: 1.5em;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0.25rem;
+}
+.touchevents .top-menu .header {
+  margin-right: 0.3125rem;
+}
+.top-menu .form-inline .form-control {
+  padding: 0.25rem 0.25rem;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-right: none;
+  width: 6rem;
+}
+.small-up .top-menu .form-inline .form-control {
+  width: 10rem;
+}
+.xsmall-land-down .top-menu .form-inline .form-control {
+  display: none;
+}
+.no-xsmall-land-down .top-menu .form-inline .form-control + .btn {
+  border-left: none;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
 
 .top-bar {
   position: absolute;
@@ -510,22 +582,33 @@ body.top-menu-hidden {
   line-height: 0.7;
   color: #343a40;
   text-shadow: -1px 0 rgba(255, 255, 255, 0.5), 0 1px rgba(255, 255, 255, 0.5), 1px 0 rgba(255, 255, 255, 0.5), 0 -1px rgba(255, 255, 255, 0.5);
-  background-color: transparent; }
-  .top-menu-hidden .top-bar {
-    display: block;
-    opacity: 1; }
+  background-color: transparent;
+}
+.top-menu-hidden .top-bar {
+  display: block;
+  opacity: 1;
+}
 
 a.all-read .hide-for-all-read {
-  display: none !important; }
-
+  display: none !important;
+}
 a.all-read .show-for-no-all-read {
-  display: none !important; }
+  display: none !important;
+}
 
 a.no-all-read .show-for-all-read {
-  display: none !important; }
-
+  display: none !important;
+}
 a.no-all-read .hide-for-no-all-read {
-  display: none !important; }
+  display: none !important;
+}
+
+/*****************************************************
+Special adjustments
+*****************************************************/
+.fa-thumbtack.fa-inside-circle {
+  margin-top: 1px;
+}
 
 /* TEST
 .main-container {
@@ -537,3 +620,5 @@ a.no-all-read .hide-for-no-all-read {
 
 }
 */
+
+/*# sourceMappingURL=fcoo-application.css.map */

@@ -7,7 +7,7 @@
         {
             "id": "6",
             "type": "warning",
-            "url": "data/browser/da.mdFEJL",
+            "url": "data/browser/da.md",
             "title": {"da":"Test af Operativsystemer og Browsere", "en":"Test of Operating Systems and Browsers"},
             "link": "http://ifm.fcoo.dk/browser/"
         },
@@ -43,7 +43,7 @@
             "id": "2",
             "date": "2017-01-01",
             "type": "error",
-            "url": "data/browser/da.md",
+            "url": "data/browser/da.mdFEJL",
             "title": {"da":"Dette er info-besked 2", "en":"This is a info message 2"}
         },
         {
