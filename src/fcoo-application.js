@@ -343,7 +343,7 @@ Sections:
             $.extend( {
                 buttons: [{
                     id          : 'offline_reconnect',
-                    icon        : 'fa-i-connection',
+                    icon        : 'fa-wifi',
                     text        : {da: 'Genopret', en:'Reconnect'},
                     closeOnClick: false,
                     onClick     : window.Offline.reconnect.tryNow
@@ -560,7 +560,8 @@ Sections:
 
     var messageGroupOptions = {
 
-            icons: { externalLink: 'fa-external-link' },
+            icons  : { externalLink: 'fa-external-link' },
+            loading: { icon: ns.icons.working },
 
             onStartLoading : function( messageGroup ){
                 //Disable the button while reading data
