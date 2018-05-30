@@ -18,6 +18,10 @@ BOOTSTRAP-VARIABLES
 /***********************************************
 ADJUST BOOTSTRAP DEFAULT VALUES
 ************************************************/
+/*Not used. No lg-buttons
+$input-btn-padding-y-lg: .75rem;
+$input-btn-padding-x-lg: $input-btn-padding-y-lg;
+*/
 /************************************************************
 Including "size" xs as in Bootstrap 3
 ************************************************************/
@@ -424,7 +428,34 @@ body.top-menu-hidden {
   margin-top: 0px;
   padding: 0.25rem;
   font-size: 0.875rem;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  /*
+    .btn i.fa {
+//        &.fa-bars {  }
+        &.fa-search {               font-size: 0.80em; }
+
+        &.fa-i-warning,
+        &.fa-i-warning-black {      font-size: 0.75em; bottom: 0.2em; }
+
+        &.fa-envelope-o,
+        &.fa-envelope {             font-size: .90em;  margin-bottom: 0; }
+
+        &.fa-question-circle-o {    font-size: .90em;  margin-bottom: -0.1em; }
+
+        &.fa-i-list {               font-size: 0.75em; margin-bottom: -0.1em; }
+
+    }
+
+    //Special adjusment for small buttons
+    .btn-sm i.fa {
+        &.fa-envelope-o,
+        &.fa-envelope {             margin-bottom: 0; }
+
+        &.fa-question-circle-o {    margin-bottom: 0; }
+
+        &.fa-i-list {               margin-bottom: -0.1em; }
+    }
+*/ }
   .touchevents .top-menu {
     font-size: 1rem; }
   .top-menu > * {
@@ -433,39 +464,19 @@ body.top-menu-hidden {
   .top-menu > *:not(:first-child):not(.right-side) {
     margin-left: 0.25rem !important; }
     .touchevents .top-menu > *:not(:first-child):not(.right-side) {
-      margin-left: 0.75rem !important; }
+      margin-left: 0.3125rem !important; }
   .top-menu .left-side {
     margin-right: auto !important; }
   .top-menu .right-side {
     margin-left: auto !important; }
   .top-menu .btn.fa-stack {
     width: 1em; }
-  .top-menu .btn i.fa.fa-search {
-    font-size: 0.80em; }
-  .top-menu .btn i.fa.fa-i-warning, .top-menu .btn i.fa.fa-i-warning-black {
-    font-size: 0.75em;
-    bottom: 0.2em; }
-  .top-menu .btn i.fa.fa-envelope-o, .top-menu .btn i.fa.fa-envelope {
-    font-size: .90em;
-    margin-bottom: 0; }
-  .top-menu .btn i.fa.fa-question-circle-o {
-    font-size: .90em;
-    margin-bottom: -0.1em; }
-  .top-menu .btn i.fa.fa-i-list {
-    font-size: 0.75em;
-    margin-bottom: -0.1em; }
-  .top-menu .btn-sm i.fa.fa-envelope-o, .top-menu .btn-sm i.fa.fa-envelope {
-    margin-bottom: 0; }
-  .top-menu .btn-sm i.fa.fa-question-circle-o {
-    margin-bottom: 0; }
-  .top-menu .btn-sm i.fa.fa-i-list {
-    margin-bottom: -0.1em; }
   .top-menu .icon-fcoo-app-logo {
     padding: 0;
     margin: 0;
     line-height: .5;
     opacity: 0.8;
-    font-size: 4.5em; }
+    font-size: 4em; }
     .touchevents .top-menu .icon-fcoo-app-logo {
       opacity: 1; }
     .top-menu .icon-fcoo-app-logo:hover, .top-menu .icon-fcoo-app-logo:focus {
@@ -481,7 +492,7 @@ body.top-menu-hidden {
     white-space: nowrap;
     margin-right: 0.25rem; }
     .touchevents .top-menu .header {
-      margin-right: 0.75rem; }
+      margin-right: 0.3125rem; }
   .top-menu .form-inline .form-control {
     padding: 0.25rem 0.25rem;
     border-bottom-right-radius: 0;
@@ -526,6 +537,12 @@ a.no-all-read .show-for-all-read {
 
 a.no-all-read .hide-for-no-all-read {
   display: none !important; }
+
+/*****************************************************
+Special adjustments
+*****************************************************/
+.fa-thumbtack.fa-inside-circle {
+  margin-top: 1px; }
 
 /* TEST
 .main-container {

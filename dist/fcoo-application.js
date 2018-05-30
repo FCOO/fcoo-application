@@ -61,7 +61,7 @@ Create and manage the top-menu for FCOO web applications
             icon = $.isArray( icon ) ? icon : [icon];
             $.each( icon, function( index, iconClass ){
                 $('<i/>')
-                    .addClass('fa ' + (allReadPrefix ? allReadPrefix + '-for-all-read ' : '') + iconClass)
+                    .addClass((allReadPrefix ? allReadPrefix + '-for-all-read ' : '') + iconClass)
                     .appendTo( $result );
             });
         }
@@ -162,12 +162,13 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'warning',
-            create: function(  elementOptions, menuOptions ){
-                //Create yellow warning triangle by overlaying two icons
+            create: function( elementOptions, menuOptions ){
+                //Create yellow warning square by overlaying two icons
+                var iconClass = 'fa-exclamation-square fa-stack-1x';
                 var $result =
                         messageGroupTopMenuButton({
-                            iconAllRead  : 'fa-stack-1x fa fa-i-warning',
-                            iconNoAllRead: ['fa-stack-1x fa-i-warning-black text-warning', 'fa-stack-1x fa-i-warning']
+                            iconAllRead  : 'far ' + iconClass,
+                            iconNoAllRead: ['fas text-warning ' + iconClass, 'far '+iconClass]
                         });
 
                 //Create message-group with warnings
@@ -184,8 +185,8 @@ Create and manage the top-menu for FCOO web applications
             create: function( elementOptions, menuOptions ){
                 var $result =
                         messageGroupTopMenuButton({
-                            iconAllRead  : 'fa-envelope-o',
-                            iconNoAllRead: 'fa-envelope'
+                            iconAllRead  : 'far fa-envelope',
+                            iconNoAllRead: 'fas fa-envelope'
                         });
                 //Create message-group with info
                 ns.createFCOOMessageGroup( 'info', menuOptions, $result );
@@ -200,7 +201,7 @@ Create and manage the top-menu for FCOO web applications
             create: function( elementOptions, menuOptions ){
                 var $result =
                         messageGroupTopMenuButton({
-                            iconAllways: 'fa-question-circle-o'
+                            iconAllways: 'far fa-question-circle'
                         });
                 //Create message-group with help
                 ns.createFCOOMessageGroup( 'help', menuOptions, $result );
@@ -212,7 +213,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'rightMenu',
-            icon:'fa-i-list',
+            icon:'far fa-list',
             rightSide: true
         }
 
@@ -254,7 +255,16 @@ Create and manage the top-menu for FCOO web applications
             logo     : true,
 
             //Get the application name from grunt.js
-            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'Den Danske Title', 'en':'The English Title'}"),
+//HER            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'Den Danske Title', 'en':'The English Title'}"),
+//HER            header   : {da:'{APPLICATION_NAME_DA}', en:'{APPLICATION_NAME_EN}'},
+//HER            header   : {'da':'{APPLICATION_NAME_DA}', 'en':'{APPLICATION_NAME_EN}'},
+
+            //Get the application name from grunt.js
+            //Support both
+            //  { application: {name:"..."}} and
+            //  { application: {name_da:"...", name_en:"..."}}
+            //in the applications gruntfile.js
+            header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'{APPLICATION_NAME_DA}', 'en':'{APPLICATION_NAME_EN}'}"),
 
             messages : null,
             warning  : null,
@@ -486,10 +496,10 @@ Sections:
 1: Namespace, application states, system variables
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
-4: Set up different Modernizr tests and initialize jquery-bootstrap
-5: Initialize offline.js - http://github.hubspot.com/offline/
-6: Initialize raven to report all uncaught exceptions to sentry AND
+4: Initialize offline.js - http://github.hubspot.com/offline/
+5: Initialize raven to report all uncaught exceptions to sentry AND
    Adding the Piwik Tracking Code
+6: Set up and initialize jquery-bootstrap
 7: Set-up jquery-bootstrap-message for different type of messages
 8: Set-up standard error-handler and message for promise
 ****************************************************************************/
@@ -684,19 +694,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    4: Set up different Modernizr tests and initialize jquery-bootstrap
-    ************************************************************************
-    ***********************************************************************/
-    //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
-    //We are using the Modernizr test touchevents
-    $(function() {
-        window.bsIsTouch = window.fcoo.modernizr.touchevents;
-    });
-
-
-    /***********************************************************************
-    ************************************************************************
-    5: Initialize offline.js - http://github.hubspot.com/offline/
+    4: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
     //Add modernizr-test-style connected
@@ -793,7 +791,6 @@ Sections:
     /*********************************************************************
     Setting up events to use bsNoty instead of default dialog-box
     *********************************************************************/
-
     var offlineNotyOptions_main = {
             layout       : 'topCenter',
             onTop        : true,
@@ -902,7 +899,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    6: Initialize raven to report all uncaught exceptions to sentry AND
+    5: Initialize raven to report all uncaught exceptions to sentry AND
        Adding the Piwik Tracking Code
     ************************************************************************
     ***********************************************************************/
@@ -941,21 +938,41 @@ Sections:
     }
 
 */
-
     /***********************************************************************
     ************************************************************************
-    7: Set-up jquery-bootstrap-message for different type of messages
+    6: Set up and initialize jquery-bootstrap
     ************************************************************************
     ***********************************************************************/
+    //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
+    //We are using the Modernizr test touchevents
+    $(function() {
+        window.bsIsTouch = window.fcoo.modernizr.touchevents;
+//        window.bsIsTouch = true; //TOO TEST
+    });
+
+    //Set default fontawesome prefix to 'regular'
+    $.FONTAWESOME_PREFIX = 'far';
+
+    //Set icon for the different icons on the header of modal windows etc.
+    $.bsHeaderIcons = $.extend( $.bsHeaderIcons, {
+        back    : 'fa-chevron-circle-left',
+        forward : 'fa-chevron-circle-right',
+        extend  : 'fa-chevron-circle-up',
+        diminish: 'fa-chevron-circle-down',
+        pin     : ['far fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
+        unpin   : ['fas fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
+    });
+
+
     //Set icon and name for different message type
     $.bsNotyIcon = {
-        info        : 'fa-i-info',  //TODO
-        information : 'fa-i-info',  //TODO
-        alert       : 'fa-i-notification',
-        success     : 'fa-i-ok',        //or original 'fa-check',
-        error       : 'fa-i-blocked',   //or original 'fa-ban',
-        warning     : 'fa-i-warning',   //or original 'fa-exclamation-triangle',
-        help        : 'fa-question-circle-o'
+        info        : 'fa-info-circle',
+        information : 'fa-info-circle',
+        alert       : 'fa-exclamation-circle',
+        success     : 'fa-check-circle',
+        error       : 'fa-ban',
+        warning     : 'fa-exclamation-square', //'fa-exclamation-triangle',
+        help        : 'fa-question-circle'
     };
 
     $.bsNotyName = {
@@ -980,6 +997,13 @@ Sections:
     };
 
 
+
+
+    /***********************************************************************
+    ************************************************************************
+    7: Set-up jquery-bootstrap-message for different type of messages
+    ************************************************************************
+    ***********************************************************************/
     //Add 'messages' to fcoo.settings
     ns.messageStatus = {};
     ns.settings.add({
@@ -1010,6 +1034,9 @@ Sections:
     **************************************************************/
 
     var messageGroupOptions = {
+
+            icons: { externalLink: 'fa-external-link' },
+
             onStartLoading : function( messageGroup ){
                 //Disable the button while reading data
                 messageGroup.options.$button.addClass('disabled');
