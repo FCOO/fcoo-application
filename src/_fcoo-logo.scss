@@ -8,10 +8,10 @@ fcoo-background = background-color = default blue
 fcoo-app-background = background-color = application background-color
 *****************************************************/
 $default-favicon-color   : white;
-$app-favicon-color       : "{APPLICATION_FAVICONCOLOR}"; 
+$app-favicon-color       : "{APPLICATION_FAVICONCOLOR}";
 
 $default-background-color: #214b87;
-$app-background-color    : "{APPLICATION_COLOR}"; 
+$app-background-color    : "{APPLICATION_COLOR}";
 
 
 @font-face {
@@ -37,7 +37,7 @@ $app-background-color    : "{APPLICATION_COLOR}";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    color: $default-favicon-color; 
+    color: $default-favicon-color;
 
      &:before { content: "\e900"; }
 }
