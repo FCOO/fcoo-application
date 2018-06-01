@@ -273,10 +273,11 @@ div.loading {
       html.loading div.loading > div.version {
         font-family: sans-serif;
         height: 3rem;
-        font-size: 2rem; }
-        html.loading div.loading > div.version.with-content {
-          background-color: red;
-          color: white; }
+        font-size: 2rem;
+        background-color: red;
+        color: white; }
+        html.loading div.loading > div.version:empty {
+          visibility: hidden; }
       html.loading div.loading > div.logo {
         flex: 1 1 auto;
         width: 95%;

@@ -53,13 +53,14 @@ div.loading {
             text-align: center;
 
             &.version {
+                &:empty {
+                    visibility: hidden;
+                }
                 font-family: sans-serif;
                 height   : 3rem;
                 font-size: 2rem;
-                &.with-content {
-                    background-color: red;
-                    color           : white;
-                }
+                background-color: red;
+                color           : white;
             }
 
             &.logo {
@@ -77,11 +78,6 @@ div.loading {
                 animation-fill-mode      : both;
                 animation-iteration-count: infinite;
             }
-
-//REMOVED            &.working {
-//REMOVED                height     : 3rem;
-//REMOVED                font-size  : 1rem;
-//REMOVED            }
         }
     }
 

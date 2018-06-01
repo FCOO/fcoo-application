@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /***********************************************
     fcoo-fontawesome.scss,
 
@@ -3981,707 +3980,150 @@ Using
   font-style: normal;
   font-weight: 400;
   src: url("fonts/icomoon.eot");
-  src: url("fonts/icomoon.eot?#iefix") format("embedded-opentype"), url("fonts/icomoon.woff") format("woff"), url("fonts/icomoon.ttf") format("truetype"), url("fonts/fa-brands-400.svg#fontawesome") format("svg"); }
+  src: url("fonts/icomoon.eot?#iefix") format("embedded-opentype"), url("fonts/icomoon.woff") format("woff"), url("fonts/icomoon.ttf") format("truetype"), url("fonts/icomoon.svg#icomoon") format("svg"); }
 
 .fai {
   font-family: 'FCOO IcoMoon';
   font-weight: 400; }
 
-.fa-i-divide-outline:before {
-  content: ""; }
+.fa-layer:before {
+  content: "\e9ce"; }
 
-.fa-i-equals-outline:before {
-  content: ""; }
+.fa-layer-black:before {
+  content: "\e9cf"; }
 
-.fa-i-tick-outline:before {
-  content: ""; }
+.fa-map-objects:before {
+  content: "\ea45"; }
 
-.fa-i-minus-outline:before {
-  content: ""; }
+.fa-mouse-left:before {
+  content: "\ea6b"; }
 
-.fa-i-plus-outline:before {
-  content: ""; }
+.fa-mouse-right:before {
+  content: "\ea6c"; }
 
-.fa-i-times-outline:before {
-  content: ""; }
+.fa-rotate:before {
+  content: "\eaa4"; }
 
-.fa-i-pencil:before {
-  content: ""; }
+.fa-label-position:before {
+  content: "\eac8"; }
 
-.fa-i-connection:before {
-  content: ""; }
+.fa-label-corner-black:before {
+  content: "\eaca"; }
 
-.fa-i-connection2:before {
-  content: ""; }
+.fa-label-corner:before {
+  content: "\eacd"; }
 
-.fa-i-connection3:before {
-  content: ""; }
+.fa-label-center-black:before {
+  content: "\ead1"; }
 
-.fa-i-connection4:before {
-  content: ""; }
+.fa-label-center:before {
+  content: "\ead3"; }
 
-.fa-i-layer:before {
-  content: ""; }
-
-.fa-i-layer-black:before {
-  content: ""; }
-
-.fa-i-folder-black:before {
-  content: ""; }
-
-.fa-i-folder-open-black:before {
-  content: ""; }
-
-.fa-i-folder:before {
-  content: ""; }
-
-.fa-i-folder-open:before {
-  content: ""; }
-
-.fa-i-envelope:before {
-  content: ""; }
-
-.fa-i-envelope-black:before {
-  content: ""; }
-
-.fa-i-location:before {
-  content: ""; }
-
-.fa-i-location-white:before {
-  content: ""; }
-
-.fa-i-location-black:before {
-  content: ""; }
-
-.fa-i-location-your-position:before {
-  content: ""; }
-
-.fa-i-compass:before {
-  content: ""; }
-
-.fa-i-map-objects:before {
-  content: ""; }
-
-.fa-i-map-black:before {
-  content: ""; }
-
-.fa-i-map:before {
-  content: ""; }
-
-.fa-i-clock:before {
-  content: ""; }
-
-.fa-i-calendar:before {
-  content: ""; }
-
-.fa-i-printer:before {
-  content: ""; }
-
-.fa-i-printer-black:before {
-  content: ""; }
-
-.fa-i-mouse-left:before {
-  content: ""; }
-
-.fa-i-mouse-right:before {
-  content: ""; }
-
-.fa-i-keyboard-black:before {
-  content: ""; }
-
-.fa-i-keyboard:before {
-  content: ""; }
-
-.fa-i-desktop:before {
-  content: ""; }
-
-.fa-i-laptop:before {
-  content: ""; }
-
-.fa-i-mobile:before {
-  content: ""; }
-
-.fa-i-mobile-max:before {
-  content: ""; }
-
-.fa-i-tablet:before {
-  content: ""; }
-
-.fa-i-disk:before {
-  content: ""; }
-
-.fa-i-rotate:before {
-  content: ""; }
-
-.fa-i-language-black:before {
-  content: ""; }
-
-.fa-i-language:before {
-  content: ""; }
-
-.fa-i-label-position:before {
-  content: ""; }
-
-.fa-i-label-corner-black:before {
-  content: ""; }
-
-.fa-i-label-corner:before {
-  content: ""; }
-
-.fa-i-label-center-black:before {
-  content: ""; }
-
-.fa-i-label-center:before {
-  content: ""; }
-
-.fa-i-label-hide-black:before {
-  content: ""; }
-
-.fa-i-search:before {
-  content: ""; }
-
-.fa-i-zoom-in:before {
-  content: ""; }
-
-.fa-i-zoom-out:before {
-  content: ""; }
-
-.fa-i-search2:before {
-  content: ""; }
-
-.fa-i-expand:before {
-  content: ""; }
-
-.fa-i-contract:before {
-  content: ""; }
-
-.fa-i-setting2-black:before {
-  content: ""; }
-
-.fa-i-setting-black:before {
-  content: ""; }
-
-.fa-i-setting:before {
-  content: ""; }
-
-.fa-i-leaf-black:before {
-  content: ""; }
-
-.fa-i-leaf:before {
-  content: ""; }
-
-.fa-i-meter-slow:before {
-  content: ""; }
-
-.fa-i-meter-medium:before {
-  content: ""; }
-
-.fa-i-meter-fast:before {
-  content: ""; }
-
-.fa-i-bin:before {
-  content: ""; }
-
-.fa-i-center-on-map:before {
-  content: ""; }
-
-.fa-i-target:before {
-  content: ""; }
-
-.fa-i-list-numbered:before {
-  content: ""; }
-
-.fa-i-list:before {
-  content: ""; }
-
-.fa-i-list-dot:before {
-  content: ""; }
-
-.fa-i-menu:before {
-  content: ""; }
-
-.fa-i-earth:before {
-  content: ""; }
-
-.fa-i-earth-black:before {
-  content: ""; }
-
-.fa-i-earth-white:before {
-  content: ""; }
-
-.fa-i-star:before {
-  content: ""; }
-
-.fa-i-star-black:before {
-  content: ""; }
-
-.fa-i-smiley-good:before {
-  content: ""; }
-
-.fa-i-smiley-bad:before {
-  content: ""; }
-
-.fa-i-smiley-neutral:before {
-  content: ""; }
-
-.fa-i-hand:before {
-  content: ""; }
-
-.fa-i-move:before {
-  content: ""; }
-
-.fa-i-warning:before {
-  content: ""; }
-
-.fa-i-warning-black:before {
-  content: ""; }
-
-.fa-i-notification:before {
-  content: ""; }
-
-.fa-i-notification-black:before {
-  content: ""; }
-
-.fa-i-plus-thick:before {
-  content: ""; }
-
-.fa-i-minus-thick:before {
-  content: ""; }
-
-.fa-i-plus:before {
-  content: ""; }
-
-.fa-i-minus:before {
-  content: ""; }
-
-.fa-i-plus-thin:before {
-  content: ""; }
-
-.fa-i-minus-thin:before {
-  content: ""; }
-
-.fa-i-plus-circle:before {
-  content: ""; }
-
-.fa-i-minus-circle:before {
-  content: ""; }
-
-.fa-i-plus-circle-black:before {
-  content: ""; }
-
-.fa-i-minus-circle-black:before {
-  content: ""; }
-
-.fa-i-info:before {
-  content: ""; }
-
-.fa-i-info-black:before {
-  content: ""; }
-
-.fa-i-close-circle:before {
-  content: ""; }
-
-.fa-i-close-circle-black:before {
-  content: ""; }
-
-.fa-i-blocked:before {
-  content: ""; }
-
-.fa-i-close-square:before {
-  content: ""; }
-
-.fa-i-close-square-black:before {
-  content: ""; }
-
-.fa-i-cross:before {
-  content: ""; }
-
-.fa-i-cancel:before {
-  content: ""; }
-
-.fa-i-close:before {
-  content: ""; }
-
-.fa-i-ok:before {
-  content: ""; }
-
-.fa-i-ok-outline:before {
-  content: ""; }
-
-.fa-i-play-circle:before {
-  content: ""; }
-
-.fa-i-pause-circle:before {
-  content: ""; }
-
-.fa-i-stop-circle:before {
-  content: ""; }
-
-.fa-i-previous-circle:before {
-  content: ""; }
-
-.fa-i-next-circle:before {
-  content: ""; }
-
-.fa-i-backward-circle:before {
-  content: ""; }
-
-.fa-i-forward-circle:before {
-  content: ""; }
-
-.fa-i-play:before {
-  content: ""; }
-
-.fa-i-pause:before {
-  content: ""; }
-
-.fa-i-stop:before {
-  content: ""; }
-
-.fa-i-backward:before {
-  content: ""; }
-
-.fa-i-forward:before {
-  content: ""; }
-
-.fa-i-first:before {
-  content: ""; }
-
-.fa-i-last:before {
-  content: ""; }
-
-.fa-i-previous:before {
-  content: ""; }
-
-.fa-i-next:before {
-  content: ""; }
-
-.fa-i-loop:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thick-up:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-up:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thin-up:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thick-right:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-right:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thin-right:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thick-down:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-down:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thin-down:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thick-left:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-left:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-thin-left:before {
-  content: ""; }
-
-.fa-i-arrow-small-up:before {
-  content: ""; }
-
-.fa-i-arrow-small-right:before {
-  content: ""; }
-
-.fa-i-arrow-small-down:before {
-  content: ""; }
-
-.fa-i-arrow-small-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-up-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-up:before {
-  content: ""; }
-
-.fa-i-arrow-stick-up-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-down-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-down:before {
-  content: ""; }
-
-.fa-i-arrow-stick-down-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-up-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-up:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-up-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-down-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-down:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-down-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-thin-left:before {
-  content: ""; }
-
-.fa-i-arrow-up-left:before {
-  content: ""; }
-
-.fa-i-arrow-up:before {
-  content: ""; }
-
-.fa-i-arrow-up-right:before {
-  content: ""; }
-
-.fa-i-arrow-right:before {
-  content: ""; }
-
-.fa-i-arrow-down-right:before {
-  content: ""; }
-
-.fa-i-arrow-down:before {
-  content: ""; }
-
-.fa-i-arrow-down-left:before {
-  content: ""; }
-
-.fa-i-arrow-left:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-gray-circle-up:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-gray-circle-right:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-gray-circle-down:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-gray-circle-left:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-circle-up:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-circle-right:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-circle-down:before {
-  content: ""; }
-
-.fa-i-arrow-chevron-circle-left:before {
-  content: ""; }
-
-.fa-i-arrow-circle-up-left:before {
-  content: ""; }
-
-.fa-i-arrow-circle-up:before {
-  content: ""; }
-
-.fa-i-arrow-circle-up-right:before {
-  content: ""; }
-
-.fa-i-arrow-circle-right:before {
-  content: ""; }
-
-.fa-i-arrow-circle-down-right:before {
-  content: ""; }
-
-.fa-i-arrow-circle-down:before {
-  content: ""; }
-
-.fa-i-arrow-circle-down-left:before {
-  content: ""; }
-
-.fa-i-arrow-circle-left:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-up-left:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-up:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-up-right:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-right:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-down-right:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-down:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-down-left:before {
-  content: ""; }
-
-.fa-i-arrow-circle-black-left:before {
-  content: ""; }
-
-.fa-i-arrow-square-up-left:before {
-  content: ""; }
-
-.fa-i-arrow-square-up:before {
-  content: ""; }
-
-.fa-i-arrow-square-up-right:before {
-  content: ""; }
-
-.fa-i-arrow-square-right:before {
-  content: ""; }
-
-.fa-i-arrow-square-down-right:before {
-  content: ""; }
-
-.fa-i-arrow-square-down:before {
-  content: ""; }
-
-.fa-i-arrow-square-down-left:before {
-  content: ""; }
-
-.fa-i-arrow-square-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-up:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-down:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-left:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-gray-up:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-gray-right:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-gray-down:before {
-  content: ""; }
-
-.fa-i-arrow-stick-outline-gray-left:before {
-  content: ""; }
-
-.fa-i-backspace:before {
-  content: ""; }
-
-.fa-i-backspace2:before {
-  content: ""; }
-
-.fa-i-tab:before {
-  content: ""; }
-
-.fa-i-checkbox-checked:before {
-  content: ""; }
-
-.fa-i-checkbox:before {
-  content: ""; }
-
-.fa-i-checkbox-partial:before {
-  content: ""; }
-
-.fa-i-square-black:before {
-  content: ""; }
-
-.fa-i-triangle:before {
-  content: ""; }
-
-.fa-i-triangle-black:before {
-  content: ""; }
-
-.fa-i-diamond:before {
-  content: ""; }
-
-.fa-i-diamond-black:before {
-  content: ""; }
-
-.fa-i-checkbox-checked-black:before {
-  content: ""; }
-
-.fa-i-checkbox-black:before {
-  content: ""; }
-
-.fa-i-checkbox-partial-black:before {
-  content: ""; }
-
-.fa-i-radio-checked:before {
-  content: ""; }
-
-.fa-i-radio-checked-black:before {
-  content: ""; }
-
-.fa-i-radio:before {
-  content: ""; }
-
-.fa-i-success-black:before {
-  content: ""; }
-
-.fa-i-digital-0:before {
-  content: ""; }
-
-.fa-i-digital-1:before {
-  content: ""; }
-
-.fa-i-digital-2:before {
-  content: ""; }
-
-.fa-i-digital-3:before {
-  content: ""; }
-
-.fa-i-digital-4:before {
-  content: ""; }
-
-.fa-i-digital-5:before {
-  content: ""; }
-
-.fa-i-digital-6:before {
-  content: ""; }
-
-.fa-i-digital-7:before {
-  content: ""; }
-
-.fa-i-digital-8:before {
-  content: ""; }
-
-.fa-i-digital-9:before {
-  content: ""; }
+.fa-meter-slow:before {
+  content: "\ebdd"; }
+
+.fa-meter-medium:before {
+  content: "\ebde"; }
+
+.fa-meter-fast:before {
+  content: "\ebdf"; }
+
+.fa-earth:before {
+  content: "\ec93"; }
+
+.fa-earth-black:before {
+  content: "\ec94"; }
+
+.fa-earth-white:before {
+  content: "\ec95"; }
+
+.fa-backspace:before {
+  content: "\ee40"; }
+
+.fa-backspace2:before {
+  content: "\ee41"; }
+
+.fa-tab:before {
+  content: "\ee42"; }
+
+.fa-digital-0:before {
+  content: "\eed3"; }
+
+.fa-digital-1:before {
+  content: "\eed4"; }
+
+.fa-digital-2:before {
+  content: "\eed5"; }
+
+.fa-digital-3:before {
+  content: "\eed6"; }
+
+.fa-digital-4:before {
+  content: "\eed7"; }
+
+.fa-digital-5:before {
+  content: "\eed8"; }
+
+.fa-digital-6:before {
+  content: "\eed9"; }
+
+.fa-digital-7:before {
+  content: "\eeda"; }
+
+.fa-digital-8:before {
+  content: "\eedb"; }
+
+.fa-digital-9:before {
+  content: "\eedc"; }
+
+/******************************************
+Special class to adjust overlaying icons
+******************************************/
+.fa-inside-circle {
+  font-size: 0.65em; }
+
+/******************************************
+fa-shrink-PERCENT
+shrink a overlying icon to size to PERCENT% x PERCENT%
+.fa-top .fa-bottom .fa-left .fa-right  sets the position of the overlaying icon
+Ex.
+    <span class="fa-stack">
+        <i class="far fa-globe fa-stack-1x"></i>
+        <i class="far fa-clock fa-stack-1x fa-shrink-65 fa-bottom fa-right"></i>
+    </span>
+******************************************/
+.fa-shrink-50 {
+  font-size: 0.5em; }
+  .fa-shrink-50.fa-top {
+    top: -12.5%; }
+  .fa-shrink-50.fa-bottom {
+    top: 12.5%; }
+  .fa-shrink-50.fa-left {
+    left: -12.5%; }
+  .fa-shrink-50.fa-right {
+    left: 12.5%; }
+
+.fa-shrink-65 {
+  font-size: 0.65em; }
+  .fa-shrink-65.fa-top {
+    top: -8.75%; }
+  .fa-shrink-65.fa-bottom {
+    top: 8.75%; }
+  .fa-shrink-65.fa-left {
+    left: -8.75%; }
+  .fa-shrink-65.fa-right {
+    left: 8.75%; }
+
+.fa-shrink-90 {
+  font-size: 0.9em; }
+  .fa-shrink-90.fa-top {
+    top: -2.5%; }
+  .fa-shrink-90.fa-bottom {
+    top: 2.5%; }
+  .fa-shrink-90.fa-left {
+    left: -2.5%; }
+  .fa-shrink-90.fa-right {
+    left: 2.5%; }
 
 /***********************************************
     fcoo-language.scss,

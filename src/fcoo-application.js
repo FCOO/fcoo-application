@@ -171,47 +171,37 @@ Sections:
     3: Set up 'loading...'
     ************************************************************************
     ***********************************************************************/
+    var $html = $('html'),
+        $body = $('body');
+    $(function() {
+        //Set <html> class = 'loading' and adds logo and spinner
+        $html.modernizrOn('loading');
+        $(window).on('load', function() { $html.modernizrOff('loading'); });
 
-    //Set <html> class = 'loading' and adds logo and spinner
-    $('html').modernizrOn('loading');
-    $(window).on( 'load', function() { $('html').modernizrOff('loading'); });
+        //Find or create outer div displayed when loading
+        var $loadingDiv = $body.find('div.loading');
+        $loadingDiv = $loadingDiv.length ? $loadingDiv : $('<div class="loading"></div>' ).prependTo( $body );
+        $loadingDiv.addClass('loading fcoo-app-background');
 
-    var $body       = $('body'),
-        $loadingDiv = $('body > div.loading'),
-        $versionDiv;
+        //Find or create div with version-text (ex. "DEMO")
+        var $versionDiv = $loadingDiv.find('.version');
+        $versionDiv = $versionDiv.length ? $versionDiv : $('<div class="version fcoo-app-color"></div>').appendTo( $loadingDiv );
 
-    if (!$loadingDiv.length){
-      $loadingDiv = $('<div class="loading"></div>' );
-      $loadingDiv.prependTo( $body );
-    }
+        //Test if the path-name contains any of the words defining the version to be none-production
+        var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
 
-    $loadingDiv
-        .addClass('loading _fcoo-app-color fcoo-app-background');
+        $.each( ['BETA', 'STAGING','DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
+            if (urlStr.indexOf(name) > -1){
+                $versionDiv.text( name );
+                window.document.title = name +' - ' + window.document.title;
+                return false;
+            }
+        });
 
-    //Create and append div with version-text (ex. "DEMO")
-    $versionDiv =
-        $('<div class="version fcoo-app-color"></div>')
-            .appendTo( $loadingDiv );
-    //Test if the path-name contains any of the words defining the version to be none-production
-    var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
-
-    $.each( ['BETA', 'STAGING','DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
-        if (urlStr.indexOf(name) > -1){
-            $versionDiv.text( name );
-            $versionDiv.addClass('with-content');
-            window.document.title = name +' - ' + window.document.title;
-            return false;
-        }
+        //Find or create div with logo
+        if (!$loadingDiv.find('div.logo').length)
+            $loadingDiv.append('<div class="logo fcoo-app-color"></div>');
     });
-
-    if (!$versionDiv.find('div.logo').length)
-        //Create and append div with logo
-        $('<div class="logo fcoo-app-color"></div>')
-            .appendTo( $loadingDiv );
-
-    //Create and append div with working-icon
-//REMOVED    $('<div class="working fcoo-app-color"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>')
-//REMOVED        .appendTo( $loadingDiv );
 
     //Call Url.adjustUrl() to remove broken values in the url
     window.Url.adjustUrl();
