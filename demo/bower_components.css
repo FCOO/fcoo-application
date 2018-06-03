@@ -4180,47 +4180,11 @@ Ex.
       width: 0.9em;
       background-size: 0.9em 0.9em; }
 
-html.flag-dk .hide-for-flag-dk {
-  display: none !important; }
-
-html.no-flag-dk .show-for-flag-dk {
-  display: none !important; }
-
-html.flag-fo .hide-for-flag-fo {
-  display: none !important; }
-
-html.no-flag-fo .show-for-flag-fo {
-  display: none !important; }
-
-html.flag-gl .hide-for-flag-gl {
-  display: none !important; }
-
-html.no-flag-gl .show-for-flag-gl {
-  display: none !important; }
-
-html.lang-da .hide-for-lang-da {
-  display: none !important; }
-
-html.no-lang-da .show-for-lang-da {
-  display: none !important; }
-
-html.lang-en .hide-for-lang-en {
-  display: none !important; }
-
-html.no-lang-en .show-for-lang-en {
-  display: none !important; }
-
 .lang-flag-icon-flag {
   font-family: dkfogl; }
 
 .lang-flag-icon-lang {
   font-family: daenfokl; }
-
-.lang-flag-icon-flag-modernizr {
-  font-family: dkfogl; }
-
-.lang-flag-icon-lang-modernizr {
-  font-family: daen; }
 
 html.lang2-da .hide-for-lang2-da {
   display: none !important; }

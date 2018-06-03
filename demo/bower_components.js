@@ -27059,106 +27059,51 @@ return index;
 
 ;
 /****************************************************************************
-    lang-flag-icon.js,
+	modernizr-javascript.js, 
 
-    (c) 2016, FCOO
+	(c) 2016, FCOO
 
-    https://github.com/FCOO/lang-flag-icon
-    https://github.com/FCOO
+	https://github.com/FCOO/modernizr-javascript
+	https://github.com/FCOO
 
 ****************************************************************************/
 
-(function ($, window/*, document, undefined*/) {
-    "use strict";
+(function ($, window, document, undefined) {
+	"use strict";
+	
+	var ns = window;
 
-    var ns = window;
+    //Extend the jQuery prototype
+    $.fn.extend({
+        modernizrOn : function( test ){ 
+            return this.modernizrToggle( test, true ); 
+        },
 
-    function LangFlag( options ) {
-        this.VERSION = "1.0.1";
-        this.options = $.extend({
-            //Default options
-            defaultFlag: 'dk',
-            defaultLang: 'da'
-        }, options || {} );
+        modernizrOff: function( test ){ 
+            return this.modernizrToggle( test, false ); 
+        },
+        
+        modernizrToggle: function( test, on ){ 
+		if ( on === undefined )
+            return this.modernizrToggle( test, !this.hasClass( test ) );
 
-        this.modernizr = window.Modernizr;
-
-        function readListFromFontFamily( className ){
-            var meta= $('<meta class="' + className + '">').appendTo(document.head),
-                str = meta.css('font-family'),
-                i, 
-                result = [];
-
-            meta.remove();
-            for (i=0; i<str.length; i=i+2 )
-                result.push( str.slice(i, i+2) );
-            return result;
+            on = !!on; //on => Boolean
+            return this.toggleClass( test, on ).toggleClass( 'no-' + test, !on );
         }
-
-        //Reads the list of flags from the css-file using the 'dummy' class "lang-flag-icon-flag"
-        this.flagList = readListFromFontFamily( 'lang-flag-icon-flag' );
-
-        //Reads the list of flags with modernizr-classes from the css-file using the 'dummy' class "lang-flag-icon-flag-modernizr"
-        this.flagModernizrList = readListFromFontFamily( 'lang-flag-icon-flag-modernizr' );
-
-        if (this.flagModernizrList.length)
-            this.setFlag( this.options.defaultFlag);
-
-        //Reads the list of langs from the css-file using the 'dummy' class "lang-flag-icon-lang"
-        this.langList = readListFromFontFamily( 'lang-flag-icon-lang' );
-
-        //Reads the list of langs with modernizr-classes from the css-file using the 'dummy' class "lang-flag-icon-lang-modernizr"
-        this.langModernizrList = readListFromFontFamily( 'lang-flag-icon-lang-modernizr' );
-
-        if (this.langModernizrList.length)
-            this.setLang( this.options.defaultLang);
+    });
 
 
+    //Add methods to window = works on <html>
+    ns.modernizrOn  = function( test ){ ns.modernizrToggle( test, true ); };
 
-    }
+    ns.modernizrOff = function( test ){ ns.modernizrToggle( test, false ); };
 
-    // expose access to the constructor
-    ns.LangFlag = LangFlag;
-
-    //Extend the prototype
-    ns.LangFlag.prototype = {
-
-        //setFlag
-        setFlag: function( flag ){    this._set( 'flag', this.flagModernizrList, flag );    },
-
-        //setLang
-        setLang: function( lang ){    this._set( 'lang', this.langModernizrList, lang );    },
-
-        //_set
-        _set: function( prefix, list, id ){
-            var i, nextId, isOn, onClassName, offClassName;
-            for (i=0; i<list.length; i++ ){
-                nextId = list[i];
-                isOn = (nextId == id);
-                onClassName  = prefix + '-' + nextId;
-                offClassName = 'no-' + onClassName;
-                $('html').toggleClass( onClassName, isOn );
-                $('html').toggleClass( offClassName, !isOn );
-            }
-        }
-
-    };
-
-
-    /******************************************
-    Initialize/ready
-    *******************************************/
-    $(function() { //"$( function() { ... });" is short for "$(document).ready( function(){...});"
-
-    }); //End of initialize/ready
-    //******************************************
-
-
+    ns.modernizrToggle = function( test, on ){ $('html').modernizrToggle( test, on ); };
 
 }(jQuery, this, document));
 ;
 /****************************************************************************
-    fcoo-language.js, 
+    fcoo-language.js,
 
     (c) 2016, FCOO
 
@@ -27169,16 +27114,16 @@ return index;
 
 (function ($, window/*, document, undefined*/) {
     "use strict";
-    
+
     //Create fcoo-namespace
     window.fcoo = window.fcoo || {};
-    var ns = window.fcoo; 
+    var ns = window.fcoo;
 
     //global events "languagechanged" fired when the language is changed
     var languagechanged = "languagechanged";
-    
+
     //*****************************************************************************
-    // All available languages.  
+    // All available languages.
     // **NOTE ** THIS LIST MUST MATCH THE LIST $lang-list IN src/fcoo-language.scss
     //******************************************************************************
     var languages = ['da', 'en',  'fo', 'kl' /*', de', 'sv', 'no'*/];
@@ -27187,24 +27132,24 @@ return index;
     var standardLanguage  = 'en',                     //Standard language is allways english (en)
         standardLanguages = [standardLanguage, 'da']; //Standard languages is allways danish (da) and english (en)
 
-    //getLanguage( 'da-DK') => 'da'    
+    //getLanguage( 'da-DK') => 'da'
     function getLanguage( language_country ){ return language_country.split('-')[0]; }
 
     //validateLanguage( lang ): Return lang if it is in languages Else return ''
     function validateLanguage( lang ){ return languages.indexOf( lang ) > -1 ? lang : ''; }
-        
+
     //isStandardLanguage( lang ) Return lang if lang is in standardLanguages ('da' or 'en') Else return ''
-    function isStandardLanguage( lang ){ return standardLanguages.indexOf( lang ) > -1 ? lang : ''; }    
-    
+    function isStandardLanguage( lang ){ return standardLanguages.indexOf( lang ) > -1 ? lang : ''; }
+
     //browserLanguage = Language of the browser
-    var browserLanguage = getLanguage( 
-                              navigator.language || 
-                              navigator.userLanguage || 
-                              navigator.browserLanguage || 
-                              navigator.systemLanguage || 
-                              standardLanguage 
+    var browserLanguage = getLanguage(
+                              navigator.language ||
+                              navigator.userLanguage ||
+                              navigator.browserLanguage ||
+                              navigator.systemLanguage ||
+                              standardLanguage
                           ),
-        
+
         //defaultLanguage = valid value of: param 'lang' OR the browser language OR 'en'
         defaultLanguage = validateLanguage( window.Url.queryString('lang') ) ||
                           validateLanguage( browserLanguage ) ||
@@ -27212,22 +27157,22 @@ return index;
 
     //The ?lang=... is removed. Is only used if no 'language' is set in fcoo.settings
     window.Url.updateSearchParam('lang');
-    
+
 
     /***********************************************************
     Some of the contents on FCOOs web applications are only available
-    in either Danish (da) or English (en). 
+    in either Danish (da) or English (en).
     If the user has selected a language other than da or en they select between
     da and en to be the second language (language2 in fcoo.settings)
-    This is primarily to allow users how has selected Faroese or Greenlandic 
+    This is primarily to allow users how has selected Faroese or Greenlandic
     to see no-translated contents in Danish.
 
     It is also possible that some phrases are translated into languages not in
-    the list of available languages. Eq. links to homepages offen 'comes' in national 
+    the list of available languages. Eq. links to homepages offen 'comes' in national
     language and English "smhi.se" is in Swedish or English
-    
+
     The function getFallbackLng sets up the fallback languages for i18next
-    
+
     ***********************************************************/
     function getFallbackLng(lang, lang2){
         var result = [];
@@ -27239,13 +27184,13 @@ return index;
         //If the browser language is not among the available languages => use the browser language as first fallback
         if (languages.indexOf(browserLanguage) == -1)
             addLang(browserLanguage);
-        
+
         //Validate lang2 to be 'da' or 'en' and adds it
         lang2 = isStandardLanguage( lang2 ) || isStandardLanguage( browserLanguage ) || standardLanguage;
         addLang( lang2 );
 
         //Add alternativ to lang 2 = da/en when lang2 is en/da
-        addLang( standardLanguages[ 1 - standardLanguages.indexOf( lang2 ) ] ); 
+        addLang( standardLanguages[ 1 - standardLanguages.indexOf( lang2 ) ] );
 
         return result;
     }
@@ -27255,50 +27200,51 @@ return index;
     setLanguageAndLanguage2
     ***********************************************************/
     function setLanguageAndLanguage2(lang, lang2){
-        i18next.options.fallbackLng = getFallbackLng(lang, lang2);  
+        i18next.options.fallbackLng = getFallbackLng(lang, lang2);
         i18next.changeLanguage( lang );
     }
 
     /***********************************************************
     Set up and load language via fcoo.settings
     ***********************************************************/
-    window.fcoo.settings.add({
-        id          : 'language', 
+    ns.settings.add({
+        id          : 'language',
         validator   : validateLanguage,
-        applyFunc   : function( lang ){ setLanguageAndLanguage2( lang, window.fcoo.settings.get('language2') ); }, 
+        applyFunc   : function( lang ){ setLanguageAndLanguage2( lang, ns.settings.get('language2') ); },
         defaultValue: defaultLanguage,
         callApply   : false
     });
 
     //language used when initialize i18next
-    var language = window.fcoo.settings.get( 'language' );
+    var language = ns.settings.get( 'language' );
 
-    
+
     /***********************************************************
     Set up and load language2 via fcoo.settings
     ***********************************************************/
-    window.fcoo.settings.add({
-        id          : 'language2', 
+    ns.settings.add({
+        id          : 'language2',
         validator   : validateLanguage,
         applyFunc   : function( lang2 ){ setLanguageAndLanguage2( i18next.language, lang2 ); },
         defaultValue: standardLanguage,
         callApply   : false
     });
-    
-    
-    //fallback used when initialize i18next
-    var fallbackLng = getFallbackLng( language, window.fcoo.settings.get('language2') );
 
-    
+
+    //fallback used when initialize i18next
+    var fallbackLng = getFallbackLng( language, ns.settings.get('language2') );
+
+
     /***********************************************************
-    Create fcoo.langFlag
+    Create fcoo.langFlag - REMOVED IN VERSION 5.x
     ***********************************************************/
-    ns.langFlag = new window.LangFlag({ defaultFlag:'dk', defaultLang: 'da' });
+//    ns.langFlag = new window.LangFlag({ defaultFlag:'dk', defaultLang: 'da' });
 
     //Change language in ns.langFlag when language is changed
-    window.fcoo.events.on( languagechanged, function(){
-        ns.langFlag.setLang( i18next.language );
-    });
+//    ns.events.on( languagechanged, function(){
+//        ns.langFlag.setLang( i18next.language );
+//    });
+
 
     /***********************************************************
     Ininialize i18next
@@ -27308,7 +27254,7 @@ return index;
         fallbackLng : fallbackLng,
         keySeparator: '#',
 
-        useDataAttrOptions: true, 
+        useDataAttrOptions: true,
         initImmediate     : false, //prevents resource loading in init function inside setTimeout (default async behaviour)
         resources         : {},    //Empty bagend
 
@@ -27316,15 +27262,20 @@ return index;
     });
     i18next.use( window.i18nextIntervalPluralPostProcessor );
 
-        
+
     //Fire languagechenged when language is changed
     i18next.on('languageChanged', function() {
-        window.fcoo.events.fire( languagechanged );
+        ns.events.fire( languagechanged );
     });
 
-    //Update all element when language changes
-    window.fcoo.events.on( languagechanged, function() { 
-        $("*").localize();        
+    //Set modernizr-test and set all element when language changes
+    ns.events.on( languagechanged, function() {
+        var $html = $('html');
+        $.each( languages, function( index, lang ){
+            $html.modernizrToggle('lang-'+lang, lang == i18next.language);
+        });
+
+        $("*").localize();
     });
 
 
@@ -27340,12 +27291,12 @@ return index;
     };
     i18next.use(nameOfProcessor);
 */
-    
-    //Initialize/ready 
-    $(function() { 
+
+    //Initialize/ready
+    $(function() {
         //Update all language related elements
-        window.fcoo.settings.set('language', language );
-    }); 
+        ns.settings.set('language', language );
+    });
 
 
 }(jQuery, this, document));
@@ -30666,50 +30617,6 @@ else {
 }(window.Modernizr, jQuery, this, document));
 
 
-;
-/****************************************************************************
-	modernizr-javascript.js, 
-
-	(c) 2016, FCOO
-
-	https://github.com/FCOO/modernizr-javascript
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window, document, undefined) {
-	"use strict";
-	
-	var ns = window;
-
-    //Extend the jQuery prototype
-    $.fn.extend({
-        modernizrOn : function( test ){ 
-            return this.modernizrToggle( test, true ); 
-        },
-
-        modernizrOff: function( test ){ 
-            return this.modernizrToggle( test, false ); 
-        },
-        
-        modernizrToggle: function( test, on ){ 
-		if ( on === undefined )
-            return this.modernizrToggle( test, !this.hasClass( test ) );
-
-            on = !!on; //on => Boolean
-            return this.toggleClass( test, on ).toggleClass( 'no-' + test, !on );
-        }
-    });
-
-
-    //Add methods to window = works on <html>
-    ns.modernizrOn  = function( test ){ ns.modernizrToggle( test, true ); };
-
-    ns.modernizrOff = function( test ){ ns.modernizrToggle( test, false ); };
-
-    ns.modernizrToggle = function( test, on ){ $('html').modernizrToggle( test, on ); };
-
-}(jQuery, this, document));
 ;
 /***************************************************************************
     modernizr-mediaquery.js,

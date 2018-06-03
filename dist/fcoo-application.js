@@ -657,11 +657,11 @@ Sections:
     ***********************************************************************/
     var $html = $('html'),
         $body = $('body');
-    $(function() {
-        //Set <html> class = 'loading' and adds logo and spinner
-        $html.modernizrOn('loading');
-        $(window).on('load', function() { $html.modernizrOff('loading'); });
 
+    //Set <html> class = 'loading' and adds logo and spinner
+    $html.modernizrOn('loading');
+    $(window).on('load', function() { $html.modernizrOff('loading'); });
+    $(function() {
         //Find or create outer div displayed when loading
         var $loadingDiv = $body.find('div.loading');
         $loadingDiv = $loadingDiv.length ? $loadingDiv : $('<div class="loading"></div>' ).prependTo( $body );
