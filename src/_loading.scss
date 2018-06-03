@@ -43,7 +43,6 @@ div.loading {
 
         //Logo, Version and Working
         & > div {
-            display: block !important;
             flex   : 0 0 auto;
             width  : 100%;
             margin : 0;
@@ -56,9 +55,10 @@ div.loading {
                 &:empty {
                     visibility: hidden;
                 }
-                font-family: sans-serif;
-                height   : 3rem;
-                font-size: 2rem;
+                font-family     : sans-serif;
+                font-size       : 2rem;
+                height          :  3rem;
+                margin-bottom   : -3rem; //= -height
                 background-color: red;
                 color           : white;
             }
@@ -68,7 +68,7 @@ div.loading {
                 width    : 95%;
                 max-width: 600px;
 
-                background-image   : url("images/FCOO_logo_notext.svg");
+                background-image   : url("images/FCOO_logo_notext.png");
                 background-repeat  : no-repeat;
                 background-size    : contain;
                 background-position: center center;

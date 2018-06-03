@@ -263,7 +263,6 @@ div.loading {
     opacity: 1;
     cursor: progress; }
     html.loading div.loading > div {
-      display: block !important;
       flex: 0 0 auto;
       width: 100%;
       margin: 0;
@@ -272,8 +271,9 @@ div.loading {
       text-align: center; }
       html.loading div.loading > div.version {
         font-family: sans-serif;
-        height: 3rem;
         font-size: 2rem;
+        height: 3rem;
+        margin-bottom: -3rem;
         background-color: red;
         color: white; }
         html.loading div.loading > div.version:empty {
@@ -282,7 +282,7 @@ div.loading {
         flex: 1 1 auto;
         width: 95%;
         max-width: 600px;
-        background-image: url("images/FCOO_logo_notext.svg");
+        background-image: url("images/FCOO_logo_notext.png");
         background-repeat: no-repeat;
         background-size: contain;
         background-position: center center;
