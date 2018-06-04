@@ -30654,7 +30654,7 @@ else {
 
             if (!ret.hasOwnProperty(key)) {
                 ret[key] = val;
-            } else 
+            } else
                 if (Array.isArray(ret[key])) {
                     ret[key].push(val);
                 } else {
@@ -30678,43 +30678,103 @@ else {
 
         this.options = $.extend({
             //Default options
-            VERSION           : "1.2.10",
+            VERSION             : "1.3.0",
+            htmlFontSize        : 16,
+            createFIRSTup       : false, //When true the media query FIRST-up (allway display) and no-FIRST-up (allways hidden) are created. MUST MATCH $create-FIRST-up
+            createLASTdown      : false, //When true the media query LAST-down (allway display) and no-LAST-down (allways hidden) are created. MUST MATCH $create-LAST-down
             useWindowClientDim: true,
         }, options || {} );
 
+        var _this = this,
+            meta,
+            mediaJSON  = {},
+            minMaxJSON = {};
 
-        //'Reads the different media queries from the css-file using the 'dummy' class "modernizr-mediaquery-media-query"
-        var id,
-            meta      = $('<meta class="modernizr-mediaquery-media-query">').appendTo(document.head),
-            mediaJSON = parseStyleToObject(meta.css('font-family'));
-        meta.remove();        
-
-        this.mediaQueryList = [];
-        for (id in mediaJSON)
-            this.mediaQueryList.push({
-                id: id,
-                mq: mediaJSON[id],
-                on: false
+        if (this.options.breakpoints){
+            //Create mediaJSON and minMaxJSON from options.breakpoints
+            var breakpointList = [];
+            $.each( this.options.breakpoints, function( id, minPx ){
+                breakpointList.push( {id: id, minPx: minPx} );
             });
-    
-            
-        //'Reads the different min-max-intervalls from the css-file using the 'dummy' class "modernizr-mediaquery-min-max"
-        meta      = $('<meta class="modernizr-mediaquery-min-max">').appendTo(document.head);
-        mediaJSON = parseStyleToObject(meta.css('font-family'));
-        meta.remove();        
+            breakpointList.sort( function( bp1, bp2 ){return bp1 > bp2; });
 
+            $.each( breakpointList, function( index, bp ){
+                //Set max eq next min - 1
+                var id = bp.id,
+                    minPx = bp.minPx,
+                    maxPx = (index == breakpointList.length-1) ? 0 : breakpointList[index+1].minPx-1,
+                    min = minPx / _this.options.htmlFontSize,
+                    minEm = min+'em',
+                    max = maxPx / _this.options.htmlFontSize,
+                    maxEm = max+'em',
+                    mq     = '',
+                    mqUp   = '',
+                    mqDown = '';
+
+                if (min > 0) {
+                    mq   = mq   + ' and (min-width: '+ minEm+')';
+                    mqUp = mqUp + ' and (min-width: '+ minEm+')';
+                }
+                if (max > 0) {
+                    mq     = mq     + ' and (max-width: '+ maxEm+')';
+                    mqDown = mqDown + ' and (max-width: '+ maxEm+')';
+                }
+
+                //Add mediaquery and minMax for id
+                mediaJSON[id]  = 'screen' + mq;
+                minMaxJSON[id] = minPx + 'px_' + maxPx+'px';
+
+                //Add mediaquery for id-down
+                if ((index < breakpointList.length-1) || options.createLASTdown){
+                    mediaJSON[id+'-down']  = 'screen' + mqDown;
+                    minMaxJSON[id+'-down'] = '0_' + maxPx+'px';
+                }
+
+                //Add mediaquery for id-up
+                if (index || options.createFIRSTup){
+                    mediaJSON[id+'-up']  = 'screen' + mqUp;
+                    minMaxJSON[id+'-up'] = minPx + 'px_0';
+                }
+            });
+
+            //Add special values for portrait and landscape
+            mediaJSON['landscape'] = 'screen and (orientation: landscape)';
+            minMaxJSON['landscape'] = '0_1_1';
+            mediaJSON['portrait'] = 'screen and (orientation: portrait)';
+            minMaxJSON['portrait'] = '0_1_0_1';
+        }
+        else {
+            //Reads the different media queries from the css-file using the 'dummy' class "modernizr-mediaquery-media-query"
+            meta      = $('<meta class="modernizr-mediaquery-media-query">').appendTo(document.head);
+            mediaJSON = parseStyleToObject(meta.css('font-family'));
+            meta.remove();
+
+            //Reads the different min-max-intervalls from the css-file using the 'dummy' class "modernizr-mediaquery-min-max"
+            meta      = $('<meta class="modernizr-mediaquery-min-max">').appendTo(document.head);
+            minMaxJSON = parseStyleToObject(meta.css('font-family'));
+            meta.remove();
+        }
+
+        //Convert mediaJSON
+        this.mediaQueryList = [];
+        $.each( mediaJSON, function( id, mq ){
+            _this.mediaQueryList.push({id: id, mq: mq, on: false });
+        });
+
+        //Convert minMaxJSON
         this.minMaxRatioList = [];
-        for (id in mediaJSON){
-            var minMaxRatio = mediaJSON[id].split('_');            
-            this.minMaxRatioList.push({
+        $.each( minMaxJSON, function( id, value ){
+            var minMaxRatio = value.split('_');
+            _this.minMaxRatioList.push({
                 id      : id,
                 min     : parseFloat(minMaxRatio[0]),
-                max     : parseFloat(minMaxRatio[1]) || 100000, 
+                max     : parseFloat(minMaxRatio[1]) || 100000,
                 minRatio: minMaxRatio.length > 2 ? parseFloat(minMaxRatio[2]) : 100000,
                 maxRatio: minMaxRatio.length > 3 ? parseFloat(minMaxRatio[3]) : 100000,
                 on      : false
             });
-        }
+        });
+
 
         //Set the 'change media-query event'
         $(window).on('resize.mmq', $.proxy( this._onMediaQuery, this ));
@@ -30726,8 +30786,8 @@ else {
 
     }
 
-  // expose access to the constructor
-  ns.ModernizrMediaquery = ModernizrMediaquery;
+    // expose access to the constructor
+    ns.ModernizrMediaquery = ModernizrMediaquery;
 
     //Extend the prototype
     ns.ModernizrMediaquery.prototype = {
@@ -30739,13 +30799,13 @@ else {
         one : function( mediaQueries, callback, context ){ this.globalEvents.one(  mediaQueries, callback, context ); },
 
 
-        setHtmlFontSizePx: function( fontSizePx ){ 
+        setHtmlFontSizePx: function( fontSizePx ){
             $('html').css('font-size', fontSizePx);
             $(window).trigger('resize.mmq');
             return fontSizePx;
         },
-        
-        setHtmlFontSizePercent: function( fontSizePercent ){ 
+
+        setHtmlFontSizePercent: function( fontSizePercent ){
             return this.setHtmlFontSizePx( fontSizePercent/100*this.defaultHtmlFontSize );
         },
 
@@ -30755,12 +30815,12 @@ else {
             return !!this.modernizr.mq(mediaQuery.mq);
         },
         _isOn_minMaxRatioMode: function( minMaxRatio ){
-            return ( (this.window_width_em >= (minMaxRatio.min / this.defaultHtmlFontSize)) && 
+            return ( (this.window_width_em >= (minMaxRatio.min / this.defaultHtmlFontSize)) &&
                      (this.window_width_em <= (minMaxRatio.max / this.defaultHtmlFontSize)) ) ||
-                   ( (this.window_ratio >= minMaxRatio.minRatio) && 
+                   ( (this.window_ratio >= minMaxRatio.minRatio) &&
                      ( this.window_ratio <= minMaxRatio.maxRatio ) );
         },
-        
+
         _onMediaQuery: function( /*event*/ ){
             var i, list, listElem, isOn, isOnFunc;
             this.screen_width  = screen.width;
@@ -30775,7 +30835,7 @@ else {
             this.window_ratio = this.window_width / this.window_height;
 
             if (this.options.useWindowClientDim){
-                list = this.minMaxRatioList; 
+                list = this.minMaxRatioList;
                 isOnFunc = $.proxy(this._isOn_minMaxRatioMode, this);
             }
             else {
@@ -30799,18 +30859,6 @@ else {
 
     };
 
-
-    /******************************************
-    Initialize/ready
-    *******************************************/
-    $(function() { //"$( function() { ... });" is short for "$(document).ready( function(){...});"
-
-
-    }); //End of initialize/ready
-    //******************************************
-
-
-
 }(window.Modernizr, jQuery, this, document));
 
 
@@ -30832,6 +30880,22 @@ else {
     window.fcoo = window.fcoo || {};
     var ns = window.fcoo;
 
+    //modernizrMediaqueryOptions *MUST* match $html-font-size, $create-FIRST-up, $create-LAST-down and $breakpoints in src/_fcoo-modernizr-mediaquery-variables.scss
+    var modernizrMediaqueryOptions = {
+            useWindowClientDim: true,
+            htmlFontSize      : 16,     // = $html-font-size
+            createFIRSTup     : false,  // = $create-FIRST-up
+            createLASTdown    : false,  // = $create-LAST-down
+            breakpoints       : {       // = $breakpoints
+                "mini"       :    0, //Smaller than small phone portrait (< 320)
+                "xsmall-port":  320, //Small phone portrait (320-479)
+                "xsmall-land":  480, //Small phone landscape (480-576)
+                "small"      :  576, //Small devices
+                "medium"     :  768, //Tablets portrait
+                "large"      :  992, //Table landscape + desttop
+                "xlarge"     : 1200  //Large desttop
+            }
+        };
 
     /******************************************
     Initialize/ready
@@ -30849,7 +30913,7 @@ else {
         });
 
         //Create fcoo.modernizrMediaquery
-        ns.modernizrMediaquery = new window.ModernizrMediaquery();
+        ns.modernizrMediaquery = new window.ModernizrMediaquery( modernizrMediaqueryOptions );
 
         //For consistency: 'create' modernizr in window.fcoo
         ns.modernizr = Modernizr;
