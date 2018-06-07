@@ -250,7 +250,7 @@ Create and manage the top-menu for FCOO web applications
     the created element
     *******************************************/
     ns.createTopMenu = function( options ){
-        var defaultHeader = ns.getApplicationOption( "{APPLICATION_NAME}", 'fcoo.dk' );
+        var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
         options = $.extend({}, {
             leftMenu : true,
             logo     : true,
@@ -260,10 +260,10 @@ Create and manage the top-menu for FCOO web applications
             //  { application: {name:"..."}} and
             //  { application: {name_da:"...", name_en:"..."}}
             //in the applications gruntfile.js
-            //header   : ns.getApplicationJSONOption( "{APPLICATION_NAME}", "{'da':'{APPLICATION_NAME_DA}', 'en':'{APPLICATION_NAME_EN}'}"),
+            //header   : ns.getApplicationJSONOption( '{APPLICATION_NAME}', '{"da":"{APPLICATION_NAME_DA}", "en":"{APPLICATION_NAME_EN}"}'),
             header   : {
-                da: ns.getApplicationOption( "{APPLICATION_NAME_DA}", defaultHeader ),
-                en: ns.getApplicationOption( "{APPLICATION_NAME_EN}", defaultHeader )
+                da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
+                en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
             },
             messages : null,
             warning  : null,

@@ -93,7 +93,7 @@ Sections:
 
 
     //Getting the application-id
-    ns.applicationId = ns.getApplicationOption( "{APPLICATION_ID}", '0');
+    ns.applicationId = ns.getApplicationOption( '{APPLICATION_ID}', '0');
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
@@ -420,11 +420,11 @@ Sections:
     ***********************************************************************/
 
     //Initialize raven to report all uncaught exceptions to sentry
-    var sentryDSN = ns.getApplicationOption( "{APPLICATION_SENTRYDSN}", '');
+    var sentryDSN = ns.getApplicationOption( '{APPLICATION_SENTRYDSN}', '');
     if (sentryDSN)
         Raven.config(sentryDSN,{
             //Senrty options
-            release      : ns.getApplicationOption( "{APPLICATION_VERSION}", null), //Track the version of your application in Sentry.
+            release      : ns.getApplicationOption( '{APPLICATION_VERSION}', null), //Track the version of your application in Sentry.
             //environment  : '', //Track the environment name inside Sentry. Eq. production/beta/staging
             //serverName   :'', //Typically this would be the server name, but that doesn’t exist on all platforms.
             //tags         : {id:'value'}, //Additional tags to assign to each event.
@@ -437,7 +437,7 @@ Sections:
 
     //Adding the Piwik Tracking Code
 /* REMOVED AGAIN AND PUT BACK IN app/_index.html.tmpl OF THE APPLICATION
-    var piwikSiteId = ns.getApplicationNumberOption( "{APPLICATION_PIWIKSITEID}", 0);
+    var piwikSiteId = ns.getApplicationNumberOption( '{APPLICATION_PIWIKSITEID}', 0);
     if (piwikSiteId){
         var _paq = _paq || [];
         _paq.push(['disableCookies']);
