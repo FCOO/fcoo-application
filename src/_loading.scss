@@ -29,7 +29,7 @@ div.loading {
     text-align: center;
 
     //When loading
-    html.loading & {
+//    html.loading & {  //the html.loading div.loading is not included in grunt-fcoo-plugin when extracting critical css => html.loading is removed
         display       : flex;
         flex-direction: column;
         justify-content: center;
@@ -79,7 +79,7 @@ div.loading {
                 animation-iteration-count: infinite;
             }
         }
-    }
+//    }
 
     //When body finish loading
     html.no-loading & {

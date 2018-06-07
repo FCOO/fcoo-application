@@ -252,44 +252,43 @@ div.loading {
   z-index: 2147483645;
   background-color: #214b87;
   background-color: {APPLICATION_COLOR};
-  text-align: center; }
-  html.loading div.loading {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  cursor: progress; }
+  div.loading > div {
+    flex: 0 0 auto;
     width: 100%;
-    height: 100%;
-    opacity: 1;
-    cursor: progress; }
-    html.loading div.loading > div {
-      flex: 0 0 auto;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      cursor: inherit;
-      text-align: center; }
-      html.loading div.loading > div.version {
-        font-family: sans-serif;
-        font-size: 2rem;
-        height: 3rem;
-        margin-bottom: -3rem;
-        background-color: red;
-        color: white; }
-        html.loading div.loading > div.version:empty {
-          visibility: hidden; }
-      html.loading div.loading > div.logo {
-        flex: 1 1 auto;
-        width: 95%;
-        max-width: 600px;
-        background-image: url("images/FCOO_logo_notext.png");
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center center;
-        animation-name: flashingLogo;
-        animation-duration: 2s;
-        animation-fill-mode: both;
-        animation-iteration-count: infinite; }
+    margin: 0;
+    padding: 0;
+    cursor: inherit;
+    text-align: center; }
+    div.loading > div.version {
+      font-family: sans-serif;
+      font-size: 2rem;
+      height: 3rem;
+      margin-bottom: -3rem;
+      background-color: red;
+      color: white; }
+      div.loading > div.version:empty {
+        visibility: hidden; }
+    div.loading > div.logo {
+      flex: 1 1 auto;
+      width: 95%;
+      max-width: 600px;
+      background-image: url("images/FCOO_logo_notext.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center center;
+      animation-name: flashingLogo;
+      animation-duration: 2s;
+      animation-fill-mode: both;
+      animation-iteration-count: infinite; }
   html.no-loading div.loading {
     width: 0;
     height: 0;
