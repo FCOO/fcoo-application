@@ -8,7 +8,7 @@
 
 Set-up of common systems, objects, and methods for FCOO web applications
 Sections:
-1: Namespace, application states, system variables, "FCOO"-variables
+1: Namespace, application states, system variables, global events, "FCOO"-variables
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
 4: Initialize offline.js - http://github.hubspot.com/offline/
@@ -24,7 +24,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    1: Namespace, application states, system variables, , "FCOO"-variables
+    1: Namespace, application states, system variables, , global events, "FCOO"-variables
     ************************************************************************
     ***********************************************************************/
 
@@ -101,7 +101,18 @@ Sections:
     ns.localStorageTempKey = ns.localStorageKey + '_temp';
 
 
-    //Global class-names for icons
+
+    /*********************************************************************
+    Add 'load'-event to fcoo.events - will be fired on window-load
+    *********************************************************************/
+    $(window).on('load', function(){
+        window.fcoo.events.fire('load');
+    });
+
+    /*********************************************************************
+    Global class-names for icons
+    *********************************************************************/
+
     ns.icons = {
         working: 'far fa-spinner fa-spin',
 
@@ -176,7 +187,11 @@ Sections:
 
     //Set <html> class = 'loading' and adds logo and spinner
     $html.modernizrOn('loading');
-    $(window).on('load', function() { $html.modernizrOff('loading'); });
+
+//    $(window).on('load', function() { $html.modernizrOff('loading'); });
+    window.fcoo.events.onLast( 'load', function(){ $html.modernizrOff('loading'); });
+
+
     $(function() {
         //Find or create outer div displayed when loading
         var $loadingDiv = $body.find('div.loading');
@@ -462,7 +477,6 @@ Sections:
     //We are using the Modernizr test touchevents
     $(function() {
         window.bsIsTouch = window.fcoo.modernizr.touchevents;
-//        window.bsIsTouch = true; //TOO TEST
     });
 
     //Set default fontawesome prefix to 'regular'
