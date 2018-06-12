@@ -25888,149 +25888,145 @@ return index;
         });
      }
 
-    //Load phrase-files when initialize/ready
-	$(function() {
+    //Load phrase-files
+    var loadOptions = {
+            finally: function() { $('*').localize(); }
+        };
 
-        var loadOptions = {
-                finally: function() { $('*').localize(); }
-            };
-
-        function fullFileName( fileName ){
-            return window.fcoo.dataFilePath("fcoo-i18next-phrases", fileName);
-        }
+    function fullFileName( fileName ){
+        return window.fcoo.dataFilePath("fcoo-i18next-phrases", fileName);
+    }
 
 
-        //Load key-phrase-files = { key: { namespace1: {..}, namespace2:{...} }*N }. See README.md for description of format
-        $.each(
-            [
-                'fcoo-i18next-abbr-name-link.json'
-            ],
-            function(index, fileName){ i18next.loadKeyPhrases( fullFileName( fileName ), loadOptions ); }
-        );
+    //Load key-phrase-files = { key: { namespace1: {..}, namespace2:{...} }*N }. See README.md for description of format
+    $.each(
+        [
+            'fcoo-i18next-abbr-name-link.json'
+        ],
+        function(index, fileName){ i18next.loadKeyPhrases( fullFileName( fileName ), loadOptions ); }
+    );
 
 
-        //Load phrase-files = { namespace: { key1: {..}, key2:{...} }*N }. See README.md for description of format
-        $.each(
-            [
-                'fcoo-i18next-error.json'
-            ],
-            function(index, fileName){ i18next.loadPhrases( fullFileName( fileName ), loadOptions ); }
-        );
+    //Load phrase-files = { namespace: { key1: {..}, key2:{...} }*N }. See README.md for description of format
+    $.each(
+        [
+            'fcoo-i18next-error.json'
+        ],
+        function(index, fileName){ i18next.loadPhrases( fullFileName( fileName ), loadOptions ); }
+    );
 
 
-        //Load "fcoo-i18next-parameter.json"
-        Promise.getJSON(
-            fullFileName("fcoo-i18next-parameter.json"),
-            $.extend( {},
-                loadOptions, {
-                resolve: function( data ) {
-                    //Create translation of units with WMO-unit and/or CF Standard Name units as key
-                    $.each( data.units, function( index, unit ){
-                        if (unit.en){
-                            if (unit.WMO_unit)
-                                i18next.addPhrase( 'unit', unit.WMO_unit, unit );
-                            if (unit.CF_unit)
-                                i18next.addPhrase( 'unit', unit.CF_unit,  unit );
-                        }
-                    });
-
-                    //Create translation of paramter-names with WMO-abbr and/or CF Standard Name as key
-                    $.each( data.parameters, function( index, parameter ){
-                        if (parameter.en){
-                            if (parameter.WMO_abbr)
-                                i18next.addPhrase( 'parameter', parameter.WMO_abbr, parameter );
-                            if (parameter.CF_SN)
-                                i18next.addPhrase( 'parameter', parameter.CF_SN, parameter );
-                        }
-                    });
-//                  $('*').localize();
-                }
-            })
-        );
-
-
-
-        /*
-        Namespace button
-        Standard text to buttons.
-        E.g. button:close = {da: "Luk", en:"Close"}
-        */
-
-
-        /*
-        Namespace parameter
-        Physical parameter. Using XXX codes for parameter. See http://www.nco.ncep.noaa.gov/pmb/docs/on388/table2.html
-        E.g.
-            parameter:wind = {da:"vindhastighed", en:"wind speed"}
-            parameter:wdir = {da:"vindretning", en:"wind direction"}
-        */
-/* TODO
-
-        en: {
-              'Significant wave height of combined wind waves and swell': 'Wave height',
-              'degC': '&deg;C',
-              'Temp.': 'Temperature'
-        },
-        da: {
-              'Wave height': 'Bølgehøjde',
-              'Mean wave period': 'Bølgeperiode',
-              'Vel.': 'Strømhastighed',
-              'Current speed': 'Strømhastighed',
-              'Current': 'Strømhastighed',
-              'Elevation': 'Vandstand',
-              'Temperature': 'Temperatur',
-              'Temp.': 'Temperatur',
-              'Salinity': 'Salinitet',
-              'Sea surface temperature': 'Temperatur',
-              'Sea surface salinity': 'Salinitet',
-              'Wind speed': 'Vindhastighed',
-              'Wind': 'Vindhastighed',
-              'Air temperature (2m)': '2 meter temperatur',
-              'Sea ice concentration': 'Haviskoncentration',
-              'Sea ice thickness': 'Havistykkelse',
-              'Sea ice drift speed': 'Havisdrifthastighed',
-              'Visibility': 'Sigtbarhed',
-              'Total precipitation flux': 'Nedbør',
-              '2 metre temperature': '2 meter temperatur',
-              'Total cloud cover': 'Skydække',
-              'Significant wave height of combined wind waves and swell': 'Bølgehøjde',
-              'mm/hour': 'mm/time',
-              'degC': '&deg;C',
-              'knots': 'knob',
-              'fraction': 'fraktion',
-              'meters': 'meter'
-        }
-*/
-/* TODO
-               var msg = 'Web map metadata request for ' + jqXHR.url + ' failed. Reason: ';
-                if (jqXHR.status === 0) {
-                    msg += 'No network connection.';
-                    this.options.onMetadataError(new MetadataError(msg));
-                } else {
-                    if (jqXHR.status == 404) {
-                        msg += 'Requested page not found. [404]';
-                    } else if (jqXHR.status == 500) {
-                        msg += 'Internal Server Error [500].';
-                    } else if (textStatus === 'parsererror') {
-                        msg += 'Requested JSON parse failed.';
-                    } else if (textStatus === 'timeout') {
-                        msg += 'Time out error.';
-                    } else if (textStatus === 'abort') {
-                        msg += 'Ajax request aborted.';
-                    } else {
-                        msg += 'Unknown error.\n' + jqXHR.responseText;
+    //Load "fcoo-i18next-parameter.json"
+    Promise.getJSON(
+        fullFileName("fcoo-i18next-parameter.json"),
+        $.extend( {},
+            loadOptions, {
+            resolve: function( data ) {
+                //Create translation of units with WMO-unit and/or CF Standard Name units as key
+                $.each( data.units, function( index, unit ){
+                    if (unit.en){
+                        if (unit.WMO_unit)
+                            i18next.addPhrase( 'unit', unit.WMO_unit, unit );
+                        if (unit.CF_unit)
+                            i18next.addPhrase( 'unit', unit.CF_unit,  unit );
                     }
-                    var err = new MetadataError(msg);
-                    this.options.onMetadataError(err);
+                });
+
+                //Create translation of paramter-names with WMO-abbr and/or CF Standard Name as key
+                $.each( data.parameters, function( index, parameter ){
+                    if (parameter.en){
+                        if (parameter.WMO_abbr)
+                            i18next.addPhrase( 'parameter', parameter.WMO_abbr, parameter );
+                        if (parameter.CF_SN)
+                            i18next.addPhrase( 'parameter', parameter.CF_SN, parameter );
+                    }
+                });
+//                  $('*').localize();
+            }
+        })
+    );
+
+
+
+    /*
+    Namespace button
+    Standard text to buttons.
+    E.g. button:close = {da: "Luk", en:"Close"}
+    */
+
+    /*
+    Namespace parameter
+    Physical parameter. Using XXX codes for parameter. See http://www.nco.ncep.noaa.gov/pmb/docs/on388/table2.html
+    E.g.
+        parameter:wind = {da:"vindhastighed", en:"wind speed"}
+        parameter:wdir = {da:"vindretning", en:"wind direction"}
+    */
+/* TODO
+
+    en: {
+          'Significant wave height of combined wind waves and swell': 'Wave height',
+          'degC': '&deg;C',
+          'Temp.': 'Temperature'
+    },
+    da: {
+          'Wave height': 'Bølgehøjde',
+          'Mean wave period': 'Bølgeperiode',
+          'Vel.': 'Strømhastighed',
+          'Current speed': 'Strømhastighed',
+          'Current': 'Strømhastighed',
+          'Elevation': 'Vandstand',
+          'Temperature': 'Temperatur',
+          'Temp.': 'Temperatur',
+          'Salinity': 'Salinitet',
+          'Sea surface temperature': 'Temperatur',
+          'Sea surface salinity': 'Salinitet',
+          'Wind speed': 'Vindhastighed',
+          'Wind': 'Vindhastighed',
+          'Air temperature (2m)': '2 meter temperatur',
+          'Sea ice concentration': 'Haviskoncentration',
+          'Sea ice thickness': 'Havistykkelse',
+          'Sea ice drift speed': 'Havisdrifthastighed',
+          'Visibility': 'Sigtbarhed',
+          'Total precipitation flux': 'Nedbør',
+          '2 metre temperature': '2 meter temperatur',
+          'Total cloud cover': 'Skydække',
+          'Significant wave height of combined wind waves and swell': 'Bølgehøjde',
+          'mm/hour': 'mm/time',
+          'degC': '&deg;C',
+          'knots': 'knob',
+          'fraction': 'fraktion',
+          'meters': 'meter'
+    }
+*/
+/* TODO
+       var msg = 'Web map metadata request for ' + jqXHR.url + ' failed. Reason: ';
+        if (jqXHR.status === 0) {
+            msg += 'No network connection.';
+            this.options.onMetadataError(new MetadataError(msg));
+        } else {
+            if (jqXHR.status == 404) {
+                msg += 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg += 'Internal Server Error [500].';
+            } else if (textStatus === 'parsererror') {
+                msg += 'Requested JSON parse failed.';
+            } else if (textStatus === 'timeout') {
+                msg += 'Time out error.';
+            } else if (textStatus === 'abort') {
+                msg += 'Ajax request aborted.';
+            } else {
+                msg += 'Unknown error.\n' + jqXHR.responseText;
+            }
+            var err = new MetadataError(msg);
+            this.options.onMetadataError(err);
 */
 
+/*
+    Namespace unit
+    Physical units.
+    E.g. unit:metre = {da:"meter", en:"metre"}
+*/
 
-        /*
-        Namespace unit
-        Physical units.
-        E.g. unit:metre = {da:"meter", en:"metre"}
-        */
-	}); //End of initialize/ready
 }(this.i18next, this.Promise, this, document));
 ;
 /****************************************************************************
@@ -27292,11 +27288,8 @@ return index;
     i18next.use(nameOfProcessor);
 */
 
-    //Initialize/ready
-    $(function() {
-        //Update all language related elements
-        ns.settings.set('language', language );
-    });
+    //Update all language related elements
+    ns.settings.set('language', language );
 
 
 }(jQuery, this, document));
@@ -30678,7 +30671,7 @@ else {
 
         this.options = $.extend({
             //Default options
-            VERSION             : "1.3.0",
+            VERSION             : "1.3.1",
             htmlFontSize        : 16,
             createFIRSTup       : false, //When true the media query FIRST-up (allway display) and no-FIRST-up (allways hidden) are created. MUST MATCH $create-FIRST-up
             createLASTdown      : false, //When true the media query LAST-down (allway display) and no-LAST-down (allways hidden) are created. MUST MATCH $create-LAST-down
@@ -30778,12 +30771,8 @@ else {
 
         //Set the 'change media-query event'
         $(window).on('resize.mmq', $.proxy( this._onMediaQuery, this ));
-        var THIS = this;
 
-        $(function() {
-            THIS._onMediaQuery();
-        });
-
+        this._onMediaQuery();
     }
 
     // expose access to the constructor
@@ -30897,35 +30886,25 @@ else {
             }
         };
 
-    /******************************************
-    Initialize/ready
-    *******************************************/
-    $(function() {
 
-        //Create fcoo.modernizrDevice
-        ns.modernizrDevice = new window.ModernizrDevice({
-            scale: false,
-            modernizr: {
-                device: false,
-                os    : true,
-                ie    : true
-            }
-        });
+    //Create fcoo.modernizrDevice
+    ns.modernizrDevice = new window.ModernizrDevice({
+        scale: false,
+        modernizr: {
+            device: false,
+            os    : true,
+            ie    : true
+        }
+    });
 
-        //Create fcoo.modernizrMediaquery
-        ns.modernizrMediaquery = new window.ModernizrMediaquery( modernizrMediaqueryOptions );
+    //Create fcoo.modernizrMediaquery
+    ns.modernizrMediaquery = new window.ModernizrMediaquery( modernizrMediaqueryOptions );
 
-        //For consistency: 'create' modernizr in window.fcoo
-        ns.modernizr = Modernizr;
+    //For consistency: 'create' modernizr in window.fcoo
+    ns.modernizr = Modernizr;
 
-        //Add https-test
-        ns.modernizr.addTest('https', window.location.protocol == 'https:');
-
-
-    }); //End of initialize/ready
-    //******************************************
-
-
+    //Add https-test
+    ns.modernizr.addTest('https', window.location.protocol == 'https:');
 
 }(window.Modernizr, jQuery, this, document));
 ;
@@ -59991,48 +59970,41 @@ module.exports = function (element) {
     Create a Modernizr-test named 'mouse-hover' to mark if hover "events" is fired. Can be use to prevent :hover {...} css to fail on touch devices
     */
 
-	/******************************************
-	Initialize/ready
-	*******************************************/
-	$(function() {
-        var mouseTest         = 'mouse',
-            mouseHoverTest    = 'mouse-hover',
-            mouseEventPostfix = '.modernizr.mouse.events',
-            hasModernizr = !!window.Modernizr,
-            hasTouchEventsTest = hasModernizr && (jQuery.type( window.Modernizr['touchevents'] ) === "boolean"),
-            hasTouchEvents = hasTouchEventsTest ? window.Modernizr['touchevents'] : true;
+    var mouseTest         = 'mouse',
+        mouseHoverTest    = 'mouse-hover',
+        mouseEventPostfix = '.modernizr.mouse.events',
+        hasModernizr = !!window.Modernizr,
+        hasTouchEventsTest = hasModernizr && (jQuery.type( window.Modernizr['touchevents'] ) === "boolean"),
+        hasTouchEvents = hasTouchEventsTest ? window.Modernizr['touchevents'] : true;
 
-        if (hasModernizr)
-            window.Modernizr.addTest(mouseTest, false);
-        window.modernizrOff(mouseTest);
+    if (hasModernizr)
+        window.Modernizr.addTest(mouseTest, false);
+    window.modernizrOff(mouseTest);
 
-        //If Modernizr-test "touchevents" is included => use if to set "mouse-hover" else set "mouse-hover" = "mouse"
-        if (hasModernizr)
-            window.Modernizr.addTest( mouseHoverTest, !hasTouchEvents );
-        window.modernizrToggle( mouseHoverTest, !hasTouchEvents );
+    //If Modernizr-test "touchevents" is included => use if to set "mouse-hover" else set "mouse-hover" = "mouse"
+    if (hasModernizr)
+        window.Modernizr.addTest( mouseHoverTest, !hasTouchEvents );
+    window.modernizrToggle( mouseHoverTest, !hasTouchEvents );
 
-        $(window)
-            //Check for mouse
-            .bind('mousemove'+mouseEventPostfix,function(){
-                $(window).unbind(mouseEventPostfix);
+    $(window)
+        //Check for mouse
+        .bind('mousemove'+mouseEventPostfix,function(){
+            $(window).unbind(mouseEventPostfix);
+            if (hasModernizr)
+                window.Modernizr[mouseTest] = true;
+            window.modernizrOn(mouseTest);
+            if (!hasTouchEventsTest){
                 if (hasModernizr)
-                    window.Modernizr[mouseTest] = true;
-                window.modernizrOn(mouseTest);
-                if (!hasTouchEventsTest){
-                    if (hasModernizr)
-                        window.Modernizr.addTest( mouseHoverTest, true );
-                    window.modernizrOn(mouseHoverTest);
-                }
-            })
-            .bind('touchstart'+mouseEventPostfix,function(){
-                $(window).unbind(mouseEventPostfix);
-                if (hasModernizr)
-                    window.Modernizr[mouseTest] = false;
-                window.modernizrOff(mouseTest);
-            });
-    });
-
-    //******************************************
+                    window.Modernizr.addTest( mouseHoverTest, true );
+                window.modernizrOn(mouseHoverTest);
+            }
+        })
+        .bind('touchstart'+mouseEventPostfix,function(){
+            $(window).unbind(mouseEventPostfix);
+            if (hasModernizr)
+                window.Modernizr[mouseTest] = false;
+            window.modernizrOff(mouseTest);
+        });
 
 }(jQuery, this, document));
 ;
@@ -69259,17 +69231,6 @@ TODO:
     };
 
 
-	/******************************************
-	Initialize/ready
-	*******************************************/
-	$(function() {
-
-
-	});
-	//******************************************
-
-
-
 }(jQuery, this, document));
 ;
 /****************************************************************************
@@ -71296,19 +71257,6 @@ Add sort-functions + save col-index for sorted column
         return $table;
     };
 
-
-
-	/******************************************
-	Initialize/ready
-	*******************************************/
-	$(function() {
-
-
-	});
-	//******************************************
-
-
-
 }(jQuery, this, document));
 ;
 /****************************************************************************
@@ -71996,15 +71944,6 @@ Add sort-functions + save col-index for sorted column
             return this;
         }
     }); //$.fn.extend
-
-
-	/******************************************
-	Initialize/ready
-	*******************************************/
-	$(function() {
-	});
-	//******************************************
-
 
 
 }(jQuery, this, document));
@@ -77296,7 +77235,7 @@ if (typeof define === 'function' && define.amd) {
                 $.each( sortByList, function( index, sortBy ){
                     switch (sortBy){
                         case 'INDEX' : val1 = mess1.options.totalIndex;         val2 = mess2.options.totalIndex;        break;
-                        case 'DATE'  : val1 = mess1.options.date.second();      val2 = mess2.options.date.second();     break;
+                        case 'DATE'  : val1 = mess1.options.date.valueOf();     val2 = mess2.options.date.valueOf();    break;
                         case 'STATUS': val1 = mess1.options.status ? 1 : 0;     val2 = mess2.options.status ? 1 : 0;    break;
                         case 'TYPE'  : val1 = typeToVal[mess1.options.type];    val2 = typeToVal[mess2.options.type];   break;
                         default      : val1 = val2 = 0;
@@ -77705,7 +77644,7 @@ if (typeof define === 'function' && define.amd) {
   });
 }.call(this);
 ;
-/*! Raven.js 3.25.2 (30b6d4e) | github.com/getsentry/raven-js */
+/*! Raven.js 3.26.2 (b10a875) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -77824,11 +77763,7 @@ function now() {
 var _window =
   typeof window !== 'undefined'
     ? window
-    : typeof global !== 'undefined'
-      ? global
-      : typeof self !== 'undefined'
-        ? self
-        : {};
+    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 var _document = _window.document;
 var _navigator = _window.navigator;
 
@@ -77918,7 +77853,7 @@ Raven.prototype = {
   // webpack (using a build step causes webpack #1617). Grunt verifies that
   // this value matches package.json during build.
   //   See: https://github.com/getsentry/raven-js/issues/465
-  VERSION: '3.25.2',
+  VERSION: '3.26.2',
 
   debug: false,
 
@@ -78084,7 +78019,7 @@ Raven.prototype = {
     if (isFunction(options)) {
       args = func || [];
       func = options;
-      options = undefined;
+      options = {};
     }
 
     return this.wrap(options, func).apply(this, args);
@@ -78095,7 +78030,7 @@ Raven.prototype = {
      *
      * @param {object} options A specific set of options for this context [optional]
      * @param {function} func The function to be wrapped in a new context
-     * @param {function} func A function to call before the try/catch wrapper [optional, private]
+     * @param {function} _before A function to call before the try/catch wrapper [optional, private]
      * @return {function} The newly wrapped functions with a context
      */
   wrap: function(options, func, _before) {
@@ -78208,8 +78143,9 @@ Raven.prototype = {
   _promiseRejectionHandler: function(event) {
     this._logDebug('debug', 'Raven caught unhandled promise rejection:', event);
     this.captureException(event.reason, {
-      extra: {
-        unhandledPromiseRejection: true
+      mechanism: {
+        type: 'onunhandledrejection',
+        handled: false
       }
     });
   },
@@ -78886,7 +78822,15 @@ Raven.prototype = {
         }
         var originalCallback = args[0];
         if (isFunction(originalCallback)) {
-          args[0] = self.wrap(originalCallback);
+          args[0] = self.wrap(
+            {
+              mechanism: {
+                type: 'instrument',
+                data: {function: orig.name || '<anonymous>'}
+              }
+            },
+            originalCallback
+          );
         }
 
         // IE < 9 doesn't support .call/.apply on setInterval/setTimeout, but it
@@ -78913,7 +78857,19 @@ Raven.prototype = {
               // preserve arity
               try {
                 if (fn && fn.handleEvent) {
-                  fn.handleEvent = self.wrap(fn.handleEvent);
+                  fn.handleEvent = self.wrap(
+                    {
+                      mechanism: {
+                        type: 'instrument',
+                        data: {
+                          target: global,
+                          function: 'handleEvent',
+                          handler: (fn && fn.name) || '<anonymous>'
+                        }
+                      }
+                    },
+                    fn.handleEvent
+                  );
                 }
               } catch (err) {
                 // can sometimes get 'Permission denied to access property "handle Event'
@@ -78953,7 +78909,20 @@ Raven.prototype = {
               return orig.call(
                 this,
                 evtName,
-                self.wrap(fn, undefined, before),
+                self.wrap(
+                  {
+                    mechanism: {
+                      type: 'instrument',
+                      data: {
+                        target: global,
+                        function: 'addEventListener',
+                        handler: (fn && fn.name) || '<anonymous>'
+                      }
+                    }
+                  },
+                  fn,
+                  before
+                ),
                 capture,
                 secure
               );
@@ -78987,7 +78956,20 @@ Raven.prototype = {
         'requestAnimationFrame',
         function(orig) {
           return function(cb) {
-            return orig(self.wrap(cb));
+            return orig(
+              self.wrap(
+                {
+                  mechanism: {
+                    type: 'instrument',
+                    data: {
+                      function: 'requestAnimationFrame',
+                      handler: (orig && orig.name) || '<anonymous>'
+                    }
+                  }
+                },
+                cb
+              )
+            );
           };
         },
         wrappedBuiltIns
@@ -79050,7 +79032,15 @@ Raven.prototype = {
     function wrapProp(prop, xhr) {
       if (prop in xhr && isFunction(xhr[prop])) {
         fill(xhr, prop, function(orig) {
-          return self.wrap(orig);
+          return self.wrap(
+            {
+              mechanism: {
+                type: 'instrument',
+                data: {function: prop, handler: (orig && orig.name) || '<anonymous>'}
+              }
+            },
+            orig
+          );
         }); // intentionally don't track filled methods on XHR instances
       }
     }
@@ -79115,7 +79105,19 @@ Raven.prototype = {
                 xhr,
                 'onreadystatechange',
                 function(orig) {
-                  return self.wrap(orig, undefined, onreadystatechangeHandler);
+                  return self.wrap(
+                    {
+                      mechanism: {
+                        type: 'instrument',
+                        data: {
+                          function: 'onreadystatechange',
+                          handler: (orig && orig.name) || '<anonymous>'
+                        }
+                      }
+                    },
+                    orig,
+                    onreadystatechangeHandler
+                  );
                 } /* intentionally don't track this instrumentation */
               );
             } else {
@@ -79339,10 +79341,16 @@ Raven.prototype = {
     return globalServer;
   },
 
-  _handleOnErrorStackInfo: function() {
+  _handleOnErrorStackInfo: function(stackInfo, options) {
+    options = options || {};
+    options.mechanism = options.mechanism || {
+      type: 'onerror',
+      handled: false
+    };
+
     // if we are intentionally ignoring errors via onerror, bail out
     if (!this._ignoreOnError) {
-      this._handleStackInfo.apply(this, arguments);
+      this._handleStackInfo(stackInfo, options);
     }
   },
 
@@ -79477,6 +79485,22 @@ Raven.prototype = {
         transaction: fileurl
       },
       options
+    );
+
+    // Move mechanism from options to exception interface
+    // We do this, as requiring user to pass `{exception:{mechanism:{ ... }}}` would be
+    // too much
+    if (!data.exception.mechanism && data.mechanism) {
+      data.exception.mechanism = data.mechanism;
+      delete data.mechanism;
+    }
+
+    data.exception.mechanism = objectMerge(
+      {
+        type: 'generic',
+        handled: true
+      },
+      data.exception.mechanism || {}
     );
 
     // Fire away!
@@ -80042,7 +80066,11 @@ var stringify = _dereq_(7);
 var _window =
   typeof window !== 'undefined'
     ? window
-    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+    : typeof global !== 'undefined'
+      ? global
+      : typeof self !== 'undefined'
+        ? self
+        : {};
 
 function isObject(what) {
   return typeof what === 'object' && what !== null;
@@ -80456,6 +80484,9 @@ function isSameStacktrace(stack1, stack2) {
   var frames1 = stack1.frames;
   var frames2 = stack2.frames;
 
+  // Exit early if stacktrace is malformed
+  if (frames1 === undefined || frames2 === undefined) return false;
+
   // Exit early if frame count differs
   if (frames1.length !== frames2.length) return false;
 
@@ -80726,11 +80757,12 @@ function getLocationOrigin() {
 
   // Oh dear IE10...
   if (!document.location.origin) {
-    document.location.origin =
+    return (
       document.location.protocol +
       '//' +
       document.location.hostname +
-      (document.location.port ? ':' + document.location.port : '');
+      (document.location.port ? ':' + document.location.port : '')
+    );
   }
 
   return document.location.origin;
