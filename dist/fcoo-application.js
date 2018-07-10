@@ -292,7 +292,7 @@ Create and manage the top-menu for FCOO web applications
         //Container for all elements used in top-menu
         result.topMenuContainer = $topMenuContainer =
             $('<div/>')
-                .addClass("top-menu-container")
+                .addClass("top-menu-container initialize")
                 .appendTo( $body );
 
 
@@ -455,6 +455,7 @@ Create and manage the top-menu for FCOO web applications
                 $body.css('padding-top', newTopMenuH+'px');
                 $aboutFCOO.css('margin-top', newTopMenuH+'px');
                 setTopMenuState( newState, true );
+                $topMenuContainer.removeClass('initialize');
             }
 
             if (topMenuState == 'extended')

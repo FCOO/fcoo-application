@@ -19,6 +19,11 @@ body {
     }
 }
 
+//Hide top-menu while initializing
+.top-menu-container.initialize {
+    visibility: hidden;
+}
+
 //All elements inside .top-menu-container get same position and opacity
 .top-menu-container > * {
     position  : fixed;

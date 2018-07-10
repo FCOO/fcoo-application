@@ -372,6 +372,9 @@ confussions another name is used
 body.top-menu-hidden {
   padding-top: 0 !important; }
 
+.top-menu-container.initialize {
+  visibility: hidden; }
+
 .top-menu-container > * {
   position: fixed;
   top: 0;
