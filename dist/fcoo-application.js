@@ -960,9 +960,9 @@ Sections:
     ***********************************************************************/
     //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
     //We are using the Modernizr test touchevents
-    $(function() {
-        window.bsIsTouch = window.fcoo.modernizr.touchevents;
-    });
+    if (window.Modernizr && (typeof window.Modernizr.touchevents == 'boolean')){
+        window.bsIsTouch = window.Modernizr.touchevents;
+    }
 
     //Set default fontawesome prefix to 'regular'
     $.FONTAWESOME_PREFIX = 'far';
