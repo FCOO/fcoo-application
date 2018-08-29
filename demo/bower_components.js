@@ -10365,7 +10365,7 @@ return jQuery;
 
 ;
 /*!
-  * Bootstrap v4.1.1 (https://getbootstrap.com/)
+  * Bootstrap v4.1.3 (https://getbootstrap.com/)
   * Copyright 2011-2018 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
@@ -10435,7 +10435,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): util.js
+   * Bootstrap (v4.1.3): util.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10512,8 +10512,7 @@ return jQuery;
         }
 
         try {
-          var $selector = $$$1(document).find(selector);
-          return $selector.length > 0 ? selector : null;
+          return document.querySelector(selector) ? selector : null;
         } catch (err) {
           return null;
         }
@@ -10568,7 +10567,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): alert.js
+   * Bootstrap (v4.1.3): alert.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10580,7 +10579,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'alert';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.alert';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -10643,7 +10642,7 @@ return jQuery;
         var parent = false;
 
         if (selector) {
-          parent = $$$1(selector)[0];
+          parent = document.querySelector(selector);
         }
 
         if (!parent) {
@@ -10743,7 +10742,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): button.js
+   * Bootstrap (v4.1.3): button.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10755,7 +10754,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'button';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.button';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -10800,14 +10799,14 @@ return jQuery;
         var rootElement = $$$1(this._element).closest(Selector.DATA_TOGGLE)[0];
 
         if (rootElement) {
-          var input = $$$1(this._element).find(Selector.INPUT)[0];
+          var input = this._element.querySelector(Selector.INPUT);
 
           if (input) {
             if (input.type === 'radio') {
-              if (input.checked && $$$1(this._element).hasClass(ClassName.ACTIVE)) {
+              if (input.checked && this._element.classList.contains(ClassName.ACTIVE)) {
                 triggerChangeEvent = false;
               } else {
-                var activeElement = $$$1(rootElement).find(Selector.ACTIVE)[0];
+                var activeElement = rootElement.querySelector(Selector.ACTIVE);
 
                 if (activeElement) {
                   $$$1(activeElement).removeClass(ClassName.ACTIVE);
@@ -10820,7 +10819,7 @@ return jQuery;
                 return;
               }
 
-              input.checked = !$$$1(this._element).hasClass(ClassName.ACTIVE);
+              input.checked = !this._element.classList.contains(ClassName.ACTIVE);
               $$$1(input).trigger('change');
             }
 
@@ -10830,7 +10829,7 @@ return jQuery;
         }
 
         if (addAriaPressed) {
-          this._element.setAttribute('aria-pressed', !$$$1(this._element).hasClass(ClassName.ACTIVE));
+          this._element.setAttribute('aria-pressed', !this._element.classList.contains(ClassName.ACTIVE));
         }
 
         if (triggerChangeEvent) {
@@ -10907,7 +10906,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): carousel.js
+   * Bootstrap (v4.1.3): carousel.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -10919,7 +10918,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'carousel';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.carousel';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -10998,7 +10997,7 @@ return jQuery;
         this.touchTimeout = null;
         this._config = this._getConfig(config);
         this._element = $$$1(element)[0];
-        this._indicatorsElement = $$$1(this._element).find(Selector.INDICATORS)[0];
+        this._indicatorsElement = this._element.querySelector(Selector.INDICATORS);
 
         this._addEventListeners();
       } // Getters
@@ -11032,7 +11031,7 @@ return jQuery;
           this._isPaused = true;
         }
 
-        if ($$$1(this._element).find(Selector.NEXT_PREV)[0]) {
+        if (this._element.querySelector(Selector.NEXT_PREV)) {
           Util.triggerTransitionEnd(this._element);
           this.cycle(true);
         }
@@ -11059,7 +11058,7 @@ return jQuery;
       _proto.to = function to(index) {
         var _this = this;
 
-        this._activeElement = $$$1(this._element).find(Selector.ACTIVE_ITEM)[0];
+        this._activeElement = this._element.querySelector(Selector.ACTIVE_ITEM);
 
         var activeIndex = this._getItemIndex(this._activeElement);
 
@@ -11165,7 +11164,7 @@ return jQuery;
       };
 
       _proto._getItemIndex = function _getItemIndex(element) {
-        this._items = $$$1.makeArray($$$1(element).parent().find(Selector.ITEM));
+        this._items = element && element.parentNode ? [].slice.call(element.parentNode.querySelectorAll(Selector.ITEM)) : [];
         return this._items.indexOf(element);
       };
 
@@ -11190,7 +11189,7 @@ return jQuery;
       _proto._triggerSlideEvent = function _triggerSlideEvent(relatedTarget, eventDirectionName) {
         var targetIndex = this._getItemIndex(relatedTarget);
 
-        var fromIndex = this._getItemIndex($$$1(this._element).find(Selector.ACTIVE_ITEM)[0]);
+        var fromIndex = this._getItemIndex(this._element.querySelector(Selector.ACTIVE_ITEM));
 
         var slideEvent = $$$1.Event(Event.SLIDE, {
           relatedTarget: relatedTarget,
@@ -11204,7 +11203,8 @@ return jQuery;
 
       _proto._setActiveIndicatorElement = function _setActiveIndicatorElement(element) {
         if (this._indicatorsElement) {
-          $$$1(this._indicatorsElement).find(Selector.ACTIVE).removeClass(ClassName.ACTIVE);
+          var indicators = [].slice.call(this._indicatorsElement.querySelectorAll(Selector.ACTIVE));
+          $$$1(indicators).removeClass(ClassName.ACTIVE);
 
           var nextIndicator = this._indicatorsElement.children[this._getItemIndex(element)];
 
@@ -11217,7 +11217,7 @@ return jQuery;
       _proto._slide = function _slide(direction, element) {
         var _this3 = this;
 
-        var activeElement = $$$1(this._element).find(Selector.ACTIVE_ITEM)[0];
+        var activeElement = this._element.querySelector(Selector.ACTIVE_ITEM);
 
         var activeElementIndex = this._getItemIndex(activeElement);
 
@@ -11383,11 +11383,13 @@ return jQuery;
 
     $$$1(document).on(Event.CLICK_DATA_API, Selector.DATA_SLIDE, Carousel._dataApiClickHandler);
     $$$1(window).on(Event.LOAD_DATA_API, function () {
-      $$$1(Selector.DATA_RIDE).each(function () {
-        var $carousel = $$$1(this);
+      var carousels = [].slice.call(document.querySelectorAll(Selector.DATA_RIDE));
+
+      for (var i = 0, len = carousels.length; i < len; i++) {
+        var $carousel = $$$1(carousels[i]);
 
         Carousel._jQueryInterface.call($carousel, $carousel.data());
-      });
+      }
     });
     /**
      * ------------------------------------------------------------------------
@@ -11408,7 +11410,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): collapse.js
+   * Bootstrap (v4.1.3): collapse.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -11420,7 +11422,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'collapse';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.collapse';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -11468,14 +11470,17 @@ return jQuery;
         this._isTransitioning = false;
         this._element = element;
         this._config = this._getConfig(config);
-        this._triggerArray = $$$1.makeArray($$$1("[data-toggle=\"collapse\"][href=\"#" + element.id + "\"]," + ("[data-toggle=\"collapse\"][data-target=\"#" + element.id + "\"]")));
-        var tabToggles = $$$1(Selector.DATA_TOGGLE);
+        this._triggerArray = $$$1.makeArray(document.querySelectorAll("[data-toggle=\"collapse\"][href=\"#" + element.id + "\"]," + ("[data-toggle=\"collapse\"][data-target=\"#" + element.id + "\"]")));
+        var toggleList = [].slice.call(document.querySelectorAll(Selector.DATA_TOGGLE));
 
-        for (var i = 0; i < tabToggles.length; i++) {
-          var elem = tabToggles[i];
+        for (var i = 0, len = toggleList.length; i < len; i++) {
+          var elem = toggleList[i];
           var selector = Util.getSelectorFromElement(elem);
+          var filterElement = [].slice.call(document.querySelectorAll(selector)).filter(function (foundElem) {
+            return foundElem === element;
+          });
 
-          if (selector !== null && $$$1(selector).filter(element).length > 0) {
+          if (selector !== null && filterElement.length > 0) {
             this._selector = selector;
 
             this._triggerArray.push(elem);
@@ -11516,7 +11521,9 @@ return jQuery;
         var activesData;
 
         if (this._parent) {
-          actives = $$$1.makeArray($$$1(this._parent).find(Selector.ACTIVES).filter("[data-parent=\"" + this._config.parent + "\"]"));
+          actives = [].slice.call(this._parent.querySelectorAll(Selector.ACTIVES)).filter(function (elem) {
+            return elem.getAttribute('data-parent') === _this._config.parent;
+          });
 
           if (actives.length === 0) {
             actives = null;
@@ -11551,7 +11558,7 @@ return jQuery;
         $$$1(this._element).removeClass(ClassName.COLLAPSE).addClass(ClassName.COLLAPSING);
         this._element.style[dimension] = 0;
 
-        if (this._triggerArray.length > 0) {
+        if (this._triggerArray.length) {
           $$$1(this._triggerArray).removeClass(ClassName.COLLAPSED).attr('aria-expanded', true);
         }
 
@@ -11592,14 +11599,15 @@ return jQuery;
         this._element.style[dimension] = this._element.getBoundingClientRect()[dimension] + "px";
         Util.reflow(this._element);
         $$$1(this._element).addClass(ClassName.COLLAPSING).removeClass(ClassName.COLLAPSE).removeClass(ClassName.SHOW);
+        var triggerArrayLength = this._triggerArray.length;
 
-        if (this._triggerArray.length > 0) {
-          for (var i = 0; i < this._triggerArray.length; i++) {
+        if (triggerArrayLength > 0) {
+          for (var i = 0; i < triggerArrayLength; i++) {
             var trigger = this._triggerArray[i];
             var selector = Util.getSelectorFromElement(trigger);
 
             if (selector !== null) {
-              var $elem = $$$1(selector);
+              var $elem = $$$1([].slice.call(document.querySelectorAll(selector)));
 
               if (!$elem.hasClass(ClassName.SHOW)) {
                 $$$1(trigger).addClass(ClassName.COLLAPSED).attr('aria-expanded', false);
@@ -11660,11 +11668,12 @@ return jQuery;
             parent = this._config.parent[0];
           }
         } else {
-          parent = $$$1(this._config.parent)[0];
+          parent = document.querySelector(this._config.parent);
         }
 
         var selector = "[data-toggle=\"collapse\"][data-parent=\"" + this._config.parent + "\"]";
-        $$$1(parent).find(selector).each(function (i, element) {
+        var children = [].slice.call(parent.querySelectorAll(selector));
+        $$$1(children).each(function (i, element) {
           _this3._addAriaAndCollapsedClass(Collapse._getTargetFromElement(element), [element]);
         });
         return parent;
@@ -11674,7 +11683,7 @@ return jQuery;
         if (element) {
           var isOpen = $$$1(element).hasClass(ClassName.SHOW);
 
-          if (triggerArray.length > 0) {
+          if (triggerArray.length) {
             $$$1(triggerArray).toggleClass(ClassName.COLLAPSED, !isOpen).attr('aria-expanded', isOpen);
           }
         }
@@ -11683,7 +11692,7 @@ return jQuery;
 
       Collapse._getTargetFromElement = function _getTargetFromElement(element) {
         var selector = Util.getSelectorFromElement(element);
-        return selector ? $$$1(selector)[0] : null;
+        return selector ? document.querySelector(selector) : null;
       };
 
       Collapse._jQueryInterface = function _jQueryInterface(config) {
@@ -11741,7 +11750,8 @@ return jQuery;
 
       var $trigger = $$$1(this);
       var selector = Util.getSelectorFromElement(this);
-      $$$1(selector).each(function () {
+      var selectors = [].slice.call(document.querySelectorAll(selector));
+      $$$1(selectors).each(function () {
         var $target = $$$1(this);
         var data = $target.data(DATA_KEY);
         var config = data ? 'toggle' : $trigger.data();
@@ -14286,7 +14296,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): dropdown.js
+   * Bootstrap (v4.1.3): dropdown.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -14298,7 +14308,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'dropdown';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.dropdown';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -14507,14 +14517,16 @@ return jQuery;
         if (!this._menu) {
           var parent = Dropdown._getParentFromElement(this._element);
 
-          this._menu = $$$1(parent).find(Selector.MENU)[0];
+          if (parent) {
+            this._menu = parent.querySelector(Selector.MENU);
+          }
         }
 
         return this._menu;
       };
 
       _proto._getPlacement = function _getPlacement() {
-        var $parentDropdown = $$$1(this._element).parent();
+        var $parentDropdown = $$$1(this._element.parentNode);
         var placement = AttachmentMap.BOTTOM; // Handle dropup
 
         if ($parentDropdown.hasClass(ClassName.DROPUP)) {
@@ -14602,15 +14614,19 @@ return jQuery;
           return;
         }
 
-        var toggles = $$$1.makeArray($$$1(Selector.DATA_TOGGLE));
+        var toggles = [].slice.call(document.querySelectorAll(Selector.DATA_TOGGLE));
 
-        for (var i = 0; i < toggles.length; i++) {
+        for (var i = 0, len = toggles.length; i < len; i++) {
           var parent = Dropdown._getParentFromElement(toggles[i]);
 
           var context = $$$1(toggles[i]).data(DATA_KEY);
           var relatedTarget = {
             relatedTarget: toggles[i]
           };
+
+          if (event && event.type === 'click') {
+            relatedTarget.clickEvent = event;
+          }
 
           if (!context) {
             continue;
@@ -14650,7 +14666,7 @@ return jQuery;
         var selector = Util.getSelectorFromElement(element);
 
         if (selector) {
-          parent = $$$1(selector)[0];
+          parent = document.querySelector(selector);
         }
 
         return parent || element.parentNode;
@@ -14682,7 +14698,7 @@ return jQuery;
 
         if (!isActive && (event.which !== ESCAPE_KEYCODE || event.which !== SPACE_KEYCODE) || isActive && (event.which === ESCAPE_KEYCODE || event.which === SPACE_KEYCODE)) {
           if (event.which === ESCAPE_KEYCODE) {
-            var toggle = $$$1(parent).find(Selector.DATA_TOGGLE)[0];
+            var toggle = parent.querySelector(Selector.DATA_TOGGLE);
             $$$1(toggle).trigger('focus');
           }
 
@@ -14690,7 +14706,7 @@ return jQuery;
           return;
         }
 
-        var items = $$$1(parent).find(Selector.VISIBLE_ITEMS).get();
+        var items = [].slice.call(parent.querySelectorAll(Selector.VISIBLE_ITEMS));
 
         if (items.length === 0) {
           return;
@@ -14768,7 +14784,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): modal.js
+   * Bootstrap (v4.1.3): modal.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -14780,7 +14796,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'modal';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.modal';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -14824,8 +14840,7 @@ return jQuery;
       DATA_TOGGLE: '[data-toggle="modal"]',
       DATA_DISMISS: '[data-dismiss="modal"]',
       FIXED_CONTENT: '.fixed-top, .fixed-bottom, .is-fixed, .sticky-top',
-      STICKY_CONTENT: '.sticky-top',
-      NAVBAR_TOGGLER: '.navbar-toggler'
+      STICKY_CONTENT: '.sticky-top'
       /**
        * ------------------------------------------------------------------------
        * Class Definition
@@ -14840,7 +14855,7 @@ return jQuery;
       function Modal(element, config) {
         this._config = this._getConfig(config);
         this._element = element;
-        this._dialog = $$$1(element).find(Selector.DIALOG)[0];
+        this._dialog = element.querySelector(Selector.DIALOG);
         this._backdrop = null;
         this._isShown = false;
         this._isBodyOverflowing = false;
@@ -15097,7 +15112,7 @@ return jQuery;
           this._backdrop.className = ClassName.BACKDROP;
 
           if (animate) {
-            $$$1(this._backdrop).addClass(animate);
+            this._backdrop.classList.add(animate);
           }
 
           $$$1(this._backdrop).appendTo(document.body);
@@ -15191,23 +15206,19 @@ return jQuery;
         if (this._isBodyOverflowing) {
           // Note: DOMNode.style.paddingRight returns the actual value or '' if not set
           //   while $(DOMNode).css('padding-right') returns the calculated value or 0 if not set
-          // Adjust fixed content padding
-          $$$1(Selector.FIXED_CONTENT).each(function (index, element) {
-            var actualPadding = $$$1(element)[0].style.paddingRight;
+          var fixedContent = [].slice.call(document.querySelectorAll(Selector.FIXED_CONTENT));
+          var stickyContent = [].slice.call(document.querySelectorAll(Selector.STICKY_CONTENT)); // Adjust fixed content padding
+
+          $$$1(fixedContent).each(function (index, element) {
+            var actualPadding = element.style.paddingRight;
             var calculatedPadding = $$$1(element).css('padding-right');
             $$$1(element).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + _this9._scrollbarWidth + "px");
           }); // Adjust sticky content margin
 
-          $$$1(Selector.STICKY_CONTENT).each(function (index, element) {
-            var actualMargin = $$$1(element)[0].style.marginRight;
+          $$$1(stickyContent).each(function (index, element) {
+            var actualMargin = element.style.marginRight;
             var calculatedMargin = $$$1(element).css('margin-right');
             $$$1(element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) - _this9._scrollbarWidth + "px");
-          }); // Adjust navbar-toggler margin
-
-          $$$1(Selector.NAVBAR_TOGGLER).each(function (index, element) {
-            var actualMargin = $$$1(element)[0].style.marginRight;
-            var calculatedMargin = $$$1(element).css('margin-right');
-            $$$1(element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) + _this9._scrollbarWidth + "px");
           }); // Adjust body padding
 
           var actualPadding = document.body.style.paddingRight;
@@ -15218,15 +15229,15 @@ return jQuery;
 
       _proto._resetScrollbar = function _resetScrollbar() {
         // Restore fixed content padding
-        $$$1(Selector.FIXED_CONTENT).each(function (index, element) {
+        var fixedContent = [].slice.call(document.querySelectorAll(Selector.FIXED_CONTENT));
+        $$$1(fixedContent).each(function (index, element) {
           var padding = $$$1(element).data('padding-right');
+          $$$1(element).removeData('padding-right');
+          element.style.paddingRight = padding ? padding : '';
+        }); // Restore sticky content
 
-          if (typeof padding !== 'undefined') {
-            $$$1(element).css('padding-right', padding).removeData('padding-right');
-          }
-        }); // Restore sticky content and navbar-toggler margin
-
-        $$$1(Selector.STICKY_CONTENT + ", " + Selector.NAVBAR_TOGGLER).each(function (index, element) {
+        var elements = [].slice.call(document.querySelectorAll("" + Selector.STICKY_CONTENT));
+        $$$1(elements).each(function (index, element) {
           var margin = $$$1(element).data('margin-right');
 
           if (typeof margin !== 'undefined') {
@@ -15235,10 +15246,8 @@ return jQuery;
         }); // Restore body padding
 
         var padding = $$$1(document.body).data('padding-right');
-
-        if (typeof padding !== 'undefined') {
-          $$$1(document.body).css('padding-right', padding).removeData('padding-right');
-        }
+        $$$1(document.body).removeData('padding-right');
+        document.body.style.paddingRight = padding ? padding : '';
       };
 
       _proto._getScrollbarWidth = function _getScrollbarWidth() {
@@ -15303,7 +15312,7 @@ return jQuery;
       var selector = Util.getSelectorFromElement(this);
 
       if (selector) {
-        target = $$$1(selector)[0];
+        target = document.querySelector(selector);
       }
 
       var config = $$$1(target).data(DATA_KEY) ? 'toggle' : _objectSpread({}, $$$1(target).data(), $$$1(this).data());
@@ -15346,7 +15355,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): tooltip.js
+   * Bootstrap (v4.1.3): tooltip.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -15358,7 +15367,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'tooltip';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.tooltip';
     var EVENT_KEY = "." + DATA_KEY;
     var JQUERY_NO_CONFLICT = $$$1.fn[NAME];
@@ -15568,7 +15577,7 @@ return jQuery;
           var attachment = this._getAttachment(placement);
 
           this.addAttachmentClass(attachment);
-          var container = this.config.container === false ? document.body : $$$1(this.config.container);
+          var container = this.config.container === false ? document.body : $$$1(document).find(this.config.container);
           $$$1(tip).data(this.constructor.DATA_KEY, this);
 
           if (!$$$1.contains(this.element.ownerDocument.documentElement, this.tip)) {
@@ -15707,9 +15716,9 @@ return jQuery;
       };
 
       _proto.setContent = function setContent() {
-        var $tip = $$$1(this.getTipElement());
-        this.setElementContent($tip.find(Selector.TOOLTIP_INNER), this.getTitle());
-        $tip.removeClass(ClassName.FADE + " " + ClassName.SHOW);
+        var tip = this.getTipElement();
+        this.setElementContent($$$1(tip.querySelectorAll(Selector.TOOLTIP_INNER)), this.getTitle());
+        $$$1(tip).removeClass(ClassName.FADE + " " + ClassName.SHOW);
       };
 
       _proto.setElementContent = function setElementContent($element, content) {
@@ -15902,15 +15911,18 @@ return jQuery;
         var $tip = $$$1(this.getTipElement());
         var tabClass = $tip.attr('class').match(BSCLS_PREFIX_REGEX);
 
-        if (tabClass !== null && tabClass.length > 0) {
+        if (tabClass !== null && tabClass.length) {
           $tip.removeClass(tabClass.join(''));
         }
       };
 
-      _proto._handlePopperPlacementChange = function _handlePopperPlacementChange(data) {
+      _proto._handlePopperPlacementChange = function _handlePopperPlacementChange(popperData) {
+        var popperInstance = popperData.instance;
+        this.tip = popperInstance.popper;
+
         this._cleanTipClass();
 
-        this.addAttachmentClass(this._getAttachment(data.placement));
+        this.addAttachmentClass(this._getAttachment(popperData.placement));
       };
 
       _proto._fixTransition = function _fixTransition() {
@@ -16013,7 +16025,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): popover.js
+   * Bootstrap (v4.1.3): popover.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -16025,7 +16037,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'popover';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.popover';
     var EVENT_KEY = "." + DATA_KEY;
     var JQUERY_NO_CONFLICT = $$$1.fn[NAME];
@@ -16210,7 +16222,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): scrollspy.js
+   * Bootstrap (v4.1.3): scrollspy.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -16222,7 +16234,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'scrollspy';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.scrollspy';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -16304,13 +16316,13 @@ return jQuery;
         this._offsets = [];
         this._targets = [];
         this._scrollHeight = this._getScrollHeight();
-        var targets = $$$1.makeArray($$$1(this._selector));
+        var targets = [].slice.call(document.querySelectorAll(this._selector));
         targets.map(function (element) {
           var target;
           var targetSelector = Util.getSelectorFromElement(element);
 
           if (targetSelector) {
-            target = $$$1(targetSelector)[0];
+            target = document.querySelector(targetSelector);
           }
 
           if (target) {
@@ -16407,7 +16419,9 @@ return jQuery;
           return;
         }
 
-        for (var i = this._offsets.length; i--;) {
+        var offsetLength = this._offsets.length;
+
+        for (var i = offsetLength; i--;) {
           var isActiveTarget = this._activeTarget !== this._targets[i] && scrollTop >= this._offsets[i] && (typeof this._offsets[i + 1] === 'undefined' || scrollTop < this._offsets[i + 1]);
 
           if (isActiveTarget) {
@@ -16427,7 +16441,7 @@ return jQuery;
         queries = queries.map(function (selector) {
           return selector + "[data-target=\"" + target + "\"]," + (selector + "[href=\"" + target + "\"]");
         });
-        var $link = $$$1(queries.join(','));
+        var $link = $$$1([].slice.call(document.querySelectorAll(queries.join(','))));
 
         if ($link.hasClass(ClassName.DROPDOWN_ITEM)) {
           $link.closest(Selector.DROPDOWN).find(Selector.DROPDOWN_TOGGLE).addClass(ClassName.ACTIVE);
@@ -16448,7 +16462,8 @@ return jQuery;
       };
 
       _proto._clear = function _clear() {
-        $$$1(this._selector).filter(Selector.ACTIVE).removeClass(ClassName.ACTIVE);
+        var nodes = [].slice.call(document.querySelectorAll(this._selector));
+        $$$1(nodes).filter(Selector.ACTIVE).removeClass(ClassName.ACTIVE);
       }; // Static
 
 
@@ -16495,9 +16510,10 @@ return jQuery;
 
 
     $$$1(window).on(Event.LOAD_DATA_API, function () {
-      var scrollSpys = $$$1.makeArray($$$1(Selector.DATA_SPY));
+      var scrollSpys = [].slice.call(document.querySelectorAll(Selector.DATA_SPY));
+      var scrollSpysLength = scrollSpys.length;
 
-      for (var i = scrollSpys.length; i--;) {
+      for (var i = scrollSpysLength; i--;) {
         var $spy = $$$1(scrollSpys[i]);
 
         ScrollSpy._jQueryInterface.call($spy, $spy.data());
@@ -16522,7 +16538,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): tab.js
+   * Bootstrap (v4.1.3): tab.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -16534,7 +16550,7 @@ return jQuery;
      * ------------------------------------------------------------------------
      */
     var NAME = 'tab';
-    var VERSION = '4.1.1';
+    var VERSION = '4.1.3';
     var DATA_KEY = 'bs.tab';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -16616,7 +16632,7 @@ return jQuery;
         }
 
         if (selector) {
-          target = $$$1(selector)[0];
+          target = document.querySelector(selector);
         }
 
         this._activate(this._element, listElement);
@@ -16698,7 +16714,8 @@ return jQuery;
           var dropdownElement = $$$1(element).closest(Selector.DROPDOWN)[0];
 
           if (dropdownElement) {
-            $$$1(dropdownElement).find(Selector.DROPDOWN_TOGGLE).addClass(ClassName.ACTIVE);
+            var dropdownToggleList = [].slice.call(dropdownElement.querySelectorAll(Selector.DROPDOWN_TOGGLE));
+            $$$1(dropdownToggleList).addClass(ClassName.ACTIVE);
           }
 
           element.setAttribute('aria-expanded', true);
@@ -16770,7 +16787,7 @@ return jQuery;
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.1): index.js
+   * Bootstrap (v4.1.3): index.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -16933,7 +16950,7 @@ return jQuery;
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	fcoo-global-events.js, 
+	fcoo-global-events.js,
 
 	(c) 2016, FCOO
 
@@ -16944,18 +16961,17 @@ return jQuery;
 
 (function (window/*, document, undefined*/) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
 
     window.fcoo.events = new window.GlobalEvents();
 
+    var globalEventsNames = ['languagechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged']
 
-	//Initialize/ready 
-//	$(function() { 
-
-
-//	}); 
+    $.each( globalEventsNames, function( index, eventName ){
+        window.fcoo.events[ eventName.toUpperCase() ] = eventName;
+    });
 
 }(this, document));
 ;
@@ -17249,6 +17265,7 @@ var EventEmitter = function () {
       _this.observers[event] = _this.observers[event] || [];
       _this.observers[event].push(listener);
     });
+    return this;
   };
 
   EventEmitter.prototype.off = function off(event, listener) {
@@ -17524,6 +17541,10 @@ var ResourceStore = function (_EventEmitter) {
     if (this.options.compatibilityAPI === 'v1') return _extends({}, this.getResource(lng, ns));
 
     return this.getResource(lng, ns);
+  };
+
+  ResourceStore.prototype.getDataByLanguage = function getDataByLanguage(lng) {
+    return this.data[lng];
   };
 
   ResourceStore.prototype.toJSON = function toJSON() {
@@ -18173,13 +18194,14 @@ var Interpolator = function () {
       this.format = options.interpolation && options.interpolation.format || function (value) {
         return value;
       };
-      this.escape = options.interpolation && options.interpolation.escape || escape;
     }
     if (!options.interpolation) options.interpolation = { escapeValue: true };
 
     var iOpts = options.interpolation;
 
+    this.escape = iOpts.escape !== undefined ? iOpts.escape : escape;
     this.escapeValue = iOpts.escapeValue !== undefined ? iOpts.escapeValue : true;
+    this.useRawValueToEscape = iOpts.useRawValueToEscape !== undefined ? iOpts.useRawValueToEscape : false;
 
     this.prefix = iOpts.prefix ? regexEscape(iOpts.prefix) : iOpts.prefixEscaped || '{{';
     this.suffix = iOpts.suffix ? regexEscape(iOpts.suffix) : iOpts.suffixEscaped || '}}';
@@ -18262,7 +18284,7 @@ var Interpolator = function () {
           this.logger.warn('missed to pass in variable ' + match[1] + ' for interpolating ' + str);
           value = '';
         }
-      } else if (typeof value !== 'string') {
+      } else if (typeof value !== 'string' && !this.useRawValueToEscape) {
         value = makeString(value);
       }
       value = this.escapeValue ? regexSafe(this.escape(value)) : regexSafe(value);
@@ -18751,7 +18773,7 @@ var I18n = function (_EventEmitter) {
     }
 
     // append api
-    var storeApi = ['getResource', 'addResource', 'addResources', 'addResourceBundle', 'removeResourceBundle', 'hasResourceBundle', 'getResourceBundle'];
+    var storeApi = ['getResource', 'addResource', 'addResources', 'addResourceBundle', 'removeResourceBundle', 'hasResourceBundle', 'getResourceBundle', 'getDataByLanguage'];
     storeApi.forEach(function (fcName) {
       _this2[fcName] = function () {
         var _store;
@@ -39659,8 +39681,8 @@ this.next=0;this.sent=undefined;this.done=false;this.delegate=null;this.tryEntri
 }(jQuery, this, document));
 ;
 /* @preserve
- * Leaflet 1.3.1, a JS library for interactive maps. http://leafletjs.com
- * (c) 2010-2017 Vladimir Agafonkin, (c) 2010-2011 CloudMade
+ * Leaflet 1.3.4, a JS library for interactive maps. http://leafletjs.com
+ * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
 (function (global, factory) {
@@ -39669,7 +39691,7 @@ this.next=0;this.sent=undefined;this.done=false;this.delegate=null;this.tryEntri
 	(factory((global.L = {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "1.3.1";
+var version = "1.3.4";
 
 /*
  * @namespace Util
@@ -41020,7 +41042,7 @@ function toLatLngBounds(a, b) {
  * map.panTo(L.latLng(50, 30));
  * ```
  *
- * Note that `LatLng` does not inherit from Leafet's `Class` object,
+ * Note that `LatLng` does not inherit from Leaflet's `Class` object,
  * which means new classes can't inherit from it, and new methods
  * can't be added to it with the `include` function.
  */
@@ -41582,7 +41604,7 @@ var mobileOpera = mobile && opera;
 var mobileGecko = mobile && gecko;
 
 // @property retina: Boolean
-// `true` for browsers on a high-resolution "retina" screen.
+// `true` for browsers on a high-resolution "retina" screen or on any screen when browser's display zoom is more than 100%.
 var retina = (window.devicePixelRatio || (window.screen.deviceXDPI / window.screen.logicalXDPI)) > 1;
 
 
@@ -41867,326 +41889,6 @@ function removeDoubleTapListener(obj, id) {
 }
 
 /*
- * @namespace DomEvent
- * Utility functions to work with the [DOM events](https://developer.mozilla.org/docs/Web/API/Event), used by Leaflet internally.
- */
-
-// Inspired by John Resig, Dean Edwards and YUI addEvent implementations.
-
-// @function on(el: HTMLElement, types: String, fn: Function, context?: Object): this
-// Adds a listener function (`fn`) to a particular DOM event type of the
-// element `el`. You can optionally specify the context of the listener
-// (object the `this` keyword will point to). You can also pass several
-// space-separated types (e.g. `'click dblclick'`).
-
-// @alternative
-// @function on(el: HTMLElement, eventMap: Object, context?: Object): this
-// Adds a set of type/listener pairs, e.g. `{click: onClick, mousemove: onMouseMove}`
-function on(obj, types, fn, context) {
-
-	if (typeof types === 'object') {
-		for (var type in types) {
-			addOne(obj, type, types[type], fn);
-		}
-	} else {
-		types = splitWords(types);
-
-		for (var i = 0, len = types.length; i < len; i++) {
-			addOne(obj, types[i], fn, context);
-		}
-	}
-
-	return this;
-}
-
-var eventsKey = '_leaflet_events';
-
-// @function off(el: HTMLElement, types: String, fn: Function, context?: Object): this
-// Removes a previously added listener function.
-// Note that if you passed a custom context to on, you must pass the same
-// context to `off` in order to remove the listener.
-
-// @alternative
-// @function off(el: HTMLElement, eventMap: Object, context?: Object): this
-// Removes a set of type/listener pairs, e.g. `{click: onClick, mousemove: onMouseMove}`
-function off(obj, types, fn, context) {
-
-	if (typeof types === 'object') {
-		for (var type in types) {
-			removeOne(obj, type, types[type], fn);
-		}
-	} else if (types) {
-		types = splitWords(types);
-
-		for (var i = 0, len = types.length; i < len; i++) {
-			removeOne(obj, types[i], fn, context);
-		}
-	} else {
-		for (var j in obj[eventsKey]) {
-			removeOne(obj, j, obj[eventsKey][j]);
-		}
-		delete obj[eventsKey];
-	}
-
-	return this;
-}
-
-function addOne(obj, type, fn, context) {
-	var id = type + stamp(fn) + (context ? '_' + stamp(context) : '');
-
-	if (obj[eventsKey] && obj[eventsKey][id]) { return this; }
-
-	var handler = function (e) {
-		return fn.call(context || obj, e || window.event);
-	};
-
-	var originalHandler = handler;
-
-	if (pointer && type.indexOf('touch') === 0) {
-		// Needs DomEvent.Pointer.js
-		addPointerListener(obj, type, handler, id);
-
-	} else if (touch && (type === 'dblclick') && addDoubleTapListener &&
-	           !(pointer && chrome)) {
-		// Chrome >55 does not need the synthetic dblclicks from addDoubleTapListener
-		// See #5180
-		addDoubleTapListener(obj, handler, id);
-
-	} else if ('addEventListener' in obj) {
-
-		if (type === 'mousewheel') {
-			obj.addEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
-
-		} else if ((type === 'mouseenter') || (type === 'mouseleave')) {
-			handler = function (e) {
-				e = e || window.event;
-				if (isExternalTarget(obj, e)) {
-					originalHandler(e);
-				}
-			};
-			obj.addEventListener(type === 'mouseenter' ? 'mouseover' : 'mouseout', handler, false);
-
-		} else {
-			if (type === 'click' && android) {
-				handler = function (e) {
-					filterClick(e, originalHandler);
-				};
-			}
-			obj.addEventListener(type, handler, false);
-		}
-
-	} else if ('attachEvent' in obj) {
-		obj.attachEvent('on' + type, handler);
-	}
-
-	obj[eventsKey] = obj[eventsKey] || {};
-	obj[eventsKey][id] = handler;
-}
-
-function removeOne(obj, type, fn, context) {
-
-	var id = type + stamp(fn) + (context ? '_' + stamp(context) : ''),
-	    handler = obj[eventsKey] && obj[eventsKey][id];
-
-	if (!handler) { return this; }
-
-	if (pointer && type.indexOf('touch') === 0) {
-		removePointerListener(obj, type, id);
-
-	} else if (touch && (type === 'dblclick') && removeDoubleTapListener &&
-	           !(pointer && chrome)) {
-		removeDoubleTapListener(obj, id);
-
-	} else if ('removeEventListener' in obj) {
-
-		if (type === 'mousewheel') {
-			obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
-
-		} else {
-			obj.removeEventListener(
-				type === 'mouseenter' ? 'mouseover' :
-				type === 'mouseleave' ? 'mouseout' : type, handler, false);
-		}
-
-	} else if ('detachEvent' in obj) {
-		obj.detachEvent('on' + type, handler);
-	}
-
-	obj[eventsKey][id] = null;
-}
-
-// @function stopPropagation(ev: DOMEvent): this
-// Stop the given event from propagation to parent elements. Used inside the listener functions:
-// ```js
-// L.DomEvent.on(div, 'click', function (ev) {
-// 	L.DomEvent.stopPropagation(ev);
-// });
-// ```
-function stopPropagation(e) {
-
-	if (e.stopPropagation) {
-		e.stopPropagation();
-	} else if (e.originalEvent) {  // In case of Leaflet event.
-		e.originalEvent._stopped = true;
-	} else {
-		e.cancelBubble = true;
-	}
-	skipped(e);
-
-	return this;
-}
-
-// @function disableScrollPropagation(el: HTMLElement): this
-// Adds `stopPropagation` to the element's `'mousewheel'` events (plus browser variants).
-function disableScrollPropagation(el) {
-	addOne(el, 'mousewheel', stopPropagation);
-	return this;
-}
-
-// @function disableClickPropagation(el: HTMLElement): this
-// Adds `stopPropagation` to the element's `'click'`, `'doubleclick'`,
-// `'mousedown'` and `'touchstart'` events (plus browser variants).
-function disableClickPropagation(el) {
-	on(el, 'mousedown touchstart dblclick', stopPropagation);
-	addOne(el, 'click', fakeStop);
-	return this;
-}
-
-// @function preventDefault(ev: DOMEvent): this
-// Prevents the default action of the DOM Event `ev` from happening (such as
-// following a link in the href of the a element, or doing a POST request
-// with page reload when a `<form>` is submitted).
-// Use it inside listener functions.
-function preventDefault(e) {
-	if (e.preventDefault) {
-		e.preventDefault();
-	} else {
-		e.returnValue = false;
-	}
-	return this;
-}
-
-// @function stop(ev: DOMEvent): this
-// Does `stopPropagation` and `preventDefault` at the same time.
-function stop(e) {
-	preventDefault(e);
-	stopPropagation(e);
-	return this;
-}
-
-// @function getMousePosition(ev: DOMEvent, container?: HTMLElement): Point
-// Gets normalized mouse position from a DOM event relative to the
-// `container` or to the whole page if not specified.
-function getMousePosition(e, container) {
-	if (!container) {
-		return new Point(e.clientX, e.clientY);
-	}
-
-	var rect = container.getBoundingClientRect();
-
-	var scaleX = rect.width / container.offsetWidth || 1;
-	var scaleY = rect.height / container.offsetHeight || 1;
-	return new Point(
-		e.clientX / scaleX - rect.left - container.clientLeft,
-		e.clientY / scaleY - rect.top - container.clientTop);
-}
-
-// Chrome on Win scrolls double the pixels as in other platforms (see #4538),
-// and Firefox scrolls device pixels, not CSS pixels
-var wheelPxFactor =
-	(win && chrome) ? 2 * window.devicePixelRatio :
-	gecko ? window.devicePixelRatio : 1;
-
-// @function getWheelDelta(ev: DOMEvent): Number
-// Gets normalized wheel delta from a mousewheel DOM event, in vertical
-// pixels scrolled (negative if scrolling down).
-// Events from pointing devices without precise scrolling are mapped to
-// a best guess of 60 pixels.
-function getWheelDelta(e) {
-	return (edge) ? e.wheelDeltaY / 2 : // Don't trust window-geometry-based delta
-	       (e.deltaY && e.deltaMode === 0) ? -e.deltaY / wheelPxFactor : // Pixels
-	       (e.deltaY && e.deltaMode === 1) ? -e.deltaY * 20 : // Lines
-	       (e.deltaY && e.deltaMode === 2) ? -e.deltaY * 60 : // Pages
-	       (e.deltaX || e.deltaZ) ? 0 :	// Skip horizontal/depth wheel events
-	       e.wheelDelta ? (e.wheelDeltaY || e.wheelDelta) / 2 : // Legacy IE pixels
-	       (e.detail && Math.abs(e.detail) < 32765) ? -e.detail * 20 : // Legacy Moz lines
-	       e.detail ? e.detail / -32765 * 60 : // Legacy Moz pages
-	       0;
-}
-
-var skipEvents = {};
-
-function fakeStop(e) {
-	// fakes stopPropagation by setting a special event flag, checked/reset with skipped(e)
-	skipEvents[e.type] = true;
-}
-
-function skipped(e) {
-	var events = skipEvents[e.type];
-	// reset when checking, as it's only used in map container and propagates outside of the map
-	skipEvents[e.type] = false;
-	return events;
-}
-
-// check if element really left/entered the event target (for mouseenter/mouseleave)
-function isExternalTarget(el, e) {
-
-	var related = e.relatedTarget;
-
-	if (!related) { return true; }
-
-	try {
-		while (related && (related !== el)) {
-			related = related.parentNode;
-		}
-	} catch (err) {
-		return false;
-	}
-	return (related !== el);
-}
-
-var lastClick;
-
-// this is a horrible workaround for a bug in Android where a single touch triggers two click events
-function filterClick(e, handler) {
-	var timeStamp = (e.timeStamp || (e.originalEvent && e.originalEvent.timeStamp)),
-	    elapsed = lastClick && (timeStamp - lastClick);
-
-	// are they closer together than 500ms yet more than 100ms?
-	// Android typically triggers them ~300ms apart while multiple listeners
-	// on the same event should be triggered far faster;
-	// or check if click is simulated on the element, and if it is, reject any non-simulated events
-
-	if ((elapsed && elapsed > 100 && elapsed < 500) || (e.target._simulatedClick && !e._simulated)) {
-		stop(e);
-		return;
-	}
-	lastClick = timeStamp;
-
-	handler(e);
-}
-
-
-
-
-var DomEvent = (Object.freeze || Object)({
-	on: on,
-	off: off,
-	stopPropagation: stopPropagation,
-	disableScrollPropagation: disableScrollPropagation,
-	disableClickPropagation: disableClickPropagation,
-	preventDefault: preventDefault,
-	stop: stop,
-	getMousePosition: getMousePosition,
-	getWheelDelta: getWheelDelta,
-	fakeStop: fakeStop,
-	skipped: skipped,
-	isExternalTarget: isExternalTarget,
-	addListener: on,
-	removeListener: off
-});
-
-/*
  * @namespace DomUtil
  *
  * Utility functions to work with the [DOM](https://developer.mozilla.org/docs/Web/API/Document_Object_Model)
@@ -42201,7 +41903,7 @@ var DomEvent = (Object.freeze || Object)({
 // @property TRANSFORM: String
 // Vendor-prefixed transform style name (e.g. `'webkitTransform'` for WebKit).
 var TRANSFORM = testProp(
-	['transform', 'WebkitTransform', 'OTransform', 'MozTransform', 'msTransform']);
+	['transform', 'webkitTransform', 'OTransform', 'MozTransform', 'msTransform']);
 
 // webkitTransition comes first because some browser versions that drop vendor prefix don't do
 // the same for the transitionend event, in particular the Android 4.1 stock browser
@@ -42504,6 +42206,29 @@ function restoreOutline() {
 	off(window, 'keydown', restoreOutline);
 }
 
+// @function getSizedParentNode(el: HTMLElement): HTMLElement
+// Finds the closest parent node which size (width and height) is not null.
+function getSizedParentNode(element) {
+	do {
+		element = element.parentNode;
+	} while ((!element.offsetWidth || !element.offsetHeight) && element !== document.body);
+	return element;
+}
+
+// @function getScale(el: HTMLElement): Object
+// Computes the CSS scale currently applied on the element.
+// Returns an object with `x` and `y` members as horizontal and vertical scales respectively,
+// and `boundingClientRect` as the result of [`getBoundingClientRect()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect).
+function getScale(element) {
+	var rect = element.getBoundingClientRect(); // Read-only in old browsers.
+
+	return {
+		x: rect.width / element.offsetWidth || 1,
+		y: rect.height / element.offsetHeight || 1,
+		boundingClientRect: rect
+	};
+}
+
 
 var DomUtil = (Object.freeze || Object)({
 	TRANSFORM: TRANSFORM,
@@ -42531,7 +42256,331 @@ var DomUtil = (Object.freeze || Object)({
 	disableImageDrag: disableImageDrag,
 	enableImageDrag: enableImageDrag,
 	preventOutline: preventOutline,
-	restoreOutline: restoreOutline
+	restoreOutline: restoreOutline,
+	getSizedParentNode: getSizedParentNode,
+	getScale: getScale
+});
+
+/*
+ * @namespace DomEvent
+ * Utility functions to work with the [DOM events](https://developer.mozilla.org/docs/Web/API/Event), used by Leaflet internally.
+ */
+
+// Inspired by John Resig, Dean Edwards and YUI addEvent implementations.
+
+// @function on(el: HTMLElement, types: String, fn: Function, context?: Object): this
+// Adds a listener function (`fn`) to a particular DOM event type of the
+// element `el`. You can optionally specify the context of the listener
+// (object the `this` keyword will point to). You can also pass several
+// space-separated types (e.g. `'click dblclick'`).
+
+// @alternative
+// @function on(el: HTMLElement, eventMap: Object, context?: Object): this
+// Adds a set of type/listener pairs, e.g. `{click: onClick, mousemove: onMouseMove}`
+function on(obj, types, fn, context) {
+
+	if (typeof types === 'object') {
+		for (var type in types) {
+			addOne(obj, type, types[type], fn);
+		}
+	} else {
+		types = splitWords(types);
+
+		for (var i = 0, len = types.length; i < len; i++) {
+			addOne(obj, types[i], fn, context);
+		}
+	}
+
+	return this;
+}
+
+var eventsKey = '_leaflet_events';
+
+// @function off(el: HTMLElement, types: String, fn: Function, context?: Object): this
+// Removes a previously added listener function.
+// Note that if you passed a custom context to on, you must pass the same
+// context to `off` in order to remove the listener.
+
+// @alternative
+// @function off(el: HTMLElement, eventMap: Object, context?: Object): this
+// Removes a set of type/listener pairs, e.g. `{click: onClick, mousemove: onMouseMove}`
+function off(obj, types, fn, context) {
+
+	if (typeof types === 'object') {
+		for (var type in types) {
+			removeOne(obj, type, types[type], fn);
+		}
+	} else if (types) {
+		types = splitWords(types);
+
+		for (var i = 0, len = types.length; i < len; i++) {
+			removeOne(obj, types[i], fn, context);
+		}
+	} else {
+		for (var j in obj[eventsKey]) {
+			removeOne(obj, j, obj[eventsKey][j]);
+		}
+		delete obj[eventsKey];
+	}
+
+	return this;
+}
+
+function addOne(obj, type, fn, context) {
+	var id = type + stamp(fn) + (context ? '_' + stamp(context) : '');
+
+	if (obj[eventsKey] && obj[eventsKey][id]) { return this; }
+
+	var handler = function (e) {
+		return fn.call(context || obj, e || window.event);
+	};
+
+	var originalHandler = handler;
+
+	if (pointer && type.indexOf('touch') === 0) {
+		// Needs DomEvent.Pointer.js
+		addPointerListener(obj, type, handler, id);
+
+	} else if (touch && (type === 'dblclick') && addDoubleTapListener &&
+	           !(pointer && chrome)) {
+		// Chrome >55 does not need the synthetic dblclicks from addDoubleTapListener
+		// See #5180
+		addDoubleTapListener(obj, handler, id);
+
+	} else if ('addEventListener' in obj) {
+
+		if (type === 'mousewheel') {
+			obj.addEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
+
+		} else if ((type === 'mouseenter') || (type === 'mouseleave')) {
+			handler = function (e) {
+				e = e || window.event;
+				if (isExternalTarget(obj, e)) {
+					originalHandler(e);
+				}
+			};
+			obj.addEventListener(type === 'mouseenter' ? 'mouseover' : 'mouseout', handler, false);
+
+		} else {
+			if (type === 'click' && android) {
+				handler = function (e) {
+					filterClick(e, originalHandler);
+				};
+			}
+			obj.addEventListener(type, handler, false);
+		}
+
+	} else if ('attachEvent' in obj) {
+		obj.attachEvent('on' + type, handler);
+	}
+
+	obj[eventsKey] = obj[eventsKey] || {};
+	obj[eventsKey][id] = handler;
+}
+
+function removeOne(obj, type, fn, context) {
+
+	var id = type + stamp(fn) + (context ? '_' + stamp(context) : ''),
+	    handler = obj[eventsKey] && obj[eventsKey][id];
+
+	if (!handler) { return this; }
+
+	if (pointer && type.indexOf('touch') === 0) {
+		removePointerListener(obj, type, id);
+
+	} else if (touch && (type === 'dblclick') && removeDoubleTapListener &&
+	           !(pointer && chrome)) {
+		removeDoubleTapListener(obj, id);
+
+	} else if ('removeEventListener' in obj) {
+
+		if (type === 'mousewheel') {
+			obj.removeEventListener('onwheel' in obj ? 'wheel' : 'mousewheel', handler, false);
+
+		} else {
+			obj.removeEventListener(
+				type === 'mouseenter' ? 'mouseover' :
+				type === 'mouseleave' ? 'mouseout' : type, handler, false);
+		}
+
+	} else if ('detachEvent' in obj) {
+		obj.detachEvent('on' + type, handler);
+	}
+
+	obj[eventsKey][id] = null;
+}
+
+// @function stopPropagation(ev: DOMEvent): this
+// Stop the given event from propagation to parent elements. Used inside the listener functions:
+// ```js
+// L.DomEvent.on(div, 'click', function (ev) {
+// 	L.DomEvent.stopPropagation(ev);
+// });
+// ```
+function stopPropagation(e) {
+
+	if (e.stopPropagation) {
+		e.stopPropagation();
+	} else if (e.originalEvent) {  // In case of Leaflet event.
+		e.originalEvent._stopped = true;
+	} else {
+		e.cancelBubble = true;
+	}
+	skipped(e);
+
+	return this;
+}
+
+// @function disableScrollPropagation(el: HTMLElement): this
+// Adds `stopPropagation` to the element's `'mousewheel'` events (plus browser variants).
+function disableScrollPropagation(el) {
+	addOne(el, 'mousewheel', stopPropagation);
+	return this;
+}
+
+// @function disableClickPropagation(el: HTMLElement): this
+// Adds `stopPropagation` to the element's `'click'`, `'doubleclick'`,
+// `'mousedown'` and `'touchstart'` events (plus browser variants).
+function disableClickPropagation(el) {
+	on(el, 'mousedown touchstart dblclick', stopPropagation);
+	addOne(el, 'click', fakeStop);
+	return this;
+}
+
+// @function preventDefault(ev: DOMEvent): this
+// Prevents the default action of the DOM Event `ev` from happening (such as
+// following a link in the href of the a element, or doing a POST request
+// with page reload when a `<form>` is submitted).
+// Use it inside listener functions.
+function preventDefault(e) {
+	if (e.preventDefault) {
+		e.preventDefault();
+	} else {
+		e.returnValue = false;
+	}
+	return this;
+}
+
+// @function stop(ev: DOMEvent): this
+// Does `stopPropagation` and `preventDefault` at the same time.
+function stop(e) {
+	preventDefault(e);
+	stopPropagation(e);
+	return this;
+}
+
+// @function getMousePosition(ev: DOMEvent, container?: HTMLElement): Point
+// Gets normalized mouse position from a DOM event relative to the
+// `container` (border excluded) or to the whole page if not specified.
+function getMousePosition(e, container) {
+	if (!container) {
+		return new Point(e.clientX, e.clientY);
+	}
+
+	var scale = getScale(container),
+	    offset = scale.boundingClientRect; // left and top  values are in page scale (like the event clientX/Y)
+
+	return new Point(
+		// offset.left/top values are in page scale (like clientX/Y),
+		// whereas clientLeft/Top (border width) values are the original values (before CSS scale applies).
+		(e.clientX - offset.left) / scale.x - container.clientLeft,
+		(e.clientY - offset.top) / scale.y - container.clientTop
+	);
+}
+
+// Chrome on Win scrolls double the pixels as in other platforms (see #4538),
+// and Firefox scrolls device pixels, not CSS pixels
+var wheelPxFactor =
+	(win && chrome) ? 2 * window.devicePixelRatio :
+	gecko ? window.devicePixelRatio : 1;
+
+// @function getWheelDelta(ev: DOMEvent): Number
+// Gets normalized wheel delta from a mousewheel DOM event, in vertical
+// pixels scrolled (negative if scrolling down).
+// Events from pointing devices without precise scrolling are mapped to
+// a best guess of 60 pixels.
+function getWheelDelta(e) {
+	return (edge) ? e.wheelDeltaY / 2 : // Don't trust window-geometry-based delta
+	       (e.deltaY && e.deltaMode === 0) ? -e.deltaY / wheelPxFactor : // Pixels
+	       (e.deltaY && e.deltaMode === 1) ? -e.deltaY * 20 : // Lines
+	       (e.deltaY && e.deltaMode === 2) ? -e.deltaY * 60 : // Pages
+	       (e.deltaX || e.deltaZ) ? 0 :	// Skip horizontal/depth wheel events
+	       e.wheelDelta ? (e.wheelDeltaY || e.wheelDelta) / 2 : // Legacy IE pixels
+	       (e.detail && Math.abs(e.detail) < 32765) ? -e.detail * 20 : // Legacy Moz lines
+	       e.detail ? e.detail / -32765 * 60 : // Legacy Moz pages
+	       0;
+}
+
+var skipEvents = {};
+
+function fakeStop(e) {
+	// fakes stopPropagation by setting a special event flag, checked/reset with skipped(e)
+	skipEvents[e.type] = true;
+}
+
+function skipped(e) {
+	var events = skipEvents[e.type];
+	// reset when checking, as it's only used in map container and propagates outside of the map
+	skipEvents[e.type] = false;
+	return events;
+}
+
+// check if element really left/entered the event target (for mouseenter/mouseleave)
+function isExternalTarget(el, e) {
+
+	var related = e.relatedTarget;
+
+	if (!related) { return true; }
+
+	try {
+		while (related && (related !== el)) {
+			related = related.parentNode;
+		}
+	} catch (err) {
+		return false;
+	}
+	return (related !== el);
+}
+
+var lastClick;
+
+// this is a horrible workaround for a bug in Android where a single touch triggers two click events
+function filterClick(e, handler) {
+	var timeStamp = (e.timeStamp || (e.originalEvent && e.originalEvent.timeStamp)),
+	    elapsed = lastClick && (timeStamp - lastClick);
+
+	// are they closer together than 500ms yet more than 100ms?
+	// Android typically triggers them ~300ms apart while multiple listeners
+	// on the same event should be triggered far faster;
+	// or check if click is simulated on the element, and if it is, reject any non-simulated events
+
+	if ((elapsed && elapsed > 100 && elapsed < 500) || (e.target._simulatedClick && !e._simulated)) {
+		stop(e);
+		return;
+	}
+	lastClick = timeStamp;
+
+	handler(e);
+}
+
+
+
+
+var DomEvent = (Object.freeze || Object)({
+	on: on,
+	off: off,
+	stopPropagation: stopPropagation,
+	disableScrollPropagation: disableScrollPropagation,
+	disableClickPropagation: disableClickPropagation,
+	preventDefault: preventDefault,
+	stop: stop,
+	getMousePosition: getMousePosition,
+	getWheelDelta: getWheelDelta,
+	fakeStop: fakeStop,
+	skipped: skipped,
+	isExternalTarget: isExternalTarget,
+	addListener: on,
+	removeListener: off
 });
 
 /*
@@ -43276,7 +43325,7 @@ var Map = Evented.extend({
 		var lat = pos.coords.latitude,
 		    lng = pos.coords.longitude,
 		    latlng = new LatLng(lat, lng),
-		    bounds = latlng.toBounds(pos.coords.accuracy),
+		    bounds = latlng.toBounds(pos.coords.accuracy * 2),
 		    options = this._locateOptions;
 
 		if (options.setView) {
@@ -43351,6 +43400,10 @@ var Map = Evented.extend({
 
 		if (this._clearControlPos) {
 			this._clearControlPos();
+		}
+		if (this._resizeRequest) {
+			cancelAnimFrame(this._resizeRequest);
+			this._resizeRequest = null;
 		}
 
 		this._clearHandlers();
@@ -43436,7 +43489,7 @@ var Map = Evented.extend({
 			this.options.maxZoom;
 	},
 
-	// @method getBoundsZoom(bounds: LatLngBounds, inside?: Boolean): Number
+	// @method getBoundsZoom(bounds: LatLngBounds, inside?: Boolean, padding?: Point): Number
 	// Returns the maximum zoom level on which the given bounds fit to the map
 	// view in its entirety. If `inside` (optional) is set to `true`, the method
 	// instead returns the minimum zoom level on which the map view fits into
@@ -44998,6 +45051,10 @@ Map.mergeOptions({
 
 Map.addInitHook(function () {
 	if (this.options.zoomControl) {
+		// @section Controls
+		// @property zoomControl: Control.Zoom
+		// The default zoom control (only available if the
+		// [`zoomControl` option](#map-zoomcontrol) was `true` when creating the map).
 		this.zoomControl = new Zoom();
 		this.addControl(this.zoomControl);
 	}
@@ -45437,9 +45494,13 @@ var Draggable = Evented.extend({
 		// Fired when a drag is about to start.
 		this.fire('down');
 
-		var first = e.touches ? e.touches[0] : e;
+		var first = e.touches ? e.touches[0] : e,
+		    sizedParent = getSizedParentNode(this._element);
 
 		this._startPoint = new Point(first.clientX, first.clientY);
+
+		// Cache the scale, so that we can continuously compensate for it during drag (_onMove).
+		this._parentScale = getScale(sizedParent);
 
 		on(document, MOVE[e.type], this._onMove, this);
 		on(document, END[e.type], this._onUp, this);
@@ -45459,11 +45520,16 @@ var Draggable = Evented.extend({
 		}
 
 		var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e),
-		    newPoint = new Point(first.clientX, first.clientY),
-		    offset = newPoint.subtract(this._startPoint);
+		    offset = new Point(first.clientX, first.clientY)._subtract(this._startPoint);
 
 		if (!offset.x && !offset.y) { return; }
 		if (Math.abs(offset.x) + Math.abs(offset.y) < this.options.clickTolerance) { return; }
+
+		// We assume that the parent container's position, border and scale do not change for the duration of the drag.
+		// Therefore there is no need to account for the position and border (they are eliminated by the subtraction)
+		// and we can use the cached value for the scale.
+		offset.x /= this._parentScale.x;
+		offset.y /= this._parentScale.y;
 
 		preventDefault(e);
 
@@ -46634,7 +46700,7 @@ var Icon = Class.extend({
 
 	options: {
 		popupAnchor: [0, 0],
-		tooltipAnchor: [0, 0],
+		tooltipAnchor: [0, 0]
 	},
 
 	initialize: function (options) {
@@ -46833,7 +46899,7 @@ var MarkerDrag = Handler.extend({
 		    map = marker._map,
 		    speed = this._marker.options.autoPanSpeed,
 		    padding = this._marker.options.autoPanPadding,
-		    iconPos = L.DomUtil.getPosition(marker._icon),
+		    iconPos = getPosition(marker._icon),
 		    bounds = map.getPixelBounds(),
 		    origin = map.getPixelOrigin();
 
@@ -46857,7 +46923,7 @@ var MarkerDrag = Handler.extend({
 			this._draggable._newPos._add(movement);
 			this._draggable._startPos._add(movement);
 
-			L.DomUtil.setPosition(marker._icon, this._draggable._newPos);
+			setPosition(marker._icon, this._draggable._newPos);
 			this._onDrag(e);
 
 			this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e));
@@ -46889,7 +46955,7 @@ var MarkerDrag = Handler.extend({
 	_onDrag: function (e) {
 		var marker = this._marker,
 		    shadow = marker._shadow,
-		iconPos = getPosition(marker._icon),
+		    iconPos = getPosition(marker._icon),
 		    latlng = marker._map.layerPointToLatLng(iconPos);
 
 		// update shadow position
@@ -46950,22 +47016,6 @@ var Marker = Layer.extend({
 		// Option inherited from "Interactive layer" abstract class
 		interactive: true,
 
-		// @option draggable: Boolean = false
-		// Whether the marker is draggable with mouse/touch or not.
-		draggable: false,
-
-		// @option autoPan: Boolean = false
-		// Set it to `true` if you want the map to do panning animation when marker hits the edges.
-		autoPan: false,
-
-		// @option autoPanPadding: Point = Point(50, 50)
-		// Equivalent of setting both top left and bottom right autopan padding to the same value.
-		autoPanPadding: [50, 50],
-
-		// @option autoPanSpeed: Number = 10
-		// Number of pixels the map should move by.
-		autoPanSpeed: 10,
-
 		// @option keyboard: Boolean = true
 		// Whether the marker can be tabbed to with a keyboard and clicked by pressing enter.
 		keyboard: true,
@@ -47001,7 +47051,25 @@ var Marker = Layer.extend({
 		// @option bubblingMouseEvents: Boolean = false
 		// When `true`, a mouse event on this marker will trigger the same event on the map
 		// (unless [`L.DomEvent.stopPropagation`](#domevent-stoppropagation) is used).
-		bubblingMouseEvents: false
+		bubblingMouseEvents: false,
+
+		// @section Draggable marker options
+		// @option draggable: Boolean = false
+		// Whether the marker is draggable with mouse/touch or not.
+		draggable: false,
+
+		// @option autoPan: Boolean = false
+		// Whether to pan the map when dragging this marker near its edge or not.
+		autoPan: false,
+
+		// @option autoPanPadding: Point = Point(50, 50)
+		// Distance (in pixels to the left/right and to the top/bottom) of the
+		// map edge to start panning the map.
+		autoPanPadding: [50, 50],
+
+		// @option autoPanSpeed: Number = 10
+		// Number of pixels the map should pan by.
+		autoPanSpeed: 10
 	},
 
 	/* @section
@@ -47710,7 +47778,7 @@ var Polyline = Path.extend({
 		return !this._latlngs.length;
 	},
 
-	// @method closestLayerPoint: Point
+	// @method closestLayerPoint(p: Point): Point
 	// Returns the point closest to `p` on the Polyline.
 	closestLayerPoint: function (p) {
 		var minDistance = Infinity,
@@ -48103,7 +48171,7 @@ var Polygon = Polyline.extend({
 		var inside = false,
 		    part, p1, p2, i, j, k, len, len2;
 
-		if (!this._pxBounds.contains(p)) { return false; }
+		if (!this._pxBounds || !this._pxBounds.contains(p)) { return false; }
 
 		// ray casting algorithm for detecting if point is in polygon
 		for (i = 0, len = this._parts.length; i < len; i++) {
@@ -48530,7 +48598,7 @@ LayerGroup.include({
 // @namespace GeoJSON
 // @factory L.geoJSON(geojson?: Object, options?: GeoJSON options)
 // Creates a GeoJSON layer. Optionally accepts an object in
-// [GeoJSON format](http://geojson.org/geojson-spec.html) to display on the map
+// [GeoJSON format](https://tools.ietf.org/html/rfc7946) to display on the map
 // (you can alternatively add it later with `addData` method) and an `options` object.
 function geoJSON(geojson, options) {
 	return new GeoJSON(geojson, options);
@@ -48572,8 +48640,10 @@ var ImageOverlay = Layer.extend({
 		// If `true`, the image overlay will emit [mouse events](#interactive-layer) when clicked or hovered.
 		interactive: false,
 
-		// @option crossOrigin: Boolean = false
-		// If true, the image will have its crossOrigin attribute set to ''. This is needed if you want to access image pixel data.
+		// @option crossOrigin: Boolean|String = false
+		// Whether the crossOrigin attribute will be added to the image.
+		// If a String is provided, the image will have its crossOrigin attribute set to the String provided. This is needed if you want to access image pixel data.
+		// Refer to [CORS Settings](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes) for valid String values.
 		crossOrigin: false,
 
 		// @option errorOverlayUrl: String = ''
@@ -48581,12 +48651,12 @@ var ImageOverlay = Layer.extend({
 		errorOverlayUrl: '',
 
 		// @option zIndex: Number = 1
-		// The explicit [zIndex](https://developer.mozilla.org/docs/Web/CSS/CSS_Positioning/Understanding_z_index) of the tile layer.
+		// The explicit [zIndex](https://developer.mozilla.org/docs/Web/CSS/CSS_Positioning/Understanding_z_index) of the overlay layer.
 		zIndex: 1,
 
 		// @option className: String = ''
 		// A custom class name to assign to the image. Empty by default.
-		className: '',
+		className: ''
 	},
 
 	initialize: function (url, bounds, options) { // (String, LatLngBounds, Object)
@@ -48692,7 +48762,7 @@ var ImageOverlay = Layer.extend({
 		return events;
 	},
 
-	// @method: setZIndex(value: Number) : this
+	// @method setZIndex(value: Number): this
 	// Changes the [zIndex](#imageoverlay-zindex) of the image overlay.
 	setZIndex: function (value) {
 		this.options.zIndex = value;
@@ -48729,8 +48799,8 @@ var ImageOverlay = Layer.extend({
 		img.onload = bind(this.fire, this, 'load');
 		img.onerror = bind(this._overlayOnError, this, 'error');
 
-		if (this.options.crossOrigin) {
-			img.crossOrigin = '';
+		if (this.options.crossOrigin || this.options.crossOrigin === '') {
+			img.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
 		}
 
 		if (this.options.zIndex) {
@@ -48778,7 +48848,7 @@ var ImageOverlay = Layer.extend({
 
 	_overlayOnError: function () {
 		// @event error: Event
-		// Fired when the ImageOverlay layer has loaded its image
+		// Fired when the ImageOverlay layer fails to load its image
 		this.fire('error');
 
 		var errorUrl = this.options.errorOverlayUrl;
@@ -48811,7 +48881,7 @@ var imageOverlay = function (url, bounds, options) {
  * ```js
  * var videoUrl = 'https://www.mapbox.com/bites/00188/patricia_nasa.webm',
  * 	videoBounds = [[ 32, -130], [ 13, -100]];
- * L.VideoOverlay(videoUrl, videoBounds ).addTo(map);
+ * L.videoOverlay(videoUrl, videoBounds ).addTo(map);
  * ```
  */
 
@@ -50838,12 +50908,6 @@ var GridLayer = Layer.extend({
 		var tile = this._tiles[key];
 		if (!tile) { return; }
 
-		// Cancels any pending http requests associated with the tile
-		// unless we're on Android's stock browser,
-		// see https://github.com/Leaflet/Leaflet/issues/137
-		if (!androidStock) {
-			tile.el.setAttribute('src', emptyImageUrl);
-		}
 		remove(tile.el);
 
 		delete this._tiles[key];
@@ -50912,8 +50976,6 @@ var GridLayer = Layer.extend({
 	},
 
 	_tileReady: function (coords, err, tile) {
-		if (!this._map) { return; }
-
 		if (err) {
 			// @event tileerror: TileErrorEvent
 			// Fired when there is an error loading a tile.
@@ -51008,7 +51070,7 @@ function gridLayer(options) {
  * @example
  *
  * ```js
- * L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', {foo: 'bar'}).addTo(map);
+ * L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', {foo: 'bar'}).addTo(map);
  * ```
  *
  * @section URL template
@@ -51067,8 +51129,10 @@ var TileLayer = GridLayer.extend({
 		// If `true` and user is on a retina display, it will request four tiles of half the specified size and a bigger zoom level in place of one to utilize the high resolution.
 		detectRetina: false,
 
-		// @option crossOrigin: Boolean = false
-		// If true, all tiles will have their crossOrigin attribute set to ''. This is needed if you want to access tile pixel data.
+		// @option crossOrigin: Boolean|String = false
+		// Whether the crossOrigin attribute will be added to the tiles.
+		// If a String is provided, all tiles will have their crossOrigin attribute set to the String provided. This is needed if you want to access tile pixel data.
+		// Refer to [CORS Settings](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes) for valid String values.
 		crossOrigin: false
 	},
 
@@ -51125,8 +51189,8 @@ var TileLayer = GridLayer.extend({
 		on(tile, 'load', bind(this._tileOnLoad, this, done, tile));
 		on(tile, 'error', bind(this._tileOnError, this, done, tile));
 
-		if (this.options.crossOrigin) {
-			tile.crossOrigin = '';
+		if (this.options.crossOrigin || this.options.crossOrigin === '') {
+			tile.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
 		}
 
 		/*
@@ -51227,6 +51291,28 @@ var TileLayer = GridLayer.extend({
 				}
 			}
 		}
+	},
+
+	_removeTile: function (key) {
+		var tile = this._tiles[key];
+		if (!tile) { return; }
+
+		// Cancels any pending http requests associated with the tile
+		// unless we're on Android's stock browser,
+		// see https://github.com/Leaflet/Leaflet/issues/137
+		if (!androidStock) {
+			tile.el.setAttribute('src', emptyImageUrl);
+		}
+
+		return GridLayer.prototype._removeTile.call(this, key);
+	},
+
+	_tileReady: function (coords, err, tile) {
+		if (!this._map || (tile && tile.getAttribute('src') === emptyImageUrl)) {
+			return;
+		}
+
+		return GridLayer.prototype._tileReady.call(this, coords, err, tile);
 	}
 });
 
@@ -51343,7 +51429,7 @@ var TileLayerWMS = TileLayer.extend({
 		    bbox = (this._wmsVersion >= 1.3 && this._crs === EPSG4326 ?
 		    [min.y, min.x, max.y, max.x] :
 		    [min.x, min.y, max.x, max.y]).join(','),
-		url = L.TileLayer.prototype.getTileUrl.call(this, coords);
+		    url = TileLayer.prototype.getTileUrl.call(this, coords);
 		return url +
 			getParamString(this.wmsParams, url, this.options.uppercase) +
 			(this.options.uppercase ? '&BBOX=' : '&bbox=') + bbox;
@@ -51569,6 +51655,7 @@ var Canvas = Renderer.extend({
 	},
 
 	_destroyContainer: function () {
+		cancelAnimFrame(this._redrawRequest);
 		delete this._ctx;
 		remove(this._container);
 		off(this._container);
@@ -51661,9 +51748,11 @@ var Canvas = Renderer.extend({
 			this._drawFirst = next;
 		}
 
+		delete this._drawnLayers[layer._leaflet_id];
+
 		delete layer._order;
 
-		delete this._layers[L.stamp(layer)];
+		delete this._layers[stamp(layer)];
 
 		this._requestRedraw(layer);
 	},
@@ -51685,14 +51774,16 @@ var Canvas = Renderer.extend({
 	},
 
 	_updateDashArray: function (layer) {
-		if (layer.options.dashArray) {
-			var parts = layer.options.dashArray.split(','),
+		if (typeof layer.options.dashArray === 'string') {
+			var parts = layer.options.dashArray.split(/[, ]+/),
 			    dashArray = [],
 			    i;
 			for (i = 0; i < parts.length; i++) {
 				dashArray.push(Number(parts[i]));
 			}
 			layer.options._dashArray = dashArray;
+		} else {
+			layer.options._dashArray = layer.options.dashArray;
 		}
 	},
 
@@ -52329,10 +52420,7 @@ Map.include({
 		var renderer = layer.options.renderer || this._getPaneRenderer(layer.options.pane) || this.options.renderer || this._renderer;
 
 		if (!renderer) {
-			// @namespace Map; @option preferCanvas: Boolean = false
-			// Whether `Path`s should be rendered on a `Canvas` renderer.
-			// By default, all `Path`s are rendered in a `SVG` renderer.
-			renderer = this._renderer = (this.options.preferCanvas && canvas$1()) || svg$1();
+			renderer = this._renderer = this._createRenderer();
 		}
 
 		if (!this.hasLayer(renderer)) {
@@ -52348,10 +52436,17 @@ Map.include({
 
 		var renderer = this._paneRenderers[name];
 		if (renderer === undefined) {
-			renderer = (SVG && svg$1({pane: name})) || (Canvas && canvas$1({pane: name}));
+			renderer = this._createRenderer({pane: name});
 			this._paneRenderers[name] = renderer;
 		}
 		return renderer;
+	},
+
+	_createRenderer: function (options) {
+		// @namespace Map; @option preferCanvas: Boolean = false
+		// Whether `Path`s should be rendered on a `Canvas` renderer.
+		// By default, all `Path`s are rendered in a `SVG` renderer.
+		return (this.options.preferCanvas && canvas$1(options)) || svg$1(options);
 	}
 });
 
@@ -52986,20 +53081,18 @@ var Keyboard = Handler.extend({
 		    offset;
 
 		if (key in this._panKeys) {
+			if (!map._panAnim || !map._panAnim._inProgress) {
+				offset = this._panKeys[key];
+				if (e.shiftKey) {
+					offset = toPoint(offset).multiplyBy(3);
+				}
 
-			if (map._panAnim && map._panAnim._inProgress) { return; }
+				map.panBy(offset);
 
-			offset = this._panKeys[key];
-			if (e.shiftKey) {
-				offset = toPoint(offset).multiplyBy(3);
+				if (map.options.maxBounds) {
+					map.panInsideBounds(map.options.maxBounds);
+				}
 			}
-
-			map.panBy(offset);
-
-			if (map.options.maxBounds) {
-				map.panInsideBounds(map.options.maxBounds);
-			}
-
 		} else if (key in this._zoomKeys) {
 			map.setZoom(map.getZoom() + (e.shiftKey ? 3 : 1) * this._zoomKeys[key]);
 
@@ -53367,21 +53460,9 @@ Map.ScrollWheelZoom = ScrollWheelZoom;
 Map.Tap = Tap;
 Map.TouchZoom = TouchZoom;
 
-// misc
-
-var oldL = window.L;
-function noConflict() {
-	window.L = oldL;
-	return this;
-}
-
-// Always export us to window global (see #2364)
-window.L = exports;
-
 Object.freeze = freeze;
 
 exports.version = version;
-exports.noConflict = noConflict;
 exports.Control = Control;
 exports.control = control;
 exports.Browser = Browser;
@@ -53457,6 +53538,15 @@ exports.Rectangle = Rectangle;
 exports.rectangle = rectangle;
 exports.Map = Map;
 exports.map = createMap;
+
+var oldL = window.L;
+exports.noConflict = function() {
+	window.L = oldL;
+	return this;
+}
+
+// Always export us to window global (see #2364)
+window.L = exports;
 
 })));
 //# sourceMappingURL=leaflet-src.js.map
@@ -58188,18 +58278,34 @@ if (typeof define === 'function' && define.amd) {
             if (hasModernizr)
                 window.Modernizr[mouseTest] = true;
             window.modernizrOn(mouseTest);
+/* REMOVED IN VERSION 2.0.0
             if (!hasTouchEventsTest){
                 if (hasModernizr)
                     window.Modernizr.addTest( mouseHoverTest, true );
                 window.modernizrOn(mouseHoverTest);
             }
+*/
         })
         .bind('touchstart'+mouseEventPostfix,function(){
             $(window).unbind(mouseEventPostfix);
             if (hasModernizr)
                 window.Modernizr[mouseTest] = false;
             window.modernizrOff(mouseTest);
+        })
+
+        //Create hidden dummy element to test for true hover support
+        .on( "load", function() {
+            var $elem = $('<i/>')
+                            .appendTo($('body'))
+                            .addClass('_test-for-hover_');
+
+            if ($elem.css('font-family') == "__HOVER_SUPPORT__"){
+                if (hasModernizr)
+                    window.Modernizr.addTest( mouseHoverTest, true );
+                window.modernizrOn(mouseHoverTest);
+            }
         });
+
 
 }(jQuery, this, document));
 ;
@@ -58254,7 +58360,7 @@ if (typeof define === 'function' && define.amd) {
         this.$handle = !!options.$handle; //Set to boolean. Created in this.append
         this.handleClassName = options.handleClassName || '';
         this.handleCSS = options.handleCSS || {};
-this.appended = false,
+        this.appended = false,
 
         this.markerData = options.markerData || {};
 
@@ -58769,18 +58875,8 @@ this.appended = false,
                     ((type1 != type2) || (obj1[id] != obj2[id]))    //type are different OR value are different
                 );
         });
-
-/*
-        $.each( obj1, function( id, value ){
-            result = result || (obj2[id] !== value);
-        });
-        $.each( obj2, function( id, value ){
-            result = result || (obj1[id] !== value);
-        });
-*/
         return result;
     }
-
 
     //'Global' text-element to be used by getTextWidth
     var $outerTextElement = null,
@@ -58888,6 +58984,9 @@ this.appended = false,
             $input : $(this.input),
             buttons: { value:{}, from:{}, to:{} }
         };
+
+        //Hide the input
+        this.cache.$input.addClass('hidden-input');
 
         //Ready to be build
         this.init();
@@ -59439,11 +59538,7 @@ this.appended = false,
             addEvents( $panElement, 'panleft panright', this.onPan      );
             addEvents( $panElement, 'panend pancancel', this.onPanend   );
 
-            var threshold = 1;
-            //If the distance between steps is set and fixed => use it as threshold
-            if (!this.options.resizable && this.gridOptions && this.gridOptions.stepRem)
-                threshold = Math.floor(this.gridOptions.stepRem*16);
-            $panElement.data('hammer').get('pan').set({threshold:threshold});
+            $panElement.data('hammer').get('pan').set({threshold: 1});
 
             //Add onResize to the container
             if (this.options.resizable){
@@ -59559,7 +59654,6 @@ this.appended = false,
                 }
 
                 if (this.dimentions.containerWidthRem){
-                    this.toggleInput();
                     this.build();
                     updateSlider = true;
                 }
@@ -59877,7 +59971,7 @@ this.appended = false,
                 if (this.options.isFixed)
                     this.options.mouseLeftStart = mouseLeft;
 
-                //Updates this.mouse
+                //Updates this.mouse with corrected mouseLeft
                 this.updateMouse( mouseLeft );
                 //Add the different between the mouse-position (%) and the percent-value of the handle as percentOffset
                 //Now this.mouse.getPercent() => 'true' new percent-value for the handle
@@ -60150,13 +60244,6 @@ this.appended = false,
         SERVICE METHODS
         ********************************************************************
         *******************************************************************/
-
-        /*******************************************************************
-        toggleInput
-        *******************************************************************/
-        toggleInput: function () {
-            this.cache.$input.toggleClass("hidden-input");
-        },
 
         /*******************************************************************
         _prettify
@@ -60561,7 +60648,6 @@ this.appended = false,
 
             this.options = $.extend(this.options, options || {});
 
-            this.toggleInput();
             this.remove();
             this.init();
 
@@ -60582,7 +60668,6 @@ this.appended = false,
         destroy: function () {
             if (!this.input) return;
 
-            this.toggleInput();
             this.cache.$input.prop("readonly", false);
             $.data(this.input, "baseSlider", null);
 
@@ -60889,6 +60974,18 @@ this.appended = false,
             return this;
         },
 
+        //_getSelectedChild: Return the selected $-element (if any)
+        _getSelectedChild: function( $exclude ){
+            var selectedList = $.grep(this._cbxChildList, function($elem){ return $elem._cbxGet() && (!$exclude || ($elem !== $exclude)); });
+            return selectedList.length ? selectedList[0] : null;
+        },
+
+        //getSelected: Return the id of the selected item (if any)
+        getSelected: function(){
+            var $selectedChild = this._getSelectedChild();
+            return $selectedChild ? $selectedChild.data('cbx_options').id : null;
+        },
+
         //setSelected: function(id, dontCallOnChange )
         setSelected: function(id, dontCallOnChange ){
             this.onChange(id, true, null, dontCallOnChange );
@@ -60902,10 +60999,11 @@ this.appended = false,
         //onChange: function(id, selected, dontCallOnChange )
         onChange: function(id, selected, dummy, dontCallOnChange ){
             //Find clicked child and other selected child
-            var $child               = $.grep(this._cbxChildList, function($elem){ return $elem.data('cbx_options').id == id; })[0],
-                childOptions         = $child.data('cbx_options'),
-                selectedList         = $.grep(this._cbxChildList, function($elem){ return $elem._cbxGet() && ($elem !== $child); }),
-                $selectedChild       = selectedList.length ? selectedList[0] : null,
+            var $child = $.grep(this._cbxChildList, function($elem){ return $elem.data('cbx_options').id == id; })[0];
+            if (!$child)
+                return;
+            var childOptions         = $child.data('cbx_options'),
+                $selectedChild       = this._getSelectedChild( $child ),
                 selectedChildOptions = $selectedChild ? $selectedChild.data('cbx_options') : null;
 
 
@@ -60929,7 +61027,6 @@ this.appended = false,
                 //Select again
                 $child._cbxSet( true, !this.options.allowReselect || dontCallOnChange);
         }
-
     };
 
     $.radioGroup = function( options ){
@@ -62844,7 +62941,7 @@ options:
     window.TimeSlider = function (input, options, pluginCount) {
         var _this = this;
 
-        this.VERSION = "6.1.0";
+        this.VERSION = "6.1.1";
 
         //Setting default options
         this.options = $.extend( true, {}, defaultOptions, options );
@@ -63004,7 +63101,7 @@ options:
             dayRem = valueRem * (
                                   midnights === 0 ? o.range :
                                   midnights == 1  ? Math.max( firstMidnightValue - o.min, o.max - firstMidnightValue ) :
-                                                    24
+                                                    20  //Setting a full day to 20 hours to allow date-string on days up to 20 hours at the ends
                                 ) - this.options.minDistanceRem; // = margin
 
             if (!o.format.dateFormat){
@@ -72096,7 +72193,7 @@ TODO:
                );
     }
 
-    $.bsAccordion = function( options, insideFormGroup ){
+    $.bsAccordion = function( options ){
         var id = 'bsAccordion'+ accordionId++;
         options =
             $._bsAdjustOptions( options, {}, {
@@ -72177,7 +72274,7 @@ TODO:
 
             //Add content: string, element, function or children (=accordion)
                 if (opt.content)
-                    $contentContainer._bsAppendContent( opt.content, insideFormGroup );
+                    $contentContainer._bsAppendContent( opt.content, opt.contentContext );
 
             //If opt.list exists => create a accordion inside $contentContainer
             if ($.isArray(opt.list))
@@ -72482,13 +72579,14 @@ TODO:
 
 
     var defaultOptions = {
-            content   : '',
-            show      : false,
-            closeText : {da:'Annullér', en:'Cancel'},
-            submitIcon: 'fa-check',
-            submitText: {da:'Ok', en:'Ok'},
-            buttons   : [], //Extra button between
-            static    : true, //Only close modal-form on (X)
+            content       : '',
+            show          : false,
+            closeText     : {da:'Annullér', en:'Cancel'},
+            submitIcon    : 'fa-check',
+            submitText    : {da:'Ok', en:'Ok'},
+            buttons       : [],     //Extra button between
+            static        : true,   //Only close modal-form on (X)
+            formValidation: false,  //When true: make room for formValidation messages
         };
 
 
@@ -72513,10 +72611,17 @@ TODO:
         getSlider
         *******************************************************/
         getSlider: function(){
-            this.slider = this.slider || this.getElement().find('input').data('baseSlider');
+            this.slider = this.slider || this.getElement().data('slider');
             return this.slider;
         },
 
+        /*******************************************************
+        getRadioGroup
+        *******************************************************/
+        getRadioGroup: function(){
+            this.radioGroup = this.radioGroup || this.getElement().data('radioGroup');
+            return this.radioGroup;
+        },
         /*******************************************************
         getFormGroup
         *******************************************************/
@@ -72532,15 +72637,17 @@ TODO:
         setValue: function(value, validate){
             var $elem = this.getElement();
             switch (this.options.type || 'input'){
-                case 'input'    : $elem.val( value );                   break;
-                case 'select'   : $elem.val( value ).trigger('change'); break;
-                case 'checkbox' : $elem.prop('checked', !!value );      break;
-//TODO case 'selectlist': ... break;
+                case 'input'     : $elem.val( value );                      break;
+                case 'select'    : $elem.val( value ).trigger('change');    break;
+                case 'checkbox'  : $elem.prop('checked', !!value );         break;
+                case 'selectlist': this.getRadioGroup().setSelected(value); break;
 //TODO case 'radio': ... break;
                 case 'slider'    :
-                case 'timeslider': this.getSlider().setValue( value ); break;
+                case 'timeslider': this.getSlider().setValue( value );      break;
+                case 'text'      :                                          break;
+                case 'hidden'    : $elem.val( value );                      break;
             }
-            this.onChange();
+            this.onChanging();
             return validate ? this.validate() : this;
         },
 
@@ -72550,13 +72657,15 @@ TODO:
         getResetValue: function(){
             var result = null;
             switch (this.options.type || 'input'){
-                case 'input'     : result = '';       break;
-                case 'select'    : result = -1;       break;
-                case 'checkbox'  : result = false;    break;
-//TODO case 'selectlist': result = ... break;
+                case 'input'     : result = '';    break;
+                case 'select'    : result = -1;    break;
+                case 'checkbox'  : result = false; break;
+                case 'selectlist': result = this.getRadioGroup().options.list[0].id; break;
 //TODO case 'radio': result = ... break;
                 case 'slider'    :
                 case 'timeslider': result = this.getSlider().result.min; break;
+                case 'text'      : result = '';                          break;
+                case 'hidden'    : result = '';                          break;
             }
             return result;
         },
@@ -72582,24 +72691,25 @@ TODO:
         *******************************************************/
         getValue: function(){
             var $elem = this.getElement(),
-                result;
+                result = null;
             switch (this.options.type || 'input'){
                 case 'input'     : result = $elem.val();               break;
                 case 'select'    : result = $elem.val();               break;
                 case 'checkbox'  : result = !!$elem.prop('checked');   break;
-//TODO case 'selectlist': ... break;
+                case 'selectlist': result = this.getRadioGroup().getSelected(); break;
 //TODO case 'radio': ... break;
                 case 'slider'    :
                 case 'timeslider': result = this._getSliderValue(); break;
+                case 'text'      : result = ' ';                    break;
+                case 'hidden'    : result = $elem.val();            break;
             }
-            return result || this.getResetValue();
+            return result ===null ? this.getResetValue() : result;
         },
 
         /*******************************************************
         addValidation - Add the validations
         *******************************************************/
         addValidation: function(){
-            this.getElement().on('change', $.proxy( this.onChange, this ));
             this.modalForm._addInputValidation( this );
         },
 
@@ -72611,11 +72721,15 @@ TODO:
             return this;
         },
 
+
         /*******************************************************
-        onChange
+        onChanging
         *******************************************************/
-        onChange: function(){
-            this.modalForm.showOrHide( this );
+        onChanging: function(){
+            if (this.modalForm.isCreated){
+                this.modalForm.showOrHide( this );
+                this.modalForm.onChanging();
+            }
         },
 
         /*******************************************************
@@ -72640,8 +72754,10 @@ TODO:
                     this.resetValue( true );
                 }
 
-                this.modalForm._enableInputValidation( this, show );
+                this.getFormGroup().css('visibility', show ? 'visible' : 'hidden');
                 this.getElement().prop('disabled', !show);
+
+                this.modalForm._enableInputValidation( this, show );
             }
             return this;
         },
@@ -72652,8 +72768,11 @@ TODO:
     *************************************************************************
     BsModalForm( options )
     options:
-        content: json-object with full content
-        onSubmit : function( values )
+        content: json-object with full content Samer as content for bsModal with extention of
+            id, and
+            showWhen and hideWhen = [id] of value: hide or show element when another element with id has value
+        onChanging: function( values ) - called when the value of any of the elements are changed
+        onSubmit  : function( values ) - called when the form is submitted
     *************************************************************************
     ************************************************************************/
     function BsModalForm( options ){
@@ -72662,15 +72781,28 @@ TODO:
 
         this.options.id = this.options.id || 'bsModalFormId' + formId++;
 
+        this.options.onClose_user = this.options.onClose || function(){};
         this.options.onClose = $.proxy( this.onClose, this );
 
         //this.input = simple object with all input-elements. Also convert element-id to unique id for input-element
         this.inputs = {};
 
-        var types = ['input', 'select', 'selectlist', 'checkbox', 'radio', 'table', 'slider', 'timeslider'];
+        var types = ['input', 'select', 'selectlist', 'checkbox', 'radio', 'table', 'slider', 'timeslider', 'hidden'];
+
         function setId( dummy, obj ){
-            if ($.isPlainObject(obj) && (obj.type !== undefined) && (types.indexOf(obj.type) >= 0) && obj.id)
-                _this.inputs[obj.id] = new BsModalInput( obj, _this );
+            if ($.isPlainObject(obj) && (obj.type !== undefined) && (types.indexOf(obj.type) >= 0) && obj.id){
+                var bsModalInput = new BsModalInput( obj, _this ),
+                    onChangingFunc = $.proxy( bsModalInput.onChanging, bsModalInput );
+
+                //Set options to call onChanging
+                switch (obj.type){
+                    case 'slider'    :
+                    case 'timeslider': obj.onChanging = onChangingFunc; break;
+                    default          : obj.onChange = onChangingFunc;
+                }
+                //Add element to inputs
+                _this.inputs[obj.id] = bsModalInput;
+            }
             else
                 if ($.isPlainObject(obj) || ($.type(obj) == 'array'))
                     $.each( obj, setId );
@@ -72691,33 +72823,18 @@ TODO:
 
         this.options.show = false; //Only show using method edit(...)
 
+        //Create the form
+        this.$form =
+            $('<form/>')
+                ._bsAppendContent( this.options.content, this.options.contentContext );
 
-        //Special version for forms with tabs
-        if (this.options.content.type == 'tabs'){
-            var $bsTabs =   $.bsTabs(this.options.content, true);
+        if (this.options.formValidation)
+            this.$form.addClass('form-validation');
 
-            //Create the form and move content inside the form
-            $bsTabs._$contents.detach();
-            this.$form =
-                $('<form/>')
-                    .append( $bsTabs._$contents );
 
-            //Create the tabs-modal
-            this.options.content = this.$form;
-            this.$bsModal = $bsTabs.asModal( this.options );
-
-        }
-        else {
-
-            //Create the form
-            this.$form =
-                $('<form/>')
-                    ._bsAppendContent( this.options.content, true );
-
-            //Create the modal
-            this.options.content = this.$form;
-            this.$bsModal = $.bsModal( this.options );
-        }
+        //Create the modal
+        this.options.content = this.$form;
+        this.$bsModal = $.bsModal( this.options );
 
         //Append the hidden submit-button the the form
         this.$form.append( $hiddenSubmitButton );
@@ -72732,7 +72849,10 @@ TODO:
         this._addValidation();
 
         //Add the validations
-        this._eachInput( function( input ){ input.addValidation(); });
+        this._eachInput( function( input ){
+            input.addValidation();
+        });
+
 
         //Add onSubmit
         this._addOnSubmit( $.proxy(this.onSubmit, this) );
@@ -72760,7 +72880,6 @@ TODO:
         edit
         *******************************************************/
         edit: function( values, tabIndexOrId ){
-
             this.$bsModal.show();
 
             if (tabIndexOrId !== undefined)
@@ -72775,7 +72894,25 @@ TODO:
             this._resetValidation();
 
             this.showOrHide( null );
+            this.isCreated = true;
+        },
 
+        /*******************************************************
+        isDifferent( values ) - retur true if values is differnet from this.getValues()
+        *******************************************************/
+        isDifferent: function( values ){
+            //Check if any of the new values are different from the original ones
+            var newValues = this.getValues(),
+                result = false;
+
+            $.each( newValues, function(id, value){
+                if (!values.hasOwnProperty(id) || (values[id] != value)){
+                    result = true;
+                    return false;
+                }
+            });
+
+            return result;
         },
 
         /*******************************************************
@@ -72783,22 +72920,13 @@ TODO:
         *******************************************************/
         onClose: function(){
             //Check if any of the new values are different from the original ones
-            var _this = this,
-                originalValues = this.originalValues,
-                newValues = this.getValues(),
-                different = false;
-
-            $.each( newValues, function(id, value){
-                if (originalValues.hasOwnProperty(id) && (originalValues[id] != value)){
-                    different = true;
-                    return false;
-                }
-            });
-
-            if (!different)
+            if (!this.isDifferent(this.originalValues)){
+                this.options.onClose_user();
                 return true;
+            }
 
-            var noty =
+            var _this = this,
+                noty =
                 $.bsNoty({
                     type     : 'info',
                     modal    : true,
@@ -72817,7 +72945,9 @@ TODO:
                         {
                             text:{da:'Gem ikke', en:'Don\'t Save'},
                             onClick: function(){
-                                _this.originalValues = newValues;
+                                if (_this.options.onCancel)
+                                    _this.options.onCancel(_this.originalValues);
+                                _this.originalValues = _this.getValues();
                                 noty.on('afterClose', function(){ _this.$bsModal.close(); });
                                 noty.close();
                             }
@@ -72937,11 +73067,24 @@ TODO:
         },
 
         /*******************************************************
+        onChanging = called every any of the element is changed
+        *******************************************************/
+        onChanging: function(){
+            //Test if values used in last event-fire is different from current values
+            if (this.isCreated && this.options.onChanging && this.isDifferent(this.onChangingValues || {})) {
+                this.onChangingValues = this.getValues();
+                this.options.onChanging( this.onChangingValues );
+            }
+        },
+
+        /*******************************************************
         onSubmit = called when the form is valid and submitted
         *******************************************************/
         onSubmit: function( event/*, data*/ ){
             this.options.onSubmit ? this.options.onSubmit( this.getValues() ) : null;
-            this.$bsModal.modal('hide');
+
+            this.$bsModal._close();
+            this.options.onClose_user();
 
             event.preventDefault();
             return false;
@@ -72985,7 +73128,7 @@ TODO:
         extend  : 'fa-chevron-up',
         diminish: 'fa-chevron-down',
         pin     : ['fas fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
-        unpin   : 'fa-thumbtack text-danger',
+        unpin   : 'fa-thumbtack',
         close   : ['far fa-times-circle fa-stack-1x hide-for-hover', 'fas fa-times-circle text-danger fa-stack-1x show-for-hover']
     };
 
@@ -73044,6 +73187,7 @@ TODO:
                         iconOptions.title || classAndTitle.title || '',
                         (iconOptions.className || '') + ' header-icon ' + (classAndTitle.class || '')
                     )
+                    .toggleClass('hidden', !!iconOptions.hidden)
                     .toggleClass('disabled', !!iconOptions.disabled)
                     .attr('data-header-icon-id', id)
                     .on('click', checkDisabled)
@@ -73238,7 +73382,9 @@ TODO:
         isExtended: boolean
         footer
         buttons = [];
+        colseIcon
         closeText
+        noCloseIconOnHeader
 
     **********************************************************/
     var modalId = 0,
@@ -73352,6 +73498,11 @@ TODO:
             this.modal('show');
         },
 
+        _close: function(){
+            this.modal('hide');
+        },
+
+
         close: function(){
 
             //If onClose exists => call and check
@@ -73361,7 +73512,7 @@ TODO:
             //If pinable and pinned => unpin
             if (this.bsModal.isPinned)
                 this._bsModalUnpin();
-            this.modal('hide');
+            this._close();
         },
 
         assignTo: function( $element ){
@@ -73389,15 +73540,20 @@ TODO:
     Create the body and footer content (exc header and bottoms)
     of a modal inside this. Created elements are saved in parts
     ******************************************************/
-    $.fn._bsModalBodyAndFooter = function(options, parts, className){
+    $.fn._bsModalBodyAndFooter = function(options, parts, className, noClassNameForFixed, noClassNameForFooter){
         //Set variables used to set scroll-bar (if any)
         var hasScroll       = !!options.scroll,
+            isTabs          = !!(options && options.content && (options.content.type == 'tabs')),
             scrollDirection = options.scroll === true ? 'vertical' : options.scroll;
+
+        //Remove padding if the content is tabs and content isn't created from bsModal - not pretty :-)
+        if (isTabs)
+            className = className + ' no-vertical-padding no-horizontal-padding';
 
         //Append fixed content (if any)
         var $modalFixedContent = parts.$fixedContent =
                 $('<div/>')
-                    .addClass('modal-body-fixed ' + className + (hasScroll ? ' scrollbar-'+scrollDirection : ''))
+                    .addClass('modal-body-fixed ' + (noClassNameForFixed ? '' : className) + (hasScroll ? ' scrollbar-'+scrollDirection : ''))
                     .appendTo( this );
         if (options.fixedContent){
             if ($.isFunction( options.fixedContent ))
@@ -73411,22 +73567,31 @@ TODO:
                 $('<div/>')
                     .addClass('modal-body ' + className)
                     .toggleClass('modal-type-' + options.type, !!options.type)
-                    .appendTo( this ),
+                    .appendTo( this );
 
-            $modalContent = parts.$content =
+        if (!options.content || (options.content === {}))
+            $modalBody.addClass('modal-body-no-content');
+
+        if (!isTabs && options.height)
+            $modalBody.height(options.height);
+
+
+        var $modalContent = parts.$content =
                 hasScroll ?
                     $modalBody.addScrollbar({ direction: scrollDirection }) :
                     $modalBody;
 
         //Add content
-        $modalContent._bsAppendContent( options.content, options.isForm );
+        $modalContent._bsAppendContent( options.content, options.contentContext );
+
+
 
         //Add footer
         parts.$footer =
                 $('<div/>')
-                    .addClass('modal-footer-header ' + className)
+                    .addClass('modal-footer-header ' + (noClassNameForFooter ? '' : className))
                     .appendTo( this )
-                    ._bsAddHtml( options.footer );
+                    ._bsAddHtml( options.footer === true ? '' : options.footer );
         return this;
     };
 
@@ -73450,7 +73615,7 @@ TODO:
         $this.modernizrToggle('modal-extended');
 
         newHeight = $this.outerHeight();
-        $this.height( oldHeight);
+        $this.height(oldHeight);
 
         $this.animate({height: newHeight}, 'fast', function() { $this.height('auto'); });
 
@@ -73487,7 +73652,7 @@ TODO:
     /******************************************************
     _bsModalContent
     Create the content of a modal inside this
-    Sets object with all parts of the result in this.modalParts
+    Sets object with all parts of the result in this.bsModal
     ******************************************************/
     $.fn._bsModalContent = function( options ){
         options = options || {};
@@ -73515,12 +73680,13 @@ TODO:
         this.bsModal.isPinned = false;
 
         options = $.extend( true, {
-            headerClassName: 'modal-header',
+            headerClassName     : 'modal-header',
             //Buttons
-            buttons    : [],
-            closeButton: true,
-            closeText  : {da:'Luk', en:'Close'},
-            closeIcon  : 'fa-times',
+            buttons             : [],
+            closeButton         : true,
+            closeText           : {da:'Luk', en:'Close'},
+            closeIcon           : 'fa-times',
+            noCloseIconOnHeader : false,
 
             //Icons
             icons    : {
@@ -73534,6 +73700,10 @@ TODO:
         //Adjust for options.buttons: null
         options.buttons = options.buttons || [];
 
+        //Hide the close icon on the header
+        if (options.noCloseIconOnHeader && options.icons && options.icons.close)
+            options.icons.close.hidden = true;
+
         //Add close-botton at beginning. Avoid by setting options.closeButton = false
         if (options.closeButton)
             options.buttons.unshift({
@@ -73544,8 +73714,11 @@ TODO:
                 addOnClick  : false
             });
 
-        //If the modal has extended content: Normal and extended content get same scroll-options to have same horizontal padding in normal and extended mode
-        if (options.extended){
+        /*
+        If the modal has extended content and neither normal or extended content is tabs =>
+            Normal and extended content get same scroll-options to have same horizontal padding in normal and extended mode
+        */
+        if (options.content && (options.content.type != "tabs") && options.extended && (options.extended.content.type != "tabs")){
             options.scroll = options.scroll || options.extended.scroll;
             options.extended.scroll = options.scroll;
         }
@@ -73566,13 +73739,32 @@ TODO:
         else
             $modalContainer.addClass('no-modal-header');
 
+        //If options.extended.fixedContent == true and/or options.extended.footer == true => normal and extended uses same fixed and/or footer content
+        var noClassNameForFixed = false,
+            noClassNameForFooter = false;
+        if (options.extended) {
+            //If common fixed content => add it as normal fixed content
+            if ((options.fixedContent === true) || (options.extended.fixedContent === true)) {
+                noClassNameForFixed = true;
+                options.fixedContent = options.extended.fixedContent === true ? options.fixedContent : options.extended.fixedContent;
+                options.extended.fixedContent = '';
+            }
+
+            //If common footer content => add it as extended footer content
+            if ((options.footer === true) || (options.extended.footer === true)) {
+                noClassNameForFooter = true;
+                options.extended.footer = options.extended.footer === true ? options.footer : options.extended.footer;
+                options.footer = '';
+            }
+        }
+
         //Create normal content
-        $modalContainer._bsModalBodyAndFooter( options, this.bsModal, 'hide-for-modal-extended' );
+        $modalContainer._bsModalBodyAndFooter(options, this.bsModal, 'hide-for-modal-extended', noClassNameForFixed, false );
 
         //Create extended content (if any)
         if (options.extended){
             this.bsModal.extended = {};
-            $modalContainer._bsModalBodyAndFooter( options.extended, this.bsModal.extended, 'show-for-modal-extended' );
+            $modalContainer._bsModalBodyAndFooter( options.extended, this.bsModal.extended, 'show-for-modal-extended', false, noClassNameForFooter );
         }
 
         //Add buttons (if any)
@@ -73628,7 +73820,6 @@ TODO:
             id = options.id || '_bsModal'+ modalId++,
             classNames = (options.noVerticalPadding   ? 'no-vertical-padding'    : '') +
                          (options.noHorizontalPadding ? ' no-horizontal-padding' : '');
-
         //Adjust options
         options =
             $._bsAdjustOptions( options, {
@@ -74597,7 +74788,6 @@ TODO:
                 useTouchSize: true
             });
 
-
         var $result =
                 $('<div tabindex="0"/>')
                     ._bsAddIdAndName( options )
@@ -74611,9 +74801,11 @@ TODO:
                     })
                 );
 
+        $result.data('radioGroup', radioGroup);
+
         $.each( options.list, function( index, itemOptions ){
             var isItem = (itemOptions.id != undefined ),
-                $item = $(isItem ? '<button/>' : '<div/>');
+                $item = $(isItem ? '<a/>' : '<div/>');
             $item
                 .addClass( isItem ? 'dropdown-item' : 'dropdown-header' )
                 .addClass( options.center ? 'text-center' : '')
@@ -74682,7 +74874,9 @@ Add sort-functions + save col-index for sorted column
             baseClass     : 'table',
             styleClass    : 'fixed',
             showHeader    : true,
-            verticalBorder: true
+            verticalBorder: true,
+            useTouchSize  : true
+
         },
 
         defaultColunmOptions = {
@@ -74845,9 +75039,10 @@ Add sort-functions + save col-index for sorted column
         rowId    = 0;
 
     $.bsTable = function( options ){
+
         options = $._bsAdjustOptions( options, defaultOptions );
         options.class =
-            (options.small ? 'table-sm ' : '' ) +
+//Removed because useTouchSize added to options            (options.small ? 'table-sm ' : '' ) +
             (options.verticalBorder ? 'table-bordered ' : '' ) +
             (options.selectable ? 'table-selectable ' : '' ) +
             (options.allowZeroSelected ? 'allow-zero-selected ' : '' ),
@@ -74945,7 +75140,7 @@ Add sort-functions + save col-index for sorted column
 </div>
     ******************************************************/
     var tabsId = 0;
-    $.bsTabs = function( options, insideFormGroup ){
+    $.bsTabs = function( options ){
         var $result = $('<div/>'),
             id = 'bsTabs'+ tabsId++,
 
@@ -74974,8 +75169,9 @@ Add sort-functions + save col-index for sorted column
                     )
                     .attr({'id': id+'content'})
                     .appendTo( $result );
-            if (options.height)
-                $contents.height( options.height );
+
+        if (options.height)
+            $contents.height( options.height );
 
 
         $.each( options.list, function( index, opt ){
@@ -75030,7 +75226,7 @@ Add sort-functions + save col-index for sorted column
 
             //Add content: string, element, function, setup-json-object, or children (=accordion)
             if (opt.content)
-                $content._bsAppendContent( opt.content, insideFormGroup );
+                $content._bsAppendContent( opt.content, opt.contentContext );
 
         });
         $result.asModal = bsTabs_asModal;
@@ -75498,7 +75694,7 @@ Add sort-functions + save col-index for sorted column
         },
 
         /****************************************************************************************
-        _bsAppendContent( options, insideFormGroup )
+        _bsAppendContent( options, context )
         Create and append any content to this.
         options can be $-element, function, json-object or array of same
 
@@ -75519,24 +75715,29 @@ Add sort-functions + save col-index for sorted column
                 </div>                                          //optional
             </div>
         </div>
-        if insideFormGroup == true OR options.
         ****************************************************************************************/
-        _bsAppendContent: function( options, insideFormGroup ){
+        _bsAppendContent: function( options, context ){
 
             //Internal functions to create baseSlider and timeSlider
-            function buildSlider(options, constructorName){
-                var $sliderInput = $('<input/>'),
-                    slider = $sliderInput[constructorName]( options ).data('baseSlider'),
-                    $result = slider.cache.$container;
+            function buildSlider(options, constructorName, $parent){
+                var $sliderInput = $('<input/>').appendTo( $parent ),
+                    slider = $sliderInput[constructorName]( options ).data(constructorName),
+                    $element = slider.cache.$outerContainer || slider.cache.$container;
 
-                $result
+                $element
                     .attr('id', options.id)
-                    .append( $sliderInput );
-
-                return $result;
+                    .data('slider', slider );
             }
-            function buildBaseSlider(options, insideFormGroup){ return buildSlider(options, 'baseSlider', insideFormGroup); }
-            function buildTimeSlider(options, insideFormGroup){ return buildSlider(options, 'timeSlider', insideFormGroup); }
+            function buildBaseSlider(options, $parent){ buildSlider(options, 'baseSlider', $parent); }
+            function buildTimeSlider(options, $parent){ buildSlider(options, 'timeSlider', $parent); }
+
+            function buildText( options ){
+                return $('<div/>')._bsAddHtml( options );
+            }
+
+            function buildHidden( options ){
+                return $.bsInput( options ).css('display', 'none');
+            }
 
 
             if (!options)
@@ -75545,58 +75746,66 @@ Add sort-functions + save col-index for sorted column
             //Array of $-element, function etc
             if ($.isArray( options )){
                 var _this = this;
-                $.each(options, function( index, options){
-                    _this._bsAppendContent(options, insideFormGroup);
+                $.each(options, function( index, opt){
+                    _this._bsAppendContent(opt, context );
                 });
                 return this;
             }
 
             //Function
             if ($.isFunction( options )){
-                options( this, insideFormGroup );
+                options.call( context, this );
                 return this;
             }
 
             //json-object with options to create bs-elements
             if ($.isPlainObject(options)){
                 var buildFunc = $.fn._bsAddHtml,
-                    neverInsideFormGroup = false,
-                    addBorder = false;
+                    insideFormGroup   = false,
+                    addBorder         = false,
+                    buildInsideParent = false,
+                    noValidation      = false;
 
-                if (options.type)
-                    switch (options.type.toLowerCase()){
-                        case 'input'        :   buildFunc = $.bsInput;          break;
+                if (options.type){
+                    var type = options.type.toLowerCase();
+                    switch (type){
+                        case 'input'        :   buildFunc = $.bsInput;          insideFormGroup = true; break;
                         case 'button'       :   buildFunc = $.bsButton;         break;
-                        case 'select'       :   buildFunc = $.bsSelectBox;      break;
+                        case 'select'       :   buildFunc = $.bsSelectBox;      insideFormGroup = true; break;
                         case 'selectlist'   :   buildFunc = $.bsSelectList;     break;
-                        case 'checkbox'     :   buildFunc = $.bsCheckbox;       break;
-                        case 'tabs'         :   buildFunc = $.bsTabs;           neverInsideFormGroup = true; break;
-                        case 'table'        :   buildFunc = $.bsTable;          neverInsideFormGroup = true; break;
-                        case 'accordion'    :   buildFunc = $.bsAccordion;      neverInsideFormGroup = true; break;
-                        case 'slider'       :   buildFunc = buildBaseSlider;    addBorder = true; break;
-                        case 'timeslider'   :   buildFunc = buildTimeSlider;    addBorder = true; break;
-
-
+                        case 'checkbox'     :   buildFunc = $.bsCheckbox;       insideFormGroup = true; break;
+                        case 'tabs'         :   buildFunc = $.bsTabs;           break;
+                        case 'table'        :   buildFunc = $.bsTable;          break;
+                        case 'accordion'    :   buildFunc = $.bsAccordion;      break;
+                        case 'slider'       :   buildFunc = buildBaseSlider;    insideFormGroup = true; addBorder = true; buildInsideParent = true; break;
+                        case 'timeslider'   :   buildFunc = buildTimeSlider;    insideFormGroup = true; addBorder = true; buildInsideParent = true; break;
+                        case 'text'         :   buildFunc = buildText;          insideFormGroup = true; addBorder = true; noValidation = true; break;
+                        case 'hidden'       :   buildFunc = buildHidden;        noValidation = true; break;
 //                        case 'xx'           :   buildFunc = $.bsXx;               break;
                     }
+                }
 
                 //Set the parent-element where to append to created element(s)
                 var $parent = this,
                     insideInputGroup = false;
-                if (insideFormGroup && !neverInsideFormGroup){
+
+                if (insideFormGroup){
                     //Create outer form-group
                     insideInputGroup = true;
                     $parent = $divXXGroup('form-group', options).appendTo( $parent );
+                    if (noValidation || options.noValidation)
+                        $parent.addClass('no-validation');
                 }
 
                 if (insideInputGroup || options.prepend || options.before || options.append || options.after){
                     //Create element inside input-group
                     var $inputGroup = $divXXGroup('input-group', options);
-                    if (addBorder){
+                    if (addBorder && !options.noBorder){
                         //Add border and label (if any)
-                        $inputGroup.addClass('input-group-border', addBorder);
+                        $inputGroup.addClass('input-group-border');
                         if (options.label){
-                            $('<div/>')
+                            $inputGroup.addClass('input-group-border-with-label');
+                            $('<span/>')
                                 .addClass('has-fixed-label')
                                 ._bsAddHtml( options.label )
                                 .appendTo( $inputGroup );
@@ -75605,21 +75814,24 @@ Add sort-functions + save col-index for sorted column
                     $parent = $inputGroup.appendTo( $parent );
                 }
 
-                //Build the element inside $parent
-                buildFunc.apply( this, arguments ).appendTo( $parent );
+                //Build the element. Build inside $parent or add to $parent after
+                if (buildInsideParent)
+                    buildFunc.call( this, options, $parent );
+                else
+                    buildFunc.call( this, options ).appendTo( $parent );
 
                 var prepend = options.prepend || options.before;
                 if (prepend)
                     $('<div/>')
                         .addClass('input-group-prepend')
-                        ._bsAppendContent( prepend )
-                        .prependTo( $parent /*this*/);
+                        ._bsAppendContent( prepend, options.contentContext  )
+                        .prependTo( $parent );
                 var append = options.append || options.after;
                 if (append)
                     $('<div/>')
                         .addClass('input-group-append')
-                        ._bsAppendContent( append )
-                        .appendTo( $parent /*this*/);
+                        ._bsAppendContent( append, options.contentContext  )
+                        .appendTo( $parent );
 
 
                 return this;
@@ -81330,7 +81542,7 @@ if (typeof define === 'function' && define.amd) {
   });
 }.call(this);
 ;
-/*! Raven.js 3.26.2 (b10a875) | github.com/getsentry/raven-js */
+/*! Raven.js 3.26.4 (7d7202b) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
@@ -81539,7 +81751,7 @@ Raven.prototype = {
   // webpack (using a build step causes webpack #1617). Grunt verifies that
   // this value matches package.json during build.
   //   See: https://github.com/getsentry/raven-js/issues/465
-  VERSION: '3.26.2',
+  VERSION: '3.26.4',
 
   debug: false,
 
@@ -82016,7 +82228,9 @@ Raven.prototype = {
       return;
     }
 
-    if (this._globalOptions.stacktrace || (options && options.stacktrace)) {
+    // Always attempt to get stacktrace if message is empty.
+    // It's the only way to provide any helpful information to the user.
+    if (this._globalOptions.stacktrace || options.stacktrace || data.message === '') {
       // fingerprint on msg, not stack trace (legacy behavior, could be revisited)
       data.fingerprint = data.fingerprint == null ? msg : data.fingerprint;
 
@@ -82275,34 +82489,40 @@ Raven.prototype = {
     )
       return;
 
-    options = options || {};
+    options = Object.assign(
+      {
+        eventId: this.lastEventId(),
+        dsn: this._dsn,
+        user: this._globalContext.user || {}
+      },
+      options
+    );
 
-    var lastEventId = options.eventId || this.lastEventId();
-    if (!lastEventId) {
+    if (!options.eventId) {
       throw new RavenConfigError('Missing eventId');
     }
 
-    var dsn = options.dsn || this._dsn;
-    if (!dsn) {
+    if (!options.dsn) {
       throw new RavenConfigError('Missing DSN');
     }
 
     var encode = encodeURIComponent;
-    var qs = '';
-    qs += '?eventId=' + encode(lastEventId);
-    qs += '&dsn=' + encode(dsn);
+    var encodedOptions = [];
 
-    var user = options.user || this._globalContext.user;
-    if (user) {
-      if (user.name) qs += '&name=' + encode(user.name);
-      if (user.email) qs += '&email=' + encode(user.email);
+    for (var key in options) {
+      if (key === 'user') {
+        var user = options.user;
+        if (user.name) encodedOptions.push('name=' + encode(user.name));
+        if (user.email) encodedOptions.push('email=' + encode(user.email));
+      } else {
+        encodedOptions.push(encode(key) + '=' + encode(options[key]));
+      }
     }
-
-    var globalServer = this._getGlobalServer(this._parseDSN(dsn));
+    var globalServer = this._getGlobalServer(this._parseDSN(options.dsn));
 
     var script = _document.createElement('script');
     script.async = true;
-    script.src = globalServer + '/api/embed/error-page/' + qs;
+    script.src = globalServer + '/api/embed/error-page/?' + encodedOptions.join('&');
     (_document.head || _document.body).appendChild(script);
   },
 
@@ -83172,6 +83392,11 @@ Raven.prototype = {
       },
       options
     );
+
+    var ex = data.exception.values[0];
+    if (ex.type == null && ex.value === '') {
+      ex.value = 'Unrecoverable error caught';
+    }
 
     // Move mechanism from options to exception interface
     // We do this, as requiring user to pass `{exception:{mechanism:{ ... }}}` would be

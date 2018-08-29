@@ -14,6 +14,7 @@
             "id": "error_2",
             "date": "2017-11-02T12:40Z",
             "publish": true,
+            "expire" : "P2Y",
             "url": "",
             "title": {"da":"Der er noget andet galt med...(UTC=12:40)", "en":"Something else is wrong with...(UTC=12:40)"}
         }
