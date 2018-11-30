@@ -52,7 +52,7 @@ HEADER
 Font-sizes for headers are one 'size' smaller than normal font
 $font-size-lg  : 1.25rem    20px
 $font-size-base: 1rem       16px
-$font-size-sm  : .875rem    14px
+$font-size-sm  : .8125rem   13px
 $font-size-xs  : .75rem     12px
 ************************************************************/
 /************************************************************
@@ -106,6 +106,7 @@ Headers for modal, popover, popup etc.
 ************************************************************/
 /************************************************************
 color-hover - Background-color and text-color for 'normal' and hover
+SKAL DER BRUGES background ELLER background-color???????
 ************************************************************/
 /************************************************************
 header-color - Colors for headers
@@ -426,8 +427,8 @@ body.top-menu-hidden {
     margin: 0;
     padding: 0.25rem;
     text-align: center;
-    font-size: 1.3125rem;
-    line-height: 1.3125rem;
+    font-size: 1.21875rem;
+    line-height: 1.21875rem;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -438,35 +439,8 @@ body.top-menu-hidden {
 .top-menu {
   margin-top: 0px;
   padding: 0.25rem;
-  font-size: 0.875rem;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  /*
-    .btn i.fa {
-//        &.fa-bars {  }
-        &.fa-search {               font-size: 0.80em; }
-
-        &.fa-i-warning,
-        &.fa-i-warning-black {      font-size: 0.75em; bottom: 0.2em; }
-
-        &.fa-envelope-o,
-        &.fa-envelope {             font-size: .90em;  margin-bottom: 0; }
-
-        &.fa-question-circle-o {    font-size: .90em;  margin-bottom: -0.1em; }
-
-        &.fa-i-list {               font-size: 0.75em; margin-bottom: -0.1em; }
-
-    }
-
-    //Special adjusment for small buttons
-    .btn-sm i.fa {
-        &.fa-envelope-o,
-        &.fa-envelope {             margin-bottom: 0; }
-
-        &.fa-question-circle-o {    margin-bottom: 0; }
-
-        &.fa-i-list {               margin-bottom: -0.1em; }
-    }
-*/ }
+  font-size: 0.8125rem;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
   .touchevents .top-menu {
     font-size: 1rem; }
   .top-menu > * {
@@ -480,8 +454,6 @@ body.top-menu-hidden {
     margin-right: auto !important; }
   .top-menu .right-side {
     margin-left: auto !important; }
-  .top-menu .btn.fa-stack {
-    width: 1em; }
   .top-menu .icon-fcoo-app-logo {
     padding: 0;
     margin: 0;
@@ -537,31 +509,17 @@ body.top-menu-hidden {
     display: block;
     opacity: 1; }
 
-a.all-read .hide-for-all-read {
-  display: none !important; }
-
-a.all-read .show-for-no-all-read {
-  display: none !important; }
-
+a.all-read .hide-for-all-read,
 a.no-all-read .show-for-all-read {
-  display: none !important; }
-
-a.no-all-read .hide-for-no-all-read {
-  display: none !important; }
+  opacity: 0 !important; }
 
 /*****************************************************
-Special adjustments
+Special adjustments and bug fix
 *****************************************************/
-.fa-thumbtack.fa-inside-circle {
-  margin-top: 1px; }
-
-/* TEST
-.main-container {
-
-.mini & { background-color: green; }
-.xsmall-port & { background-color: yellow; }
-.xsmall-land & { background-color: orange; }
-.small & { background-color: red; }
-
-}
+/* Both jquery-bootstrap and fcoo-fontawesome has
+.fa-inside-circle { font-size: .65em; }
+resulting in font-size = 0.65*0.65 = .4225
+This is fixed by overwriting the last size with "inherit"
 */
+.fa-inside-circle.fa-inside-circle {
+  font-size: inherit; }

@@ -488,8 +488,9 @@ Sections:
         forward : 'fa-chevron-circle-right',
         extend  : 'fa-chevron-circle-up',
         diminish: 'fa-chevron-circle-down',
-        pin     : ['far fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
-        unpin   : ['fas fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
+        pin     : ['far fa-thumbtack fa-inside-circle', 'far fa-circle'],
+        unpin   : ['fas fa-thumbtack fa-inside-circle', 'far fa-circle'],
+
     });
 
 
@@ -526,6 +527,8 @@ Sections:
     };
 
 
+    //Icon for external link
+    $.bsExternalLinkIcon = 'fa-external-link';
 
 
     /***********************************************************************

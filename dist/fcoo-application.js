@@ -24,17 +24,18 @@ Create and manage the top-menu for FCOO web applications
         },
         topMenuState = 'normal';
 
+    var defaultTopMenuButtonOptions = {
+            transparent: true,
+            bigIcon    : true,
+            square     : true
+        };
 
     /**************************************************
     defaultTopMenuButton
     Create standard button for the top-menu
     **************************************************/
     function defaultTopMenuButton( options ){
-        options = $.extend({}, options, {
-            transparent: true,
-            bigIcon    : true,
-            square     : true
-        });
+        options = $.extend({}, options, defaultTopMenuButtonOptions);
         var $result = $.bsButton( options );
         if (options.title)
             $result.i18n(options.title, 'title');
@@ -43,44 +44,23 @@ Create and manage the top-menu for FCOO web applications
 
 
     /**************************************************
-    messageGroupTopMenuButton
+    messageGroupTopMenuButton( allReadIcon, notAllReadIcon )
     Create a button used for message-groups
-    The button can contain up to tree icons:
-    1: one that is allways displayed
-    2: one that is displayed when all messages are read
-    3: one that is displayed when one or more message is unread
-    2 and 3 are mutual excluding
+    The button contains two icons:
+        allReadIcon   : displayed when all messages are read
+        notAllReadIcon: displayed when one or more message is unread
     **************************************************/
-    function messageGroupTopMenuButton( options ){
-        var $result =
-                defaultTopMenuButton( {icon:'NOT'})
-                    .addClass('fa-stack all-read'); //all-read: Default no new message
-
-        //*************************************************************
-        function addIcons( icon, allReadPrefix ){
-            icon = $.isArray( icon ) ? icon : [icon];
-            $.each( icon, function( index, iconClass ){
-                $('<i/>')
-                    .addClass((allReadPrefix ? allReadPrefix + '-for-all-read ' : '') + iconClass)
-                    .appendTo( $result );
+    function messageGroupTopMenuButton( allReadIcon, notAllReadIcon ){
+        var iconList = [];
+        function addIcon( icon, className ){
+            icon = $.isArray(icon) ? icon : [icon];
+            icon.forEach( function( iconClass ){
+                iconList.push(iconClass + ' ' + className );
             });
         }
-        //*************************************************************
-
-
-        //Remove default icon
-        $result.find('.NOT').remove();
-
-        if (options.iconAllRead)
-            addIcons( options.iconAllRead, 'show' );
-
-        if (options.iconNoAllRead)
-            addIcons( options.iconNoAllRead, 'hide' );
-
-        if (options.iconAllways)
-            addIcons( options.iconAllways);
-
-        return $result;
+        addIcon(allReadIcon,     'show-for-all-read');
+        addIcon(notAllReadIcon , 'hide-for-all-read');
+        return defaultTopMenuButton( {icon: [iconList]} ).addClass('all-read'); //all-read: Default no new message
     }
 
 
@@ -164,12 +144,8 @@ Create and manage the top-menu for FCOO web applications
             id: 'warning',
             create: function( elementOptions, menuOptions ){
                 //Create yellow warning square by overlaying two icons
-                var iconClass = 'fa-exclamation-square fa-stack-1x';
-                var $result =
-                        messageGroupTopMenuButton({
-                            iconAllRead  : 'far ' + iconClass,
-                            iconNoAllRead: ['fas text-warning ' + iconClass, 'far '+iconClass]
-                        });
+                var iconClass = 'fa-exclamation-square';
+                var $result = messageGroupTopMenuButton('far ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
 
                 //Create message-group with warnings
                 ns.createFCOOMessageGroup( 'warning', menuOptions, $result );
@@ -181,13 +157,8 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'messages',
-//            icon:'fa-envelope-o',
             create: function( elementOptions, menuOptions ){
-                var $result =
-                        messageGroupTopMenuButton({
-                            iconAllRead  : 'far fa-envelope',
-                            iconNoAllRead: 'fas fa-envelope'
-                        });
+                var $result = messageGroupTopMenuButton('far fa-envelope', 'fas fa-envelope');
                 //Create message-group with info
                 ns.createFCOOMessageGroup( 'info', menuOptions, $result );
                 return $result;
@@ -199,10 +170,8 @@ Create and manage the top-menu for FCOO web applications
         {
             id: 'help',
             create: function( elementOptions, menuOptions ){
-                var $result =
-                        messageGroupTopMenuButton({
-                            iconAllways: 'far fa-question-circle'
-                        });
+                var $result = defaultTopMenuButton({icon: 'far fa-question-circle'});
+
                 //Create message-group with help
                 ns.createFCOOMessageGroup( 'help', menuOptions, $result );
                 return $result;
@@ -973,8 +942,9 @@ Sections:
         forward : 'fa-chevron-circle-right',
         extend  : 'fa-chevron-circle-up',
         diminish: 'fa-chevron-circle-down',
-        pin     : ['far fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
-        unpin   : ['fas fa-thumbtack fa-stack-1x fa-inside-circle', 'far fa-circle fa-stack-1x'],
+        pin     : ['far fa-thumbtack fa-inside-circle', 'far fa-circle'],
+        unpin   : ['fas fa-thumbtack fa-inside-circle', 'far fa-circle'],
+
     });
 
 
@@ -1011,6 +981,8 @@ Sections:
     };
 
 
+    //Icon for external link
+    $.bsExternalLinkIcon = 'fa-external-link';
 
 
     /***********************************************************************

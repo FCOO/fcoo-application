@@ -30,7 +30,7 @@
     </div>
 
     <script src="bower_components.js"></script>
-    <script src="../src/fcoo-application-global-events.js"></script>
+    <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
     <script src="../src/fcoo-application-top-menu.js"></script>
     <script src="../src/fcoo-application.js"></script>
 
@@ -64,8 +64,20 @@
 
         function modalDemo(){
             $.bsModal({
-                header: 'Davs',
-                onPin: function(){},
+                header: {
+                    text: 'Davs'
+                },
+                icons: {
+                    back: { onClick: function(){} },
+                    forward: { onClick: function(){} },
+                },
+
+                onPin : function(){},
+                onNew : function(){},
+                extended: {
+                    content: 'Hej<br>Dette er udvidet'
+                },
+
                 content: 'Content',
                 show: true
             });

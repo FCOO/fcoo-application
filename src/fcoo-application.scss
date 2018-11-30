@@ -78,19 +78,12 @@ Style for top menu
 
 
 /*****************************************************
-Special adjustments
+Special adjustments and bug fix
 *****************************************************/
-.fa-thumbtack.fa-inside-circle {
-    margin-top: 1px;
-}
 
-/* TEST
-.main-container {
-
-.mini & { background-color: green; }
-.xsmall-port & { background-color: yellow; }
-.xsmall-land & { background-color: orange; }
-.small & { background-color: red; }
-
-}
+/* Both jquery-bootstrap and fcoo-fontawesome has
+.fa-inside-circle { font-size: .65em; }
+resulting in font-size = 0.65*0.65 = .4225
+This is fixed by overwriting the last size with "inherit"
 */
+.fa-inside-circle.fa-inside-circle { font-size: inherit; }

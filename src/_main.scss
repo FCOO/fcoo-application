@@ -9,7 +9,7 @@ Style for html and body to prevent bouncing on mobile
 devices and to fix the size and prevent any scrolling in body
 ***************************************************/
 html, body {
-    height  : 100%;    
+    height  : 100%;
     width   : 100%;
     overflow: hidden;
 }
@@ -29,4 +29,3 @@ body {
         background-color: gray;
     }
 }
-

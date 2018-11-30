@@ -129,47 +129,6 @@ body {
         margin-left: auto !important;
     }
 
-
-    //Prevent double icon buttons to get double width
-    .btn.fa-stack {
-        width: 1em;
-    }
-
-//fa-bars
-//fa-search
-//fa-i-warning, fa-i-warning-black
-//fa-envelope-o,fa-envelope
-//fa-question-circle-o
-//fa-i-list
-
-    //Adjusting font-size and/or margin-bottom of specific icon to make all look equal sized and horizontal aligned
-/*
-    .btn i.fa {
-//        &.fa-bars {  }
-        &.fa-search {               font-size: 0.80em; }
-
-        &.fa-i-warning,
-        &.fa-i-warning-black {      font-size: 0.75em; bottom: 0.2em; }
-
-        &.fa-envelope-o,
-        &.fa-envelope {             font-size: .90em;  margin-bottom: 0; }
-
-        &.fa-question-circle-o {    font-size: .90em;  margin-bottom: -0.1em; }
-
-        &.fa-i-list {               font-size: 0.75em; margin-bottom: -0.1em; }
-
-    }
-
-    //Special adjusment for small buttons
-    .btn-sm i.fa {
-        &.fa-envelope-o,
-        &.fa-envelope {             margin-bottom: 0; }
-
-        &.fa-question-circle-o {    margin-bottom: 0; }
-
-        &.fa-i-list {               margin-bottom: -0.1em; }
-    }
-*/
     //FCOO-logo inside top menu get fixed size and hover effect
     .icon-fcoo-app-logo {
         padding    : 0;
@@ -253,11 +212,8 @@ body {
 
 
 //Create display-style for modernizr test all-read used in buttons for message-groups
-@include show-and-hide-for-modernizr-test(
-    all-read,   //$modernizr-test ,
-	a,          //$parent-element-type: '',
-	true,       //$incl-no-selector: true,
-	'',         //$display-value: ''
-	false       // $incl-table-display: true
-);
+a.all-read    .hide-for-all-read,
+a.no-all-read .show-for-all-read {
+    opacity: 0 !important;
+}
 
