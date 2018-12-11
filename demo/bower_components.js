@@ -74383,7 +74383,7 @@ S2.define('jquery.select2',[
 
         new     : ['far fa-window-maximize fa-inside-circle2', 'far fa-circle'],
 
-        close   : ['fas fa-circle back', 'far fa-times-circle middle', 'fas fa-times-circle front']
+        close   : ['fas fa-circle back', 'far fa-times-circle middle', 'far fa-circle front']
     };
 
     //mandatoryHeaderIconClass = mandatory class-names and title for the different icons on the header
