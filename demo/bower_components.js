@@ -27208,7 +27208,7 @@ return index;
     var ns = window.fcoo;
 
     //global events "languagechanged" fired when the language is changed
-    var languagechanged = "languagechanged";
+    var languagechanged = window.fcoo.events.LANGUAGECHANGED;
 
     //*****************************************************************************
     // All available languages.
@@ -27322,18 +27322,6 @@ return index;
     //fallback used when initialize i18next
     var fallbackLng = getFallbackLng( language, ns.settings.get('language2') );
 
-
-    /***********************************************************
-    Create fcoo.langFlag - REMOVED IN VERSION 5.x
-    ***********************************************************/
-//    ns.langFlag = new window.LangFlag({ defaultFlag:'dk', defaultLang: 'da' });
-
-    //Change language in ns.langFlag when language is changed
-//    ns.events.on( languagechanged, function(){
-//        ns.langFlag.setLang( i18next.language );
-//    });
-
-
     /***********************************************************
     Ininialize i18next
     ***********************************************************/
@@ -27351,7 +27339,8 @@ return index;
     i18next.use( window.i18nextIntervalPluralPostProcessor );
 
 
-    //Fire languagechenged when language is changed
+    //To capture both language-change by fcoo.settings and by i18next direct
+    //fire globalEvent LANGUAGECHENGED when language is changed via i18next
     i18next.on('languageChanged', function() {
         ns.events.fire( languagechanged );
     });
@@ -28813,7 +28802,7 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 }(jQuery, this, document));
 ;
 /****************************************************************************
-	fcoo-latlng-format.js, 
+	fcoo-latlng-format.js,
 
 	(c) 2017, FCOO
 
@@ -28824,41 +28813,35 @@ latlng-format, a class to validate, format, and transform positions (eq. leaflet
 
 (function ($, window/*, document, undefined*/) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
     window.fcoo = window.fcoo || {};
-    var ns = window.fcoo; 
+    var ns = window.fcoo;
 
     /***********************************************************
     Set up and load latlng-format via fcoo.settings
     ***********************************************************/
     ns.settings.add({
-        id          : 'latlng', 
-        validator   : function( /*latlngFormatId*/ ){ 
-                          //TODO Check for valid value                              
-                          return true;      
+        id          : 'latlng',
+        validator   : function( /*latlngFormatId*/ ){
+                          //TODO Check for valid value
+                          return true;
                       },
         applyFunc   : function( latlngFormatId ){
                           window.latLngFormat.setFormat( latlngFormatId );
                       },
         defaultValue: window.latLngFormat.LATLNGFORMAT_DMSS,
         callApply   : true,
-        globalEvents: 'latlngformatchanged'
+        globalEvents: window.fcoo.events.LATLNGFORMATCHANGED
 
     });
 
 
     //Update the latlng-format when the number-format is changed
-    ns.events.on( 'numberformatchanged', function(){
+    ns.events.on( window.fcoo.events.NUMBERFORMATCHANGED, function(){
         ns.settings.set('latlng', window.latLngFormat.options.formatId );
     });
 
-/* TODO - if N,S,E,W need to be in local language (da: NS�V)
-    //Update the latlng-format when the language is changed
-    ns.events.on( 'languagechanged', function(){
-        ns.settings.set('latlng', window.latLngFormat.options.formatId );
-    });
-*/
 }(jQuery, this, document));
 ;
 /*!
@@ -39166,7 +39149,7 @@ else {
 
 ;
 /****************************************************************************
-	fcoo-moment.js, 
+	fcoo-moment.js,
 
 	(c) 2016, FCOO
 
@@ -39177,7 +39160,7 @@ Set-up of common systems, objects, and methods for FCOO web applications use of 
 Sections:
 1: Translation for moment-simple-format
 2: Add time-zones and translation of there names
-4: 
+4:
 5: Define common Modernizr-tests used to display moment
 6: Load format for date, time and timezone from fcoo.settings
 
@@ -39185,7 +39168,7 @@ Sections:
 
 (function ($, moment, i18next, window/*, document, undefined*/) {
 	"use strict";
-	
+
 	//Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
 
@@ -39207,7 +39190,7 @@ Sections:
 
 
     //Change language in moment and call sfInit when the language is changed
-    window.fcoo.events.on('languagechanged', function(){ 
+    window.fcoo.events.on(window.fcoo.events.LANGUAGECHANGED, function(){
 
         //Special case: Norwegian (no) using "Bokmål" (nb)
         moment.locale(i18next.language == 'no' ? 'nb' : i18next.language);
@@ -39249,7 +39232,7 @@ Sections:
     );
 
     //Add the translation of the timezones incl. the two default id:'local' and id:'utc'
-    //Østgrønland (grønlandsk: "Tunu"), Vestgrønland (Grønlandsk: "Kitaa"), Nordgrønland (grønlandsk: "Avannaarsua") 
+    //Østgrønland (grønlandsk: "Tunu"), Vestgrønland (Grønlandsk: "Kitaa"), Nordgrønland (grønlandsk: "Avannaarsua")
     i18next.addPhrases( 'timezone', {
         'local'               : { en: 'Local time',                      da: 'Lokaltid'           },
         'utc'                 : { en: 'UTC',                             da: 'UTC'                },
@@ -39264,15 +39247,15 @@ Sections:
     });
 
     //Translate the names of the timezones when the language is changed
-    window.fcoo.events.on('languagechanged', function(){ 
+    window.fcoo.events.on(window.fcoo.events.LANGUAGECHANGED, function(){
         $.each( moment.simpleFormat.timezoneList, function( index, timezone ){
             timezone.update( i18next.t('timezone:' + timezone.id) );
         });
-        
+
     });
 
 
-/*        
+/*
 Standard
     value="local" Local
     value="utc" UTC
@@ -39299,7 +39282,7 @@ Greenland
     ***********************************************************************/
 
     /* The following Modernizr-test are deffined in fcoo-moment.scss and are set in momentSimpleFormatSetFormat
-    showrelative: Show also the date/time as relative to now. Can be created using fcoo-value-format 
+    showrelative: Show also the date/time as relative to now. Can be created using fcoo-value-format
     showutc     : Show also the date/time in UTC
     timezoneutc : On when the selected time zone is UTC
 
@@ -39320,9 +39303,9 @@ Greenland
                         'timezone'          : window.fcoo.settings.get('timezone'),
                         '_fcoo_showrelative': window.fcoo.settings.get('showrelative'),
                         '_fcoo_showutc'     : window.fcoo.settings.get('showutc'),
-                    }, 
+                    },
                     options );
-        
+
         //Update moment-formats
         moment.sfSetFormat( options );
 
@@ -39332,59 +39315,59 @@ Greenland
         window.modernizrToggle( 'timezoneutc',  options.timezone == 'utc');
 
         //Fire global event
-        window.fcoo.events.fire('datetimeformatchanged');
+        window.fcoo.events.fire(window.fcoo.events.DATETIMEFORMATCHANGED);
     }
 
     //Set up and load 'date', 'time', 'timezone', 'showrelative', and 'showutc'  via fcoo.settings
     window.fcoo.settings.add({
-        id          : 'date', 
+        id          : 'date',
         validator   : function( date ){ return $.inArray( date, ['DMY', 'MDY', 'YMD']) > -1; },
-        applyFunc   : function( date ){ momentSimpleFormatSetFormat({ 'date': date });       }, 
+        applyFunc   : function( date ){ momentSimpleFormatSetFormat({ 'date': date });       },
         defaultValue: 'DMY',
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'time', 
+        id          : 'time',
         validator   : function( time ){ return $.inArray( time, ['12', '24']) > -1;    },
-        applyFunc   : function( time ){ momentSimpleFormatSetFormat({ 'time': time }); }, 
+        applyFunc   : function( time ){ momentSimpleFormatSetFormat({ 'time': time }); },
         defaultValue: '24',
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'timezone', 
+        id          : 'timezone',
         validator   : function( timezone ){ return moment.sfGetTimezone( timezone ) !== null;      },
-        applyFunc   : function( timezone ){ momentSimpleFormatSetFormat({ 'timezone': timezone }); }, 
+        applyFunc   : function( timezone ){ momentSimpleFormatSetFormat({ 'timezone': timezone }); },
         defaultValue: 'local',
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'showrelative', 
+        id          : 'showrelative',
         validator   : function( showrelative ){ return jQuery.type( showrelative ) === "boolean";                    },
-        applyFunc   : function( showrelative ){ momentSimpleFormatSetFormat({ '_fcoo_showrelative': showrelative }); }, 
+        applyFunc   : function( showrelative ){ momentSimpleFormatSetFormat({ '_fcoo_showrelative': showrelative }); },
         defaultValue: false,
         callApply   : false
     });
     window.fcoo.settings.add({
-        id          : 'showutc', 
+        id          : 'showutc',
         validator   : function( showutc ){ return jQuery.type( showutc ) === "boolean";               },
-        applyFunc   : function( showutc ){ momentSimpleFormatSetFormat({ '_fcoo_showutc': showutc }); }, 
+        applyFunc   : function( showutc ){ momentSimpleFormatSetFormat({ '_fcoo_showutc': showutc }); },
         defaultValue: false,
         callApply   : false
     });
 
 
     //Also fire "datetimeformatchanged" when the language is changed
-    window.fcoo.events.on('languagechanged', momentSimpleFormatSetFormat); 
+    window.fcoo.events.on(window.fcoo.events.LANGUAGECHANGED, momentSimpleFormatSetFormat);
 
 
     momentSimpleFormatSetFormat();
 
-    
+
     /******************************************
-	Initialize/ready 
+	Initialize/ready
 	*******************************************/
-	$(function() { 
-	
+	$(function() {
+
 	}); //End of initialize/ready
 	//******************************************
 
