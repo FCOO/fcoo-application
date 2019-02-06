@@ -37,6 +37,9 @@ $font-size-base         : 1rem !default;
 $spacer                 : 1rem !default;
 */
 /************************************************************
+Adjust dropdown-menu
+************************************************************/
+/************************************************************
 VARIABLES
 ************************************************************/
 /***********************************************
@@ -83,10 +86,6 @@ No outline
 border-color = light blue
 ************************************************************/
 /************************************************************
-CONTROL BORDER_COLOR
-All control elements get same border-color when normal, hover, active and error
-************************************************************/
-/************************************************************
 CONTENT
 Unifies padding for modal, accordion, popup etc.
 ************************************************************/
@@ -94,6 +93,14 @@ Unifies padding for modal, accordion, popup etc.
 CONTROL-CONTAINER
 Style for div with controls inside modal.
 Must have tabindex:"-1" to work with focus
+************************************************************/
+/************************************************************
+CONTROL BORDER-COLOR
+All control elements get same border-color when normal, hover, active and error
+************************************************************/
+/************************************************************
+CONTROL-COLORS
+Sets all color for text, background, border for normal, :hover, :focus,  :active and .active
 ************************************************************/
 /************************************************************
 TYPE-COLOR
@@ -106,21 +113,12 @@ Headers for modal, popover, popup etc.
 ************************************************************/
 /************************************************************
 color-hover - Background-color and text-color for 'normal' and hover
-SKAL DER BRUGES background ELLER background-color???????
 ************************************************************/
 /************************************************************
-header-color - Colors for headers
+header-colors - Colors for headers
 ************************************************************/
 /************************************************************
 title-color - create colors for headers for table and accordion etc.
-************************************************************/
-/************************************************************
-select-list-color
-Mixin to set colors for active and selected elements in select-list
-************************************************************/
-/************************************************************
-control-active-color
-Mixin to set colors for selected elements and when hover
 ************************************************************/
 /************************************************************
 HEADER, TITLE, AND FOOTER PADDING AND FONT-SIZE
