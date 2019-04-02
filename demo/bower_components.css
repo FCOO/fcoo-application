@@ -6275,96 +6275,6 @@ Ex.
   .fa-shrink-90.fa-right {
     left: 2.5%; }
 
-/***********************************************
-	fcoo-form-validation.scss,
-
-	(c) 2018, FCOO
-
-	https://github.com/FCOO/fcoo-form-validation
-	https://github.com/FCOO
-
-    This is a edited copy of the style-files used by formValidation and contains copy of
-    src/_formValidation/dist/css/formValidation.css
-
-    Editions:
-    All .fv-form-bootstrap removed
-    All .fv-form-foundation5 removed
-    All .fv-form-foundation removed
-    All .fv-form-pure removed
-    All .fv-form-semantic removed
-    All .fv-form-uikit removed
-
-    Red and green color for label removed ( at ** ... ** )
-
-************************************************/
-/*!
- * FormValidation (http://formvalidation.io)
- * The best jQuery plugin to validate form fields. Support Bootstrap, Foundation, Pure, SemanticUI, UIKit and custom frameworks
- *
- * @version     v0.8.1, built on 2016-07-29 1:10:54 AM
- * @author      https://twitter.com/formvalidation
- * @copyright   (c) 2013 - 2016 Nguyen Huu Phuoc
- * @license     http://formvalidation.io/license/
- */
-.fv-has-feedback {
-  position: relative; }
-
-.fv-control-feedback {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  display: block;
-  text-align: center; }
-
-.fv-help-block {
-  display: block; }
-
-/* Hide the clear icon for field using placeholder attribute on IE10/11 */
-.fv-form [placeholder]::-ms-clear {
-  display: none; }
-
-/* -------------------------
- * Support Bootstrap 4 alpha
- * ------------------------- */
-.fv-form-bootstrap4 .fv-control-feedback {
-  width: 38px;
-  height: 38px;
-  line-height: 38px; }
-
-/* For horizontal form */
-.fv-form-bootstrap4 .form-group.row .fv-control-feedback {
-  right: 15px; }
-
-.fv-form-bootstrap4 .form-group.row .form-check ~ .fv-control-feedback {
-  top: -7px;
-  /* labelHeight/2 - iconHeight/2 */ }
-
-/* Inline form */
-.fv-form-bootstrap4.form-inline .form-group {
-  vertical-align: top; }
-
-/* Stacked form */
-.fv-form-bootstrap4:not(.form-inline) label ~ .fv-control-feedback {
-  top: 32px; }
-
-/* Without label */
-.fv-form-bootstrap4:not(.form-inline) label.sr-only ~ .fv-control-feedback {
-  top: -7px;
-  /* labelHeight/2 - iconHeight/2 */ }
-
-.fv-form-bootstrap4:not(.form-inline) .form-check ~ .fv-control-feedback {
-  top: 25px;
-  /* labelHeight + checkboxHeight/2 - iconHeight/2 */ }
-
-/** .fv-form-bootstrap4 .has-success label, **/
-.fv-form-bootstrap4 .has-success .fv-control-feedback {
-  color: #5cb85c; }
-
-/** .fv-form-bootstrap4 .has-warning label, **/
-.fv-form-bootstrap4 .has-warning .fv-control-feedback {
-  color: #f0ad4e; }
-
 @charset "UTF-8";
 
 /*!
@@ -10854,7 +10764,7 @@ Adjust dropdown-menu
 IMPORT BOOTSTRAP SCSS
 ************************************************/
 /*!
- * Bootstrap v4.3.0 (https://getbootstrap.com/)
+ * Bootstrap v4.3.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors
  * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -16327,7 +16237,8 @@ button.bg-dark:focus {
 .w-75 {
   width: 75% !important; }
 
-.w-100, .popover-body .btn-group-vertical {
+.w-100, .popover-body .btn-group-vertical,
+.btn-group-vertical.btn-group-full-width {
   width: 100% !important; }
 
 .w-auto {
@@ -18711,8 +18622,86 @@ BUTTON-GROUP
   .btn-group:not(.btn-group-vertical).btn-group-full-width .btn {
     flex: 1 0 10px; }
 
+.btn-group.btn-group-border, .btn-group-vertical.btn-group-border {
+  border: 1px solid #afb4ba;
+  border-radius: 0.25rem; }
+  .btn-group.btn-group-border.btn-group-sm, .btn-group-vertical.btn-group-border.btn-group-sm {
+    border-radius: 0.1875rem; }
+  .btn-group.btn-group-border.btn-group-xs, .btn-group-vertical.btn-group-border.btn-group-xs {
+    border-radius: 0.125rem; }
+
 .has-fixed-label ~ .btn-group {
   padding-top: 3px; }
+
+.btn-group-vertical .btn-group-header {
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  cursor: default;
+  padding: 0.3125rem 0.3125rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: inherit;
+  color: #495057;
+  background-color: #e9ecef;
+  line-height: 1.3;
+  width: 100%; }
+  .btn-group-vertical .btn-group-header span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+  .btn-group-vertical .btn-group-header span.fixed-header {
+    overflow: visible;
+    word-break: keep-all; }
+  .btn-group-vertical .btn-group-header ~ .btn {
+    padding-left: 0.625rem; }
+
+.btn-group-vertical.btn-group-sm .btn-group-header {
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  cursor: default;
+  padding: 0.25rem 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  border-radius: inherit;
+  line-height: 1.3; }
+  .btn-group-vertical.btn-group-sm .btn-group-header span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+  .btn-group-vertical.btn-group-sm .btn-group-header span.fixed-header {
+    overflow: visible;
+    word-break: keep-all; }
+  .btn-group-vertical.btn-group-sm .btn-group-header ~ .btn {
+    padding-left: 0.5rem; }
+
+.btn-group-vertical.btn-group-xs .btn-group-header {
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  cursor: default;
+  padding: 0.125rem 0.125rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  border-radius: inherit;
+  line-height: 1.3; }
+  .btn-group-vertical.btn-group-xs .btn-group-header span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+  .btn-group-vertical.btn-group-xs .btn-group-header span.fixed-header {
+    overflow: visible;
+    word-break: keep-all; }
+  .btn-group-vertical.btn-group-xs .btn-group-header ~ .btn {
+    padding-left: 0.25rem; }
+
+.btn-group-vertical + .btn-group-vertical {
+  margin-top: 0.3125rem; }
+  .btn-group-vertical + .btn-group-vertical.btn-group-sm {
+    margin-top: 0.25rem; }
+  .btn-group-vertical + .btn-group-vertical.btn-group-xs {
+    margin-top: 0.25rem; }
 
 /************************************************************
 POPOVER

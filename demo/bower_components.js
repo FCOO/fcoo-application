@@ -17566,97 +17566,153 @@ return jQuery;
 }(this, document));
 ;
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.i18next = factory());
-}(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.i18next = factory());
+}(this, function () { 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
+  function _typeof(obj) {
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
 
-
-
-
-
-
-
-
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
+    return _typeof(obj);
   }
-};
 
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
 
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
 
+    return obj;
+  }
 
+  function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(source);
 
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
       }
+
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    }
+
+    return target;
+  }
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function");
+    }
+
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) _setPrototypeOf(subClass, superClass);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+      o.__proto__ = p;
+      return o;
+    };
+
+    return _setPrototypeOf(o, p);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (call && (typeof call === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+  }
+
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+      return arr2;
     }
   }
 
-  return target;
-};
-
-
-
-var inherits = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
   }
 
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-
-
-
-
-
-
-
-
-
-
-var possibleConstructorReturn = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  function _iterableToArray(iter) {
+    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
   }
 
-  return call && (typeof call === "object" || typeof call === "function") ? call : self;
-};
-
-
-
-
-
-var slicedToArray = function () {
-  function sliceIterator(arr, i) {
+  function _iterableToArrayLimit(arr, i) {
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -17673,7 +17729,7 @@ var slicedToArray = function () {
       _e = err;
     } finally {
       try {
-        if (!_n && _i["return"]) _i["return"]();
+        if (!_n && _i["return"] != null) _i["return"]();
       } finally {
         if (_d) throw _e;
       }
@@ -17682,1994 +17738,2169 @@ var slicedToArray = function () {
     return _arr;
   }
 
-  return function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-      return sliceIterator(arr, i);
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-}();
-
-
-
-
-
-
-
-
-
-
-
-
-
-var toConsumableArray = function (arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  } else {
-    return Array.from(arr);
-  }
-};
-
-var consoleLogger = {
-  type: 'logger',
-
-  log: function log(args) {
-    this.output('log', args);
-  },
-  warn: function warn(args) {
-    this.output('warn', args);
-  },
-  error: function error(args) {
-    this.output('error', args);
-  },
-  output: function output(type, args) {
-    var _console;
-
-    /* eslint no-console: 0 */
-    if (console && console[type]) (_console = console)[type].apply(_console, toConsumableArray(args));
-  }
-};
-
-var Logger = function () {
-  function Logger(concreteLogger) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    classCallCheck(this, Logger);
-
-    this.init(concreteLogger, options);
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance");
   }
 
-  Logger.prototype.init = function init(concreteLogger) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-    this.prefix = options.prefix || 'i18next:';
-    this.logger = concreteLogger || consoleLogger;
-    this.options = options;
-    this.debug = options.debug;
-  };
-
-  Logger.prototype.setDebug = function setDebug(bool) {
-    this.debug = bool;
-  };
-
-  Logger.prototype.log = function log() {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return this.forward(args, 'log', '', true);
-  };
-
-  Logger.prototype.warn = function warn() {
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    return this.forward(args, 'warn', '', true);
-  };
-
-  Logger.prototype.error = function error() {
-    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-      args[_key3] = arguments[_key3];
-    }
-
-    return this.forward(args, 'error', '');
-  };
-
-  Logger.prototype.deprecate = function deprecate() {
-    for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-      args[_key4] = arguments[_key4];
-    }
-
-    return this.forward(args, 'warn', 'WARNING DEPRECATED: ', true);
-  };
-
-  Logger.prototype.forward = function forward(args, lvl, prefix, debugOnly) {
-    if (debugOnly && !this.debug) return null;
-    if (typeof args[0] === 'string') args[0] = '' + prefix + this.prefix + ' ' + args[0];
-    return this.logger[lvl](args);
-  };
-
-  Logger.prototype.create = function create(moduleName) {
-    return new Logger(this.logger, _extends({ prefix: this.prefix + ':' + moduleName + ':' }, this.options));
-  };
-
-  return Logger;
-}();
-
-var baseLogger = new Logger();
-
-var EventEmitter = function () {
-  function EventEmitter() {
-    classCallCheck(this, EventEmitter);
-
-    this.observers = {};
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance");
   }
 
-  EventEmitter.prototype.on = function on(events, listener) {
-    var _this = this;
+  var consoleLogger = {
+    type: 'logger',
+    log: function log(args) {
+      this.output('log', args);
+    },
+    warn: function warn(args) {
+      this.output('warn', args);
+    },
+    error: function error(args) {
+      this.output('error', args);
+    },
+    output: function output(type, args) {
+      var _console;
 
-    events.split(' ').forEach(function (event) {
-      _this.observers[event] = _this.observers[event] || [];
-      _this.observers[event].push(listener);
-    });
-    return this;
+      /* eslint no-console: 0 */
+      if (console && console[type]) (_console = console)[type].apply(_console, _toConsumableArray(args));
+    }
   };
 
-  EventEmitter.prototype.off = function off(event, listener) {
-    var _this2 = this;
+  var Logger =
+  /*#__PURE__*/
+  function () {
+    function Logger(concreteLogger) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    if (!this.observers[event]) {
-      return;
+      _classCallCheck(this, Logger);
+
+      this.init(concreteLogger, options);
     }
 
-    this.observers[event].forEach(function () {
-      if (!listener) {
-        delete _this2.observers[event];
-      } else {
-        var index = _this2.observers[event].indexOf(listener);
-        if (index > -1) {
-          _this2.observers[event].splice(index, 1);
-        }
+    _createClass(Logger, [{
+      key: "init",
+      value: function init(concreteLogger) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        this.prefix = options.prefix || 'i18next:';
+        this.logger = concreteLogger || consoleLogger;
+        this.options = options;
+        this.debug = options.debug;
       }
-    });
-  };
-
-  EventEmitter.prototype.emit = function emit(event) {
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-
-    if (this.observers[event]) {
-      var cloned = [].concat(this.observers[event]);
-      cloned.forEach(function (observer) {
-        observer.apply(undefined, args);
-      });
-    }
-
-    if (this.observers['*']) {
-      var _cloned = [].concat(this.observers['*']);
-      _cloned.forEach(function (observer) {
-        observer.apply(observer, [event].concat(args));
-      });
-    }
-  };
-
-  return EventEmitter;
-}();
-
-// http://lea.verou.me/2016/12/resolve-promises-externally-with-this-one-weird-trick/
-function defer() {
-  var res = void 0;
-  var rej = void 0;
-
-  var promise = new Promise(function (resolve, reject) {
-    res = resolve;
-    rej = reject;
-  });
-
-  promise.resolve = res;
-  promise.reject = rej;
-
-  return promise;
-}
-
-function makeString(object) {
-  if (object == null) return '';
-  /* eslint prefer-template: 0 */
-  return '' + object;
-}
-
-function copy(a, s, t) {
-  a.forEach(function (m) {
-    if (s[m]) t[m] = s[m];
-  });
-}
-
-function getLastOfPath(object, path, Empty) {
-  function cleanKey(key) {
-    return key && key.indexOf('###') > -1 ? key.replace(/###/g, '.') : key;
-  }
-
-  function canNotTraverseDeeper() {
-    return !object || typeof object === 'string';
-  }
-
-  var stack = typeof path !== 'string' ? [].concat(path) : path.split('.');
-  while (stack.length > 1) {
-    if (canNotTraverseDeeper()) return {};
-
-    var key = cleanKey(stack.shift());
-    if (!object[key] && Empty) object[key] = new Empty();
-    object = object[key];
-  }
-
-  if (canNotTraverseDeeper()) return {};
-  return {
-    obj: object,
-    k: cleanKey(stack.shift())
-  };
-}
-
-function setPath(object, path, newValue) {
-  var _getLastOfPath = getLastOfPath(object, path, Object),
-      obj = _getLastOfPath.obj,
-      k = _getLastOfPath.k;
-
-  obj[k] = newValue;
-}
-
-function pushPath(object, path, newValue, concat) {
-  var _getLastOfPath2 = getLastOfPath(object, path, Object),
-      obj = _getLastOfPath2.obj,
-      k = _getLastOfPath2.k;
-
-  obj[k] = obj[k] || [];
-  if (concat) obj[k] = obj[k].concat(newValue);
-  if (!concat) obj[k].push(newValue);
-}
-
-function getPath(object, path) {
-  var _getLastOfPath3 = getLastOfPath(object, path),
-      obj = _getLastOfPath3.obj,
-      k = _getLastOfPath3.k;
-
-  if (!obj) return undefined;
-  return obj[k];
-}
-
-function deepExtend(target, source, overwrite) {
-  /* eslint no-restricted-syntax: 0 */
-  for (var prop in source) {
-    if (prop in target) {
-      // If we reached a leaf string in target or source then replace with source or skip depending on the 'overwrite' switch
-      if (typeof target[prop] === 'string' || target[prop] instanceof String || typeof source[prop] === 'string' || source[prop] instanceof String) {
-        if (overwrite) target[prop] = source[prop];
-      } else {
-        deepExtend(target[prop], source[prop], overwrite);
+    }, {
+      key: "setDebug",
+      value: function setDebug(bool) {
+        this.debug = bool;
       }
-    } else {
-      target[prop] = source[prop];
-    }
-  }
-  return target;
-}
-
-function regexEscape(str) {
-  /* eslint no-useless-escape: 0 */
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-}
-
-/* eslint-disable */
-var _entityMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-  '/': '&#x2F;'
-};
-/* eslint-enable */
-
-function escape(data) {
-  if (typeof data === 'string') {
-    return data.replace(/[&<>"'\/]/g, function (s) {
-      return _entityMap[s];
-    });
-  }
-
-  return data;
-}
-
-var ResourceStore = function (_EventEmitter) {
-  inherits(ResourceStore, _EventEmitter);
-
-  function ResourceStore(data) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { ns: ['translation'], defaultNS: 'translation' };
-    classCallCheck(this, ResourceStore);
-
-    var _this = possibleConstructorReturn(this, _EventEmitter.call(this));
-
-    _this.data = data || {};
-    _this.options = options;
-    if (_this.options.keySeparator === undefined) {
-      _this.options.keySeparator = '.';
-    }
-    return _this;
-  }
-
-  ResourceStore.prototype.addNamespaces = function addNamespaces(ns) {
-    if (this.options.ns.indexOf(ns) < 0) {
-      this.options.ns.push(ns);
-    }
-  };
-
-  ResourceStore.prototype.removeNamespaces = function removeNamespaces(ns) {
-    var index = this.options.ns.indexOf(ns);
-    if (index > -1) {
-      this.options.ns.splice(index, 1);
-    }
-  };
-
-  ResourceStore.prototype.getResource = function getResource(lng, ns, key) {
-    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-
-    var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
-
-    var path = [lng, ns];
-    if (key && typeof key !== 'string') path = path.concat(key);
-    if (key && typeof key === 'string') path = path.concat(keySeparator ? key.split(keySeparator) : key);
-
-    if (lng.indexOf('.') > -1) {
-      path = lng.split('.');
-    }
-
-    return getPath(this.data, path);
-  };
-
-  ResourceStore.prototype.addResource = function addResource(lng, ns, key, value) {
-    var options = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : { silent: false };
-
-    var keySeparator = this.options.keySeparator;
-    if (keySeparator === undefined) keySeparator = '.';
-
-    var path = [lng, ns];
-    if (key) path = path.concat(keySeparator ? key.split(keySeparator) : key);
-
-    if (lng.indexOf('.') > -1) {
-      path = lng.split('.');
-      value = ns;
-      ns = path[1];
-    }
-
-    this.addNamespaces(ns);
-
-    setPath(this.data, path, value);
-
-    if (!options.silent) this.emit('added', lng, ns, key, value);
-  };
-
-  ResourceStore.prototype.addResources = function addResources(lng, ns, resources) {
-    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : { silent: false };
-
-    /* eslint no-restricted-syntax: 0 */
-    for (var m in resources) {
-      if (typeof resources[m] === 'string') this.addResource(lng, ns, m, resources[m], { silent: true });
-    }
-    if (!options.silent) this.emit('added', lng, ns, resources);
-  };
-
-  ResourceStore.prototype.addResourceBundle = function addResourceBundle(lng, ns, resources, deep, overwrite) {
-    var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : { silent: false };
-
-    var path = [lng, ns];
-    if (lng.indexOf('.') > -1) {
-      path = lng.split('.');
-      deep = resources;
-      resources = ns;
-      ns = path[1];
-    }
-
-    this.addNamespaces(ns);
-
-    var pack = getPath(this.data, path) || {};
-
-    if (deep) {
-      deepExtend(pack, resources, overwrite);
-    } else {
-      pack = _extends({}, pack, resources);
-    }
-
-    setPath(this.data, path, pack);
-
-    if (!options.silent) this.emit('added', lng, ns, resources);
-  };
-
-  ResourceStore.prototype.removeResourceBundle = function removeResourceBundle(lng, ns) {
-    if (this.hasResourceBundle(lng, ns)) {
-      delete this.data[lng][ns];
-    }
-    this.removeNamespaces(ns);
-
-    this.emit('removed', lng, ns);
-  };
-
-  ResourceStore.prototype.hasResourceBundle = function hasResourceBundle(lng, ns) {
-    return this.getResource(lng, ns) !== undefined;
-  };
-
-  ResourceStore.prototype.getResourceBundle = function getResourceBundle(lng, ns) {
-    if (!ns) ns = this.options.defaultNS;
-
-    // COMPATIBILITY: remove extend in v2.1.0
-    if (this.options.compatibilityAPI === 'v1') return _extends({}, this.getResource(lng, ns));
-
-    return this.getResource(lng, ns);
-  };
-
-  ResourceStore.prototype.getDataByLanguage = function getDataByLanguage(lng) {
-    return this.data[lng];
-  };
-
-  ResourceStore.prototype.toJSON = function toJSON() {
-    return this.data;
-  };
-
-  return ResourceStore;
-}(EventEmitter);
-
-var postProcessor = {
-  processors: {},
-
-  addPostProcessor: function addPostProcessor(module) {
-    this.processors[module.name] = module;
-  },
-  handle: function handle(processors, value, key, options, translator) {
-    var _this = this;
-
-    processors.forEach(function (processor) {
-      if (_this.processors[processor]) value = _this.processors[processor].process(value, key, options, translator);
-    });
-
-    return value;
-  }
-};
-
-var Translator = function (_EventEmitter) {
-  inherits(Translator, _EventEmitter);
-
-  function Translator(services) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    classCallCheck(this, Translator);
-
-    var _this = possibleConstructorReturn(this, _EventEmitter.call(this));
-
-    copy(['resourceStore', 'languageUtils', 'pluralResolver', 'interpolator', 'backendConnector', 'i18nFormat'], services, _this);
-
-    _this.options = options;
-    if (_this.options.keySeparator === undefined) {
-      _this.options.keySeparator = '.';
-    }
-
-    _this.logger = baseLogger.create('translator');
-    return _this;
-  }
-
-  Translator.prototype.changeLanguage = function changeLanguage(lng) {
-    if (lng) this.language = lng;
-  };
-
-  Translator.prototype.exists = function exists(key) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { interpolation: {} };
-
-    var resolved = this.resolve(key, options);
-    return resolved && resolved.res !== undefined;
-  };
-
-  Translator.prototype.extractFromKey = function extractFromKey(key, options) {
-    var nsSeparator = options.nsSeparator || this.options.nsSeparator;
-    if (nsSeparator === undefined) nsSeparator = ':';
-
-    var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
-
-    var namespaces = options.ns || this.options.defaultNS;
-    if (nsSeparator && key.indexOf(nsSeparator) > -1) {
-      var parts = key.split(nsSeparator);
-      if (nsSeparator !== keySeparator || nsSeparator === keySeparator && this.options.ns.indexOf(parts[0]) > -1) namespaces = parts.shift();
-      key = parts.join(keySeparator);
-    }
-    if (typeof namespaces === 'string') namespaces = [namespaces];
-
-    return {
-      key: key,
-      namespaces: namespaces
-    };
-  };
-
-  Translator.prototype.translate = function translate(keys, options) {
-    var _this2 = this;
-
-    if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) !== 'object' && this.options.overloadTranslationOptionHandler) {
-      /* eslint prefer-rest-params: 0 */
-      options = this.options.overloadTranslationOptionHandler(arguments);
-    }
-    if (!options) options = {};
-
-    // non valid keys handling
-    if (keys === undefined || keys === null) return '';
-    if (!Array.isArray(keys)) keys = [String(keys)];
-
-    // separators
-    var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
-
-    // get namespace(s)
-
-    var _extractFromKey = this.extractFromKey(keys[keys.length - 1], options),
-        key = _extractFromKey.key,
-        namespaces = _extractFromKey.namespaces;
-
-    var namespace = namespaces[namespaces.length - 1];
-
-    // return key on CIMode
-    var lng = options.lng || this.language;
-    var appendNamespaceToCIMode = options.appendNamespaceToCIMode || this.options.appendNamespaceToCIMode;
-    if (lng && lng.toLowerCase() === 'cimode') {
-      if (appendNamespaceToCIMode) {
-        var nsSeparator = options.nsSeparator || this.options.nsSeparator;
-        return namespace + nsSeparator + key;
-      }
-
-      return key;
-    }
-
-    // resolve from store
-    var resolved = this.resolve(keys, options);
-    var res = resolved && resolved.res;
-    var resUsedKey = resolved && resolved.usedKey || key;
-    var resExactUsedKey = resolved && resolved.exactUsedKey || key;
-
-    var resType = Object.prototype.toString.apply(res);
-    var noObject = ['[object Number]', '[object Function]', '[object RegExp]'];
-    var joinArrays = options.joinArrays !== undefined ? options.joinArrays : this.options.joinArrays;
-
-    // object
-    var handleAsObjectInI18nFormat = !this.i18nFormat || this.i18nFormat.handleAsObject;
-    var handleAsObject = typeof res !== 'string' && typeof res !== 'boolean' && typeof res !== 'number';
-    if (handleAsObjectInI18nFormat && res && handleAsObject && noObject.indexOf(resType) < 0 && !(typeof joinArrays === 'string' && resType === '[object Array]')) {
-      if (!options.returnObjects && !this.options.returnObjects) {
-        this.logger.warn('accessing an object - but returnObjects options is not enabled!');
-        return this.options.returnedObjectHandler ? this.options.returnedObjectHandler(resUsedKey, res, options) : 'key \'' + key + ' (' + this.language + ')\' returned an object instead of string.';
-      }
-
-      // if we got a separator we loop over children - else we just return object as is
-      // as having it set to false means no hierarchy so no lookup for nested values
-      if (keySeparator) {
-        var resTypeIsArray = resType === '[object Array]';
-        var copy$$1 = resTypeIsArray ? [] : {}; // apply child translation on a copy
-
-        /* eslint no-restricted-syntax: 0 */
-        var newKeyToUse = resTypeIsArray ? resExactUsedKey : resUsedKey;
-        for (var m in res) {
-          if (Object.prototype.hasOwnProperty.call(res, m)) {
-            var deepKey = '' + newKeyToUse + keySeparator + m;
-            copy$$1[m] = this.translate(deepKey, _extends({}, options, { joinArrays: false, ns: namespaces }));
-            if (copy$$1[m] === deepKey) copy$$1[m] = res[m]; // if nothing found use orginal value as fallback
-          }
-        }
-        res = copy$$1;
-      }
-    } else if (handleAsObjectInI18nFormat && typeof joinArrays === 'string' && resType === '[object Array]') {
-      // array special treatment
-      res = res.join(joinArrays);
-      if (res) res = this.extendTranslation(res, keys, options);
-    } else {
-      // string, empty or null
-      var usedDefault = false;
-      var usedKey = false;
-
-      // fallback value
-      if (!this.isValidLookup(res) && options.defaultValue !== undefined) {
-        usedDefault = true;
-
-        if (options.count !== undefined) {
-          var suffix = this.pluralResolver.getSuffix(lng, options.count);
-          res = options['defaultValue' + suffix];
-        }
-        if (!res) res = options.defaultValue;
-      }
-      if (!this.isValidLookup(res)) {
-        usedKey = true;
-        res = key;
-      }
-
-      // save missing
-      var updateMissing = options.defaultValue && options.defaultValue !== res && this.options.updateMissing;
-      if (usedKey || usedDefault || updateMissing) {
-        this.logger.log(updateMissing ? 'updateKey' : 'missingKey', lng, namespace, key, updateMissing ? options.defaultValue : res);
-
-        var lngs = [];
-        var fallbackLngs = this.languageUtils.getFallbackCodes(this.options.fallbackLng, options.lng || this.language);
-        if (this.options.saveMissingTo === 'fallback' && fallbackLngs && fallbackLngs[0]) {
-          for (var i = 0; i < fallbackLngs.length; i++) {
-            lngs.push(fallbackLngs[i]);
-          }
-        } else if (this.options.saveMissingTo === 'all') {
-          lngs = this.languageUtils.toResolveHierarchy(options.lng || this.language);
-        } else {
-          lngs.push(options.lng || this.language);
+    }, {
+      key: "log",
+      value: function log() {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
         }
 
-        var send = function send(l, k) {
-          if (_this2.options.missingKeyHandler) {
-            _this2.options.missingKeyHandler(l, namespace, k, updateMissing ? options.defaultValue : res, updateMissing, options);
-          } else if (_this2.backendConnector && _this2.backendConnector.saveMissing) {
-            _this2.backendConnector.saveMissing(l, namespace, k, updateMissing ? options.defaultValue : res, updateMissing, options);
-          }
-          _this2.emit('missingKey', l, namespace, k, res);
-        };
+        return this.forward(args, 'log', '', true);
+      }
+    }, {
+      key: "warn",
+      value: function warn() {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
 
-        if (this.options.saveMissing) {
-          var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
-          if (this.options.saveMissingPlurals && needsPluralHandling) {
-            lngs.forEach(function (l) {
-              var plurals = _this2.pluralResolver.getPluralFormsOfKey(l, key);
+        return this.forward(args, 'warn', '', true);
+      }
+    }, {
+      key: "error",
+      value: function error() {
+        for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+          args[_key3] = arguments[_key3];
+        }
 
-              plurals.forEach(function (p) {
-                return send([l], p);
-              });
-            });
+        return this.forward(args, 'error', '');
+      }
+    }, {
+      key: "deprecate",
+      value: function deprecate() {
+        for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+          args[_key4] = arguments[_key4];
+        }
+
+        return this.forward(args, 'warn', 'WARNING DEPRECATED: ', true);
+      }
+    }, {
+      key: "forward",
+      value: function forward(args, lvl, prefix, debugOnly) {
+        if (debugOnly && !this.debug) return null;
+        if (typeof args[0] === 'string') args[0] = "".concat(prefix).concat(this.prefix, " ").concat(args[0]);
+        return this.logger[lvl](args);
+      }
+    }, {
+      key: "create",
+      value: function create(moduleName) {
+        return new Logger(this.logger, _objectSpread({}, {
+          prefix: "".concat(this.prefix, ":").concat(moduleName, ":")
+        }, this.options));
+      }
+    }]);
+
+    return Logger;
+  }();
+
+  var baseLogger = new Logger();
+
+  var EventEmitter =
+  /*#__PURE__*/
+  function () {
+    function EventEmitter() {
+      _classCallCheck(this, EventEmitter);
+
+      this.observers = {};
+    }
+
+    _createClass(EventEmitter, [{
+      key: "on",
+      value: function on(events, listener) {
+        var _this = this;
+
+        events.split(' ').forEach(function (event) {
+          _this.observers[event] = _this.observers[event] || [];
+
+          _this.observers[event].push(listener);
+        });
+        return this;
+      }
+    }, {
+      key: "off",
+      value: function off(event, listener) {
+        var _this2 = this;
+
+        if (!this.observers[event]) {
+          return;
+        }
+
+        this.observers[event].forEach(function () {
+          if (!listener) {
+            delete _this2.observers[event];
           } else {
-            send(lngs, key);
-          }
-        }
-      }
+            var index = _this2.observers[event].indexOf(listener);
 
-      // extend
-      res = this.extendTranslation(res, keys, options, resolved);
-
-      // append namespace if still key
-      if (usedKey && res === key && this.options.appendNamespaceToMissingKey) res = namespace + ':' + key;
-
-      // parseMissingKeyHandler
-      if (usedKey && this.options.parseMissingKeyHandler) res = this.options.parseMissingKeyHandler(res);
-    }
-
-    // return
-    return res;
-  };
-
-  Translator.prototype.extendTranslation = function extendTranslation(res, key, options, resolved) {
-    var _this3 = this;
-
-    if (this.i18nFormat && this.i18nFormat.parse) {
-      res = this.i18nFormat.parse(res, options, resolved.usedLng, resolved.usedNS, resolved.usedKey, { resolved: resolved });
-    } else if (!options.skipInterpolation) {
-      // i18next.parsing
-      if (options.interpolation) this.interpolator.init(_extends({}, options, { interpolation: _extends({}, this.options.interpolation, options.interpolation) }));
-
-      // interpolate
-      var data = options.replace && typeof options.replace !== 'string' ? options.replace : options;
-      if (this.options.interpolation.defaultVariables) data = _extends({}, this.options.interpolation.defaultVariables, data);
-      res = this.interpolator.interpolate(res, data, options.lng || this.language, options);
-
-      // nesting
-      if (options.nest !== false) res = this.interpolator.nest(res, function () {
-        return _this3.translate.apply(_this3, arguments);
-      }, options);
-
-      if (options.interpolation) this.interpolator.reset();
-    }
-
-    // post process
-    var postProcess = options.postProcess || this.options.postProcess;
-    var postProcessorNames = typeof postProcess === 'string' ? [postProcess] : postProcess;
-
-    if (res !== undefined && res !== null && postProcessorNames && postProcessorNames.length && options.applyPostProcessor !== false) {
-      res = postProcessor.handle(postProcessorNames, res, key, options, this);
-    }
-
-    return res;
-  };
-
-  Translator.prototype.resolve = function resolve(keys) {
-    var _this4 = this;
-
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-    var found = void 0;
-    var usedKey = void 0; // plain key
-    var exactUsedKey = void 0; // key with context / plural
-    var usedLng = void 0;
-    var usedNS = void 0;
-
-    if (typeof keys === 'string') keys = [keys];
-
-    // forEach possible key
-    keys.forEach(function (k) {
-      if (_this4.isValidLookup(found)) return;
-      var extracted = _this4.extractFromKey(k, options);
-      var key = extracted.key;
-      usedKey = key;
-      var namespaces = extracted.namespaces;
-      if (_this4.options.fallbackNS) namespaces = namespaces.concat(_this4.options.fallbackNS);
-
-      var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
-      var needsContextHandling = options.context !== undefined && typeof options.context === 'string' && options.context !== '';
-
-      var codes = options.lngs ? options.lngs : _this4.languageUtils.toResolveHierarchy(options.lng || _this4.language, options.fallbackLng);
-
-      namespaces.forEach(function (ns) {
-        if (_this4.isValidLookup(found)) return;
-        usedNS = ns;
-
-        codes.forEach(function (code) {
-          if (_this4.isValidLookup(found)) return;
-          usedLng = code;
-
-          var finalKey = key;
-          var finalKeys = [finalKey];
-
-          if (_this4.i18nFormat && _this4.i18nFormat.addLookupKeys) {
-            _this4.i18nFormat.addLookupKeys(finalKeys, key, code, ns, options);
-          } else {
-            var pluralSuffix = void 0;
-            if (needsPluralHandling) pluralSuffix = _this4.pluralResolver.getSuffix(code, options.count);
-
-            // fallback for plural if context not found
-            if (needsPluralHandling && needsContextHandling) finalKeys.push(finalKey + pluralSuffix);
-
-            // get key for context if needed
-            if (needsContextHandling) finalKeys.push(finalKey += '' + _this4.options.contextSeparator + options.context);
-
-            // get key for plural if needed
-            if (needsPluralHandling) finalKeys.push(finalKey += pluralSuffix);
-          }
-
-          // iterate over finalKeys starting with most specific pluralkey (-> contextkey only) -> singularkey only
-          var possibleKey = void 0;
-          /* eslint no-cond-assign: 0 */
-          while (possibleKey = finalKeys.pop()) {
-            if (!_this4.isValidLookup(found)) {
-              exactUsedKey = possibleKey;
-              found = _this4.getResource(code, ns, possibleKey, options);
+            if (index > -1) {
+              _this2.observers[event].splice(index, 1);
             }
           }
         });
-      });
-    });
-
-    return { res: found, usedKey: usedKey, exactUsedKey: exactUsedKey, usedLng: usedLng, usedNS: usedNS };
-  };
-
-  Translator.prototype.isValidLookup = function isValidLookup(res) {
-    return res !== undefined && !(!this.options.returnNull && res === null) && !(!this.options.returnEmptyString && res === '');
-  };
-
-  Translator.prototype.getResource = function getResource(code, ns, key) {
-    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-
-    if (this.i18nFormat && this.i18nFormat.getResource) return this.i18nFormat.getResource(code, ns, key, options);
-    return this.resourceStore.getResource(code, ns, key, options);
-  };
-
-  return Translator;
-}(EventEmitter);
-
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-var LanguageUtil = function () {
-  function LanguageUtil(options) {
-    classCallCheck(this, LanguageUtil);
-
-    this.options = options;
-
-    this.whitelist = this.options.whitelist || false;
-    this.logger = baseLogger.create('languageUtils');
-  }
-
-  LanguageUtil.prototype.getScriptPartFromCode = function getScriptPartFromCode(code) {
-    if (!code || code.indexOf('-') < 0) return null;
-
-    var p = code.split('-');
-    if (p.length === 2) return null;
-    p.pop();
-    return this.formatLanguageCode(p.join('-'));
-  };
-
-  LanguageUtil.prototype.getLanguagePartFromCode = function getLanguagePartFromCode(code) {
-    if (!code || code.indexOf('-') < 0) return code;
-
-    var p = code.split('-');
-    return this.formatLanguageCode(p[0]);
-  };
-
-  LanguageUtil.prototype.formatLanguageCode = function formatLanguageCode(code) {
-    // http://www.iana.org/assignments/language-tags/language-tags.xhtml
-    if (typeof code === 'string' && code.indexOf('-') > -1) {
-      var specialCases = ['hans', 'hant', 'latn', 'cyrl', 'cans', 'mong', 'arab'];
-      var p = code.split('-');
-
-      if (this.options.lowerCaseLng) {
-        p = p.map(function (part) {
-          return part.toLowerCase();
-        });
-      } else if (p.length === 2) {
-        p[0] = p[0].toLowerCase();
-        p[1] = p[1].toUpperCase();
-
-        if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
-      } else if (p.length === 3) {
-        p[0] = p[0].toLowerCase();
-
-        // if lenght 2 guess it's a country
-        if (p[1].length === 2) p[1] = p[1].toUpperCase();
-        if (p[0] !== 'sgn' && p[2].length === 2) p[2] = p[2].toUpperCase();
-
-        if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
-        if (specialCases.indexOf(p[2].toLowerCase()) > -1) p[2] = capitalize(p[2].toLowerCase());
       }
-
-      return p.join('-');
-    }
-
-    return this.options.cleanCode || this.options.lowerCaseLng ? code.toLowerCase() : code;
-  };
-
-  LanguageUtil.prototype.isWhitelisted = function isWhitelisted(code) {
-    if (this.options.load === 'languageOnly' || this.options.nonExplicitWhitelist) {
-      code = this.getLanguagePartFromCode(code);
-    }
-    return !this.whitelist || !this.whitelist.length || this.whitelist.indexOf(code) > -1;
-  };
-
-  LanguageUtil.prototype.getFallbackCodes = function getFallbackCodes(fallbacks, code) {
-    if (!fallbacks) return [];
-    if (typeof fallbacks === 'string') fallbacks = [fallbacks];
-    if (Object.prototype.toString.apply(fallbacks) === '[object Array]') return fallbacks;
-
-    if (!code) return fallbacks.default || [];
-
-    // asume we have an object defining fallbacks
-    var found = fallbacks[code];
-    if (!found) found = fallbacks[this.getScriptPartFromCode(code)];
-    if (!found) found = fallbacks[this.formatLanguageCode(code)];
-    if (!found) found = fallbacks.default;
-
-    return found || [];
-  };
-
-  LanguageUtil.prototype.toResolveHierarchy = function toResolveHierarchy(code, fallbackCode) {
-    var _this = this;
-
-    var fallbackCodes = this.getFallbackCodes(fallbackCode || this.options.fallbackLng || [], code);
-
-    var codes = [];
-    var addCode = function addCode(c) {
-      if (!c) return;
-      if (_this.isWhitelisted(c)) {
-        codes.push(c);
-      } else {
-        _this.logger.warn('rejecting non-whitelisted language code: ' + c);
-      }
-    };
-
-    if (typeof code === 'string' && code.indexOf('-') > -1) {
-      if (this.options.load !== 'languageOnly') addCode(this.formatLanguageCode(code));
-      if (this.options.load !== 'languageOnly' && this.options.load !== 'currentOnly') addCode(this.getScriptPartFromCode(code));
-      if (this.options.load !== 'currentOnly') addCode(this.getLanguagePartFromCode(code));
-    } else if (typeof code === 'string') {
-      addCode(this.formatLanguageCode(code));
-    }
-
-    fallbackCodes.forEach(function (fc) {
-      if (codes.indexOf(fc) < 0) addCode(_this.formatLanguageCode(fc));
-    });
-
-    return codes;
-  };
-
-  return LanguageUtil;
-}();
-
-// definition http://translate.sourceforge.net/wiki/l10n/pluralforms
-/* eslint-disable */
-var sets = [{ lngs: ['ach', 'ak', 'am', 'arn', 'br', 'fil', 'gun', 'ln', 'mfe', 'mg', 'mi', 'oc', 'pt', 'pt-BR', 'tg', 'ti', 'tr', 'uz', 'wa'], nr: [1, 2], fc: 1 }, { lngs: ['af', 'an', 'ast', 'az', 'bg', 'bn', 'ca', 'da', 'de', 'dev', 'el', 'en', 'eo', 'es', 'et', 'eu', 'fi', 'fo', 'fur', 'fy', 'gl', 'gu', 'ha', 'hi', 'hu', 'hy', 'ia', 'it', 'kn', 'ku', 'lb', 'mai', 'ml', 'mn', 'mr', 'nah', 'nap', 'nb', 'ne', 'nl', 'nn', 'no', 'nso', 'pa', 'pap', 'pms', 'ps', 'pt-PT', 'rm', 'sco', 'se', 'si', 'so', 'son', 'sq', 'sv', 'sw', 'ta', 'te', 'tk', 'ur', 'yo'], nr: [1, 2], fc: 2 }, { lngs: ['ay', 'bo', 'cgg', 'fa', 'id', 'ja', 'jbo', 'ka', 'kk', 'km', 'ko', 'ky', 'lo', 'ms', 'sah', 'su', 'th', 'tt', 'ug', 'vi', 'wo', 'zh'], nr: [1], fc: 3 }, { lngs: ['be', 'bs', 'dz', 'hr', 'ru', 'sr', 'uk'], nr: [1, 2, 5], fc: 4 }, { lngs: ['ar'], nr: [0, 1, 2, 3, 11, 100], fc: 5 }, { lngs: ['cs', 'sk'], nr: [1, 2, 5], fc: 6 }, { lngs: ['csb', 'pl'], nr: [1, 2, 5], fc: 7 }, { lngs: ['cy'], nr: [1, 2, 3, 8], fc: 8 }, { lngs: ['fr'], nr: [1, 2], fc: 9 }, { lngs: ['ga'], nr: [1, 2, 3, 7, 11], fc: 10 }, { lngs: ['gd'], nr: [1, 2, 3, 20], fc: 11 }, { lngs: ['is'], nr: [1, 2], fc: 12 }, { lngs: ['jv'], nr: [0, 1], fc: 13 }, { lngs: ['kw'], nr: [1, 2, 3, 4], fc: 14 }, { lngs: ['lt'], nr: [1, 2, 10], fc: 15 }, { lngs: ['lv'], nr: [1, 2, 0], fc: 16 }, { lngs: ['mk'], nr: [1, 2], fc: 17 }, { lngs: ['mnk'], nr: [0, 1, 2], fc: 18 }, { lngs: ['mt'], nr: [1, 2, 11, 20], fc: 19 }, { lngs: ['or'], nr: [2, 1], fc: 2 }, { lngs: ['ro'], nr: [1, 2, 20], fc: 20 }, { lngs: ['sl'], nr: [5, 1, 2, 3], fc: 21 }, { lngs: ['he'], nr: [1, 2, 20, 21], fc: 22 }];
-
-var _rulesPluralsTypes = {
-  1: function _(n) {
-    return Number(n > 1);
-  },
-  2: function _(n) {
-    return Number(n != 1);
-  },
-  3: function _(n) {
-    return 0;
-  },
-  4: function _(n) {
-    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
-  },
-  5: function _(n) {
-    return Number(n === 0 ? 0 : n == 1 ? 1 : n == 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5);
-  },
-  6: function _(n) {
-    return Number(n == 1 ? 0 : n >= 2 && n <= 4 ? 1 : 2);
-  },
-  7: function _(n) {
-    return Number(n == 1 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
-  },
-  8: function _(n) {
-    return Number(n == 1 ? 0 : n == 2 ? 1 : n != 8 && n != 11 ? 2 : 3);
-  },
-  9: function _(n) {
-    return Number(n >= 2);
-  },
-  10: function _(n) {
-    return Number(n == 1 ? 0 : n == 2 ? 1 : n < 7 ? 2 : n < 11 ? 3 : 4);
-  },
-  11: function _(n) {
-    return Number(n == 1 || n == 11 ? 0 : n == 2 || n == 12 ? 1 : n > 2 && n < 20 ? 2 : 3);
-  },
-  12: function _(n) {
-    return Number(n % 10 != 1 || n % 100 == 11);
-  },
-  13: function _(n) {
-    return Number(n !== 0);
-  },
-  14: function _(n) {
-    return Number(n == 1 ? 0 : n == 2 ? 1 : n == 3 ? 2 : 3);
-  },
-  15: function _(n) {
-    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
-  },
-  16: function _(n) {
-    return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n !== 0 ? 1 : 2);
-  },
-  17: function _(n) {
-    return Number(n == 1 || n % 10 == 1 ? 0 : 1);
-  },
-  18: function _(n) {
-    return Number(n == 0 ? 0 : n == 1 ? 1 : 2);
-  },
-  19: function _(n) {
-    return Number(n == 1 ? 0 : n === 0 || n % 100 > 1 && n % 100 < 11 ? 1 : n % 100 > 10 && n % 100 < 20 ? 2 : 3);
-  },
-  20: function _(n) {
-    return Number(n == 1 ? 0 : n === 0 || n % 100 > 0 && n % 100 < 20 ? 1 : 2);
-  },
-  21: function _(n) {
-    return Number(n % 100 == 1 ? 1 : n % 100 == 2 ? 2 : n % 100 == 3 || n % 100 == 4 ? 3 : 0);
-  },
-  22: function _(n) {
-    return Number(n === 1 ? 0 : n === 2 ? 1 : (n < 0 || n > 10) && n % 10 == 0 ? 2 : 3);
-  }
-};
-/* eslint-enable */
-
-function createRules() {
-  var rules = {};
-  sets.forEach(function (set$$1) {
-    set$$1.lngs.forEach(function (l) {
-      rules[l] = {
-        numbers: set$$1.nr,
-        plurals: _rulesPluralsTypes[set$$1.fc]
-      };
-    });
-  });
-  return rules;
-}
-
-var PluralResolver = function () {
-  function PluralResolver(languageUtils) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    classCallCheck(this, PluralResolver);
-
-    this.languageUtils = languageUtils;
-    this.options = options;
-
-    this.logger = baseLogger.create('pluralResolver');
-
-    this.rules = createRules();
-  }
-
-  PluralResolver.prototype.addRule = function addRule(lng, obj) {
-    this.rules[lng] = obj;
-  };
-
-  PluralResolver.prototype.getRule = function getRule(code) {
-    return this.rules[code] || this.rules[this.languageUtils.getLanguagePartFromCode(code)];
-  };
-
-  PluralResolver.prototype.needsPlural = function needsPlural(code) {
-    var rule = this.getRule(code);
-
-    return rule && rule.numbers.length > 1;
-  };
-
-  PluralResolver.prototype.getPluralFormsOfKey = function getPluralFormsOfKey(code, key) {
-    var _this = this;
-
-    var ret = [];
-
-    var rule = this.getRule(code);
-
-    if (!rule) return ret;
-
-    rule.numbers.forEach(function (n) {
-      var suffix = _this.getSuffix(code, n);
-      ret.push('' + key + suffix);
-    });
-
-    return ret;
-  };
-
-  PluralResolver.prototype.getSuffix = function getSuffix(code, count) {
-    var _this2 = this;
-
-    var rule = this.getRule(code);
-
-    if (rule) {
-      // if (rule.numbers.length === 1) return ''; // only singular
-
-      var idx = rule.noAbs ? rule.plurals(count) : rule.plurals(Math.abs(count));
-      var suffix = rule.numbers[idx];
-
-      // special treatment for lngs only having singular and plural
-      if (this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
-        if (suffix === 2) {
-          suffix = 'plural';
-        } else if (suffix === 1) {
-          suffix = '';
-        }
-      }
-
-      var returnSuffix = function returnSuffix() {
-        return _this2.options.prepend && suffix.toString() ? _this2.options.prepend + suffix.toString() : suffix.toString();
-      };
-
-      // COMPATIBILITY JSON
-      // v1
-      if (this.options.compatibilityJSON === 'v1') {
-        if (suffix === 1) return '';
-        if (typeof suffix === 'number') return '_plural_' + suffix.toString();
-        return returnSuffix();
-      } else if ( /* v2 */this.options.compatibilityJSON === 'v2') {
-        return returnSuffix();
-      } else if ( /* v3 - gettext index */this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
-        return returnSuffix();
-      }
-      return this.options.prepend && idx.toString() ? this.options.prepend + idx.toString() : idx.toString();
-    }
-
-    this.logger.warn('no plural rule found for: ' + code);
-    return '';
-  };
-
-  return PluralResolver;
-}();
-
-var Interpolator = function () {
-  function Interpolator() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, Interpolator);
-
-    this.logger = baseLogger.create('interpolator');
-
-    this.init(options, true);
-  }
-
-  /* eslint no-param-reassign: 0 */
-
-
-  Interpolator.prototype.init = function init() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var reset = arguments[1];
-
-    if (reset) {
-      this.options = options;
-      this.format = options.interpolation && options.interpolation.format || function (value) {
-        return value;
-      };
-    }
-    if (!options.interpolation) options.interpolation = { escapeValue: true };
-
-    var iOpts = options.interpolation;
-
-    this.escape = iOpts.escape !== undefined ? iOpts.escape : escape;
-    this.escapeValue = iOpts.escapeValue !== undefined ? iOpts.escapeValue : true;
-    this.useRawValueToEscape = iOpts.useRawValueToEscape !== undefined ? iOpts.useRawValueToEscape : false;
-
-    this.prefix = iOpts.prefix ? regexEscape(iOpts.prefix) : iOpts.prefixEscaped || '{{';
-    this.suffix = iOpts.suffix ? regexEscape(iOpts.suffix) : iOpts.suffixEscaped || '}}';
-
-    this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
-
-    this.unescapePrefix = iOpts.unescapeSuffix ? '' : iOpts.unescapePrefix || '-';
-    this.unescapeSuffix = this.unescapePrefix ? '' : iOpts.unescapeSuffix || '';
-
-    this.nestingPrefix = iOpts.nestingPrefix ? regexEscape(iOpts.nestingPrefix) : iOpts.nestingPrefixEscaped || regexEscape('$t(');
-    this.nestingSuffix = iOpts.nestingSuffix ? regexEscape(iOpts.nestingSuffix) : iOpts.nestingSuffixEscaped || regexEscape(')');
-
-    this.maxReplaces = iOpts.maxReplaces ? iOpts.maxReplaces : 1000;
-
-    // the regexp
-    this.resetRegExp();
-  };
-
-  Interpolator.prototype.reset = function reset() {
-    if (this.options) this.init(this.options);
-  };
-
-  Interpolator.prototype.resetRegExp = function resetRegExp() {
-    // the regexp
-    var regexpStr = this.prefix + '(.+?)' + this.suffix;
-    this.regexp = new RegExp(regexpStr, 'g');
-
-    var regexpUnescapeStr = '' + this.prefix + this.unescapePrefix + '(.+?)' + this.unescapeSuffix + this.suffix;
-    this.regexpUnescape = new RegExp(regexpUnescapeStr, 'g');
-
-    var nestingRegexpStr = this.nestingPrefix + '(.+?)' + this.nestingSuffix;
-    this.nestingRegexp = new RegExp(nestingRegexpStr, 'g');
-  };
-
-  Interpolator.prototype.interpolate = function interpolate(str, data, lng, options) {
-    var _this = this;
-
-    var match = void 0;
-    var value = void 0;
-    var replaces = void 0;
-
-    function regexSafe(val) {
-      return val.replace(/\$/g, '$$$$');
-    }
-
-    var handleFormat = function handleFormat(key) {
-      if (key.indexOf(_this.formatSeparator) < 0) return getPath(data, key);
-
-      var p = key.split(_this.formatSeparator);
-      var k = p.shift().trim();
-      var f = p.join(_this.formatSeparator).trim();
-
-      return _this.format(getPath(data, k), f, lng);
-    };
-
-    this.resetRegExp();
-
-    var missingInterpolationHandler = options && options.missingInterpolationHandler || this.options.missingInterpolationHandler;
-
-    replaces = 0;
-    // unescape if has unescapePrefix/Suffix
-    /* eslint no-cond-assign: 0 */
-    while (match = this.regexpUnescape.exec(str)) {
-      value = handleFormat(match[1].trim());
-      str = str.replace(match[0], value);
-      this.regexpUnescape.lastIndex = 0;
-      replaces++;
-      if (replaces >= this.maxReplaces) {
-        break;
-      }
-    }
-
-    replaces = 0;
-    // regular escape on demand
-    while (match = this.regexp.exec(str)) {
-      value = handleFormat(match[1].trim());
-      if (value === undefined) {
-        if (typeof missingInterpolationHandler === 'function') {
-          var temp = missingInterpolationHandler(str, match, options);
-          value = typeof temp === 'string' ? temp : '';
-        } else {
-          this.logger.warn('missed to pass in variable ' + match[1] + ' for interpolating ' + str);
-          value = '';
-        }
-      } else if (typeof value !== 'string' && !this.useRawValueToEscape) {
-        value = makeString(value);
-      }
-      value = this.escapeValue ? regexSafe(this.escape(value)) : regexSafe(value);
-      str = str.replace(match[0], value);
-      this.regexp.lastIndex = 0;
-      replaces++;
-      if (replaces >= this.maxReplaces) {
-        break;
-      }
-    }
-    return str;
-  };
-
-  Interpolator.prototype.nest = function nest(str, fc) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-    var match = void 0;
-    var value = void 0;
-
-    var clonedOptions = _extends({}, options);
-    clonedOptions.applyPostProcessor = false; // avoid post processing on nested lookup
-
-    // if value is something like "myKey": "lorem $(anotherKey, { "count": {{aValueInOptions}} })"
-    function handleHasOptions(key, inheritedOptions) {
-      if (key.indexOf(',') < 0) return key;
-
-      var p = key.split(',');
-      key = p.shift();
-      var optionsString = p.join(',');
-      optionsString = this.interpolate(optionsString, clonedOptions);
-      optionsString = optionsString.replace(/'/g, '"');
-
-      try {
-        clonedOptions = JSON.parse(optionsString);
-
-        if (inheritedOptions) clonedOptions = _extends({}, inheritedOptions, clonedOptions);
-      } catch (e) {
-        this.logger.error('failed parsing options string in nesting for key ' + key, e);
-      }
-
-      return key;
-    }
-
-    // regular escape on demand
-    while (match = this.nestingRegexp.exec(str)) {
-      value = fc(handleHasOptions.call(this, match[1].trim(), clonedOptions), clonedOptions);
-
-      // is only the nesting key (key1 = '$(key2)') return the value without stringify
-      if (value && match[0] === str && typeof value !== 'string') return value;
-
-      // no string to include or empty
-      if (typeof value !== 'string') value = makeString(value);
-      if (!value) {
-        this.logger.warn('missed to resolve ' + match[1] + ' for nesting ' + str);
-        value = '';
-      }
-      // Nested keys should not be escaped by default #854
-      // value = this.escapeValue ? regexSafe(utils.escape(value)) : regexSafe(value);
-      str = str.replace(match[0], value);
-      this.regexp.lastIndex = 0;
-    }
-    return str;
-  };
-
-  return Interpolator;
-}();
-
-function remove(arr, what) {
-  var found = arr.indexOf(what);
-
-  while (found !== -1) {
-    arr.splice(found, 1);
-    found = arr.indexOf(what);
-  }
-}
-
-var Connector = function (_EventEmitter) {
-  inherits(Connector, _EventEmitter);
-
-  function Connector(backend, store, services) {
-    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-    classCallCheck(this, Connector);
-
-    var _this = possibleConstructorReturn(this, _EventEmitter.call(this));
-
-    _this.backend = backend;
-    _this.store = store;
-    _this.languageUtils = services.languageUtils;
-    _this.options = options;
-    _this.logger = baseLogger.create('backendConnector');
-
-    _this.state = {};
-    _this.queue = [];
-
-    if (_this.backend && _this.backend.init) {
-      _this.backend.init(services, options.backend, options);
-    }
-    return _this;
-  }
-
-  Connector.prototype.queueLoad = function queueLoad(languages, namespaces, options, callback) {
-    var _this2 = this;
-
-    // find what needs to be loaded
-    var toLoad = [];
-    var pending = [];
-    var toLoadLanguages = [];
-    var toLoadNamespaces = [];
-
-    languages.forEach(function (lng) {
-      var hasAllNamespaces = true;
-
-      namespaces.forEach(function (ns) {
-        var name = lng + '|' + ns;
-
-        if (!options.reload && _this2.store.hasResourceBundle(lng, ns)) {
-          _this2.state[name] = 2; // loaded
-        } else if (_this2.state[name] < 0) {
-          // nothing to do for err
-        } else if (_this2.state[name] === 1) {
-          if (pending.indexOf(name) < 0) pending.push(name);
-        } else {
-          _this2.state[name] = 1; // pending
-
-          hasAllNamespaces = false;
-
-          if (pending.indexOf(name) < 0) pending.push(name);
-          if (toLoad.indexOf(name) < 0) toLoad.push(name);
-          if (toLoadNamespaces.indexOf(ns) < 0) toLoadNamespaces.push(ns);
-        }
-      });
-
-      if (!hasAllNamespaces) toLoadLanguages.push(lng);
-    });
-
-    if (toLoad.length || pending.length) {
-      this.queue.push({
-        pending: pending,
-        loaded: {},
-        errors: [],
-        callback: callback
-      });
-    }
-
-    return {
-      toLoad: toLoad,
-      pending: pending,
-      toLoadLanguages: toLoadLanguages,
-      toLoadNamespaces: toLoadNamespaces
-    };
-  };
-
-  Connector.prototype.loaded = function loaded(name, err, data) {
-    var _name$split = name.split('|'),
-        _name$split2 = slicedToArray(_name$split, 2),
-        lng = _name$split2[0],
-        ns = _name$split2[1];
-
-    if (err) this.emit('failedLoading', lng, ns, err);
-
-    if (data) {
-      this.store.addResourceBundle(lng, ns, data);
-    }
-
-    // set loaded
-    this.state[name] = err ? -1 : 2;
-
-    // consolidated loading done in this run - only emit once for a loaded namespace
-    var loaded = {};
-
-    // callback if ready
-    this.queue.forEach(function (q) {
-      pushPath(q.loaded, [lng], ns);
-      remove(q.pending, name);
-
-      if (err) q.errors.push(err);
-
-      if (q.pending.length === 0 && !q.done) {
-        // only do once per loaded -> this.emit('loaded', q.loaded);
-        Object.keys(q.loaded).forEach(function (l) {
-          if (!loaded[l]) loaded[l] = [];
-          if (q.loaded[l].length) {
-            q.loaded[l].forEach(function (ns) {
-              if (loaded[l].indexOf(ns) < 0) loaded[l].push(ns);
-            });
-          }
-        });
-
-        /* eslint no-param-reassign: 0 */
-        q.done = true;
-        if (q.errors.length) {
-          q.callback(q.errors);
-        } else {
-          q.callback();
-        }
-      }
-    });
-
-    // emit consolidated loaded event
-    this.emit('loaded', loaded);
-
-    // remove done load requests
-    this.queue = this.queue.filter(function (q) {
-      return !q.done;
-    });
-  };
-
-  Connector.prototype.read = function read(lng, ns, fcName) {
-    var tried = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-
-    var _this3 = this;
-
-    var wait = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 250;
-    var callback = arguments[5];
-
-    if (!lng.length) return callback(null, {}); // noting to load
-
-    return this.backend[fcName](lng, ns, function (err, data) {
-      if (err && data /* = retryFlag */ && tried < 5) {
-        setTimeout(function () {
-          _this3.read.call(_this3, lng, ns, fcName, tried + 1, wait * 2, callback);
-        }, wait);
-        return;
-      }
-      callback(err, data);
-    });
-  };
-
-  /* eslint consistent-return: 0 */
-
-
-  Connector.prototype.prepareLoading = function prepareLoading(languages, namespaces) {
-    var _this4 = this;
-
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var callback = arguments[3];
-
-    if (!this.backend) {
-      this.logger.warn('No backend was added via i18next.use. Will not load resources.');
-      return callback && callback();
-    }
-
-    if (typeof languages === 'string') languages = this.languageUtils.toResolveHierarchy(languages);
-    if (typeof namespaces === 'string') namespaces = [namespaces];
-
-    var toLoad = this.queueLoad(languages, namespaces, options, callback);
-    if (!toLoad.toLoad.length) {
-      if (!toLoad.pending.length) callback(); // nothing to load and no pendings...callback now
-      return null; // pendings will trigger callback
-    }
-
-    toLoad.toLoad.forEach(function (name) {
-      _this4.loadOne(name);
-    });
-  };
-
-  Connector.prototype.load = function load(languages, namespaces, callback) {
-    this.prepareLoading(languages, namespaces, {}, callback);
-  };
-
-  Connector.prototype.reload = function reload(languages, namespaces, callback) {
-    this.prepareLoading(languages, namespaces, { reload: true }, callback);
-  };
-
-  Connector.prototype.loadOne = function loadOne(name) {
-    var _this5 = this;
-
-    var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
-    var _name$split3 = name.split('|'),
-        _name$split4 = slicedToArray(_name$split3, 2),
-        lng = _name$split4[0],
-        ns = _name$split4[1];
-
-    this.read(lng, ns, 'read', null, null, function (err, data) {
-      if (err) _this5.logger.warn(prefix + 'loading namespace ' + ns + ' for language ' + lng + ' failed', err);
-      if (!err && data) _this5.logger.log(prefix + 'loaded namespace ' + ns + ' for language ' + lng, data);
-
-      _this5.loaded(name, err, data);
-    });
-  };
-
-  Connector.prototype.saveMissing = function saveMissing(languages, namespace, key, fallbackValue, isUpdate) {
-    var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-
-    if (this.backend && this.backend.create) {
-      this.backend.create(languages, namespace, key, fallbackValue, null /* unused callback */, _extends({}, options, {
-        isUpdate: isUpdate
-      }));
-    }
-
-    // write to store to avoid resending
-    if (!languages || !languages[0]) return;
-    this.store.addResource(languages[0], namespace, key, fallbackValue);
-  };
-
-  return Connector;
-}(EventEmitter);
-
-function get$1() {
-  return {
-    debug: false,
-    initImmediate: true,
-
-    ns: ['translation'],
-    defaultNS: ['translation'],
-    fallbackLng: ['dev'],
-    fallbackNS: false, // string or array of namespaces
-
-    whitelist: false, // array with whitelisted languages
-    nonExplicitWhitelist: false,
-    load: 'all', // | currentOnly | languageOnly
-    preload: false, // array with preload languages
-
-    simplifyPluralSuffix: true,
-    keySeparator: '.',
-    nsSeparator: ':',
-    pluralSeparator: '_',
-    contextSeparator: '_',
-
-    partialBundledLanguages: false, // allow bundling certain languages that are not remotely fetched
-    saveMissing: false, // enable to send missing values
-    updateMissing: false, // enable to update default values if different from translated value (only useful on initial development, or when keeping code as source of truth)
-    saveMissingTo: 'fallback', // 'current' || 'all'
-    saveMissingPlurals: true, // will save all forms not only singular key
-    missingKeyHandler: false, // function(lng, ns, key, fallbackValue) -> override if prefer on handling
-    missingInterpolationHandler: false, // function(str, match)
-
-    postProcess: false, // string or array of postProcessor names
-    returnNull: true, // allows null value as valid translation
-    returnEmptyString: true, // allows empty string value as valid translation
-    returnObjects: false,
-    joinArrays: false, // or string to join array
-    returnedObjectHandler: function returnedObjectHandler() {}, // function(key, value, options) triggered if key returns object but returnObjects is set to false
-    parseMissingKeyHandler: false, // function(key) parsed a key that was not found in t() before returning
-    appendNamespaceToMissingKey: false,
-    appendNamespaceToCIMode: false,
-    overloadTranslationOptionHandler: function handle(args) {
-      var ret = {};
-      if (_typeof(args[1]) === 'object') ret = args[1];
-      if (typeof args[1] === 'string') ret.defaultValue = args[1];
-      if (typeof args[2] === 'string') ret.tDescription = args[2];
-      if (_typeof(args[2]) === 'object' || _typeof(args[3]) === 'object') {
-        var options = args[3] || args[2];
-        Object.keys(options).forEach(function (key) {
-          ret[key] = options[key];
-        });
-      }
-      return ret;
-    },
-    interpolation: {
-      escapeValue: true,
-      format: function format(value, _format, lng) {
-        return value;
-      },
-      prefix: '{{',
-      suffix: '}}',
-      formatSeparator: ',',
-      // prefixEscaped: '{{',
-      // suffixEscaped: '}}',
-      // unescapeSuffix: '',
-      unescapePrefix: '-',
-
-      nestingPrefix: '$t(',
-      nestingSuffix: ')',
-      // nestingPrefixEscaped: '$t(',
-      // nestingSuffixEscaped: ')',
-      // defaultVariables: undefined // object that can have values to interpolate on - extends passed in interpolation data
-      maxReplaces: 1000 // max replaces to prevent endless loop
-    }
-  };
-}
-
-/* eslint no-param-reassign: 0 */
-function transformOptions(options) {
-  // create namespace object if namespace is passed in as string
-  if (typeof options.ns === 'string') options.ns = [options.ns];
-  if (typeof options.fallbackLng === 'string') options.fallbackLng = [options.fallbackLng];
-  if (typeof options.fallbackNS === 'string') options.fallbackNS = [options.fallbackNS];
-
-  // extend whitelist with cimode
-  if (options.whitelist && options.whitelist.indexOf('cimode') < 0) {
-    options.whitelist = options.whitelist.concat(['cimode']);
-  }
-
-  return options;
-}
-
-function noop() {}
-
-var I18n = function (_EventEmitter) {
-  inherits(I18n, _EventEmitter);
-
-  function I18n() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var callback = arguments[1];
-    classCallCheck(this, I18n);
-
-    var _this = possibleConstructorReturn(this, _EventEmitter.call(this));
-
-    _this.options = transformOptions(options);
-    _this.services = {};
-    _this.logger = baseLogger;
-    _this.modules = { external: [] };
-
-    if (callback && !_this.isInitialized && !options.isClone) {
-      // https://github.com/i18next/i18next/issues/879
-      if (!_this.options.initImmediate) {
-        var _ret;
-
-        _this.init(options, callback);
-        return _ret = _this, possibleConstructorReturn(_this, _ret);
-      }
-      setTimeout(function () {
-        _this.init(options, callback);
-      }, 0);
-    }
-    return _this;
-  }
-
-  I18n.prototype.init = function init() {
-    var _this2 = this;
-
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var callback = arguments[1];
-
-    if (typeof options === 'function') {
-      callback = options;
-      options = {};
-    }
-    this.options = _extends({}, get$1(), this.options, transformOptions(options));
-
-    this.format = this.options.interpolation.format;
-    if (!callback) callback = noop;
-
-    function createClassOnDemand(ClassOrObject) {
-      if (!ClassOrObject) return null;
-      if (typeof ClassOrObject === 'function') return new ClassOrObject();
-      return ClassOrObject;
-    }
-
-    // init services
-    if (!this.options.isClone) {
-      if (this.modules.logger) {
-        baseLogger.init(createClassOnDemand(this.modules.logger), this.options);
-      } else {
-        baseLogger.init(null, this.options);
-      }
-
-      var lu = new LanguageUtil(this.options);
-      this.store = new ResourceStore(this.options.resources, this.options);
-
-      var s = this.services;
-      s.logger = baseLogger;
-      s.resourceStore = this.store;
-      s.languageUtils = lu;
-      s.pluralResolver = new PluralResolver(lu, {
-        prepend: this.options.pluralSeparator,
-        compatibilityJSON: this.options.compatibilityJSON,
-        simplifyPluralSuffix: this.options.simplifyPluralSuffix
-      });
-      s.interpolator = new Interpolator(this.options);
-
-      s.backendConnector = new Connector(createClassOnDemand(this.modules.backend), s.resourceStore, s, this.options);
-      // pipe events from backendConnector
-      s.backendConnector.on('*', function (event) {
-        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    }, {
+      key: "emit",
+      value: function emit(event) {
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
           args[_key - 1] = arguments[_key];
         }
 
-        _this2.emit.apply(_this2, [event].concat(args));
-      });
-
-      if (this.modules.languageDetector) {
-        s.languageDetector = createClassOnDemand(this.modules.languageDetector);
-        s.languageDetector.init(s, this.options.detection, this.options);
-      }
-
-      if (this.modules.i18nFormat) {
-        s.i18nFormat = createClassOnDemand(this.modules.i18nFormat);
-        if (s.i18nFormat.init) s.i18nFormat.init(this);
-      }
-
-      this.translator = new Translator(this.services, this.options);
-      // pipe events from translator
-      this.translator.on('*', function (event) {
-        for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-          args[_key2 - 1] = arguments[_key2];
+        if (this.observers[event]) {
+          var cloned = [].concat(this.observers[event]);
+          cloned.forEach(function (observer) {
+            observer.apply(void 0, args);
+          });
         }
 
-        _this2.emit.apply(_this2, [event].concat(args));
-      });
+        if (this.observers['*']) {
+          var _cloned = [].concat(this.observers['*']);
 
-      this.modules.external.forEach(function (m) {
-        if (m.init) m.init(_this2);
-      });
-    }
+          _cloned.forEach(function (observer) {
+            observer.apply(observer, [event].concat(args));
+          });
+        }
+      }
+    }]);
 
-    // append api
-    var storeApi = ['getResource', 'addResource', 'addResources', 'addResourceBundle', 'removeResourceBundle', 'hasResourceBundle', 'getResourceBundle', 'getDataByLanguage'];
-    storeApi.forEach(function (fcName) {
-      _this2[fcName] = function () {
-        var _store;
+    return EventEmitter;
+  }();
 
-        return (_store = _this2.store)[fcName].apply(_store, arguments);
-      };
+  // http://lea.verou.me/2016/12/resolve-promises-externally-with-this-one-weird-trick/
+  function defer() {
+    var res;
+    var rej;
+    var promise = new Promise(function (resolve, reject) {
+      res = resolve;
+      rej = reject;
     });
+    promise.resolve = res;
+    promise.reject = rej;
+    return promise;
+  }
+  function makeString(object) {
+    if (object == null) return '';
+    /* eslint prefer-template: 0 */
 
-    var deferred = defer();
+    return '' + object;
+  }
+  function copy(a, s, t) {
+    a.forEach(function (m) {
+      if (s[m]) t[m] = s[m];
+    });
+  }
 
-    var load = function load() {
-      _this2.changeLanguage(_this2.options.lng, function (err, t) {
-        _this2.isInitialized = true;
-        _this2.logger.log('initialized', _this2.options);
-        _this2.emit('initialized', _this2.options);
-
-        deferred.resolve(t); // not rejecting on err (as err is only a loading translation failed warning)
-        callback(err, t);
-      });
-    };
-
-    if (this.options.resources || !this.options.initImmediate) {
-      load();
-    } else {
-      setTimeout(load, 0);
+  function getLastOfPath(object, path, Empty) {
+    function cleanKey(key) {
+      return key && key.indexOf('###') > -1 ? key.replace(/###/g, '.') : key;
     }
 
-    return deferred;
-  };
+    function canNotTraverseDeeper() {
+      return !object || typeof object === 'string';
+    }
 
-  /* eslint consistent-return: 0 */
+    var stack = typeof path !== 'string' ? [].concat(path) : path.split('.');
 
+    while (stack.length > 1) {
+      if (canNotTraverseDeeper()) return {};
+      var key = cleanKey(stack.shift());
+      if (!object[key] && Empty) object[key] = new Empty();
+      object = object[key];
+    }
 
-  I18n.prototype.loadResources = function loadResources() {
-    var _this3 = this;
+    if (canNotTraverseDeeper()) return {};
+    return {
+      obj: object,
+      k: cleanKey(stack.shift())
+    };
+  }
 
-    var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
+  function setPath(object, path, newValue) {
+    var _getLastOfPath = getLastOfPath(object, path, Object),
+        obj = _getLastOfPath.obj,
+        k = _getLastOfPath.k;
 
-    if (!this.options.resources || this.options.partialBundledLanguages) {
-      if (this.language && this.language.toLowerCase() === 'cimode') return callback(); // avoid loading resources for cimode
+    obj[k] = newValue;
+  }
+  function pushPath(object, path, newValue, concat) {
+    var _getLastOfPath2 = getLastOfPath(object, path, Object),
+        obj = _getLastOfPath2.obj,
+        k = _getLastOfPath2.k;
 
-      var toLoad = [];
+    obj[k] = obj[k] || [];
+    if (concat) obj[k] = obj[k].concat(newValue);
+    if (!concat) obj[k].push(newValue);
+  }
+  function getPath(object, path) {
+    var _getLastOfPath3 = getLastOfPath(object, path),
+        obj = _getLastOfPath3.obj,
+        k = _getLastOfPath3.k;
 
-      var append = function append(lng) {
-        if (!lng) return;
-        var lngs = _this3.services.languageUtils.toResolveHierarchy(lng);
-        lngs.forEach(function (l) {
-          if (toLoad.indexOf(l) < 0) toLoad.push(l);
-        });
-      };
-
-      if (!this.language) {
-        // at least load fallbacks in this case
-        var fallbacks = this.services.languageUtils.getFallbackCodes(this.options.fallbackLng);
-        fallbacks.forEach(function (l) {
-          return append(l);
-        });
+    if (!obj) return undefined;
+    return obj[k];
+  }
+  function deepExtend(target, source, overwrite) {
+    /* eslint no-restricted-syntax: 0 */
+    for (var prop in source) {
+      if (prop in target) {
+        // If we reached a leaf string in target or source then replace with source or skip depending on the 'overwrite' switch
+        if (typeof target[prop] === 'string' || target[prop] instanceof String || typeof source[prop] === 'string' || source[prop] instanceof String) {
+          if (overwrite) target[prop] = source[prop];
+        } else {
+          deepExtend(target[prop], source[prop], overwrite);
+        }
       } else {
-        append(this.language);
+        target[prop] = source[prop];
+      }
+    }
+
+    return target;
+  }
+  function regexEscape(str) {
+    /* eslint no-useless-escape: 0 */
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  }
+  /* eslint-disable */
+
+  var _entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;'
+  };
+  /* eslint-enable */
+
+  function escape(data) {
+    if (typeof data === 'string') {
+      return data.replace(/[&<>"'\/]/g, function (s) {
+        return _entityMap[s];
+      });
+    }
+
+    return data;
+  }
+
+  var ResourceStore =
+  /*#__PURE__*/
+  function (_EventEmitter) {
+    _inherits(ResourceStore, _EventEmitter);
+
+    function ResourceStore(data) {
+      var _this;
+
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        ns: ['translation'],
+        defaultNS: 'translation'
+      };
+
+      _classCallCheck(this, ResourceStore);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(ResourceStore).call(this));
+      _this.data = data || {};
+      _this.options = options;
+
+      if (_this.options.keySeparator === undefined) {
+        _this.options.keySeparator = '.';
       }
 
-      if (this.options.preload) {
-        this.options.preload.forEach(function (l) {
-          return append(l);
+      return _this;
+    }
+
+    _createClass(ResourceStore, [{
+      key: "addNamespaces",
+      value: function addNamespaces(ns) {
+        if (this.options.ns.indexOf(ns) < 0) {
+          this.options.ns.push(ns);
+        }
+      }
+    }, {
+      key: "removeNamespaces",
+      value: function removeNamespaces(ns) {
+        var index = this.options.ns.indexOf(ns);
+
+        if (index > -1) {
+          this.options.ns.splice(index, 1);
+        }
+      }
+    }, {
+      key: "getResource",
+      value: function getResource(lng, ns, key) {
+        var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+        var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
+        var path = [lng, ns];
+        if (key && typeof key !== 'string') path = path.concat(key);
+        if (key && typeof key === 'string') path = path.concat(keySeparator ? key.split(keySeparator) : key);
+
+        if (lng.indexOf('.') > -1) {
+          path = lng.split('.');
+        }
+
+        return getPath(this.data, path);
+      }
+    }, {
+      key: "addResource",
+      value: function addResource(lng, ns, key, value) {
+        var options = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {
+          silent: false
+        };
+        var keySeparator = this.options.keySeparator;
+        if (keySeparator === undefined) keySeparator = '.';
+        var path = [lng, ns];
+        if (key) path = path.concat(keySeparator ? key.split(keySeparator) : key);
+
+        if (lng.indexOf('.') > -1) {
+          path = lng.split('.');
+          value = ns;
+          ns = path[1];
+        }
+
+        this.addNamespaces(ns);
+        setPath(this.data, path, value);
+        if (!options.silent) this.emit('added', lng, ns, key, value);
+      }
+    }, {
+      key: "addResources",
+      value: function addResources(lng, ns, resources) {
+        var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {
+          silent: false
+        };
+
+        /* eslint no-restricted-syntax: 0 */
+        for (var m in resources) {
+          if (typeof resources[m] === 'string' || Object.prototype.toString.apply(resources[m]) === '[object Array]') this.addResource(lng, ns, m, resources[m], {
+            silent: true
+          });
+        }
+
+        if (!options.silent) this.emit('added', lng, ns, resources);
+      }
+    }, {
+      key: "addResourceBundle",
+      value: function addResourceBundle(lng, ns, resources, deep, overwrite) {
+        var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {
+          silent: false
+        };
+        var path = [lng, ns];
+
+        if (lng.indexOf('.') > -1) {
+          path = lng.split('.');
+          deep = resources;
+          resources = ns;
+          ns = path[1];
+        }
+
+        this.addNamespaces(ns);
+        var pack = getPath(this.data, path) || {};
+
+        if (deep) {
+          deepExtend(pack, resources, overwrite);
+        } else {
+          pack = _objectSpread({}, pack, resources);
+        }
+
+        setPath(this.data, path, pack);
+        if (!options.silent) this.emit('added', lng, ns, resources);
+      }
+    }, {
+      key: "removeResourceBundle",
+      value: function removeResourceBundle(lng, ns) {
+        if (this.hasResourceBundle(lng, ns)) {
+          delete this.data[lng][ns];
+        }
+
+        this.removeNamespaces(ns);
+        this.emit('removed', lng, ns);
+      }
+    }, {
+      key: "hasResourceBundle",
+      value: function hasResourceBundle(lng, ns) {
+        return this.getResource(lng, ns) !== undefined;
+      }
+    }, {
+      key: "getResourceBundle",
+      value: function getResourceBundle(lng, ns) {
+        if (!ns) ns = this.options.defaultNS; // COMPATIBILITY: remove extend in v2.1.0
+
+        if (this.options.compatibilityAPI === 'v1') return _objectSpread({}, {}, this.getResource(lng, ns));
+        return this.getResource(lng, ns);
+      }
+    }, {
+      key: "getDataByLanguage",
+      value: function getDataByLanguage(lng) {
+        return this.data[lng];
+      }
+    }, {
+      key: "toJSON",
+      value: function toJSON() {
+        return this.data;
+      }
+    }]);
+
+    return ResourceStore;
+  }(EventEmitter);
+
+  var postProcessor = {
+    processors: {},
+    addPostProcessor: function addPostProcessor(module) {
+      this.processors[module.name] = module;
+    },
+    handle: function handle(processors, value, key, options, translator) {
+      var _this = this;
+
+      processors.forEach(function (processor) {
+        if (_this.processors[processor]) value = _this.processors[processor].process(value, key, options, translator);
+      });
+      return value;
+    }
+  };
+
+  var Translator =
+  /*#__PURE__*/
+  function (_EventEmitter) {
+    _inherits(Translator, _EventEmitter);
+
+    function Translator(services) {
+      var _this;
+
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      _classCallCheck(this, Translator);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(Translator).call(this));
+      copy(['resourceStore', 'languageUtils', 'pluralResolver', 'interpolator', 'backendConnector', 'i18nFormat'], services, _assertThisInitialized(_assertThisInitialized(_this)));
+      _this.options = options;
+
+      if (_this.options.keySeparator === undefined) {
+        _this.options.keySeparator = '.';
+      }
+
+      _this.logger = baseLogger.create('translator');
+      return _this;
+    }
+
+    _createClass(Translator, [{
+      key: "changeLanguage",
+      value: function changeLanguage(lng) {
+        if (lng) this.language = lng;
+      }
+    }, {
+      key: "exists",
+      value: function exists(key) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+          interpolation: {}
+        };
+        var resolved = this.resolve(key, options);
+        return resolved && resolved.res !== undefined;
+      }
+    }, {
+      key: "extractFromKey",
+      value: function extractFromKey(key, options) {
+        var nsSeparator = options.nsSeparator || this.options.nsSeparator;
+        if (nsSeparator === undefined) nsSeparator = ':';
+        var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator;
+        var namespaces = options.ns || this.options.defaultNS;
+
+        if (nsSeparator && key.indexOf(nsSeparator) > -1) {
+          var parts = key.split(nsSeparator);
+          if (nsSeparator !== keySeparator || nsSeparator === keySeparator && this.options.ns.indexOf(parts[0]) > -1) namespaces = parts.shift();
+          key = parts.join(keySeparator);
+        }
+
+        if (typeof namespaces === 'string') namespaces = [namespaces];
+        return {
+          key: key,
+          namespaces: namespaces
+        };
+      }
+    }, {
+      key: "translate",
+      value: function translate(keys, options) {
+        var _this2 = this;
+
+        if (_typeof(options) !== 'object' && this.options.overloadTranslationOptionHandler) {
+          /* eslint prefer-rest-params: 0 */
+          options = this.options.overloadTranslationOptionHandler(arguments);
+        }
+
+        if (!options) options = {}; // non valid keys handling
+
+        if (keys === undefined || keys === null) return '';
+        if (!Array.isArray(keys)) keys = [String(keys)]; // separators
+
+        var keySeparator = options.keySeparator !== undefined ? options.keySeparator : this.options.keySeparator; // get namespace(s)
+
+        var _this$extractFromKey = this.extractFromKey(keys[keys.length - 1], options),
+            key = _this$extractFromKey.key,
+            namespaces = _this$extractFromKey.namespaces;
+
+        var namespace = namespaces[namespaces.length - 1]; // return key on CIMode
+
+        var lng = options.lng || this.language;
+        var appendNamespaceToCIMode = options.appendNamespaceToCIMode || this.options.appendNamespaceToCIMode;
+
+        if (lng && lng.toLowerCase() === 'cimode') {
+          if (appendNamespaceToCIMode) {
+            var nsSeparator = options.nsSeparator || this.options.nsSeparator;
+            return namespace + nsSeparator + key;
+          }
+
+          return key;
+        } // resolve from store
+
+
+        var resolved = this.resolve(keys, options);
+        var res = resolved && resolved.res;
+        var resUsedKey = resolved && resolved.usedKey || key;
+        var resExactUsedKey = resolved && resolved.exactUsedKey || key;
+        var resType = Object.prototype.toString.apply(res);
+        var noObject = ['[object Number]', '[object Function]', '[object RegExp]'];
+        var joinArrays = options.joinArrays !== undefined ? options.joinArrays : this.options.joinArrays; // object
+
+        var handleAsObjectInI18nFormat = !this.i18nFormat || this.i18nFormat.handleAsObject;
+        var handleAsObject = typeof res !== 'string' && typeof res !== 'boolean' && typeof res !== 'number';
+
+        if (handleAsObjectInI18nFormat && res && handleAsObject && noObject.indexOf(resType) < 0 && !(typeof joinArrays === 'string' && resType === '[object Array]')) {
+          if (!options.returnObjects && !this.options.returnObjects) {
+            this.logger.warn('accessing an object - but returnObjects options is not enabled!');
+            return this.options.returnedObjectHandler ? this.options.returnedObjectHandler(resUsedKey, res, options) : "key '".concat(key, " (").concat(this.language, ")' returned an object instead of string.");
+          } // if we got a separator we loop over children - else we just return object as is
+          // as having it set to false means no hierarchy so no lookup for nested values
+
+
+          if (keySeparator) {
+            var resTypeIsArray = resType === '[object Array]';
+            var copy$$1 = resTypeIsArray ? [] : {}; // apply child translation on a copy
+
+            /* eslint no-restricted-syntax: 0 */
+
+            var newKeyToUse = resTypeIsArray ? resExactUsedKey : resUsedKey;
+
+            for (var m in res) {
+              if (Object.prototype.hasOwnProperty.call(res, m)) {
+                var deepKey = "".concat(newKeyToUse).concat(keySeparator).concat(m);
+                copy$$1[m] = this.translate(deepKey, _objectSpread({}, options, {
+                  joinArrays: false,
+                  ns: namespaces
+                }));
+                if (copy$$1[m] === deepKey) copy$$1[m] = res[m]; // if nothing found use orginal value as fallback
+              }
+            }
+
+            res = copy$$1;
+          }
+        } else if (handleAsObjectInI18nFormat && typeof joinArrays === 'string' && resType === '[object Array]') {
+          // array special treatment
+          res = res.join(joinArrays);
+          if (res) res = this.extendTranslation(res, keys, options);
+        } else {
+          // string, empty or null
+          var usedDefault = false;
+          var usedKey = false; // fallback value
+
+          if (!this.isValidLookup(res) && options.defaultValue !== undefined) {
+            usedDefault = true;
+
+            if (options.count !== undefined) {
+              var suffix = this.pluralResolver.getSuffix(lng, options.count);
+              res = options["defaultValue".concat(suffix)];
+            }
+
+            if (!res) res = options.defaultValue;
+          }
+
+          if (!this.isValidLookup(res)) {
+            usedKey = true;
+            res = key;
+          } // save missing
+
+
+          var updateMissing = options.defaultValue && options.defaultValue !== res && this.options.updateMissing;
+
+          if (usedKey || usedDefault || updateMissing) {
+            this.logger.log(updateMissing ? 'updateKey' : 'missingKey', lng, namespace, key, updateMissing ? options.defaultValue : res);
+            var lngs = [];
+            var fallbackLngs = this.languageUtils.getFallbackCodes(this.options.fallbackLng, options.lng || this.language);
+
+            if (this.options.saveMissingTo === 'fallback' && fallbackLngs && fallbackLngs[0]) {
+              for (var i = 0; i < fallbackLngs.length; i++) {
+                lngs.push(fallbackLngs[i]);
+              }
+            } else if (this.options.saveMissingTo === 'all') {
+              lngs = this.languageUtils.toResolveHierarchy(options.lng || this.language);
+            } else {
+              lngs.push(options.lng || this.language);
+            }
+
+            var send = function send(l, k) {
+              if (_this2.options.missingKeyHandler) {
+                _this2.options.missingKeyHandler(l, namespace, k, updateMissing ? options.defaultValue : res, updateMissing, options);
+              } else if (_this2.backendConnector && _this2.backendConnector.saveMissing) {
+                _this2.backendConnector.saveMissing(l, namespace, k, updateMissing ? options.defaultValue : res, updateMissing, options);
+              }
+
+              _this2.emit('missingKey', l, namespace, k, res);
+            };
+
+            if (this.options.saveMissing) {
+              var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
+
+              if (this.options.saveMissingPlurals && needsPluralHandling) {
+                lngs.forEach(function (l) {
+                  var plurals = _this2.pluralResolver.getPluralFormsOfKey(l, key);
+
+                  plurals.forEach(function (p) {
+                    return send([l], p);
+                  });
+                });
+              } else {
+                send(lngs, key);
+              }
+            }
+          } // extend
+
+
+          res = this.extendTranslation(res, keys, options, resolved); // append namespace if still key
+
+          if (usedKey && res === key && this.options.appendNamespaceToMissingKey) res = "".concat(namespace, ":").concat(key); // parseMissingKeyHandler
+
+          if (usedKey && this.options.parseMissingKeyHandler) res = this.options.parseMissingKeyHandler(res);
+        } // return
+
+
+        return res;
+      }
+    }, {
+      key: "extendTranslation",
+      value: function extendTranslation(res, key, options, resolved) {
+        var _this3 = this;
+
+        if (this.i18nFormat && this.i18nFormat.parse) {
+          res = this.i18nFormat.parse(res, options, resolved.usedLng, resolved.usedNS, resolved.usedKey, {
+            resolved: resolved
+          });
+        } else if (!options.skipInterpolation) {
+          // i18next.parsing
+          if (options.interpolation) this.interpolator.init(_objectSpread({}, options, {
+            interpolation: _objectSpread({}, this.options.interpolation, options.interpolation)
+          })); // interpolate
+
+          var data = options.replace && typeof options.replace !== 'string' ? options.replace : options;
+          if (this.options.interpolation.defaultVariables) data = _objectSpread({}, this.options.interpolation.defaultVariables, data);
+          res = this.interpolator.interpolate(res, data, options.lng || this.language, options); // nesting
+
+          if (options.nest !== false) res = this.interpolator.nest(res, function () {
+            return _this3.translate.apply(_this3, arguments);
+          }, options);
+          if (options.interpolation) this.interpolator.reset();
+        } // post process
+
+
+        var postProcess = options.postProcess || this.options.postProcess;
+        var postProcessorNames = typeof postProcess === 'string' ? [postProcess] : postProcess;
+
+        if (res !== undefined && res !== null && postProcessorNames && postProcessorNames.length && options.applyPostProcessor !== false) {
+          res = postProcessor.handle(postProcessorNames, res, key, options, this);
+        }
+
+        return res;
+      }
+    }, {
+      key: "resolve",
+      value: function resolve(keys) {
+        var _this4 = this;
+
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var found;
+        var usedKey; // plain key
+
+        var exactUsedKey; // key with context / plural
+
+        var usedLng;
+        var usedNS;
+        if (typeof keys === 'string') keys = [keys]; // forEach possible key
+
+        keys.forEach(function (k) {
+          if (_this4.isValidLookup(found)) return;
+
+          var extracted = _this4.extractFromKey(k, options);
+
+          var key = extracted.key;
+          usedKey = key;
+          var namespaces = extracted.namespaces;
+          if (_this4.options.fallbackNS) namespaces = namespaces.concat(_this4.options.fallbackNS);
+          var needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
+          var needsContextHandling = options.context !== undefined && typeof options.context === 'string' && options.context !== '';
+          var codes = options.lngs ? options.lngs : _this4.languageUtils.toResolveHierarchy(options.lng || _this4.language, options.fallbackLng);
+          namespaces.forEach(function (ns) {
+            if (_this4.isValidLookup(found)) return;
+            usedNS = ns;
+            codes.forEach(function (code) {
+              if (_this4.isValidLookup(found)) return;
+              usedLng = code;
+              var finalKey = key;
+              var finalKeys = [finalKey];
+
+              if (_this4.i18nFormat && _this4.i18nFormat.addLookupKeys) {
+                _this4.i18nFormat.addLookupKeys(finalKeys, key, code, ns, options);
+              } else {
+                var pluralSuffix;
+                if (needsPluralHandling) pluralSuffix = _this4.pluralResolver.getSuffix(code, options.count); // fallback for plural if context not found
+
+                if (needsPluralHandling && needsContextHandling) finalKeys.push(finalKey + pluralSuffix); // get key for context if needed
+
+                if (needsContextHandling) finalKeys.push(finalKey += "".concat(_this4.options.contextSeparator).concat(options.context)); // get key for plural if needed
+
+                if (needsPluralHandling) finalKeys.push(finalKey += pluralSuffix);
+              } // iterate over finalKeys starting with most specific pluralkey (-> contextkey only) -> singularkey only
+
+
+              var possibleKey;
+              /* eslint no-cond-assign: 0 */
+
+              while (possibleKey = finalKeys.pop()) {
+                if (!_this4.isValidLookup(found)) {
+                  exactUsedKey = possibleKey;
+                  found = _this4.getResource(code, ns, possibleKey, options);
+                }
+              }
+            });
+          });
+        });
+        return {
+          res: found,
+          usedKey: usedKey,
+          exactUsedKey: exactUsedKey,
+          usedLng: usedLng,
+          usedNS: usedNS
+        };
+      }
+    }, {
+      key: "isValidLookup",
+      value: function isValidLookup(res) {
+        return res !== undefined && !(!this.options.returnNull && res === null) && !(!this.options.returnEmptyString && res === '');
+      }
+    }, {
+      key: "getResource",
+      value: function getResource(code, ns, key) {
+        var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+        if (this.i18nFormat && this.i18nFormat.getResource) return this.i18nFormat.getResource(code, ns, key, options);
+        return this.resourceStore.getResource(code, ns, key, options);
+      }
+    }]);
+
+    return Translator;
+  }(EventEmitter);
+
+  function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  var LanguageUtil =
+  /*#__PURE__*/
+  function () {
+    function LanguageUtil(options) {
+      _classCallCheck(this, LanguageUtil);
+
+      this.options = options;
+      this.whitelist = this.options.whitelist || false;
+      this.logger = baseLogger.create('languageUtils');
+    }
+
+    _createClass(LanguageUtil, [{
+      key: "getScriptPartFromCode",
+      value: function getScriptPartFromCode(code) {
+        if (!code || code.indexOf('-') < 0) return null;
+        var p = code.split('-');
+        if (p.length === 2) return null;
+        p.pop();
+        return this.formatLanguageCode(p.join('-'));
+      }
+    }, {
+      key: "getLanguagePartFromCode",
+      value: function getLanguagePartFromCode(code) {
+        if (!code || code.indexOf('-') < 0) return code;
+        var p = code.split('-');
+        return this.formatLanguageCode(p[0]);
+      }
+    }, {
+      key: "formatLanguageCode",
+      value: function formatLanguageCode(code) {
+        // http://www.iana.org/assignments/language-tags/language-tags.xhtml
+        if (typeof code === 'string' && code.indexOf('-') > -1) {
+          var specialCases = ['hans', 'hant', 'latn', 'cyrl', 'cans', 'mong', 'arab'];
+          var p = code.split('-');
+
+          if (this.options.lowerCaseLng) {
+            p = p.map(function (part) {
+              return part.toLowerCase();
+            });
+          } else if (p.length === 2) {
+            p[0] = p[0].toLowerCase();
+            p[1] = p[1].toUpperCase();
+            if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
+          } else if (p.length === 3) {
+            p[0] = p[0].toLowerCase(); // if lenght 2 guess it's a country
+
+            if (p[1].length === 2) p[1] = p[1].toUpperCase();
+            if (p[0] !== 'sgn' && p[2].length === 2) p[2] = p[2].toUpperCase();
+            if (specialCases.indexOf(p[1].toLowerCase()) > -1) p[1] = capitalize(p[1].toLowerCase());
+            if (specialCases.indexOf(p[2].toLowerCase()) > -1) p[2] = capitalize(p[2].toLowerCase());
+          }
+
+          return p.join('-');
+        }
+
+        return this.options.cleanCode || this.options.lowerCaseLng ? code.toLowerCase() : code;
+      }
+    }, {
+      key: "isWhitelisted",
+      value: function isWhitelisted(code) {
+        if (this.options.load === 'languageOnly' || this.options.nonExplicitWhitelist) {
+          code = this.getLanguagePartFromCode(code);
+        }
+
+        return !this.whitelist || !this.whitelist.length || this.whitelist.indexOf(code) > -1;
+      }
+    }, {
+      key: "getFallbackCodes",
+      value: function getFallbackCodes(fallbacks, code) {
+        if (!fallbacks) return [];
+        if (typeof fallbacks === 'string') fallbacks = [fallbacks];
+        if (Object.prototype.toString.apply(fallbacks) === '[object Array]') return fallbacks;
+        if (!code) return fallbacks.default || []; // asume we have an object defining fallbacks
+
+        var found = fallbacks[code];
+        if (!found) found = fallbacks[this.getScriptPartFromCode(code)];
+        if (!found) found = fallbacks[this.formatLanguageCode(code)];
+        if (!found) found = fallbacks.default;
+        return found || [];
+      }
+    }, {
+      key: "toResolveHierarchy",
+      value: function toResolveHierarchy(code, fallbackCode) {
+        var _this = this;
+
+        var fallbackCodes = this.getFallbackCodes(fallbackCode || this.options.fallbackLng || [], code);
+        var codes = [];
+
+        var addCode = function addCode(c) {
+          if (!c) return;
+
+          if (_this.isWhitelisted(c)) {
+            codes.push(c);
+          } else {
+            _this.logger.warn("rejecting non-whitelisted language code: ".concat(c));
+          }
+        };
+
+        if (typeof code === 'string' && code.indexOf('-') > -1) {
+          if (this.options.load !== 'languageOnly') addCode(this.formatLanguageCode(code));
+          if (this.options.load !== 'languageOnly' && this.options.load !== 'currentOnly') addCode(this.getScriptPartFromCode(code));
+          if (this.options.load !== 'currentOnly') addCode(this.getLanguagePartFromCode(code));
+        } else if (typeof code === 'string') {
+          addCode(this.formatLanguageCode(code));
+        }
+
+        fallbackCodes.forEach(function (fc) {
+          if (codes.indexOf(fc) < 0) addCode(_this.formatLanguageCode(fc));
+        });
+        return codes;
+      }
+    }]);
+
+    return LanguageUtil;
+  }();
+
+  /* eslint-disable */
+
+  var sets = [{
+    lngs: ['ach', 'ak', 'am', 'arn', 'br', 'fil', 'gun', 'ln', 'mfe', 'mg', 'mi', 'oc', 'pt', 'pt-BR', 'tg', 'ti', 'tr', 'uz', 'wa'],
+    nr: [1, 2],
+    fc: 1
+  }, {
+    lngs: ['af', 'an', 'ast', 'az', 'bg', 'bn', 'ca', 'da', 'de', 'dev', 'el', 'en', 'eo', 'es', 'et', 'eu', 'fi', 'fo', 'fur', 'fy', 'gl', 'gu', 'ha', 'hi', 'hu', 'hy', 'ia', 'it', 'kn', 'ku', 'lb', 'mai', 'ml', 'mn', 'mr', 'nah', 'nap', 'nb', 'ne', 'nl', 'nn', 'no', 'nso', 'pa', 'pap', 'pms', 'ps', 'pt-PT', 'rm', 'sco', 'se', 'si', 'so', 'son', 'sq', 'sv', 'sw', 'ta', 'te', 'tk', 'ur', 'yo'],
+    nr: [1, 2],
+    fc: 2
+  }, {
+    lngs: ['ay', 'bo', 'cgg', 'fa', 'id', 'ja', 'jbo', 'ka', 'kk', 'km', 'ko', 'ky', 'lo', 'ms', 'sah', 'su', 'th', 'tt', 'ug', 'vi', 'wo', 'zh'],
+    nr: [1],
+    fc: 3
+  }, {
+    lngs: ['be', 'bs', 'dz', 'hr', 'ru', 'sr', 'uk'],
+    nr: [1, 2, 5],
+    fc: 4
+  }, {
+    lngs: ['ar'],
+    nr: [0, 1, 2, 3, 11, 100],
+    fc: 5
+  }, {
+    lngs: ['cs', 'sk'],
+    nr: [1, 2, 5],
+    fc: 6
+  }, {
+    lngs: ['csb', 'pl'],
+    nr: [1, 2, 5],
+    fc: 7
+  }, {
+    lngs: ['cy'],
+    nr: [1, 2, 3, 8],
+    fc: 8
+  }, {
+    lngs: ['fr'],
+    nr: [1, 2],
+    fc: 9
+  }, {
+    lngs: ['ga'],
+    nr: [1, 2, 3, 7, 11],
+    fc: 10
+  }, {
+    lngs: ['gd'],
+    nr: [1, 2, 3, 20],
+    fc: 11
+  }, {
+    lngs: ['is'],
+    nr: [1, 2],
+    fc: 12
+  }, {
+    lngs: ['jv'],
+    nr: [0, 1],
+    fc: 13
+  }, {
+    lngs: ['kw'],
+    nr: [1, 2, 3, 4],
+    fc: 14
+  }, {
+    lngs: ['lt'],
+    nr: [1, 2, 10],
+    fc: 15
+  }, {
+    lngs: ['lv'],
+    nr: [1, 2, 0],
+    fc: 16
+  }, {
+    lngs: ['mk'],
+    nr: [1, 2],
+    fc: 17
+  }, {
+    lngs: ['mnk'],
+    nr: [0, 1, 2],
+    fc: 18
+  }, {
+    lngs: ['mt'],
+    nr: [1, 2, 11, 20],
+    fc: 19
+  }, {
+    lngs: ['or'],
+    nr: [2, 1],
+    fc: 2
+  }, {
+    lngs: ['ro'],
+    nr: [1, 2, 20],
+    fc: 20
+  }, {
+    lngs: ['sl'],
+    nr: [5, 1, 2, 3],
+    fc: 21
+  }, {
+    lngs: ['he'],
+    nr: [1, 2, 20, 21],
+    fc: 22
+  }];
+  var _rulesPluralsTypes = {
+    1: function _(n) {
+      return Number(n > 1);
+    },
+    2: function _(n) {
+      return Number(n != 1);
+    },
+    3: function _(n) {
+      return 0;
+    },
+    4: function _(n) {
+      return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+    },
+    5: function _(n) {
+      return Number(n === 0 ? 0 : n == 1 ? 1 : n == 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5);
+    },
+    6: function _(n) {
+      return Number(n == 1 ? 0 : n >= 2 && n <= 4 ? 1 : 2);
+    },
+    7: function _(n) {
+      return Number(n == 1 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+    },
+    8: function _(n) {
+      return Number(n == 1 ? 0 : n == 2 ? 1 : n != 8 && n != 11 ? 2 : 3);
+    },
+    9: function _(n) {
+      return Number(n >= 2);
+    },
+    10: function _(n) {
+      return Number(n == 1 ? 0 : n == 2 ? 1 : n < 7 ? 2 : n < 11 ? 3 : 4);
+    },
+    11: function _(n) {
+      return Number(n == 1 || n == 11 ? 0 : n == 2 || n == 12 ? 1 : n > 2 && n < 20 ? 2 : 3);
+    },
+    12: function _(n) {
+      return Number(n % 10 != 1 || n % 100 == 11);
+    },
+    13: function _(n) {
+      return Number(n !== 0);
+    },
+    14: function _(n) {
+      return Number(n == 1 ? 0 : n == 2 ? 1 : n == 3 ? 2 : 3);
+    },
+    15: function _(n) {
+      return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+    },
+    16: function _(n) {
+      return Number(n % 10 == 1 && n % 100 != 11 ? 0 : n !== 0 ? 1 : 2);
+    },
+    17: function _(n) {
+      return Number(n == 1 || n % 10 == 1 ? 0 : 1);
+    },
+    18: function _(n) {
+      return Number(n == 0 ? 0 : n == 1 ? 1 : 2);
+    },
+    19: function _(n) {
+      return Number(n == 1 ? 0 : n === 0 || n % 100 > 1 && n % 100 < 11 ? 1 : n % 100 > 10 && n % 100 < 20 ? 2 : 3);
+    },
+    20: function _(n) {
+      return Number(n == 1 ? 0 : n === 0 || n % 100 > 0 && n % 100 < 20 ? 1 : 2);
+    },
+    21: function _(n) {
+      return Number(n % 100 == 1 ? 1 : n % 100 == 2 ? 2 : n % 100 == 3 || n % 100 == 4 ? 3 : 0);
+    },
+    22: function _(n) {
+      return Number(n === 1 ? 0 : n === 2 ? 1 : (n < 0 || n > 10) && n % 10 == 0 ? 2 : 3);
+    }
+  };
+  /* eslint-enable */
+
+  function createRules() {
+    var rules = {};
+    sets.forEach(function (set) {
+      set.lngs.forEach(function (l) {
+        rules[l] = {
+          numbers: set.nr,
+          plurals: _rulesPluralsTypes[set.fc]
+        };
+      });
+    });
+    return rules;
+  }
+
+  var PluralResolver =
+  /*#__PURE__*/
+  function () {
+    function PluralResolver(languageUtils) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      _classCallCheck(this, PluralResolver);
+
+      this.languageUtils = languageUtils;
+      this.options = options;
+      this.logger = baseLogger.create('pluralResolver');
+      this.rules = createRules();
+    }
+
+    _createClass(PluralResolver, [{
+      key: "addRule",
+      value: function addRule(lng, obj) {
+        this.rules[lng] = obj;
+      }
+    }, {
+      key: "getRule",
+      value: function getRule(code) {
+        return this.rules[code] || this.rules[this.languageUtils.getLanguagePartFromCode(code)];
+      }
+    }, {
+      key: "needsPlural",
+      value: function needsPlural(code) {
+        var rule = this.getRule(code);
+        return rule && rule.numbers.length > 1;
+      }
+    }, {
+      key: "getPluralFormsOfKey",
+      value: function getPluralFormsOfKey(code, key) {
+        var _this = this;
+
+        var ret = [];
+        var rule = this.getRule(code);
+        if (!rule) return ret;
+        rule.numbers.forEach(function (n) {
+          var suffix = _this.getSuffix(code, n);
+
+          ret.push("".concat(key).concat(suffix));
+        });
+        return ret;
+      }
+    }, {
+      key: "getSuffix",
+      value: function getSuffix(code, count) {
+        var _this2 = this;
+
+        var rule = this.getRule(code);
+
+        if (rule) {
+          // if (rule.numbers.length === 1) return ''; // only singular
+          var idx = rule.noAbs ? rule.plurals(count) : rule.plurals(Math.abs(count));
+          var suffix = rule.numbers[idx]; // special treatment for lngs only having singular and plural
+
+          if (this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
+            if (suffix === 2) {
+              suffix = 'plural';
+            } else if (suffix === 1) {
+              suffix = '';
+            }
+          }
+
+          var returnSuffix = function returnSuffix() {
+            return _this2.options.prepend && suffix.toString() ? _this2.options.prepend + suffix.toString() : suffix.toString();
+          }; // COMPATIBILITY JSON
+          // v1
+
+
+          if (this.options.compatibilityJSON === 'v1') {
+            if (suffix === 1) return '';
+            if (typeof suffix === 'number') return "_plural_".concat(suffix.toString());
+            return returnSuffix();
+          } else if (
+          /* v2 */
+          this.options.compatibilityJSON === 'v2') {
+            return returnSuffix();
+          } else if (
+          /* v3 - gettext index */
+          this.options.simplifyPluralSuffix && rule.numbers.length === 2 && rule.numbers[0] === 1) {
+            return returnSuffix();
+          }
+
+          return this.options.prepend && idx.toString() ? this.options.prepend + idx.toString() : idx.toString();
+        }
+
+        this.logger.warn("no plural rule found for: ".concat(code));
+        return '';
+      }
+    }]);
+
+    return PluralResolver;
+  }();
+
+  var Interpolator =
+  /*#__PURE__*/
+  function () {
+    function Interpolator() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      _classCallCheck(this, Interpolator);
+
+      this.logger = baseLogger.create('interpolator');
+      this.init(options, true);
+    }
+    /* eslint no-param-reassign: 0 */
+
+
+    _createClass(Interpolator, [{
+      key: "init",
+      value: function init() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var reset = arguments.length > 1 ? arguments[1] : undefined;
+
+        if (reset) {
+          this.options = options;
+
+          this.format = options.interpolation && options.interpolation.format || function (value) {
+            return value;
+          };
+        }
+
+        if (!options.interpolation) options.interpolation = {
+          escapeValue: true
+        };
+        var iOpts = options.interpolation;
+        this.escape = iOpts.escape !== undefined ? iOpts.escape : escape;
+        this.escapeValue = iOpts.escapeValue !== undefined ? iOpts.escapeValue : true;
+        this.useRawValueToEscape = iOpts.useRawValueToEscape !== undefined ? iOpts.useRawValueToEscape : false;
+        this.prefix = iOpts.prefix ? regexEscape(iOpts.prefix) : iOpts.prefixEscaped || '{{';
+        this.suffix = iOpts.suffix ? regexEscape(iOpts.suffix) : iOpts.suffixEscaped || '}}';
+        this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
+        this.unescapePrefix = iOpts.unescapeSuffix ? '' : iOpts.unescapePrefix || '-';
+        this.unescapeSuffix = this.unescapePrefix ? '' : iOpts.unescapeSuffix || '';
+        this.nestingPrefix = iOpts.nestingPrefix ? regexEscape(iOpts.nestingPrefix) : iOpts.nestingPrefixEscaped || regexEscape('$t(');
+        this.nestingSuffix = iOpts.nestingSuffix ? regexEscape(iOpts.nestingSuffix) : iOpts.nestingSuffixEscaped || regexEscape(')');
+        this.maxReplaces = iOpts.maxReplaces ? iOpts.maxReplaces : 1000; // the regexp
+
+        this.resetRegExp();
+      }
+    }, {
+      key: "reset",
+      value: function reset() {
+        if (this.options) this.init(this.options);
+      }
+    }, {
+      key: "resetRegExp",
+      value: function resetRegExp() {
+        // the regexp
+        var regexpStr = "".concat(this.prefix, "(.+?)").concat(this.suffix);
+        this.regexp = new RegExp(regexpStr, 'g');
+        var regexpUnescapeStr = "".concat(this.prefix).concat(this.unescapePrefix, "(.+?)").concat(this.unescapeSuffix).concat(this.suffix);
+        this.regexpUnescape = new RegExp(regexpUnescapeStr, 'g');
+        var nestingRegexpStr = "".concat(this.nestingPrefix, "(.+?)").concat(this.nestingSuffix);
+        this.nestingRegexp = new RegExp(nestingRegexpStr, 'g');
+      }
+    }, {
+      key: "interpolate",
+      value: function interpolate(str, data, lng, options) {
+        var _this = this;
+
+        var match;
+        var value;
+        var replaces;
+
+        function regexSafe(val) {
+          return val.replace(/\$/g, '$$$$');
+        }
+
+        var handleFormat = function handleFormat(key) {
+          if (key.indexOf(_this.formatSeparator) < 0) return getPath(data, key);
+          var p = key.split(_this.formatSeparator);
+          var k = p.shift().trim();
+          var f = p.join(_this.formatSeparator).trim();
+          return _this.format(getPath(data, k), f, lng);
+        };
+
+        this.resetRegExp();
+        var missingInterpolationHandler = options && options.missingInterpolationHandler || this.options.missingInterpolationHandler;
+        replaces = 0; // unescape if has unescapePrefix/Suffix
+
+        /* eslint no-cond-assign: 0 */
+
+        while (match = this.regexpUnescape.exec(str)) {
+          value = handleFormat(match[1].trim());
+          str = str.replace(match[0], value);
+          this.regexpUnescape.lastIndex = 0;
+          replaces++;
+
+          if (replaces >= this.maxReplaces) {
+            break;
+          }
+        }
+
+        replaces = 0; // regular escape on demand
+
+        while (match = this.regexp.exec(str)) {
+          value = handleFormat(match[1].trim());
+
+          if (value === undefined) {
+            if (typeof missingInterpolationHandler === 'function') {
+              var temp = missingInterpolationHandler(str, match, options);
+              value = typeof temp === 'string' ? temp : '';
+            } else {
+              this.logger.warn("missed to pass in variable ".concat(match[1], " for interpolating ").concat(str));
+              value = '';
+            }
+          } else if (typeof value !== 'string' && !this.useRawValueToEscape) {
+            value = makeString(value);
+          }
+
+          value = this.escapeValue ? regexSafe(this.escape(value)) : regexSafe(value);
+          str = str.replace(match[0], value);
+          this.regexp.lastIndex = 0;
+          replaces++;
+
+          if (replaces >= this.maxReplaces) {
+            break;
+          }
+        }
+
+        return str;
+      }
+    }, {
+      key: "nest",
+      value: function nest(str, fc) {
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        var match;
+        var value;
+
+        var clonedOptions = _objectSpread({}, options);
+
+        clonedOptions.applyPostProcessor = false; // avoid post processing on nested lookup
+        // if value is something like "myKey": "lorem $(anotherKey, { "count": {{aValueInOptions}} })"
+
+        function handleHasOptions(key, inheritedOptions) {
+          if (key.indexOf(',') < 0) return key;
+          var p = key.split(',');
+          key = p.shift();
+          var optionsString = p.join(',');
+          optionsString = this.interpolate(optionsString, clonedOptions);
+          optionsString = optionsString.replace(/'/g, '"');
+
+          try {
+            clonedOptions = JSON.parse(optionsString);
+            if (inheritedOptions) clonedOptions = _objectSpread({}, inheritedOptions, clonedOptions);
+          } catch (e) {
+            this.logger.error("failed parsing options string in nesting for key ".concat(key), e);
+          }
+
+          return key;
+        } // regular escape on demand
+
+
+        while (match = this.nestingRegexp.exec(str)) {
+          value = fc(handleHasOptions.call(this, match[1].trim(), clonedOptions), clonedOptions); // is only the nesting key (key1 = '$(key2)') return the value without stringify
+
+          if (value && match[0] === str && typeof value !== 'string') return value; // no string to include or empty
+
+          if (typeof value !== 'string') value = makeString(value);
+
+          if (!value) {
+            this.logger.warn("missed to resolve ".concat(match[1], " for nesting ").concat(str));
+            value = '';
+          } // Nested keys should not be escaped by default #854
+          // value = this.escapeValue ? regexSafe(utils.escape(value)) : regexSafe(value);
+
+
+          str = str.replace(match[0], value);
+          this.regexp.lastIndex = 0;
+        }
+
+        return str;
+      }
+    }]);
+
+    return Interpolator;
+  }();
+
+  function remove(arr, what) {
+    var found = arr.indexOf(what);
+
+    while (found !== -1) {
+      arr.splice(found, 1);
+      found = arr.indexOf(what);
+    }
+  }
+
+  var Connector =
+  /*#__PURE__*/
+  function (_EventEmitter) {
+    _inherits(Connector, _EventEmitter);
+
+    function Connector(backend, store, services) {
+      var _this;
+
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+      _classCallCheck(this, Connector);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(Connector).call(this));
+      _this.backend = backend;
+      _this.store = store;
+      _this.languageUtils = services.languageUtils;
+      _this.options = options;
+      _this.logger = baseLogger.create('backendConnector');
+      _this.state = {};
+      _this.queue = [];
+
+      if (_this.backend && _this.backend.init) {
+        _this.backend.init(services, options.backend, options);
+      }
+
+      return _this;
+    }
+
+    _createClass(Connector, [{
+      key: "queueLoad",
+      value: function queueLoad(languages, namespaces, options, callback) {
+        var _this2 = this;
+
+        // find what needs to be loaded
+        var toLoad = [];
+        var pending = [];
+        var toLoadLanguages = [];
+        var toLoadNamespaces = [];
+        languages.forEach(function (lng) {
+          var hasAllNamespaces = true;
+          namespaces.forEach(function (ns) {
+            var name = "".concat(lng, "|").concat(ns);
+
+            if (!options.reload && _this2.store.hasResourceBundle(lng, ns)) {
+              _this2.state[name] = 2; // loaded
+            } else if (_this2.state[name] < 0) ; else if (_this2.state[name] === 1) {
+              if (pending.indexOf(name) < 0) pending.push(name);
+            } else {
+              _this2.state[name] = 1; // pending
+
+              hasAllNamespaces = false;
+              if (pending.indexOf(name) < 0) pending.push(name);
+              if (toLoad.indexOf(name) < 0) toLoad.push(name);
+              if (toLoadNamespaces.indexOf(ns) < 0) toLoadNamespaces.push(ns);
+            }
+          });
+          if (!hasAllNamespaces) toLoadLanguages.push(lng);
+        });
+
+        if (toLoad.length || pending.length) {
+          this.queue.push({
+            pending: pending,
+            loaded: {},
+            errors: [],
+            callback: callback
+          });
+        }
+
+        return {
+          toLoad: toLoad,
+          pending: pending,
+          toLoadLanguages: toLoadLanguages,
+          toLoadNamespaces: toLoadNamespaces
+        };
+      }
+    }, {
+      key: "loaded",
+      value: function loaded(name, err, data) {
+        var _name$split = name.split('|'),
+            _name$split2 = _slicedToArray(_name$split, 2),
+            lng = _name$split2[0],
+            ns = _name$split2[1];
+
+        if (err) this.emit('failedLoading', lng, ns, err);
+
+        if (data) {
+          this.store.addResourceBundle(lng, ns, data);
+        } // set loaded
+
+
+        this.state[name] = err ? -1 : 2; // consolidated loading done in this run - only emit once for a loaded namespace
+
+        var loaded = {}; // callback if ready
+
+        this.queue.forEach(function (q) {
+          pushPath(q.loaded, [lng], ns);
+          remove(q.pending, name);
+          if (err) q.errors.push(err);
+
+          if (q.pending.length === 0 && !q.done) {
+            // only do once per loaded -> this.emit('loaded', q.loaded);
+            Object.keys(q.loaded).forEach(function (l) {
+              if (!loaded[l]) loaded[l] = [];
+
+              if (q.loaded[l].length) {
+                q.loaded[l].forEach(function (ns) {
+                  if (loaded[l].indexOf(ns) < 0) loaded[l].push(ns);
+                });
+              }
+            });
+            /* eslint no-param-reassign: 0 */
+
+            q.done = true;
+
+            if (q.errors.length) {
+              q.callback(q.errors);
+            } else {
+              q.callback();
+            }
+          }
+        }); // emit consolidated loaded event
+
+        this.emit('loaded', loaded); // remove done load requests
+
+        this.queue = this.queue.filter(function (q) {
+          return !q.done;
         });
       }
+    }, {
+      key: "read",
+      value: function read(lng, ns, fcName) {
+        var _this3 = this;
 
-      this.services.backendConnector.load(toLoad, this.options.ns, callback);
-    } else {
-      callback(null);
-    }
-  };
+        var tried = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+        var wait = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 250;
+        var callback = arguments.length > 5 ? arguments[5] : undefined;
+        if (!lng.length) return callback(null, {}); // noting to load
 
-  I18n.prototype.reloadResources = function reloadResources(lngs, ns, callback) {
-    var deferred = defer();
-    if (!lngs) lngs = this.languages;
-    if (!ns) ns = this.options.ns;
-    if (!callback) callback = noop;
-    this.services.backendConnector.reload(lngs, ns, function () {
-      deferred.resolve();
-      callback(null);
-    });
-    return deferred;
-  };
+        return this.backend[fcName](lng, ns, function (err, data) {
+          if (err && data
+          /* = retryFlag */
+          && tried < 5) {
+            setTimeout(function () {
+              _this3.read.call(_this3, lng, ns, fcName, tried + 1, wait * 2, callback);
+            }, wait);
+            return;
+          }
 
-  I18n.prototype.use = function use(module) {
-    if (module.type === 'backend') {
-      this.modules.backend = module;
-    }
-
-    if (module.type === 'logger' || module.log && module.warn && module.error) {
-      this.modules.logger = module;
-    }
-
-    if (module.type === 'languageDetector') {
-      this.modules.languageDetector = module;
-    }
-
-    if (module.type === 'i18nFormat') {
-      this.modules.i18nFormat = module;
-    }
-
-    if (module.type === 'postProcessor') {
-      postProcessor.addPostProcessor(module);
-    }
-
-    if (module.type === '3rdParty') {
-      this.modules.external.push(module);
-    }
-
-    return this;
-  };
-
-  I18n.prototype.changeLanguage = function changeLanguage(lng, callback) {
-    var _this4 = this;
-
-    var deferred = defer();
-
-    var done = function done(err, l) {
-      _this4.translator.changeLanguage(l);
-
-      if (l) {
-        _this4.emit('languageChanged', l);
-        _this4.logger.log('languageChanged', l);
+          callback(err, data);
+        });
       }
+      /* eslint consistent-return: 0 */
 
-      deferred.resolve(function () {
-        return _this4.t.apply(_this4, arguments);
-      });
-      if (callback) callback(err, function () {
-        return _this4.t.apply(_this4, arguments);
-      });
+    }, {
+      key: "prepareLoading",
+      value: function prepareLoading(languages, namespaces) {
+        var _this4 = this;
+
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        var callback = arguments.length > 3 ? arguments[3] : undefined;
+
+        if (!this.backend) {
+          this.logger.warn('No backend was added via i18next.use. Will not load resources.');
+          return callback && callback();
+        }
+
+        if (typeof languages === 'string') languages = this.languageUtils.toResolveHierarchy(languages);
+        if (typeof namespaces === 'string') namespaces = [namespaces];
+        var toLoad = this.queueLoad(languages, namespaces, options, callback);
+
+        if (!toLoad.toLoad.length) {
+          if (!toLoad.pending.length) callback(); // nothing to load and no pendings...callback now
+
+          return null; // pendings will trigger callback
+        }
+
+        toLoad.toLoad.forEach(function (name) {
+          _this4.loadOne(name);
+        });
+      }
+    }, {
+      key: "load",
+      value: function load(languages, namespaces, callback) {
+        this.prepareLoading(languages, namespaces, {}, callback);
+      }
+    }, {
+      key: "reload",
+      value: function reload(languages, namespaces, callback) {
+        this.prepareLoading(languages, namespaces, {
+          reload: true
+        }, callback);
+      }
+    }, {
+      key: "loadOne",
+      value: function loadOne(name) {
+        var _this5 = this;
+
+        var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+        var _name$split3 = name.split('|'),
+            _name$split4 = _slicedToArray(_name$split3, 2),
+            lng = _name$split4[0],
+            ns = _name$split4[1];
+
+        this.read(lng, ns, 'read', null, null, function (err, data) {
+          if (err) _this5.logger.warn("".concat(prefix, "loading namespace ").concat(ns, " for language ").concat(lng, " failed"), err);
+          if (!err && data) _this5.logger.log("".concat(prefix, "loaded namespace ").concat(ns, " for language ").concat(lng), data);
+
+          _this5.loaded(name, err, data);
+        });
+      }
+    }, {
+      key: "saveMissing",
+      value: function saveMissing(languages, namespace, key, fallbackValue, isUpdate) {
+        var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
+
+        if (this.backend && this.backend.create) {
+          this.backend.create(languages, namespace, key, fallbackValue, null
+          /* unused callback */
+          , _objectSpread({}, options, {
+            isUpdate: isUpdate
+          }));
+        } // write to store to avoid resending
+
+
+        if (!languages || !languages[0]) return;
+        this.store.addResource(languages[0], namespace, key, fallbackValue);
+      }
+    }]);
+
+    return Connector;
+  }(EventEmitter);
+
+  function get() {
+    return {
+      debug: false,
+      initImmediate: true,
+      ns: ['translation'],
+      defaultNS: ['translation'],
+      fallbackLng: ['dev'],
+      fallbackNS: false,
+      // string or array of namespaces
+      whitelist: false,
+      // array with whitelisted languages
+      nonExplicitWhitelist: false,
+      load: 'all',
+      // | currentOnly | languageOnly
+      preload: false,
+      // array with preload languages
+      simplifyPluralSuffix: true,
+      keySeparator: '.',
+      nsSeparator: ':',
+      pluralSeparator: '_',
+      contextSeparator: '_',
+      partialBundledLanguages: false,
+      // allow bundling certain languages that are not remotely fetched
+      saveMissing: false,
+      // enable to send missing values
+      updateMissing: false,
+      // enable to update default values if different from translated value (only useful on initial development, or when keeping code as source of truth)
+      saveMissingTo: 'fallback',
+      // 'current' || 'all'
+      saveMissingPlurals: true,
+      // will save all forms not only singular key
+      missingKeyHandler: false,
+      // function(lng, ns, key, fallbackValue) -> override if prefer on handling
+      missingInterpolationHandler: false,
+      // function(str, match)
+      postProcess: false,
+      // string or array of postProcessor names
+      returnNull: true,
+      // allows null value as valid translation
+      returnEmptyString: true,
+      // allows empty string value as valid translation
+      returnObjects: false,
+      joinArrays: false,
+      // or string to join array
+      returnedObjectHandler: function returnedObjectHandler() {},
+      // function(key, value, options) triggered if key returns object but returnObjects is set to false
+      parseMissingKeyHandler: false,
+      // function(key) parsed a key that was not found in t() before returning
+      appendNamespaceToMissingKey: false,
+      appendNamespaceToCIMode: false,
+      overloadTranslationOptionHandler: function handle(args) {
+        var ret = {};
+        if (_typeof(args[1]) === 'object') ret = args[1];
+        if (typeof args[1] === 'string') ret.defaultValue = args[1];
+        if (typeof args[2] === 'string') ret.tDescription = args[2];
+
+        if (_typeof(args[2]) === 'object' || _typeof(args[3]) === 'object') {
+          var options = args[3] || args[2];
+          Object.keys(options).forEach(function (key) {
+            ret[key] = options[key];
+          });
+        }
+
+        return ret;
+      },
+      interpolation: {
+        escapeValue: true,
+        format: function format(value, _format, lng) {
+          return value;
+        },
+        prefix: '{{',
+        suffix: '}}',
+        formatSeparator: ',',
+        // prefixEscaped: '{{',
+        // suffixEscaped: '}}',
+        // unescapeSuffix: '',
+        unescapePrefix: '-',
+        nestingPrefix: '$t(',
+        nestingSuffix: ')',
+        // nestingPrefixEscaped: '$t(',
+        // nestingSuffixEscaped: ')',
+        // defaultVariables: undefined // object that can have values to interpolate on - extends passed in interpolation data
+        maxReplaces: 1000 // max replaces to prevent endless loop
+
+      }
     };
+  }
+  /* eslint no-param-reassign: 0 */
 
-    var setLng = function setLng(l) {
-      if (l) {
-        _this4.language = l;
-        _this4.languages = _this4.services.languageUtils.toResolveHierarchy(l);
-        if (!_this4.translator.language) _this4.translator.changeLanguage(l);
+  function transformOptions(options) {
+    // create namespace object if namespace is passed in as string
+    if (typeof options.ns === 'string') options.ns = [options.ns];
+    if (typeof options.fallbackLng === 'string') options.fallbackLng = [options.fallbackLng];
+    if (typeof options.fallbackNS === 'string') options.fallbackNS = [options.fallbackNS]; // extend whitelist with cimode
 
-        if (_this4.services.languageDetector) _this4.services.languageDetector.cacheUserLanguage(l);
-      }
-
-      _this4.loadResources(function (err) {
-        done(err, l);
-      });
-    };
-
-    if (!lng && this.services.languageDetector && !this.services.languageDetector.async) {
-      setLng(this.services.languageDetector.detect());
-    } else if (!lng && this.services.languageDetector && this.services.languageDetector.async) {
-      this.services.languageDetector.detect(setLng);
-    } else {
-      setLng(lng);
+    if (options.whitelist && options.whitelist.indexOf('cimode') < 0) {
+      options.whitelist = options.whitelist.concat(['cimode']);
     }
 
-    return deferred;
-  };
+    return options;
+  }
 
-  I18n.prototype.getFixedT = function getFixedT(lng, ns) {
-    var _this5 = this;
+  function noop() {}
 
-    var fixedT = function fixedT(key, opts) {
-      for (var _len3 = arguments.length, rest = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
-        rest[_key3 - 2] = arguments[_key3];
+  var I18n =
+  /*#__PURE__*/
+  function (_EventEmitter) {
+    _inherits(I18n, _EventEmitter);
+
+    function I18n() {
+      var _this;
+
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var callback = arguments.length > 1 ? arguments[1] : undefined;
+
+      _classCallCheck(this, I18n);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(I18n).call(this));
+      _this.options = transformOptions(options);
+      _this.services = {};
+      _this.logger = baseLogger;
+      _this.modules = {
+        external: []
+      };
+
+      if (callback && !_this.isInitialized && !options.isClone) {
+        // https://github.com/i18next/i18next/issues/879
+        if (!_this.options.initImmediate) {
+          _this.init(options, callback);
+
+          return _possibleConstructorReturn(_this, _assertThisInitialized(_assertThisInitialized(_this)));
+        }
+
+        setTimeout(function () {
+          _this.init(options, callback);
+        }, 0);
       }
 
-      var options = _extends({}, opts);
-      if ((typeof opts === 'undefined' ? 'undefined' : _typeof(opts)) !== 'object') {
-        options = _this5.options.overloadTranslationOptionHandler([key, opts].concat(rest));
+      return _this;
+    }
+
+    _createClass(I18n, [{
+      key: "init",
+      value: function init() {
+        var _this2 = this;
+
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var callback = arguments.length > 1 ? arguments[1] : undefined;
+
+        if (typeof options === 'function') {
+          callback = options;
+          options = {};
+        }
+
+        this.options = _objectSpread({}, get(), this.options, transformOptions(options));
+        this.format = this.options.interpolation.format;
+        if (!callback) callback = noop;
+
+        function createClassOnDemand(ClassOrObject) {
+          if (!ClassOrObject) return null;
+          if (typeof ClassOrObject === 'function') return new ClassOrObject();
+          return ClassOrObject;
+        } // init services
+
+
+        if (!this.options.isClone) {
+          if (this.modules.logger) {
+            baseLogger.init(createClassOnDemand(this.modules.logger), this.options);
+          } else {
+            baseLogger.init(null, this.options);
+          }
+
+          var lu = new LanguageUtil(this.options);
+          this.store = new ResourceStore(this.options.resources, this.options);
+          var s = this.services;
+          s.logger = baseLogger;
+          s.resourceStore = this.store;
+          s.languageUtils = lu;
+          s.pluralResolver = new PluralResolver(lu, {
+            prepend: this.options.pluralSeparator,
+            compatibilityJSON: this.options.compatibilityJSON,
+            simplifyPluralSuffix: this.options.simplifyPluralSuffix
+          });
+          s.interpolator = new Interpolator(this.options);
+          s.backendConnector = new Connector(createClassOnDemand(this.modules.backend), s.resourceStore, s, this.options); // pipe events from backendConnector
+
+          s.backendConnector.on('*', function (event) {
+            for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+              args[_key - 1] = arguments[_key];
+            }
+
+            _this2.emit.apply(_this2, [event].concat(args));
+          });
+
+          if (this.modules.languageDetector) {
+            s.languageDetector = createClassOnDemand(this.modules.languageDetector);
+            s.languageDetector.init(s, this.options.detection, this.options);
+          }
+
+          if (this.modules.i18nFormat) {
+            s.i18nFormat = createClassOnDemand(this.modules.i18nFormat);
+            if (s.i18nFormat.init) s.i18nFormat.init(this);
+          }
+
+          this.translator = new Translator(this.services, this.options); // pipe events from translator
+
+          this.translator.on('*', function (event) {
+            for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+              args[_key2 - 1] = arguments[_key2];
+            }
+
+            _this2.emit.apply(_this2, [event].concat(args));
+          });
+          this.modules.external.forEach(function (m) {
+            if (m.init) m.init(_this2);
+          });
+        } // append api
+
+
+        var storeApi = ['getResource', 'addResource', 'addResources', 'addResourceBundle', 'removeResourceBundle', 'hasResourceBundle', 'getResourceBundle', 'getDataByLanguage'];
+        storeApi.forEach(function (fcName) {
+          _this2[fcName] = function () {
+            var _this2$store;
+
+            return (_this2$store = _this2.store)[fcName].apply(_this2$store, arguments);
+          };
+        });
+        var deferred = defer();
+
+        var load = function load() {
+          _this2.changeLanguage(_this2.options.lng, function (err, t) {
+            _this2.isInitialized = true;
+
+            _this2.logger.log('initialized', _this2.options);
+
+            _this2.emit('initialized', _this2.options);
+
+            deferred.resolve(t); // not rejecting on err (as err is only a loading translation failed warning)
+
+            callback(err, t);
+          });
+        };
+
+        if (this.options.resources || !this.options.initImmediate) {
+          load();
+        } else {
+          setTimeout(load, 0);
+        }
+
+        return deferred;
       }
+      /* eslint consistent-return: 0 */
 
-      options.lng = options.lng || fixedT.lng;
-      options.lngs = options.lngs || fixedT.lngs;
-      options.ns = options.ns || fixedT.ns;
-      return _this5.t(key, options);
-    };
-    if (typeof lng === 'string') {
-      fixedT.lng = lng;
-    } else {
-      fixedT.lngs = lng;
-    }
-    fixedT.ns = ns;
-    return fixedT;
-  };
+    }, {
+      key: "loadResources",
+      value: function loadResources() {
+        var _this3 = this;
 
-  I18n.prototype.t = function t() {
-    var _translator;
+        var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
 
-    return this.translator && (_translator = this.translator).translate.apply(_translator, arguments);
-  };
+        if (!this.options.resources || this.options.partialBundledLanguages) {
+          if (this.language && this.language.toLowerCase() === 'cimode') return callback(); // avoid loading resources for cimode
 
-  I18n.prototype.exists = function exists() {
-    var _translator2;
+          var toLoad = [];
 
-    return this.translator && (_translator2 = this.translator).exists.apply(_translator2, arguments);
-  };
+          var append = function append(lng) {
+            if (!lng) return;
 
-  I18n.prototype.setDefaultNamespace = function setDefaultNamespace(ns) {
-    this.options.defaultNS = ns;
-  };
+            var lngs = _this3.services.languageUtils.toResolveHierarchy(lng);
 
-  I18n.prototype.loadNamespaces = function loadNamespaces(ns, callback) {
-    var _this6 = this;
+            lngs.forEach(function (l) {
+              if (toLoad.indexOf(l) < 0) toLoad.push(l);
+            });
+          };
 
-    var deferred = defer();
+          if (!this.language) {
+            // at least load fallbacks in this case
+            var fallbacks = this.services.languageUtils.getFallbackCodes(this.options.fallbackLng);
+            fallbacks.forEach(function (l) {
+              return append(l);
+            });
+          } else {
+            append(this.language);
+          }
 
-    if (!this.options.ns) {
-      callback && callback();
-      return Promise.resolve();
-    }
-    if (typeof ns === 'string') ns = [ns];
+          if (this.options.preload) {
+            this.options.preload.forEach(function (l) {
+              return append(l);
+            });
+          }
 
-    ns.forEach(function (n) {
-      if (_this6.options.ns.indexOf(n) < 0) _this6.options.ns.push(n);
-    });
-
-    this.loadResources(function (err) {
-      deferred.resolve();
-      if (callback) callback(err);
-    });
-
-    return deferred;
-  };
-
-  I18n.prototype.loadLanguages = function loadLanguages(lngs, callback) {
-    var deferred = defer();
-
-    if (typeof lngs === 'string') lngs = [lngs];
-    var preloaded = this.options.preload || [];
-
-    var newLngs = lngs.filter(function (lng) {
-      return preloaded.indexOf(lng) < 0;
-    });
-    // Exit early if all given languages are already preloaded
-    if (!newLngs.length) {
-      if (callback) callback();
-      return Promise.resolve();
-    }
-
-    this.options.preload = preloaded.concat(newLngs);
-    this.loadResources(function (err) {
-      deferred.resolve();
-      if (callback) callback(err);
-    });
-
-    return deferred;
-  };
-
-  I18n.prototype.dir = function dir(lng) {
-    if (!lng) lng = this.languages && this.languages.length > 0 ? this.languages[0] : this.language;
-    if (!lng) return 'rtl';
-
-    var rtlLngs = ['ar', 'shu', 'sqr', 'ssh', 'xaa', 'yhd', 'yud', 'aao', 'abh', 'abv', 'acm', 'acq', 'acw', 'acx', 'acy', 'adf', 'ads', 'aeb', 'aec', 'afb', 'ajp', 'apc', 'apd', 'arb', 'arq', 'ars', 'ary', 'arz', 'auz', 'avl', 'ayh', 'ayl', 'ayn', 'ayp', 'bbz', 'pga', 'he', 'iw', 'ps', 'pbt', 'pbu', 'pst', 'prp', 'prd', 'ur', 'ydd', 'yds', 'yih', 'ji', 'yi', 'hbo', 'men', 'xmn', 'fa', 'jpr', 'peo', 'pes', 'prs', 'dv', 'sam'];
-
-    return rtlLngs.indexOf(this.services.languageUtils.getLanguagePartFromCode(lng)) >= 0 ? 'rtl' : 'ltr';
-  };
-
-  /* eslint class-methods-use-this: 0 */
-
-
-  I18n.prototype.createInstance = function createInstance() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var callback = arguments[1];
-
-    return new I18n(options, callback);
-  };
-
-  I18n.prototype.cloneInstance = function cloneInstance() {
-    var _this7 = this;
-
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
-
-    var mergedOptions = _extends({}, this.options, options, { isClone: true });
-    var clone = new I18n(mergedOptions);
-    var membersToCopy = ['store', 'services', 'language'];
-    membersToCopy.forEach(function (m) {
-      clone[m] = _this7[m];
-    });
-    clone.translator = new Translator(clone.services, clone.options);
-    clone.translator.on('*', function (event) {
-      for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-        args[_key4 - 1] = arguments[_key4];
+          this.services.backendConnector.load(toLoad, this.options.ns, callback);
+        } else {
+          callback(null);
+        }
       }
+    }, {
+      key: "reloadResources",
+      value: function reloadResources(lngs, ns, callback) {
+        var deferred = defer();
+        if (!lngs) lngs = this.languages;
+        if (!ns) ns = this.options.ns;
+        if (!callback) callback = noop;
+        this.services.backendConnector.reload(lngs, ns, function (err) {
+          deferred.resolve(); // not rejecting on err (as err is only a loading translation failed warning)
 
-      clone.emit.apply(clone, [event].concat(args));
-    });
-    clone.init(mergedOptions, callback);
-    clone.translator.options = clone.options; // sync options
+          callback(err);
+        });
+        return deferred;
+      }
+    }, {
+      key: "use",
+      value: function use(module) {
+        if (module.type === 'backend') {
+          this.modules.backend = module;
+        }
 
-    return clone;
-  };
+        if (module.type === 'logger' || module.log && module.warn && module.error) {
+          this.modules.logger = module;
+        }
 
-  return I18n;
-}(EventEmitter);
+        if (module.type === 'languageDetector') {
+          this.modules.languageDetector = module;
+        }
 
-var i18next = new I18n();
+        if (module.type === 'i18nFormat') {
+          this.modules.i18nFormat = module;
+        }
 
-return i18next;
+        if (module.type === 'postProcessor') {
+          postProcessor.addPostProcessor(module);
+        }
 
-})));
+        if (module.type === '3rdParty') {
+          this.modules.external.push(module);
+        }
+
+        return this;
+      }
+    }, {
+      key: "changeLanguage",
+      value: function changeLanguage(lng, callback) {
+        var _this4 = this;
+
+        var deferred = defer();
+
+        var done = function done(err, l) {
+          _this4.translator.changeLanguage(l);
+
+          if (l) {
+            _this4.emit('languageChanged', l);
+
+            _this4.logger.log('languageChanged', l);
+          }
+
+          deferred.resolve(function () {
+            return _this4.t.apply(_this4, arguments);
+          });
+          if (callback) callback(err, function () {
+            return _this4.t.apply(_this4, arguments);
+          });
+        };
+
+        var setLng = function setLng(l) {
+          if (l) {
+            _this4.language = l;
+            _this4.languages = _this4.services.languageUtils.toResolveHierarchy(l);
+            if (!_this4.translator.language) _this4.translator.changeLanguage(l);
+            if (_this4.services.languageDetector) _this4.services.languageDetector.cacheUserLanguage(l);
+          }
+
+          _this4.loadResources(function (err) {
+            done(err, l);
+          });
+        };
+
+        if (!lng && this.services.languageDetector && !this.services.languageDetector.async) {
+          setLng(this.services.languageDetector.detect());
+        } else if (!lng && this.services.languageDetector && this.services.languageDetector.async) {
+          this.services.languageDetector.detect(setLng);
+        } else {
+          setLng(lng);
+        }
+
+        return deferred;
+      }
+    }, {
+      key: "getFixedT",
+      value: function getFixedT(lng, ns) {
+        var _this5 = this;
+
+        var fixedT = function fixedT(key, opts) {
+          var options = _objectSpread({}, opts);
+
+          if (_typeof(opts) !== 'object') {
+            for (var _len3 = arguments.length, rest = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+              rest[_key3 - 2] = arguments[_key3];
+            }
+
+            options = _this5.options.overloadTranslationOptionHandler([key, opts].concat(rest));
+          }
+
+          options.lng = options.lng || fixedT.lng;
+          options.lngs = options.lngs || fixedT.lngs;
+          options.ns = options.ns || fixedT.ns;
+          return _this5.t(key, options);
+        };
+
+        if (typeof lng === 'string') {
+          fixedT.lng = lng;
+        } else {
+          fixedT.lngs = lng;
+        }
+
+        fixedT.ns = ns;
+        return fixedT;
+      }
+    }, {
+      key: "t",
+      value: function t() {
+        var _this$translator;
+
+        return this.translator && (_this$translator = this.translator).translate.apply(_this$translator, arguments);
+      }
+    }, {
+      key: "exists",
+      value: function exists() {
+        var _this$translator2;
+
+        return this.translator && (_this$translator2 = this.translator).exists.apply(_this$translator2, arguments);
+      }
+    }, {
+      key: "setDefaultNamespace",
+      value: function setDefaultNamespace(ns) {
+        this.options.defaultNS = ns;
+      }
+    }, {
+      key: "loadNamespaces",
+      value: function loadNamespaces(ns, callback) {
+        var _this6 = this;
+
+        var deferred = defer();
+
+        if (!this.options.ns) {
+          callback && callback();
+          return Promise.resolve();
+        }
+
+        if (typeof ns === 'string') ns = [ns];
+        ns.forEach(function (n) {
+          if (_this6.options.ns.indexOf(n) < 0) _this6.options.ns.push(n);
+        });
+        this.loadResources(function (err) {
+          deferred.resolve();
+          if (callback) callback(err);
+        });
+        return deferred;
+      }
+    }, {
+      key: "loadLanguages",
+      value: function loadLanguages(lngs, callback) {
+        var deferred = defer();
+        if (typeof lngs === 'string') lngs = [lngs];
+        var preloaded = this.options.preload || [];
+        var newLngs = lngs.filter(function (lng) {
+          return preloaded.indexOf(lng) < 0;
+        }); // Exit early if all given languages are already preloaded
+
+        if (!newLngs.length) {
+          if (callback) callback();
+          return Promise.resolve();
+        }
+
+        this.options.preload = preloaded.concat(newLngs);
+        this.loadResources(function (err) {
+          deferred.resolve();
+          if (callback) callback(err);
+        });
+        return deferred;
+      }
+    }, {
+      key: "dir",
+      value: function dir(lng) {
+        if (!lng) lng = this.languages && this.languages.length > 0 ? this.languages[0] : this.language;
+        if (!lng) return 'rtl';
+        var rtlLngs = ['ar', 'shu', 'sqr', 'ssh', 'xaa', 'yhd', 'yud', 'aao', 'abh', 'abv', 'acm', 'acq', 'acw', 'acx', 'acy', 'adf', 'ads', 'aeb', 'aec', 'afb', 'ajp', 'apc', 'apd', 'arb', 'arq', 'ars', 'ary', 'arz', 'auz', 'avl', 'ayh', 'ayl', 'ayn', 'ayp', 'bbz', 'pga', 'he', 'iw', 'ps', 'pbt', 'pbu', 'pst', 'prp', 'prd', 'ur', 'ydd', 'yds', 'yih', 'ji', 'yi', 'hbo', 'men', 'xmn', 'fa', 'jpr', 'peo', 'pes', 'prs', 'dv', 'sam'];
+        return rtlLngs.indexOf(this.services.languageUtils.getLanguagePartFromCode(lng)) >= 0 ? 'rtl' : 'ltr';
+      }
+      /* eslint class-methods-use-this: 0 */
+
+    }, {
+      key: "createInstance",
+      value: function createInstance() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var callback = arguments.length > 1 ? arguments[1] : undefined;
+        return new I18n(options, callback);
+      }
+    }, {
+      key: "cloneInstance",
+      value: function cloneInstance() {
+        var _this7 = this;
+
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
+
+        var mergedOptions = _objectSpread({}, this.options, options, {
+          isClone: true
+        });
+
+        var clone = new I18n(mergedOptions);
+        var membersToCopy = ['store', 'services', 'language'];
+        membersToCopy.forEach(function (m) {
+          clone[m] = _this7[m];
+        });
+        clone.translator = new Translator(clone.services, clone.options);
+        clone.translator.on('*', function (event) {
+          for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+            args[_key4 - 1] = arguments[_key4];
+          }
+
+          clone.emit.apply(clone, [event].concat(args));
+        });
+        clone.init(mergedOptions, callback);
+        clone.translator.options = clone.options; // sync options
+
+        return clone;
+      }
+    }]);
+
+    return I18n;
+  }(EventEmitter);
+
+  var i18next = new I18n();
+
+  return i18next;
+
+}));
 
 ;
 /* @preserve
@@ -26874,5143 +27105,6 @@ return index;
         };
     }
 }(this));
-;
-/****************************************************************************
-	fcoo-form-validation.js,
-
-	(c) 2018, FCOO
-
-	https://github.com/FCOO/fcoo-form-validation
-	https://github.com/FCOO
-
-    This is a copy of the javascript-files used by formValidation and contains copy of
-    src/_formValidation/dist/js/formValidation.popular.js, and
-    src/_formValidation/dist/js/framework/bootstrap4.js and
-    src/_i18n-v0.1.1/src/i18n.js
-
-****************************************************************************/
-
-/*!
- * FormValidation (http://formvalidation.io)
- * The best jQuery plugin to validate form fields. Support Bootstrap, Foundation, Pure, SemanticUI, UIKit and custom frameworks
- *
- * This is a custom build that does NOT consist of all validators. Only popular validators are included:
- * - between
- * - callback
- * - choice
- * - color
- * - creditCard
- * - date
- * - different
- * - digits
- * - emailAddress
- * - file
- * - greaterThan
- * - identical
- * - integer
- * - lessThan
- * - notEmpty
- * - numeric
- * - promise
- * - regexp
- * - remote
- * - stringLength
- * - uri
- *
- * Use formValidation(.min).js file if you want to have all validators.
- *
- * @version     v0.8.1, built on 2016-07-29 1:10:54 AM
- * @author      https://twitter.com/formvalidation
- * @copyright   (c) 2013 - 2016 Nguyen Huu Phuoc
- * @license     http://formvalidation.io/license/
- */
-// Register the namespace
-window.FormValidation = {
-    AddOn:     {},  // Add-ons
-    Framework: {},  // Supported frameworks
-    I18n:      {},  // i18n
-    Validator: {}   // Available validators
-};
-
-if (typeof jQuery === 'undefined') {
-    throw new Error('FormValidation requires jQuery');
-}
-
-(function($) {
-    var version = $.fn.jquery.split(' ')[0].split('.');
-    if ((+version[0] < 2 && +version[1] < 9) || (+version[0] === 1 && +version[1] === 9 && +version[2] < 1)) {
-        throw new Error('FormValidation requires jQuery version 1.9.1 or higher');
-    }
-}(jQuery));
-
-(function($) {
-    // TODO: Remove backward compatibility
-    /**
-     * Constructor
-     *
-     * @param {jQuery|String} form The form element or selector
-     * @param {Object} options The options
-     * @param {String} [namespace] The optional namespace which is used for data-{namespace}-xxx attributes and internal data.
-     * Currently, it's used to support backward version
-     * @constructor
-     */
-    FormValidation.Base = function(form, options, namespace) {
-        this.$form      = $(form);
-        this.options    = $.extend({}, $.fn.formValidation.DEFAULT_OPTIONS, options);
-        this._namespace = namespace || 'fv';
-
-        this.$invalidFields = $([]);    // Array of invalid fields
-        this.$submitButton  = null;     // The submit button which is clicked to submit form
-        this.$hiddenButton  = null;
-
-        // Validating status
-        this.STATUS_NOT_VALIDATED = 'NOT_VALIDATED';
-        this.STATUS_VALIDATING    = 'VALIDATING';
-        this.STATUS_INVALID       = 'INVALID';
-        this.STATUS_VALID         = 'VALID';
-        this.STATUS_IGNORED       = 'IGNORED';
-
-        // Default message
-        this.DEFAULT_MESSAGE      = $.fn.formValidation.DEFAULT_MESSAGE;
-
-        // Determine the event that is fired when user change the field value
-        // Most modern browsers supports input event except IE 7, 8.
-        // IE 9 supports input event but the event is still not fired if I press the backspace key.
-        // Get IE version
-        // https://gist.github.com/padolsey/527683/#comment-7595
-        this._ieVersion = (function() {
-            var v = 3, div = document.createElement('div'), a = div.all || [];
-            while (div.innerHTML = '<!--[if gt IE '+(++v)+']><br><![endif]-->', a[0]) {}
-            return v > 4 ? v : document.documentMode;
-        }());
-
-        var el = document.createElement('div');
-        this._changeEvent = (this._ieVersion === 9 || !('oninput' in el)) ? 'keyup' : 'input';
-
-        // The flag to indicate that the form is ready to submit when a remote/callback validator returns
-        this._submitIfValid = null;
-
-        // Field elements
-        this._cacheFields = {};
-
-        this._init();
-    };
-
-    FormValidation.Base.prototype = {
-        constructor: FormValidation.Base,
-
-        /**
-         * Check if the number of characters of field value exceed the threshold or not
-         *
-         * @param {jQuery} $field The field element
-         * @returns {Boolean}
-         */
-        _exceedThreshold: function($field) {
-            var ns        = this._namespace,
-                field     = $field.attr('data-' + ns + '-field'),
-                threshold = this.options.fields[field].threshold || this.options.threshold;
-            if (!threshold) {
-                return true;
-            }
-            var cannotType = $.inArray($field.attr('type'), ['button', 'checkbox', 'file', 'hidden', 'image', 'radio', 'reset', 'submit']) !== -1;
-            return (cannotType || $field.val().length >= threshold);
-        },
-
-        /**
-         * Init form
-         */
-        _init: function() {
-            var that    = this,
-                ns      = this._namespace,
-                options = {
-                    addOns:         {},
-                    autoFocus:      this.$form.attr('data-' + ns + '-autofocus'),
-                    button: {
-                        selector: this.$form.attr('data-' + ns + '-button-selector') || this.$form.attr('data-' + ns + '-submitbuttons'), // Support backward
-                        disabled: this.$form.attr('data-' + ns + '-button-disabled')
-                    },
-                    control: {
-                        valid:   this.$form.attr('data-' + ns + '-control-valid'),
-                        invalid: this.$form.attr('data-' + ns + '-control-invalid')
-                    },
-                    err: {
-                        clazz:     this.$form.attr('data-' + ns + '-err-clazz'),
-                        container: this.$form.attr('data-' + ns + '-err-container') || this.$form.attr('data-' + ns + '-container'), // Support backward
-                        parent:    this.$form.attr('data-' + ns + '-err-parent')
-                    },
-                    events: {
-                        formInit:         this.$form.attr('data-' + ns + '-events-form-init'),
-                        formPreValidate:  this.$form.attr('data-' + ns + '-events-form-prevalidate'),
-                        formError:        this.$form.attr('data-' + ns + '-events-form-error'),
-                        formReset:        this.$form.attr('data-' + ns + '-events-form-reset'),
-                        formSuccess:      this.$form.attr('data-' + ns + '-events-form-success'),
-                        fieldAdded:       this.$form.attr('data-' + ns + '-events-field-added'),
-                        fieldRemoved:     this.$form.attr('data-' + ns + '-events-field-removed'),
-                        fieldInit:        this.$form.attr('data-' + ns + '-events-field-init'),
-                        fieldError:       this.$form.attr('data-' + ns + '-events-field-error'),
-                        fieldReset:       this.$form.attr('data-' + ns + '-events-field-reset'),
-                        fieldSuccess:     this.$form.attr('data-' + ns + '-events-field-success'),
-                        fieldStatus:      this.$form.attr('data-' + ns + '-events-field-status'),
-                        localeChanged:    this.$form.attr('data-' + ns + '-events-locale-changed'),
-                        validatorError:   this.$form.attr('data-' + ns + '-events-validator-error'),
-                        validatorSuccess: this.$form.attr('data-' + ns + '-events-validator-success'),
-                        validatorIgnored: this.$form.attr('data-' + ns + '-events-validator-ignored')
-                    },
-                    excluded:      this.$form.attr('data-' + ns + '-excluded'),
-                    icon: {
-                        valid:      this.$form.attr('data-' + ns + '-icon-valid')      || this.$form.attr('data-' + ns + '-feedbackicons-valid'),      // Support backward
-                        invalid:    this.$form.attr('data-' + ns + '-icon-invalid')    || this.$form.attr('data-' + ns + '-feedbackicons-invalid'),    // Support backward
-                        validating: this.$form.attr('data-' + ns + '-icon-validating') || this.$form.attr('data-' + ns + '-feedbackicons-validating'), // Support backward
-                        feedback:   this.$form.attr('data-' + ns + '-icon-feedback')
-                    },
-                    live:          this.$form.attr('data-' + ns + '-live'),
-                    locale:        this.$form.attr('data-' + ns + '-locale'),
-                    message:       this.$form.attr('data-' + ns + '-message'),
-                    onPreValidate: this.$form.attr('data-' + ns + '-onprevalidate'),
-                    onError:       this.$form.attr('data-' + ns + '-onerror'),
-                    onReset:       this.$form.attr('data-' + ns + '-onreset'),
-                    onSuccess:     this.$form.attr('data-' + ns + '-onsuccess'),
-                    row: {
-                        selector: this.$form.attr('data-' + ns + '-row-selector') || this.$form.attr('data-' + ns + '-group'), // Support backward
-                        valid:    this.$form.attr('data-' + ns + '-row-valid'),
-                        invalid:  this.$form.attr('data-' + ns + '-row-invalid'),
-                        feedback: this.$form.attr('data-' + ns + '-row-feedback')
-                    },
-                    threshold:     this.$form.attr('data-' + ns + '-threshold'),
-                    trigger:       this.$form.attr('data-' + ns + '-trigger'),
-                    verbose:       this.$form.attr('data-' + ns + '-verbose'),
-                    fields:        {}
-                };
-
-            this.$form
-                // Disable client side validation in HTML 5
-                .attr('novalidate', 'novalidate')
-                .addClass(this.options.elementClass)
-                // Disable the default submission first
-                .on('submit.' + ns, function(e) {
-                    e.preventDefault();
-                    that.validate();
-                })
-                .on('click.' + ns, this.options.button.selector, function() {
-                    that.$submitButton  = $(this);
-                    // The user just click the submit button
-                    that._submitIfValid = true;
-                });
-
-            if (this.options.declarative === true || this.options.declarative === 'true') {
-                // Find all fields which have either "name" or "data-{namespace}-field" attribute
-                this.$form
-                    .find('[name], [data-' + ns + '-field]')
-                    .each(function() {
-                        var $field = $(this),
-                            field  = $field.attr('name') || $field.attr('data-' + ns + '-field'),
-                            opts   = that._parseOptions($field);
-                        if (opts) {
-                            $field.attr('data-' + ns + '-field', field);
-                            options.fields[field] = $.extend({}, opts, options.fields[field]);
-                        }
-                    });
-            }
-
-            this.options = $.extend(true, this.options, options);
-
-            // Normalize the err.parent option
-            if ('string' === typeof this.options.err.parent) {
-                this.options.err.parent = new RegExp(this.options.err.parent);
-            }
-
-            // Support backward
-            if (this.options.container) {
-                this.options.err.container = this.options.container;
-                delete this.options.container;
-            }
-            if (this.options.feedbackIcons) {
-                this.options.icon = $.extend(true, this.options.icon, this.options.feedbackIcons);
-                delete this.options.feedbackIcons;
-            }
-            if (this.options.group) {
-                this.options.row.selector = this.options.group;
-                delete this.options.group;
-            }
-            if (this.options.submitButtons) {
-                this.options.button.selector = this.options.submitButtons;
-                delete this.options.submitButtons;
-            }
-
-            // If the locale is not found, reset it to default one
-            if (!FormValidation.I18n[this.options.locale]) {
-                this.options.locale = $.fn.formValidation.DEFAULT_OPTIONS.locale;
-            }
-
-            // Parse the add-on options from HTML attributes
-            if (this.options.declarative === true || this.options.declarative === 'true') {
-                this.options = $.extend(true, this.options, { addOns: this._parseAddOnOptions() });
-            }
-
-            // When pressing Enter on any field in the form, the first submit button will do its job.
-            // The form then will be submitted.
-            // I create a first hidden submit button
-            this.$hiddenButton = $('<button/>')
-                                    .attr('type', 'submit')
-                                    .prependTo(this.$form)
-                                    .addClass('fv-hidden-submit')
-                                    .css({ display: 'none', width: 0, height: 0 });
-
-            this.$form
-                .on('click.' +  this._namespace, '[type="submit"]', function(e) {
-                    // #746: Check if the button click handler returns false
-                    if (!e.isDefaultPrevented()) {
-                        var $target = $(e.target),
-                            // The button might contain HTML tag
-                            $button = $target.is('[type="submit"]') ? $target.eq(0) : $target.parent('[type="submit"]').eq(0);
-
-                        // Don't perform validation when clicking on the submit button/input which
-                        // aren't defined by the 'button.selector' option
-                        if (that.options.button.selector && !$button.is(that.options.button.selector) && !$button.is(that.$hiddenButton)) {
-                            that.$form.off('submit.' + that._namespace).submit();
-                            // Fix the issue where 'formnovalidate' causes IE to send two postbacks to server
-                            return false;
-                        }
-                    }
-                });
-
-            for (var field in this.options.fields) {
-                this._initField(field);
-            }
-
-            // Init the add-ons
-            for (var addOn in this.options.addOns) {
-                if ('function' === typeof FormValidation.AddOn[addOn].init) {
-                    FormValidation.AddOn[addOn].init(this, this.options.addOns[addOn]);
-                }
-            }
-
-            this.$form.trigger($.Event(this.options.events.formInit), {
-                bv: this,   // Support backward
-                fv: this,
-                options: this.options
-            });
-
-            // Prepare the events
-            if (this.options.onPreValidate) {
-                this.$form.on(this.options.events.formPreValidate, function(e) {
-                    FormValidation.Helper.call(that.options.onPreValidate, [e]);
-                });
-            }
-            if (this.options.onSuccess) {
-                this.$form.on(this.options.events.formSuccess, function(e) {
-                    FormValidation.Helper.call(that.options.onSuccess, [e]);
-                });
-            }
-            if (this.options.onError) {
-                this.$form.on(this.options.events.formError, function(e) {
-                    FormValidation.Helper.call(that.options.onError, [e]);
-                });
-            }
-            if (this.options.onReset) {
-                this.$form.on(this.options.events.formReset, function(e) {
-                    FormValidation.Helper.call(that.options.onReset, [e]);
-                });
-            }
-        },
-
-        /**
-         * Init field
-         *
-         * @param {String|jQuery} field The field name or field element
-         */
-        _initField: function(field) {
-            var ns     = this._namespace,
-                fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-' + ns + '-field');
-                    break;
-                case 'string':
-                    fields = this.getFieldElements(field);
-                    fields.attr('data-' + ns + '-field', field);
-                    break;
-                default:
-                    break;
-            }
-
-            // We don't need to validate non-existing fields
-            if (fields.length === 0) {
-                return;
-            }
-
-            if (this.options.fields[field] === null || this.options.fields[field].validators === null) {
-                return;
-            }
-
-            var validators = this.options.fields[field].validators,
-                validatorName,
-                alias;
-            for (validatorName in validators) {
-                alias = validators[validatorName].alias || validatorName;
-                if (!FormValidation.Validator[alias]) {
-                    delete this.options.fields[field].validators[validatorName];
-                }
-            }
-            if (this.options.fields[field].enabled === null) {
-                this.options.fields[field].enabled = true;
-            }
-
-            var that      = this,
-                total     = fields.length,
-                type      = fields.attr('type'),
-                updateAll = (total === 1) || ('radio' === type) || ('checkbox' === type),
-                trigger   = this._getFieldTrigger(fields.eq(0)),
-                clazz     = this.options.err.clazz.split(' ').join('.'),
-                events    = $.map(trigger, function(item) {
-                    return item + '.update.' + ns;
-                }).join(' ');
-
-            for (var i = 0; i < total; i++) {
-                var $field    = fields.eq(i),
-                    row       = this.options.fields[field].row || this.options.row.selector,
-                    $parent   = $field.closest(row),
-                    // Allow user to indicate where the error messages are shown
-                    // Support backward
-                    container = ('function' === typeof (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container))
-                                ? (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container).call(this, $field, this)
-                                : (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container),
-                    $message  = (container && container !== 'tooltip' && container !== 'popover') ? $(container) : this._getMessageContainer($field, row);
-
-                if (container && container !== 'tooltip' && container !== 'popover') {
-                    $message.addClass(this.options.err.clazz);
-                }
-
-                // Remove all error messages and feedback icons
-                $message.find('.' + clazz + '[data-' + ns + '-validator][data-' + ns + '-for="' + field + '"]').remove();
-                $parent.find('i[data-' + ns + '-icon-for="' + field + '"]').remove();
-
-                // Whenever the user change the field value, mark it as not validated yet
-                $field.off(events).on(events, function() {
-                    that.updateStatus($(this), that.STATUS_NOT_VALIDATED);
-                });
-
-                // Create help block elements for showing the error messages
-                $field.data(ns + '.messages', $message);
-                for (validatorName in validators) {
-                    $field.data(ns + '.result.' + validatorName, this.STATUS_NOT_VALIDATED);
-
-                    if (!updateAll || i === total - 1) {
-                        $('<small/>')
-                            .css('display', 'none')
-                            .addClass(this.options.err.clazz)
-                            .attr('data-' + ns + '-validator', validatorName)
-                            .attr('data-' + ns + '-for', field)
-                            .attr('data-' + ns + '-result', this.STATUS_NOT_VALIDATED)
-                            .html(this._getMessage(field, validatorName))
-                            .appendTo($message);
-                    }
-
-                    // Init the validator
-                    alias = validators[validatorName].alias || validatorName;
-                    if ('function' === typeof FormValidation.Validator[alias].init) {
-                        FormValidation.Validator[alias].init(this, $field, this.options.fields[field].validators[validatorName], validatorName);
-                    }
-                }
-
-                // Prepare the feedback icons
-                if (this.options.fields[field].icon !== false && this.options.fields[field].icon !== 'false'
-                    && this.options.icon
-                    && this.options.icon.valid && this.options.icon.invalid && this.options.icon.validating
-                    && (!updateAll || i === total - 1))
-                {
-                    // $parent.removeClass(this.options.row.valid).removeClass(this.options.row.invalid).addClass(this.options.row.feedback);
-                    // Keep error messages which are populated from back-end
-                    $parent.addClass(this.options.row.feedback);
-                    var $icon = $('<i/>')
-                                    .css('display', 'none')
-                                    .addClass(this.options.icon.feedback)
-                                    .attr('data-' + ns + '-icon-for', field)
-                                    .insertAfter($field);
-
-                    // Store the icon as a data of field element
-                    (!updateAll ? $field : fields).data(ns + '.icon', $icon);
-
-                    if ('tooltip' === container || 'popover' === container) {
-                        (!updateAll ? $field : fields)
-                            .on(this.options.events.fieldError, function() {
-                                $parent.addClass('fv-has-tooltip');
-                            })
-                            .on(this.options.events.fieldSuccess, function() {
-                                $parent.removeClass('fv-has-tooltip');
-                            });
-
-                        $field
-                            // Show tooltip/popover message when field gets focus
-                            .off('focus.container.' + ns)
-                            .on('focus.container.' + ns, function() {
-                                that._showTooltip($(this), container);
-                            })
-                            // and hide them when losing focus
-                            .off('blur.container.' + ns)
-                            .on('blur.container.' + ns, function() {
-                                that._hideTooltip($(this), container);
-                            });
-                    }
-
-                    if ('string' === typeof this.options.fields[field].icon && this.options.fields[field].icon !== 'true') {
-                        $icon.appendTo($(this.options.fields[field].icon));
-                    } else {
-                        this._fixIcon($field, $icon);
-                    }
-                }
-            }
-
-            // Sort the validators by priority
-            var sortedByPriority = [];
-            for (validatorName in validators) {
-                alias = validators[validatorName].alias || validatorName;
-
-                // Determine the priority
-                validators[validatorName].priority = parseInt(validators[validatorName].priority
-                                                            || FormValidation.Validator[alias].priority
-                                                            || 1, 10);
-                sortedByPriority.push({
-                    validator: validatorName,
-                    priority: validators[validatorName].priority
-                });
-            }
-            sortedByPriority = sortedByPriority.sort(function(a, b) {
-                return a.priority - b.priority;
-            });
-
-            // Prepare the events
-            fields
-                .data(ns + '.validators', sortedByPriority)
-                .on(this.options.events.fieldSuccess, function(e, data) {
-                    var onSuccess = that.getOptions(data.field, null, 'onSuccess');
-                    if (onSuccess) {
-                        FormValidation.Helper.call(onSuccess, [e, data]);
-                    }
-                })
-                .on(this.options.events.fieldError, function(e, data) {
-                    var onError = that.getOptions(data.field, null, 'onError');
-                    if (onError) {
-                        FormValidation.Helper.call(onError, [e, data]);
-                    }
-                })
-                .on(this.options.events.fieldReset, function(e, data) {
-                    var onReset = that.getOptions(data.field, null, 'onReset');
-                    if (onReset) {
-                        FormValidation.Helper.call(onReset, [e, data]);
-                    }
-                })
-                .on(this.options.events.fieldStatus, function(e, data) {
-                    var onStatus = that.getOptions(data.field, null, 'onStatus');
-                    if (onStatus) {
-                        FormValidation.Helper.call(onStatus, [e, data]);
-                    }
-                })
-                .on(this.options.events.validatorError, function(e, data) {
-                    var onError = that.getOptions(data.field, data.validator, 'onError');
-                    if (onError) {
-                        FormValidation.Helper.call(onError, [e, data]);
-                    }
-                })
-                .on(this.options.events.validatorIgnored, function(e, data) {
-                    var onIgnored = that.getOptions(data.field, data.validator, 'onIgnored');
-                    if (onIgnored) {
-                        FormValidation.Helper.call(onIgnored, [e, data]);
-                    }
-                })
-                .on(this.options.events.validatorSuccess, function(e, data) {
-                    var onSuccess = that.getOptions(data.field, data.validator, 'onSuccess');
-                    if (onSuccess) {
-                        FormValidation.Helper.call(onSuccess, [e, data]);
-                    }
-                });
-
-            // Set live mode
-            this.onLiveChange(fields, 'live', function() {
-                if (that._exceedThreshold($(this))) {
-                    that.validateField($(this));
-                }
-            });
-
-            fields.trigger($.Event(this.options.events.fieldInit), {
-                bv: this,   // Support backward
-                fv: this,
-                field: field,
-                element: fields
-            });
-        },
-
-        /**
-         * Check if the field is excluded.
-         * Returning true means that the field will not be validated
-         *
-         * @param {jQuery} $field The field element
-         * @returns {Boolean}
-         */
-        _isExcluded: function($field) {
-            var ns           = this._namespace,
-                excludedAttr = $field.attr('data-' + ns + '-excluded'),
-                // I still need to check the 'name' attribute while initializing the field
-                field        = $field.attr('data-' + ns + '-field') || $field.attr('name');
-
-            switch (true) {
-                case (!!field && this.options.fields && this.options.fields[field] && (this.options.fields[field].excluded === 'true' || this.options.fields[field].excluded === true)):
-                case (excludedAttr === 'true'):
-                case (excludedAttr === ''):
-                    return true;
-
-                case (!!field && this.options.fields && this.options.fields[field] && (this.options.fields[field].excluded === 'false' || this.options.fields[field].excluded === false)):
-                case (excludedAttr === 'false'):
-                    return false;
-
-                case (!!field && this.options.fields && this.options.fields[field] && 'function' === typeof this.options.fields[field].excluded):
-                    return this.options.fields[field].excluded.call(this, $field, this);
-
-                case (!!field && this.options.fields && this.options.fields[field] && 'string' === typeof this.options.fields[field].excluded):
-                case (excludedAttr):
-                    return FormValidation.Helper.call(this.options.fields[field].excluded, [$field, this]);
-
-                default:
-                    if (this.options.excluded) {
-                        // Convert to array first
-                        if ('string' === typeof this.options.excluded) {
-                            this.options.excluded = $.map(this.options.excluded.split(','), function(item) {
-                                // Trim the spaces
-                                return $.trim(item);
-                            });
-                        }
-
-                        var length = this.options.excluded.length;
-                        for (var i = 0; i < length; i++) {
-                            if (('string' === typeof this.options.excluded[i] && $field.is(this.options.excluded[i]))
-                                || ('function' === typeof this.options.excluded[i] && this.options.excluded[i].call(this, $field, this) === true))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-            }
-        },
-
-        /**
-         * Get a field changed trigger event
-         *
-         * @param {jQuery} $field The field element
-         * @returns {String[]} The event names triggered on field change
-         */
-        _getFieldTrigger: function($field) {
-            var ns      = this._namespace,
-                trigger = $field.data(ns + '.trigger');
-            if (trigger) {
-                return trigger;
-            }
-
-            // IE10/11 auto fires input event of elements using the placeholder attribute
-            // https://connect.microsoft.com/IE/feedback/details/856700/
-            var type  = $field.attr('type'),
-                name  = $field.attr('data-' + ns + '-field'),
-                event = ('radio' === type || 'checkbox' === type || 'file' === type || 'SELECT' === $field.get(0).tagName)
-                        ? 'change'
-                        : (this._ieVersion >= 10 && $field.attr('placeholder') ? 'keyup' : this._changeEvent);
-            trigger   = ((this.options.fields[name] ? this.options.fields[name].trigger : null) || this.options.trigger || event).split(' ');
-
-            // Since the trigger data is used many times, I need to cache it to use later
-            $field.data(ns + '.trigger', trigger);
-
-            return trigger;
-        },
-
-        /**
-         * Get the error message for given field and validator
-         *
-         * @param {String} field The field name
-         * @param {String} validatorName The validator name
-         * @returns {String}
-         */
-        _getMessage: function(field, validatorName) {
-            if (!this.options.fields[field] || !this.options.fields[field].validators) {
-                return '';
-            }
-            var validators = this.options.fields[field].validators,
-                alias      = (validators[validatorName] && validators[validatorName].alias) ? validators[validatorName].alias : validatorName;
-            if (!FormValidation.Validator[alias]) {
-                return '';
-            }
-
-            switch (true) {
-                case !!validators[validatorName].message:
-                    return validators[validatorName].message;
-                case !!this.options.fields[field].message:
-                    return this.options.fields[field].message;
-                case !!this.options.message:
-                    return this.options.message;
-                case (!!FormValidation.I18n[this.options.locale] && !!FormValidation.I18n[this.options.locale][alias] && !!FormValidation.I18n[this.options.locale][alias]['default']):
-                    return FormValidation.I18n[this.options.locale][alias]['default'];
-                default:
-                    return this.DEFAULT_MESSAGE;
-            }
-        },
-
-        /**
-         * Get the element to place the error messages
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} row
-         * @returns {jQuery}
-         */
-        _getMessageContainer: function($field, row) {
-            if (!this.options.err.parent) {
-                throw new Error('The err.parent option is not defined');
-            }
-
-            var $parent = $field.parent();
-            if ($parent.is(row)) {
-                return $parent;
-            }
-
-            var cssClasses = $parent.attr('class');
-            if (!cssClasses) {
-                return this._getMessageContainer($parent, row);
-            }
-
-            if (this.options.err.parent.test(cssClasses)) {
-                return $parent;
-            }
-
-            return this._getMessageContainer($parent, row);
-        },
-
-        /**
-         * Parse the add-on options from HTML attributes
-         *
-         * @returns {Object}
-         */
-        _parseAddOnOptions: function() {
-            var ns     = this._namespace,
-                names  = this.$form.attr('data-' + ns + '-addons'),
-                addOns = this.options.addOns || {};
-
-            if (names) {
-                names = names.replace(/\s/g, '').split(',');
-                for (var i = 0; i < names.length; i++) {
-                    if (!addOns[names[i]]) {
-                        addOns[names[i]] = {};
-                    }
-                }
-            }
-
-            // Try to parse each add-on options
-            var addOn, attrMap, attr, option;
-            for (addOn in addOns) {
-                if (!FormValidation.AddOn[addOn]) {
-                    // Add-on is not found
-                    delete addOns[addOn];
-                    continue;
-                }
-
-                attrMap = FormValidation.AddOn[addOn].html5Attributes;
-                if (attrMap) {
-                    for (attr in attrMap) {
-                        option = this.$form.attr('data-' + ns + '-addons-' + addOn.toLowerCase() + '-' + attr.toLowerCase());
-                        if (option) {
-                            addOns[addOn][attrMap[attr]] = option;
-                        }
-                    }
-                }
-            }
-
-            return addOns;
-        },
-
-        /**
-         * Parse the validator options from HTML attributes
-         *
-         * @param {jQuery} $field The field element
-         * @returns {Object}
-         */
-        _parseOptions: function($field) {
-            var ns           = this._namespace,
-                field        = $field.attr('name') || $field.attr('data-' + ns + '-field'),
-                validators   = {},
-                aliasAttr    = new RegExp('^data-' + ns + '-([a-z]+)-alias$'),
-                validatorSet = $.extend({}, FormValidation.Validator),
-                validator,
-                v,          // Validator name
-                attrName,
-                enabled,
-                optionName,
-                optionAttrName,
-                optionValue,
-                html5AttrName,
-                html5AttrMap;
-
-            // Determine whether the alias validator is used by checking the data-fv-validator-alias attribute
-            $.each($field.get(0).attributes, function(i, attribute) {
-                if (attribute.value && aliasAttr.test(attribute.name)) {
-                    v = attribute.name.split('-')[2];
-                    if (validatorSet[attribute.value]) {
-                        validatorSet[v]       = validatorSet[attribute.value];
-                        validatorSet[v].alias = attribute.value;
-                    }
-                }
-            });
-
-            for (v in validatorSet) {
-                validator    = validatorSet[v];
-                attrName     = 'data-' + ns + '-' + v.toLowerCase(),
-                enabled      = $field.attr(attrName) + '';
-                html5AttrMap = ('function' === typeof validator.enableByHtml5) ? validator.enableByHtml5($field) : null;
-
-                if ((html5AttrMap && enabled !== 'false')
-                    || (html5AttrMap !== true && ('' === enabled || 'true' === enabled || attrName === enabled.toLowerCase())))
-                {
-                    // Try to parse the options via attributes
-                    validator.html5Attributes = $.extend({}, {
-                                                    message: 'message',
-                                                    onerror: 'onError',
-                                                    onreset: 'onReset',
-                                                    onsuccess: 'onSuccess',
-                                                    priority: 'priority',
-                                                    transformer: 'transformer'
-                                                }, validator.html5Attributes);
-                    validators[v] = $.extend({}, html5AttrMap === true ? {} : html5AttrMap, validators[v]);
-                    if (validator.alias) {
-                        validators[v].alias = validator.alias;
-                    }
-
-                    for (html5AttrName in validator.html5Attributes) {
-                        optionName     = validator.html5Attributes[html5AttrName];
-                        optionAttrName = 'data-' + ns + '-' + v.toLowerCase() + '-' + html5AttrName;
-                        optionValue    = $field.attr(optionAttrName);
-                        if (optionValue) {
-                            if ('true' === optionValue || optionAttrName === optionValue.toLowerCase()) {
-                                optionValue = true;
-                            } else if ('false' === optionValue) {
-                                optionValue = false;
-                            }
-                            validators[v][optionName] = optionValue;
-                        }
-                    }
-                }
-            }
-
-            var opts = {
-                    autoFocus:   $field.attr('data-' + ns + '-autofocus'),
-                    err:         $field.attr('data-' + ns + '-err-container') || $field.attr('data-' + ns + '-container'), // Support backward
-                    enabled:     $field.attr('data-' + ns + '-enabled'),
-                    excluded:    $field.attr('data-' + ns + '-excluded'),
-                    icon:        $field.attr('data-' + ns + '-icon') || $field.attr('data-' + ns + '-feedbackicons') || (this.options.fields && this.options.fields[field] ? this.options.fields[field].feedbackIcons : null), // Support backward
-                    message:     $field.attr('data-' + ns + '-message'),
-                    onError:     $field.attr('data-' + ns + '-onerror'),
-                    onReset:     $field.attr('data-' + ns + '-onreset'),
-                    onStatus:    $field.attr('data-' + ns + '-onstatus'),
-                    onSuccess:   $field.attr('data-' + ns + '-onsuccess'),
-                    row:         $field.attr('data-' + ns + '-row') || $field.attr('data-' + ns + '-group') || (this.options.fields && this.options.fields[field] ? this.options.fields[field].group : null), // Support backward
-                    selector:    $field.attr('data-' + ns + '-selector'),
-                    threshold:   $field.attr('data-' + ns + '-threshold'),
-                    transformer: $field.attr('data-' + ns + '-transformer'),
-                    trigger:     $field.attr('data-' + ns + '-trigger'),
-                    verbose:     $field.attr('data-' + ns + '-verbose'),
-                    validators:  validators
-                },
-                emptyOptions    = $.isEmptyObject(opts),        // Check if the field options are set using HTML attributes
-                emptyValidators = $.isEmptyObject(validators);  // Check if the field validators are set using HTML attributes
-
-            if (!emptyValidators || (!emptyOptions && this.options.fields && this.options.fields[field])) {
-                //opts.validators = validators;
-                return opts;
-            } else {
-                return null;
-            }
-        },
-
-        /**
-         * Called when all validations are completed
-         */
-        _submit: function() {
-            var isValid = this.isValid();
-            if (isValid === null) {
-                return;
-            }
-
-            var eventType = isValid ? this.options.events.formSuccess : this.options.events.formError,
-                e         = $.Event(eventType);
-
-            this.$form.trigger(e);
-
-            // Call default handler
-            // Check if whether the submit button is clicked
-            if (this.$submitButton) {
-                isValid ? this._onSuccess(e) : this._onError(e);
-            }
-        },
-
-        // ~~~~~~
-        // Events
-        // ~~~~~~
-
-        /**
-         * The default handler of error.form.fv event.
-         * It will be called when there is a invalid field
-         *
-         * @param {jQuery.Event} e The jQuery event object
-         */
-        _onError: function(e) {
-            if (e.isDefaultPrevented()) {
-                return;
-            }
-
-            if ('submitted' === this.options.live) {
-                // Enable live mode
-                this.options.live = 'enabled';
-
-                var that = this;
-                for (var field in this.options.fields) {
-                    (function(f) {
-                        var fields  = that.getFieldElements(f);
-                        if (fields.length) {
-                            that.onLiveChange(fields, 'live', function() {
-                                if (that._exceedThreshold($(this))) {
-                                    that.validateField($(this));
-                                }
-                            });
-                        }
-                    })(field);
-                }
-            }
-
-            // Determined the first invalid field which will be focused on automatically
-            var ns = this._namespace;
-            for (var i = 0; i < this.$invalidFields.length; i++) {
-                var $field    = this.$invalidFields.eq(i),
-                    autoFocus = this.isOptionEnabled($field.attr('data-' + ns + '-field'), 'autoFocus');
-                if (autoFocus) {
-                    // Focus the field
-                    $field.focus();
-                    break;
-                }
-            }
-        },
-
-        /**
-         * Called after validating a field element
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} [validatorName] The validator name
-         */
-        _onFieldValidated: function($field, validatorName) {
-            var ns            = this._namespace,
-                field         = $field.attr('data-' + ns + '-field'),
-                validators    = this.options.fields[field].validators,
-                counter       = {},
-                numValidators = 0,
-                data          = {
-                    bv: this,   // Support backward
-                    fv: this,
-                    field: field,
-                    element: $field,
-                    validator: validatorName,
-                    result: $field.data(ns + '.response.' + validatorName)
-                };
-
-            // Trigger an event after given validator completes
-            if (validatorName) {
-                switch ($field.data(ns + '.result.' + validatorName)) {
-                    case this.STATUS_INVALID:
-                        $field.trigger($.Event(this.options.events.validatorError), data);
-                        break;
-                    case this.STATUS_VALID:
-                        $field.trigger($.Event(this.options.events.validatorSuccess), data);
-                        break;
-                    case this.STATUS_IGNORED:
-                        $field.trigger($.Event(this.options.events.validatorIgnored), data);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            counter[this.STATUS_NOT_VALIDATED] = 0;
-            counter[this.STATUS_VALIDATING]    = 0;
-            counter[this.STATUS_INVALID]       = 0;
-            counter[this.STATUS_VALID]         = 0;
-            counter[this.STATUS_IGNORED]       = 0;
-
-            for (var v in validators) {
-                if (validators[v].enabled === false) {
-                    continue;
-                }
-
-                numValidators++;
-                var result = $field.data(ns + '.result.' + v);
-                if (result) {
-                    counter[result]++;
-                }
-            }
-
-            // The sum of valid fields now also include ignored fields
-            if (counter[this.STATUS_VALID] + counter[this.STATUS_IGNORED] === numValidators) {
-                // Remove from the list of invalid fields
-                this.$invalidFields = this.$invalidFields.not($field);
-
-                $field.trigger($.Event(this.options.events.fieldSuccess), data);
-            }
-            // If all validators are completed and there is at least one validator which doesn't pass
-            else if ((counter[this.STATUS_NOT_VALIDATED] === 0 || !this.isOptionEnabled(field, 'verbose')) && counter[this.STATUS_VALIDATING] === 0 && counter[this.STATUS_INVALID] > 0) {
-                // Add to the list of invalid fields
-                this.$invalidFields = this.$invalidFields.add($field);
-
-                $field.trigger($.Event(this.options.events.fieldError), data);
-            }
-        },
-
-        /**
-         * The default handler of success.form.fv event.
-         * It will be called when all the fields are valid
-         *
-         * @param {jQuery.Event} e The jQuery event object
-         */
-        _onSuccess: function(e) {
-            if (e.isDefaultPrevented()) {
-                return;
-            }
-
-            // Submit the form
-            this.disableSubmitButtons(true).defaultSubmit();
-        },
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // Abstract methods
-        // Need to be implemented by sub-class that supports specific framework
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        /**
-         * Specific framework might need to adjust the icon position
-         *
-         * @param {jQuery} $field The field element
-         * @param {jQuery} $icon The icon element
-         */
-        _fixIcon: function($field, $icon) {
-        },
-
-        /**
-         * Create a tooltip or popover
-         * It will be shown when focusing on the field
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} message The message
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _createTooltip: function($field, message, type) {
-        },
-
-        /**
-         * Destroy the tooltip or popover
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _destroyTooltip: function($field, type) {
-        },
-
-        /**
-         * Hide a tooltip or popover
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _hideTooltip: function($field, type) {
-        },
-
-        /**
-         * Show a tooltip or popover
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _showTooltip: function($field, type) {
-        },
-
-        // ~~~~~~~~~~~~~~
-        // Public methods
-        // ~~~~~~~~~~~~~~
-
-        /**
-         * Submit the form using default submission.
-         * It also does not perform any validations when submitting the form
-         */
-        defaultSubmit: function() {
-            var ns = this._namespace;
-            if (this.$submitButton) {
-                // Create hidden input to send the submit buttons
-                $('<input/>')
-                    .attr({
-                        'type': 'hidden',
-                        name: this.$submitButton.attr('name')
-                    })
-                    .attr('data-' + ns + '-submit-hidden', '')
-                    .val(this.$submitButton.val())
-                    .appendTo(this.$form);
-            }
-
-            // Submit form
-            this.$form.off('submit.' + ns).submit();
-        },
-
-        /**
-         * Disable/enable submit buttons
-         *
-         * @param {Boolean} disabled Can be true or false
-         * @returns {FormValidation.Base}
-         */
-        disableSubmitButtons: function(disabled) {
-            if (!disabled) {
-                this.$form
-                    .find(this.options.button.selector)
-                        .removeAttr('disabled')
-                        .removeClass(this.options.button.disabled);
-            } else if (this.options.live !== 'disabled') {
-                // Don't disable if the live validating mode is disabled
-                this.$form
-                    .find(this.options.button.selector)
-                        .attr('disabled', 'disabled')
-                        .addClass(this.options.button.disabled);
-            }
-
-            return this;
-        },
-
-        /**
-         * Retrieve the field elements by given name
-         *
-         * @param {String} field The field name
-         * @returns {null|jQuery[]}
-         */
-        getFieldElements: function(field) {
-            if (!this._cacheFields[field]) {
-                if (this.options.fields[field] && this.options.fields[field].selector) {
-                    // Look for the field inside the form first
-                    var f = this.$form.find(this.options.fields[field].selector);
-                    // If not found, search in entire document
-                    this._cacheFields[field] = f.length ? f : $(this.options.fields[field].selector);
-                } else {
-                    this._cacheFields[field] = this.$form.find('[name="' + field + '"]');
-                }
-            }
-
-            return this._cacheFields[field];
-        },
-
-        /**
-         * Get the field value after applying transformer
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {String} validatorName The validator name
-         * @returns {String}
-         */
-        getFieldValue: function(field, validatorName) {
-            var $field, ns = this._namespace;
-            if ('string' === typeof field) {
-                $field = this.getFieldElements(field);
-                if ($field.length === 0) {
-                    return null;
-                }
-            } else {
-                $field = field;
-                field  = $field.attr('data-' + ns + '-field');
-            }
-
-            if (!field || !this.options.fields[field]) {
-                return $field.val();
-            }
-
-            var transformer = (this.options.fields[field].validators && this.options.fields[field].validators[validatorName]
-                                ? this.options.fields[field].validators[validatorName].transformer : null)
-                                || this.options.fields[field].transformer;
-            return transformer ? FormValidation.Helper.call(transformer, [$field, validatorName, this]) : $field.val();
-        },
-
-        /**
-         * Get the namespace
-         *
-         * @returns {String}
-         */
-        getNamespace: function() {
-            return this._namespace;
-        },
-
-        /**
-         * Get the field options
-         *
-         * @param {String|jQuery} [field] The field name or field element. If it is not set, the method returns the form options
-         * @param {String} [validator] The name of validator. It null, the method returns form options
-         * @param {String} [option] The option name
-         * @return {String|Object}
-         */
-        getOptions: function(field, validator, option) {
-            var ns = this._namespace;
-            if (!field) {
-                return option ? this.options[option] : this.options;
-            }
-            if ('object' === typeof field) {
-                field = field.attr('data-' + ns + '-field');
-            }
-            if (!this.options.fields[field]) {
-                return null;
-            }
-
-            var options = this.options.fields[field];
-            if (!validator) {
-                return option ? options[option] : options;
-            }
-            if (!options.validators || !options.validators[validator]) {
-                return null;
-            }
-
-            return option ? options.validators[validator][option] : options.validators[validator];
-        },
-
-        /**
-         * Get the validating result of field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {String} validatorName The validator name
-         * @returns {String} The status. Can be 'NOT_VALIDATED', 'VALIDATING', 'INVALID', 'VALID' or 'IGNORED'
-         */
-        getStatus: function(field, validatorName) {
-            var ns = this._namespace;
-            switch (typeof field) {
-                case 'object':
-                    return field.data(ns + '.result.' + validatorName);
-                case 'string':
-                /* falls through */
-                default:
-                    return this.getFieldElements(field).eq(0).data(ns + '.result.' + validatorName);
-            }
-        },
-
-        /**
-         * Check whether or not a field option is enabled
-         *
-         * @param {String} field The field name
-         * @param {String} option The option name, "verbose", "autoFocus", for example
-         * @returns {Boolean}
-         */
-        isOptionEnabled: function(field, option) {
-            if (this.options.fields[field] && (this.options.fields[field][option] === 'true' || this.options.fields[field][option] === true)) {
-                return true;
-            }
-            if (this.options.fields[field] && (this.options.fields[field][option] === 'false' || this.options.fields[field][option] === false)) {
-                return false;
-            }
-            return this.options[option] === 'true' || this.options[option] === true;
-        },
-
-        /**
-         * Check the form validity
-         *
-         * @returns {Boolean|null} Returns one of three values
-         * - true, if all fields are valid
-         * - false, if there is one invalid field
-         * - null, if there is at least one field which is not validated yet or being validated
-         */
-        isValid: function() {
-            for (var field in this.options.fields) {
-                var isValidField = this.isValidField(field);
-                if (isValidField === null) {
-                    return null;
-                }
-                if (isValidField === false) {
-                    return false;
-                }
-            }
-
-            return true;
-        },
-
-        /**
-         * Check if all fields inside a given container are valid.
-         * It's useful when working with a wizard-like such as tab, collapse
-         *
-         * @param {String|jQuery} container The container selector or element
-         * @returns {Boolean|null} Returns one of three values
-         * - true, if all fields inside the container are valid
-         * - false, if there is one invalid field inside the container
-         * - null, if the container consists of at least one field which is not validated yet or being validated
-         */
-        isValidContainer: function(container) {
-            var that       = this,
-                ns         = this._namespace,
-                fields     = [],
-                $container = ('string' === typeof container) ? $(container) : container;
-            if ($container.length === 0) {
-                return true;
-            }
-
-            $container.find('[data-' + ns + '-field]').each(function() {
-                var $field = $(this);
-                if (!that._isExcluded($field)) {
-                    fields.push($field);
-                }
-            });
-
-            var total = fields.length,
-                clazz = this.options.err.clazz.split(' ').join('.');
-            for (var i = 0; i < total; i++) {
-                var $f      = fields[i],
-                    field   = $f.attr('data-' + ns + '-field'),
-                    $errors = $f.data(ns + '.messages')
-                                .find('.' + clazz + '[data-' + ns + '-validator][data-' + ns + '-for="' + field + '"]');
-
-                if (this.options.fields && this.options.fields[field]
-                    && (this.options.fields[field].enabled === 'false' || this.options.fields[field].enabled === false))
-                {
-                    continue;
-                }
-
-                if ($errors.filter('[data-' + ns + '-result="' + this.STATUS_INVALID + '"]').length > 0) {
-                    return false;
-                }
-
-                // If the field is not validated
-                if ($errors.filter('[data-' + ns + '-result="' + this.STATUS_NOT_VALIDATED + '"]').length > 0
-                    || $errors.filter('[data-' + ns + '-result="' + this.STATUS_VALIDATING + '"]').length > 0)
-                {
-                    return null;
-                }
-            }
-
-            return true;
-        },
-
-        /**
-         * Check if the field is valid or not
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @returns {Boolean|null} Returns one of three values
-         * - true, if the field passes all validators
-         * - false, if the field doesn't pass any validator
-         * - null, if there is at least one validator which isn't validated yet or being validated
-         */
-        isValidField: function(field) {
-            var ns     = this._namespace,
-                fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-' + ns + '-field');
-                    break;
-                case 'string':
-                    fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
-            if (fields.length === 0 || !this.options.fields[field]
-                || this.options.fields[field].enabled === 'false' || this.options.fields[field].enabled === false)
-            {
-                return true;
-            }
-
-            var type  = fields.attr('type'),
-                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length,
-                $field, validatorName, status;
-            for (var i = 0; i < total; i++) {
-                $field = fields.eq(i);
-                if (this._isExcluded($field)) {
-                    continue;
-                }
-
-                for (validatorName in this.options.fields[field].validators) {
-                    if (this.options.fields[field].validators[validatorName].enabled === false) {
-                        continue;
-                    }
-
-                    status = $field.data(ns + '.result.' + validatorName);
-                    if (status === this.STATUS_VALIDATING || status === this.STATUS_NOT_VALIDATED) {
-                        return null;
-                    } else if (status === this.STATUS_INVALID) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        },
-
-        /**
-         * Detach a handler function for a field live change event
-         *
-         * @param {jQuery[]} $fields The field elements
-         * @param {String} namespace The event namespace
-         * @returns {FormValidation.Base}
-         */
-        offLiveChange: function($fields, namespace) {
-            if ($fields === null || $fields.length === 0) {
-                return this;
-            }
-
-            var ns      = this._namespace,
-                trigger = this._getFieldTrigger($fields.eq(0)),
-                events  = $.map(trigger, function(item) {
-                    return item + '.' + namespace + '.' + ns;
-                }).join(' ');
-
-            $fields.off(events);
-            return this;
-        },
-
-        /**
-         * Attach a handler function for a field live change event
-         *
-         * @param {jQuery[]} $fields The field elements
-         * @param {String} namespace The event namespace
-         * @param {Function} handler The handler function
-         * @returns {FormValidation.Base}
-         */
-        onLiveChange: function($fields, namespace, handler) {
-            if ($fields === null || $fields.length === 0) {
-                return this;
-            }
-
-            var ns      = this._namespace,
-                trigger = this._getFieldTrigger($fields.eq(0)),
-                events  = $.map(trigger, function(item) {
-                    return item + '.' + namespace + '.' + ns;
-                }).join(' ');
-
-            switch (this.options.live) {
-                case 'submitted':
-                    break;
-                case 'disabled':
-                    $fields.off(events);
-                    break;
-                case 'enabled':
-                /* falls through */
-                default:
-                    $fields.off(events).on(events, function(e) {
-                        handler.apply(this, arguments);
-                    });
-                    break;
-            }
-
-            return this;
-        },
-
-        /**
-         * Update the error message
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {String} validator The validator name
-         * @param {String} message The message
-         * @returns {FormValidation.Base}
-         */
-        updateMessage: function(field, validator, message) {
-            var ns      = this._namespace,
-                $fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    $fields = field;
-                    field   = field.attr('data-' + ns + '-field');
-                    break;
-                case 'string':
-                    $fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
-
-            var clazz = this.options.err.clazz.split(' ').join('.');
-            $fields.each(function() {
-                $(this)
-                    .data(ns + '.messages')
-                    .find('.' + clazz + '[data-' + ns + '-validator="' + validator + '"][data-' + ns + '-for="' + field + '"]').html(message);
-            });
-
-            return this;
-        },
-
-        /**
-         * Update all validating results of field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {String} status The status. Can be 'NOT_VALIDATED', 'VALIDATING', 'INVALID', 'VALID' or 'IGNORED'
-         * @param {String} [validatorName] The validator name. If null, the method updates validity result for all validators
-         * @returns {FormValidation.Base}
-         */
-        updateStatus: function(field, status, validatorName) {
-            var ns     = this._namespace,
-                fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-' + ns + '-field');
-                    break;
-                case 'string':
-                    fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
-
-            if (!field || !this.options.fields[field]) {
-                return this;
-            }
-
-            if (status === this.STATUS_NOT_VALIDATED) {
-                // Reset the flag
-                // To prevent the form from doing submit when a deferred validator returns true while typing
-                this._submitIfValid = false;
-            }
-
-            var that  = this,
-                type  = fields.attr('type'),
-                row   = this.options.fields[field].row || this.options.row.selector,
-                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length,
-                clazz = this.options.err.clazz.split(' ').join('.');
-
-            for (var i = 0; i < total; i++) {
-                var $field       = fields.eq(i);
-                if (this._isExcluded($field)) {
-                    continue;
-                }
-
-                var $parent      = $field.closest(row),
-                    $message     = $field.data(ns + '.messages'),
-                    $allErrors   = $message.find('.' + clazz + '[data-' + ns + '-validator][data-' + ns + '-for="' + field + '"]'),
-                    $errors      = validatorName ? $allErrors.filter('[data-' + ns + '-validator="' + validatorName + '"]') : $allErrors,
-                    $icon        = $field.data(ns + '.icon'),
-                    // Support backward
-                    container    = ('function' === typeof (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container))
-                                    ? (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container).call(this, $field, this)
-                                    : (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container),
-                    isValidField = null,
-                    isValidating,
-                    isNotValidated;
-
-                // Update status
-                if (validatorName) {
-                    $field.data(ns + '.result.' + validatorName, status);
-                } else {
-                    for (var v in this.options.fields[field].validators) {
-                        $field.data(ns + '.result.' + v, status);
-                    }
-                }
-
-                // Show/hide error elements and feedback icons
-                $errors.attr('data-' + ns + '-result', status);
-
-                switch (status) {
-                    case this.STATUS_VALIDATING:
-                        isValidField = null;
-                        this.disableSubmitButtons(true);
-                        $field.removeClass(this.options.control.valid).removeClass(this.options.control.invalid);
-                        $parent.removeClass(this.options.row.valid).removeClass(this.options.row.invalid);
-                        if ($icon) {
-                            $icon.removeClass(this.options.icon.valid).removeClass(this.options.icon.invalid).addClass(this.options.icon.validating).show();
-                        }
-                        break;
-
-                    case this.STATUS_INVALID:
-                        isValidField = false;
-                        this.disableSubmitButtons(true);
-                        $field.removeClass(this.options.control.valid).addClass(this.options.control.invalid);
-                        $parent.removeClass(this.options.row.valid).addClass(this.options.row.invalid);
-                        if ($icon) {
-                            $icon.removeClass(this.options.icon.valid).removeClass(this.options.icon.validating).addClass(this.options.icon.invalid).show();
-                        }
-                        break;
-
-                    case this.STATUS_IGNORED:       // Treat ignored fields like they are valid with some specialties
-                    case this.STATUS_VALID:
-                        isValidating   = ($allErrors.filter('[data-' + ns + '-result="' + this.STATUS_VALIDATING +'"]').length > 0);
-                        isNotValidated = ($allErrors.filter('[data-' + ns + '-result="' + this.STATUS_NOT_VALIDATED +'"]').length > 0);
-
-                        var numIgnored = $allErrors.filter('[data-' + ns + '-result="' + this.STATUS_IGNORED +'"]').length;
-
-                        // If the field is valid (passes all validators)
-                        isValidField   = (isValidating || isNotValidated)     // There are some validators that have not done
-                                        ? null
-                                        // All validators are completed
-                                        : ($allErrors.filter('[data-' + ns + '-result="' + this.STATUS_VALID +'"]').length + numIgnored === $allErrors.length);
-
-                        $field.removeClass(this.options.control.valid).removeClass(this.options.control.invalid);
-
-                        if (isValidField === true) {
-                            this.disableSubmitButtons(this.isValid() === false);
-                            if (status === this.STATUS_VALID) {
-                                $field.addClass(this.options.control.valid);
-                            }
-                        } else if (isValidField === false) {
-                            this.disableSubmitButtons(true);
-                            if (status === this.STATUS_VALID) {
-                                $field.addClass(this.options.control.invalid);
-                            }
-                        }
-
-                        if ($icon) {
-                            $icon.removeClass(this.options.icon.invalid).removeClass(this.options.icon.validating).removeClass(this.options.icon.valid);
-                            if (status === this.STATUS_VALID || numIgnored !== $allErrors.length) {
-                                $icon.addClass(isValidating
-                                                ? this.options.icon.validating
-                                                : (isValidField === null ? '' : (isValidField ? this.options.icon.valid : this.options.icon.invalid)))
-                                     .show();
-                            }
-                        }
-
-                        var isValidContainer = this.isValidContainer($parent);
-                        if (isValidContainer !== null) {
-                            $parent.removeClass(this.options.row.valid).removeClass(this.options.row.invalid);
-                            if (status === this.STATUS_VALID || numIgnored !== $allErrors.length) {
-                                $parent.addClass(isValidContainer ? this.options.row.valid : this.options.row.invalid);
-                            }
-                        }
-                        break;
-
-                    case this.STATUS_NOT_VALIDATED:
-                    /* falls through */
-                    default:
-                        isValidField = null;
-                        this.disableSubmitButtons(false);
-                        $field.removeClass(this.options.control.valid).removeClass(this.options.control.invalid);
-                        $parent.removeClass(this.options.row.valid).removeClass(this.options.row.invalid);
-                        if ($icon) {
-                            $icon.removeClass(this.options.icon.valid).removeClass(this.options.icon.invalid).removeClass(this.options.icon.validating).hide();
-                        }
-                        break;
-                }
-
-                if ($icon && ('tooltip' === container || 'popover' === container)) {
-                    (isValidField === false)
-                        // Only show the first error message
-                        ? this._createTooltip($field, $allErrors.filter('[data-' + ns + '-result="' + that.STATUS_INVALID + '"]').eq(0).html(), container)
-                        : this._destroyTooltip($field, container);
-                } else {
-                    (status === this.STATUS_INVALID) ? $errors.show() : $errors.hide();
-                }
-
-                // Trigger an event
-                $field.trigger($.Event(this.options.events.fieldStatus), {
-                    bv: this,   // Support backward
-                    fv: this,
-                    field: field,
-                    element: $field,
-                    status: status,
-                    validator: validatorName
-                });
-                this._onFieldValidated($field, validatorName);
-            }
-
-            return this;
-        },
-
-        /**
-         * Validate the form
-         *
-         * @returns {FormValidation.Base}
-         */
-        validate: function() {
-            if ($.isEmptyObject(this.options.fields)) {
-                this._submit();
-                return this;
-            }
-            this.$form.trigger($.Event(this.options.events.formPreValidate));
-
-            this.disableSubmitButtons(true);
-            this._submitIfValid = false;
-            for (var field in this.options.fields) {
-                this.validateField(field);
-            }
-
-            this._submit();
-            this._submitIfValid = true;
-
-            return this;
-        },
-
-        /**
-         * Validate given field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @returns {FormValidation.Base}
-         */
-        validateField: function(field) {
-            var ns     = this._namespace,
-                fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-' + ns + '-field');
-                    break;
-                case 'string':
-                    fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
-
-            if (fields.length === 0 || !this.options.fields[field]
-                || this.options.fields[field].enabled === 'false' || this.options.fields[field].enabled === false)
-            {
-                return this;
-            }
-
-            var that       = this,
-                type       = fields.attr('type'),
-                total      = (('radio' === type || 'checkbox' === type) && this.options.live !== 'disabled') ? 1 : fields.length,
-                updateAll  = ('radio' === type || 'checkbox' === type),
-                validators = this.options.fields[field].validators,
-                verbose    = this.isOptionEnabled(field, 'verbose'),
-                validatorName,
-                alias,
-                validateResult;
-
-            for (var i = 0; i < total; i++) {
-                var $field = fields.eq(i);
-                if (this._isExcluded($field)) {
-                    continue;
-                }
-
-                var stop             = false,
-                    sortedByPriority = $field.data(ns + '.validators'),
-                    numValidators    = sortedByPriority.length;
-
-                for (var j = 0; j < numValidators; j++) {
-                    validatorName = sortedByPriority[j].validator;
-                    if ($field.data(ns + '.dfs.' + validatorName)) {
-                        $field.data(ns + '.dfs.' + validatorName).reject();
-                    }
-                    if (stop) {
-                        break;
-                    }
-
-                    // Don't validate field if it is already done
-                    var result = $field.data(ns + '.result.' + validatorName);
-                    if (result === this.STATUS_VALID || result === this.STATUS_INVALID) {
-                        this._onFieldValidated($field, validatorName);
-                        continue;
-                    } else if (validators[validatorName].enabled === false) {
-                        // Changed in v0.6.2:
-                        // When the field validator is disabled, it should be treated as STATUS_IGNORED instead of STATUS_VALID
-                        // By doing that, the field with only disabled and ignored validators will not have success/error class
-                        this.updateStatus(updateAll ? field : $field, this.STATUS_IGNORED, validatorName);
-                        continue;
-                    }
-
-                    $field.data(ns + '.result.' + validatorName, this.STATUS_VALIDATING);
-
-                    // Check whether or not the validator is just an alias of another
-                    alias          = validators[validatorName].alias || validatorName;
-                    validateResult = FormValidation.Validator[alias].validate(this, $field, validators[validatorName], validatorName);
-
-                    // validateResult can be a $.Deferred object ...
-                    if ('object' === typeof validateResult && validateResult.resolve) {
-                        this.updateStatus(updateAll ? field : $field, this.STATUS_VALIDATING, validatorName);
-                        $field.data(ns + '.dfs.' + validatorName, validateResult);
-
-                        validateResult.done(function($f, v, response) {
-                            // v is validator name
-                            $f.removeData(ns + '.dfs.' + v).data(ns + '.response.' + v, response);
-                            if (response.message) {
-                                that.updateMessage($f, v, response.message);
-                            }
-
-                            that.updateStatus(updateAll ? $f.attr('data-' + ns + '-field') : $f,
-                                              response.valid === true ? that.STATUS_VALID : (response.valid === false ? that.STATUS_INVALID : that.STATUS_IGNORED),
-                                              v);
-
-                            if (response.valid && that._submitIfValid === true) {
-                                // If a remote validator returns true and the form is ready to submit, then do it
-                                that._submit();
-                            } else if (response.valid === false && !verbose) {
-                                stop = true;
-                            }
-                        });
-                    }
-                    // ... or object { valid: true/false/null, message: 'dynamic message', otherKey: value, ... }
-                    else if ('object' === typeof validateResult && validateResult.valid !== undefined) {
-                        $field.data(ns + '.response.' + validatorName, validateResult);
-                        if (validateResult.message) {
-                            this.updateMessage(updateAll ? field : $field, validatorName, validateResult.message);
-                        }
-                        this.updateStatus(updateAll ? field : $field,
-                                          validateResult.valid === true ? this.STATUS_VALID : (validateResult.valid === false ? this.STATUS_INVALID : this.STATUS_IGNORED),
-                                          validatorName);
-                        if (validateResult.valid === false && !verbose) {
-                            break;
-                        }
-                    }
-                    // ... or a boolean value
-                    else if ('boolean' === typeof validateResult) {
-                        $field.data(ns + '.response.' + validatorName, validateResult);
-                        this.updateStatus(updateAll ? field : $field, validateResult ? this.STATUS_VALID : this.STATUS_INVALID, validatorName);
-                        if (!validateResult && !verbose) {
-                            break;
-                        }
-                    }
-                    // ... or null
-                    // to indicate that the field should be ignored for current validator
-                    else if (null === validateResult) {
-                        $field.data(ns + '.response.' + validatorName, validateResult);
-                        this.updateStatus(updateAll ? field : $field, this.STATUS_IGNORED, validatorName);
-                    }
-                }
-            }
-
-            return this;
-        },
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // Useful APIs which aren't used internally
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        /**
-         * Add a new field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {Object} [options] The validator rules
-         * @returns {FormValidation.Base}
-         */
-        addField: function(field, options) {
-            var ns     = this._namespace,
-                fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-' + ns + '-field') || field.attr('name');
-                    break;
-                case 'string':
-                    delete this._cacheFields[field];
-                    fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
-
-            fields.attr('data-' + ns + '-field', field);
-
-            var type  = fields.attr('type'),
-                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
-
-            for (var i = 0; i < total; i++) {
-                var $field = fields.eq(i);
-
-                // Try to parse the options from HTML attributes
-                var opts = this._parseOptions($field);
-                opts = (opts === null) ? options : $.extend(true, opts, options);
-
-                this.options.fields[field] = $.extend(true, this.options.fields[field], opts);
-
-                // Update the cache
-                this._cacheFields[field] = this._cacheFields[field] ? this._cacheFields[field].add($field) : $field;
-
-                // Init the element
-                this._initField(('checkbox' === type || 'radio' === type) ? field : $field);
-            }
-
-            this.disableSubmitButtons(false);
-            // Trigger an event
-            this.$form.trigger($.Event(this.options.events.fieldAdded), {
-                field: field,
-                element: fields,
-                options: this.options.fields[field]
-            });
-
-            return this;
-        },
-
-        /**
-         * Destroy the plugin
-         * It will remove all error messages, feedback icons and turn off the events
-         */
-        destroy: function() {
-            var ns = this._namespace, i, field, fields, $field, validator, $icon, row, alias;
-
-            // Destroy the validators first
-            for (field in this.options.fields) {
-                fields = this.getFieldElements(field);
-                for (i = 0; i < fields.length; i++) {
-                    $field = fields.eq(i);
-                    for (validator in this.options.fields[field].validators) {
-                        if ($field.data(ns + '.dfs.' + validator)) {
-                            $field.data(ns + '.dfs.' + validator).reject();
-                        }
-                        $field.removeData(ns + '.result.' + validator)
-                              .removeData(ns + '.response.' + validator)
-                              .removeData(ns + '.dfs.' + validator);
-
-                        // Destroy the validator
-                        alias = this.options.fields[field].validators[validator].alias || validator;
-                        if ('function' === typeof FormValidation.Validator[alias].destroy) {
-                            FormValidation.Validator[alias].destroy(this, $field, this.options.fields[field].validators[validator], validator);
-                        }
-                    }
-                }
-            }
-
-            // Remove messages and icons
-            var clazz = this.options.err.clazz.split(' ').join('.');
-            for (field in this.options.fields) {
-                fields = this.getFieldElements(field);
-                row    = this.options.fields[field].row || this.options.row.selector;
-                for (i = 0; i < fields.length; i++) {
-                    $field = fields.eq(i);
-                    // Remove all error messages
-                    var $messages = $field.data(ns + '.messages');
-                    if ($messages) {
-                        $messages.find('.' + clazz + '[data-' + ns + '-validator][data-' + ns + '-for="' + field + '"]').remove();
-                    }
-                    $field
-                        .removeData(ns + '.messages')
-                        .removeData(ns + '.validators')
-                        // Remove feedback classes
-                        .closest(row)
-                            .removeClass(this.options.row.valid)
-                            .removeClass(this.options.row.invalid)
-                            .removeClass(this.options.row.feedback)
-                            .end()
-                        // Turn off events
-                        .off('.' + ns)
-                        .removeAttr('data-' + ns + '-field');
-
-                    // Remove feedback icons, tooltip/popover container
-                    // Support backward
-                    var container = ('function' === typeof (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container))
-                                    ? (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container).call(this, $field, this)
-                                    : (this.options.fields[field].container || this.options.fields[field].err || this.options.err.container);
-                    if ('tooltip' === container || 'popover' === container) {
-                        this._destroyTooltip($field, container);
-                    }
-
-                    $icon = $field.data(ns + '.icon');
-                    if ($icon) {
-                        $icon.remove();
-                    }
-                    $field.removeData(ns + '.icon')
-                          // It's safe to remove trigger data here, because it might be used when destroying the validator
-                          .removeData(ns + '.trigger');
-                }
-            }
-
-            // Destroy the add-ons
-            for (var addOn in this.options.addOns) {
-                if ('function' === typeof FormValidation.AddOn[addOn].destroy) {
-                    FormValidation.AddOn[addOn].destroy(this, this.options.addOns[addOn]);
-                }
-            }
-
-            this.disableSubmitButtons(false);   // Enable submit buttons
-            this.$hiddenButton.remove();        // Remove the hidden button
-
-            this.$form
-                .removeClass(this.options.elementClass)
-                .off('.' + ns)
-                .removeData('bootstrapValidator')   // Support backward
-                .removeData('formValidation')
-                // Remove generated hidden elements
-                .find('[data-' + ns + '-submit-hidden]').remove().end()
-                .find('[type="submit"]')
-                    .off('click.' + ns);
-        },
-
-        /**
-         * Enable/Disable all validators to given field
-         *
-         * @param {String} field The field name
-         * @param {Boolean} enabled Enable/Disable field validators
-         * @param {String} [validatorName] The validator name. If null, all validators will be enabled/disabled
-         * @returns {FormValidation.Base}
-         */
-        enableFieldValidators: function(field, enabled, validatorName) {
-            var validators = this.options.fields[field].validators;
-
-            // Enable/disable particular validator
-            if (validatorName
-                && validators
-                && validators[validatorName] && validators[validatorName].enabled !== enabled)
-            {
-                this.options.fields[field].validators[validatorName].enabled = enabled;
-                this.updateStatus(field, this.STATUS_NOT_VALIDATED, validatorName);
-            }
-            // Enable/disable all validators
-            else if (!validatorName && this.options.fields[field].enabled !== enabled) {
-                this.options.fields[field].enabled = enabled;
-                for (var v in validators) {
-                    this.enableFieldValidators(field, enabled, v);
-                }
-            }
-
-            return this;
-        },
-
-        /**
-         * Some validators have option which its value is dynamic.
-         * For example, the zipCode validator has the country option which might be changed dynamically by a select element.
-         *
-         * @param {jQuery|String} field The field name or element
-         * @param {String|Function} option The option which can be determined by:
-         * - a string
-         * - name of field which defines the value
-         * - name of function which returns the value
-         * - a function returns the value
-         *
-         * The callback function has the format of
-         *      callback: function(value, validator, $field) {
-         *          // value is the value of field
-         *          // validator is the BootstrapValidator instance
-         *          // $field is the field element
-         *      }
-         *
-         * @returns {String}
-         */
-        getDynamicOption: function(field, option) {
-            var $field = ('string' === typeof field) ? this.getFieldElements(field) : field,
-                value  = $field.val();
-
-            // Option can be determined by
-            // ... a function
-            if ('function' === typeof option) {
-                return FormValidation.Helper.call(option, [value, this, $field]);
-            }
-            // ... value of other field
-            else if ('string' === typeof option) {
-                var $f = this.getFieldElements(option);
-                if ($f.length) {
-                    return $f.val();
-                }
-                // ... return value of callback
-                else {
-                    return FormValidation.Helper.call(option, [value, this, $field]) || option;
-                }
-            }
-
-            return null;
-        },
-
-        /**
-         * Get the form element
-         *
-         * @returns {jQuery}
-         */
-        getForm: function() {
-            return this.$form;
-        },
-
-        /**
-         * Get the list of invalid fields
-         *
-         * @returns {jQuery[]}
-         */
-        getInvalidFields: function() {
-            return this.$invalidFields;
-        },
-
-        /**
-         * Get the current locale
-         *
-         * @return {String}
-         */
-        getLocale: function() {
-            return this.options.locale;
-        },
-
-        /**
-         * Get the error messages
-         *
-         * @param {String|jQuery} [field] The field name or field element
-         * If the field is not defined, the method returns all error messages of all fields
-         * @param {String} [validator] The name of validator
-         * If the validator is not defined, the method returns error messages of all validators
-         * @returns {String[]}
-         */
-        getMessages: function(field, validator) {
-            var that     = this,
-                ns       = this._namespace,
-                messages = [],
-                $fields  = $([]);
-
-            switch (true) {
-                case (field && 'object' === typeof field):
-                    $fields = field;
-                    break;
-                case (field && 'string' === typeof field):
-                    var f = this.getFieldElements(field);
-                    if (f.length > 0) {
-                        var type = f.attr('type');
-                        $fields = ('radio' === type || 'checkbox' === type) ? f.eq(0) : f;
-                    }
-                    break;
-                default:
-                    $fields = this.$invalidFields;
-                    break;
-            }
-
-            var filter = validator ? '[data-' + ns + '-validator="' + validator + '"]' : '',
-                clazz  = this.options.err.clazz.split(' ').join('.');
-            $fields.each(function() {
-                messages = messages.concat(
-                    $(this)
-                        .data(ns + '.messages')
-                        .find('.' + clazz + '[data-' + ns + '-for="' + $(this).attr('data-' + ns + '-field') + '"][data-' + ns + '-result="' + that.STATUS_INVALID + '"]' + filter)
-                        .map(function() {
-                            var v = $(this).attr('data-' + ns + '-validator'),
-                                f = $(this).attr('data-' + ns + '-for');
-                            return (that.options.fields[f].validators[v].enabled === false) ? '' : $(this).html();
-                        })
-                        .get()
-                );
-            });
-
-            return messages;
-        },
-
-        /**
-         * Returns the clicked submit button
-         *
-         * @returns {jQuery}
-         */
-        getSubmitButton: function() {
-            return this.$submitButton;
-        },
-
-        /**
-         * Remove a given field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @returns {FormValidation.Base}
-         */
-        removeField: function(field) {
-            var ns     = this._namespace,
-                fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    fields = field;
-                    field  = field.attr('data-' + ns + '-field') || field.attr('name');
-                    fields.attr('data-' + ns + '-field', field);
-                    break;
-                case 'string':
-                    fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
-
-            if (fields.length === 0) {
-                return this;
-            }
-
-            var type  = fields.attr('type'),
-                total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
-
-            for (var i = 0; i < total; i++) {
-                var $field = fields.eq(i);
-
-                // Remove from the list of invalid fields
-                this.$invalidFields = this.$invalidFields.not($field);
-
-                // Update the cache
-                this._cacheFields[field] = this._cacheFields[field].not($field);
-            }
-
-            if (!this._cacheFields[field] || this._cacheFields[field].length === 0) {
-                delete this.options.fields[field];
-            }
-            if ('checkbox' === type || 'radio' === type) {
-                this._initField(field);
-            }
-
-            this.disableSubmitButtons(false);
-            // Trigger an event
-            this.$form.trigger($.Event(this.options.events.fieldRemoved), {
-                field: field,
-                element: fields
-            });
-
-            return this;
-        },
-
-        /**
-         * Reset given field
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {Boolean} [resetValue] If true, the method resets field value to empty or remove checked/selected attribute (for radio/checkbox)
-         * @returns {FormValidation.Base}
-         */
-        resetField: function(field, resetValue) {
-            var ns      = this._namespace,
-                $fields = $([]);
-            switch (typeof field) {
-                case 'object':
-                    $fields = field;
-                    field   = field.attr('data-' + ns + '-field');
-                    break;
-                case 'string':
-                    $fields = this.getFieldElements(field);
-                    break;
-                default:
-                    break;
-            }
-
-            var i     = 0,
-                total = $fields.length;
-            if (this.options.fields[field]) {
-                for (i = 0; i < total; i++) {
-                    for (var validator in this.options.fields[field].validators) {
-                        $fields.eq(i).removeData(ns + '.dfs.' + validator);
-                    }
-                }
-            }
-
-            if (resetValue) {
-                var type = $fields.attr('type');
-                ('radio' === type || 'checkbox' === type) ? $fields.prop('checked', false).removeAttr('selected') : $fields.val('');
-            }
-
-            // Mark field as not validated yet
-            this.updateStatus(field, this.STATUS_NOT_VALIDATED);
-
-            for (i = 0; i < total; i++) {
-                $fields.eq(i).trigger($.Event(this.options.events.fieldReset), {
-                    fv: this,
-                    field: field,
-                    element: $fields.eq(i),
-                    resetValue: resetValue
-                });
-            }
-
-            return this;
-        },
-
-        /**
-         * Reset the form
-         *
-         * @param {Boolean} [resetValue] If true, the method resets field value to empty or remove checked/selected attribute (for radio/checkbox)
-         * @returns {FormValidation.Base}
-         */
-        resetForm: function(resetValue) {
-            for (var field in this.options.fields) {
-                this.resetField(field, resetValue);
-            }
-
-            this.$invalidFields = $([]);
-            this.$submitButton  = null;
-
-            // Enable submit buttons
-            this.disableSubmitButtons(false);
-
-            this.$form.trigger($.Event(this.options.events.formReset), {
-                fv: this,
-                resetValue: resetValue
-            });
-
-            return this;
-        },
-
-        /**
-         * Revalidate given field
-         * It's used when you need to revalidate the field which its value is updated by other plugin
-         *
-         * @param {String|jQuery} field The field name of field element
-         * @returns {FormValidation.Base}
-         */
-        revalidateField: function(field) {
-            this.updateStatus(field, this.STATUS_NOT_VALIDATED)
-                .validateField(field);
-
-            return this;
-        },
-
-        /**
-         * Set the locale
-         *
-         * @param {String} locale The locale in format of countrycode_LANGUAGECODE
-         * @returns {FormValidation.Base}
-         */
-        setLocale: function(locale) {
-            this.options.locale = locale;
-            this.$form.trigger($.Event(this.options.events.localeChanged), {
-                locale: locale,
-                bv: this,   // Support backward
-                fv: this
-            });
-
-            return this;
-        },
-
-        /**
-         * Update the option of a specific validator
-         *
-         * @param {String|jQuery} field The field name or field element
-         * @param {String} validator The validator name
-         * @param {String} option The option name
-         * @param {String} value The value to set
-         * @returns {FormValidation.Base}
-         */
-        updateOption: function(field, validator, option, value) {
-            var ns = this._namespace;
-            if ('object' === typeof field) {
-                field = field.attr('data-' + ns + '-field');
-            }
-            if (this.options.fields[field] && this.options.fields[field].validators[validator]) {
-                this.options.fields[field].validators[validator][option] = value;
-                this.updateStatus(field, this.STATUS_NOT_VALIDATED, validator);
-            }
-
-            return this;
-        },
-
-        /**
-         * Validate given container
-         * It can be used with isValidContainer() when you want to work with wizard form
-         *
-         * @param {String|jQuery} container The container selector or element
-         * @returns {FormValidation.Base}
-         */
-        validateContainer: function(container) {
-            var that       = this,
-                ns         = this._namespace,
-                fields     = [],
-                $container = ('string' === typeof container) ? $(container) : container;
-            if ($container.length === 0) {
-                return this;
-            }
-
-            $container.find('[data-' + ns + '-field]').each(function() {
-                var $field = $(this);
-                if (!that._isExcluded($field)) {
-                    fields.push($field);
-                }
-            });
-
-            var total = fields.length;
-            for (var i = 0; i < total; i++) {
-                this.validateField(fields[i]);
-            }
-
-            return this;
-        }
-    };
-
-    // Plugin definition
-    $.fn.formValidation = function(option) {
-        var params = arguments;
-        return this.each(function() {
-            var $this   = $(this),
-                data    = $this.data('formValidation'),
-                options = 'object' === typeof option && option;
-            if (!data) {
-                var framework = (options.framework || $this.attr('data-fv-framework') || 'bootstrap').toLowerCase(),
-                    clazz     = framework.substr(0, 1).toUpperCase() + framework.substr(1);
-
-                if (typeof FormValidation.Framework[clazz] === 'undefined') {
-                    throw new Error('The class FormValidation.Framework.' + clazz + ' is not implemented');
-                }
-
-                data = new FormValidation.Framework[clazz](this, options);
-                $this.addClass('fv-form-' + framework)
-                     .data('formValidation', data);
-            }
-
-            // Allow to call plugin method
-            if ('string' === typeof option) {
-                data[option].apply(data, Array.prototype.slice.call(params, 1));
-            }
-        });
-    };
-
-    $.fn.formValidation.Constructor = FormValidation.Base;
-
-    // Default message
-    $.fn.formValidation.DEFAULT_MESSAGE = 'This value is not valid';
-
-    // The default options sorted in alphabetical order
-    $.fn.formValidation.DEFAULT_OPTIONS = {
-        // The first invalid field will be focused automatically
-        autoFocus: true,
-
-        // Support declarative usage (setting options via HTML 5 attributes)
-        // Setting to false can improve the performance
-        declarative: true,
-
-        // The form CSS class
-        elementClass: 'fv-form',
-
-        // Use custom event name to avoid window.onerror being invoked by jQuery
-        // See #630
-        events: {
-            // Support backward
-            formInit: 'init.form.fv',
-            formPreValidate: 'prevalidate.form.fv',
-            formError: 'err.form.fv',
-            formReset: 'rst.form.fv',
-            formSuccess: 'success.form.fv',
-            fieldAdded: 'added.field.fv',
-            fieldRemoved: 'removed.field.fv',
-            fieldInit: 'init.field.fv',
-            fieldError: 'err.field.fv',
-            fieldReset: 'rst.field.fv',
-            fieldSuccess: 'success.field.fv',
-            fieldStatus: 'status.field.fv',
-            localeChanged: 'changed.locale.fv',
-            validatorError: 'err.validator.fv',
-            validatorSuccess: 'success.validator.fv',
-            validatorIgnored: 'ignored.validator.fv'
-        },
-
-        // Indicate fields which won't be validated
-        // By default, the plugin will not validate the following kind of fields:
-        // - disabled
-        // - hidden
-        // - invisible
-        //
-        // The setting consists of jQuery filters. Accept 3 formats:
-        // - A string. Use a comma to separate filter
-        // - An array. Each element is a filter
-        // - An array. Each element can be a callback function
-        //      function($field, validator) {
-        //          $field is jQuery object representing the field element
-        //          validator is the BootstrapValidator instance
-        //          return true or false;
-        //      }
-        //
-        // The 3 following settings are equivalent:
-        //
-        // 1) ':disabled, :hidden, :not(:visible)'
-        // 2) [':disabled', ':hidden', ':not(:visible)']
-        // 3) [':disabled', ':hidden', function($field) {
-        //        return !$field.is(':visible');
-        //    }]
-        excluded: [':disabled', ':hidden', ':not(:visible)'],
-
-        // Map the field name with validator rules
-        fields: null,
-
-        // Live validating option
-        // Can be one of 3 values:
-        // - enabled: The plugin validates fields as soon as they are changed
-        // - disabled: Disable the live validating. The error messages are only shown after the form is submitted
-        // - submitted: The live validating is enabled after the form is submitted
-        live: 'enabled',
-
-        // Locale in the format of languagecode_COUNTRYCODE
-        locale: 'en_US',
-
-        // Default invalid message
-        message: null,
-
-        // The field will not be live validated if its length is less than this number of characters
-        threshold: null,
-
-        // Whether to be verbose when validating a field or not.
-        // Possible values:
-        // - true:  when a field has multiple validators, all of them will be checked, and respectively - if errors occur in
-        //          multiple validators, all of them will be displayed to the user
-        // - false: when a field has multiple validators, validation for this field will be terminated upon the first encountered error.
-        //          Thus, only the very first error message related to this field will be displayed to the user
-        verbose: true,
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // These options mostly are overridden by specific framework
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        button: {
-            // The submit buttons selector
-            // These buttons will be disabled to prevent the valid form from multiple submissions
-            // Don't perform validation when clicking on the submit button/input which have formnovalidate attribute
-            selector: '[type="submit"]:not([formnovalidate])',
-
-            // The disabled class
-            disabled: ''
-        },
-
-        control: {
-            // The CSS class for valid control
-            valid: '',
-
-            // The CSS class for invalid control
-            invalid: ''
-        },
-
-        err: {
-            // The CSS class of each message element
-            clazz: '',
-
-            // The error messages container. It can be:
-            // - 'tooltip' if you want to use Bootstrap tooltip to show error messages
-            // - 'popover' if you want to use Bootstrap popover to show error messages
-            // - a CSS selector indicating the container
-            // In the first two cases, since the tooltip/popover should be small enough, the plugin only shows only one error message
-            // You also can define the message container for particular field
-            container: null,
-
-            // Used to determine where the messages are placed
-            parent: null
-        },
-
-        // Shows ok/error/loading icons based on the field validity.
-        icon: {
-            valid: null,
-            invalid: null,
-            validating: null,
-            feedback: ''
-        },
-
-        row: {
-            // The CSS selector for indicating the element consists of the field
-            // You should adjust this option if your form group consists of many fields which not all of them need to be validated
-            selector: null,
-            valid: '',
-            invalid: '',
-            feedback: ''
-        }
-    };
-}(jQuery));
-;(function($) {
-    // Helper methods, which can be used in validator class
-    FormValidation.Helper = {
-        /**
-         * Execute a callback function
-         *
-         * @param {String|Function} functionName Can be
-         * - name of global function
-         * - name of namespace function (such as A.B.C)
-         * - a function
-         * @param {Array} args The callback arguments
-         */
-        call: function(functionName, args) {
-            if ('function' === typeof functionName) {
-                return functionName.apply(this, args);
-            } else if ('string' === typeof functionName) {
-                if ('()' === functionName.substring(functionName.length - 2)) {
-                    functionName = functionName.substring(0, functionName.length - 2);
-                }
-                var ns      = functionName.split('.'),
-                    func    = ns.pop(),
-                    context = window;
-                for (var i = 0; i < ns.length; i++) {
-                    context = context[ns[i]];
-                }
-
-                return (typeof context[func] === 'undefined') ? null : context[func].apply(this, args);
-            }
-        },
-
-        /**
-         * Validate a date
-         *
-         * @param {Number} year The full year in 4 digits
-         * @param {Number} month The month number
-         * @param {Number} day The day number
-         * @param {Boolean} [notInFuture] If true, the date must not be in the future
-         * @returns {Boolean}
-         */
-        date: function(year, month, day, notInFuture) {
-            if (isNaN(year) || isNaN(month) || isNaN(day)) {
-                return false;
-            }
-            if (day.length > 2 || month.length > 2 || year.length > 4) {
-                return false;
-            }
-
-            day   = parseInt(day, 10);
-            month = parseInt(month, 10);
-            year  = parseInt(year, 10);
-
-            if (year < 1000 || year > 9999 || month <= 0 || month > 12) {
-                return false;
-            }
-            var numDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            // Update the number of days in Feb of leap year
-            if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
-                numDays[1] = 29;
-            }
-
-            // Check the day
-            if (day <= 0 || day > numDays[month - 1]) {
-                return false;
-            }
-
-            if (notInFuture === true) {
-                var currentDate  = new Date(),
-                    currentYear  = currentDate.getFullYear(),
-                    currentMonth = currentDate.getMonth(),
-                    currentDay   = currentDate.getDate();
-                return (year < currentYear
-                || (year === currentYear && month - 1 < currentMonth)
-                || (year === currentYear && month - 1 === currentMonth && day < currentDay));
-            }
-
-            return true;
-        },
-
-        /**
-         * Format a string
-         * It's used to format the error message
-         * format('The field must between %s and %s', [10, 20]) = 'The field must between 10 and 20'
-         *
-         * @param {String} message
-         * @param {Array} parameters
-         * @returns {String}
-         */
-        format: function(message, parameters) {
-            if (!$.isArray(parameters)) {
-                parameters = [parameters];
-            }
-
-            for (var i in parameters) {
-                message = message.replace('%s', parameters[i]);
-            }
-
-            return message;
-        },
-
-        /**
-         * Implement Luhn validation algorithm
-         * Credit to https://gist.github.com/ShirtlessKirk/2134376
-         *
-         * @see http://en.wikipedia.org/wiki/Luhn
-         * @param {String} value
-         * @returns {Boolean}
-         */
-        luhn: function(value) {
-            var length  = value.length,
-                mul     = 0,
-                prodArr = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 2, 4, 6, 8, 1, 3, 5, 7, 9]],
-                sum     = 0;
-
-            while (length--) {
-                sum += prodArr[mul][parseInt(value.charAt(length), 10)];
-                mul ^= 1;
-            }
-
-            return (sum % 10 === 0 && sum > 0);
-        },
-
-        /**
-         * Implement modulus 11, 10 (ISO 7064) algorithm
-         *
-         * @param {String} value
-         * @returns {Boolean}
-         */
-        mod11And10: function(value) {
-            var check  = 5,
-                length = value.length;
-            for (var i = 0; i < length; i++) {
-                check = (((check || 10) * 2) % 11 + parseInt(value.charAt(i), 10)) % 10;
-            }
-            return (check === 1);
-        },
-
-        /**
-         * Implements Mod 37, 36 (ISO 7064) algorithm
-         * Usages:
-         * mod37And36('A12425GABC1234002M')
-         * mod37And36('002006673085', '0123456789')
-         *
-         * @param {String} value
-         * @param {String} [alphabet]
-         * @returns {Boolean}
-         */
-        mod37And36: function(value, alphabet) {
-            alphabet = alphabet || '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            var modulus = alphabet.length,
-                length  = value.length,
-                check   = Math.floor(modulus / 2);
-            for (var i = 0; i < length; i++) {
-                check = (((check || modulus) * 2) % (modulus + 1) + alphabet.indexOf(value.charAt(i))) % modulus;
-            }
-            return (check === 1);
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            between: {
-                'default': 'Please enter a value between %s and %s',
-                notInclusive: 'Please enter a value between %s and %s strictly'
-            }
-        }
-    });
-
-    FormValidation.Validator.between = {
-        html5Attributes: {
-            message: 'message',
-            min: 'min',
-            max: 'max',
-            inclusive: 'inclusive'
-        },
-
-        enableByHtml5: function($field) {
-            if ('range' === $field.attr('type')) {
-                return {
-                    min: $field.attr('min'),
-                    max: $field.attr('max')
-                };
-            }
-
-            return false;
-        },
-
-        /**
-         * Return true if the input value is between (strictly or not) two given numbers
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - min
-         * - max
-         *
-         * The min, max keys define the number which the field value compares to. min, max can be
-         *      - A number
-         *      - Name of field which its value defines the number
-         *      - Name of callback function that returns the number
-         *      - A callback function that returns the number
-         *
-         * - inclusive [optional]: Can be true or false. Default is true
-         * - message: The invalid message
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-			value = this._format(value);
-
-            var locale   = validator.getLocale(),
-                min      = $.isNumeric(options.min) ? options.min : validator.getDynamicOption($field, options.min),
-                max      = $.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max),
-                minValue = this._format(min),
-                maxValue = this._format(max);
-
-			return (options.inclusive === true || options.inclusive === undefined)
-                    ? {
-                        valid: $.isNumeric(value) && parseFloat(value) >= minValue && parseFloat(value) <= maxValue,
-                        message: FormValidation.Helper.format(options.message || FormValidation.I18n[locale].between['default'], [min, max])
-                    }
-                    : {
-                        valid: $.isNumeric(value) && parseFloat(value) > minValue && parseFloat(value) < maxValue,
-                        message: FormValidation.Helper.format(options.message || FormValidation.I18n[locale].between.notInclusive, [min, max])
-                    };
-        },
-
-        _format: function(value) {
-            return (value + '').replace(',', '.');
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            callback: {
-                'default': 'Please enter a valid value'
-            }
-        }
-    });
-
-    FormValidation.Validator.callback = {
-        priority: 999,
-
-        html5Attributes: {
-            message: 'message',
-            callback: 'callback'
-        },
-
-        /**
-         * Return result from the callback method
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - callback: The callback method that passes parameters:
-         *      callback: function(fieldValue, validator, $field) {
-         *          // fieldValue is the value of field
-         *          // validator is instance of FormValidation.Base
-         *          // $field is the field element
-         *      }
-         * - message: The invalid message
-         * @returns {Deferred}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value  = validator.getFieldValue($field, validatorName),
-                dfd    = new $.Deferred(),
-                result = { valid: true };
-
-            if (options.callback) {
-                var response = FormValidation.Helper.call(options.callback, [value, validator, $field]);
-                result = ('boolean' === typeof response || null === response) ? { valid: response } : response;
-            }
-
-            dfd.resolve($field, validatorName, result);
-            return dfd;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            choice: {
-                'default': 'Please enter a valid value',
-                less: 'Please choose %s options at minimum',
-                more: 'Please choose %s options at maximum',
-                between: 'Please choose %s - %s options'
-            }
-        }
-    });
-
-    FormValidation.Validator.choice = {
-        html5Attributes: {
-            message: 'message',
-            min: 'min',
-            max: 'max'
-        },
-
-        /**
-         * Check if the number of checked boxes are less or more than a given number
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of following keys:
-         * - min
-         * - max
-         *
-         * At least one of two keys is required
-         * The min, max keys define the number which the field value compares to. min, max can be
-         *      - A number
-         *      - Name of field which its value defines the number
-         *      - Name of callback function that returns the number
-         *      - A callback function that returns the number
-         *
-         * - message: The invalid message
-         * @returns {Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var locale     = validator.getLocale(),
-                ns         = validator.getNamespace(),
-                numChoices = $field.is('select')
-                            ? validator.getFieldElements($field.attr('data-' + ns + '-field')).find('option').filter(':selected').length
-                            : validator.getFieldElements($field.attr('data-' + ns + '-field')).filter(':checked').length,
-                min        = options.min ? ($.isNumeric(options.min) ? options.min : validator.getDynamicOption($field, options.min)) : null,
-                max        = options.max ? ($.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max)) : null,
-                isValid    = true,
-                message    = options.message || FormValidation.I18n[locale].choice['default'];
-
-            if ((min && numChoices < parseInt(min, 10)) || (max && numChoices > parseInt(max, 10))) {
-                isValid = false;
-            }
-
-            switch (true) {
-                case (!!min && !!max):
-                    message = FormValidation.Helper.format(options.message || FormValidation.I18n[locale].choice.between, [parseInt(min, 10), parseInt(max, 10)]);
-                    break;
-
-                case (!!min):
-                    message = FormValidation.Helper.format(options.message || FormValidation.I18n[locale].choice.less, parseInt(min, 10));
-                    break;
-
-                case (!!max):
-                    message = FormValidation.Helper.format(options.message || FormValidation.I18n[locale].choice.more, parseInt(max, 10));
-                    break;
-
-                default:
-                    break;
-            }
-
-            return { valid: isValid, message: message };
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            color: {
-                'default': 'Please enter a valid color'
-            }
-        }
-    });
-
-    FormValidation.Validator.color = {
-        html5Attributes: {
-            message: 'message',
-            type: 'type'
-        },
-
-        enableByHtml5: function($field) {
-            return ('color' === $field.attr('type'));
-        },
-
-        SUPPORTED_TYPES: [
-            'hex', 'rgb', 'rgba', 'hsl', 'hsla', 'keyword'
-        ],
-
-        KEYWORD_COLORS: [
-            // Colors start with A
-            'aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure',
-            // B
-            'beige', 'bisque', 'black', 'blanchedalmond', 'blue', 'blueviolet', 'brown', 'burlywood',
-            // C
-            'cadetblue', 'chartreuse', 'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan',
-            // D
-            'darkblue', 'darkcyan', 'darkgoldenrod', 'darkgray', 'darkgreen', 'darkgrey', 'darkkhaki', 'darkmagenta',
-            'darkolivegreen', 'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen', 'darkslateblue',
-            'darkslategray', 'darkslategrey', 'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray',
-            'dimgrey', 'dodgerblue',
-            // F
-            'firebrick', 'floralwhite', 'forestgreen', 'fuchsia',
-            // G
-            'gainsboro', 'ghostwhite', 'gold', 'goldenrod', 'gray', 'green', 'greenyellow', 'grey',
-            // H
-            'honeydew', 'hotpink',
-            // I
-            'indianred', 'indigo', 'ivory',
-            // K
-            'khaki',
-            // L
-            'lavender', 'lavenderblush', 'lawngreen', 'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan',
-            'lightgoldenrodyellow', 'lightgray', 'lightgreen', 'lightgrey', 'lightpink', 'lightsalmon', 'lightseagreen',
-            'lightskyblue', 'lightslategray', 'lightslategrey', 'lightsteelblue', 'lightyellow', 'lime', 'limegreen',
-            'linen',
-            // M
-            'magenta', 'maroon', 'mediumaquamarine', 'mediumblue', 'mediumorchid', 'mediumpurple', 'mediumseagreen',
-            'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumvioletred', 'midnightblue', 'mintcream',
-            'mistyrose', 'moccasin',
-            // N
-            'navajowhite', 'navy',
-            // O
-            'oldlace', 'olive', 'olivedrab', 'orange', 'orangered', 'orchid',
-            // P
-            'palegoldenrod', 'palegreen', 'paleturquoise', 'palevioletred', 'papayawhip', 'peachpuff', 'peru', 'pink',
-            'plum', 'powderblue', 'purple',
-            // R
-            'red', 'rosybrown', 'royalblue',
-            // S
-            'saddlebrown', 'salmon', 'sandybrown', 'seagreen', 'seashell', 'sienna', 'silver', 'skyblue', 'slateblue',
-            'slategray', 'slategrey', 'snow', 'springgreen', 'steelblue',
-            // T
-            'tan', 'teal', 'thistle', 'tomato', 'transparent', 'turquoise',
-            // V
-            'violet',
-            // W
-            'wheat', 'white', 'whitesmoke',
-            // Y
-            'yellow', 'yellowgreen'
-        ],
-
-        /**
-         * Return true if the input value is a valid color
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * - type: The array of valid color types
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            // Only accept 6 hex character values due to the HTML 5 spec
-            // See http://www.w3.org/TR/html-markup/input.color.html#input.color.attrs.value
-            if (this.enableByHtml5($field)) {
-                return /^#[0-9A-F]{6}$/i.test(value);
-            }
-
-            var types = options.type || this.SUPPORTED_TYPES;
-            if (!$.isArray(types)) {
-                types = types.replace(/s/g, '').split(',');
-            }
-
-            var method,
-                type,
-                isValid = false;
-
-            for (var i = 0; i < types.length; i++) {
-                type    = types[i];
-                method  = '_' + type.toLowerCase();
-                isValid = isValid || this[method](value);
-                if (isValid) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
-        _hex: function(value) {
-            return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value);
-        },
-
-        _hsl: function(value) {
-            return /^hsl\((\s*(-?\d+)\s*,)(\s*(\b(0?\d{1,2}|100)\b%)\s*,)(\s*(\b(0?\d{1,2}|100)\b%)\s*)\)$/.test(value);
-        },
-
-        _hsla: function(value) {
-            return /^hsla\((\s*(-?\d+)\s*,)(\s*(\b(0?\d{1,2}|100)\b%)\s*,){2}(\s*(0?(\.\d+)?|1(\.0+)?)\s*)\)$/.test(value);
-        },
-
-        _keyword: function(value) {
-            return $.inArray(value, this.KEYWORD_COLORS) >= 0;
-        },
-
-        _rgb: function(value) {
-            var regexInteger = /^rgb\((\s*(\b([01]?\d{1,2}|2[0-4]\d|25[0-5])\b)\s*,){2}(\s*(\b([01]?\d{1,2}|2[0-4]\d|25[0-5])\b)\s*)\)$/,
-                regexPercent = /^rgb\((\s*(\b(0?\d{1,2}|100)\b%)\s*,){2}(\s*(\b(0?\d{1,2}|100)\b%)\s*)\)$/;
-            return regexInteger.test(value) || regexPercent.test(value);
-        },
-
-        _rgba: function(value) {
-            var regexInteger = /^rgba\((\s*(\b([01]?\d{1,2}|2[0-4]\d|25[0-5])\b)\s*,){3}(\s*(0?(\.\d+)?|1(\.0+)?)\s*)\)$/,
-                regexPercent = /^rgba\((\s*(\b(0?\d{1,2}|100)\b%)\s*,){3}(\s*(0?(\.\d+)?|1(\.0+)?)\s*)\)$/;
-            return regexInteger.test(value) || regexPercent.test(value);
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            creditCard: {
-                'default': 'Please enter a valid credit card number'
-            }
-        }
-    });
-
-    FormValidation.Validator.creditCard = {
-        /**
-         * Return true if the input value is valid credit card number
-         * Based on https://gist.github.com/DiegoSalazar/4075533
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} [options] Can consist of the following key:
-         * - message: The invalid message
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            // Accept only digits, dashes or spaces
-            if (/[^0-9-\s]+/.test(value)) {
-                return false;
-            }
-            value = value.replace(/\D/g, '');
-
-            if (!FormValidation.Helper.luhn(value)) {
-                return false;
-            }
-
-            // Validate the card number based on prefix (IIN ranges) and length
-            var cards = {
-                AMERICAN_EXPRESS: {
-                    length: [15],
-                    prefix: ['34', '37']
-                },
-                DANKORT: {
-                    length: [16],
-                    prefix: ['5019']
-                },
-                DINERS_CLUB: {
-                    length: [14],
-                    prefix: ['300', '301', '302', '303', '304', '305', '36']
-                },
-                DINERS_CLUB_US: {
-                    length: [16],
-                    prefix: ['54', '55']
-                },
-                DISCOVER: {
-                    length: [16],
-                    prefix: ['6011', '622126', '622127', '622128', '622129', '62213',
-                             '62214', '62215', '62216', '62217', '62218', '62219',
-                             '6222', '6223', '6224', '6225', '6226', '6227', '6228',
-                             '62290', '62291', '622920', '622921', '622922', '622923',
-                             '622924', '622925', '644', '645', '646', '647', '648',
-                             '649', '65']
-                },
-                ELO: {
-                    length: [16],
-                    prefix: ['4011', '4312', '4389', '4514', '4573', '4576',
-                             '5041', '5066', '5067', '509',
-                             '6277', '6362', '6363', '650', '6516', '6550']
-                },
-                FORBRUGSFORENINGEN: {
-                    length: [16],
-                    prefix: ['600722']
-                },
-                JCB: {
-                    length: [16],
-                    prefix: ['3528', '3529', '353', '354', '355', '356', '357', '358']
-                },
-                LASER: {
-                    length: [16, 17, 18, 19],
-                    prefix: ['6304', '6706', '6771', '6709']
-                },
-                MAESTRO: {
-                    length: [12, 13, 14, 15, 16, 17, 18, 19],
-                    prefix: ['5018', '5020', '5038', '5868', '6304', '6759', '6761', '6762', '6763', '6764', '6765', '6766']
-                },
-                MASTERCARD: {
-                    length: [16],
-                    prefix: ['51', '52', '53', '54', '55']
-                },
-                SOLO: {
-                    length: [16, 18, 19],
-                    prefix: ['6334', '6767']
-                },
-                UNIONPAY: {
-                    length: [16, 17, 18, 19],
-                    prefix: ['622126', '622127', '622128', '622129', '62213', '62214',
-                             '62215', '62216', '62217', '62218', '62219', '6222', '6223',
-                             '6224', '6225', '6226', '6227', '6228', '62290', '62291',
-                             '622920', '622921', '622922', '622923', '622924', '622925']
-                },
-                VISA_ELECTRON: {
-                    length: [16],
-                    prefix: ['4026', '417500', '4405', '4508', '4844', '4913', '4917']
-                },
-                VISA: {
-                    length: [16],
-                    prefix: ['4']
-                }
-            };
-
-            var type, i;
-            for (type in cards) {
-                for (i in cards[type].prefix) {
-                    if (value.substr(0, cards[type].prefix[i].length) === cards[type].prefix[i]     // Check the prefix
-                        && $.inArray(value.length, cards[type].length) !== -1)                      // and length
-                    {
-                        return {
-                            valid: true,
-                            type: type
-                        };
-                    }
-                }
-            }
-
-            return false;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            date: {
-                'default': 'Please enter a valid date',
-                min: 'Please enter a date after %s',
-                max: 'Please enter a date before %s',
-                range: 'Please enter a date in the range %s - %s'
-            }
-        }
-    });
-
-    FormValidation.Validator.date = {
-        html5Attributes: {
-            message: 'message',
-            format: 'format',
-            min: 'min',
-            max: 'max',
-            separator: 'separator'
-        },
-
-        /**
-         * Return true if the input value is valid date
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - message: The invalid message
-         * - min: the minimum date
-         * - max: the maximum date
-         * - separator: Use to separate the date, month, and year.
-         * By default, it is /
-         * - format: The date format. Default is MM/DD/YYYY
-         * The format can be:
-         *
-         * i) date: Consist of DD, MM, YYYY parts which are separated by the separator option
-         * ii) date and time:
-         * The time can consist of h, m, s parts which are separated by :
-         * ii) date, time and A (indicating AM or PM)
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            options.format = options.format || 'MM/DD/YYYY';
-
-            // #683: Force the format to YYYY-MM-DD as the default browser behaviour when using type="date" attribute
-            if ($field.attr('type') === 'date') {
-                options.format = 'YYYY-MM-DD';
-            }
-
-            var locale     = validator.getLocale(),
-                message    = options.message || FormValidation.I18n[locale].date['default'],
-                formats    = options.format.split(' '),
-                dateFormat = formats[0],
-                timeFormat = (formats.length > 1) ? formats[1] : null,
-                amOrPm     = (formats.length > 2) ? formats[2] : null,
-                sections   = value.split(' '),
-                date       = sections[0],
-                time       = (sections.length > 1) ? sections[1] : null;
-
-            if (formats.length !== sections.length) {
-                return {
-                    valid: false,
-                    message: message
-                };
-            }
-
-            // Determine the separator
-            var separator = options.separator;
-            if (!separator) {
-                separator = (date.indexOf('/') !== -1)
-                            ? '/'
-                            : ((date.indexOf('-') !== -1) ? '-' : ((date.indexOf('.') !== -1) ? '.' : null));
-            }
-            if (separator === null || date.indexOf(separator) === -1) {
-                return {
-                    valid: false,
-                    message: message
-                };
-            }
-
-            // Determine the date
-            date       = date.split(separator);
-            dateFormat = dateFormat.split(separator);
-            if (date.length !== dateFormat.length) {
-                return {
-                    valid: false,
-                    message: message
-                };
-            }
-
-            var year  = date[$.inArray('YYYY', dateFormat)],
-                month = date[$.inArray('MM', dateFormat)],
-                day   = date[$.inArray('DD', dateFormat)];
-
-            if (!year || !month || !day || year.length !== 4) {
-                return {
-                    valid: false,
-                    message: message
-                };
-            }
-
-            // Determine the time
-            var minutes = null, hours = null, seconds = null;
-            if (timeFormat) {
-                timeFormat = timeFormat.split(':');
-                time       = time.split(':');
-
-                if (timeFormat.length !== time.length) {
-                    return {
-                        valid: false,
-                        message: message
-                    };
-                }
-
-                hours   = time.length > 0 ? time[0] : null;
-                minutes = time.length > 1 ? time[1] : null;
-                seconds = time.length > 2 ? time[2] : null;
-
-                if (hours === '' || minutes === '' || seconds === '') {
-                    return {
-                        valid: false,
-                        message: message
-                    };
-                }
-
-                // Validate seconds
-                if (seconds) {
-                    if (isNaN(seconds) || seconds.length > 2) {
-                        return {
-                            valid: false,
-                            message: message
-                        };
-                    }
-                    seconds = parseInt(seconds, 10);
-                    if (seconds < 0 || seconds > 60) {
-                        return {
-                            valid: false,
-                            message: message
-                        };
-                    }
-                }
-
-                // Validate hours
-                if (hours) {
-                    if (isNaN(hours) || hours.length > 2) {
-                        return {
-                            valid: false,
-                            message: message
-                        };
-                    }
-                    hours = parseInt(hours, 10);
-                    if (hours < 0 || hours >= 24 || (amOrPm && hours > 12)) {
-                        return {
-                            valid: false,
-                            message: message
-                        };
-                    }
-                }
-
-                // Validate minutes
-                if (minutes) {
-                    if (isNaN(minutes) || minutes.length > 2) {
-                        return {
-                            valid: false,
-                            message: message
-                        };
-                    }
-                    minutes = parseInt(minutes, 10);
-                    if (minutes < 0 || minutes > 59) {
-                        return {
-                            valid: false,
-                            message: message
-                        };
-                    }
-                }
-            }
-
-            // Validate day, month, and year
-            var valid     = FormValidation.Helper.date(year, month, day),
-                min       = null,
-                max       = null,
-                minOption = options.min,
-                maxOption = options.max;
-
-            if (minOption) {
-                min = (minOption instanceof Date)
-                    ? minOption
-                    : (this._parseDate(minOption, dateFormat, separator) ||
-                       this._parseDate(validator.getDynamicOption($field, minOption), dateFormat, separator));
-
-                // In order to avoid displaying a date string like "Mon Dec 08 2014 19:14:12 GMT+0000 (WET)"
-                minOption = this._formatDate(min, options.format);
-            }
-
-            if (maxOption) {
-                max = (maxOption instanceof Date)
-                    ? maxOption
-                    : (this._parseDate(maxOption, dateFormat, separator) ||
-                       this._parseDate(validator.getDynamicOption($field, maxOption), dateFormat, separator));
-
-                // In order to avoid displaying a date string like "Mon Dec 08 2014 19:14:12 GMT+0000 (WET)"
-                maxOption = this._formatDate(max, options.format);
-            }
-
-            date = new Date(year, month -1, day, hours, minutes, seconds);
-
-            switch (true) {
-                case (minOption && !maxOption && valid):
-                    valid   = date.getTime() >= min.getTime();
-                    message = options.message || FormValidation.Helper.format(FormValidation.I18n[locale].date.min, minOption);
-                    break;
-
-                case (maxOption && !minOption && valid):
-                    valid   = date.getTime() <= max.getTime();
-                    message = options.message || FormValidation.Helper.format(FormValidation.I18n[locale].date.max, maxOption);
-                    break;
-
-                case (maxOption && minOption && valid):
-                    valid   = date.getTime() <= max.getTime() && date.getTime() >= min.getTime();
-                    message = options.message || FormValidation.Helper.format(FormValidation.I18n[locale].date.range, [minOption, maxOption]);
-                    break;
-
-                default:
-                    break;
-            }
-
-            return {
-                valid: valid,
-                date: date,
-                message: message
-            };
-        },
-
-        /**
-         * Return a date object after parsing the date string
-         *
-         * @param {Date|String} date   The date string to parse
-         * @param {String} format The date format
-         * The format can be:
-         *   - date: Consist of DD, MM, YYYY parts which are separated by the separator option
-         *   - date and time:
-         *     The time can consist of h, m, s parts which are separated by :
-         * @param {String} separator The separator used to separate the date, month, and year
-         * @returns {Date}
-         */
-        _parseDate: function(date, format, separator) {
-            if (date instanceof Date) {
-                return date;
-            }
-            if (typeof date !== 'string') {
-                return null;
-            }
-
-            // Ensure that the format must consist of year, month and day patterns
-            var yearIndex   = $.inArray('YYYY', format),
-                monthIndex  = $.inArray('MM', format),
-                dayIndex    = $.inArray('DD', format);
-            if (yearIndex === -1 || monthIndex === -1 || dayIndex === -1) {
-                return null;
-            }
-
-            var minutes     = 0, hours = 0, seconds = 0,
-                sections    = date.split(' '),
-                dateSection = sections[0].split(separator);
-            if (dateSection.length < 3) {
-                return null;
-            }
-
-            if (sections.length > 1) {
-                var timeSection = sections[1].split(':');
-                hours   = timeSection.length > 0 ? timeSection[0] : null;
-                minutes = timeSection.length > 1 ? timeSection[1] : null;
-                seconds = timeSection.length > 2 ? timeSection[2] : null;
-            }
-
-            return new Date(dateSection[yearIndex], dateSection[monthIndex] - 1, dateSection[dayIndex],
-                            hours, minutes, seconds);
-        },
-
-        /**
-         * Format date
-         *
-         * @param {Date} date The date object to format
-         * @param {String} format The date format
-         * The format can consist of the following tokens:
-         *      d       Day of the month without leading zeros (1 through 31)
-         *      dd      Day of the month with leading zeros (01 through 31)
-         *      m       Month without leading zeros (1 through 12)
-         *      mm      Month with leading zeros (01 through 12)
-         *      yy      Last two digits of year (for example: 14)
-         *      yyyy    Full four digits of year (for example: 2014)
-         *      h       Hours without leading zeros (1 through 12)
-         *      hh      Hours with leading zeros (01 through 12)
-         *      H       Hours without leading zeros (0 through 23)
-         *      HH      Hours with leading zeros (00 through 23)
-         *      M       Minutes without leading zeros (0 through 59)
-         *      MM      Minutes with leading zeros (00 through 59)
-         *      s       Seconds without leading zeros (0 through 59)
-         *      ss      Seconds with leading zeros (00 through 59)
-         * @returns {String}
-         */
-        _formatDate: function(date, format) {
-            format = format
-                        .replace(/Y/g, 'y')
-                        .replace(/M/g, 'm')
-                        .replace(/D/g, 'd')
-                        .replace(/:m/g, ':M')
-                        .replace(/:mm/g, ':MM')
-                        .replace(/:S/, ':s')
-                        .replace(/:SS/, ':ss');
-
-            var replacer = {
-                d: function(date) {
-                    return date.getDate();
-                },
-                dd: function(date) {
-                    var d = date.getDate();
-                    return (d < 10) ? '0' + d : d;
-                },
-                m: function(date) {
-                    return date.getMonth() + 1;
-                },
-                mm: function(date) {
-                    var m = date.getMonth() + 1;
-                    return m < 10 ? '0' + m : m;
-                },
-                yy: function(date) {
-                    return ('' + date.getFullYear()).substr(2);
-                },
-                yyyy: function(date) {
-                    return date.getFullYear();
-                },
-                h: function(date) {
-                    return date.getHours() % 12 || 12;
-                },
-                hh: function(date) {
-                    var h = date.getHours() % 12 || 12;
-                    return h < 10 ? '0' + h : h;
-                },
-                H: function(date) {
-                    return date.getHours();
-                },
-                HH: function(date) {
-                    var H = date.getHours();
-                    return H < 10 ? '0' + H : H;
-                },
-                M: function(date) {
-                    return date.getMinutes();
-                },
-                MM: function(date) {
-                    var M = date.getMinutes();
-                    return M < 10 ? '0' + M : M;
-                },
-                s: function(date) {
-                    return date.getSeconds();
-                },
-                ss: function(date) {
-                    var s = date.getSeconds();
-                    return s < 10 ? '0' + s : s;
-                }
-            };
-
-            return format.replace(/d{1,4}|m{1,4}|yy(?:yy)?|([HhMs])\1?|"[^"]*"|'[^']*'/g, function(match) {
-                return replacer[match] ? replacer[match](date) : match.slice(1, match.length - 1);
-            });
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            different: {
-                'default': 'Please enter a different value'
-            }
-        }
-    });
-
-    FormValidation.Validator.different = {
-        html5Attributes: {
-            message: 'message',
-            field: 'field'
-        },
-
-        /**
-         * Bind the validator on the live change of the field to compare with current one
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of the following key:
-         * - field: The name of field that will be used to compare with current one
-         */
-        init: function(validator, $field, options, validatorName) {
-            var fields = options.field.split(',');
-            for (var i = 0; i < fields.length; i++) {
-                var compareWith = validator.getFieldElements($.trim(fields[i]));
-                validator.onLiveChange(compareWith, 'live_' + validatorName, function() {
-                    var status = validator.getStatus($field, validatorName);
-                    if (status !== validator.STATUS_NOT_VALIDATED) {
-                        validator.revalidateField($field);
-                    }
-                });
-            }
-        },
-
-        /**
-         * Unbind the validator on the live change of the field to compare with current one
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of the following key:
-         * - field: The name of field that will be used to compare with current one
-         */
-        destroy: function(validator, $field, options, validatorName) {
-            var fields = options.field.split(',');
-            for (var i = 0; i < fields.length; i++) {
-                var compareWith = validator.getFieldElements($.trim(fields[i]));
-                validator.offLiveChange(compareWith, 'live_' + validatorName);
-            }
-        },
-
-        /**
-         * Return true if the input value is different with given field's value
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of the following key:
-         * - field: The name of field that will be used to compare with current one
-         * - message: The invalid message
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            var fields  = options.field.split(','),
-                isValid = true;
-
-            for (var i = 0; i < fields.length; i++) {
-                var compareWith = validator.getFieldElements($.trim(fields[i]));
-                if (compareWith == null || compareWith.length === 0) {
-                    continue;
-                }
-
-                var compareValue = validator.getFieldValue(compareWith, validatorName);
-                if (value === compareValue) {
-                    isValid = false;
-                } else if (compareValue !== '') {
-                    validator.updateStatus(compareWith, validator.STATUS_VALID, validatorName);
-                }
-            }
-
-            return isValid;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            digits: {
-                'default': 'Please enter only digits'
-            }
-        }
-    });
-
-    FormValidation.Validator.digits = {
-        /**
-         * Return true if the input value contains digits only
-         *
-         * @param {FormValidation.Base} validator Validate plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} [options]
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            return /^\d+$/.test(value);
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            emailAddress: {
-                'default': 'Please enter a valid email address'
-            }
-        }
-    });
-
-    FormValidation.Validator.emailAddress = {
-        html5Attributes: {
-            message: 'message',
-            multiple: 'multiple',
-            separator: 'separator'
-        },
-
-        enableByHtml5: function($field) {
-            return ('email' === $field.attr('type'));
-        },
-
-        /**
-         * Return true if and only if the input value is a valid email address
-         *
-         * @param {FormValidation.Base} validator Validate plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} [options]
-         * - multiple: Allow multiple email addresses, separated by a comma or semicolon; default is false.
-         * - separator: Regex for character or characters expected as separator between addresses; default is comma /[,;]/, i.e. comma or semicolon.
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            // Email address regular expression
-            // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-            var emailRegExp   = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-                allowMultiple = options.multiple === true || options.multiple === 'true';
-
-            if (allowMultiple) {
-                var separator = options.separator || /[,;]/,
-                    addresses = this._splitEmailAddresses(value, separator);
-
-                for (var i = 0; i < addresses.length; i++) {
-                    if (!emailRegExp.test(addresses[i])) {
-                        return false;
-                    }
-                }
-
-                return true;
-            } else {
-                return emailRegExp.test(value);
-            }
-        },
-
-        _splitEmailAddresses: function(emailAddresses, separator) {
-            var quotedFragments     = emailAddresses.split(/"/),
-                quotedFragmentCount = quotedFragments.length,
-                emailAddressArray   = [],
-                nextEmailAddress    = '';
-
-            for (var i = 0; i < quotedFragmentCount; i++) {
-                if (i % 2 === 0) {
-                    var splitEmailAddressFragments     = quotedFragments[i].split(separator),
-                        splitEmailAddressFragmentCount = splitEmailAddressFragments.length;
-
-                    if (splitEmailAddressFragmentCount === 1) {
-                        nextEmailAddress += splitEmailAddressFragments[0];
-                    } else {
-                        emailAddressArray.push(nextEmailAddress + splitEmailAddressFragments[0]);
-
-                        for (var j = 1; j < splitEmailAddressFragmentCount - 1; j++) {
-                            emailAddressArray.push(splitEmailAddressFragments[j]);
-                        }
-                        nextEmailAddress = splitEmailAddressFragments[splitEmailAddressFragmentCount - 1];
-                    }
-                } else {
-                    nextEmailAddress += '"' + quotedFragments[i];
-                    if (i < quotedFragmentCount - 1) {
-                        nextEmailAddress += '"';
-                    }
-                }
-            }
-
-            emailAddressArray.push(nextEmailAddress);
-            return emailAddressArray;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            file: {
-                'default': 'Please choose a valid file'
-            }
-        }
-    });
-
-    FormValidation.Validator.file = {
-        Error: {
-            EXTENSION: 'EXTENSION',
-            MAX_FILES: 'MAX_FILES',
-            MAX_SIZE: 'MAX_SIZE',
-            MAX_TOTAL_SIZE: 'MAX_TOTAL_SIZE',
-            MIN_FILES: 'MIN_FILES',
-            MIN_SIZE: 'MIN_SIZE',
-            MIN_TOTAL_SIZE: 'MIN_TOTAL_SIZE',
-            TYPE: 'TYPE'
-        },
-
-        html5Attributes: {
-            extension: 'extension',
-            maxfiles: 'maxFiles',
-            minfiles: 'minFiles',
-            maxsize: 'maxSize',
-            minsize: 'minSize',
-            maxtotalsize: 'maxTotalSize',
-            mintotalsize: 'minTotalSize',
-            message: 'message',
-            type: 'type'
-        },
-
-        /**
-         * Validate upload file. Use HTML 5 API if the browser supports
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - extension: The allowed extensions, separated by a comma
-         * - maxFiles: The maximum number of files
-         * - minFiles: The minimum number of files
-         * - maxSize: The maximum size in bytes
-         * - minSize: The minimum size in bytes
-         * - maxTotalSize: The maximum size in bytes for all files
-         * - minTotalSize: The minimum size in bytes for all files
-         * - message: The invalid message
-         * - type: The allowed MIME type, separated by a comma
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            var ext,
-                extensions = options.extension ? options.extension.toLowerCase().split(',') : null,
-                types      = options.type      ? options.type.toLowerCase().split(',')      : null,
-                html5      = (window.File && window.FileList && window.FileReader);
-
-            if (html5) {
-                // Get FileList instance
-                var files     = $field.get(0).files,
-                    total     = files.length,
-                    totalSize = 0;
-
-                // Check the maxFiles
-                if (options.maxFiles && total > parseInt(options.maxFiles, 10)) {
-                    return {
-                        valid: false,
-                        error: this.Error.MAX_FILES
-                    };
-                }
-
-                // Check the minFiles
-                if (options.minFiles && total < parseInt(options.minFiles, 10)) {
-                    return {
-                        valid: false,
-                        error: this.Error.MIN_FILES
-                    };
-                }
-
-                var metaData = {};
-                for (var i = 0; i < total; i++) {
-                    totalSize += files[i].size;
-                    ext        = files[i].name.substr(files[i].name.lastIndexOf('.') + 1);
-                    metaData   = {
-                        file: files[i],
-                        size: files[i].size,
-                        ext: ext,
-                        type: files[i].type
-                    };
-
-                    // Check the minSize
-                    if (options.minSize && files[i].size < parseInt(options.minSize, 10)) {
-                       return {
-                           valid: false,
-                           error: this.Error.MIN_SIZE,
-                           metaData: metaData
-                       };
-                    }
-
-                    // Check the maxSize
-                    if (options.maxSize && files[i].size > parseInt(options.maxSize, 10)) {
-                        return {
-                            valid: false,
-                            error: this.Error.MAX_SIZE,
-                            metaData: metaData
-                        };
-                    }
-
-                    // Check file extension
-                    if (extensions && $.inArray(ext.toLowerCase(), extensions) === -1) {
-                        return {
-                            valid: false,
-                            error: this.Error.EXTENSION,
-                            metaData: metaData
-                        };
-                    }
-
-                    // Check file type
-                    if (files[i].type && types && $.inArray(files[i].type.toLowerCase(), types) === -1) {
-                        return {
-                            valid: false,
-                            error: this.Error.TYPE,
-                            metaData: metaData
-                        };
-                    }
-                }
-
-                // Check the maxTotalSize
-                if (options.maxTotalSize && totalSize > parseInt(options.maxTotalSize, 10)) {
-                    return {
-                        valid: false,
-                        error: this.Error.MAX_TOTAL_SIZE,
-                        metaData: {
-                            totalSize: totalSize
-                        }
-                    };
-                }
-
-                // Check the minTotalSize
-                if (options.minTotalSize && totalSize < parseInt(options.minTotalSize, 10)) {
-                    return {
-                        valid: false,
-                        error: this.Error.MIN_TOTAL_SIZE,
-                        metaData: {
-                            totalSize: totalSize
-                        }
-                    };
-                }
-            } else {
-                // Check file extension
-                ext = value.substr(value.lastIndexOf('.') + 1);
-                if (extensions && $.inArray(ext.toLowerCase(), extensions) === -1) {
-                    return {
-                        valid: false,
-                        error: this.Error.EXTENSION,
-                        metaData: {
-                            ext: ext
-                        }
-                    };
-                }
-            }
-
-            return true;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            greaterThan: {
-                'default': 'Please enter a value greater than or equal to %s',
-                notInclusive: 'Please enter a value greater than %s'
-            }
-        }
-    });
-
-    FormValidation.Validator.greaterThan = {
-        html5Attributes: {
-            message: 'message',
-            value: 'value',
-            inclusive: 'inclusive'
-        },
-
-        enableByHtml5: function($field) {
-            var type = $field.attr('type'),
-                min  = $field.attr('min');
-            if (min && type !== 'date') {
-                return {
-                    value: min
-                };
-            }
-
-            return false;
-        },
-
-        /**
-         * Return true if the input value is greater than or equals to given number
-         *
-         * @param {FormValidation.Base} validator Validate plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - value: Define the number to compare with. It can be
-         *      - A number
-         *      - Name of field which its value defines the number
-         *      - Name of callback function that returns the number
-         *      - A callback function that returns the number
-         *
-         * - inclusive [optional]: Can be true or false. Default is true
-         * - message: The invalid message
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            value = this._format(value);
-
-            var locale         = validator.getLocale(),
-                compareTo      = $.isNumeric(options.value) ? options.value : validator.getDynamicOption($field, options.value),
-                compareToValue = this._format(compareTo);
-
-			return (options.inclusive === true || options.inclusive === undefined)
-                    ? {
-                        valid: $.isNumeric(value) && parseFloat(value) >= compareToValue,
-                        message: FormValidation.Helper.format(options.message || FormValidation.I18n[locale].greaterThan['default'], compareTo)
-                    }
-                    : {
-                        valid: $.isNumeric(value) && parseFloat(value) > compareToValue,
-                        message: FormValidation.Helper.format(options.message || FormValidation.I18n[locale].greaterThan.notInclusive, compareTo)
-                    };
-        },
-
-        _format: function(value) {
-            return (value + '').replace(',', '.');
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            identical: {
-                'default': 'Please enter the same value'
-            }
-        }
-    });
-
-    FormValidation.Validator.identical = {
-        html5Attributes: {
-            message: 'message',
-            field: 'field'
-        },
-
-        /**
-         * Bind the validator on the live change of the field to compare with current one
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of the following key:
-         * - field: The name of field that will be used to compare with current one
-         */
-        init: function(validator, $field, options, validatorName) {
-            var compareWith = validator.getFieldElements(options.field);
-            validator.onLiveChange(compareWith, 'live_' + validatorName, function() {
-                var status = validator.getStatus($field, validatorName);
-                if (status !== validator.STATUS_NOT_VALIDATED) {
-                    validator.revalidateField($field);
-                }
-            });
-        },
-
-        /**
-         * Unbind the validator on the live change of the field to compare with current one
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of the following key:
-         * - field: The name of field that will be used to compare with current one
-         */
-        destroy: function(validator, $field, options, validatorName) {
-            var compareWith = validator.getFieldElements(options.field);
-            validator.offLiveChange(compareWith, 'live_' + validatorName);
-        },
-
-        /**
-         * Check if input value equals to value of particular one
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of the following key:
-         * - field: The name of field that will be used to compare with current one
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value       = validator.getFieldValue($field, validatorName),
-                compareWith = validator.getFieldElements(options.field);
-            if (compareWith === null || compareWith.length === 0) {
-                return true;
-            }
-
-            var compareValue = validator.getFieldValue(compareWith, validatorName);
-            if (value === compareValue) {
-                validator.updateStatus(compareWith, validator.STATUS_VALID, validatorName);
-                return true;
-            }
-
-            return false;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            integer: {
-                'default': 'Please enter a valid number'
-            }
-        }
-    });
-
-    FormValidation.Validator.integer = {
-        html5Attributes: {
-            message: 'message',
-            thousandsseparator: 'thousandsSeparator',
-            decimalseparator: 'decimalSeparator'
-        },
-
-        enableByHtml5: function($field) {
-            return ('number' === $field.attr('type')) && ($field.attr('step') === undefined || $field.attr('step') % 1 === 0);
-        },
-
-        /**
-         * Return true if the input value is an integer
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following key:
-         * - message: The invalid message
-         * - thousandsSeparator: The thousands separator. It's empty by default
-         * - decimalSeparator: The decimal separator. It's '.' by default
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            if (this.enableByHtml5($field) && $field.get(0).validity && $field.get(0).validity.badInput === true) {
-                return false;
-            }
-
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            var decimalSeparator   = options.decimalSeparator   || '.',
-                thousandsSeparator = options.thousandsSeparator || '';
-            decimalSeparator       = (decimalSeparator   === '.') ? '\\.' : decimalSeparator;
-            thousandsSeparator     = (thousandsSeparator === '.') ? '\\.' : thousandsSeparator;
-
-            var testRegexp         = new RegExp('^-?[0-9]{1,3}(' + thousandsSeparator + '[0-9]{3})*(' + decimalSeparator + '[0-9]+)?$'),
-                thousandsReplacer  = new RegExp(thousandsSeparator, 'g');
-
-            if (!testRegexp.test(value)) {
-                return false;
-            }
-
-            // Replace thousands separator with blank
-            if (thousandsSeparator) {
-                value = value.replace(thousandsReplacer, '');
-            }
-            // Replace decimal separator with a dot
-            if (decimalSeparator) {
-                value = value.replace(decimalSeparator, '.');
-            }
-
-            if (isNaN(value) || !isFinite(value)) {
-                return false;
-            }
-            // TODO: Use Number.isInteger() if available
-            value = parseFloat(value);
-            return Math.floor(value) === value;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            lessThan: {
-                'default': 'Please enter a value less than or equal to %s',
-                notInclusive: 'Please enter a value less than %s'
-            }
-        }
-    });
-
-    FormValidation.Validator.lessThan = {
-        html5Attributes: {
-            message: 'message',
-            value: 'value',
-            inclusive: 'inclusive'
-        },
-
-        enableByHtml5: function($field) {
-            var type = $field.attr('type'),
-                max  = $field.attr('max');
-            if (max && type !== 'date') {
-                return {
-                    value: max
-                };
-            }
-
-            return false;
-        },
-
-        /**
-         * Return true if the input value is less than or equal to given number
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - value: The number used to compare to. It can be
-         *      - A number
-         *      - Name of field which its value defines the number
-         *      - Name of callback function that returns the number
-         *      - A callback function that returns the number
-         *
-         * - inclusive [optional]: Can be true or false. Default is true
-         * - message: The invalid message
-         * @returns {Boolean|Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-			value = this._format(value);
-
-            var locale         = validator.getLocale(),
-                compareTo      = $.isNumeric(options.value) ? options.value : validator.getDynamicOption($field, options.value),
-                compareToValue = this._format(compareTo);
-
-            return (options.inclusive === true || options.inclusive === undefined)
-                    ? {
-                        valid: $.isNumeric(value) && parseFloat(value) <= compareToValue,
-                        message: FormValidation.Helper.format(options.message || FormValidation.I18n[locale].lessThan['default'], compareTo)
-                    }
-                    : {
-                        valid: $.isNumeric(value) && parseFloat(value) < compareToValue,
-                        message: FormValidation.Helper.format(options.message || FormValidation.I18n[locale].lessThan.notInclusive, compareTo)
-                    };
-        },
-
-        _format: function(value) {
-            return (value + '').replace(',', '.');
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            notEmpty: {
-                'default': 'Please enter a value'
-            }
-        }
-    });
-
-    FormValidation.Validator.notEmpty = {
-        enableByHtml5: function($field) {
-            var required = $field.attr('required') + '';
-            return ('required' === required || 'true' === required);
-        },
-
-        /**
-         * Check if input value is empty or not
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var type = $field.attr('type');
-            if ('radio' === type || 'checkbox' === type) {
-                var ns = validator.getNamespace();
-                return validator
-                            .getFieldElements($field.attr('data-' + ns + '-field'))
-                            .filter(':checked')
-                            .length > 0;
-            }
-
-            if ('number' === type && $field.get(0).validity && $field.get(0).validity.badInput === true) {
-                return true;
-            }
-
-            var value = validator.getFieldValue($field, validatorName);
-            return $.trim(value) !== '';
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            numeric: {
-                'default': 'Please enter a valid float number'
-            }
-        }
-    });
-
-    FormValidation.Validator.numeric = {
-        html5Attributes: {
-            message: 'message',
-            separator: 'separator',     // deprecated
-            thousandsseparator: 'thousandsSeparator',
-            decimalseparator: 'decimalSeparator'
-        },
-
-        enableByHtml5: function($field) {
-            return ('number' === $field.attr('type')) && ($field.attr('step') !== undefined) && ($field.attr('step') % 1 !== 0);
-        },
-
-        /**
-         * Validate decimal number
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consist of key:
-         * - message: The invalid message
-         * - thousandsSeparator: The thousands separator. It's empty by default
-         * - separator, decimalSeparator: The decimal separator. It's '.' by default
-         * The separator option is deprecated and should be replaced with decimalSeparator
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            if (this.enableByHtml5($field) && $field.get(0).validity && $field.get(0).validity.badInput === true) {
-                return false;
-            }
-
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            var decimalSeparator   = options.separator || options.decimalSeparator || '.',
-                thousandsSeparator = options.thousandsSeparator || '';
-
-            // Support preceding zero numbers such as .5, -.5
-            if (value.substr(0, 1) === decimalSeparator) {
-                value = '0' + decimalSeparator + value.substr(1);
-            } else if (value.substr(0, 2) === '-' + decimalSeparator) {
-                value = '-0' + decimalSeparator + value.substr(2);
-            }
-
-            decimalSeparator   = (decimalSeparator   === '.') ? '\\.' : decimalSeparator;
-            thousandsSeparator = (thousandsSeparator === '.') ? '\\.' : thousandsSeparator;
-
-            var testRegexp         = new RegExp('^-?[0-9]{1,3}(' + thousandsSeparator + '[0-9]{3})*(' + decimalSeparator + '[0-9]+)?$'),
-                thousandsReplacer  = new RegExp(thousandsSeparator, 'g');
-
-            if (!testRegexp.test(value)) {
-                return false;
-            }
-
-            // Replace thousands separator with blank
-            if (thousandsSeparator) {
-                value = value.replace(thousandsReplacer, '');
-            }
-            // Replace decimal separator with a dot
-            if (decimalSeparator) {
-                value = value.replace(decimalSeparator, '.');
-            }
-
-            return !isNaN(parseFloat(value)) && isFinite(value);
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            promise: {
-                'default': 'Please enter a valid value'
-            }
-        }
-    });
-
-    FormValidation.Validator.promise = {
-        priority: 999,
-
-        html5Attributes: {
-            message: 'message',
-            promise: 'promise'
-        },
-
-        /**
-         * Return result from a jQuery's Deferred object
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - promise: The method that passes parameters:
-         *      promise: function(fieldValue, validator, $field) {
-         *          // fieldValue is the value of field
-         *          // validator is instance of FormValidation.Base
-         *          // $field is the field element
-         *
-         *          var dfd = new $.Deferred();
-         *
-         *          // Do something ...
-         *
-         *          // Resolve when particular task is done
-         *          dfd.resolve({
-         *              valid: true or false,       // Required
-         *              message: 'Other message',   // Optional
-         *              key: value                  // You can attach more data to reuse later
-         *          });
-         *
-         *          // You can reject if there's error
-         *          dfd.reject({
-         *              message: 'Other message',   // Optional
-         *              key: value                  // You can attach more data to reuse later
-         *          });
-         *
-         *          return dfd.promise();
-         *      }
-         * - message: The invalid message
-         * @returns {Deferred}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value   = validator.getFieldValue($field, validatorName),
-                dfd     = new $.Deferred(),
-                promise = FormValidation.Helper.call(options.promise, [value, validator, $field]);
-
-            promise
-                .done(function(result) {
-                    dfd.resolve($field, validatorName, result);
-                })
-                .fail(function(result) {
-                    result = result || {};
-                    result.valid = false;
-                    dfd.resolve($field, validatorName, result);
-                });
-
-            return dfd;
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            regexp: {
-                'default': 'Please enter a value matching the pattern'
-            }
-        }
-    });
-
-    FormValidation.Validator.regexp = {
-        html5Attributes: {
-            message: 'message',
-            flags: 'flags',
-            regexp: 'regexp'
-        },
-
-        enableByHtml5: function($field) {
-            var pattern = $field.attr('pattern');
-            if (pattern) {
-                return {
-                    regexp: pattern
-                };
-            }
-
-            return false;
-        },
-
-        /**
-         * Check if the element value matches given regular expression
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of the following key:
-         * - regexp: The regular expression you need to check
-         * - flags: If specified, flags can have any combination of Javascript regular expression flags such as:
-         *      g: global match
-         *      i: ignore case
-         *      m: multiple line
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            var regexp = ('string' === typeof options.regexp)
-                        ? (options.flags ? new RegExp(options.regexp, options.flags) : new RegExp(options.regexp))
-                        : options.regexp;
-            return regexp.test(value);
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            remote: {
-                'default': 'Please enter a valid value'
-            }
-        }
-    });
-
-    FormValidation.Validator.remote = {
-        priority: 1000,
-
-        html5Attributes: {
-            async: 'async',
-            crossdomain: 'crossDomain',
-            data: 'data',
-            datatype: 'dataType',
-            delay: 'delay',
-            message: 'message',
-            name: 'name',
-            type: 'type',
-            url: 'url',
-            validkey: 'validKey'
-        },
-
-        /**
-         * Destroy the timer when destroying the FormValidation (using validator.destroy() method)
-         */
-        destroy: function(validator, $field, options, validatorName) {
-            var ns    = validator.getNamespace(),
-                timer = $field.data(ns + '.' + validatorName + '.timer');
-            if (timer) {
-                clearTimeout(timer);
-                $field.removeData(ns + '.' + validatorName + '.timer');
-            }
-        },
-
-        /**
-         * Request a remote server to check the input value
-         *
-         * @param {FormValidation.Base} validator Plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Can consist of the following keys:
-         * - async {Boolean} [optional] Indicate the Ajax request will be asynchronous or not. It's true by default
-         * - crossDomain {Boolean} [optional]
-         * - data {Object|Function} [optional]: By default, it will take the value
-         *  {
-         *      <fieldName>: <fieldValue>
-         *  }
-         * - dataType {String} [optional]: The type of data which is returned by remote server.
-         * It can be json (default), text, script
-         * - delay {Number} [optional]
-         * - headers {String[]} [optional]: Additional headers
-         * - message {String} [optional]: The invalid message
-         * - name {String} [optional]: Override the field name for the request.
-         * - type {String} [optional] Can be GET or POST (default)
-         * - url {String|Function}
-         * - validKey {String} [optional]: The valid key. It's "valid" by default
-         * This is useful when connecting to external remote server or APIs provided by 3rd parties
-         * @returns {Deferred}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var ns    = validator.getNamespace(),
-                value = validator.getFieldValue($field, validatorName),
-                dfd   = new $.Deferred();
-            if (value === '') {
-                dfd.resolve($field, validatorName, { valid: true });
-                return dfd;
-            }
-            var name     = $field.attr('data-' + ns + '-field'),
-                data     = options.data || {},
-                url      = options.url,
-                validKey = options.validKey || 'valid';
-
-            // Support dynamic data
-            if ('function' === typeof data) {
-                data = data.call(this, validator, $field, value);
-            }
-
-            // Parse string data from HTML5 attribute
-            if ('string' === typeof data) {
-                data = JSON.parse(data);
-            }
-
-            // Support dynamic url
-            if ('function' === typeof url) {
-                url = url.call(this, validator, $field, value);
-            }
-
-            data[options.name || name] = value;
-
-            var ajaxOptions = {
-                async: options.async === null || options.async === true || options.async === 'true',
-                data: data,
-                dataType: options.dataType || 'json',
-                headers: options.headers || {},
-                type: options.type || 'GET',
-                url: url
-            };
-            if (options.crossDomain !== null) {
-                ajaxOptions.crossDomain = (options.crossDomain === true || options.crossDomain === 'true');
-            }
-
-            function runCallback() {
-                var xhr = $.ajax(ajaxOptions);
-
-                xhr
-                    .success(function(response) {
-                        response.valid = (response[validKey] === true || response[validKey] === 'true')
-                                        ? true
-                                        : (response[validKey] === false || response[validKey] === 'false' ? false : null);
-                        dfd.resolve($field, validatorName, response);
-                    })
-                    .error(function(response) {
-                        dfd.resolve($field, validatorName, {
-                            valid: false
-                        });
-                    });
-
-                dfd.fail(function() {
-                    xhr.abort();
-                });
-
-                return dfd;
-            }
-
-            if (options.delay) {
-                // Since the form might have multiple fields with the same name
-                // I have to attach the timer to the field element
-                if ($field.data(ns + '.' + validatorName + '.timer')) {
-                    clearTimeout($field.data(ns + '.' + validatorName + '.timer'));
-                }
-
-                $field.data(ns + '.' + validatorName + '.timer', setTimeout(runCallback, options.delay));
-                return dfd;
-            } else {
-                return runCallback();
-            }
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            stringLength: {
-                'default': 'Please enter a value with valid length',
-                less: 'Please enter less than %s characters',
-                more: 'Please enter more than %s characters',
-                between: 'Please enter value between %s and %s characters long'
-            }
-        }
-    });
-
-    FormValidation.Validator.stringLength = {
-        html5Attributes: {
-            message: 'message',
-            min: 'min',
-            max: 'max',
-            trim: 'trim',
-            utf8bytes: 'utf8Bytes'
-        },
-
-        enableByHtml5: function($field) {
-            var options   = {},
-                maxLength = $field.attr('maxlength'),
-                minLength = $field.attr('minlength');
-            if (maxLength) {
-                options.max = parseInt(maxLength, 10);
-            }
-            if (minLength) {
-                options.min = parseInt(minLength, 10);
-            }
-
-            return $.isEmptyObject(options) ? false : options;
-        },
-
-        /**
-         * Check if the length of element value is less or more than given number
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options Consists of following keys:
-         * - min
-         * - max
-         * At least one of two keys is required
-         * The min, max keys define the number which the field value compares to. min, max can be
-         *      - A number
-         *      - Name of field which its value defines the number
-         *      - Name of callback function that returns the number
-         *      - A callback function that returns the number
-         *
-         * - message: The invalid message
-         * - trim: Indicate the length will be calculated after trimming the value or not. It is false, by default
-         * - utf8bytes: Evaluate string length in UTF-8 bytes, default to false
-         * @returns {Object}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (options.trim === true || options.trim === 'true') {
-                value = $.trim(value);
-            }
-
-            if (value === '') {
-                return true;
-            }
-
-            var locale     = validator.getLocale(),
-                min        = $.isNumeric(options.min) ? options.min : validator.getDynamicOption($field, options.min),
-                max        = $.isNumeric(options.max) ? options.max : validator.getDynamicOption($field, options.max),
-                // Credit to http://stackoverflow.com/a/23329386 (@lovasoa) for UTF-8 byte length code
-                utf8Length = function(str) {
-                                 var s = str.length;
-                                 for (var i = str.length - 1; i >= 0; i--) {
-                                     var code = str.charCodeAt(i);
-                                     if (code > 0x7f && code <= 0x7ff) {
-                                         s++;
-                                     } else if (code > 0x7ff && code <= 0xffff) {
-                                         s += 2;
-                                     }
-                                     if (code >= 0xDC00 && code <= 0xDFFF) {
-                                         i--;
-                                     }
-                                 }
-                                 return s;
-                             },
-                length     = options.utf8Bytes ? utf8Length(value) : value.length,
-                isValid    = true,
-                message    = options.message || FormValidation.I18n[locale].stringLength['default'];
-
-            if ((min && length < parseInt(min, 10)) || (max && length > parseInt(max, 10))) {
-                isValid = false;
-            }
-
-            switch (true) {
-                case (!!min && !!max):
-                    message = FormValidation.Helper.format(options.message || FormValidation.I18n[locale].stringLength.between, [parseInt(min, 10), parseInt(max, 10)]);
-                    break;
-
-                case (!!min):
-                    message = FormValidation.Helper.format(options.message || FormValidation.I18n[locale].stringLength.more, parseInt(min, 10) - 1);
-                    break;
-
-                case (!!max):
-                    message = FormValidation.Helper.format(options.message || FormValidation.I18n[locale].stringLength.less, parseInt(max, 10) + 1);
-                    break;
-
-                default:
-                    break;
-            }
-
-            return {
-                valid: isValid,
-                message: message
-            };
-        }
-    };
-}(jQuery));
-;(function($) {
-    FormValidation.I18n = $.extend(true, FormValidation.I18n || {}, {
-        'en_US': {
-            uri: {
-                'default': 'Please enter a valid URI'
-            }
-        }
-    });
-
-    FormValidation.Validator.uri = {
-        html5Attributes: {
-            message: 'message',
-            allowlocal: 'allowLocal',
-            allowemptyprotocol: 'allowEmptyProtocol',
-            protocol: 'protocol'
-        },
-
-        enableByHtml5: function($field) {
-            return ('url' === $field.attr('type'));
-        },
-
-        /**
-         * Return true if the input value is a valid URL
-         *
-         * @param {FormValidation.Base} validator The validator plugin instance
-         * @param {jQuery} $field Field element
-         * @param {Object} options
-         * - message: The error message
-         * - allowLocal: Allow the private and local network IP. Default to false
-         * - allowEmptyProtocol: Allow the URI without protocol. Default to false
-         * - protocol: The protocols, separated by a comma. Default to "http, https, ftp"
-         * @returns {Boolean}
-         */
-        validate: function(validator, $field, options, validatorName) {
-            var value = validator.getFieldValue($field, validatorName);
-            if (value === '') {
-                return true;
-            }
-
-            // Credit to https://gist.github.com/dperini/729294
-            //
-            // Regular Expression for URL validation
-            //
-            // Author: Diego Perini
-            // Updated: 2010/12/05
-            //
-            // the regular expression composed & commented
-            // could be easily tweaked for RFC compliance,
-            // it was expressly modified to fit & satisfy
-            // these test for an URL shortener:
-            //
-            //   http://mathiasbynens.be/demo/url-regex
-            //
-            // Notes on possible differences from a standard/generic validation:
-            //
-            // - utf-8 char class take in consideration the full Unicode range
-            // - TLDs are mandatory unless `allowLocal` is true
-            // - protocols have been restricted to ftp, http and https only as requested
-            //
-            // Changes:
-            //
-            // - IP address dotted notation validation, range: 1.0.0.0 - 223.255.255.255
-            //   first and last IP address of each class is considered invalid
-            //   (since they are broadcast/network addresses)
-            //
-            // - Added exclusion of private, reserved and/or local networks ranges
-            //   unless `allowLocal` is true
-            //
-            // - Added possibility of choosing a custom protocol
-            //
-            // - Add option to validate without protocol
-            //
-            var allowLocal         = options.allowLocal === true || options.allowLocal === 'true',
-                allowEmptyProtocol = options.allowEmptyProtocol === true || options.allowEmptyProtocol === 'true',
-                protocol           = (options.protocol || 'http, https, ftp').split(',').join('|').replace(/\s/g, ''),
-                urlExp             = new RegExp(
-                    "^" +
-                    // protocol identifier
-                    "(?:(?:" + protocol + ")://)" +
-                    // allow empty protocol
-                    (allowEmptyProtocol ? '?' : '') +
-                    // user:pass authentication
-                    "(?:\\S+(?::\\S*)?@)?" +
-                    "(?:" +
-                    // IP address exclusion
-                    // private & local networks
-                    (allowLocal
-                        ? ''
-                        : ("(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
-                           "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
-                           "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})")) +
-                    // IP address dotted notation octets
-                    // excludes loopback network 0.0.0.0
-                    // excludes reserved space >= 224.0.0.0
-                    // excludes network & broadcast addresses
-                    // (first & last IP address of each class)
-                    "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
-                    "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
-                    "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
-                    "|" +
-                    // host name
-                    "(?:(?:[a-z\\u00a1-\\uffff0-9]-?)*[a-z\\u00a1-\\uffff0-9]+)" +
-                    // domain name
-                    "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-?)*[a-z\\u00a1-\\uffff0-9])*" +
-                    // TLD identifier
-                    "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
-                    // Allow intranet sites (no TLD) if `allowLocal` is true
-                    (allowLocal ? '?' : '') +
-                    ")" +
-                    // port number
-                    "(?::\\d{2,5})?" +
-                    // resource path
-                    "(?:/[^\\s]*)?" +
-                    "$", "i"
-                );
-
-            return urlExp.test(value);
-        }
-    };
-}(jQuery));
-
-
-/**
- * FormValidation (http://formvalidation.io)
- * The best jQuery plugin to validate form fields. Support Bootstrap, Foundation, Pure, SemanticUI, UIKit and custom frameworks
- *
- * @author      https://twitter.com/formvalidation
- * @copyright   (c) 2013 - 2016 Nguyen Huu Phuoc
- * @license     http://formvalidation.io/license/
- */
-
-/**
- * This class supports validating Bootstrap 4 alpha form (http://v4-alpha.getbootstrap.com/)
- */
-(function($) {
-    FormValidation.Framework.Bootstrap4 = function(element, options, namespace) {
-        options = $.extend(true, {
-            button: {
-                selector: '[type="submit"]:not([formnovalidate])',
-                // The class of disabled button
-                disabled: 'disabled'
-            },
-            err: {
-                // http://v4-alpha.getbootstrap.com/components/forms/#validation
-                clazz: 'form-control-feedback',
-                parent: '^(.*)(col|offset)-(xs|sm|md|lg)-[0-9]+(.*)$'
-            },
-            // - Use FontAwesome icons:
-            //  icon: {
-            //      valid: 'fa fa-check',
-            //      invalid: 'fa fa-times',
-            //      validating: 'fa fa-refresh',
-            //      feedback: 'form-control-feedback'
-            //  }
-            icon: {
-                valid: null,
-                invalid: null,
-                validating: null,
-                feedback: 'fv-control-feedback'
-            },
-            row: {
-                // By default, each field is placed inside the <div class="form-group"></div>
-                // http://v4-alpha.getbootstrap.com/components/forms/#form-groups
-                selector: '.form-group',
-                valid: 'has-success',
-                invalid: 'has-warning',
-                feedback: 'fv-has-feedback'
-            }
-        }, options);
-
-        FormValidation.Base.apply(this, [element, options, namespace]);
-    };
-
-    FormValidation.Framework.Bootstrap4.prototype = $.extend({}, FormValidation.Base.prototype, {
-        /**
-         * Specific framework might need to adjust the icon position
-         *
-         * @param {jQuery} $field The field element
-         * @param {jQuery} $icon The icon element
-         */
-        _fixIcon: function($field, $icon) {
-            var ns      = this._namespace,
-                type    = $field.attr('type'),
-                field   = $field.attr('data-' + ns + '-field'),
-                row     = this.options.fields[field].row || this.options.row.selector,
-                $parent = $field.closest(row);
-
-            // Place it after the container of checkbox/radio
-            // so when clicking the icon, it doesn't effect to the checkbox/radio element
-            if ('checkbox' === type || 'radio' === type) {
-                var $fieldParent = $field.parent();
-                if ($fieldParent.hasClass('form-check')) {
-                    $icon.insertAfter($fieldParent);
-                } else if ($fieldParent.parent().hasClass('form-check')) {
-                    $icon.insertAfter($fieldParent.parent());
-                }
-            }
-
-            // Fix feedback icons in input-group
-            if ($parent.find('.input-group').length !== 0) {
-                $icon.addClass('fv-bootstrap-icon-input-group')
-                     .insertAfter($parent.find('.input-group').eq(0));
-            }
-        },
-
-        /**
-         * Create a tooltip or popover
-         * It will be shown when focusing on the field
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} message The message
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _createTooltip: function($field, message, type) {
-            var ns    = this._namespace,
-                $icon = $field.data(ns + '.icon');
-            if ($icon) {
-                switch (type) {
-                    case 'popover':
-                        $icon
-                            .css({
-                                'cursor': 'pointer',
-                                'pointer-events': 'auto'
-                            })
-                            .popover('destroy')
-                            .popover({
-                                container: 'body',
-                                content: message,
-                                html: true,
-                                placement: 'top',
-                                trigger: 'hover click'
-                            });
-                        break;
-
-                    case 'tooltip':
-                    /* falls through */
-                    default:
-                        $icon
-                            .css({
-                                'cursor': 'pointer',
-                                'pointer-events': 'auto'
-                            })
-                            .tooltip('dispose')
-                            .tooltip({
-                                container: 'body',
-                                html: true,
-                                placement: 'top',
-                                title: message
-                            });
-                        break;
-                }
-            }
-        },
-
-        /**
-         * Destroy the tooltip or popover
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _destroyTooltip: function($field, type) {
-            var ns    = this._namespace,
-                $icon = $field.data(ns + '.icon');
-            if ($icon) {
-                switch (type) {
-                    case 'popover':
-                        $icon
-                            .css({
-                                'cursor': '',
-                                'pointer-events': 'none'
-                            })
-                            .popover('destroy');
-                        break;
-
-                    case 'tooltip':
-                    /* falls through */
-                    default:
-                        $icon
-                            .css({
-                                'cursor': '',
-                                'pointer-events': 'none'
-                            })
-                            .tooltip('dispose');
-                        break;
-                }
-            }
-        },
-
-        /**
-         * Hide a tooltip or popover
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _hideTooltip: function($field, type) {
-            var ns    = this._namespace,
-                $icon = $field.data(ns + '.icon');
-            if ($icon) {
-                switch (type) {
-                    case 'popover':
-                        $icon.popover('hide');
-                        break;
-
-                    case 'tooltip':
-                    /* falls through */
-                    default:
-                        $icon.tooltip('hide');
-                        break;
-                }
-            }
-        },
-
-        /**
-         * Show a tooltip or popover
-         *
-         * @param {jQuery} $field The field element
-         * @param {String} type Can be 'tooltip' or 'popover'
-         */
-        _showTooltip: function($field, type) {
-            var ns    = this._namespace,
-                $icon = $field.data(ns + '.icon');
-            if ($icon) {
-                switch (type) {
-                    case 'popover':
-                        $icon.popover('show');
-                        break;
-
-                    case 'tooltip':
-                    /* falls through */
-                    default:
-                        $icon.tooltip('show');
-                        break;
-                }
-            }
-        }
-    });
-}(jQuery));
-
-/***************************************************************************
-I18N ADD-ON
-src/_i18n-v0.1.1/src/i18n.js
-****************************************************************************/
-/**
- * i18n add-on
- * This add-on allow to define message in multiple languages
- *
- * @link        http://formvalidation.io/addons/i18n/
- * @license     http://formvalidation.io/license/
- * @author      https://twitter.com/formvalidation
- * @copyright   (c) 2013 - 2015 Nguyen Huu Phuoc
- */
-(function($) {
-    /**
-     * The 'message' option of each validator can be
-     * - a literal object mapping the locale with message
-     *  $(form).formValidation({
-     *      fields: {
-     *          fieldName: {
-     *              validators: {
-     *                  validatorName: {
-     *                      message: {
-     *                          en_US: 'The message in English',
-     *                          fr_FR: 'The message in French'
-     *                      }
-     *                  }
-     *              }
-     *          }
-     *      }
-     *  });
-     *  - or a callback function returns the literal object as above
-     *  $(form).formValidation({
-     *      fields: {
-     *          fieldName: {
-     *              validators: {
-     *                  validatorName: {
-     *                      message: function(validator, $field, validatorName) {
-     *                          return {
-     *                              en_US: 'The message in English',
-     *                              fr_FR: 'The message in French'
-     *                          };
-     *                      }
-     *                  }
-     *              }
-     *          }
-     *      }
-     *  });
-     *  - or taken from language package
-     *  $(form).formValidation({
-     *      fields: {
-     *          fieldName: {
-     *              validators: {
-     *                  validatorName: {
-     *                  }
-     *              }
-     *          }
-     *      }
-     *  });
-     */
-    FormValidation.AddOn.i18n = {
-        /**
-         * @param {FormValidation.Base} validator The validator instance
-         * @param {Object} options The add-on options
-         */
-        init: function(validator, options) {
-            var that  = this,
-                $form = validator.getForm(),
-                opts  = validator.getOptions();
-
-            // Clone the original options
-            $form.data('fv.addon.i18n.options', $.extend(true, {}, opts));
-            this._setMessage(validator);
-
-            // Update the message when changing the locale
-            $form.on(opts.events.localeChanged, function(e, data) {
-                that._setMessage(data.fv);
-            });
-        },
-
-        destroy: function(validator, options) {
-            validator.getForm().removeData('fv.addon.i18n.options');
-        },
-
-        _setMessage: function(validator) {
-            var $form   = validator.getForm(),
-                options = $form.data('fv.addon.i18n.options'),
-                locale  = validator.getLocale();
-
-            for (var field in options.fields) {
-                if (!options.fields[field].validators) {
-                    continue;
-                }
-
-                var fields = validator.getFieldElements(field),
-                    type   = fields.attr('type'),
-                    total  = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
-
-                for (var i = 0; i < total; i++) {
-                    var $field = fields.eq(i);
-
-                    for (var v in options.fields[field].validators) {
-                        var message     = options.fields[field].validators[v].message,
-                            messageType = typeof message,
-                            localized   = null;
-
-                        // message is a literal object
-                        if ('object' === messageType && message[locale]) {
-                            localized = message[locale];
-                        }
-                        // message is defined by a function
-                        else if ('function' === messageType) {
-                            var result = message.apply(this, [validator, $field, v]);
-                            if (result && result[locale]) {
-                                localized = result[locale];
-                            }
-                        }
-
-                        // message is defined by language package - CHANGED: Check for existing of validator
-//OLD                        if (localized === null && FormValidation.I18n[locale][v]['default']) {
-                        if (localized === null && FormValidation.I18n[locale][v] && FormValidation.I18n[locale][v]['default']) {
-                            localized = FormValidation.I18n[locale][v]['default'];
-                        }
-
-                        if (localized) {
-                            validator.updateMessage(field, v, localized)
-                                     .updateOption(field, v, 'message', localized);
-                        }
-                    }
-                }
-            }
-        }
-    };
-}(jQuery));
-
 ;
 /*
  * jQuery.bind-first library v0.2.3
@@ -55520,7 +50614,7 @@ options:
     window.TimeSlider = function (input, options, pluginCount) {
         var _this = this;
 
-        this.VERSION = "6.1.3";
+        this.VERSION = "6.1.4";
 
         //Setting default options
         this.options = $.extend( true, {}, defaultOptions, options );
@@ -55662,7 +50756,12 @@ options:
             //Setting tick at midnight
             value = o.min;
             while (value <= o.max){
-                if ( ((value - this.options.majorTicksOffset) % o.tickDistanceNum === 0) && (this._valueToTzMoment( value, this.options.format.timezone ).hour() === 0) ){
+                //Old version: Force midnights tag to be on minor-tick => error on shift to/from DST (Daylight Saving Time)
+                //if ( ((value - this.options.majorTicksOffset) % o.tickDistanceNum === 0) && (this._valueToTzMoment( value, this.options.format.timezone ).hour() === 0) ){
+
+                //New version: Allow midnights tags on every hour regardless if there are a tag
+                if (this._valueToTzMoment( value, this.options.format.timezone ).hour() === 0){
+
                     midnights++;
                     this.appendTick( valueP, tickOptions );
 
@@ -59966,15 +55065,24 @@ module.exports = g;
         if (options.allowZeroSelected)
             result.addClass( 'allow-zero-selected' );
 
-        if (options.fullWidth && !options.vertical)
+        if (options.fullWidth)
             result.addClass('btn-group-full-width');
+
+        if (options.border)
+            result.addClass('btn-group-border');
 
         if (options.attr)
             result.attr( options.attr );
 
         $.each( options.list, function(index, buttonOptions ){
-            $.bsButton( $.extend({}, options.buttonOptions, buttonOptions ) )
-                .appendTo( result );
+            if (buttonOptions.id)
+                $.bsButton( $.extend({}, options.buttonOptions, buttonOptions ) )
+                    .appendTo( result );
+            else
+                $('<div/>')
+                    .addClass('btn-group-header')
+                    ._bsAddHtml( buttonOptions )
+                    .appendTo( result );
         });
         return result;
     };
@@ -63629,7 +58737,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
     /*
 
-    Almost all elements comes in two sizes: normal and small set by options.small: ?lse/true
+    Almost all elements comes in two sizes: normal and small set by options.small: false/true
 
     In jquery-bootstrap.scss sizing class-postfix -xs is added (from Bootstrap 3)
 
@@ -64244,319 +59352,6 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
 
 }(jQuery, this.i18next, this, document));
-;
-/****************************************************************************
-	fcoo-form-field.js,
-
-	(c) 2019, FCOO
-
-	https://github.com/FCOO/fcoo-modal-form
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window/*, document, undefined*/) {
-	"use strict";
-
-	//Create fcoo-namespace
-	window.fcoo = window.fcoo || {};
-    var ns = window.fcoo.form = window.fcoo.form || {};
-
-
-
-    /*********************************************************
-    fcoo.form.field( id, type, options )
-    Return the options for a FCOO Standard Field:
-        id: identifier
-        type: The name of the field type
-        options: Both general options for the field (label etc.9 and special options for the specific field-type
-    *********************************************************/
-    ns.field = function( id, type, options ){
-        var result = $.extend(true, options || {});
-        result.id = id;
-
-
-        return result;
-    };
-
-
-}(jQuery, this, document));
-
-
-;
-/****************************************************************************
-	fcoo-validation.js,
-
-	(c) 2018, FCOO
-
-	https://github.com/FCOO/fcoo-modal-form
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window/*, document, undefined*/) {
-	"use strict";
-
-	//Create fcoo-namespace
-	window.fcoo = window.fcoo || {};
-    var ns = window.fcoo.form = window.fcoo.form || {};
-
-
-
-    /********************************************************************************
-    messages = { validator#1: {da:"...", en:"..."}, validator#2: {da:"...", en:"..."},... }
-    The different messages for default validators
-    ********************************************************************************/
-    var messages = {
-            notEmpty: {
-                da: "Feltet skal udfyldes",
-                en: "The field is required"
-            },
-            integer: {
-                da: "Skal være et heltal",
-                en: "Must be an integer"
-            },
-            between: {
-                da: "Skal være mellem %s og %s",
-                en: "Must be between %s and %s"
-            },
-            lessThan: {
-                da: {default: "Skal være mindre eller lig %s", notInclusive: "Skal være mindre end %s"},
-                en: {default: "Must be less than or equal to %s", notInclusive: "Must be less than %s"}
-            },
-            greaterThan: {
-                da: {default: "Skal være større eller lig %s", notInclusive: "Skal være større end %s"},
-                en: {default: "Must be greater than or equal to %s", notInclusive: "Must be greater than %s"}
-            },
-            stringLength: {
-                da: {default: "Ugyldig længde", less: "Skal være mindre end %s tegn", more: "Skal være længere end %s tegn", between: "Skal være mellem  %s og %s tegn lang"},
-                en: {default: "Invalid length", less: "Must be less than %s characters", more: "Must be more than %s characters", between: "Must be between %s and %s characters long"},
-            }
-    };
-
-/*
-        between: {default: "Please enter a value between %s and %s", notInclusive: "Please enter a value between %s and %s strictly"}
-callback: {default: "Please enter a valid value"}
-choice: {default: "Please enter a valid value", less: "Please choose %s options at minimum", more: "Please choose %s options at maximum", between: "Please choose %s - %s options"}
-color: {default: "Please enter a valid color"}
-creditCard: {default: "Please enter a valid credit card number"}
-date: {default: "Please enter a valid date", min: "Please enter a date after %s", max: "Please enter a date before %s", range: "Please enter a date in the range %s - %s"}
-different: {default: "Please enter a different value"}
-digits: {default: "Please enter only digits"}
-emailAddress: {default: "Please enter a valid email address"}
-file: {default: "Please choose a valid file"}
-greaterThan: {default: "Please enter a value greater than or equal to %s", notInclusive: "Please enter a value greater than %s"}
-identical: {default: "Please enter the same value"}
-integer: {default: "Please enter a valid number"}
-lessThan: {default: "Please enter a value less than or equal to %s", notInclusive: "Please enter a value less than %s"}
-notEmpty: {default: "Please enter a value"}
-numeric: {default: "Please enter a valid float number"}
-promise: {default: "Please enter a valid value"}
-regexp: {default: "Please enter a value matching the pattern"}
-remote: {default: "Please enter a valid value"}
-stringLength: {default: "Please enter a value with valid length", less: "Please enter less than %s characters", more: "Please enter more than %s characters", between: "Please enter value between %s and %s characters long"}
-uri: {default: "Please enter a valid URI"}
-*/
-
-    //Add all messages as default message
-    function addMessage(id, message){
-        $.each(message, function(lang, text){
-            window.FormValidation.I18n[lang] = window.FormValidation.I18n[lang] || {};
-            window.FormValidation.I18n[lang][id] = $.type(text) == 'string' ? {default:text} : text;
-        });
-    }
-    $.each(messages, addMessage );
-
-    /*********************************************************
-    fcoo.form.addValidation( id, validate, message )
-    Create a validator:
-        id: identifier
-        validate: validate-funtion = function(validator, $field, options) {
-            * @param {FormValidation.Base} validator The validator plugin instance
-            * @param {jQuery} $field The jQuery object represents the field element
-            * @param {Object} options The validator options
-            * @returns {Boolean}
-            //You can get the field value
-            var value = $field.val();
-            //Perform validating and return true if the field value is valid otherwise return false
-        },
-        message: standard bs-text options. Can include onClick and icons
-    *********************************************************/
-    ns.addValidation = function( id, validate, message ){
-        window.FormValidation.Validator[id] = {validate: validate, message: message};
-    };
-
-
-}(jQuery, this, document));
-
-
-;
-/****************************************************************************
-	jquery-bootstrap-form.js,
-
-    Extend $.BsModalForm.prototype with version of methods used for formValidation
-****************************************************************************/
-
-(function ($, window/*, document, undefined*/) {
-	"use strict";
-
-    //Extend $.BsModalForm.prototype
-    $.extend($.BsModalForm.prototype, {
-        /*******************************************************
-        _addOnSubmit
-        *******************************************************/
-        _addOnSubmit: function( onSubmitFunc ){
-            this.$form.on('success.form.fv', onSubmitFunc );
-        },
-
-        /*******************************************************
-        _addValidation
-        *******************************************************/
-        _addValidation: function(){
-            //Create the formValidation
-            this.$form.formValidation({
-                framework: 'bootstrap4',
-                autoFocus: false,
-                excluded : ':disabled',
-                button: {}, //Using modal button instead
-                icon  : {}, //No icon used
-                //live: String — Live validating mode. Can be one of three values:
-                //live: 'enabled', // default	The plugin validates fields as soon as they are changed
-                //live: 'disabled', // Disable the live validating. The error messages are only shown after the form is submitted
-                live: 'submitted', // The live validating is enabled after the form is submitted
-                locale: window.i18next.language,
-                verbose: false,
-                addOns: {i18n: true}
-            });
-
-            this.formValidation = this.$form.data('formValidation');
-            this.formValidation.setLocale(window.i18next.language);
-            var _this = this;
-
-            //Add event to change language
-            window.i18next.on('languageChanged', function() {
-                //Bug fix to get updated locale-option to i18n
-                _this.$form.data('fv.addon.i18n.options', _this.formValidation.options),
-
-                _this.formValidation
-                    .setLocale(window.i18next.language)
-                    .resetForm();
-            });
-
-            //Add event to update message as bsOptions ({text,icon,link,...}
-            this.$form.on('added.field.fv', $.proxy( this.updateBsMessage, this) );
-
-            //Add events
-            this.$form.on('success.form.fv', $.proxy( this.onSubmit, this ));
-            this.$form.on('err.form.fv',     $.proxy( this.onError,  this )); //Not used at the moment
-
-            this.$form.on('status.field.fv', $.proxy( this.onFieldStatus,  this ));
-            this.$form.on('err.field.fv',    $.proxy( this.onFieldError,  this )); //Not used at the moment
-        },
-
-        /*******************************************************
-        _resetValidation
-        *******************************************************/
-        _resetValidation: function(){
-            this.formValidation.resetForm(false);
-        },
-
-        /*******************************************************
-        _addInputValidation
-        *******************************************************/
-        _addInputValidation: function( bsModalInput ){
-            //Set onChange
-            bsModalInput.getElement().on('change', $.proxy( bsModalInput.onChange, bsModalInput ));
-
-
-            if (bsModalInput.options.validators){
-                var validatorList = $.isArray(bsModalInput.options.validators) ?
-                                    bsModalInput.options.validators :
-                                    $.type(bsModalInput.options.validators) == 'string' ?
-                                    bsModalInput.options.validators.split(' ') :
-                                    [bsModalInput.options.validators],
-                    validators = {};
-
-                $.each( validatorList, function( index, validator ){
-                    //validator = string or {validatorId#1: options1, validatorId#2: options2,...}
-                    if ($.type(validator) == 'string')
-                        validators[validator] = {};
-                    else
-                        $.each( validator, function( id, options ){ validators[id] = options; });
-                });
-
-                this.formValidation.addField( bsModalInput.options.id, {'validators': validators} );
-            }
-        },
-
-        /*******************************************************
-        _resetInputValidation
-        *******************************************************/
-        _resetInputValidation: function( bsModalInput ){
-            this.formValidation.resetField(bsModalInput.options.id);
-        },
-
-        /*******************************************************
-        _enableInputValidation
-        *******************************************************/
-        _enableInputValidation: function( bsModalInput, enabled ){
-            bsModalInput.getFormGroup().toggleClass('fv-do-not-validate', !enabled);
-        },
-
-
-        /*******************************************************
-        updateBsMessage(e, data)
-        Using i18n to dynamic translate message set by window.fcoo.validation.add(...)
-        *******************************************************/
-        updateBsMessage: function( event, data ){
-            $.each( data.options.validators, function( validator ){
-                var $messageElement = data.element.parents('.form-group').find('small[data-fv-validator="'+validator+'"]'),
-                    fixedMessage = window.FormValidation.Validator[validator].message;
-
-                if (fixedMessage)
-                    $messageElement
-                        .empty()
-                        ._bsAddHtml(fixedMessage);
-
-            });
-        },
-
-        /*******************************************************
-        onSubmit = called when the form is valid and submitted
-        *******************************************************/
-        onSubmit: function( event/*, data*/ ){
-            this.options.onSubmit ? this.options.onSubmit( this.getValues() ) : null;
-            this.$bsModal.modal('hide');
-
-            event.preventDefault();
-            return false;
-        },
-
-        /*******************************************************
-        onFieldStatus = called when a field change its status
-        *******************************************************/
-        onFieldStatus: function(/* event, data */){
-            var isValid = this.formValidation.isValid() === false;
-            this.$submitButton.toggleClass('disabled', isValid);
-            this.$form.parents('.modal-content').toggleClass('modal-has-warning', isValid);
-        },
-
-        /*******************************************************
-        onFieldError = called when a field is invalid
-        *******************************************************/
-        onFieldError: function(/* event, data */){
-            //NOT USED AT THE MOMENT
-        },
-
-        /*******************************************************
-        onError = called when the form is invalid
-        *******************************************************/
-        onError: function(/* event, data */){
-            //NOT USED AT THE MOMENT
-        }
-    });
-}(jQuery, this, document));
-
 ;
 "use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj};(function(f){if((typeof exports==="undefined"?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Url=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o])}return s}({1:[function(require,module,exports){window.addEventListener("popstate",function(e){Url.triggerPopStateCb(e)});var Url=module.exports={_onPopStateCbs:[],_isHash:false,queryString:function queryString(name,notDecoded){name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),results=regex.exec(location.search),encoded=null;if(results===null){regex=new RegExp("[\\?&]"+name+"(\\&([^&#]*)|$)");if(regex.test(location.search)){return true}return undefined}else{encoded=results[1].replace(/\+/g," ");if(notDecoded){return encoded}return decodeURIComponent(encoded)}},parseQuery:function parseQuery(search){var query={};if(typeof search!=="string"){search=window.location.search}search=search.replace(/^\?/g,"");if(!search){return{}}var a=search.split("&"),i=0,iequ,value=null;for(;i<a.length;++i){iequ=a[i].indexOf("=");if(iequ<0){iequ=a[i].length;value=true}else{value=decodeURIComponent(a[i].slice(iequ+1))}query[decodeURIComponent(a[i].slice(0,iequ))]=value}return query},stringify:function stringify(queryObj){if(!queryObj||queryObj.constructor!==Object){throw new Error("Query object should be an object.")}var stringified="";Object.keys(queryObj).forEach(function(c){var value=queryObj[c];stringified+=c;if(value!==true){stringified+="="+encodeURIComponent(queryObj[c])}stringified+="&"});stringified=stringified.replace(/\&$/g,"");return stringified},updateSearchParam:function updateSearchParam(param,value,push,triggerPopState){var searchParsed=this.parseQuery();if(value===undefined){delete searchParsed[param]}else{if(searchParsed[param]===value){return Url}searchParsed[param]=value}var newSearch="?"+this.stringify(searchParsed);this._updateAll(window.location.pathname+newSearch+location.hash,push,triggerPopState);return Url},getLocation:function getLocation(){return window.location.pathname+window.location.search+window.location.hash},hash:function hash(newHash,triggerPopState){if(newHash===undefined){return location.hash.substring(1)}if(!triggerPopState){setTimeout(function(){Url._isHash=false},0);Url._isHash=true}return location.hash=newHash},_updateAll:function _updateAll(s,push,triggerPopState){window.history[push?"pushState":"replaceState"](null,"",s);if(triggerPopState){Url.triggerPopStateCb({})}return s},pathname:function pathname(_pathname,push,triggerPopState){if(_pathname===undefined){return location.pathname}return this._updateAll(_pathname+window.location.search+window.location.hash,push,triggerPopState)},triggerPopStateCb:function triggerPopStateCb(e){if(this._isHash){return}this._onPopStateCbs.forEach(function(c){c(e)})},onPopState:function onPopState(cb){this._onPopStateCbs.push(cb)},removeHash:function removeHash(){this._updateAll(window.location.pathname+window.location.search,false,false)},removeQuery:function removeQuery(){this._updateAll(window.location.pathname+window.location.hash,false,false)},version:"2.3.1"}},{}]},{},[1])(1)});
 ;
@@ -65739,1475 +60534,6 @@ return index;
     //Update all language related elements
     ns.settings.set('language', language );
 
-
-}(jQuery, this, document));
-;
-/*! @preserve
- * numeral.js
- * version : 2.0.6
- * author : Adam Draper
- * license : MIT
- * http://adamwdraper.github.com/Numeral-js/
- */
-
-(function (global, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define(factory);
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory();
-    } else {
-        global.numeral = factory();
-    }
-}(this, function () {
-    /************************************
-        Variables
-    ************************************/
-
-    var numeral,
-        _,
-        VERSION = '2.0.6',
-        formats = {},
-        locales = {},
-        defaults = {
-            currentLocale: 'en',
-            zeroFormat: null,
-            nullFormat: null,
-            defaultFormat: '0,0',
-            scalePercentBy100: true
-        },
-        options = {
-            currentLocale: defaults.currentLocale,
-            zeroFormat: defaults.zeroFormat,
-            nullFormat: defaults.nullFormat,
-            defaultFormat: defaults.defaultFormat,
-            scalePercentBy100: defaults.scalePercentBy100
-        };
-
-
-    /************************************
-        Constructors
-    ************************************/
-
-    // Numeral prototype object
-    function Numeral(input, number) {
-        this._input = input;
-
-        this._value = number;
-    }
-
-    numeral = function(input) {
-        var value,
-            kind,
-            unformatFunction,
-            regexp;
-
-        if (numeral.isNumeral(input)) {
-            value = input.value();
-        } else if (input === 0 || typeof input === 'undefined') {
-            value = 0;
-        } else if (input === null || _.isNaN(input)) {
-            value = null;
-        } else if (typeof input === 'string') {
-            if (options.zeroFormat && input === options.zeroFormat) {
-                value = 0;
-            } else if (options.nullFormat && input === options.nullFormat || !input.replace(/[^0-9]+/g, '').length) {
-                value = null;
-            } else {
-                for (kind in formats) {
-                    regexp = typeof formats[kind].regexps.unformat === 'function' ? formats[kind].regexps.unformat() : formats[kind].regexps.unformat;
-
-                    if (regexp && input.match(regexp)) {
-                        unformatFunction = formats[kind].unformat;
-
-                        break;
-                    }
-                }
-
-                unformatFunction = unformatFunction || numeral._.stringToNumber;
-
-                value = unformatFunction(input);
-            }
-        } else {
-            value = Number(input)|| null;
-        }
-
-        return new Numeral(input, value);
-    };
-
-    // version number
-    numeral.version = VERSION;
-
-    // compare numeral object
-    numeral.isNumeral = function(obj) {
-        return obj instanceof Numeral;
-    };
-
-    // helper functions
-    numeral._ = _ = {
-        // formats numbers separators, decimals places, signs, abbreviations
-        numberToFormat: function(value, format, roundingFunction) {
-            var locale = locales[numeral.options.currentLocale],
-                negP = false,
-                optDec = false,
-                leadingCount = 0,
-                abbr = '',
-                trillion = 1000000000000,
-                billion = 1000000000,
-                million = 1000000,
-                thousand = 1000,
-                decimal = '',
-                neg = false,
-                abbrForce, // force abbreviation
-                abs,
-                min,
-                max,
-                power,
-                int,
-                precision,
-                signed,
-                thousands,
-                output;
-
-            // make sure we never format a null value
-            value = value || 0;
-
-            abs = Math.abs(value);
-
-            // see if we should use parentheses for negative number or if we should prefix with a sign
-            // if both are present we default to parentheses
-            if (numeral._.includes(format, '(')) {
-                negP = true;
-                format = format.replace(/[\(|\)]/g, '');
-            } else if (numeral._.includes(format, '+') || numeral._.includes(format, '-')) {
-                signed = numeral._.includes(format, '+') ? format.indexOf('+') : value < 0 ? format.indexOf('-') : -1;
-                format = format.replace(/[\+|\-]/g, '');
-            }
-
-            // see if abbreviation is wanted
-            if (numeral._.includes(format, 'a')) {
-                abbrForce = format.match(/a(k|m|b|t)?/);
-
-                abbrForce = abbrForce ? abbrForce[1] : false;
-
-                // check for space before abbreviation
-                if (numeral._.includes(format, ' a')) {
-                    abbr = ' ';
-                }
-
-                format = format.replace(new RegExp(abbr + 'a[kmbt]?'), '');
-
-                if (abs >= trillion && !abbrForce || abbrForce === 't') {
-                    // trillion
-                    abbr += locale.abbreviations.trillion;
-                    value = value / trillion;
-                } else if (abs < trillion && abs >= billion && !abbrForce || abbrForce === 'b') {
-                    // billion
-                    abbr += locale.abbreviations.billion;
-                    value = value / billion;
-                } else if (abs < billion && abs >= million && !abbrForce || abbrForce === 'm') {
-                    // million
-                    abbr += locale.abbreviations.million;
-                    value = value / million;
-                } else if (abs < million && abs >= thousand && !abbrForce || abbrForce === 'k') {
-                    // thousand
-                    abbr += locale.abbreviations.thousand;
-                    value = value / thousand;
-                }
-            }
-
-            // check for optional decimals
-            if (numeral._.includes(format, '[.]')) {
-                optDec = true;
-                format = format.replace('[.]', '.');
-            }
-
-            // break number and format
-            int = value.toString().split('.')[0];
-            precision = format.split('.')[1];
-            thousands = format.indexOf(',');
-            leadingCount = (format.split('.')[0].split(',')[0].match(/0/g) || []).length;
-
-            if (precision) {
-                if (numeral._.includes(precision, '[')) {
-                    precision = precision.replace(']', '');
-                    precision = precision.split('[');
-                    decimal = numeral._.toFixed(value, (precision[0].length + precision[1].length), roundingFunction, precision[1].length);
-                } else {
-                    decimal = numeral._.toFixed(value, precision.length, roundingFunction);
-                }
-
-                int = decimal.split('.')[0];
-
-                if (numeral._.includes(decimal, '.')) {
-                    decimal = locale.delimiters.decimal + decimal.split('.')[1];
-                } else {
-                    decimal = '';
-                }
-
-                if (optDec && Number(decimal.slice(1)) === 0) {
-                    decimal = '';
-                }
-            } else {
-                int = numeral._.toFixed(value, 0, roundingFunction);
-            }
-
-            // check abbreviation again after rounding
-            if (abbr && !abbrForce && Number(int) >= 1000 && abbr !== locale.abbreviations.trillion) {
-                int = String(Number(int) / 1000);
-
-                switch (abbr) {
-                    case locale.abbreviations.thousand:
-                        abbr = locale.abbreviations.million;
-                        break;
-                    case locale.abbreviations.million:
-                        abbr = locale.abbreviations.billion;
-                        break;
-                    case locale.abbreviations.billion:
-                        abbr = locale.abbreviations.trillion;
-                        break;
-                }
-            }
-
-
-            // format number
-            if (numeral._.includes(int, '-')) {
-                int = int.slice(1);
-                neg = true;
-            }
-
-            if (int.length < leadingCount) {
-                for (var i = leadingCount - int.length; i > 0; i--) {
-                    int = '0' + int;
-                }
-            }
-
-            if (thousands > -1) {
-                int = int.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + locale.delimiters.thousands);
-            }
-
-            if (format.indexOf('.') === 0) {
-                int = '';
-            }
-
-            output = int + decimal + (abbr ? abbr : '');
-
-            if (negP) {
-                output = (negP && neg ? '(' : '') + output + (negP && neg ? ')' : '');
-            } else {
-                if (signed >= 0) {
-                    output = signed === 0 ? (neg ? '-' : '+') + output : output + (neg ? '-' : '+');
-                } else if (neg) {
-                    output = '-' + output;
-                }
-            }
-
-            return output;
-        },
-        // unformats numbers separators, decimals places, signs, abbreviations
-        stringToNumber: function(string) {
-            var locale = locales[options.currentLocale],
-                stringOriginal = string,
-                abbreviations = {
-                    thousand: 3,
-                    million: 6,
-                    billion: 9,
-                    trillion: 12
-                },
-                abbreviation,
-                value,
-                i,
-                regexp;
-
-            if (options.zeroFormat && string === options.zeroFormat) {
-                value = 0;
-            } else if (options.nullFormat && string === options.nullFormat || !string.replace(/[^0-9]+/g, '').length) {
-                value = null;
-            } else {
-                value = 1;
-
-                if (locale.delimiters.decimal !== '.') {
-                    string = string.replace(/\./g, '').replace(locale.delimiters.decimal, '.');
-                }
-
-                for (abbreviation in abbreviations) {
-                    regexp = new RegExp('[^a-zA-Z]' + locale.abbreviations[abbreviation] + '(?:\\)|(\\' + locale.currency.symbol + ')?(?:\\))?)?$');
-
-                    if (stringOriginal.match(regexp)) {
-                        value *= Math.pow(10, abbreviations[abbreviation]);
-                        break;
-                    }
-                }
-
-                // check for negative number
-                value *= (string.split('-').length + Math.min(string.split('(').length - 1, string.split(')').length - 1)) % 2 ? 1 : -1;
-
-                // remove non numbers
-                string = string.replace(/[^0-9\.]+/g, '');
-
-                value *= Number(string);
-            }
-
-            return value;
-        },
-        isNaN: function(value) {
-            return typeof value === 'number' && isNaN(value);
-        },
-        includes: function(string, search) {
-            return string.indexOf(search) !== -1;
-        },
-        insert: function(string, subString, start) {
-            return string.slice(0, start) + subString + string.slice(start);
-        },
-        reduce: function(array, callback /*, initialValue*/) {
-            if (this === null) {
-                throw new TypeError('Array.prototype.reduce called on null or undefined');
-            }
-
-            if (typeof callback !== 'function') {
-                throw new TypeError(callback + ' is not a function');
-            }
-
-            var t = Object(array),
-                len = t.length >>> 0,
-                k = 0,
-                value;
-
-            if (arguments.length === 3) {
-                value = arguments[2];
-            } else {
-                while (k < len && !(k in t)) {
-                    k++;
-                }
-
-                if (k >= len) {
-                    throw new TypeError('Reduce of empty array with no initial value');
-                }
-
-                value = t[k++];
-            }
-            for (; k < len; k++) {
-                if (k in t) {
-                    value = callback(value, t[k], k, t);
-                }
-            }
-            return value;
-        },
-        /**
-         * Computes the multiplier necessary to make x >= 1,
-         * effectively eliminating miscalculations caused by
-         * finite precision.
-         */
-        multiplier: function (x) {
-            var parts = x.toString().split('.');
-
-            return parts.length < 2 ? 1 : Math.pow(10, parts[1].length);
-        },
-        /**
-         * Given a variable number of arguments, returns the maximum
-         * multiplier that must be used to normalize an operation involving
-         * all of them.
-         */
-        correctionFactor: function () {
-            var args = Array.prototype.slice.call(arguments);
-
-            return args.reduce(function(accum, next) {
-                var mn = _.multiplier(next);
-                return accum > mn ? accum : mn;
-            }, 1);
-        },
-        /**
-         * Implementation of toFixed() that treats floats more like decimals
-         *
-         * Fixes binary rounding issues (eg. (0.615).toFixed(2) === '0.61') that present
-         * problems for accounting- and finance-related software.
-         */
-        toFixed: function(value, maxDecimals, roundingFunction, optionals) {
-            var splitValue = value.toString().split('.'),
-                minDecimals = maxDecimals - (optionals || 0),
-                boundedPrecision,
-                optionalsRegExp,
-                power,
-                output;
-
-            // Use the smallest precision value possible to avoid errors from floating point representation
-            if (splitValue.length === 2) {
-              boundedPrecision = Math.min(Math.max(splitValue[1].length, minDecimals), maxDecimals);
-            } else {
-              boundedPrecision = minDecimals;
-            }
-
-            power = Math.pow(10, boundedPrecision);
-
-            // Multiply up by precision, round accurately, then divide and use native toFixed():
-            output = (roundingFunction(value + 'e+' + boundedPrecision) / power).toFixed(boundedPrecision);
-
-            if (optionals > maxDecimals - boundedPrecision) {
-                optionalsRegExp = new RegExp('\\.?0{1,' + (optionals - (maxDecimals - boundedPrecision)) + '}$');
-                output = output.replace(optionalsRegExp, '');
-            }
-
-            return output;
-        }
-    };
-
-    // avaliable options
-    numeral.options = options;
-
-    // avaliable formats
-    numeral.formats = formats;
-
-    // avaliable formats
-    numeral.locales = locales;
-
-    // This function sets the current locale.  If
-    // no arguments are passed in, it will simply return the current global
-    // locale key.
-    numeral.locale = function(key) {
-        if (key) {
-            options.currentLocale = key.toLowerCase();
-        }
-
-        return options.currentLocale;
-    };
-
-    // This function provides access to the loaded locale data.  If
-    // no arguments are passed in, it will simply return the current
-    // global locale object.
-    numeral.localeData = function(key) {
-        if (!key) {
-            return locales[options.currentLocale];
-        }
-
-        key = key.toLowerCase();
-
-        if (!locales[key]) {
-            throw new Error('Unknown locale : ' + key);
-        }
-
-        return locales[key];
-    };
-
-    numeral.reset = function() {
-        for (var property in defaults) {
-            options[property] = defaults[property];
-        }
-    };
-
-    numeral.zeroFormat = function(format) {
-        options.zeroFormat = typeof(format) === 'string' ? format : null;
-    };
-
-    numeral.nullFormat = function (format) {
-        options.nullFormat = typeof(format) === 'string' ? format : null;
-    };
-
-    numeral.defaultFormat = function(format) {
-        options.defaultFormat = typeof(format) === 'string' ? format : '0.0';
-    };
-
-    numeral.register = function(type, name, format) {
-        name = name.toLowerCase();
-
-        if (this[type + 's'][name]) {
-            throw new TypeError(name + ' ' + type + ' already registered.');
-        }
-
-        this[type + 's'][name] = format;
-
-        return format;
-    };
-
-
-    numeral.validate = function(val, culture) {
-        var _decimalSep,
-            _thousandSep,
-            _currSymbol,
-            _valArray,
-            _abbrObj,
-            _thousandRegEx,
-            localeData,
-            temp;
-
-        //coerce val to string
-        if (typeof val !== 'string') {
-            val += '';
-
-            if (console.warn) {
-                console.warn('Numeral.js: Value is not string. It has been co-erced to: ', val);
-            }
-        }
-
-        //trim whitespaces from either sides
-        val = val.trim();
-
-        //if val is just digits return true
-        if (!!val.match(/^\d+$/)) {
-            return true;
-        }
-
-        //if val is empty return false
-        if (val === '') {
-            return false;
-        }
-
-        //get the decimal and thousands separator from numeral.localeData
-        try {
-            //check if the culture is understood by numeral. if not, default it to current locale
-            localeData = numeral.localeData(culture);
-        } catch (e) {
-            localeData = numeral.localeData(numeral.locale());
-        }
-
-        //setup the delimiters and currency symbol based on culture/locale
-        _currSymbol = localeData.currency.symbol;
-        _abbrObj = localeData.abbreviations;
-        _decimalSep = localeData.delimiters.decimal;
-        if (localeData.delimiters.thousands === '.') {
-            _thousandSep = '\\.';
-        } else {
-            _thousandSep = localeData.delimiters.thousands;
-        }
-
-        // validating currency symbol
-        temp = val.match(/^[^\d]+/);
-        if (temp !== null) {
-            val = val.substr(1);
-            if (temp[0] !== _currSymbol) {
-                return false;
-            }
-        }
-
-        //validating abbreviation symbol
-        temp = val.match(/[^\d]+$/);
-        if (temp !== null) {
-            val = val.slice(0, -1);
-            if (temp[0] !== _abbrObj.thousand && temp[0] !== _abbrObj.million && temp[0] !== _abbrObj.billion && temp[0] !== _abbrObj.trillion) {
-                return false;
-            }
-        }
-
-        _thousandRegEx = new RegExp(_thousandSep + '{2}');
-
-        if (!val.match(/[^\d.,]/g)) {
-            _valArray = val.split(_decimalSep);
-            if (_valArray.length > 2) {
-                return false;
-            } else {
-                if (_valArray.length < 2) {
-                    return ( !! _valArray[0].match(/^\d+.*\d$/) && !_valArray[0].match(_thousandRegEx));
-                } else {
-                    if (_valArray[0].length === 1) {
-                        return ( !! _valArray[0].match(/^\d+$/) && !_valArray[0].match(_thousandRegEx) && !! _valArray[1].match(/^\d+$/));
-                    } else {
-                        return ( !! _valArray[0].match(/^\d+.*\d$/) && !_valArray[0].match(_thousandRegEx) && !! _valArray[1].match(/^\d+$/));
-                    }
-                }
-            }
-        }
-
-        return false;
-    };
-
-
-    /************************************
-        Numeral Prototype
-    ************************************/
-
-    numeral.fn = Numeral.prototype = {
-        clone: function() {
-            return numeral(this);
-        },
-        format: function(inputString, roundingFunction) {
-            var value = this._value,
-                format = inputString || options.defaultFormat,
-                kind,
-                output,
-                formatFunction;
-
-            // make sure we have a roundingFunction
-            roundingFunction = roundingFunction || Math.round;
-
-            // format based on value
-            if (value === 0 && options.zeroFormat !== null) {
-                output = options.zeroFormat;
-            } else if (value === null && options.nullFormat !== null) {
-                output = options.nullFormat;
-            } else {
-                for (kind in formats) {
-                    if (format.match(formats[kind].regexps.format)) {
-                        formatFunction = formats[kind].format;
-
-                        break;
-                    }
-                }
-
-                formatFunction = formatFunction || numeral._.numberToFormat;
-
-                output = formatFunction(value, format, roundingFunction);
-            }
-
-            return output;
-        },
-        value: function() {
-            return this._value;
-        },
-        input: function() {
-            return this._input;
-        },
-        set: function(value) {
-            this._value = Number(value);
-
-            return this;
-        },
-        add: function(value) {
-            var corrFactor = _.correctionFactor.call(null, this._value, value);
-
-            function cback(accum, curr, currI, O) {
-                return accum + Math.round(corrFactor * curr);
-            }
-
-            this._value = _.reduce([this._value, value], cback, 0) / corrFactor;
-
-            return this;
-        },
-        subtract: function(value) {
-            var corrFactor = _.correctionFactor.call(null, this._value, value);
-
-            function cback(accum, curr, currI, O) {
-                return accum - Math.round(corrFactor * curr);
-            }
-
-            this._value = _.reduce([value], cback, Math.round(this._value * corrFactor)) / corrFactor;
-
-            return this;
-        },
-        multiply: function(value) {
-            function cback(accum, curr, currI, O) {
-                var corrFactor = _.correctionFactor(accum, curr);
-                return Math.round(accum * corrFactor) * Math.round(curr * corrFactor) / Math.round(corrFactor * corrFactor);
-            }
-
-            this._value = _.reduce([this._value, value], cback, 1);
-
-            return this;
-        },
-        divide: function(value) {
-            function cback(accum, curr, currI, O) {
-                var corrFactor = _.correctionFactor(accum, curr);
-                return Math.round(accum * corrFactor) / Math.round(curr * corrFactor);
-            }
-
-            this._value = _.reduce([this._value, value], cback);
-
-            return this;
-        },
-        difference: function(value) {
-            return Math.abs(numeral(this._value).subtract(value).value());
-        }
-    };
-
-    /************************************
-        Default Locale && Format
-    ************************************/
-
-    numeral.register('locale', 'en', {
-        delimiters: {
-            thousands: ',',
-            decimal: '.'
-        },
-        abbreviations: {
-            thousand: 'k',
-            million: 'm',
-            billion: 'b',
-            trillion: 't'
-        },
-        ordinal: function(number) {
-            var b = number % 10;
-            return (~~(number % 100 / 10) === 1) ? 'th' :
-                (b === 1) ? 'st' :
-                (b === 2) ? 'nd' :
-                (b === 3) ? 'rd' : 'th';
-        },
-        currency: {
-            symbol: '$'
-        }
-    });
-
-    
-
-(function() {
-        numeral.register('format', 'bps', {
-            regexps: {
-                format: /(BPS)/,
-                unformat: /(BPS)/
-            },
-            format: function(value, format, roundingFunction) {
-                var space = numeral._.includes(format, ' BPS') ? ' ' : '',
-                    output;
-
-                value = value * 10000;
-
-                // check for space before BPS
-                format = format.replace(/\s?BPS/, '');
-
-                output = numeral._.numberToFormat(value, format, roundingFunction);
-
-                if (numeral._.includes(output, ')')) {
-                    output = output.split('');
-
-                    output.splice(-1, 0, space + 'BPS');
-
-                    output = output.join('');
-                } else {
-                    output = output + space + 'BPS';
-                }
-
-                return output;
-            },
-            unformat: function(string) {
-                return +(numeral._.stringToNumber(string) * 0.0001).toFixed(15);
-            }
-        });
-})();
-
-
-(function() {
-        var decimal = {
-            base: 1000,
-            suffixes: ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-        },
-        binary = {
-            base: 1024,
-            suffixes: ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-        };
-
-    var allSuffixes =  decimal.suffixes.concat(binary.suffixes.filter(function (item) {
-            return decimal.suffixes.indexOf(item) < 0;
-        }));
-        var unformatRegex = allSuffixes.join('|');
-        // Allow support for BPS (http://www.investopedia.com/terms/b/basispoint.asp)
-        unformatRegex = '(' + unformatRegex.replace('B', 'B(?!PS)') + ')';
-
-    numeral.register('format', 'bytes', {
-        regexps: {
-            format: /([0\s]i?b)/,
-            unformat: new RegExp(unformatRegex)
-        },
-        format: function(value, format, roundingFunction) {
-            var output,
-                bytes = numeral._.includes(format, 'ib') ? binary : decimal,
-                suffix = numeral._.includes(format, ' b') || numeral._.includes(format, ' ib') ? ' ' : '',
-                power,
-                min,
-                max;
-
-            // check for space before
-            format = format.replace(/\s?i?b/, '');
-
-            for (power = 0; power <= bytes.suffixes.length; power++) {
-                min = Math.pow(bytes.base, power);
-                max = Math.pow(bytes.base, power + 1);
-
-                if (value === null || value === 0 || value >= min && value < max) {
-                    suffix += bytes.suffixes[power];
-
-                    if (min > 0) {
-                        value = value / min;
-                    }
-
-                    break;
-                }
-            }
-
-            output = numeral._.numberToFormat(value, format, roundingFunction);
-
-            return output + suffix;
-        },
-        unformat: function(string) {
-            var value = numeral._.stringToNumber(string),
-                power,
-                bytesMultiplier;
-
-            if (value) {
-                for (power = decimal.suffixes.length - 1; power >= 0; power--) {
-                    if (numeral._.includes(string, decimal.suffixes[power])) {
-                        bytesMultiplier = Math.pow(decimal.base, power);
-
-                        break;
-                    }
-
-                    if (numeral._.includes(string, binary.suffixes[power])) {
-                        bytesMultiplier = Math.pow(binary.base, power);
-
-                        break;
-                    }
-                }
-
-                value *= (bytesMultiplier || 1);
-            }
-
-            return value;
-        }
-    });
-})();
-
-
-(function() {
-        numeral.register('format', 'currency', {
-        regexps: {
-            format: /(\$)/
-        },
-        format: function(value, format, roundingFunction) {
-            var locale = numeral.locales[numeral.options.currentLocale],
-                symbols = {
-                    before: format.match(/^([\+|\-|\(|\s|\$]*)/)[0],
-                    after: format.match(/([\+|\-|\)|\s|\$]*)$/)[0]
-                },
-                output,
-                symbol,
-                i;
-
-            // strip format of spaces and $
-            format = format.replace(/\s?\$\s?/, '');
-
-            // format the number
-            output = numeral._.numberToFormat(value, format, roundingFunction);
-
-            // update the before and after based on value
-            if (value >= 0) {
-                symbols.before = symbols.before.replace(/[\-\(]/, '');
-                symbols.after = symbols.after.replace(/[\-\)]/, '');
-            } else if (value < 0 && (!numeral._.includes(symbols.before, '-') && !numeral._.includes(symbols.before, '('))) {
-                symbols.before = '-' + symbols.before;
-            }
-
-            // loop through each before symbol
-            for (i = 0; i < symbols.before.length; i++) {
-                symbol = symbols.before[i];
-
-                switch (symbol) {
-                    case '$':
-                        output = numeral._.insert(output, locale.currency.symbol, i);
-                        break;
-                    case ' ':
-                        output = numeral._.insert(output, ' ', i + locale.currency.symbol.length - 1);
-                        break;
-                }
-            }
-
-            // loop through each after symbol
-            for (i = symbols.after.length - 1; i >= 0; i--) {
-                symbol = symbols.after[i];
-
-                switch (symbol) {
-                    case '$':
-                        output = i === symbols.after.length - 1 ? output + locale.currency.symbol : numeral._.insert(output, locale.currency.symbol, -(symbols.after.length - (1 + i)));
-                        break;
-                    case ' ':
-                        output = i === symbols.after.length - 1 ? output + ' ' : numeral._.insert(output, ' ', -(symbols.after.length - (1 + i) + locale.currency.symbol.length - 1));
-                        break;
-                }
-            }
-
-
-            return output;
-        }
-    });
-})();
-
-
-(function() {
-        numeral.register('format', 'exponential', {
-        regexps: {
-            format: /(e\+|e-)/,
-            unformat: /(e\+|e-)/
-        },
-        format: function(value, format, roundingFunction) {
-            var output,
-                exponential = typeof value === 'number' && !numeral._.isNaN(value) ? value.toExponential() : '0e+0',
-                parts = exponential.split('e');
-
-            format = format.replace(/e[\+|\-]{1}0/, '');
-
-            output = numeral._.numberToFormat(Number(parts[0]), format, roundingFunction);
-
-            return output + 'e' + parts[1];
-        },
-        unformat: function(string) {
-            var parts = numeral._.includes(string, 'e+') ? string.split('e+') : string.split('e-'),
-                value = Number(parts[0]),
-                power = Number(parts[1]);
-
-            power = numeral._.includes(string, 'e-') ? power *= -1 : power;
-
-            function cback(accum, curr, currI, O) {
-                var corrFactor = numeral._.correctionFactor(accum, curr),
-                    num = (accum * corrFactor) * (curr * corrFactor) / (corrFactor * corrFactor);
-                return num;
-            }
-
-            return numeral._.reduce([value, Math.pow(10, power)], cback, 1);
-        }
-    });
-})();
-
-
-(function() {
-        numeral.register('format', 'ordinal', {
-        regexps: {
-            format: /(o)/
-        },
-        format: function(value, format, roundingFunction) {
-            var locale = numeral.locales[numeral.options.currentLocale],
-                output,
-                ordinal = numeral._.includes(format, ' o') ? ' ' : '';
-
-            // check for space before
-            format = format.replace(/\s?o/, '');
-
-            ordinal += locale.ordinal(value);
-
-            output = numeral._.numberToFormat(value, format, roundingFunction);
-
-            return output + ordinal;
-        }
-    });
-})();
-
-
-(function() {
-        numeral.register('format', 'percentage', {
-        regexps: {
-            format: /(%)/,
-            unformat: /(%)/
-        },
-        format: function(value, format, roundingFunction) {
-            var space = numeral._.includes(format, ' %') ? ' ' : '',
-                output;
-
-            if (numeral.options.scalePercentBy100) {
-                value = value * 100;
-            }
-
-            // check for space before %
-            format = format.replace(/\s?\%/, '');
-
-            output = numeral._.numberToFormat(value, format, roundingFunction);
-
-            if (numeral._.includes(output, ')')) {
-                output = output.split('');
-
-                output.splice(-1, 0, space + '%');
-
-                output = output.join('');
-            } else {
-                output = output + space + '%';
-            }
-
-            return output;
-        },
-        unformat: function(string) {
-            var number = numeral._.stringToNumber(string);
-            if (numeral.options.scalePercentBy100) {
-                return number * 0.01;
-            }
-            return number;
-        }
-    });
-})();
-
-
-(function() {
-        numeral.register('format', 'time', {
-        regexps: {
-            format: /(:)/,
-            unformat: /(:)/
-        },
-        format: function(value, format, roundingFunction) {
-            var hours = Math.floor(value / 60 / 60),
-                minutes = Math.floor((value - (hours * 60 * 60)) / 60),
-                seconds = Math.round(value - (hours * 60 * 60) - (minutes * 60));
-
-            return hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
-        },
-        unformat: function(string) {
-            var timeArray = string.split(':'),
-                seconds = 0;
-
-            // turn hours and minutes into seconds and add them all up
-            if (timeArray.length === 3) {
-                // hours
-                seconds = seconds + (Number(timeArray[0]) * 60 * 60);
-                // minutes
-                seconds = seconds + (Number(timeArray[1]) * 60);
-                // seconds
-                seconds = seconds + Number(timeArray[2]);
-            } else if (timeArray.length === 2) {
-                // minutes
-                seconds = seconds + (Number(timeArray[0]) * 60);
-                // seconds
-                seconds = seconds + Number(timeArray[1]);
-            }
-            return Number(seconds);
-        }
-    });
-})();
-
-return numeral;
-}));
-
-;
-/****************************************************************************
-latlng-format, a class to validate, format, and transform positions (eq. leaflet LatLng)
-
-    (c) 2015, FCOO
-
-    https://github.com/fcoo/latlng-format
-    https://github.com/fcoo
-
-****************************************************************************/
-
-(function ($, window/*, document, undefined*/) {
-    "use strict";
-
-    //Options for the tree posible formats. Placed in seperate namespace
-    var LATLNGFORMAT_DMSS = 0, //Degrees Minutes Seconds Decimal Seconds: N65d30'15.3"  d='degree sign'
-        LATLNGFORMAT_DMM  = 1, //Degrees Decimal minutes                : N65d30.258'
-        LATLNGFORMAT_DD   = 2; //Decimal degrees                        : N41.1234d
-
-    // _split - Input: position (number) Return: {hemisphere, degrees, degreesDecimal, minutes, minutesDecimal, seconds, secondsDecimal}
-    function _split( position ){
-        var result = {};
-        result.hemisphere = position >= 0 ? +1 : -1;
-        position = Math.abs(position);
-        result.degrees = Math.floor(position);
-        result.degreesDecimal = Math.min(9999, Math.round((position - result.degrees)*10000) );
-
-        position = position*60 % 60; //Minutes
-        result.minutes = Math.floor(position);
-        result.minutesDecimal = Math.min( 999, Math.round((position - result.minutes)*1000) );
-
-        position = position*60 % 60; //seconds
-        result.seconds = Math.floor(position);
-        result.secondsDecimal = Math.min( 9, Math.floor/*round*/((position - result.seconds)*10) );
-
-
-        return result;
-    }
-
-    var latLngFormat;
-
-
-    /************************************
-    Constructors
-    ************************************/
-
-    // LatlngFormat prototype object
-    function LatLngFormat( inputs ){
-        this._inputs = inputs;
-        this.inputIsValid = (this._inputs !== null);
-        this.inputIsSingle = this.inputIsValid && (this._inputs.length == 1);
-
-
-        if (!this.inputIsValid && console.warn)
-            console.warn('latLngFormat: Invalid arguments');
-    }
-
-
-    latLngFormat = function() {
-        //Possible arguments: ( Number ), ( Number, Number ) ( [Number, Number] ), ( String ), ( String, String ) ( [String, String] )
-        var inputs = null,
-            inputValid = false;
-        if (arguments.length && (arguments.length <= 2)){
-            if (arguments.length == 1){
-                if ($.isArray(arguments[0]))
-                    inputs = arguments[0];
-                else
-                    inputs = [ arguments[0] ];
-            }
-            if (arguments.length == 2)
-              inputs = [ arguments[0], arguments[1] ];
-
-            inputValid = true;
-            $.each( inputs, function( index, val ){
-                if ((typeof val != 'number') && (typeof val != 'string')){
-                    inputValid = false;
-                    return false;
-                }
-            });
-        }
-        return new LatLngFormat( inputValid ? inputs : [null,null] );
-    };
-
-    //Defalut options
-    latLngFormat.options = {
-        degreeChar: String.fromCharCode(176), //or '&#176;' '&deg;'
-             //lat, lng
-        min: [-90, -180],
-        max: [ 90,  180]
-    };
-    latLngFormat.LATLNGFORMAT_DMSS = LATLNGFORMAT_DMSS;
-    latLngFormat.LATLNGFORMAT_DMM  = LATLNGFORMAT_DMM;
-    latLngFormat.LATLNGFORMAT_DD   = LATLNGFORMAT_DD;
-
-
-    /************************************
-    LatlngFormat Prototype
-    ************************************/
-    latLngFormat.fn = LatLngFormat.prototype = {
-        _getLat: function(){ return this._inputs[0]; },
-        _getLng: function(){ return this.inputIsSingle ? this._inputs[0] : this._inputs[1]; },
-
-        //_method - call this.method with correct parametre. method = function( regexpIndex,  value [, extraParam] ): return (Boolean|Number|String)
-        _method   : function (method, param1, param2) { return [ method.call( this, 0, this._getLat(), param1, param2 ), method.call( this, 1, this._getLng(), param1, param2 ) ]; },
-        _methodLat: function (method, param1, param2) { return method.call( this, 0, this._getLat(), param1, param2 ); },
-        _methodLng: function (method, param1, param2) { return method.call( this, 1, this._getLng(), param1, param2 ); },
-
-
-        //**********************************************************
-        //_valid - Return true if the value is a valid position
-
-        _valid: function(latOrLng, value){
-            if (typeof value == 'number')
-                return (value >= latLngFormat.options.min[latOrLng]) && (value <= latLngFormat.options.max[latOrLng]);
-            else
-                //The regexp is prefixed with ^(?: and suffixed with )$ to make it full-match-only.
-                return (new RegExp( '^(?:' + latLngFormat.options.regexp[latOrLng] + ')$' )).test(value);
-        },
-
-        //valid - Return true if the input is a valid position
-        valid   : function(){ return this._method( this._valid ); },
-        validLat: function(){ return this._methodLat( this._valid ); },
-        validLng: function(){ return this._methodLng( this._valid ); },
-
-        //**********************************************************
-        //_format - Converts value to a string, using this.displayMask or this.editMask
-        _format: function(latOrLng, value, useEditMask, trunc){
-
-            function trim(value, lgd){
-                var result = ''+value;
-                if (trunc){
-                    if (value == 0)
-                        result = '';
-                }
-                else
-                    while (result.length < lgd)
-                        result = '0'+result;
-                return result;
-            }
-            function append(value, lgd){
-                var result = ''+value;
-                if (trunc)
-                    result = result.replace( /0*$/g, '');
-                else
-                    while (result.length < lgd)
-                        result = result+'0';
-                return result;
-            }
-
-            if (typeof value == 'string')
-                return this._valid(latOrLng, value) ? value : '';
-
-            var parts = _split(value);
-
-            var result = (useEditMask ? latLngFormat.options.editMask : latLngFormat.options.displayMask)
-                            .replace('H', latOrLng ?
-                                            (parts.hemisphere == 1 ? 'E' : 'W') :
-                                            (parts.hemisphere == 1 ? 'N' : 'S')
-                            );
-
-            result = result.replace(/DDD/ , parts.degrees                   );
-            result = result.replace(/dddd/, append(parts.degreesDecimal, 4) );
-            result = result.replace(/MM/  , trim(parts.minutes,          2) );
-            result = result.replace(/mmm/ , append(parts.minutesDecimal, 3) );
-            result = result.replace(/SS/  , trim(parts.seconds,          2) );
-            result = result.replace(/s/   , trim(parts.secondsDecimal,   1) );
-
-            if (trunc){
-                //Remove delimiters not followed by a digit
-                result = result.replace( new RegExp('\\'+latLngFormat.options.delimitersDecimal + '(?![0-9])', 'g'), '');
-
-                /*
-                Remove sign for minute (') and seconds (") without pending digital
-                Using regExp result = result.replace( /(?<!\d)[\'\"]/g, ''); works but JavaScript do not support 'before': < so
-                a workaround is used
-                */
-                var i = 1;
-                while (i < result.length)
-                    if ( ((result.charAt(i) == '"') || (result.charAt(i) == "'")) &&
-                         !$.isNumeric(result.charAt(i-1))
-                       )
-                        result = result.slice(0,i) + result.slice(i+1);
-                    else
-                        i++;
-            }
-
-            return result;
-        },
-        //format - Converts number value to a string, using this.displayMask or this.editMask
-        format   : function( useEditMask ){ return this._method(    this._format, useEditMask ); },
-        formatLat: function( useEditMask ){ return this._methodLat( this._format, useEditMask ); },
-        formatLng: function( useEditMask ){ return this._methodLng( this._format, useEditMask ); },
-
-        //formatTrunc - Converts number value to a string, truncating any zero-values
-        formatTrunc   : function(){ return this._method(    this._format, false, true ); },
-        formatTruncLat: function(){ return this._methodLat( this._format, false, true ); },
-        formatTruncLng: function(){ return this._methodLng( this._format, false, true ); },
-
-
-        //**********************************************************
-        //_ value - Converts value (string masked as editMask) to decimal degrees.
-        //Using convertMask to convert the different part of the text. Any space is ignored
-        _value: function(latOrLng,  value){
-            //toDecimal - Convert a integer value v to a decimal. Eq    toDecimal(89)    = 0.89, toDecimal(9) = 0.9, toDecimal(1234)    = 0.1234
-            function toDecimal(v) {
-                var l = v.toString().length;
-                return v / Math.pow(10, l);
-            }
-
-            if (typeof value != 'string')
-              return value;
-
-            value = value.toUpperCase().trim();
-
-            //Convert N or E to +1 and S or W to -1
-            var sign = 1;
-            if ( (value.indexOf('S') > -1) || (value.indexOf('W') > -1) )
-                sign = -1;
-
-            //Remove all no-digital charts
-            value = value.replace(/\D+/g, ' ');
-
-            if ((value === '') || !this._valid(latOrLng,  value))
-                return null;
-
-            var split = value.split(/\D/),
-                result = 0,
-                convertMaskIndex = 0,
-                i, nextValue;
-            for (i=0; i<split.length; i++ ){
-                nextValue = parseInt(split[i]);
-                if (!isNaN(nextValue)){
-                    switch (latLngFormat.options.convertMask[convertMaskIndex]){
-                        case 'DDD' : result = result + nextValue;                 break;
-                        case 'MM'  : result = result + nextValue/60;              break;
-                        case 'mmm' : result = result + toDecimal(nextValue)/60;   break;
-                        case 's'   : result = result + toDecimal(nextValue)/3600; break;
-                        case 'SS'  : result = result + nextValue/3600;            break;
-                        case 'dddd': result = result + toDecimal(nextValue);      break;
-                    }
-                    convertMaskIndex++;
-                    if (convertMaskIndex >= latLngFormat.options.convertMask.length)
-                        break;
-                }
-            }
-            return sign*result;
-        },
-        //value - Converts value (string masked as editMask) to decimal degrees.
-        value   : function(){ return this._method( this._value ); },
-        valueLat: function(){ return this._methodLat( this._value ); },
-        valueLng: function(){ return this._methodLng( this._value ); },
-
-
-        //**********************************************************
-        //_convert - If value is valid string in orgLatlngFormat => convert it to this' format and return it as text-string, else return original input-string
-        _convert: function( latOrLng, value, orgFormatId ){
-            if (typeof value != 'string')
-              return value;
-
-            if (orgFormatId){
-                //Change to original format
-                var formatId = latLngFormat.options.formatId;
-                latLngFormat.setFormat( orgFormatId );
-
-                if (this._valid( latOrLng, value )){
-                    var numberValue = this._value( latOrLng, value );
-
-                    //Reset format
-                    latLngFormat.setFormat( formatId );
-
-                    //Convert to current format
-                    value = this._format( latOrLng, numberValue, true/*useEditMask*/);
-                }
-                else
-                    //Reset format
-                    latLngFormat.setFormat( formatId );
-            }
-            return value;
-        },
-        //convert - If value is valid in orgLatlngFormat => convert it to this' format and return it as text-string, else return original input-string
-        convert   : function( orgLatLngFormat ){ return this._method( this._convert, orgLatLngFormat ); },
-        convertLat: function( orgLatLngFormat ){ return this._methodLat( this._convert, orgLatLngFormat ); },
-        convertLng: function( orgLatLngFormat ){ return this._methodLng( this._convert, orgLatLngFormat ); },
-
-
-    };//end of latLngFormat.fn = LatLngFormat.prototype = {
-
-
-    /************************************
-    Static methods
-    ************************************/
-    $.extend( latLngFormat, {
-        //setFormat
-        setFormat: function( formatId ){
-            if (formatId !== null)
-              this.options.formatId = formatId;
-
-            /*
-            Create editMask,convertMask, regexp, placeholder in options based on options.formatId and numeral.js
-            Regular expressions for different type of position input
-            The regexp are 'build' using regexp for the sub-parts:
-                H=Hemisphere        : [n,N,s,S]
-                DD=Degrees          : 0-9, 00-09, 10-89
-                dddd=Degrees decimal: 0-9999
-                MM=Minutes          : 0-9, 00-09, 10-59
-                SS=Seconds          : 0-59
-                .=seperator         : blank, "." or ","
-                mmm=decimal min     : 0-999
-            */
-            var _regexp = {
-                anySpace      : '\\s*',
-                hemisphereLat : '([nNsS])?',    //H=Hemisphere  : [n,N,s,S] (optional,
-                hemisphereLong: '([eEwW])?',    //H=Hemisphere : [e,E,w,W] (optional,
-
-                DD            : '((0?[0-9])|[1-8][0-9])',  //DD=Degrees 0-89        :    0-9, 00-09 or 10-89
-                DDD           : '((\\d?\\d)|1[0-7][0-9])', //DDD=Degrees 0-179    :    0-9, 00-99 or 100-179
-
-                MM            : '\\s' + '((0?[0-9])|[1-5][0-9])', //MM=Minutes: 0-9, 00-09 or 10-59 (allways with a seperator in front)
-            };
-            _regexp.SS        = _regexp.MM;
-            _regexp.seperator = _regexp.anySpace + '[\\s\\.,]' + _regexp.anySpace; //seperator: blank, "." or ",". Allow any number of spac,
-
-            _regexp.dddd      = '(' + _regexp.seperator + '\\d{1,4}' + ')?'; //dddd=decimal degrees (0-9999) optional
-
-            _regexp.MMmmm     = '(' + _regexp.MM + '(' + _regexp.seperator + '\\d{1,3}' + ')?' + ')?';                           //MMmmm=Minutes and Decimal minutes = [MM[0-999]]
-            _regexp.MMSSs     = '(' + _regexp.MM + '(' + _regexp.SS + '(' + _regexp.seperator + '\\d{1,1}' + ')?' + ')?' + ')?'; //MMSSss= Minutes Second and Decimal Seconds = [MM[ SS[0-99]]]
-
-            var dS = '.', //Default
-                dC = this.options.degreeChar,
-                newOptions = {};
-
-            //Try to get delimiters from current locale in numeral
-            var n = window.numeral,
-                n_localeData = n && n.localeData ? n.localeData() : null,
-                n_delimiters_decimal = n_localeData && n_localeData.delimiters && n_localeData.delimiters.decimal ? n_localeData.delimiters.decimal : null;
-
-            if (n_delimiters_decimal)
-              dS = n_delimiters_decimal;
-            else {
-                var S = Number(1.1).toLocaleString();
-                dS = S.indexOf('.') > -1 ? '.' :
-                     S.indexOf(',') > -1 ? ',' :
-                     '.';
-            }
-
-            this.options.delimitersDecimal = dS;
-
-            switch (this.options.formatId){
-                case LATLNGFORMAT_DMSS:
-                    newOptions = { //Degrees Minutes Seconds (N41d25'01")
-                        displayMask: "DDD"+dC+"MM'SS"+dS+"s\"H",
-                        editMask   : "DDD MM SS"+dS+"sH",
-                        convertMask: ['DDD', 'MM', 'SS', 's'],
-                        regexp     : [ _regexp.anySpace + '(90|'  + _regexp.DD  + _regexp.anySpace + _regexp.MMSSs + ')' + _regexp.anySpace + _regexp.hemisphereLat  + _regexp.anySpace,
-                                       _regexp.anySpace + '(180|' + _regexp.DDD + _regexp.anySpace + _regexp.MMSSs + ')' + _regexp.anySpace + _regexp.hemisphereLong + _regexp.anySpace  ],
-                        placeholder: ["89 59 59"+dS+"9N", "179 59 59"+dS+"9E"],
-                    };
-                    break;
-
-                case LATLNGFORMAT_DMM:
-                    newOptions = { //Degrees Decimal minutes (N41d25.123')
-                        displayMask: "DDD"+dC+"MM"+dS+"mmm'H",
-                        editMask   : "DDD MM"+dS+"mmmH",
-                        convertMask: ['DDD', 'MM', 'mmm'],
-                        regexp     : [ _regexp.anySpace + '(90|'  + _regexp.DD  + _regexp.anySpace + _regexp.MMmmm + ')' + _regexp.anySpace + _regexp.hemisphereLat  + _regexp.anySpace,
-                                       _regexp.anySpace + '(180|' + _regexp.DDD + _regexp.anySpace + _regexp.MMmmm + ')' + _regexp.anySpace + _regexp.hemisphereLong + _regexp.anySpace  ],
-                        placeholder: ["89 59"+dS+"999N", "179 59"+dS+"999E"],
-                    };
-                    break;
-
-                case LATLNGFORMAT_DD:
-                    newOptions = { //Decimal degrees (N41.1234d)
-                        displayMask: "DDD"+dS+"dddd"+dC+"H",
-                        editMask   : "DDD"+dS+"ddddH",
-                        convertMask: ['DDD', 'dddd'],
-                        regexp     : [ _regexp.anySpace + '(90|'  + _regexp.DD  + _regexp.anySpace + _regexp.dddd + ')' + _regexp.anySpace + _regexp.hemisphereLat  + _regexp.anySpace,
-                                       _regexp.anySpace + '(180|' + _regexp.DDD + _regexp.anySpace + _regexp.dddd + ')' + _regexp.anySpace + _regexp.hemisphereLong + _regexp.anySpace  ],
-                        placeholder: ["89.9999N", "179.9999E"],
-                    };
-                    break;
-            }
-            $.extend( this.options, newOptions );
-
-            return formatId;
-        }
-    }); //end of $.extend( latLngFormat, {
-
-    // expose access to the constructor and set default format
-    window.latLngFormat = latLngFormat;
-    window.latLngFormat.setFormat( LATLNGFORMAT_DMSS );
-
-    //Overwrite numeral.js method XX to update format with new decimal delimiters
-    var n = window.numeral;
-    if (n && n.locale){
-        n.locale =
-            function( locale ){
-                return function(){
-                    //Original function
-                    var result = locale.apply(this, arguments);
-
-                    //Update format
-                    window.latLngFormat.setFormat();
-
-                    return result;
-                };
-            }( n.locale );
-    }
-
-
-
-}(jQuery, this, document));
-;
-/****************************************************************************
-	fcoo-latlng-format.js,
-
-	(c) 2017, FCOO
-
-	https://github.com/FCOO/fcoo-latlng-format
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window/*, document, undefined*/) {
-	"use strict";
-
-	//Create fcoo-namespace
-    window.fcoo = window.fcoo || {};
-    var ns = window.fcoo;
-
-    /***********************************************************
-    Set up and load latlng-format via fcoo.settings
-    ***********************************************************/
-    ns.settings.add({
-        id          : 'latlng',
-        validator   : function( /*latlngFormatId*/ ){
-                          //TODO Check for valid value
-                          return true;
-                      },
-        applyFunc   : function( latlngFormatId ){
-                          window.latLngFormat.setFormat( latlngFormatId );
-                      },
-        defaultValue: window.latLngFormat.LATLNGFORMAT_DMSS,
-        callApply   : true,
-        globalEvents: window.fcoo.events.LATLNGFORMATCHANGED
-
-    });
-
-
-    //Update the latlng-format when the number-format is changed
-    ns.events.on( window.fcoo.events.NUMBERFORMATCHANGED, function(){
-        ns.settings.set('latlng', window.latLngFormat.options.formatId );
-    });
 
 }(jQuery, this, document));
 ;
@@ -69594,6 +62920,1021 @@ moment.defineLocale('kl', {
 });
 
 ;
+/*! @preserve
+ * numeral.js
+ * version : 2.0.6
+ * author : Adam Draper
+ * license : MIT
+ * http://adamwdraper.github.com/Numeral-js/
+ */
+
+(function (global, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        global.numeral = factory();
+    }
+}(this, function () {
+    /************************************
+        Variables
+    ************************************/
+
+    var numeral,
+        _,
+        VERSION = '2.0.6',
+        formats = {},
+        locales = {},
+        defaults = {
+            currentLocale: 'en',
+            zeroFormat: null,
+            nullFormat: null,
+            defaultFormat: '0,0',
+            scalePercentBy100: true
+        },
+        options = {
+            currentLocale: defaults.currentLocale,
+            zeroFormat: defaults.zeroFormat,
+            nullFormat: defaults.nullFormat,
+            defaultFormat: defaults.defaultFormat,
+            scalePercentBy100: defaults.scalePercentBy100
+        };
+
+
+    /************************************
+        Constructors
+    ************************************/
+
+    // Numeral prototype object
+    function Numeral(input, number) {
+        this._input = input;
+
+        this._value = number;
+    }
+
+    numeral = function(input) {
+        var value,
+            kind,
+            unformatFunction,
+            regexp;
+
+        if (numeral.isNumeral(input)) {
+            value = input.value();
+        } else if (input === 0 || typeof input === 'undefined') {
+            value = 0;
+        } else if (input === null || _.isNaN(input)) {
+            value = null;
+        } else if (typeof input === 'string') {
+            if (options.zeroFormat && input === options.zeroFormat) {
+                value = 0;
+            } else if (options.nullFormat && input === options.nullFormat || !input.replace(/[^0-9]+/g, '').length) {
+                value = null;
+            } else {
+                for (kind in formats) {
+                    regexp = typeof formats[kind].regexps.unformat === 'function' ? formats[kind].regexps.unformat() : formats[kind].regexps.unformat;
+
+                    if (regexp && input.match(regexp)) {
+                        unformatFunction = formats[kind].unformat;
+
+                        break;
+                    }
+                }
+
+                unformatFunction = unformatFunction || numeral._.stringToNumber;
+
+                value = unformatFunction(input);
+            }
+        } else {
+            value = Number(input)|| null;
+        }
+
+        return new Numeral(input, value);
+    };
+
+    // version number
+    numeral.version = VERSION;
+
+    // compare numeral object
+    numeral.isNumeral = function(obj) {
+        return obj instanceof Numeral;
+    };
+
+    // helper functions
+    numeral._ = _ = {
+        // formats numbers separators, decimals places, signs, abbreviations
+        numberToFormat: function(value, format, roundingFunction) {
+            var locale = locales[numeral.options.currentLocale],
+                negP = false,
+                optDec = false,
+                leadingCount = 0,
+                abbr = '',
+                trillion = 1000000000000,
+                billion = 1000000000,
+                million = 1000000,
+                thousand = 1000,
+                decimal = '',
+                neg = false,
+                abbrForce, // force abbreviation
+                abs,
+                min,
+                max,
+                power,
+                int,
+                precision,
+                signed,
+                thousands,
+                output;
+
+            // make sure we never format a null value
+            value = value || 0;
+
+            abs = Math.abs(value);
+
+            // see if we should use parentheses for negative number or if we should prefix with a sign
+            // if both are present we default to parentheses
+            if (numeral._.includes(format, '(')) {
+                negP = true;
+                format = format.replace(/[\(|\)]/g, '');
+            } else if (numeral._.includes(format, '+') || numeral._.includes(format, '-')) {
+                signed = numeral._.includes(format, '+') ? format.indexOf('+') : value < 0 ? format.indexOf('-') : -1;
+                format = format.replace(/[\+|\-]/g, '');
+            }
+
+            // see if abbreviation is wanted
+            if (numeral._.includes(format, 'a')) {
+                abbrForce = format.match(/a(k|m|b|t)?/);
+
+                abbrForce = abbrForce ? abbrForce[1] : false;
+
+                // check for space before abbreviation
+                if (numeral._.includes(format, ' a')) {
+                    abbr = ' ';
+                }
+
+                format = format.replace(new RegExp(abbr + 'a[kmbt]?'), '');
+
+                if (abs >= trillion && !abbrForce || abbrForce === 't') {
+                    // trillion
+                    abbr += locale.abbreviations.trillion;
+                    value = value / trillion;
+                } else if (abs < trillion && abs >= billion && !abbrForce || abbrForce === 'b') {
+                    // billion
+                    abbr += locale.abbreviations.billion;
+                    value = value / billion;
+                } else if (abs < billion && abs >= million && !abbrForce || abbrForce === 'm') {
+                    // million
+                    abbr += locale.abbreviations.million;
+                    value = value / million;
+                } else if (abs < million && abs >= thousand && !abbrForce || abbrForce === 'k') {
+                    // thousand
+                    abbr += locale.abbreviations.thousand;
+                    value = value / thousand;
+                }
+            }
+
+            // check for optional decimals
+            if (numeral._.includes(format, '[.]')) {
+                optDec = true;
+                format = format.replace('[.]', '.');
+            }
+
+            // break number and format
+            int = value.toString().split('.')[0];
+            precision = format.split('.')[1];
+            thousands = format.indexOf(',');
+            leadingCount = (format.split('.')[0].split(',')[0].match(/0/g) || []).length;
+
+            if (precision) {
+                if (numeral._.includes(precision, '[')) {
+                    precision = precision.replace(']', '');
+                    precision = precision.split('[');
+                    decimal = numeral._.toFixed(value, (precision[0].length + precision[1].length), roundingFunction, precision[1].length);
+                } else {
+                    decimal = numeral._.toFixed(value, precision.length, roundingFunction);
+                }
+
+                int = decimal.split('.')[0];
+
+                if (numeral._.includes(decimal, '.')) {
+                    decimal = locale.delimiters.decimal + decimal.split('.')[1];
+                } else {
+                    decimal = '';
+                }
+
+                if (optDec && Number(decimal.slice(1)) === 0) {
+                    decimal = '';
+                }
+            } else {
+                int = numeral._.toFixed(value, 0, roundingFunction);
+            }
+
+            // check abbreviation again after rounding
+            if (abbr && !abbrForce && Number(int) >= 1000 && abbr !== locale.abbreviations.trillion) {
+                int = String(Number(int) / 1000);
+
+                switch (abbr) {
+                    case locale.abbreviations.thousand:
+                        abbr = locale.abbreviations.million;
+                        break;
+                    case locale.abbreviations.million:
+                        abbr = locale.abbreviations.billion;
+                        break;
+                    case locale.abbreviations.billion:
+                        abbr = locale.abbreviations.trillion;
+                        break;
+                }
+            }
+
+
+            // format number
+            if (numeral._.includes(int, '-')) {
+                int = int.slice(1);
+                neg = true;
+            }
+
+            if (int.length < leadingCount) {
+                for (var i = leadingCount - int.length; i > 0; i--) {
+                    int = '0' + int;
+                }
+            }
+
+            if (thousands > -1) {
+                int = int.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + locale.delimiters.thousands);
+            }
+
+            if (format.indexOf('.') === 0) {
+                int = '';
+            }
+
+            output = int + decimal + (abbr ? abbr : '');
+
+            if (negP) {
+                output = (negP && neg ? '(' : '') + output + (negP && neg ? ')' : '');
+            } else {
+                if (signed >= 0) {
+                    output = signed === 0 ? (neg ? '-' : '+') + output : output + (neg ? '-' : '+');
+                } else if (neg) {
+                    output = '-' + output;
+                }
+            }
+
+            return output;
+        },
+        // unformats numbers separators, decimals places, signs, abbreviations
+        stringToNumber: function(string) {
+            var locale = locales[options.currentLocale],
+                stringOriginal = string,
+                abbreviations = {
+                    thousand: 3,
+                    million: 6,
+                    billion: 9,
+                    trillion: 12
+                },
+                abbreviation,
+                value,
+                i,
+                regexp;
+
+            if (options.zeroFormat && string === options.zeroFormat) {
+                value = 0;
+            } else if (options.nullFormat && string === options.nullFormat || !string.replace(/[^0-9]+/g, '').length) {
+                value = null;
+            } else {
+                value = 1;
+
+                if (locale.delimiters.decimal !== '.') {
+                    string = string.replace(/\./g, '').replace(locale.delimiters.decimal, '.');
+                }
+
+                for (abbreviation in abbreviations) {
+                    regexp = new RegExp('[^a-zA-Z]' + locale.abbreviations[abbreviation] + '(?:\\)|(\\' + locale.currency.symbol + ')?(?:\\))?)?$');
+
+                    if (stringOriginal.match(regexp)) {
+                        value *= Math.pow(10, abbreviations[abbreviation]);
+                        break;
+                    }
+                }
+
+                // check for negative number
+                value *= (string.split('-').length + Math.min(string.split('(').length - 1, string.split(')').length - 1)) % 2 ? 1 : -1;
+
+                // remove non numbers
+                string = string.replace(/[^0-9\.]+/g, '');
+
+                value *= Number(string);
+            }
+
+            return value;
+        },
+        isNaN: function(value) {
+            return typeof value === 'number' && isNaN(value);
+        },
+        includes: function(string, search) {
+            return string.indexOf(search) !== -1;
+        },
+        insert: function(string, subString, start) {
+            return string.slice(0, start) + subString + string.slice(start);
+        },
+        reduce: function(array, callback /*, initialValue*/) {
+            if (this === null) {
+                throw new TypeError('Array.prototype.reduce called on null or undefined');
+            }
+
+            if (typeof callback !== 'function') {
+                throw new TypeError(callback + ' is not a function');
+            }
+
+            var t = Object(array),
+                len = t.length >>> 0,
+                k = 0,
+                value;
+
+            if (arguments.length === 3) {
+                value = arguments[2];
+            } else {
+                while (k < len && !(k in t)) {
+                    k++;
+                }
+
+                if (k >= len) {
+                    throw new TypeError('Reduce of empty array with no initial value');
+                }
+
+                value = t[k++];
+            }
+            for (; k < len; k++) {
+                if (k in t) {
+                    value = callback(value, t[k], k, t);
+                }
+            }
+            return value;
+        },
+        /**
+         * Computes the multiplier necessary to make x >= 1,
+         * effectively eliminating miscalculations caused by
+         * finite precision.
+         */
+        multiplier: function (x) {
+            var parts = x.toString().split('.');
+
+            return parts.length < 2 ? 1 : Math.pow(10, parts[1].length);
+        },
+        /**
+         * Given a variable number of arguments, returns the maximum
+         * multiplier that must be used to normalize an operation involving
+         * all of them.
+         */
+        correctionFactor: function () {
+            var args = Array.prototype.slice.call(arguments);
+
+            return args.reduce(function(accum, next) {
+                var mn = _.multiplier(next);
+                return accum > mn ? accum : mn;
+            }, 1);
+        },
+        /**
+         * Implementation of toFixed() that treats floats more like decimals
+         *
+         * Fixes binary rounding issues (eg. (0.615).toFixed(2) === '0.61') that present
+         * problems for accounting- and finance-related software.
+         */
+        toFixed: function(value, maxDecimals, roundingFunction, optionals) {
+            var splitValue = value.toString().split('.'),
+                minDecimals = maxDecimals - (optionals || 0),
+                boundedPrecision,
+                optionalsRegExp,
+                power,
+                output;
+
+            // Use the smallest precision value possible to avoid errors from floating point representation
+            if (splitValue.length === 2) {
+              boundedPrecision = Math.min(Math.max(splitValue[1].length, minDecimals), maxDecimals);
+            } else {
+              boundedPrecision = minDecimals;
+            }
+
+            power = Math.pow(10, boundedPrecision);
+
+            // Multiply up by precision, round accurately, then divide and use native toFixed():
+            output = (roundingFunction(value + 'e+' + boundedPrecision) / power).toFixed(boundedPrecision);
+
+            if (optionals > maxDecimals - boundedPrecision) {
+                optionalsRegExp = new RegExp('\\.?0{1,' + (optionals - (maxDecimals - boundedPrecision)) + '}$');
+                output = output.replace(optionalsRegExp, '');
+            }
+
+            return output;
+        }
+    };
+
+    // avaliable options
+    numeral.options = options;
+
+    // avaliable formats
+    numeral.formats = formats;
+
+    // avaliable formats
+    numeral.locales = locales;
+
+    // This function sets the current locale.  If
+    // no arguments are passed in, it will simply return the current global
+    // locale key.
+    numeral.locale = function(key) {
+        if (key) {
+            options.currentLocale = key.toLowerCase();
+        }
+
+        return options.currentLocale;
+    };
+
+    // This function provides access to the loaded locale data.  If
+    // no arguments are passed in, it will simply return the current
+    // global locale object.
+    numeral.localeData = function(key) {
+        if (!key) {
+            return locales[options.currentLocale];
+        }
+
+        key = key.toLowerCase();
+
+        if (!locales[key]) {
+            throw new Error('Unknown locale : ' + key);
+        }
+
+        return locales[key];
+    };
+
+    numeral.reset = function() {
+        for (var property in defaults) {
+            options[property] = defaults[property];
+        }
+    };
+
+    numeral.zeroFormat = function(format) {
+        options.zeroFormat = typeof(format) === 'string' ? format : null;
+    };
+
+    numeral.nullFormat = function (format) {
+        options.nullFormat = typeof(format) === 'string' ? format : null;
+    };
+
+    numeral.defaultFormat = function(format) {
+        options.defaultFormat = typeof(format) === 'string' ? format : '0.0';
+    };
+
+    numeral.register = function(type, name, format) {
+        name = name.toLowerCase();
+
+        if (this[type + 's'][name]) {
+            throw new TypeError(name + ' ' + type + ' already registered.');
+        }
+
+        this[type + 's'][name] = format;
+
+        return format;
+    };
+
+
+    numeral.validate = function(val, culture) {
+        var _decimalSep,
+            _thousandSep,
+            _currSymbol,
+            _valArray,
+            _abbrObj,
+            _thousandRegEx,
+            localeData,
+            temp;
+
+        //coerce val to string
+        if (typeof val !== 'string') {
+            val += '';
+
+            if (console.warn) {
+                console.warn('Numeral.js: Value is not string. It has been co-erced to: ', val);
+            }
+        }
+
+        //trim whitespaces from either sides
+        val = val.trim();
+
+        //if val is just digits return true
+        if (!!val.match(/^\d+$/)) {
+            return true;
+        }
+
+        //if val is empty return false
+        if (val === '') {
+            return false;
+        }
+
+        //get the decimal and thousands separator from numeral.localeData
+        try {
+            //check if the culture is understood by numeral. if not, default it to current locale
+            localeData = numeral.localeData(culture);
+        } catch (e) {
+            localeData = numeral.localeData(numeral.locale());
+        }
+
+        //setup the delimiters and currency symbol based on culture/locale
+        _currSymbol = localeData.currency.symbol;
+        _abbrObj = localeData.abbreviations;
+        _decimalSep = localeData.delimiters.decimal;
+        if (localeData.delimiters.thousands === '.') {
+            _thousandSep = '\\.';
+        } else {
+            _thousandSep = localeData.delimiters.thousands;
+        }
+
+        // validating currency symbol
+        temp = val.match(/^[^\d]+/);
+        if (temp !== null) {
+            val = val.substr(1);
+            if (temp[0] !== _currSymbol) {
+                return false;
+            }
+        }
+
+        //validating abbreviation symbol
+        temp = val.match(/[^\d]+$/);
+        if (temp !== null) {
+            val = val.slice(0, -1);
+            if (temp[0] !== _abbrObj.thousand && temp[0] !== _abbrObj.million && temp[0] !== _abbrObj.billion && temp[0] !== _abbrObj.trillion) {
+                return false;
+            }
+        }
+
+        _thousandRegEx = new RegExp(_thousandSep + '{2}');
+
+        if (!val.match(/[^\d.,]/g)) {
+            _valArray = val.split(_decimalSep);
+            if (_valArray.length > 2) {
+                return false;
+            } else {
+                if (_valArray.length < 2) {
+                    return ( !! _valArray[0].match(/^\d+.*\d$/) && !_valArray[0].match(_thousandRegEx));
+                } else {
+                    if (_valArray[0].length === 1) {
+                        return ( !! _valArray[0].match(/^\d+$/) && !_valArray[0].match(_thousandRegEx) && !! _valArray[1].match(/^\d+$/));
+                    } else {
+                        return ( !! _valArray[0].match(/^\d+.*\d$/) && !_valArray[0].match(_thousandRegEx) && !! _valArray[1].match(/^\d+$/));
+                    }
+                }
+            }
+        }
+
+        return false;
+    };
+
+
+    /************************************
+        Numeral Prototype
+    ************************************/
+
+    numeral.fn = Numeral.prototype = {
+        clone: function() {
+            return numeral(this);
+        },
+        format: function(inputString, roundingFunction) {
+            var value = this._value,
+                format = inputString || options.defaultFormat,
+                kind,
+                output,
+                formatFunction;
+
+            // make sure we have a roundingFunction
+            roundingFunction = roundingFunction || Math.round;
+
+            // format based on value
+            if (value === 0 && options.zeroFormat !== null) {
+                output = options.zeroFormat;
+            } else if (value === null && options.nullFormat !== null) {
+                output = options.nullFormat;
+            } else {
+                for (kind in formats) {
+                    if (format.match(formats[kind].regexps.format)) {
+                        formatFunction = formats[kind].format;
+
+                        break;
+                    }
+                }
+
+                formatFunction = formatFunction || numeral._.numberToFormat;
+
+                output = formatFunction(value, format, roundingFunction);
+            }
+
+            return output;
+        },
+        value: function() {
+            return this._value;
+        },
+        input: function() {
+            return this._input;
+        },
+        set: function(value) {
+            this._value = Number(value);
+
+            return this;
+        },
+        add: function(value) {
+            var corrFactor = _.correctionFactor.call(null, this._value, value);
+
+            function cback(accum, curr, currI, O) {
+                return accum + Math.round(corrFactor * curr);
+            }
+
+            this._value = _.reduce([this._value, value], cback, 0) / corrFactor;
+
+            return this;
+        },
+        subtract: function(value) {
+            var corrFactor = _.correctionFactor.call(null, this._value, value);
+
+            function cback(accum, curr, currI, O) {
+                return accum - Math.round(corrFactor * curr);
+            }
+
+            this._value = _.reduce([value], cback, Math.round(this._value * corrFactor)) / corrFactor;
+
+            return this;
+        },
+        multiply: function(value) {
+            function cback(accum, curr, currI, O) {
+                var corrFactor = _.correctionFactor(accum, curr);
+                return Math.round(accum * corrFactor) * Math.round(curr * corrFactor) / Math.round(corrFactor * corrFactor);
+            }
+
+            this._value = _.reduce([this._value, value], cback, 1);
+
+            return this;
+        },
+        divide: function(value) {
+            function cback(accum, curr, currI, O) {
+                var corrFactor = _.correctionFactor(accum, curr);
+                return Math.round(accum * corrFactor) / Math.round(curr * corrFactor);
+            }
+
+            this._value = _.reduce([this._value, value], cback);
+
+            return this;
+        },
+        difference: function(value) {
+            return Math.abs(numeral(this._value).subtract(value).value());
+        }
+    };
+
+    /************************************
+        Default Locale && Format
+    ************************************/
+
+    numeral.register('locale', 'en', {
+        delimiters: {
+            thousands: ',',
+            decimal: '.'
+        },
+        abbreviations: {
+            thousand: 'k',
+            million: 'm',
+            billion: 'b',
+            trillion: 't'
+        },
+        ordinal: function(number) {
+            var b = number % 10;
+            return (~~(number % 100 / 10) === 1) ? 'th' :
+                (b === 1) ? 'st' :
+                (b === 2) ? 'nd' :
+                (b === 3) ? 'rd' : 'th';
+        },
+        currency: {
+            symbol: '$'
+        }
+    });
+
+    
+
+(function() {
+        numeral.register('format', 'bps', {
+            regexps: {
+                format: /(BPS)/,
+                unformat: /(BPS)/
+            },
+            format: function(value, format, roundingFunction) {
+                var space = numeral._.includes(format, ' BPS') ? ' ' : '',
+                    output;
+
+                value = value * 10000;
+
+                // check for space before BPS
+                format = format.replace(/\s?BPS/, '');
+
+                output = numeral._.numberToFormat(value, format, roundingFunction);
+
+                if (numeral._.includes(output, ')')) {
+                    output = output.split('');
+
+                    output.splice(-1, 0, space + 'BPS');
+
+                    output = output.join('');
+                } else {
+                    output = output + space + 'BPS';
+                }
+
+                return output;
+            },
+            unformat: function(string) {
+                return +(numeral._.stringToNumber(string) * 0.0001).toFixed(15);
+            }
+        });
+})();
+
+
+(function() {
+        var decimal = {
+            base: 1000,
+            suffixes: ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+        },
+        binary = {
+            base: 1024,
+            suffixes: ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+        };
+
+    var allSuffixes =  decimal.suffixes.concat(binary.suffixes.filter(function (item) {
+            return decimal.suffixes.indexOf(item) < 0;
+        }));
+        var unformatRegex = allSuffixes.join('|');
+        // Allow support for BPS (http://www.investopedia.com/terms/b/basispoint.asp)
+        unformatRegex = '(' + unformatRegex.replace('B', 'B(?!PS)') + ')';
+
+    numeral.register('format', 'bytes', {
+        regexps: {
+            format: /([0\s]i?b)/,
+            unformat: new RegExp(unformatRegex)
+        },
+        format: function(value, format, roundingFunction) {
+            var output,
+                bytes = numeral._.includes(format, 'ib') ? binary : decimal,
+                suffix = numeral._.includes(format, ' b') || numeral._.includes(format, ' ib') ? ' ' : '',
+                power,
+                min,
+                max;
+
+            // check for space before
+            format = format.replace(/\s?i?b/, '');
+
+            for (power = 0; power <= bytes.suffixes.length; power++) {
+                min = Math.pow(bytes.base, power);
+                max = Math.pow(bytes.base, power + 1);
+
+                if (value === null || value === 0 || value >= min && value < max) {
+                    suffix += bytes.suffixes[power];
+
+                    if (min > 0) {
+                        value = value / min;
+                    }
+
+                    break;
+                }
+            }
+
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            return output + suffix;
+        },
+        unformat: function(string) {
+            var value = numeral._.stringToNumber(string),
+                power,
+                bytesMultiplier;
+
+            if (value) {
+                for (power = decimal.suffixes.length - 1; power >= 0; power--) {
+                    if (numeral._.includes(string, decimal.suffixes[power])) {
+                        bytesMultiplier = Math.pow(decimal.base, power);
+
+                        break;
+                    }
+
+                    if (numeral._.includes(string, binary.suffixes[power])) {
+                        bytesMultiplier = Math.pow(binary.base, power);
+
+                        break;
+                    }
+                }
+
+                value *= (bytesMultiplier || 1);
+            }
+
+            return value;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'currency', {
+        regexps: {
+            format: /(\$)/
+        },
+        format: function(value, format, roundingFunction) {
+            var locale = numeral.locales[numeral.options.currentLocale],
+                symbols = {
+                    before: format.match(/^([\+|\-|\(|\s|\$]*)/)[0],
+                    after: format.match(/([\+|\-|\)|\s|\$]*)$/)[0]
+                },
+                output,
+                symbol,
+                i;
+
+            // strip format of spaces and $
+            format = format.replace(/\s?\$\s?/, '');
+
+            // format the number
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            // update the before and after based on value
+            if (value >= 0) {
+                symbols.before = symbols.before.replace(/[\-\(]/, '');
+                symbols.after = symbols.after.replace(/[\-\)]/, '');
+            } else if (value < 0 && (!numeral._.includes(symbols.before, '-') && !numeral._.includes(symbols.before, '('))) {
+                symbols.before = '-' + symbols.before;
+            }
+
+            // loop through each before symbol
+            for (i = 0; i < symbols.before.length; i++) {
+                symbol = symbols.before[i];
+
+                switch (symbol) {
+                    case '$':
+                        output = numeral._.insert(output, locale.currency.symbol, i);
+                        break;
+                    case ' ':
+                        output = numeral._.insert(output, ' ', i + locale.currency.symbol.length - 1);
+                        break;
+                }
+            }
+
+            // loop through each after symbol
+            for (i = symbols.after.length - 1; i >= 0; i--) {
+                symbol = symbols.after[i];
+
+                switch (symbol) {
+                    case '$':
+                        output = i === symbols.after.length - 1 ? output + locale.currency.symbol : numeral._.insert(output, locale.currency.symbol, -(symbols.after.length - (1 + i)));
+                        break;
+                    case ' ':
+                        output = i === symbols.after.length - 1 ? output + ' ' : numeral._.insert(output, ' ', -(symbols.after.length - (1 + i) + locale.currency.symbol.length - 1));
+                        break;
+                }
+            }
+
+
+            return output;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'exponential', {
+        regexps: {
+            format: /(e\+|e-)/,
+            unformat: /(e\+|e-)/
+        },
+        format: function(value, format, roundingFunction) {
+            var output,
+                exponential = typeof value === 'number' && !numeral._.isNaN(value) ? value.toExponential() : '0e+0',
+                parts = exponential.split('e');
+
+            format = format.replace(/e[\+|\-]{1}0/, '');
+
+            output = numeral._.numberToFormat(Number(parts[0]), format, roundingFunction);
+
+            return output + 'e' + parts[1];
+        },
+        unformat: function(string) {
+            var parts = numeral._.includes(string, 'e+') ? string.split('e+') : string.split('e-'),
+                value = Number(parts[0]),
+                power = Number(parts[1]);
+
+            power = numeral._.includes(string, 'e-') ? power *= -1 : power;
+
+            function cback(accum, curr, currI, O) {
+                var corrFactor = numeral._.correctionFactor(accum, curr),
+                    num = (accum * corrFactor) * (curr * corrFactor) / (corrFactor * corrFactor);
+                return num;
+            }
+
+            return numeral._.reduce([value, Math.pow(10, power)], cback, 1);
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'ordinal', {
+        regexps: {
+            format: /(o)/
+        },
+        format: function(value, format, roundingFunction) {
+            var locale = numeral.locales[numeral.options.currentLocale],
+                output,
+                ordinal = numeral._.includes(format, ' o') ? ' ' : '';
+
+            // check for space before
+            format = format.replace(/\s?o/, '');
+
+            ordinal += locale.ordinal(value);
+
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            return output + ordinal;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'percentage', {
+        regexps: {
+            format: /(%)/,
+            unformat: /(%)/
+        },
+        format: function(value, format, roundingFunction) {
+            var space = numeral._.includes(format, ' %') ? ' ' : '',
+                output;
+
+            if (numeral.options.scalePercentBy100) {
+                value = value * 100;
+            }
+
+            // check for space before %
+            format = format.replace(/\s?\%/, '');
+
+            output = numeral._.numberToFormat(value, format, roundingFunction);
+
+            if (numeral._.includes(output, ')')) {
+                output = output.split('');
+
+                output.splice(-1, 0, space + '%');
+
+                output = output.join('');
+            } else {
+                output = output + space + '%';
+            }
+
+            return output;
+        },
+        unformat: function(string) {
+            var number = numeral._.stringToNumber(string);
+            if (numeral.options.scalePercentBy100) {
+                return number * 0.01;
+            }
+            return number;
+        }
+    });
+})();
+
+
+(function() {
+        numeral.register('format', 'time', {
+        regexps: {
+            format: /(:)/,
+            unformat: /(:)/
+        },
+        format: function(value, format, roundingFunction) {
+            var hours = Math.floor(value / 60 / 60),
+                minutes = Math.floor((value - (hours * 60 * 60)) / 60),
+                seconds = Math.round(value - (hours * 60 * 60) - (minutes * 60));
+
+            return hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+        },
+        unformat: function(string) {
+            var timeArray = string.split(':'),
+                seconds = 0;
+
+            // turn hours and minutes into seconds and add them all up
+            if (timeArray.length === 3) {
+                // hours
+                seconds = seconds + (Number(timeArray[0]) * 60 * 60);
+                // minutes
+                seconds = seconds + (Number(timeArray[1]) * 60);
+                // seconds
+                seconds = seconds + Number(timeArray[2]);
+            } else if (timeArray.length === 2) {
+                // minutes
+                seconds = seconds + (Number(timeArray[0]) * 60);
+                // seconds
+                seconds = seconds + Number(timeArray[1]);
+            }
+            return Number(seconds);
+        }
+    });
+})();
+
+return numeral;
+}));
+
+;
 /****************************************************************************
 	fcoo-number.js,
 
@@ -69766,6 +64107,1957 @@ this.next=0;this.sent=undefined;this.done=false;this.delegate=null;this.tryEntri
 
 }(this, document));
 
+;
+/****************************************************************************
+    color.js,
+    Functions to caluclate the brightness of a color
+    Taken from http://codepen.io/lunelson/pen/jENxwB
+
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+    "use strict";
+
+    //Create fcoo-namespace
+    var nsColor = window;
+
+
+    function lin2log(n) {
+        if (n <= 0.0031308)
+            return n * 12.92;
+        else
+            return 1.055 * Math.pow(n,1/2.4) - 0.055;
+    }
+
+    function log2lin(n) {
+        if (n <= 0.04045)
+            return n / 12.92;
+        else
+            return Math.pow(((n + 0.055)/1.055),2.4);
+    }
+
+    /********************************************
+    brightness
+    ********************************************/
+    nsColor.brightness = function brightness(r, g, b) {
+        r = log2lin(r/255);
+        g = log2lin(g/255);
+        b = log2lin(b/255);
+        return lin2log(0.2126 * r + 0.7152 * g + 0.0722 * b) * 100;
+    };
+
+    /********************************************
+    colorContrastHEX
+    ********************************************/
+    nsColor.colorContrastHEX = function colorContrastHEX( color ) {
+        if (color.length === 3)
+            color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
+        var rgb = [];
+        for (var i = 0; i <= 2; i++)
+            rgb[i] = parseInt(color.substr(1+i*2, 2), 16);
+        return nsColor.colorContrastRGB(rgb[0], rgb[1], rgb[2]);
+    };
+
+    /********************************************
+    colorContrastRGB
+    ********************************************/
+    nsColor.colorContrastRGB = function colorContrastRGB(r, g, b) {
+        var colorBrightness = nsColor.brightness(r, g, b),
+                whiteBrightness = nsColor.brightness(255, 255, 255),
+                blackBrightness = nsColor.brightness(0, 0, 0);
+        return Math.abs(colorBrightness - whiteBrightness) > Math.abs(colorBrightness - blackBrightness) ? '#ffffff' : '#000000';
+    };
+
+    /********************************************
+    rgbHex
+    Convert RGB color to HEX
+    From https://github.com/sindresorhus/rgb-hex
+    ********************************************/
+    nsColor.rgbHex = function(red, green, blue, alpha){
+        var isPercent = (red + (alpha || '')).toString().includes('%');
+
+        if (typeof red === 'string') {
+            var res = red.match(/(0?\.?\d{1,3})%?\b/g).map(Number);
+            red = res[0];
+            green = res[1];
+            blue = res[2];
+            alpha = res[3];
+        }
+        else
+            if (alpha !== undefined) {
+                alpha = parseFloat(alpha);
+            }
+
+        if (typeof red !== 'number' ||
+            typeof green !== 'number' ||
+            typeof blue !== 'number' ||
+            red > 255 ||
+            green > 255 ||
+            blue > 255) {
+                throw new TypeError('Expected three numbers below 256');
+        }
+
+        if (typeof alpha === 'number') {
+            if (!isPercent && alpha >= 0 && alpha <= 1) {
+                alpha = Math.round(255 * alpha);
+            }
+            else
+                if (isPercent && alpha >= 0 && alpha <= 100) {
+                    alpha = Math.round(255 * alpha / 100);
+                }
+                else {
+                    throw new TypeError('Expected alpha value (${alpha}) as a fraction or percentage');
+                }
+            alpha = (alpha | 1 << 8).toString(16).slice(1);
+        }
+        else {
+            alpha = '';
+        }
+
+        return ((blue | green << 8 | red << 16) | 1 << 24).toString(16).slice(1) + alpha;
+    };
+
+    /********************************************
+    hexRgb
+    Convert HEX color to RGB
+    From https://github.com/sindresorhus/hex-rgb
+    ********************************************/
+    var hexChars = 'a-f\\d',
+        match3or4Hex = '#?[' + hexChars + ']{3}[' + hexChars + ']?',
+        match6or8Hex = '#?[' + hexChars + ']{6}([' + hexChars + ']{2})?',
+        nonHexChars = new RegExp('[^#' + hexChars + ']', 'gi'),
+        validHexSize = new RegExp('^' + match3or4Hex + '$|^' + match6or8Hex + '$', 'i');
+
+    nsColor.hexRgb = function(hex, options) {
+        options = options || {};
+        if (typeof hex !== 'string' || nonHexChars.test(hex) || !validHexSize.test(hex)) {
+            throw new TypeError('Expected a valid hex string');
+        }
+
+        hex = hex.replace(/^#/, '');
+        var alpha = 255;
+
+        if (hex.length === 8) {
+            alpha = parseInt(hex.slice(6, 8), 16) / 255;
+            hex = hex.substring(0, 6);
+        }
+
+        if (hex.length === 4) {
+            alpha = parseInt(hex.slice(3, 4).repeat(2), 16) / 255;
+            hex = hex.substring(0, 3);
+        }
+
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+
+        var num = parseInt(hex, 16),
+            red = num >> 16,
+            green = (num >> 8) & 255,
+            blue = num & 255;
+
+        return options.format === 'array' ? [red, green, blue, alpha] : { red: red, green: green, blue: blue, alpha: alpha };
+    };
+
+    /********************************************
+    hexSetAlpha
+    Set the alpha-value in a hex-color
+    ********************************************/
+    nsColor.hexSetAlpha = function(hex, alpha){
+        var rgba = nsColor.hexRgb(hex, {format: 'array'});
+        rgba[3] = alpha;
+        return nsColor.rgbHex.apply(this, rgba);
+    };
+
+}(this, document));
+;
+/****************************************************************************
+    json.js,
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+    "use strict";
+
+    //Create fcoo-namespace
+    var nsJSON = window;
+
+    /******************************************
+    serializeJSON
+    Converts a json-object a la {id1:'value1', id2:'value2'}
+    to [ { name: "id1", value: "value1" }, { name: "id2", value: "value2" } ]
+    *******************************************/
+    nsJSON.serializeJSON = function( jsonObj ){
+        var result = [];
+        for (var id in jsonObj)
+            if (jsonObj.hasOwnProperty(id))
+                result.push( {name: id, value: jsonObj[id] });
+        return result;
+    };
+
+
+}(this, document));
+;
+/****************************************************************************
+    math.js,
+
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+    "use strict";
+
+    var nsMath = window;
+
+    /*******************************************
+    significant - return n rounded to significant sf
+    *******************************************/
+    nsMath.significant = function significant(n, sf) {
+        sf = sf - Math.floor(Math.log(n) / Math.LN10) - 1;
+        sf = Math.pow(10, sf);
+        n = Math.round(n * sf);
+        n = n / sf;
+        return n;
+    };
+
+    /*******************************************
+    precision
+    *******************************************/
+    nsMath.precision = function precision(n, dp) {
+        dp = Math.pow(10, dp);
+        n = n * dp;
+        n = Math.round(n);
+        n = n / dp;
+        return n;
+    };
+
+    /*******************************************
+    nearest
+    *******************************************/
+    nsMath.nearest = function nearest(n, v) {
+        v = v ? v : 1;
+        n = n / v;
+        n = Math.round(n) * v;
+        return n;
+    };
+
+    /*******************************************
+    roundDownTo
+    *******************************************/
+    nsMath.roundDownTo = function roundDownTo(n, v) {
+        v = v ? v : 1;
+        n = n / v;
+        n = Math.floor(n) * v;
+        return n;
+    };
+
+    /*******************************************
+    roundToRange
+    *******************************************/
+    nsMath.roundToRange = function roundToRange(v, min, max) {
+        return Math.max( Math.min(v, max), min);
+    };
+
+    /*******************************************
+    toDecimal
+    Convert a integer value v to a decimal
+    Eq    toDecimal(89)        = 0.89
+            toDecimal(9)        = 0.9
+            toDecimal(1234)    = 0.1234
+    *******************************************/
+    nsMath.toDecimal = function toDecimal(v) {
+        var l = v.toString().length;
+        return v / Math.pow(10, l);
+    };
+
+}(this, document));
+;
+/****************************************************************************
+latlng-format-base, a class to validate, format, and transform positions (eq. leaflet LatLng)
+
+    (c) 2015, FCOO
+
+    https://github.com/fcoo/latlng-format
+    https://github.com/fcoo
+
+****************************************************************************/
+
+(function ($, window, document, undefined) {
+    "use strict";
+
+    /*******************************************************
+    window.latLngFormat =
+    constructor of LatLngFormat, and
+    holder of global options and methods
+    ********************************************************/
+    var latLngFormat = function( arg0, arg1 ) {
+        return new LatLngFormat( arg0, arg1 );
+    };
+
+    //Options for the posible formats. Placed in seperate namespace
+    latLngFormat.LATLNGFORMAT_DMSS = 0; //Degrees Minutes Seconds Decimal Seconds: N65d30'15.3"  d='degree sign'
+    latLngFormat.LATLNGFORMAT_DMM  = 1; //Degrees Decimal minutes                : N65d30.258'
+    latLngFormat.LATLNGFORMAT_DD   = 2; //Decimal degrees                        : N41.1234d
+
+    latLngFormat.LATLNGFORMAT_UTM  = 3; //UTM                                    : 29Q 286657 2492164
+    latLngFormat.LATLNGFORMAT_MGRS = 4; //MGRS                                   : 02U PG 03727 09686
+    latLngFormat.LATLNGFORMAT_NAC  = 5; //NAC                                    : HBV6R RG77T.
+
+
+    latLngFormat.LATLNGFORMAT_FIRST = latLngFormat.LATLNGFORMAT_DMSS;
+    latLngFormat.LATLNGFORMAT_LAST  = latLngFormat.LATLNGFORMAT_NAC;
+
+
+    //Default options
+    var defaultOptions = {
+        twoValueMode: false, //If true the different methods are called on lat and lng individually
+
+        degreeChar  : String.fromCharCode(176), //or '&#176;' '&deg;'
+
+        preText     : '',
+        separator   : ' ',
+        postText    : '',
+
+             //lat, lng
+        min: [-90, -180],
+        max: [ 90,  180]
+    };
+
+    latLngFormat.options = $.extend({}, defaultOptions);
+
+    /*
+    latLngFormatList = list of different formats
+    latLngFormatList = [id] of {
+        getOptions: function()                             //Return the different options for the format. If
+        format    : function(value of [lat,lng], options, latLngFormat) //Return formated string of value/[lat,lng]
+        value     : function(String, options, latLngFormat) //Convert String from current string-format to latlng-value
+    }
+    */
+    latLngFormat.formatList = {};
+
+
+    /************************************
+    Static methods
+    ************************************/
+    $.extend( latLngFormat, {
+
+        /************************************
+        _callMethodFromFormatList
+        ************************************/
+        _callMethodFromFormatList: function( methodId, _this, arg ){
+            var formatId = this.options.formatId;
+            if (formatId === undefined)
+                return '';
+
+            if (this.formatList && this.formatList[formatId] && this.formatList[formatId][methodId])
+                return this.formatList[formatId][methodId].apply(_this || this, arg);
+            else {
+                if (window.console && window.console.warn)
+                    window.console.warn('latLngFormat: Missing '+methodId);
+                return '';
+            }
+        },
+
+        /************************************
+        setFormat
+        ************************************/
+        setFormat: function( formatId ){
+            if (formatId !== undefined)
+                this.options.formatId = formatId;
+
+            formatId = this.options.formatId;
+
+            //Reset to default options
+            this.options = $.extend({}, this.options, defaultOptions );
+
+            //Try to get delimiters from current locale in numeral
+            var dS = '.',
+                n = window.numeral,
+                n_localeData = n && n.localeData ? n.localeData() : null,
+                n_delimiters_decimal = n_localeData && n_localeData.delimiters && n_localeData.delimiters.decimal ? n_localeData.delimiters.decimal : null;
+
+            if (n_delimiters_decimal)
+              dS = n_delimiters_decimal;
+            else {
+                var S = Number(1.1).toLocaleString();
+                dS = S.indexOf('.') > -1 ? '.' :
+                     S.indexOf(',') > -1 ? ',' :
+                     '.';
+            }
+            this.options.delimitersDecimal = dS;
+
+            //Get new options
+            var newOptions = {};
+
+            newOptions = this._callMethodFromFormatList('getOptions', null, [formatId]);
+            if (newOptions){
+                //Adjust options. If convertMask, regexp, or placeholder isn't a array => convert
+                $.each(['displayMask', 'editMask', 'convertMask', 'regexp', 'placeholder'], function(index, id){
+                    newOptions[id] = newOptions[id] || '';
+                });
+                $.each(['convertMask', 'regexp', 'placeholder'], function(index, id){
+                    if (!$.isArray(newOptions[id]))
+                        newOptions[id] = [newOptions[id], newOptions[id]];
+                });
+                $.extend( this.options, newOptions );
+            }
+
+            return formatId;
+        }, //end of setFormat
+
+
+        /************************************
+        split
+            Input: position (number)
+            Return: {hemisphere, degrees, degreesDecimal, minutes, minutesDecimal, seconds, secondsDecimal}
+        ************************************/
+        split: function( position ){
+            var result = {};
+            result.hemisphere = position >= 0 ? +1 : -1;
+            position = Math.abs(position);
+            result.degrees = Math.floor(position);
+            result.degreesDecimal = Math.min(9999, Math.round((position - result.degrees)*10000) );
+
+            position = position*60 % 60; //Minutes
+            result.minutes = Math.floor(position);
+            result.minutesDecimal = Math.min( 999, Math.round((position - result.minutes)*1000) );
+
+            position = position*60 % 60; //seconds
+            result.seconds = Math.floor(position);
+            result.secondsDecimal = Math.min( 9, Math.floor/*round*/((position - result.seconds)*10) );
+
+            return result;
+        }
+
+    }); //end of $.extend( latLngFormat, {
+
+    // expose access to the constructor
+    window.latLngFormat = latLngFormat;
+
+    //Overwrite numeral.js method locale to update format with new decimal delimiters
+    var n = window.numeral;
+    if (n && n.locale)
+        n.locale = function( locale ){
+            return function(){
+                //Original function
+                var result = locale.apply(this, arguments);
+
+                //Update format
+                window.latLngFormat.setFormat();
+
+                return result;
+            };
+        }( n.locale );
+
+    /************************************
+    Constructors
+    ************************************/
+    // LatlngFormat prototype object
+    function LatLngFormat( arg0, arg1 ){
+        /*
+        Possible arguments:
+            ( Number )                                   => this._inputs = [ Number0, Number0 ]
+            ( Number0, Number1 ), ( [Number0, Number1] ) => this._inputs = [ Number0, Number1 ]
+            ( String ), ( String0, String1 ) ( [String0, String1] ) => this._inputs = String or [String0, String1] or error depending on options.twoValueMode
+        */
+        var inputs = null,
+            inputValid = true;
+        if (arg1 === undefined){
+            if ($.isArray(arg0))
+                inputs = arg0;
+            else
+                inputs = [ arg0 ];
+        }
+        else
+            inputs = [ arg0, arg1 ];
+
+        //Two arguments => must be same type
+        inputValid = (inputs.length == 1) || (typeof inputs[0] == typeof inputs[1]);
+
+        //Only Number or String
+        if (inputValid)
+            $.each( inputs, function( index, val ){
+                if ((typeof val != 'number') && (typeof val != 'string'))
+                    inputValid = false;
+            });
+
+        //[String, String] only when options.twoValueMode == true
+        //[String] only when options.twoValueMode == false + [String] => String
+        if (inputValid && (typeof inputs[0] == 'string'))
+            inputValid = (inputs.length == (latLngFormat.options.twoValueMode ? 2 : 1));
+
+        //[Number0] => [Number0, Number0], [String] => Stirng
+        if (inputValid && (inputs.length == 1)){
+            if (typeof inputs[0] == 'number')
+                inputs.push( inputs[0] );
+            else
+                inputs = inputs[0];
+        }
+
+        this._inputs = inputValid ? inputs : [null, null];
+        this.inputIsValid = inputValid;
+
+       if (!this.inputIsValid && window.console && window.console.warn)
+            window.console.warn('latLngFormat: Invalid arguments:', arg0, arg1);
+    }
+
+    /************************************
+    LatlngFormat Prototype
+    ************************************/
+    latLngFormat.fn = LatLngFormat.prototype = {
+        //_valueMethod = function(method, options): calls method(latLng, options, latLngFormat) with the latlng-value as input. Method returns a string or []string
+        _valueMethod: function(method, opt) {
+            var latLngFormat = window.latLngFormat,
+                options = $.extend({}, latLngFormat.options, opt || {}),
+                result;
+
+            if (options.twoValueMode){
+                result = [];
+                options.latOrLng = 0;
+                result.push( method.call( this, this._inputs[0], options, latLngFormat ) );
+                options.latOrLng = 1;
+                result.push( method.call( this, this._inputs[1], options, latLngFormat ) );
+            }
+            else
+                result = method.call( this, this._inputs, options, latLngFormat );
+
+            if (options.joinAsString && $.isArray(result))
+                result = options.preText + result.join(options.separator) + options.postText;
+
+            return result;
+        },
+
+        /**********************************************************
+        _valid - Return true if the value is a valid position
+        **********************************************************/
+        _valid: function(value, options){
+            options.latOrLng = options.latOrLng || 0;
+            if (typeof value == 'number')
+                return (value >= options.min[options.latOrLng]) && (value <= options.max[options.latOrLng]);
+            else
+                //The regexp is prefixed with ^(?: and suffixed with )$ to make it full-match-only.
+                return (new RegExp( '^(?:' + options.regexp[options.latOrLng] + ')$' )).test(value);
+        },
+
+        //valid - Return true if the input is a valid position
+        valid: function(asArray){
+            var result = this._valueMethod( this._valid, {twoValueMode: true} );
+            return asArray ? result : result[0] && result[1];
+        },
+
+        /**********************************************************
+        _format - Converts value to a string
+        **********************************************************/
+        _format: function(value, options, latLngFormat){
+            if (this.valid()){
+                if (typeof value == 'string')
+                    return value;
+                return latLngFormat._callMethodFromFormatList( 'format', this, arguments );
+            }
+            else
+                return false;
+        },
+
+        //format - Converts number value to a string, using this.displayMask or this.editMask
+        format: function( options ){
+            if (this.inputIsValid && this.valid()){
+                options = options || {};
+                options.joinAsString = !options.asArray;
+                return this._valueMethod( this._format, options );
+            }
+            else
+                return false;
+        },
+
+        //formatTrunc - Converts number value to a string, truncating any zero-values
+        formatTrunc: function( options ){
+            options = options || {};
+            options.truncate = true;
+            return this.format( options );
+        },
+
+        /**********************************************************
+        _ value - Converts value (string masked as editMask) to decimal degrees.
+        **********************************************************/
+        _value: function(value, options, latLngFormat){
+            if (typeof value != 'string')
+                return false;
+
+            return latLngFormat._callMethodFromFormatList( 'value', this, arguments );
+        },
+
+        //value - Converts value (string masked as editMask) to decimal degrees.
+        value: function(){
+            var result = this._valueMethod( this._value );
+
+            //Check if both lat and lng are not false
+            if ( $.isArray(result) && ((result[0] === false) || (result[1] === false)) )
+                result = false;
+
+            //Round or truncate
+            if (result) {
+                result[0] = window.precision(result[0], 4);
+                result[1] = window.precision(result[1], 4);
+            }
+
+            return result;
+        },
+
+
+        //convertTo - If value is valid => convert it to newFormatId format and return it as text-string, else return false
+        convertTo: function( newFormatId, options ){
+            var formatId = latLngFormat.options.formatId,
+                result   = this.value();
+
+            if (result){
+                latLngFormat.setFormat( newFormatId );
+                var newLatLngFormat = latLngFormat( result );
+                result = newLatLngFormat.valid() ? newLatLngFormat.format( options ) : false;
+                latLngFormat.setFormat( formatId );
+            }
+
+            return result;
+        }
+    };//end of latLngFormat.fn = LatLngFormat.prototype = {
+
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+latlng-format-degrees
+
+Set methodes and options for format degrees, minutes, seconds
+
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+    "use strict";
+    var LATLNGFORMAT_DMSS = window.latLngFormat.LATLNGFORMAT_DMSS, //Degrees Minutes Seconds Decimal Seconds: N65d30'15.3"  d='degree sign'
+        LATLNGFORMAT_DMM  = window.latLngFormat.LATLNGFORMAT_DMM,  //Degrees Decimal minutes                : N65d30.258'
+        LATLNGFORMAT_DD   = window.latLngFormat.LATLNGFORMAT_DD;   //Decimal degrees                        : N41.1234d
+
+    window.latLngFormat.formatList[LATLNGFORMAT_DMSS] =
+    window.latLngFormat.formatList[LATLNGFORMAT_DMM] =
+    window.latLngFormat.formatList[LATLNGFORMAT_DD] = {
+
+        /************************************
+        getOptions
+        ************************************/
+        getOptions: function(formatId){
+            /*
+            Create options with editMask, convertMask, regexp, placeholder
+            Regular expressions for different type of position input
+            The regexp are 'build' using regexp for the sub-parts:
+                H=Hemisphere        : [n,N,s,S]
+                DD=Degrees          : 0-9, 00-09, 10-89
+                dddd=Degrees decimal: 0-9999
+                MM=Minutes          : 0-9, 00-09, 10-59
+                SS=Seconds          : 0-59
+                .=seperator         : blank, "." or ","
+                mmm=decimal min     : 0-999
+            */
+            var _regexp = {
+                anySpace      : '\\s*',
+                hemisphereLat : '([nNsS])?',    //H=Hemisphere  : [n,N,s,S] (optional,
+                hemisphereLong: '([eEwW])?',    //H=Hemisphere : [e,E,w,W] (optional,
+
+                DD            : '((0?[0-9])|[1-8][0-9])',  //DD=Degrees 0-89        :    0-9, 00-09 or 10-89
+                DDD           : '((\\d?\\d)|1[0-7][0-9])', //DDD=Degrees 0-179    :    0-9, 00-99 or 100-179
+
+                MM            : '\\s' + '((0?[0-9])|[1-5][0-9])', //MM=Minutes: 0-9, 00-09 or 10-59 (allways with a seperator in front)
+            };
+            _regexp.SS        = _regexp.MM;
+            _regexp.seperator = _regexp.anySpace + '[\\s\\.,]' + _regexp.anySpace; //seperator: blank, "." or ",". Allow any number of spac,
+
+            _regexp.dddd      = '(' + _regexp.seperator + '\\d{1,4}' + ')?'; //dddd=decimal degrees (0-9999) optional
+
+            _regexp.MMmmm     = '(' + _regexp.MM + '(' + _regexp.seperator + '\\d{1,3}' + ')?' + ')?';                           //MMmmm=Minutes and Decimal minutes = [MM[0-999]]
+            _regexp.MMSSs     = '(' + _regexp.MM + '(' + _regexp.SS + '(' + _regexp.seperator + '\\d{1,1}' + ')?' + ')?' + ')?'; //MMSSss= Minutes Second and Decimal Seconds = [MM[ SS[0-99]]]
+
+            var dS     = window.latLngFormat.options.delimitersDecimal,
+                dC     = window.latLngFormat.options.degreeChar,
+                result = {
+                    twoValueMode: true,
+                         //lat, lng
+                    min: [-90, -180],
+                    max: [ 90,  180]
+                };
+
+            switch (formatId){
+                case LATLNGFORMAT_DMSS:
+                    $.extend(result, { //Degrees Minutes Seconds (N41d25'01")
+                        displayMask: "DDD"+dC+"MM'SS"+dS+"s\"H",
+                        editMask   : "DDD MM SS"+dS+"sH",
+                        convertMask: ['DDD', 'MM', 'SS', 's'],
+                        regexp     : [ _regexp.anySpace + '(90|'  + _regexp.DD  + _regexp.anySpace + _regexp.MMSSs + ')' + _regexp.anySpace + _regexp.hemisphereLat  + _regexp.anySpace,
+                                       _regexp.anySpace + '(180|' + _regexp.DDD + _regexp.anySpace + _regexp.MMSSs + ')' + _regexp.anySpace + _regexp.hemisphereLong + _regexp.anySpace  ],
+                        placeholder: ["89 59 59"+dS+"9N", "179 59 59"+dS+"9E"],
+                    });
+                    break;
+
+                case LATLNGFORMAT_DMM:
+                    $.extend(result, { //Degrees Decimal minutes (N41d25.123')
+                        displayMask: "DDD"+dC+"MM"+dS+"mmm'H",
+                        editMask   : "DDD MM"+dS+"mmmH",
+                        convertMask: ['DDD', 'MM', 'mmm'],
+                        regexp     : [ _regexp.anySpace + '(90|'  + _regexp.DD  + _regexp.anySpace + _regexp.MMmmm + ')' + _regexp.anySpace + _regexp.hemisphereLat  + _regexp.anySpace,
+                                       _regexp.anySpace + '(180|' + _regexp.DDD + _regexp.anySpace + _regexp.MMmmm + ')' + _regexp.anySpace + _regexp.hemisphereLong + _regexp.anySpace  ],
+                        placeholder: ["89 59"+dS+"999N", "179 59"+dS+"999E"],
+                    });
+                    break;
+
+                case LATLNGFORMAT_DD:
+                    $.extend(result, { //Decimal degrees (N41.1234d)
+                        displayMask: "DDD"+dS+"dddd"+dC+"H",
+                        editMask   : "DDD"+dS+"ddddH",
+                        convertMask: ['DDD', 'dddd'],
+                        regexp     : [ _regexp.anySpace + '(90|'  + _regexp.DD  + _regexp.anySpace + _regexp.dddd + ')' + _regexp.anySpace + _regexp.hemisphereLat  + _regexp.anySpace,
+                                       _regexp.anySpace + '(180|' + _regexp.DDD + _regexp.anySpace + _regexp.dddd + ')' + _regexp.anySpace + _regexp.hemisphereLong + _regexp.anySpace  ],
+                        placeholder: ["89.9999N", "179.9999E"],
+                    });
+                    break;
+            }
+            return result;
+        },
+
+        /************************************
+        format
+        ************************************/
+        format: function(value, options, latLngFormat){
+
+            function trim(value, lgd){
+                var result = ''+value;
+                if (options.truncate){
+                    if (value == 0)
+                        result = '';
+                }
+                else
+                    while (result.length < lgd)
+                        result = '0'+result;
+                return result;
+            }
+            function append(value, lgd){
+                var result = ''+value;
+                if (options.truncate)
+                    result = result.replace( /0*$/g, '');
+                else
+                    while (result.length < lgd)
+                        result = result+'0';
+                return result;
+            }
+
+            var parts = latLngFormat.split(value),
+                result = (options.useEditMask ? options.editMask : options.displayMask)
+                            .replace('H', options.latOrLng ?
+                                            (parts.hemisphere == 1 ? 'E' : 'W') :
+                                            (parts.hemisphere == 1 ? 'N' : 'S')
+                            );
+            result = result.replace(/DDD/ , parts.degrees                   );
+            result = result.replace(/dddd/, append(parts.degreesDecimal, 4) );
+            result = result.replace(/MM/  , trim(parts.minutes,          2) );
+            result = result.replace(/mmm/ , append(parts.minutesDecimal, 3) );
+            result = result.replace(/SS/  , trim(parts.seconds,          2) );
+            result = result.replace(/s/   , trim(parts.secondsDecimal,   1) );
+
+            if (options.truncate){
+                //Remove delimiters not followed by a digit
+                result = result.replace( new RegExp('\\'+options.delimitersDecimal + '(?![0-9])', 'g'), '');
+
+                /*
+                Remove sign for minute (') and seconds (") without pending digital
+                Using regExp result = result.replace( /(?<!\d)[\'\"]/g, ''); works but JavaScript do not support 'before': < so
+                a workaround is used
+                */
+                var i = 1;
+                while (i < result.length)
+                    if ( ((result.charAt(i) == '"') || (result.charAt(i) == "'")) &&
+                         !$.isNumeric(result.charAt(i-1))
+                       )
+                        result = result.slice(0,i) + result.slice(i+1);
+                    else
+                        i++;
+            }
+
+            return result;
+        },
+
+        /************************************
+        value
+        Using convertMask to convert the different part of the text. Any space is ignored
+        ************************************/
+        value: function(value, options/*, latLngFormat*/){
+            //toDecimal - Convert a integer value v to a decimal. Eq    toDecimal(89)    = 0.89, toDecimal(9) = 0.9, toDecimal(1234)    = 0.1234
+            function toDecimal(v) {
+                var l = v.toString().length;
+                return v / Math.pow(10, l);
+            }
+
+            value = value.toUpperCase().trim();
+
+            //Convert N or E to +1 and S or W to -1
+            var sign = 1;
+            if ( (value.indexOf('S') > -1) || (value.indexOf('W') > -1) )
+                sign = -1;
+
+            //Remove all no-digital charts
+            value = value.replace(/\D+/g, ' ');
+            if ((value === '') || !this._valid(value, options))
+                return false;
+
+            var split = value.split(/\D/),
+                result = 0,
+                convertMaskIndex = 0,
+                i, nextValue;
+            for (i=0; i<split.length; i++ ){
+                nextValue = parseInt(split[i]);
+                if (!isNaN(nextValue)){
+                    switch (options.convertMask[convertMaskIndex]){
+                        case 'DDD' : result = result + nextValue;                 break;
+                        case 'MM'  : result = result + nextValue/60;              break;
+                        case 'mmm' : result = result + toDecimal(nextValue)/60;   break;
+                        case 's'   : result = result + toDecimal(nextValue)/3600; break;
+                        case 'SS'  : result = result + nextValue/3600;            break;
+                        case 'dddd': result = result + toDecimal(nextValue);      break;
+                    }
+                    convertMaskIndex++;
+                    if (convertMaskIndex >= options.convertMask.length)
+                        break;
+                }
+            }
+            return sign*result;
+        }
+
+    }; //end of window.latLngFormat.formatList[...] =
+
+    //Set LATLNGFORMAT_DMSS as default
+    if (!window.latLngFormat.options.formatId)
+        window.latLngFormat.setFormat(LATLNGFORMAT_DMSS);
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+latlng-format-nac
+
+Set methodes and options for format nac
+
+Using the methods
+from  https://github.com/PowerPan/leaflet.mouseCoordinate
+by "Johannes Rudolph johannes.rudolph@gmx.com
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+    "use strict";
+
+    /**
+    * Created by Johannes Rudolph <johannes.rudolph@gmx.com> on 01.09.2016.
+    */
+
+    /**
+    *
+    * @type {{fromLatLng: NAC.fromLatLng, _nac2Letter: NAC._nac2Letter}}
+    */
+    var NAC = {
+
+        /**
+        *
+        * @param {{lat: number, lng: number}}
+        * @returns {string}
+        */
+        fromLatLng: function(latlng) {
+            var lat = latlng.lat;
+            var lon = latlng.lng;
+            var x = [];
+            var y = [];
+            var xy = [];
+            xy.x = '';
+            xy.y = '';
+            if (lon >= -180 && lon <= 180) {
+                var xlon = (lon + 180) / 360;
+                x = this._calcValues(xlon);
+            } else {
+                x[0] = 0;
+            }
+            if (lat >= -90 && lat <= 90) {
+                var ylat = (lat + 90) / 180;
+                y = this._calcValues(ylat);
+            } else {
+                y[0] = 0;
+            }
+            for (var i = 0; i < x.length; i++) {
+                xy.x += this._nac2Letter(x[i]);
+            }
+            for (i = 0; i < y.length; i++) {
+                xy.y += this._nac2Letter(y[i]);
+            }
+            return xy;
+        },
+
+        /**
+        *
+        * @param z
+        * @returns {Array}
+        * @private
+        */
+        _calcValues: function (z){
+            var ret = [];
+            ret[0] = parseInt(z * 30,10);
+            ret[1] = parseInt((z * 30 - ret[0]) * 30,10);
+            ret[2] = parseInt(((z * 30 - ret[0]) * 30 - ret[1]) * 30,10);
+            ret[3] = parseInt((((z * 30 - ret[0]) * 30 - ret[1]) * 30 - ret[2]) * 30,10);
+            ret[4] = parseInt(((((z * 30 - ret[0]) * 30 - ret[1]) * 30 - ret[2]) * 30 - ret[3]) * 30,10);
+            ret[5] = parseInt((((((z * 30 - ret[0]) * 30 - ret[1]) * 30 - ret[2]) * 30 - ret[3]) * 30 - ret[4]) * 30,10);
+            return ret;
+        },
+
+        /**
+        *
+        * @param number
+        * @returns {string}
+        * @private
+        */
+        _nac2Letter: function(number){
+            var nac_letters = "0123456789BCDFGHJKLMNPQRSTVWXZ";
+            if(!isNaN(number) && number < 30)
+                return nac_letters.substr(number,1);
+            else return 0;
+        }
+    };
+
+
+    /************************************************************************************
+    ************************************************************************************/
+    window.latLngFormat.formatList[window.latLngFormat.LATLNGFORMAT_NAC] = {
+
+        /************************************
+        getOptions
+        ************************************/
+        getOptions: function( /*formatId*/ ){
+            var zeroOrMoreSpace = '\\s*',
+                oneOrMoreSpace  = '\\s+',
+                nacChars        = '[0123456789BCDFGHJKLMNPQRSTVWXZ]{2,6}';
+            return {
+                twoValueMode: false,
+                    //lat, lng
+                min: [-90, -180],
+                max: [ 90,  180],
+
+                displayMask : "",
+                editMask    : "",
+                regexp      : zeroOrMoreSpace + nacChars + oneOrMoreSpace + nacChars + zeroOrMoreSpace,
+                placeholder : "J0Z8B S8NRP",
+           };
+        },
+
+        /************************************
+        format
+        ************************************/
+        format: function(value/*, options, latLngFormat*/){
+            var result = NAC.fromLatLng({lat:value[0], lng:value[1]});
+            return [result.x, result.y];
+        },
+
+        /************************************
+        value
+        Convert "0VJZTG S5LFGZ" to lat-lng
+        ************************************/
+        value: function(value, options/*, latLngFormat*/){
+            if (!this._valid(value, options))
+                return false;
+
+            //Trim and remove multi space
+            value = value.toUpperCase().trim();
+            value = value.replace(/\s{2,}/g, ' ');
+
+            var nacLetters = "0123456789BCDFGHJKLMNPQRSTVWXZ",
+                valueList = value.split(' '),
+                result = {};
+
+            /*
+            First, convert all characters X1, X2, X3, X4, ... Y1, Y2, Y3, Y4, ... Z1, Z2, Z3, Z4, ... into integers x1, x2, x3, x4, ... y1, y2, y3, y4, ... z1, z2, z3, z4, ... according to the Table of the NAC Character and Integer Correspondences.
+            Then use the following formulae to calculate coordinates:
+
+            Longitude = (x1/30+x2/30^2+x3/30^3+x4/30^4+...)*360-180
+            Latitude =  (y1/30+y2/30^2+y3/30^3+y4/30^4+...)*180-90
+
+            */
+            $.each(valueList, function(index, str){
+                var charList = str.split(''),
+                    coor     = 0,
+                    factor   = 30;
+
+                $.each(charList, function(index, letter){
+                    coor = coor + nacLetters.indexOf(letter)/factor;
+                    factor = 30*factor;
+                });
+
+                if (index)
+                    result.lat = coor*180 - 90;
+                else
+                    result.lng = coor*360 - 180;
+
+            });
+
+            return [result.lat, result.lng];
+        }
+
+    }; //end of window.latLngFormat.formatList[...] =
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+latlng-format-proj4js-mgrs
+
+Set methodes and options for format mgrs
+using a ES5-version of https://github.com/proj4js/mgrs
+
+****************************************************************************/
+
+
+(function ($, window/*, document, undefined*/) {
+    "use strict";
+
+    /**
+     * UTM zones are grouped, and assigned to one of a group of 6
+     * sets.
+     *
+     * {int} @private
+     */
+    var NUM_100K_SETS = 6;
+
+    /**
+     * The column letters (for easting) of the lower left value, per
+     * set.
+ *
+     * {string} @private
+ */
+    var SET_ORIGIN_COLUMN_LETTERS = 'AJSAJS';
+
+    /**
+    * The row letters (for northing) of the lower left value, per
+    * set.
+    *
+    * {string} @private
+    */
+    var SET_ORIGIN_ROW_LETTERS = 'AFAFAF';
+
+    var A = 65; // A
+    var I = 73; // I
+    var O = 79; // O
+    var V = 86; // V
+    var Z = 90; // Z
+
+    /**
+     * Conversion from degrees to radians.
+     *
+     * @private
+     * @param {number} deg the angle in degrees.
+     * @return {number} the angle in radians.
+     */
+    function degToRad(deg) {
+        return (deg * (Math.PI / 180.0));
+    }
+
+    /**
+     * Conversion from radians to degrees.
+     *
+     * @private
+     * @param {number} rad the angle in radians.
+     * @return {number} the angle in degrees.
+     */
+    function radToDeg(rad) {
+        return (180.0 * (rad / Math.PI));
+    }
+
+    /**
+    * Calculates the MGRS letter designator for the given latitude.
+    *
+    * @private
+    * @param {number} lat The latitude in WGS84 to get the letter designator
+    *     for.
+    * @return {char} The letter designator.
+    */
+    function getLetterDesignator(lat) {
+        //This is here as an error flag to show that the Latitude is
+        //outside MGRS limits
+        var LetterDesignator = 'Z';
+
+        if ((84 >= lat) && (lat >= 72)) {
+            LetterDesignator = 'X';
+        }
+        else if ((72 > lat) && (lat >= 64)) {
+            LetterDesignator = 'W';
+        }
+        else if ((64 > lat) && (lat >= 56)) {
+            LetterDesignator = 'V';
+        }
+        else if ((56 > lat) && (lat >= 48)) {
+            LetterDesignator = 'U';
+        }
+        else if ((48 > lat) && (lat >= 40)) {
+            LetterDesignator = 'T';
+        }
+        else if ((40 > lat) && (lat >= 32)) {
+            LetterDesignator = 'S';
+        }
+        else if ((32 > lat) && (lat >= 24)) {
+            LetterDesignator = 'R';
+        }
+        else if ((24 > lat) && (lat >= 16)) {
+            LetterDesignator = 'Q';
+        }
+        else if ((16 > lat) && (lat >= 8)) {
+            LetterDesignator = 'P';
+        }
+        else if ((8 > lat) && (lat >= 0)) {
+            LetterDesignator = 'N';
+        }
+        else if ((0 > lat) && (lat >= -8)) {
+            LetterDesignator = 'M';
+        }
+        else if ((-8 > lat) && (lat >= -16)) {
+            LetterDesignator = 'L';
+        }
+        else if ((-16 > lat) && (lat >= -24)) {
+            LetterDesignator = 'K';
+        }
+        else if ((-24 > lat) && (lat >= -32)) {
+            LetterDesignator = 'J';
+        }
+        else if ((-32 > lat) && (lat >= -40)) {
+            LetterDesignator = 'H';
+        }
+        else if ((-40 > lat) && (lat >= -48)) {
+            LetterDesignator = 'G';
+        }
+        else if ((-48 > lat) && (lat >= -56)) {
+            LetterDesignator = 'F';
+        }
+        else if ((-56 > lat) && (lat >= -64)) {
+            LetterDesignator = 'E';
+        }
+        else if ((-64 > lat) && (lat >= -72)) {
+            LetterDesignator = 'D';
+        }
+        else if ((-72 > lat) && (lat >= -80)) {
+            LetterDesignator = 'C';
+        }
+        return LetterDesignator;
+    }
+
+    /**
+    * Encodes a UTM location as MGRS string.
+    *
+    * @private
+    * @param {object} utm An object literal with easting, northing,
+    *     zoneLetter, zoneNumber
+    * @param {number} accuracy Accuracy in digits (1-5).
+    * @return {string} MGRS string for the given UTM location.
+    */
+    function encode(utm, accuracy) {
+        // prepend with leading zeroes
+        var seasting = "00000" + utm.easting,
+            snorthing = "00000" + utm.northing;
+        return utm.zoneNumber + utm.zoneLetter + get100kID(utm.easting, utm.northing, utm.zoneNumber) + seasting.substr(seasting.length - 5, accuracy) + snorthing.substr(snorthing.length - 5, accuracy);
+    }
+
+    /**
+    * Get the two letter 100k designator for a given UTM easting,
+    *  northing and zone number value.
+    *
+    * @private
+    * @param {number} easting
+    * @param {number} northing
+    * @param {number} zoneNumber
+    * @return the two letter 100k designator for the given UTM location.
+    */
+    function get100kID(easting, northing, zoneNumber) {
+        var setParm = get100kSetForZone(zoneNumber);
+        var setColumn = Math.floor(easting / 100000);
+        var setRow = Math.floor(northing / 100000) % 20;
+        return getLetter100kID(setColumn, setRow, setParm);
+    }
+
+    /**
+    * Given a UTM zone number, figure out the MGRS 100K set it is in.
+    *
+    * @private
+    * @param {number} i An UTM zone number.
+    * @return {number} the 100k set the UTM zone is in.
+    */
+    function get100kSetForZone(i) {
+        var setParm = i % NUM_100K_SETS;
+        if (setParm === 0) {
+            setParm = NUM_100K_SETS;
+        }
+        return setParm;
+    }
+
+    /**
+    * Get the two-letter MGRS 100k designator given information
+    * translated from the UTM northing, easting and zone number.
+    *
+    * @private
+    * @param {number} column the column index as it relates to the MGRS
+    *        100k set spreadsheet, created from the UTM easting.
+    *        Values are 1-8.
+    * @param {number} row the row index as it relates to the MGRS 100k set
+    *        spreadsheet, created from the UTM northing value. Values
+    *        are from 0-19.
+    * @param {number} parm the set block, as it relates to the MGRS 100k set
+    *        spreadsheet, created from the UTM zone. Values are from
+    *        1-60.
+    * @return two letter MGRS 100k code.
+    */
+    function getLetter100kID(column, row, parm) {
+        // colOrigin and rowOrigin are the letters at the origin of the set
+        var index = parm - 1;
+        var colOrigin = SET_ORIGIN_COLUMN_LETTERS.charCodeAt(index);
+        var rowOrigin = SET_ORIGIN_ROW_LETTERS.charCodeAt(index);
+
+        // colInt and rowInt are the letters to build to return
+        var colInt = colOrigin + column - 1;
+        var rowInt = rowOrigin + row;
+        var rollover = false;
+
+        if (colInt > Z) {
+            colInt = colInt - Z + A - 1;
+            rollover = true;
+        }
+
+        if (colInt === I || (colOrigin < I && colInt > I) || ((colInt > I || colOrigin < I) && rollover)) {
+            colInt++;
+        }
+
+        if (colInt === O || (colOrigin < O && colInt > O) || ((colInt > O || colOrigin < O) && rollover)) {
+            colInt++;
+
+            if (colInt === I) {
+                colInt++;
+            }
+        }
+
+        if (colInt > Z) {
+            colInt = colInt - Z + A - 1;
+        }
+
+        if (rowInt > V) {
+            rowInt = rowInt - V + A - 1;
+            rollover = true;
+        }
+        else {
+            rollover = false;
+        }
+
+        if (((rowInt === I) || ((rowOrigin < I) && (rowInt > I))) || (((rowInt > I) || (rowOrigin < I)) && rollover)) {
+            rowInt++;
+        }
+
+        if (((rowInt === O) || ((rowOrigin < O) && (rowInt > O))) || (((rowInt > O) || (rowOrigin < O)) && rollover)) {
+            rowInt++;
+
+            if (rowInt === I) {
+                rowInt++;
+            }
+        }
+
+        if (rowInt > V) {
+            rowInt = rowInt - V + A - 1;
+        }
+
+        var twoLetter = String.fromCharCode(colInt) + String.fromCharCode(rowInt);
+        return twoLetter;
+    }
+
+    /**
+    * Decode the UTM parameters from a MGRS string.
+    *
+    * @private
+    * @param {string} mgrsString an UPPERCASE coordinate string is expected.
+    * @return {object} An object literal with easting, northing, zoneLetter,
+    *     zoneNumber and accuracy (in meters) properties.
+    */
+    function decode(mgrsString) {
+
+        if (mgrsString && mgrsString.length === 0) {
+            throw ("MGRSPoint coverting from nothing");
+        }
+
+        var length = mgrsString.length;
+
+          var hunK = null;
+        var sb = "";
+        var testChar;
+        var i = 0;
+
+          // get Zone number
+        while (!(/[A-Z]/).test(testChar = mgrsString.charAt(i))) {
+            if (i >= 2) {
+            throw ("MGRSPoint bad conversion from: " + mgrsString);
+            }
+            sb += testChar;
+            i++;
+        }
+
+          var zoneNumber = parseInt(sb, 10);
+
+          if (i === 0 || i + 3 > length) {
+            // A good MGRS string has to be 4-5 digits long,
+            // ##AAA/#AAA at least.
+            throw ("MGRSPoint bad conversion from: " + mgrsString);
+        }
+
+        var zoneLetter = mgrsString.charAt(i++);
+
+        // Should we check the zone letter here? Why not.
+        if (zoneLetter <= 'A' || zoneLetter === 'B' || zoneLetter === 'Y' || zoneLetter >= 'Z' || zoneLetter === 'I' || zoneLetter === 'O') {
+            throw ("MGRSPoint zone letter " + zoneLetter + " not handled: " + mgrsString);
+        }
+
+        hunK = mgrsString.substring(i, i += 2);
+
+        var set = get100kSetForZone(zoneNumber);
+
+        var east100k = getEastingFromChar(hunK.charAt(0), set);
+        var north100k = getNorthingFromChar(hunK.charAt(1), set);
+
+        // We have a bug where the northing may be 2000000 too low.
+        // How
+        // do we know when to roll over?
+
+        while (north100k < getMinNorthing(zoneLetter)) {
+            north100k += 2000000;
+        }
+
+        // calculate the char index for easting/northing separator
+        var remainder = length - i;
+
+        if (remainder % 2 !== 0) {
+            throw ("MGRSPoint has to have an even number \nof digits after the zone letter and two 100km letters - front \nhalf for easting meters, second half for \nnorthing meters" + mgrsString);
+        }
+
+        var sep = remainder / 2;
+
+        var sepEasting = 0.0;
+        var sepNorthing = 0.0;
+        var accuracyBonus, sepEastingString, sepNorthingString, easting, northing;
+        if (sep > 0) {
+            accuracyBonus = 100000.0 / Math.pow(10, sep);
+            sepEastingString = mgrsString.substring(i, i + sep);
+            sepEasting = parseFloat(sepEastingString) * accuracyBonus;
+            sepNorthingString = mgrsString.substring(i + sep);
+            sepNorthing = parseFloat(sepNorthingString) * accuracyBonus;
+        }
+
+        easting = sepEasting + east100k;
+        northing = sepNorthing + north100k;
+
+        return {
+            easting: easting,
+            northing: northing,
+            zoneLetter: zoneLetter,
+            zoneNumber: zoneNumber,
+            accuracy: accuracyBonus
+        };
+    }
+
+    /**
+    * Given the first letter from a two-letter MGRS 100k zone, and given the
+    * MGRS table set for the zone number, figure out the easting value that
+   * should be added to the other, secondary easting value.
+    *
+    * @private
+    * @param {char} e The first letter from a two-letter MGRS 100´k zone.
+    * @param {number} set The MGRS table set for the zone number.
+    * @return {number} The easting value for the given letter and set.
+    */
+    function getEastingFromChar(e, set) {
+        // colOrigin is the letter at the origin of the set for the
+        // column
+        var curCol = SET_ORIGIN_COLUMN_LETTERS.charCodeAt(set - 1);
+        var eastingValue = 100000.0;
+        var rewindMarker = false;
+
+        while (curCol !== e.charCodeAt(0)) {
+            curCol++;
+            if (curCol === I) {
+                curCol++;
+            }
+            if (curCol === O) {
+                curCol++;
+            }
+            if (curCol > Z) {
+                if (rewindMarker) {
+                    throw ("Bad character: " + e);
+                }
+                curCol = A;
+                rewindMarker = true;
+            }
+            eastingValue += 100000.0;
+        }
+
+        return eastingValue;
+    }
+
+    /**
+    * Given the second letter from a two-letter MGRS 100k zone, and given the
+    * MGRS table set for the zone number, figure out the northing value that
+    * should be added to the other, secondary northing value. You have to
+    * remember that Northings are determined from the equator, and the vertical
+    * cycle of letters mean a 2000000 additional northing meters. This happens
+    * approx. every 18 degrees of latitude. This method does *NOT* count any
+    * additional northings. You have to figure out how many 2000000 meters need
+    * to be added for the zone letter of the MGRS coordinate.
+    *
+    * @private
+    * @param {char} n Second letter of the MGRS 100k zone
+    * @param {number} set The MGRS table set number, which is dependent on the
+    *     UTM zone number.
+    * @return {number} The northing value for the given letter and set.
+    */
+    function getNorthingFromChar(n, set) {
+        if (n > 'V') {
+            throw ("MGRSPoint given invalid Northing " + n);
+        }
+
+        // rowOrigin is the letter at the origin of the set for the
+        // column
+        var curRow = SET_ORIGIN_ROW_LETTERS.charCodeAt(set - 1);
+        var northingValue = 0.0;
+        var rewindMarker = false;
+
+        while (curRow !== n.charCodeAt(0)) {
+            curRow++;
+            if (curRow === I) {
+                curRow++;
+            }
+            if (curRow === O) {
+                curRow++;
+            }
+            // fixing a bug making whole application hang in this loop
+            // when 'n' is a wrong character
+            if (curRow > V) {
+                if (rewindMarker) { // making sure that this loop ends
+                    throw ("Bad character: " + n);
+                }
+                curRow = A;
+                rewindMarker = true;
+            }
+            northingValue += 100000.0;
+        }
+
+        return northingValue;
+    }
+
+    /**
+    * The function getMinNorthing returns the minimum northing value of a MGRS
+    * zone.
+    *
+    * Ported from Geotrans' c Lattitude_Band_Value structure table.
+    *
+    * @private
+    * @param {char} zoneLetter The MGRS zone to get the min northing for.
+    * @return {number}
+    */
+    function getMinNorthing(zoneLetter) {
+        var northing;
+        switch (zoneLetter) {
+            case 'C': northing = 1100000.0; break;
+            case 'D': northing = 2000000.0; break;
+            case 'E': northing = 2800000.0; break;
+            case 'F': northing = 3700000.0; break;
+            case 'G': northing = 4600000.0; break;
+            case 'H': northing = 5500000.0; break;
+            case 'J': northing = 6400000.0; break;
+            case 'K': northing = 7300000.0; break;
+            case 'L': northing = 8200000.0; break;
+            case 'M': northing = 9100000.0; break;
+            case 'N': northing = 0.0; break;
+            case 'P': northing = 800000.0; break;
+            case 'Q': northing = 1700000.0; break;
+            case 'R': northing = 2600000.0; break;
+            case 'S': northing = 3500000.0; break;
+            case 'T': northing = 4400000.0; break;
+            case 'U': northing = 5300000.0; break;
+            case 'V': northing = 6200000.0; break;
+            case 'W': northing = 7000000.0; break;
+            case 'X': northing = 7900000.0; break;
+            default: northing = -1.0;
+        }
+        if (northing >= 0.0) {
+            return northing;
+        }
+        else {
+            throw ("Invalid zone letter: " + zoneLetter);
+        }
+    }
+
+    /**
+    * Converts a set of Longitude and Latitude co-ordinates to UTM
+    * using the WGS84 ellipsoid.
+    *
+    * @private
+    * @param {object} ll Object literal with lat and lon properties
+    *     representing the WGS84 coordinate to be converted.
+    * @param {boolean} truncate When true the result is truncated.
+    * @return {object} Object literal containing the UTM value with easting,
+    *     northing, zoneNumber and zoneLetter properties, and an optional
+    *     accuracy property in digits. Returns null if the conversion failed.
+    */
+    function LLtoUTM(ll, truncate) {
+        var Lat = ll.lat;
+        var Long = ll.lon;
+        var a = 6378137.0; //ellip.radius;
+        var eccSquared = 0.00669438; //ellip.eccsq;
+        var k0 = 0.9996;
+        var LongOrigin;
+        var eccPrimeSquared;
+        var N, T, C, A, M;
+        var LatRad = degToRad(Lat);
+        var LongRad = degToRad(Long);
+        var LongOriginRad;
+        var ZoneNumber;
+        // (int)
+        ZoneNumber = Math.floor((Long + 180) / 6) + 1;
+
+        //Make sure the longitude 180.00 is in Zone 60
+        if (Long === 180) {
+            ZoneNumber = 60;
+        }
+
+        // Special zone for Norway
+        if (Lat >= 56.0 && Lat < 64.0 && Long >= 3.0 && Long < 12.0) {
+            ZoneNumber = 32;
+        }
+
+        // Special zones for Svalbard
+        if (Lat >= 72.0 && Lat < 84.0) {
+            if (Long >= 0.0 && Long < 9.0) {
+                ZoneNumber = 31;
+            }
+            else if (Long >= 9.0 && Long < 21.0) {
+                ZoneNumber = 33;
+            }
+            else if (Long >= 21.0 && Long < 33.0) {
+                ZoneNumber = 35;
+            }
+            else if (Long >= 33.0 && Long < 42.0) {
+                ZoneNumber = 37;
+            }
+        }
+
+        LongOrigin = (ZoneNumber - 1) * 6 - 180 + 3; //+3 puts origin
+        // in middle of
+        // zone
+        LongOriginRad = degToRad(LongOrigin);
+
+        eccPrimeSquared = (eccSquared) / (1 - eccSquared);
+
+        N = a / Math.sqrt(1 - eccSquared * Math.sin(LatRad) * Math.sin(LatRad));
+        T = Math.tan(LatRad) * Math.tan(LatRad);
+        C = eccPrimeSquared * Math.cos(LatRad) * Math.cos(LatRad);
+        A = Math.cos(LatRad) * (LongRad - LongOriginRad);
+
+        M = a * ((1 - eccSquared / 4 - 3 * eccSquared * eccSquared / 64 - 5 * eccSquared * eccSquared * eccSquared / 256) * LatRad - (3 * eccSquared / 8 + 3 * eccSquared * eccSquared / 32 + 45 * eccSquared * eccSquared * eccSquared / 1024) * Math.sin(2 * LatRad) + (15 * eccSquared * eccSquared / 256 + 45 * eccSquared * eccSquared * eccSquared / 1024) * Math.sin(4 * LatRad) - (35 * eccSquared * eccSquared * eccSquared / 3072) * Math.sin(6 * LatRad));
+
+        var UTMEasting = (k0 * N * (A + (1 - T + C) * A * A * A / 6.0 + (5 - 18 * T + T * T + 72 * C - 58 * eccPrimeSquared) * A * A * A * A * A / 120.0) + 500000.0);
+
+        var UTMNorthing = (k0 * (M + N * Math.tan(LatRad) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A * A * A * A / 24.0 + (61 - 58 * T + T * T + 600 * C - 330 * eccPrimeSquared) * A * A * A * A * A * A / 720.0)));
+        if (Lat < 0.0) {
+            UTMNorthing += 10000000.0; //10000000 meter offset for
+            // southern hemisphere
+        }
+
+        return {
+            northing: truncate ? Math.floor(UTMNorthing) : Math.round(UTMNorthing),
+            easting : truncate ? Math.floor(UTMEasting)  : Math.round(UTMEasting),
+            zoneNumber: ZoneNumber,
+            zoneLetter: getLetterDesignator(Lat)
+        };
+    }
+
+    /**
+    * Converts UTM coords to lat/long, using the WGS84 ellipsoid. This is a convenience
+    * class where the Zone can be specified as a single string eg."60N" which
+    * is then broken down into the ZoneNumber and ZoneLetter.
+    *
+    * @private
+    * @param {object} utm An object literal with northing, easting, zoneNumber
+    *     and zoneLetter properties. If an optional accuracy property is
+    *     provided (in meters), a bounding box will be returned instead of
+    *     latitude and longitude.
+    * @return {object} An object literal containing either lat and lon values
+    *     (if no accuracy was provided), or top, right, bottom and left values
+    *     for the bounding box calculated according to the provided accuracy.
+    *     Returns null if the conversion failed.
+    */
+    function UTMtoLL(utm) {
+        var UTMNorthing = utm.northing;
+        var UTMEasting = utm.easting;
+        var zoneLetter = utm.zoneLetter;
+        var zoneNumber = utm.zoneNumber;
+        // check the ZoneNummber is valid
+        if (zoneNumber < 0 || zoneNumber > 60) {
+            return null;
+        }
+
+        var k0 = 0.9996;
+        var a = 6378137.0; //ellip.radius;
+        var eccSquared = 0.00669438; //ellip.eccsq;
+        var eccPrimeSquared;
+        var e1 = (1 - Math.sqrt(1 - eccSquared)) / (1 + Math.sqrt(1 - eccSquared));
+        var N1, T1, C1, R1, D, M;
+        var LongOrigin;
+        var mu, phi1Rad;
+
+        // remove 500,000 meter offset for longitude
+        var x = UTMEasting - 500000.0;
+        var y = UTMNorthing;
+
+        // We must know somehow if we are in the Northern or Southern
+        // hemisphere, this is the only time we use the letter So even
+        // if the Zone letter isn't exactly correct it should indicate
+        // the hemisphere correctly
+        if (zoneLetter < 'N') {
+            y -= 10000000.0; // remove 10,000,000 meter offset used
+            // for southern hemisphere
+        }
+
+        // There are 60 zones with zone 1 being at West -180 to -174
+        LongOrigin = (zoneNumber - 1) * 6 - 180 + 3; // +3 puts origin
+        // in middle of
+        // zone
+
+        eccPrimeSquared = (eccSquared) / (1 - eccSquared);
+
+        M = y / k0;
+        mu = M / (a * (1 - eccSquared / 4 - 3 * eccSquared * eccSquared / 64 - 5 * eccSquared * eccSquared * eccSquared / 256));
+
+        phi1Rad = mu + (3 * e1 / 2 - 27 * e1 * e1 * e1 / 32) * Math.sin(2 * mu) + (21 * e1 * e1 / 16 - 55 * e1 * e1 * e1 * e1 / 32) * Math.sin(4 * mu) + (151 * e1 * e1 * e1 / 96) * Math.sin(6 * mu);
+        // double phi1 = ProjMath.radToDeg(phi1Rad);
+
+        N1 = a / Math.sqrt(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad));
+        T1 = Math.tan(phi1Rad) * Math.tan(phi1Rad);
+        C1 = eccPrimeSquared * Math.cos(phi1Rad) * Math.cos(phi1Rad);
+        R1 = a * (1 - eccSquared) / Math.pow(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad), 1.5);
+        D = x / (N1 * k0);
+
+        var lat = phi1Rad - (N1 * Math.tan(phi1Rad) / R1) * (D * D / 2 - (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * eccPrimeSquared) * D * D * D * D / 24 + (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * eccPrimeSquared - 3 * C1 * C1) * D * D * D * D * D * D / 720);
+        lat = radToDeg(lat);
+
+        var lon = (D - (1 + 2 * T1 + C1) * D * D * D / 6 + (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * eccPrimeSquared + 24 * T1 * T1) * D * D * D * D * D / 120) / Math.cos(phi1Rad);
+        lon = LongOrigin + radToDeg(lon);
+
+        var result;
+        if (utm.accuracy) {
+            var topRight = MGRS.UTMtoLL({
+                    northing: utm.northing + utm.accuracy,
+                    easting: utm.easting + utm.accuracy,
+                    zoneLetter: utm.zoneLetter,
+                    zoneNumber: utm.zoneNumber
+                });
+            result = {
+                top: topRight.lat,
+                right: topRight.lon,
+                bottom: lat,
+                left: lon
+            };
+        }
+        else {
+            result = {
+                lat: lat,
+                lon: lon
+            };
+        }
+        return result;
+    }
+
+
+    /************************************************************************************
+    MGRS
+    ************************************************************************************/
+    var MGRS = {
+        /**
+             * Conversion of lat/lon to MGRS.
+         *
+         * @param {object} ll Object literal with lat and lon properties on a
+         *     WGS84 ellipsoid.
+         * @param {int} accuracy Accuracy in digits (5 for 1 m, 4 for 10 m, 3 for
+         *      100 m, 2 for 1000 m or 1 for 10000 m). Optional, default is 5.
+         * @return {string} the MGRS string for the given location and accuracy.
+         */
+        forward: function(ll, accuracy) {
+            accuracy = accuracy || 5; // default accuracy 1m
+            return encode(MGRS.LLtoUTM({
+                lat: ll[0], //Changed by Niels Holt
+                lon: ll[1]  //Changed by Niels Holt
+            }, true), accuracy);
+        },
+
+        /**
+         * Conversion of MGRS to lat/lon.
+         *
+         * @param {string} mgrs MGRS string.
+         * @return {array} An array with left (longitude), bottom (latitude), right
+         *     (longitude) and top (latitude) values in WGS84, representing the
+         *     bounding box for the provided MGRS reference.
+         */
+        inverse: function(mgrs) {
+            var bbox = UTMtoLL(decode(mgrs.toUpperCase()));
+            if (bbox.lat && bbox.lon) {
+                return [bbox.lon, bbox.lat, bbox.lon, bbox.lat];
+            }
+            return [bbox.left, bbox.bottom, bbox.right, bbox.top];
+        },
+
+        toPoint: function(mgrs) {
+            var bbox = MGRS.UTMtoLL(decode(mgrs.toUpperCase()));
+            if (bbox.lat && bbox.lon) {
+                return [bbox.lon, bbox.lat];
+            }
+            //Changed from lng, lat to lat,lng by Niels Holt
+            //return [(bbox.left + bbox.right) / 2, (bbox.top + bbox.bottom) / 2];
+            return [(bbox.top + bbox.bottom) / 2 , (bbox.left + bbox.right) / 2];
+        },
+
+        LLtoUTM: LLtoUTM,
+        UTMtoLL: UTMtoLL
+    };
+
+
+
+    /************************************************************************************
+    ************************************************************************************/
+    window.latLngFormat.formatList[window.latLngFormat.LATLNGFORMAT_MGRS] = {
+
+        /************************************
+        MGRS - the object doing the calculation
+        ************************************/
+        MGRS: MGRS,
+
+        /************************************
+        getOptions
+        See https://www.usna.edu/Users/oceano/pguth/md_help/html/mgrs_utm.htm for format
+        ************************************/
+        getOptions: function( /*formatId*/ ){
+            var zeroOrMoreSpace = '\\s*',
+                c2xNoIorO       = '[CDEFGHJKLMNPQRSTUVWX]', //C-X without I and O
+                a2zNoIorO       = '[ABCDEFGHJKLMNPQRSTUVWXYZ]', //A-Z without I and O
+                regexp          =
+                    zeroOrMoreSpace +
+                    '(0?[1-9]|[1-5][0-9]|60)' + //[0]1-9 or 10-59 or 60
+                    zeroOrMoreSpace +
+                    c2xNoIorO +
+                    zeroOrMoreSpace +
+                    a2zNoIorO +
+                    zeroOrMoreSpace +
+                    a2zNoIorO +
+                    zeroOrMoreSpace;
+
+            //2, 4, 6, 8 or 10 digits with optional space in the middle
+            regexp = regexp + '(';
+            for (var digits=1; digits<=5; digits++){
+                if (digits>1)
+                    regexp += '|';
+                regexp += '\\d{' + digits + '}' + zeroOrMoreSpace + '\\d{' + digits + '}';
+            }
+            regexp = regexp + ')' + zeroOrMoreSpace;
+
+            return {
+                twoValueMode: false,
+                     //lat, lng
+                min: [-80, -180],
+                max: [ 84,  180],
+
+                displayMask : "",
+                editMask    : "",
+                regexp      : regexp,
+                placeholder : "48NCD 12345 12345",
+           };
+        },
+
+        /************************************
+        format
+        ************************************/
+        format: function(value/*, options, latLngFormat*/){
+
+            // prepend with leading zeroes
+            var utm = MGRS.LLtoUTM({lat: value[0], lon: value[1]}, true),
+                accuracy  = 5,
+                zoneNumber = ''+utm.zoneNumber,
+                seasting  = "00000" + utm.easting,
+                snorthing = "00000" + utm.northing,
+                result = [
+                    (zoneNumber.length < 2  ? '0'+zoneNumber : zoneNumber) + utm.zoneLetter + get100kID(utm.easting, utm.northing, utm.zoneNumber),
+                    seasting.substr(seasting.length - 5, accuracy),
+                    snorthing.substr(snorthing.length - 5, accuracy)
+                ];
+            return result;
+        },
+
+        /************************************
+        value
+        Convert "33I UB 36257 11489" to lat-lng
+        ************************************/
+        value: function(value, options/*, latLngFormat*/){
+            if (!this._valid(value, options))
+                return false;
+
+            //Remove ALL space => value = "33IUB3625711489"
+            value = value.toUpperCase().trim();
+            value = value.replace(/\s/g, '');
+
+            //If one digit zone without leading zero => add leading zero
+            if ( (new RegExp('^\\d?\\D')).test(value))
+                value = '0'+value;
+
+            return MGRS.toPoint(value);
+        }
+
+    }; //end of window.latLngFormat.formatList[...] =
+}(jQuery, this, document));
+;
+/****************************************************************************
+latlng-format-utm
+
+Set methodes and options for format utm
+
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+    "use strict";
+
+    window.latLngFormat.formatList[window.latLngFormat.LATLNGFORMAT_UTM] = {
+
+        /************************************
+        getOptions
+        ************************************/
+        getOptions: function( /*formatId*/ ){
+            var zeroOrMoreSpace = '\\s*',
+                oneOrMoreSpace  = '\\s+',
+                onToSevenDigits = '\\d{1,7}',
+                regexp          =
+                    zeroOrMoreSpace +
+                    '(0?[1-9]|[1-5][0-9]|60)' + //[0]1-9 or 10-59 or 60
+                    zeroOrMoreSpace +
+                    '[CDEFGHJKLMNPQRSTUVWX]' + //C-X without I and O
+                    oneOrMoreSpace +
+                    onToSevenDigits +
+                    oneOrMoreSpace +
+                    onToSevenDigits +
+                    zeroOrMoreSpace;
+
+                //(0?[1-9]|[1-5][0-9]|60)\s*[CDEFGHJKLMNPQRSTUVWXX]\s+\d{7}\s+\d{7}\s*
+
+            return {
+                twoValueMode: false,
+                     //lat, lng
+                min: [-80, -180],
+                max: [ 84,  180],
+
+                displayMask : "",
+                editMask    : "",
+                regexp      : regexp,
+                placeholder : "48N 0123456 1234567",
+           };
+        },
+
+        /************************************
+        format
+        ************************************/
+        format: function(value, options/*, latLngFormat*/){
+            function pad(value, lgd){
+                var result = ''+value;
+                if (!options.truncate)
+                    while (result.length < lgd)
+                        result = '0'+result;
+                return result;
+            }
+
+            var utm = window.latLngFormat.formatList[window.latLngFormat.LATLNGFORMAT_MGRS].MGRS.LLtoUTM({lat: value[0], lon: value[1]});
+            return [pad(utm.zoneNumber, 2) + utm.zoneLetter, pad(utm.easting, 7), pad(utm.northing, 7)];
+        },
+
+        /************************************
+        value
+        Convert "12N 123456 1234567" to lat-lng
+        ************************************/
+        value: function(value, options/*, latLngFormat*/){
+            if (!this._valid(value, options))
+                return false;
+
+            //Remove multi space => value = "12N 123456 1234567" or "12 N 123456 1234567"
+            value = value.toUpperCase().trim();
+            value = value.replace(/\s{2,}/g, ' ');
+
+            //If one digit zone without leading zero => add leading zero
+            if ( (new RegExp('^\\d\\s?\\D')).test(value))
+                value = '0'+value;
+
+            var valueList = value.split(' ');
+            //Special case: "12 N 123456 1234567" => [0..3] converted to [0..2]
+            if (valueList.length == 4){
+                valueList[0] = valueList[0] + valueList[1];
+                valueList[1] = valueList[2];
+                valueList[2] = valueList[3];
+                valueList.pop();
+            }
+
+            var latlng = window.latLngFormat.formatList[window.latLngFormat.LATLNGFORMAT_MGRS].MGRS.UTMtoLL({
+                    northing  : parseInt(valueList[2]),
+                    easting   : parseInt(valueList[1]),
+                    zoneLetter: parseInt(valueList[0].slice(2)),
+                    zoneNumber: parseInt(valueList[0].slice(0, 2))
+                });
+            return [latlng.lat, latlng.lon];
+        }
+
+    }; //end of window.latLngFormat.formatList[...] =
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+	fcoo-latlng-format.js,
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/fcoo-latlng-format
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+	//Create fcoo-namespace
+    window.fcoo = window.fcoo || {};
+    var ns = window.fcoo;
+
+    /***********************************************************
+    Set up and load latlng-format via fcoo.settings
+    ***********************************************************/
+    ns.settings.add({
+        id          : 'latlng',
+        validator   : function( /*latlngFormatId*/ ){
+                          //TODO Check for valid value
+                          return true;
+                      },
+        applyFunc   : function( latlngFormatId ){
+                          window.latLngFormat.setFormat( latlngFormatId );
+                      },
+        defaultValue: window.latLngFormat.LATLNGFORMAT_DMSS,
+        callApply   : true,
+        globalEvents: window.fcoo.events.LATLNGFORMATCHANGED
+
+    });
+
+
+    //Update the latlng-format when the number-format is changed
+    ns.events.on( window.fcoo.events.NUMBERFORMATCHANGED, function(){
+        ns.settings.set('latlng', window.latLngFormat.options.formatId );
+    });
+
+}(jQuery, this, document));
 ;
 /****************************************************************************
 	fcoo-unit.js,
@@ -83852,14 +80144,8 @@ window.L = exports;
 
     //Extend the prototype of L.LatLng
     L.extend( L.LatLng.prototype, {
-        formatLat: function(){ return window.latLngFormat( this.lat ).formatLat(); },
-        formatLng: function(){ return window.latLngFormat( this.lng ).formatLng(); },
-        format   : function(){ return window.latLngFormat( this.lat, this.lng ).format(); },
-
-        formatTruncLat: function(){ return window.latLngFormat( this.lat ).formatTruncLat(); },
-        formatTruncLng: function(){ return window.latLngFormat( this.lng ).formatTruncLng(); },
-        formatTrunc   : function(){ return window.latLngFormat( this.lat, this.lng ).formatTrunc(); }
-
+        format     : function(options){ return window.latLngFormat( this.lat, this.lng ).format(options);      },
+        formatTrunc: function(options){ return window.latLngFormat( this.lat, this.lng ).formatTrunc(options); }
     });
 
 }(L, this, document));
@@ -84057,18 +80343,15 @@ window.L = exports;
     function convertLatLngBack( latLngArray ){ return latLngArray ? L.latLng(latLngArray) : null;  }
 
     /*************************************
-    formatId = lat, lng
-    *************************************/
-    addFormat({ id: 'lat', format : function( latLng ){ return latLng ? latLng.formatLat() : ''; }, convert: convertLatLng, convertBack: convertLatLngBack });
-    addFormat({ id: 'lng', format : function( latLng ){ return latLng ? latLng.formatLng() : ''; }, convert: convertLatLng, convertBack: convertLatLngBack });
-
-    /*************************************
     formatId = latlng
     *************************************/
     addFormat({
         id    : 'latlng',
         format: function( latLng, options ){
-            return latLng ? latLng.format().join(options.separator ? options.separator : '&nbsp;') : '';
+            options = options || {};
+            if (options.separator == undefined)
+                options.separator = '&nbsp;';
+            return latLng ? latLng.format(options) : '';
          },
          convert    : convertLatLng,
          convertBack: convertLatLngBack
@@ -84727,268 +81010,6 @@ return ImagesLoaded;
 
 });
 
-;
-/****************************************************************************
-    color.js,
-    Functions to caluclate the brightness of a color
-    Taken from http://codepen.io/lunelson/pen/jENxwB
-
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-    "use strict";
-
-    //Create fcoo-namespace
-    var nsColor = window;
-
-
-    function lin2log(n) {
-        if (n <= 0.0031308)
-            return n * 12.92;
-        else
-            return 1.055 * Math.pow(n,1/2.4) - 0.055;
-    }
-
-    function log2lin(n) {
-        if (n <= 0.04045)
-            return n / 12.92;
-        else
-            return Math.pow(((n + 0.055)/1.055),2.4);
-    }
-
-    /********************************************
-    brightness
-    ********************************************/
-    nsColor.brightness = function brightness(r, g, b) {
-        r = log2lin(r/255);
-        g = log2lin(g/255);
-        b = log2lin(b/255);
-        return lin2log(0.2126 * r + 0.7152 * g + 0.0722 * b) * 100;
-    };
-
-    /********************************************
-    colorContrastHEX
-    ********************************************/
-    nsColor.colorContrastHEX = function colorContrastHEX( color ) {
-        if (color.length === 3)
-            color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
-        var rgb = [];
-        for (var i = 0; i <= 2; i++)
-            rgb[i] = parseInt(color.substr(1+i*2, 2), 16);
-        return nsColor.colorContrastRGB(rgb[0], rgb[1], rgb[2]);
-    };
-
-    /********************************************
-    colorContrastRGB
-    ********************************************/
-    nsColor.colorContrastRGB = function colorContrastRGB(r, g, b) {
-        var colorBrightness = nsColor.brightness(r, g, b),
-                whiteBrightness = nsColor.brightness(255, 255, 255),
-                blackBrightness = nsColor.brightness(0, 0, 0);
-        return Math.abs(colorBrightness - whiteBrightness) > Math.abs(colorBrightness - blackBrightness) ? '#ffffff' : '#000000';
-    };
-
-    /********************************************
-    rgbHex
-    Convert RGB color to HEX
-    From https://github.com/sindresorhus/rgb-hex
-    ********************************************/
-    nsColor.rgbHex = function(red, green, blue, alpha){
-        var isPercent = (red + (alpha || '')).toString().includes('%');
-
-        if (typeof red === 'string') {
-            var res = red.match(/(0?\.?\d{1,3})%?\b/g).map(Number);
-            red = res[0];
-            green = res[1];
-            blue = res[2];
-            alpha = res[3];
-        }
-        else
-            if (alpha !== undefined) {
-                alpha = parseFloat(alpha);
-            }
-
-        if (typeof red !== 'number' ||
-            typeof green !== 'number' ||
-            typeof blue !== 'number' ||
-            red > 255 ||
-            green > 255 ||
-            blue > 255) {
-                throw new TypeError('Expected three numbers below 256');
-        }
-
-        if (typeof alpha === 'number') {
-            if (!isPercent && alpha >= 0 && alpha <= 1) {
-                alpha = Math.round(255 * alpha);
-            }
-            else
-                if (isPercent && alpha >= 0 && alpha <= 100) {
-                    alpha = Math.round(255 * alpha / 100);
-                }
-                else {
-                    throw new TypeError('Expected alpha value (${alpha}) as a fraction or percentage');
-                }
-            alpha = (alpha | 1 << 8).toString(16).slice(1);
-        }
-        else {
-            alpha = '';
-        }
-
-        return ((blue | green << 8 | red << 16) | 1 << 24).toString(16).slice(1) + alpha;
-    };
-
-    /********************************************
-    hexRgb
-    Convert HEX color to RGB
-    From https://github.com/sindresorhus/hex-rgb
-    ********************************************/
-    var hexChars = 'a-f\\d',
-        match3or4Hex = '#?[' + hexChars + ']{3}[' + hexChars + ']?',
-        match6or8Hex = '#?[' + hexChars + ']{6}([' + hexChars + ']{2})?',
-        nonHexChars = new RegExp('[^#' + hexChars + ']', 'gi'),
-        validHexSize = new RegExp('^' + match3or4Hex + '$|^' + match6or8Hex + '$', 'i');
-
-    nsColor.hexRgb = function(hex, options) {
-        options = options || {};
-        if (typeof hex !== 'string' || nonHexChars.test(hex) || !validHexSize.test(hex)) {
-            throw new TypeError('Expected a valid hex string');
-        }
-
-        hex = hex.replace(/^#/, '');
-        var alpha = 255;
-
-        if (hex.length === 8) {
-            alpha = parseInt(hex.slice(6, 8), 16) / 255;
-            hex = hex.substring(0, 6);
-        }
-
-        if (hex.length === 4) {
-            alpha = parseInt(hex.slice(3, 4).repeat(2), 16) / 255;
-            hex = hex.substring(0, 3);
-        }
-
-        if (hex.length === 3) {
-            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-        }
-
-        var num = parseInt(hex, 16),
-            red = num >> 16,
-            green = (num >> 8) & 255,
-            blue = num & 255;
-
-        return options.format === 'array' ? [red, green, blue, alpha] : { red: red, green: green, blue: blue, alpha: alpha };
-    };
-
-    /********************************************
-    hexSetAlpha
-    Set the alpha-value in a hex-color
-    ********************************************/
-    nsColor.hexSetAlpha = function(hex, alpha){
-        var rgba = nsColor.hexRgb(hex, {format: 'array'});
-        rgba[3] = alpha;
-        return nsColor.rgbHex.apply(this, rgba);
-    };
-
-}(this, document));
-;
-/****************************************************************************
-    json.js,
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-    "use strict";
-
-    //Create fcoo-namespace
-    var nsJSON = window;
-
-    /******************************************
-    serializeJSON
-    Converts a json-object a la {id1:'value1', id2:'value2'}
-    to [ { name: "id1", value: "value1" }, { name: "id2", value: "value2" } ]
-    *******************************************/
-    nsJSON.serializeJSON = function( jsonObj ){
-        var result = [];
-        for (var id in jsonObj)
-            if (jsonObj.hasOwnProperty(id))
-                result.push( {name: id, value: jsonObj[id] });
-        return result;
-    };
-
-
-}(this, document));
-;
-/****************************************************************************
-    math.js,
-
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-    "use strict";
-
-    var nsMath = window;
-
-    /*******************************************
-    significant - return n rounded to significant sf
-    *******************************************/
-    nsMath.significant = function significant(n, sf) {
-        sf = sf - Math.floor(Math.log(n) / Math.LN10) - 1;
-        sf = Math.pow(10, sf);
-        n = Math.round(n * sf);
-        n = n / sf;
-        return n;
-    };
-
-    /*******************************************
-    precision
-    *******************************************/
-    nsMath.precision = function precision(n, dp) {
-        dp = Math.pow(10, dp);
-        n = n * dp;
-        n = Math.round(n);
-        n = n / dp;
-        return n;
-    };
-
-    /*******************************************
-    nearest
-    *******************************************/
-    nsMath.nearest = function nearest(n, v) {
-        v = v ? v : 1;
-        n = n / v;
-        n = Math.round(n) * v;
-        return n;
-    };
-
-    /*******************************************
-    roundDownTo
-    *******************************************/
-    nsMath.roundDownTo = function roundDownTo(n, v) {
-        v = v ? v : 1;
-        n = n / v;
-        n = Math.floor(n) * v;
-        return n;
-    };
-
-    /*******************************************
-    roundToRange
-    *******************************************/
-    nsMath.roundToRange = function roundToRange(v, min, max) {
-        return Math.max( Math.min(v, max), min);
-    };
-
-    /*******************************************
-    toDecimal
-    Convert a integer value v to a decimal
-    Eq    toDecimal(89)        = 0.89
-            toDecimal(9)        = 0.9
-            toDecimal(1234)    = 0.1234
-    *******************************************/
-    nsMath.toDecimal = function toDecimal(v) {
-        var l = v.toString().length;
-        return v / Math.pow(10, l);
-    };
-
-}(this, document));
 ;
 /****************************************************************************
 	jquery-action-pan.js,

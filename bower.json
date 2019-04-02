@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "5.8.4",
+  "version": "6.0.0",
   "homepage": "https://gitlab.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -39,8 +39,7 @@
     "fcoo-language": "fcoo/fcoo-language#^5.0.0",
     "fcoo-number": "fcoo/fcoo-number#^1.0.0",
     "fcoo-moment": "fcoo/fcoo-moment#^1.0.0",
-    "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^1.0.0",
-    "fcoo-value-format": "fcoo/fcoo-value-format#^1.1.0",
+    "fcoo-value-format": "fcoo/fcoo-value-format#^2.0.0",
     "fcoo-fontawesome": "https://gitlab.com/fcoo/fcoo-fontawesome.git#^5.0.0",
     "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
     "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
@@ -49,7 +48,6 @@
     "offline": "HubSpot/offline#~0.7.18",
     "imagesloaded": "desandro/imagesloaded#~4.1.1",
     "raven-js": "^3.19.0",
-    "fcoo-i18next-phrases": "fcoo/fcoo-i18next-phrases#latest",
     "jquery-bootstrap": "fcoo/jquery-bootstrap#^1.45.0",
     "jquery-action-pan": "fcoo/jquery-action-pan#^1.0.0",
     "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^1.0.0",
