@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "homepage": "https://gitlab.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -33,7 +33,7 @@
     "csshake": "^1.5.2"
   },
   "dependencies": {
-    "jquery": "~3.3.0",
+    "jquery": "~3.4.0",
     "fcoo-global-events": "fcoo/fcoo-global-events#^1.0.0",
     "fcoo-settings": "fcoo/fcoo-settings#^1.3.0",
     "fcoo-language": "fcoo/fcoo-language#^5.0.0",
