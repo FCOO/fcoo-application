@@ -1052,6 +1052,7 @@ Sections:
                 messageGroup.options.$button.removeClass('disabled');
             },
 
+            shakeWhenUnread: false,
 
             onChange: function( messageGroup ){
                 var status = messageGroup.getAllStatus(),
@@ -1059,8 +1060,8 @@ Sections:
                 if (status.publish){
                     $button
                         .removeClass('d-none')
-                        .modernizrToggle( 'all-read', !status.unread );
-                    //REMOVED .toggleClass('shake-constant', !!status.unread ); //Makes button shake when there are new messages
+                        .modernizrToggle( 'all-read', !status.unread )
+                        .toggleClass('shake-constant', !!status.unread && messageGroup.options.shakeWhenUnread ); //Makes button shake when there are new messages
                 }
                 else {
                     //Hide the button if there are no message
@@ -1076,15 +1077,16 @@ Sections:
             warning: {
                 id: 'warning_'+ns.applicationId,
 
-                reloadPeriod: 'PT10M', //Reload every 10 min
+                reloadPeriod: 'PT20M', //Reload every 20 min
 
                 sortBy: 'DATE',
                 sortDesc: true,
 
-                showStatus    : true,
-                showTypeHeader: true,
-                showTypeColor : true,
-                vfFormat      : 'time_local',
+                showStatus     : true,
+                showTypeHeader : true,
+                showTypeColor  : true,
+                vfFormat       : 'time_local',
+                shakeWhenUnread: true,
 
                 //Save status as sessionStorage
                 loadStatus: function( message ){
@@ -1092,7 +1094,7 @@ Sections:
                 },
                 saveStatus: function( message ){
                     sessionStorage.setItem( message.getFCOOId(), message.options.status ? 'READ' : 'NOTREAD' );
-                },
+                }
             },
 
             //Info:
