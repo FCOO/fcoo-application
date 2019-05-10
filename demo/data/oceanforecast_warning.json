@@ -6,17 +6,19 @@
         {
             "id": "error_1",
             "date": "2017-11-02T14:20Z",
+            "type": "error",
             "publish": true,
             "url": "",
-            "title": {"da":"Der er noget galt med...(UTC=14:20)", "en":"Something is wrong with...(UTC=14:20)"}
+            "title": {"da":"Error: Der er noget galt med...(UTC=14:20)", "en":"Error: Something is wrong with...(UTC=14:20)"}
         },
         {
             "id": "error_2",
             "date": "2017-11-02T12:40Z",
+            "type": "warning",
             "publish": true,
             "expire" : "P2Y",
             "url": "",
-            "title": {"da":"Der er noget andet galt med...(UTC=12:40)", "en":"Something else is wrong with...(UTC=12:40)"}
+            "title": {"da":"Advarsel: Der er noget andet galt med...(UTC=12:40)", "en":"Warning: Something else is wrong with...(UTC=12:40)"}
         }
     ]
 }

@@ -94,7 +94,7 @@ Sections:
 
     //Getting the application-id
     ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
-    ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null)
+    ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null);
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
@@ -567,7 +567,6 @@ Sections:
     **************************************************************/
 
     var messageGroupOptions = {
-
             icons  : { externalLink: 'fa-external-link' },
             loading: { icon: ns.icons.working },
 
