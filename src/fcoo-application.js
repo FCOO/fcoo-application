@@ -93,7 +93,8 @@ Sections:
 
 
     //Getting the application-id
-    ns.applicationId = ns.getApplicationOption( '{APPLICATION_ID}', '0');
+    ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
+    ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null)
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
@@ -207,7 +208,7 @@ Sections:
 
         $.each( ['BETA', 'STAGING','DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
             if (urlStr.indexOf(name) > -1){
-                $versionDiv.text( name );
+                $versionDiv.text( name + (ns.applicationVersion ? ' - ' + ns.applicationVersion : ''));
                 window.document.title = name +' - ' + window.document.title;
                 return false;
             }
