@@ -376,7 +376,8 @@ Create and manage the top-menu for FCOO web applications
         $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
             if ((minMax.min == 0) && (minMax.max < mqBreakpoint) && (minMax.max > minScreenWidth)){
                 mqBreakpoint = minMax.max;
-                headerHideClassName = 'hide-for-'+minMax.id;
+//HER                headerHideClassName = 'hide-for-'+minMax.id;
+                headerHideClassName = 'invisible-for-'+minMax.id;
                 aboutFCOOHeaderShowClassName = 'show-for-'+minMax.id;
             }
         });

@@ -690,6 +690,40 @@ animations and to apply to button even when no-hover
 }
 */
 /*****************************************************
+Create classes invisible-for-XX a la hide-for-XX using
+the break-points defined in fcoo-modernizr-mediaquery-device
+*****************************************************/
+/***********************************************
+    _fcoo-modernizr-mediaquery-variables.scss,
+
+    (c) 2016, FCOO
+
+    https://github.com/FCOO/fcoo-modernizr-mediaquery-device
+    https://github.com/FCOO
+
+************************************************/
+html.mini-down .invisible-for-mini-down {
+  visibility: hidden; }
+
+html.xsmall-port-down .invisible-for-xsmall-port-down {
+  visibility: hidden; }
+
+html.xsmall-land-down .invisible-for-xsmall-land-down {
+  visibility: hidden; }
+
+html.small-down .invisible-for-small-down {
+  visibility: hidden; }
+
+html.medium-down .invisible-for-medium-down {
+  visibility: hidden; }
+
+html.large-down .invisible-for-large-down {
+  visibility: hidden; }
+
+html.xlarge-down .invisible-for-xlarge-down {
+  visibility: hidden; }
+
+/*****************************************************
 Special adjustments and bug fix
 *****************************************************/
 /* Both jquery-bootstrap and fcoo-fontawesome has
