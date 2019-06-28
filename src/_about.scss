@@ -1,0 +1,38 @@
+/*****************************************************
+ABOUT
+
+Style for 'About FCOO' modal-content
+*****************************************************/
+
+//Box with FCOO-logo and contact info etc.
+.about-fcoo {
+    text-align: center;
+    font-size : 0.8 * $font-size-base;
+
+    > * { width: 100%; }
+
+    .application-header {
+        margin : 0;
+        padding: $content-padding-x-sm;
+
+        text-align : center;
+        font-size  : 1.5*$font-size-sm;
+        line-height: 1.5*$font-size-sm;
+        @include text-shadow();
+        @include text-truncate();
+    }
+
+    .fcoo-logo {
+        $logo-width: 290px;
+        width : $logo-width;
+        height: 60px / 260px * $logo-width;
+        margin: 0.75em auto;
+
+        background-image   : url("images/FCOO_logo_260x60.jpg");
+        background-repeat  : no-repeat;
+        background-position: center center;
+        background-size    : contain;
+
+    }
+}
+

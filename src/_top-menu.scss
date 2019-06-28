@@ -19,11 +19,6 @@ body {
     }
 }
 
-//Hide top-menu while initializing
-.top-menu-container.initialize {
-    visibility: hidden;
-}
-
 //All elements inside .top-menu-container get same position and opacity
 .top-menu-container > * {
     position  : fixed;
@@ -35,64 +30,6 @@ body {
     transition: opacity .15s ease-in-out;
     cursor: default;
 }
-
-//Box with FCOO-logo and contact info etc.
-.about-fcoo {
-    background-color: white;
-    border-bottom   : 1px solid black;
-    text-align      : center;
-    font-size       : 0.9 * $font-size-base;
-    //    opacity         : 0.6;
-    //opacity         : 0;
-    * {
-        opacity   : 1;
-        transition: opacity .2s;
-
-    }
-    &.panning * { opacity: 0.6; }
-
-    .top-menu-extended &,
-    .top-menu-threshold-down ~ & {
-        * { opacity: 1; }
-    }
-    .top-menu-threshold-up ~ & {
-        * { opacity: 0.6; }
-    }
-
-    > * {
-        margin: .5rem;
-        flex-shrink: 1;
-        flex-grow  : 0;
-    }
-
-    .fcoo-logo {
-        width      : 310px;
-        height     : 60 / 260 * 310px;
-        flex-shrink: 0;
-        background-image   : url("images/FCOO_logo_260x60.jpg");
-        background-repeat  : no-repeat;
-        background-position: center center;
-        background-size    : contain;
-    }
-
-    .header {
-        width    : 100%;
-        flex-grow: 1;
-
-        margin : 0;
-        padding: $content-padding-x-sm;
-
-        text-align : center;
-        font-size  : 1.5*$font-size-sm;
-        line-height: 1.5*$font-size-sm;
-        @include text-shadow();
-        @include text-truncate();
-
-        &:empty { display: none; }
-    }
-
-}
-
 
 .top-menu {
 

@@ -379,9 +379,6 @@ confussions another name is used
 body.top-menu-hidden {
   padding-top: 0 !important; }
 
-.top-menu-container.initialize {
-  visibility: hidden; }
-
 .top-menu-container > * {
   position: fixed;
   top: 0;
@@ -391,48 +388,6 @@ body.top-menu-hidden {
   opacity: 1;
   transition: opacity .15s ease-in-out;
   cursor: default; }
-
-.about-fcoo {
-  background-color: white;
-  border-bottom: 1px solid black;
-  text-align: center;
-  font-size: 0.9rem; }
-  .about-fcoo * {
-    opacity: 1;
-    transition: opacity .2s; }
-  .about-fcoo.panning * {
-    opacity: 0.6; }
-  .top-menu-extended .about-fcoo *,
-  .top-menu-threshold-down ~ .about-fcoo * {
-    opacity: 1; }
-  .top-menu-threshold-up ~ .about-fcoo * {
-    opacity: 0.6; }
-  .about-fcoo > * {
-    margin: .5rem;
-    flex-shrink: 1;
-    flex-grow: 0; }
-  .about-fcoo .fcoo-logo {
-    width: 310px;
-    height: 71.5384615385px;
-    flex-shrink: 0;
-    background-image: url("images/FCOO_logo_260x60.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain; }
-  .about-fcoo .header {
-    width: 100%;
-    flex-grow: 1;
-    margin: 0;
-    padding: 0.25rem;
-    text-align: center;
-    font-size: 1.21875rem;
-    line-height: 1.21875rem;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; }
-    .about-fcoo .header:empty {
-      display: none; }
 
 .top-menu {
   margin-top: 0px;
@@ -689,6 +644,38 @@ animations and to apply to button even when no-hover
   0%, 100% { transform: translate(0, 0) rotate(0); }
 }
 */
+/*****************************************************
+Style for 'About FCOO'
+*****************************************************/
+/*****************************************************
+ABOUT
+
+Style for 'About FCOO' modal-content
+*****************************************************/
+.about-fcoo {
+  text-align: center;
+  font-size: 0.8rem; }
+  .about-fcoo > * {
+    width: 100%; }
+  .about-fcoo .application-header {
+    margin: 0;
+    padding: 0.25rem;
+    text-align: center;
+    font-size: 1.21875rem;
+    line-height: 1.21875rem;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+  .about-fcoo .fcoo-logo {
+    width: 290px;
+    height: 66.9230769231px;
+    margin: 0.75em auto;
+    background-image: url("images/FCOO_logo_260x60.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain; }
+
 /*****************************************************
 Create classes invisible-for-XX a la hide-for-XX using
 the break-points defined in fcoo-modernizr-mediaquery-device

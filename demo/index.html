@@ -11,6 +11,7 @@
 
   <link  href="bower_components.css" rel="stylesheet">
   <link  href="../src/fcoo-application.css" rel="stylesheet">
+  <link  href="../src/touch-menu-la.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,6 +19,11 @@
         <div class="version fcoo-app-color"></div>
         <div class="logo fcoo-app-color"></div>
     </div>
+
+	<div id="menu" class="touch-menu-la">
+    HER ER JEG :-)
+    </div>
+
 
     <div class="main-container">
         <select id="theSelect" style="width:200px"></select><br>
@@ -32,10 +38,17 @@
     <script src="bower_components.js"></script>
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
     <script src="../src/fcoo-application-top-menu.js"></script>
+    <script src="../src/fcoo-application-touch.js"></script>
+    <script src="../src/fcoo-application-about.js"></script>
     <script src="../src/fcoo-application.js"></script>
 
 
 	<script>
+	    var TouchMenu = TouchMenuLA({
+		    target: document.getElementById('menu')
+	    });
+
+
         var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
 
         var $select = $('#theSelect');

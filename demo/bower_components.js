@@ -20171,7 +20171,7 @@ return jQuery;
  * 
  */
 /**
- * bluebird build version 3.5.4
+ * bluebird build version 3.5.5
  * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
 */
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -21509,8 +21509,8 @@ function parseLineInfo(line) {
 
 function setBounds(firstLineError, lastLineError) {
     if (!longStackTracesIsSupported()) return;
-    var firstStackLines = firstLineError.stack.split("\n");
-    var lastStackLines = lastLineError.stack.split("\n");
+    var firstStackLines = (firstLineError.stack || "").split("\n");
+    var lastStackLines = (lastLineError.stack || "").split("\n");
     var firstIndex = -1;
     var lastIndex = -1;
     var firstFileName;
@@ -23034,6 +23034,11 @@ Promise.prototype.caught = Promise.prototype["catch"] = function (fn) {
         }
         catchInstances.length = j;
         fn = arguments[i];
+
+        if (typeof fn !== "function") {
+            throw new TypeError("The last argument to .catch() " +
+                "must be a function, got " + util.toString(fn));
+        }
         return this.then(undefined, catchFilter(catchInstances, fn, this));
     }
     return this.then(undefined, fn);
@@ -23641,6 +23646,14 @@ Promise.prototype._settledValue = function() {
     }
 };
 
+if (typeof Symbol !== "undefined" && Symbol.toStringTag) {
+    es5.defineProperty(Promise.prototype, Symbol.toStringTag, {
+        get: function () {
+            return "Object";
+        }
+    });
+}
+
 function deferResolve(v) {this.promise._resolveCallback(v);}
 function deferReject(v) {this.promise._rejectCallback(v, false);}
 
@@ -23667,12 +23680,10 @@ _dereq_("./synchronous_inspection")(Promise);
 _dereq_("./join")(
     Promise, PromiseArray, tryConvertToPromise, INTERNAL, async, getDomain);
 Promise.Promise = Promise;
-Promise.version = "3.5.4";
-_dereq_('./map.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
+Promise.version = "3.5.5";
 _dereq_('./call_get.js')(Promise);
-_dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext, INTERNAL, debug);
-_dereq_('./timers.js')(Promise, INTERNAL, debug);
 _dereq_('./generators.js')(Promise, apiRejection, INTERNAL, tryConvertToPromise, Proxyable, debug);
+_dereq_('./map.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
 _dereq_('./nodeify.js')(Promise);
 _dereq_('./promisify.js')(Promise, INTERNAL);
 _dereq_('./props.js')(Promise, PromiseArray, tryConvertToPromise, apiRejection);
@@ -23680,9 +23691,11 @@ _dereq_('./race.js')(Promise, INTERNAL, tryConvertToPromise, apiRejection);
 _dereq_('./reduce.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
 _dereq_('./settle.js')(Promise, PromiseArray, debug);
 _dereq_('./some.js')(Promise, PromiseArray, apiRejection);
-_dereq_('./filter.js')(Promise, INTERNAL);
-_dereq_('./each.js')(Promise, INTERNAL);
+_dereq_('./timers.js')(Promise, INTERNAL, debug);
+_dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext, INTERNAL, debug);
 _dereq_('./any.js')(Promise);
+_dereq_('./each.js')(Promise, INTERNAL);
+_dereq_('./filter.js')(Promise, INTERNAL);
                                                          
     util.toFastProperties(Promise);                                          
     util.toFastProperties(Promise.prototype);                                
@@ -24654,7 +24667,8 @@ if (util.isNode && typeof MutationObserver === "undefined") {
 } else if ((typeof MutationObserver !== "undefined") &&
           !(typeof window !== "undefined" &&
             window.navigator &&
-            (window.navigator.standalone || window.cordova))) {
+            (window.navigator.standalone || window.cordova)) &&
+          ("classList" in document.documentElement)) {
     schedule = (function() {
         var div = document.createElement("div");
         var opts = {attributes: true};
@@ -47503,6 +47517,22 @@ module.exports = function (element) {
     // function before passing them to `toLocaleString` for final formatting.
     var toLocaleStringRoundingWorks = false;
 
+    // `Intl.NumberFormat#format` is tested on plugin initialization.
+    // If the feature test passes, `intlNumberFormatRoundingWorks` will be set to
+    // `true` and the native function will be used to generate formatted output.
+    // If the feature test fails, either `Number#tolocaleString` (if
+    // `toLocaleStringWorks` is `true`), or the fallback format function internal
+    //  to this plugin will be used.
+    var intlNumberFormatWorks = false;
+
+    // `Intl.NumberFormat#format` rounds incorrectly for select numbers in Microsoft
+    // environments (Edge, IE11, Windows Phone) and possibly other environments.
+    // If the rounding test fails and `Intl.NumberFormat#format` will be used for
+    // formatting, the plugin will "pre-round" number values using the fallback number
+    // format function before passing them to `Intl.NumberFormat#format` for final
+    // formatting.
+    var intlNumberFormatRoundingWorks = false;
+
     // Token type names in order of descending magnitude.
     var types = "escape years months weeks days hours minutes seconds milliseconds general".split(" ");
 
@@ -47607,6 +47637,33 @@ module.exports = function (element) {
         return digitsArray.reverse().join("");
     }
 
+    // cachedNumberFormat
+    // Returns an `Intl.NumberFormat` instance for the given locale and configuration.
+    // On first use of a particular configuration, the instance is cached for fast
+    // repeat access.
+    function cachedNumberFormat(locale, options) {
+        // Create a sorted, stringified version of `options`
+        // for use as part of the cache key
+        var optionsString = map(
+            keys(options).sort(),
+            function(key) {
+                return key + ':' + options[key];
+            }
+        ).join(',');
+
+        // Set our cache key
+        var cacheKey = locale + '+' + optionsString;
+
+        // If we don't have this configuration cached, configure and cache it
+        if (!cachedNumberFormat.cache[cacheKey]) {
+            cachedNumberFormat.cache[cacheKey] = Intl.NumberFormat(locale, options);
+        }
+
+        // Return the cached version of this configuration
+        return cachedNumberFormat.cache[cacheKey];
+    }
+    cachedNumberFormat.cache = {};
+
     // formatNumber
     // Formats any number greater than or equal to zero using these options:
     // - userLocale
@@ -47619,8 +47676,8 @@ module.exports = function (element) {
     // - groupingSeparator
     // - decimalSeparator
     //
-    // `useToLocaleString` will use `toLocaleString` for formatting.
-    // `userLocale` option is passed through to `toLocaleString`.
+    // `useToLocaleString` will use `Intl.NumberFormat` or `toLocaleString` for formatting.
+    // `userLocale` option is passed through to the formatting function.
     // `fractionDigits` is passed through to `maximumFractionDigits` and `minimumFractionDigits`
     // Using `maximumSignificantDigits` will override `minimumIntegerDigits` and `fractionDigits`.
     function formatNumber(number, options, userLocale) {
@@ -47650,14 +47707,25 @@ module.exports = function (element) {
                 localeStringOptions.maximumSignificantDigits = maximumSignificantDigits;
             }
 
-            if (!toLocaleStringRoundingWorks) {
-                var roundingOptions = extend({}, options);
-                roundingOptions.useGrouping = false;
-                roundingOptions.decimalSeparator = ".";
-                number = parseFloat(formatNumber(number, roundingOptions), 10);
-            }
+            if (intlNumberFormatWorks) {
+                if (!intlNumberFormatRoundingWorks) {
+                    var roundingOptions = extend({}, options);
+                    roundingOptions.useGrouping = false;
+                    roundingOptions.decimalSeparator = ".";
+                    number = parseFloat(formatNumber(number, roundingOptions), 10);
+                }
 
-            return number.toLocaleString(userLocale, localeStringOptions);
+                return cachedNumberFormat(userLocale, localeStringOptions).format(number);
+            } else {
+                if (!toLocaleStringRoundingWorks) {
+                    var roundingOptions = extend({}, options);
+                    roundingOptions.useGrouping = false;
+                    roundingOptions.decimalSeparator = ".";
+                    number = parseFloat(formatNumber(number, roundingOptions), 10);
+                }
+
+                return number.toLocaleString(userLocale, localeStringOptions);
+            }
         }
 
         var numberString;
@@ -48073,8 +48141,8 @@ module.exports = function (element) {
         return false;
     }
 
-    function featureTestToLocaleStringRounding() {
-        return (3.55).toLocaleString("en", {
+    function featureTestFormatterRounding(formatter) {
+        return formatter(3.55, "en", {
             useGrouping: false,
             minimumIntegerDigits: 1,
             minimumFractionDigits: 1,
@@ -48082,37 +48150,33 @@ module.exports = function (element) {
         }) === "3.6";
     }
 
-    function featureTestToLocaleString() {
+    function featureTestFormatter(formatter) {
         var passed = true;
 
-        // Test locale.
-        passed = passed && toLocaleStringSupportsLocales();
-        if (!passed) { return false; }
-
         // Test minimumIntegerDigits.
-        passed = passed && (1).toLocaleString("en", { minimumIntegerDigits: 1 }) === "1";
-        passed = passed && (1).toLocaleString("en", { minimumIntegerDigits: 2 }) === "01";
-        passed = passed && (1).toLocaleString("en", { minimumIntegerDigits: 3 }) === "001";
+        passed = passed && formatter(1, "en", { minimumIntegerDigits: 1 }) === "1";
+        passed = passed && formatter(1, "en", { minimumIntegerDigits: 2 }) === "01";
+        passed = passed && formatter(1, "en", { minimumIntegerDigits: 3 }) === "001";
         if (!passed) { return false; }
 
         // Test maximumFractionDigits and minimumFractionDigits.
-        passed = passed && (99.99).toLocaleString("en", { maximumFractionDigits: 0, minimumFractionDigits: 0 }) === "100";
-        passed = passed && (99.99).toLocaleString("en", { maximumFractionDigits: 1, minimumFractionDigits: 1 }) === "100.0";
-        passed = passed && (99.99).toLocaleString("en", { maximumFractionDigits: 2, minimumFractionDigits: 2 }) === "99.99";
-        passed = passed && (99.99).toLocaleString("en", { maximumFractionDigits: 3, minimumFractionDigits: 3 }) === "99.990";
+        passed = passed && formatter(99.99, "en", { maximumFractionDigits: 0, minimumFractionDigits: 0 }) === "100";
+        passed = passed && formatter(99.99, "en", { maximumFractionDigits: 1, minimumFractionDigits: 1 }) === "100.0";
+        passed = passed && formatter(99.99, "en", { maximumFractionDigits: 2, minimumFractionDigits: 2 }) === "99.99";
+        passed = passed && formatter(99.99, "en", { maximumFractionDigits: 3, minimumFractionDigits: 3 }) === "99.990";
         if (!passed) { return false; }
 
         // Test maximumSignificantDigits.
-        passed = passed && (99.99).toLocaleString("en", { maximumSignificantDigits: 1 }) === "100";
-        passed = passed && (99.99).toLocaleString("en", { maximumSignificantDigits: 2 }) === "100";
-        passed = passed && (99.99).toLocaleString("en", { maximumSignificantDigits: 3 }) === "100";
-        passed = passed && (99.99).toLocaleString("en", { maximumSignificantDigits: 4 }) === "99.99";
-        passed = passed && (99.99).toLocaleString("en", { maximumSignificantDigits: 5 }) === "99.99";
+        passed = passed && formatter(99.99, "en", { maximumSignificantDigits: 1 }) === "100";
+        passed = passed && formatter(99.99, "en", { maximumSignificantDigits: 2 }) === "100";
+        passed = passed && formatter(99.99, "en", { maximumSignificantDigits: 3 }) === "100";
+        passed = passed && formatter(99.99, "en", { maximumSignificantDigits: 4 }) === "99.99";
+        passed = passed && formatter(99.99, "en", { maximumSignificantDigits: 5 }) === "99.99";
         if (!passed) { return false; }
 
         // Test grouping.
-        passed = passed && (1000).toLocaleString("en", { useGrouping: true }) === "1,000";
-        passed = passed && (1000).toLocaleString("en", { useGrouping: false }) === "1000";
+        passed = passed && formatter(1000, "en", { useGrouping: true }) === "1,000";
+        passed = passed && formatter(1000, "en", { useGrouping: false }) === "1000";
         if (!passed) { return false; }
 
         return true;
@@ -48351,7 +48415,7 @@ module.exports = function (element) {
         var decimalSeparator = settings.decimalSeparator;
         var grouping = settings.grouping;
 
-        useToLocaleString = useToLocaleString && toLocaleStringWorks;
+        useToLocaleString = useToLocaleString && (toLocaleStringWorks || intlNumberFormatWorks);
 
         // Trim options.
         var trim = settings.trim;
@@ -49120,8 +49184,22 @@ module.exports = function (element) {
     }
 
     // Run feature tests for `Number#toLocaleString`.
-    toLocaleStringWorks = featureTestToLocaleString();
-    toLocaleStringRoundingWorks = toLocaleStringWorks && featureTestToLocaleStringRounding();
+    var toLocaleStringFormatter = function(number, locale, options) {
+        return number.toLocaleString(locale, options);
+    };
+
+    toLocaleStringWorks = toLocaleStringSupportsLocales() && featureTestFormatter(toLocaleStringFormatter);
+    toLocaleStringRoundingWorks = toLocaleStringWorks && featureTestFormatterRounding(toLocaleStringFormatter);
+
+    // Run feature tests for `Intl.NumberFormat#format`.
+    var intlNumberFormatFormatter = function(number, locale, options) {
+        if (typeof window !== 'undefined' && window && window.Intl && window.Intl.NumberFormat) {
+            return window.Intl.NumberFormat(locale, options).format(number);
+        }
+    };
+
+    intlNumberFormatWorks = featureTestFormatter(intlNumberFormatFormatter);
+    intlNumberFormatRoundingWorks = intlNumberFormatWorks && featureTestFormatterRounding(intlNumberFormatFormatter);
 
     // Initialize duration format on the global moment instance.
     init(moment);
@@ -67302,432 +67380,6 @@ return ImagesLoaded;
 });
 
 ;
-/****************************************************************************
-	jquery-action-pan.js,
-
-	(c) 2017, FCOO
-
-	https://github.com/FCOO/jquery-action-pan
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($/*, window, document, undefined*/) {
-	"use strict";
-
-    //click-event to (try to) take care of ghost click
-    var actionPanIsPanningId = 'actionPan_is_panning_id';
-
-    $.fn.actionPan = function(options) {
-        options = $.extend( true, {}, $.fn.actionPan.defaults, options );
-        return this.each(function() {
-            $(this)._panaction_add( options );
-        });
-    };
-
-    $.fn.actionPanEnable = function(direction) {
-        return this._panaction_setOptions( direction, {enabled: true} );
-    };
-
-    $.fn.actionPanDisable = function(direction) {
-        return this._panaction_setOptions( direction, {enabled: false} );
-    };
-
-    $.fn.actionPanToggle = function(direction, state) {
-        if (typeof state !== "boolean")
-            state = !this._panaction_getOptions( direction ).enabled;
-        return this._panaction_setOptions( direction, {enabled: state} );
-    };
-
-    $.fn.actionPanIsPanning = function(){
-        return !!this.data(actionPanIsPanningId);
-    };
-
-    $.fn.actionPanReset = function(direction, checkForPan) {
-        if (!checkForPan || !this.actionPanIsPanning())
-            this._panaction_reset( direction, true );
-        return this;
-    };
-
-    $.fn.actionPanForce = function(direction, checkForPan){
-        if (!checkForPan || !this.actionPanIsPanning()){
-            this._panaction_panstart();
-            this._panaction_panend( null, direction );
-        }
-        return this;
-    };
-
-
-    // Plugin defaults � added as a property on our plugin function.
-    $.fn.actionPan.defaults = {
-        direction   : "down",       //'down', 'up', 'left' or 'right'
-        enabled     : true,
-        cssPrefix   : 'margin-',
-        cssPostfix  : '',           //'' (auto), 'left', 'right', 'top', 'bottom'
-        cssFactor   : 0,            //0 (auto), +1, -1
-        threshold   : .5,           //number <= 1 (0.3), number (200), string ("200px"), or function($element) return number: delta-value for css-property where action is fired
-        max         : 1,            //number <= 1 (0.3), number (200), string ("200px"), or function($element) return number: max-value for css-property
-
-        maxBeforeAction : true,     //Animate to max-value before calling action
-        resetAfterAction: true,     //Reset to start-value after action. NOTE: If resetAfterAction: false the element get disabled and can olny be panned after .actionPanEnable( direction ) is called
-
-        classNamePan        : '',   //Class added to the element when it is panning
-        classNameThreshold  : '',   //Class added to the element when it is panning AND value is above thresholdValue
-
-        shadows             : null, //jQuery-selection of element that gets same panning as the element
-
-        shadowClassNamePan        : '',   //Class added to the shadows when it is panning
-        shadowClassNameThreshold  : '',   //Class added to the shadows when it is panning AND value is above thresholdValue
-
-
-        onPan               : null, //function( $element, direction, delta, options, event ): called when the element is panned
-        action              : function(){}
-    };
-
-    var animateOptions = {
-            duration: 'fast',
-            easing  : 'swing',
-            queue   : false
-        },
-
-        directionDefault = {
-            down : {cssPostfix: 'top',  cssFactor: +1, hammerDirection: Hammer.DIRECTION_DOWN,  oppositeDirection: 'up',    },
-            up   : {cssPostfix: 'top',  cssFactor: -1, hammerDirection: Hammer.DIRECTION_UP,    oppositeDirection: 'down',  },
-            left : {cssPostfix: 'left', cssFactor: -1, hammerDirection: Hammer.DIRECTION_LEFT,  oppositeDirection: 'right', horizontal: true },
-            right: {cssPostfix: 'left', cssFactor: +1, hammerDirection: Hammer.DIRECTION_RIGHT, oppositeDirection: 'left',  horizontal: true },
-    };
-
-
-    //****************************************************
-    //_panaction_add( options )
-    //****************************************************
-    $.fn._panaction_add = function( options ){
-
-        //Prevent ghost click
-        this.on('click', function( event ){
-            if ( $(this).actionPanIsPanning() ){
-                event.preventDefault();
-                event.stopPropagation();
-                event.stopImmediatePropagation();
-                return false;
-            }
-        });
-
-
-        var def = directionDefault[options.direction];
-        options.cssPostfix        = options.cssPostfix || def.cssPostfix;
-        options.cssFactor         = options.cssFactor || def.cssFactor;
-        options.hammerDirection   = def.hammerDirection;
-        options.oppositeDirection = def.oppositeDirection;
-
-        //Create a string with all className (if any)
-        options.classNameAll = [options.classNamePan || '', options.classNameThreshold || ''].join(' ');
-        options.shadowClassNameAll = [options.shadowClassNamePan || '', options.shadowClassNameThreshold || ''].join(' ');
-
-        //Find the css-property to alter when panning
-        options.cssId = options.cssId || options.cssPrefix + options.cssPostfix;
-
-        //Only one direction pro element
-        if ( !this._panaction_getOptions(options.direction) ) {
-
-            //Mark if there are a pan in the opposite direction
-            if (this._panaction_getOptions(options.oppositeDirection)){
-                this._panaction_setOptions(options.direction, {bothDirections: true});
-                this._panaction_setOptions(options.oppositeDirection, {bothDirections: true});
-            }
-
-            this._panaction_setOptions(options.direction, options);
-
-            //Add events, but only once pro element
-            if (!this.data('panstart_and_panend_added'))
-                this
-                    .on('pan'+options.direction+'.panaction pan'+options.oppositeDirection+'.panaction', $.proxy(this._panaction_pan, this))
-                    .on('panstart.panaction', $.proxy(this._panaction_panstart, this))
-                    .on('panend.panaction',   $.proxy(this._panaction_panend, this))
-                    .data('panstart_and_panend_added', true);
-        }
-        return this;
-    };
-
-    $.fn._panaction_getOptions = function( direction ){
-        return this.data( 'paOptions-'+direction );
-    };
-
-    $.fn._panaction_setOptions = function( direction, options ){
-        var originalOptions = this._panaction_getOptions( direction );
-        this.data( 'paOptions-'+direction, $.extend({}, originalOptions, options) );
-        return this;
-    };
-
-
-    //****************************************************
-    //_panaction_reset( direction, forceBack )
-    //****************************************************
-    $.fn._panaction_reset = function( direction, forceBack ){
-        var properties = {},
-            options = this._panaction_getOptions( direction );
-
-        if (options){
-            if (forceBack || (options.enabled && (!options.aboveThreshold || options.resetAfterAction))){
-                //pan back to original state
-                properties[options.cssId] = options.startValue;
-
-                //Pan back the shadow
-                if (options.shadows)
-                    options.shadows.each(function(){
-                        var $shadow = $(this),
-                            shadowProerties = {};
-                        shadowProerties[options.cssId] = $shadow._panaction_getOptions( direction ).startValue;
-
-                        //Animate back to previous state
-                        $shadow.animate( shadowProerties, animateOptions );
-                    });
-            }
-
-            //Remove all pan-classes
-            this.removeClass( options.classNameAll );
-            if (options.shadows)
-                options.shadows.each(function(){
-                    $(this).removeClass( options.shadowClassNameAll );
-                });
-
-            //Animate back to previous state
-            this.animate( properties, animateOptions );
-        }
-        return this;
-    };
-
-    //****************************************************
-    //_panaction_panstart( event )
-    //****************************************************
-    $.fn._panaction_panstart = function( /*event*/ ){
-        var $this = this, options;
-        $this.data(actionPanIsPanningId, true);
-
-        //******************************************
-        function getValue(value, defaultValue, elemDim){
-            var result = $.isFunction(value) ? value($this, options) : value;
-            try {
-                result = parseFloat(result);
-            }
-            catch (e) {
-                result = defaultValue;
-            }
-            if (result <= 1)
-                result = result*elemDim;
-            return result;
-        }
-        //******************************************
-
-        $this.data('panaction_panstart_called', true);
-
-        $.each(['down', 'up', 'left', 'right'], function( index, direction ){
-            options = $this._panaction_getOptions( direction );
-
-            if (options && options.enabled){
-                //Calc the max and threshold for when the options.action is fired
-                var startValue     = parseFloat( $this.css(options.cssId) ),
-                    $elemToUse     = options.panOwner ? options.panOwner : $this,
-                    elemDim        = directionDefault[direction].horizontal ? $elemToUse.outerWidth() : $elemToUse.outerHeight(),
-                    thresholdValue = getValue(options.threshold, $.fn.actionPan.defaults.threshold, elemDim),
-                    maxValue       = getValue(options.max, $.fn.actionPan.defaults.max, elemDim);
-
-                //Calc total and threshold range
-                var range, thresholdRange;
-                if (options.cssFactor > 0){
-                    range = {
-                        min: startValue,
-                        max: startValue + maxValue
-                    };
-                    thresholdRange = {
-                        min: startValue + thresholdValue,
-                        max: range.max
-                    };
-                }
-                else {
-                    range = {
-                        min: startValue - maxValue,
-                        max: startValue
-                    };
-                    thresholdRange = {
-                        min: range.min,
-                        max: startValue - thresholdValue
-                    };
-                }
-
-                $this.addClass( options.classNamePan );
-                $this._panaction_setOptions( direction, {
-                    startValue    : startValue,
-                    value         : startValue,
-                    thresholdValue: thresholdValue,
-                    maxValue      : maxValue,
-                    range         : range,
-                    thresholdRange: thresholdRange,
-                    aboveThreshold: false
-                });
-
-                if (options.shadows)
-                    options.shadows.each(function(){
-                        var $shadow = $(this);
-                        $shadow.addClass( options.shadowClassNamePan );
-                        $shadow._panaction_setOptions( direction, { startValue: parseFloat( $shadow.css(options.cssId) ) } );
-                    });
-            }
-        });
-        return this;
-    };
-
-    //****************************************************
-    //_panaction_pan( event )
-    //****************************************************
-    $.fn._panaction_pan = function( event ){
-        var $this = this;
-        //Due to a bug in Hammer.js panstart isn't allways called if the previous pan was stop by 'force'
-        if (!$this.data('panaction_panstart_called'))
-            $this.trigger( 'panstart.panaction' );
-
-        $.each(['down', 'up', 'left', 'right'], function(index, direction ){
-            var options = $this._panaction_getOptions( direction );
-
-
-            if (options && options.enabled){
-                //Get the value of the css-property to use when panning
-                var deltaValue = options.hammerDirection & Hammer.DIRECTION_HORIZONTAL ? event.gesture.deltaX : event.gesture.deltaY,
-                    newValue   = options.startValue + deltaValue,
-                    range      = options.range;
-
-                //Adjust range if opposite pan exists and is enabled
-                var oppositeOptions = $this._panaction_getOptions( directionDefault[direction].oppositeDirection );
-                if (oppositeOptions && oppositeOptions.enabled){
-                    range.min = Math.min( range.min, oppositeOptions.range.min );
-                    range.max = Math.max( range.max, oppositeOptions.range.max );
-                }
-                newValue = Math.max( newValue, range.min );
-                newValue = Math.min( newValue, range.max );
-
-
-                $this._panaction_setOptions( direction, { value: newValue });
-                $this.css( options.cssId, newValue );
-
-                //Update deltaValue to 'real' value
-                deltaValue = newValue - options.startValue;
-
-                //Check if value is above thresholdValue
-                var aboveThreshold = ((newValue >= options.thresholdRange.min) && (newValue <= options.thresholdRange.max)),
-                    atMax = ((options.cssFactor > 0) && (newValue == options.range.max)) || ((options.cssFactor < 0) && (newValue == options.range.min));
-
-                $this.toggleClass( options.classNameThreshold, !!aboveThreshold );
-
-                $this._panaction_setOptions( direction, {
-                    atMax         : atMax,
-                    aboveThreshold: aboveThreshold
-                });
-
-                //Call onPan (if any)
-                if (options.onPan)
-                    options.onPan( $this, direction, newValue - options.startValue, options, event );
-
-                //Update all shadows (if any)
-                if (options.shadows)
-                    options.shadows.each(function(){
-                        var $shadow = $(this);
-
-                        $shadow.toggleClass( options.shadowClassNameThreshold, !!aboveThreshold );
-
-                        $shadow.css(
-                            options.cssId,
-                            $shadow._panaction_getOptions( direction ).startValue + deltaValue
-                        );
-                    });
-            } //end of if (options && options.enabled){
-        });
-        return this;
-    };
-
-    //****************************************************
-    //_panaction_panend( event, forceDirection )
-    //****************************************************
-    $.fn._panaction_panend = function( event, forceDirection ){
-        var $this = this,
-            actionFound = false;
-
-        $this.data('panaction_panstart_called', false);
-
-
-        $.each(['up', 'down', 'left', 'right'], function( index, direction ){
-            var options = $this._panaction_getOptions( direction );
-            if (options && options.enabled){
-
-                //Create function to reset and call action
-                var actionAndReset = function (){
-                    $this._panaction_reset( direction );
-
-                    if (options.action)
-                        options.action( $this, options );
-                };
-
-                //If a forceDirection is given: Use only this direction
-                if (forceDirection){
-                    if (direction == forceDirection){
-                        actionFound            = false;
-                        options.aboveThreshold = true;
-                        options.atMax          = false;
-                    }
-                    else
-                        actionFound = true;
-                }
-
-                if ( actionFound || (forceDirection && (direction != forceDirection)) ){
-                    //Remove all pan-classes
-                    $this.removeClass( options.classNameAll );
-                    if (options.shadows)
-                        options.shadows.each(function(){
-                            $(this).removeClass( options.shadowClassNameAll );
-                        });
-
-                    return true;
-                }
-
-                //Check if the value is above the threshold
-                if (options.aboveThreshold || (direction == forceDirection)){
-                    //Animate to max if not at max and need to
-                    if (options.maxBeforeAction && !options.atMax){
-                        //Animate to max and the fire action
-                        var properties = {},
-                            newValue   = options.cssFactor > 0 ? options.range.max : options.range.min,
-                            deltaValue = newValue - options.startValue;
-                        properties[options.cssId] = newValue;
-                        $this.animate( properties, $.extend({}, animateOptions, {always: actionAndReset}) );
-
-                        if (options.shadows)
-                            options.shadows.each(function(){
-                                var $shadow = $(this),
-                                    shadowProerties = {};
-                                shadowProerties[options.cssId] = $shadow._panaction_getOptions( direction ).startValue + deltaValue;
-                                $shadow.animate( shadowProerties, animateOptions );
-                            });
-
-                    }
-                    else
-                        //Just fire action
-                        actionAndReset();
-
-                    actionFound = true;
-                }
-                else
-                    //Reset the 'direction' if it is panned
-                    if ((options.value > options.range.min) && (options.value < options.range.max))
-                        $this._panaction_reset( direction );
-            }
-        });
-        window.setTimeout(function(){
-            $this.data(actionPanIsPanningId, false);
-        }, 200);
-        return this;
-    };
-
-}(jQuery, this, document));
-;
 ;/*! showdown v 1.9.0 - 10-11-2018 */
 (function(){
 /**
@@ -74063,13 +73715,13 @@ if (typeof define === 'function' && define.amd) {
   });
 }.call(this);
 ;
-/*! Raven.js 3.27.0 (200cffcc) | github.com/getsentry/raven-js */
+/*! Raven.js 3.27.2 (6d91db933) | github.com/getsentry/raven-js */
 
 /*
  * Includes TraceKit
  * https://github.com/getsentry/TraceKit
  *
- * Copyright (c) 2018 Sentry (https://sentry.io) and individual contributors.
+ * Copyright (c) 2019 Sentry (https://sentry.io) and individual contributors.
  * All rights reserved.
  * https://github.com/getsentry/sentry-javascript/blob/master/packages/raven-js/LICENSE
  *
@@ -74271,7 +73923,7 @@ Raven.prototype = {
   // webpack (using a build step causes webpack #1617). Grunt verifies that
   // this value matches package.json during build.
   //   See: https://github.com/getsentry/raven-js/issues/465
-  VERSION: '3.27.0',
+  VERSION: '3.27.2',
 
   debug: false,
 
@@ -76054,6 +75706,9 @@ Raven.prototype = {
     } else if (current.exception || last.exception) {
       // Exception interface (i.e. from captureException/onerror)
       return isSameException(current.exception, last.exception);
+    } else if (current.fingerprint || last.fingerprint) {
+      return Boolean(current.fingerprint && last.fingerprint) &&
+        JSON.stringify(current.fingerprint) === JSON.stringify(last.fingerprint)
     }
 
     return true;
@@ -77169,7 +76824,11 @@ var TraceKit = {
 var _window =
   typeof window !== 'undefined'
     ? window
-    : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+    : typeof global !== 'undefined'
+    ? global
+    : typeof self !== 'undefined'
+    ? self
+    : {};
 
 // global reference to slice
 var _slice = [].slice;
@@ -77422,11 +77081,14 @@ TraceKit.report = (function reportModuleWrapper() {
     // slow slow IE to see if onerror occurs or not before reporting
     // this exception; otherwise, we will end up with an incomplete
     // stack trace
-    setTimeout(function() {
-      if (lastException === ex) {
-        processLastException();
-      }
-    }, stack.incomplete ? 2000 : 0);
+    setTimeout(
+      function() {
+        if (lastException === ex) {
+          processLastException();
+        }
+      },
+      stack.incomplete ? 2000 : 0
+    );
 
     if (rethrow !== false) {
       throw ex; // re-throw to propagate to the top level (and cause window.onerror)
@@ -77541,7 +77203,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     var winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx(?:-web)|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i;
     // NOTE: blob urls are now supposed to always have an origin, therefore it's format
     // which is `blob:http://url/path/with-some-uuid`, is matched by `blob.*?:\/` as well
-    var gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|moz-extension).*?:\/.*?|\[native code\]|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i;
+    var gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|moz-extension).*?:\/.*?|\[native code\]|[^@]*(?:bundle|\d+\.js))(?::(\d+))?(?::(\d+))?\s*$/i;
     // Used to additionally parse URL/line/column from eval frames
     var geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i;
     var chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/;

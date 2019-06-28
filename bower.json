@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "6.1.2",
+  "version": "6.2.0",
   "homepage": "https://gitlab.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -49,9 +49,9 @@
     "imagesloaded": "desandro/imagesloaded#~4.1.1",
     "raven-js": "^3.19.0",
     "jquery-bootstrap": "fcoo/jquery-bootstrap#^1.45.0",
-    "jquery-action-pan": "fcoo/jquery-action-pan#^1.0.0",
     "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^1.0.0",
-    "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest"
+    "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",
+    "hammerjs": "^2.0.8"
   },
   "overrides": {
     "offline": {

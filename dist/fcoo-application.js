@@ -1,4 +1,61 @@
 /****************************************************************************
+fcoo-application-about.js
+
+Create and display "About FCOO" info and modal-box
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+	window.fcoo = window.fcoo || {};
+	var ns = window.fcoo,
+        aboutFCOOModal = null;
+
+
+    ns.aboutFCOO = function(){
+        if (!aboutFCOOModal){
+            //Create the modal-content
+
+            var $content = $('<div/>')
+                .addClass("_d-flex justify-content-center _flex-wrap about-fcoo")
+                .append(
+                    //Bar with title of application
+                    $('<div/>')
+                        .addClass('application-header fcoo-app-color fcoo-app-background')
+                        .i18n( ns.applicationHeader ),
+
+                    //FCOO logo
+                    $('<div/>').addClass('fcoo-logo'),
+
+                    //FCOO name and address and email and link
+                    $('<div/>')
+                        .append(
+                            $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
+                            $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
+                            $('<span/>').i18n({da:'', en:' - Denmark'}),
+                            '<br>',
+                            $('<a target="_blank">fcoo.dk</a>').i18n('link:fcoo', 'href'),
+                            ' - ',
+                            $('<a href="mailto:info@fcoo.dk" target="_top">info@fcoo.dk</a>')
+                        )
+                );
+
+            aboutFCOOModal = $.bsModal({
+                noHeader   : true,
+                flexWidth  : true,
+                scroll     : false,
+                content    : $content,
+                closeButton: false,
+                show       : false
+            });
+        }
+
+        aboutFCOOModal.show();
+    };
+}(jQuery, this, document));
+
+;
+/****************************************************************************
 	fcoo-application-top-menu.js
 
 	(c) 2017, FCOO
@@ -15,27 +72,20 @@ Create and manage the top-menu for FCOO web applications
 
     //Create fcoo-namespace
 	window.fcoo = window.fcoo || {};
-	var ns = window.fcoo,
-        $topMenu,
-        topMenuClass = {
-            normal  : 'top-menu-normal',
-            hidden  : 'top-menu-hidden',
-            extended: 'top-menu-extended'
-        },
-        topMenuState = 'normal';
+	var ns = window.fcoo;
 
-    var defaultTopMenuButtonOptions = {
-            transparent: true,
-            bigIcon    : true,
-            square     : true
-        };
+    var $topMenu;
 
     /**************************************************
     defaultTopMenuButton
     Create standard button for the top-menu
     **************************************************/
     function defaultTopMenuButton( options ){
-        options = $.extend({}, options, defaultTopMenuButtonOptions);
+        options = $.extend({}, options, {
+            transparent: true,
+            bigIcon    : true,
+            square     : true
+        });
         var $result = $.bsButton( options );
         if (options.title)
             $result.i18n(options.title, 'title');
@@ -66,10 +116,7 @@ Create and manage the top-menu for FCOO web applications
 
     //Class-name to be used to hide buttons when screen-width get to small - is set later
     var logoHideClassName = '',
-        headerHideClassName = '',
-
-        aboutFCOOHeaderShowClassName = ''; //Class-name for the header in about FCOO. Is 'opposite' of headerHideClassName to ensure that only header in top-menu or header in about FCOO is visible at the same time
-
+        headerHideClassName = '';
 
     /**********************************************
     topMenuElementList = list of options for elements in the top menu
@@ -90,14 +137,12 @@ Create and manage the top-menu for FCOO web applications
         {
             id: 'logo',
             create: function( /*elementOptions, menuOptions*/ ){
-                //FCOO logo with click to extende/diminish top-menu content
+                //FCOO logo with click to show "About FCOO"
                 return $('<a/>')
                             .addClass( 'icon-fcoo-app-logo' )
                             .addClass( logoHideClassName )
                             .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
-                            .on('click', function(){
-                                $topMenu.actionPanForce( topMenuState == 'normal' ? 'down' : 'up', true );
-                            });
+                            .on('click', ns.aboutFCOO);
             },
             exclude: true
         },
@@ -193,47 +238,27 @@ Create and manage the top-menu for FCOO web applications
         } ,options);
     });
 
-    /**********************************************
-    setTopMenuState( state )
-    **********************************************/
-    function setTopMenuState( state, noAction ){
-        if (state == topMenuState)
-            return;
-        var oldState = topMenuState;
-
-        $('body')
-            .removeClass(topMenuClass[oldState] )
-            .addClass( topMenuClass[state] );
-
-        topMenuState = state;
-
-        if (!noAction){
-            $topMenu.actionPanToggle( 'down', topMenuState != 'extended');
-            $topMenu.actionPanToggle( 'up',   topMenuState != 'hidden'  );
-        }
-    }
-
     /*******************************************
     createTopMenu = function( options )
     Create the top menu and return a object with
     the created element
     *******************************************/
     ns.createTopMenu = function( options ){
-        var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
+//HER        var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
         options = $.extend({}, {
             leftMenu : true,
             logo     : true,
 
-            //Get the application name from grunt.js
-            //Support both
-            //  { application: {name:"..."}} and
-            //  { application: {name_da:"...", name_en:"..."}}
-            //in the applications gruntfile.js
-            //header   : ns.getApplicationJSONOption( '{APPLICATION_NAME}', '{"da":"{APPLICATION_NAME_DA}", "en":"{APPLICATION_NAME_EN}"}'),
-            header   : {
-                da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
-                en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
-            },
+//HER            //Get the application name from grunt.js
+//HER            //Support both
+//HER            //  { application: {name:"..."}} and
+//HER            //  { application: {name_da:"...", name_en:"..."}}
+//HER            //in the applications gruntfile.js
+//HER            //header   : ns.getApplicationJSONOption( '{APPLICATION_NAME}', '{"da":"{APPLICATION_NAME_DA}", "en":"{APPLICATION_NAME_EN}"}'),
+//HER            header   : {
+//HER                da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
+//HER                en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
+//HER            },
             messages : null,
             warning  : null,
             search   : true,
@@ -243,66 +268,22 @@ Create and manage the top-menu for FCOO web applications
 
 
         var $body = $('body'),
-            $topMenuContainer,
-            $aboutFCOO,
-            $topBar,
             result = {};
 
-        //**************************************************
-        function topMenuHeight(){
-            return $topMenu.outerHeight();
-        }
-        //**************************************************
-        function aboutFCOOHeight(){
-            return $aboutFCOO.outerHeight();
-        }
-        //**************************************************
-
         //Container for all elements used in top-menu
-        result.topMenuContainer = $topMenuContainer =
+        var $topMenuContainer = result.topMenuContainer =
             $('<div/>')
-                .addClass("top-menu-container initialize")
+                .addClass("top-menu-container invisible")
                 .appendTo( $body );
 
-
-        //Contact info for FCOO
-        result.aboutFCOO = $aboutFCOO = $('<div/>')
-            .addClass("d-flex justify-content-center flex-wrap about-fcoo") //justify-content-around
-            .appendTo( $topMenuContainer );
-
-        //FCOO logo
-        $('<div/>')
-            .addClass('fcoo-logo')
-            .appendTo( $aboutFCOO );
-
-        //FCOO name and address and email and link
-        $('<div/>')
-            .append(
-                $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
-                $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
-                $('<span/>').i18n({da:'', en:' - Denmark'}),
-                '<br>',
-                $('<a target="_blank">fcoo.dk</a>').i18n('link:fcoo', 'href'),
-                ' - ',
-                $('<a href="mailto:info@fcoo.dk" target="_top">info@fcoo.dk</a>')
-            )
-            .appendTo( $aboutFCOO );
-
-        //Bar with title of application
-        var aboutFCOOHeader =
-            $('<div/>')
-                .addClass('header fcoo-app-color fcoo-app-background')
-                .i18n( options.header )
-                .appendTo( $aboutFCOO );
-
-
         //Create the menu-bar
-        result.topMenu = $topMenu = $('<nav/>')
+        $topMenu = result.topMenu = $('<nav/>')
                 .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu")
                 .prependTo( $topMenuContainer );
 
         //Create the bar to drag down the top-menu when it is hidden
-        result.topBar = $topBar = $('<div/>')
+/* Skal bruges senere til ny swip-bort
+        var $topBar = result.topBar = $('<div/>')
                     .addClass('top-bar fa fa-minus')
                     .appendTo( $topMenuContainer )
                     .actionPan({
@@ -319,30 +300,7 @@ Create and manage the top-menu for FCOO web applications
                     .on('swipedown click', function(){
                         $topBar.actionPanForce( 'down', true);
                     });
-
-        //actionPan for top-menu down
-        $topMenu.actionPan({
-            direction         : 'down',
-            shadows           : $aboutFCOO,
-            threshold         : 40,
-            max               : aboutFCOOHeight,
-            resetAfterAction  : false,
-            classNameThreshold: 'top-menu-threshold-down',
-            shadowClassNamePan: 'panning',
-            action            : function(){ setTopMenuState( topMenuState == 'normal' ? 'extended' : 'normal' ); }
-        });
-
-        //actionPan for top-menu up
-        $topMenu.actionPan({
-            direction         : 'up',
-            shadows           : $aboutFCOO,
-            threshold         : 0.25,
-            max               : function(){ return topMenuState == 'extended' ? aboutFCOOHeight() : topMenuHeight(); },
-            resetAfterAction  : false,
-            classNameThreshold: 'top-menu-threshold-up',
-            action            : function(){ setTopMenuState( topMenuState == 'extended' ? 'normal' : 'hidden' ); }
-        });
-
+*/
 
         //Count the number of buttons to decide the width of the screen where the header and/or the logo disappears
         var totalWidth = 0;
@@ -368,20 +326,15 @@ Create and manage the top-menu for FCOO web applications
         }
 
         //Set the minimum width of the visible header to 4 times a button and calculate the breakpoint for the header
-        //Find Class-name for the header in about FCOO. Is 'opposite' of headerHideClassName to ensure that only header in top-menu or header in about FCOO is visible at the same time
         headerHideClassName = '';
-        aboutFCOOHeaderShowClassName = '';
         minScreenWidth = minScreenWidth + 4 * 2.5 * 16;
         mqBreakpoint = 10000;
         $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
             if ((minMax.min == 0) && (minMax.max < mqBreakpoint) && (minMax.max > minScreenWidth)){
                 mqBreakpoint = minMax.max;
-//HER                headerHideClassName = 'hide-for-'+minMax.id;
                 headerHideClassName = 'invisible-for-'+minMax.id;
-                aboutFCOOHeaderShowClassName = 'show-for-'+minMax.id;
             }
         });
-        aboutFCOOHeader.addClass(aboutFCOOHeaderShowClassName);
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
         var firstRightSideFound = false;
@@ -403,55 +356,268 @@ Create and manage the top-menu for FCOO web applications
         });
 
         //Initialize
-        var newState = topMenuState,
-            count, topMenuH, aboutFCOOH;
-
         //Create init-function and use timeout  to wait for the browser to update DOM and get height of the top-menu
         function topMenuReady(){
-            var newTopMenuH   = topMenuHeight(),
-                newAboutFCOOH = aboutFCOOHeight();
-            if ((newTopMenuH <= 0) || (newAboutFCOOH <= 0) || (newTopMenuH != topMenuH) || (newAboutFCOOH != aboutFCOOH)){
-                topMenuH = newTopMenuH;
-                aboutFCOOH = newAboutFCOOH;
-                count--;
-                if (count){
-                    setTimeout( topMenuReady, 50 );
-                    return;
-                }
+            var topMenuH = $topMenu.outerHeight();
+            if (topMenuH <= 0){
+                setTimeout( topMenuReady, 50 );
+                return;
             }
 
-            if (!topMenuState){
-                //First time
-                $body.css('padding-top', newTopMenuH+'px');
-                $aboutFCOO.css('margin-top', newTopMenuH+'px');
-                setTopMenuState( newState, true );
-                $topMenuContainer.removeClass('initialize');
-            }
-
-            if (topMenuState == 'extended')
-                $topMenu.css('margin-top', aboutFCOOHeight());
-            else
-                $aboutFCOO.css('margin-top', -1*aboutFCOOHeight());
+            //Now the height of the yop-mernu is known
+            $body.css('padding-top', topMenuH+'px');
+            $topMenuContainer.removeClass('invisible');
         }
-
-        function onWindowResize(){
-            count      = 20;
-            topMenuH   = 0;
-            aboutFCOOH = 0;
-            topMenuReady();
-        }
-        $(window).on('resize.topmenu', onWindowResize);
-
-
-        //Initialize
-        topMenuState = '';
-        onWindowResize();
-
+        topMenuReady();
 
         return result;
 
     }; //end of createTopMenu
 }(jQuery, this, document));
+;
+/****************************************************************************
+fcoo-application-touch.js
+
+
+
+Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touch-Menu-Like-Android)
+
+****************************************************************************/
+
+(function ($, Hammer, window/*, document, undefined*/) {
+    "use strict";
+
+    var ns = window;
+
+    ns.TouchMenuLA = function (options) {
+        var self,
+            defaults,
+            menuClassName = '',
+            mask,
+            handle,
+            menuHammer,
+            maskHammer,
+            newPos = 0,
+            currentPos = 0,
+            startPoint = 0,
+            countStart = 0,
+            velocity = 0.0;
+
+        var TouchMenuLA = function () {
+            self = this;
+
+            defaults = {
+                width: 280,
+                zIndex: 99999,
+                disableSlide: false,
+                handleSize: 20,
+                disableMask: false,
+                maxMaskOpacity: 0.5
+            };
+
+            this.isVisible = false;
+
+            this.initialize();
+        };
+
+        TouchMenuLA.prototype.setDefaultsOptions = function () {
+            for (var key in defaults) {
+                if (!options[key]) {
+                    options[key] = defaults[key];
+                }
+            }
+        };
+
+        TouchMenuLA.prototype.initElements = function () {
+            options.target.style.zIndex = options.zIndex;
+            options.target.style./*width*/height = options.width + 'px';
+            options.target.style./*left*/top = -options.width + 'px';
+
+            handle = document.createElement('div');
+            handle.className = "tmla-handle";
+            handle.style./*width*/height = options.handleSize + 'px';
+            handle.style./*right*/bottom = -options.handleSize + 'px';
+
+            options.target.appendChild(handle);
+
+            if (!options.disableMask) {
+                mask = document.createElement('div');
+                mask.className = 'tmla-mask';
+                document.body.appendChild(mask);
+
+                maskHammer = new Hammer(mask, null);
+            }
+        };
+
+        TouchMenuLA.prototype.touchStartMenu = function () {
+            menuHammer.on('panstart panmove', function (ev) {
+                newPos = currentPos + ev./*deltaX*/deltaY;
+                self.changeMenuPos();
+                velocity = Math.abs(ev.velocity);
+            });
+        };
+
+        TouchMenuLA.prototype.animateToPosition = function (pos) {
+            options.target.style.transform = 'translate3d(' + pos + 'px, 0, 0)';
+            options.target.style.WebkitTransform = 'translate3d(' + pos + 'px, 0, 0)';
+            options.target.style.MozTransform = 'translate3d(' + pos + 'px, 0, 0)';
+
+        };
+
+        TouchMenuLA.prototype.changeMenuPos = function () {
+            if (newPos <= options.width) {
+                options.target.className = menuClassName + ' tmla-menu';
+                this.animateToPosition(newPos);
+
+                if (!options.disableMask) {
+                    this.setMaskOpacity(newPos);
+                }
+            }
+        };
+
+        TouchMenuLA.prototype.setMaskOpacity = function (newMenuPos) {
+            var opacity = parseFloat((newMenuPos / options.width) * options.maxMaskOpacity);
+
+            mask.style.opacity = opacity;
+
+            if (opacity === 0) {
+                mask.style.zIndex = -1;
+            } else {
+                mask.style.zIndex = options.zIndex - 1;
+            }
+        };
+
+        TouchMenuLA.prototype.touchEndMenu = function () {
+            menuHammer.on('panend pancancel', function (ev) {
+                currentPos = ev.deltaX;
+                self.checkMenuState(ev./*deltaX*/deltaY);
+            });
+        };
+
+        TouchMenuLA.prototype.eventStartMask = function () {
+            maskHammer.on('panstart panmove', function (ev) {
+                if (ev.center./*x*/y <= options.width && self.isVisible) {
+                    countStart++;
+
+                    if (countStart == 1) {
+                        startPoint = ev./*deltaX*/deltaY;
+                    }
+
+                    if (ev./*deltaX*/deltaY < 0) {
+                        newPos = (ev./*deltaX*/deltaY - startPoint) + options.width;
+                        self.changeMenuPos();
+                        velocity = Math.abs(ev.velocity);
+                    }
+                }
+            });
+        };
+
+        TouchMenuLA.prototype.eventEndMask = function () {
+            maskHammer.on('panend pancancel', function (ev) {
+                self.checkMenuState(ev./*deltaX*/deltaY);
+                countStart = 0;
+            });
+        };
+
+        TouchMenuLA.prototype.clickMaskClose = function () {
+            mask.addEventListener('click', function () {
+                self.close();
+            });
+        };
+
+        TouchMenuLA.prototype.checkMenuState = function (deltaX) {
+            if (velocity >= 1.0) {
+                if (deltaX >= 0) {
+                    self.open();
+                } else {
+                    self.close();
+                }
+            } else {
+                if (newPos >= 100) {
+                    self.open();
+                } else {
+                    self.close();
+                }
+            }
+        };
+
+        TouchMenuLA.prototype.open = function () {
+            options.target.className = menuClassName + " tmla-menu opened";
+            this.animateToPosition(options.width);
+
+            currentPos = options.width;
+            this.isVisible = true;
+
+            self.showMask();
+            self.invoke(options.onOpen);
+        };
+
+        TouchMenuLA.prototype.close = function () {
+            options.target.className = menuClassName + " tmla-menu closed";
+            currentPos = 0;
+            self.isVisible = false;
+
+            self.hideMask();
+            self.invoke(options.onClose);
+        };
+
+        TouchMenuLA.prototype.toggle = function () {
+            if (self.isVisible) {
+                self.close();
+            } else {
+                self.open();
+            }
+        };
+
+        TouchMenuLA.prototype.showMask = function () {
+            mask.className = "tmla-mask transition";
+            mask.style.opacity = options.maxMaskOpacity;
+            mask.style.zIndex = options.zIndex - 1;
+        };
+
+        TouchMenuLA.prototype.hideMask = function () {
+            mask.className = "tmla-mask transition";
+            mask.style.opacity = 0;
+            mask.style.zIndex = -1;
+        };
+
+        TouchMenuLA.prototype.setMenuClassName = function () {
+            menuClassName = options.target.className;
+        };
+
+        TouchMenuLA.prototype.invoke = function (fn) {
+            if (fn) {
+                fn.apply(self);
+            }
+        };
+
+        TouchMenuLA.prototype.initialize = function () {
+            if (options.target) {
+                menuHammer = Hammer(options.target, null);
+
+                self.setDefaultsOptions();
+                self.setMenuClassName();
+                self.initElements();
+
+                if (!options.disableSlide) {
+                    self.touchStartMenu();
+                    self.touchEndMenu();
+                    self.eventStartMask();
+                    self.eventEndMask();
+                }
+
+                if (!options.disableMask) {
+                    self.clickMaskClose();
+                }
+            } else {
+                //console.error('TouchMenuLA: The option \'target\' is required.');
+            }
+        };
+
+        return new TouchMenuLA();
+    };
+
+}(jQuery, this.Hammer, this, document));
 ;
 /****************************************************************************
 	fcoo-application.js,
@@ -550,6 +716,19 @@ Sections:
     //Getting the application-id
     ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
     ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null);
+
+    //Get the application name from grunt.js
+    //Support both
+    //  { application: {name:"..."}} and
+    //  { application: {name_da:"...", name_en:"..."}}
+    //in the applications gruntfile.js
+    //header   : ns.getApplicationJSONOption( '{APPLICATION_NAME}', '{"da":"{APPLICATION_NAME_DA}", "en":"{APPLICATION_NAME_EN}"}'),
+    var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
+    ns.applicationHeader = {
+        da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
+        en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
+    };
+
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true

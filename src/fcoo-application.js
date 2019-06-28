@@ -96,6 +96,19 @@ Sections:
     ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
     ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null);
 
+    //Get the application name from grunt.js
+    //Support both
+    //  { application: {name:"..."}} and
+    //  { application: {name_da:"...", name_en:"..."}}
+    //in the applications gruntfile.js
+    //header   : ns.getApplicationJSONOption( '{APPLICATION_NAME}', '{"da":"{APPLICATION_NAME_DA}", "en":"{APPLICATION_NAME_EN}"}'),
+    var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
+    ns.applicationHeader = {
+        da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
+        en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
+    };
+
+
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
     ns.localStorageKey     = 'fcoo_' + ns.applicationId;
