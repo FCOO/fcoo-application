@@ -21,11 +21,12 @@ body {
     height  : -webkit-calc(100% - 0px); //To fix issues with "100vh" in Safari
     position: fixed;
 
-    transition: padding-top .15s ease-in-out;
-
-    .main-container {
-        width : 100%;
-        height: 100%;
-        background-color: gray;
+    .outer-container, .main-container {
+        position: absolute;
+        top     : 0;
+        left    : 0;
+        right   : 0;
+        bottom  : 0;
     }
 }
+

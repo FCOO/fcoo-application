@@ -1,4 +1,4 @@
-/*****************************************************
+    /*****************************************************
 TOP-MENU
 
 Style for top menu and items (logo, buttons etc)
@@ -12,146 +12,114 @@ Style for top menu and items (logo, buttons etc)
 top-menu is like Bootstrap navbar but to avoid
 confussions another name is used
 ***************************************************/
-body {
-    //When top-menu is hidden body expand to top
-    &.top-menu-hidden {
-        padding-top: 0 !important;
-    }
-}
 
-//All elements inside .top-menu-container get same position and opacity
-.top-menu-container > * {
-    position  : fixed;
-    top       : 0;
-    right     : 0;
-    left      : 0;
-    z-index   : $zindex-fixed;
-    opacity   : 1;
-    transition: opacity .15s ease-in-out;
-    cursor: default;
-}
+.top-menu-container {
 
-.top-menu {
-
-    margin-top: 0px;
-    padding   : $content-padding-x-sm;
-
-    font-size: $font-size-sm;
-    @include text-shadow();
-
-    .touchevents & {
-        font-size: $font-size-base;
-    }
-
-    @extend .fcoo-app-background;
-    @extend .fcoo-app-color;
-
-
+    //All elements inside .top-menu-container get same position and opacity
     > * {
-        flex-shrink: 0;
-        flex-grow  : 0;
+        position  : fixed;
+        top       : 0;
+        right     : 0;
+        left      : 0;
+        z-index   : $zindex-fixed;
+        opacity   : 1;
+        transition: opacity .15s ease-in-out;
+        cursor: default;
     }
 
-    > *:not(:first-child):not(.right-side) {
-        margin-left: $content-padding-x-sm !important;
+    .top-menu {
+        margin-top: 0px;
+        padding   : $content-padding-x-sm; //Same as .vertical-pre-menu in _touch-menu.scss
+
+        font-size: $font-size-sm;
+        @include text-shadow();
+
         .touchevents & {
-            margin-left: $content-padding-x !important;
+            font-size: $font-size-base;
         }
-    }
 
-    .left-side {
-        margin-right: auto !important;
-    }
-    .right-side {
-        margin-left: auto !important;
-    }
+        @extend .fcoo-app-background;
+        @extend .fcoo-app-color;
 
 
-    //FCOO-logo inside top menu get fixed size and hover effect
-    .icon-fcoo-app-logo {
-        padding    : 0;
-        margin     : 0;
-        line-height: .5;
+        .top-menu-element-show { display: initial; }
+        .top-menu-element-hide { display: none; }
 
-        opacity    : 0.8;
-        .touchevents & {
-            opacity: 1;
+        > .top-menu-item {
+            flex-shrink: 0;
+            flex-grow  : 0;
         }
-        @include hover-focus {
-            opacity: 1;
-        }
-        font-size: 4em;
-    }
 
-    //The header is the only element that shrink and grow on resize
-    .header {
-        flex-shrink: 1;
-        flex-grow  : 1;
-        text-align : center;
-        font-size  : 1.5em;
-        line-height: 1.5;
-        @include text-truncate();
-
-        margin-right: $content-padding-x-sm;
-        .touchevents & {
-            margin-right: $content-padding-x;
-        }
-    }
-
-    //form and input for search. Input have no round border to the right. The search-button have no round border to the left when the input is vissible
-    .form-inline {
-        .form-control {
-
-            padding: $input-padding-y-sm $input-padding-x-sm; //Same padding for 'normal' and 'small'
-
-            border-bottom-right-radius: 0;
-            border-top-right-radius   : 0;
-            border-right              : none;
-            width: 6rem;
-
-            .small-up & {
-                width: 10rem;
-            }
-            .xsmall-land-down & {
-                display: none;
-            }
-
-            .no-xsmall-land-down & + .btn {
-                border-left: none;
-                border-bottom-left-radius: 0;
-                border-top-left-radius   : 0;
+        > .top-menu-item:not(:first-child) {
+            margin-left: $content-padding-x-sm !important;
+            .touchevents & {
+                margin-left: $content-padding-x !important;
             }
         }
-    }
-} //end of .top-menu
 
-//.top-bar = the bar to drag down the top-menu when it is hidden
-.top-bar {
-    $width: 3rem;
-    position   : absolute;
-    top        : 0;
-    left       : 50%;
-    width      : $width;
-    margin-left: -0.5*$width;
-    display    : none;
-    opacity    : 0;
-    font-size  : 2rem;
-    text-align : center;
-    line-height: 0.7;
-    color      : $gray-800;
-    @include text-shadow( rgba(255, 255,255,.5) );
+        .left-side {
+            margin-right: auto !important;
+        }
+        .right-side {
+            margin-left: auto !important;
+        }
 
-    background-color: transparent;
-    .top-menu-hidden & {
-        display: block;
-        opacity: 1;
-    }
-}
+        //FCOO-logo inside top menu get fixed size and hover effect
+        .icon-fcoo-app-logo {
+            padding    : 0;
+            margin     : 0;
+            line-height: .5;
 
+            opacity    : 0.8;
+            .touchevents & {
+                opacity: 1;
+            }
+            @include hover-focus {
+                opacity: 1;
+            }
+            font-size: 4em;
+        }
+
+        //The header is the only element that shrink and grow on resize
+        .top-menu-header {
+            flex-shrink: 1;
+            flex-grow  : 1;
+            text-align : center;
+            font-size  : 1.5em;
+            line-height: 1.5;
+            @include text-truncate();
+
+            &.top-menu-element-hide {
+                display   : block;
+                visibility: hidden;
+            }
+        }
+
+        //form and input for search. Input have no round border to the right. The search-button have no round border to the left when the input is vissible
+        .form-inline {
+            .form-control {
+                padding: $input-padding-y-sm $input-padding-x-sm; //Same padding for 'normal' and 'small'
+
+                border-bottom-right-radius: 0;
+                border-top-right-radius   : 0;
+                border-right              : none;
+                width: 6rem;
+                .small-up & {
+                    width: 10rem;
+                }
+
+                &.top-menu-element-show + .btn {
+                    border-left: none;
+                    border-bottom-left-radius: 0;
+                    border-top-left-radius   : 0;
+                }
+            }
+        }
+    } //end of .top-menu
+}//end of .top-menu-content
 
 //Create display-style for modernizr test all-read used in buttons for message-groups
 a.all-read    .hide-for-all-read,
 a.no-all-read .show-for-all-read {
     opacity: 0 !important;
 }
-

@@ -17,7 +17,7 @@ Create and display "About FCOO" info and modal-box
             //Create the modal-content
 
             var $content = $('<div/>')
-                .addClass("_d-flex justify-content-center _flex-wrap about-fcoo")
+                .addClass("about-fcoo")
                 .append(
                     //Bar with title of application
                     $('<div/>')

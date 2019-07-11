@@ -8,6 +8,8 @@
 
 
 ************************************************/
+/* stylelint-disable order/properties-alphabetical-order */
+/* stylelint-enable */
 /***************************************************
 Import Bootstrap variables and variables and the
 adjustments to Bootstrap from fcoo/jquery-bootstrap
@@ -70,6 +72,16 @@ Using same font-size and vertical/horizontal padding as buttons
 /************************************************************
 MARGIN-BOTTOM
 All elements in modal-windows get same margin-bottom
+************************************************************/
+/************************************************************
+COLOR
+
+background-color and text-color for
+headers modal, popover, tables, buttons, list-items etc.
+
+"$header-" is used for header to modal-windows and popover
+"$title-" is used for headers on content - table, accordion etc.
+"$control-" is used for buttons, list-items etc.
 ************************************************************/
 /************************************************************
 MIXIN
@@ -200,16 +212,16 @@ fcoo-app-background = background-color = application background-color
 .icon-fcoo-app-logo {
   color: {APPLICATION_FAVICONCOLOR} !important; }
 
-.fcoo-color, .fcoo-app-color, .top-menu {
+.fcoo-color, .fcoo-app-color, .top-menu-container .top-menu {
   color: white; }
 
-.fcoo-app-color, .top-menu {
+.fcoo-app-color, .top-menu-container .top-menu {
   color: {APPLICATION_FAVICONCOLOR} !important; }
 
-.fcoo-background, .fcoo-app-background, .top-menu {
+.fcoo-background, .fcoo-app-background, .top-menu-container .top-menu {
   background-color: #214b87; }
 
-.fcoo-app-background, .top-menu {
+.fcoo-app-background, .top-menu-container .top-menu {
   background-color: {APPLICATION_COLOR} !important; }
 
 /**********************************************************
@@ -357,12 +369,13 @@ body {
   margin: 0;
   width: -webkit-calc(100% - 0px);
   height: -webkit-calc(100% - 0px);
-  position: fixed;
-  transition: padding-top .15s ease-in-out; }
-  body .main-container {
-    width: 100%;
-    height: 100%;
-    background-color: gray; }
+  position: fixed; }
+  body .outer-container, body .main-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
 
 /*****************************************************
 Style for top menu
@@ -376,9 +389,6 @@ Style for top menu and items (logo, buttons etc)
 top-menu is like Bootstrap navbar but to avoid
 confussions another name is used
 ***************************************************/
-body.top-menu-hidden {
-  padding-top: 0 !important; }
-
 .top-menu-container > * {
   position: fixed;
   top: 0;
@@ -389,35 +399,39 @@ body.top-menu-hidden {
   transition: opacity .15s ease-in-out;
   cursor: default; }
 
-.top-menu {
+.top-menu-container .top-menu {
   margin-top: 0px;
   padding: 0.25rem;
   font-size: 0.8125rem;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
-  .touchevents .top-menu {
+  .touchevents .top-menu-container .top-menu {
     font-size: 1rem; }
-  .top-menu > * {
+  .top-menu-container .top-menu .top-menu-element-show {
+    display: initial; }
+  .top-menu-container .top-menu .top-menu-element-hide {
+    display: none; }
+  .top-menu-container .top-menu > .top-menu-item {
     flex-shrink: 0;
     flex-grow: 0; }
-  .top-menu > *:not(:first-child):not(.right-side) {
+  .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
     margin-left: 0.25rem !important; }
-    .touchevents .top-menu > *:not(:first-child):not(.right-side) {
+    .touchevents .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
       margin-left: 0.3125rem !important; }
-  .top-menu .left-side {
+  .top-menu-container .top-menu .left-side {
     margin-right: auto !important; }
-  .top-menu .right-side {
+  .top-menu-container .top-menu .right-side {
     margin-left: auto !important; }
-  .top-menu .icon-fcoo-app-logo {
+  .top-menu-container .top-menu .icon-fcoo-app-logo {
     padding: 0;
     margin: 0;
     line-height: .5;
     opacity: 0.8;
     font-size: 4em; }
-    .touchevents .top-menu .icon-fcoo-app-logo {
+    .touchevents .top-menu-container .top-menu .icon-fcoo-app-logo {
       opacity: 1; }
-    .top-menu .icon-fcoo-app-logo:hover, .top-menu .icon-fcoo-app-logo:focus {
+    .top-menu-container .top-menu .icon-fcoo-app-logo:hover, .top-menu-container .top-menu .icon-fcoo-app-logo:focus {
       opacity: 1; }
-  .top-menu .header {
+  .top-menu-container .top-menu .top-menu-header {
     flex-shrink: 1;
     flex-grow: 1;
     text-align: center;
@@ -425,42 +439,22 @@ body.top-menu-hidden {
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-right: 0.25rem; }
-    .touchevents .top-menu .header {
-      margin-right: 0.3125rem; }
-  .top-menu .form-inline .form-control {
+    white-space: nowrap; }
+    .top-menu-container .top-menu .top-menu-header.top-menu-element-hide {
+      display: block;
+      visibility: hidden; }
+  .top-menu-container .top-menu .form-inline .form-control {
     padding: 0.25rem 0.25rem;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
     border-right: none;
     width: 6rem; }
-    .small-up .top-menu .form-inline .form-control {
+    .small-up .top-menu-container .top-menu .form-inline .form-control {
       width: 10rem; }
-    .xsmall-land-down .top-menu .form-inline .form-control {
-      display: none; }
-    .no-xsmall-land-down .top-menu .form-inline .form-control + .btn {
+    .top-menu-container .top-menu .form-inline .form-control.top-menu-element-show + .btn {
       border-left: none;
       border-bottom-left-radius: 0;
       border-top-left-radius: 0; }
-
-.top-bar {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 3rem;
-  margin-left: -1.5rem;
-  display: none;
-  opacity: 0;
-  font-size: 2rem;
-  text-align: center;
-  line-height: 0.7;
-  color: #343a40;
-  text-shadow: -1px 0 rgba(255, 255, 255, 0.5), 0 1px rgba(255, 255, 255, 0.5), 1px 0 rgba(255, 255, 255, 0.5), 0 -1px rgba(255, 255, 255, 0.5);
-  background-color: transparent; }
-  .top-menu-hidden .top-bar {
-    display: block;
-    opacity: 1; }
 
 a.all-read .hide-for-all-read,
 a.no-all-read .show-for-all-read {
@@ -476,9 +470,6 @@ Created with csshake and modified to have interval between
 animations and to apply to button even when no-hover
 
 *****************************************************/
-.top-menu .btn i.far, .top-menu .btn i.fas {
-  transform-origin: center center; }
-
 .top-menu .btn.shake-constant i.far, .top-menu .btn.shake-constant i.fas {
   animation-name: shake-little;
   animation-duration: 10000ms;
@@ -677,6 +668,99 @@ Style for 'About FCOO' modal-content
     background-size: contain; }
 
 /*****************************************************
+Style for touch menus
+*****************************************************/
+/*****************************************************
+TOUCH-MENU
+
+Style for touch-menus at the left, right, top and bottom edge
+*****************************************************/
+/*
+Two modes:
+    side: Touch menu side-by-side with content
+    over: Touch menu over content
+*/
+.touch-menu-container {
+  position: absolute;
+  background-color: #fff; }
+  .touch-menu-container.left {
+    border-right: 1px solid #868e96; }
+  .touch-menu-container.right {
+    border-left: 1px solid #868e96; }
+  .touch-menu-container.top {
+    border-bottom: 1px solid #868e96; }
+  .touch-menu-container.bottom {
+    border-top: 1px solid #868e96; }
+  .touch-menu-container.mode-over {
+    z-index: 1044; }
+    .touch-menu-container.mode-over.closed {
+      z-index: 1038; }
+    .touch-menu-container.mode-over:not(.closed) {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5); }
+  .touch-menu-container.mode-side {
+    z-index: 1038; }
+  .touch-menu-container.opened {
+    transition-property: transform !important;
+    transition-duration: 0.3s !important;
+    transition-timing-function: ease-out !important; }
+    .touch-menu-container.opened.no-animation {
+      transition: none !important; }
+  .touch-menu-container.closed {
+    transition-property: transform, z-index !important;
+    transition-duration: 0.3s !important;
+    transition-timing-function: ease-out !important;
+    transform: none !important; }
+    .touch-menu-container.closed.no-animation {
+      transition: none !important; }
+
+.touch-menu-handle {
+  position: absolute; }
+  .touch-menu-handle.left {
+    left: 0; }
+  .touch-menu-handle.right {
+    right: 0; }
+  .touch-menu-handle.top {
+    top: 0; }
+  .touch-menu-handle.bottom {
+    bottom: 0; }
+  .touch-menu-handle.hide-when-open.opened, .touch-menu-handle.hide-when-open.closing {
+    display: none; }
+
+.touch-menu-mask {
+  position: absolute;
+  opacity: 0.0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #000; }
+  .touch-menu-mask.opened, .touch-menu-mask.closed {
+    transition: opacity 0.3s ease-out; }
+  .touch-menu-mask.visible {
+    z-index: 1043; }
+
+.top-bar {
+  font-size: 2rem;
+  text-align: center;
+  line-height: 0.7;
+  color: #343a40;
+  text-shadow: -1px 0 rgba(255, 255, 255, 0.5), 0 1px rgba(255, 255, 255, 0.5), 1px 0 rgba(255, 255, 255, 0.5), 0 -1px rgba(255, 255, 255, 0.5);
+  background-color: transparent; }
+
+.vertical-pre-menu {
+  border-bottom: 1px solid #868e96;
+  background-color: #f2f2f2;
+  padding: 0.25rem; }
+
+.neighbour-container {
+  transition-property: margin-left, margin-right, margin-top, margin-bottom !important;
+  transition-duration: 0.3s !important;
+  transition-timing-function: ease-out !important; }
+  .neighbour-container.no-animation {
+    transition-duration: 0s !important; }
+
+/*****************************************************
 Create classes invisible-for-XX a la hide-for-XX using
 the break-points defined in fcoo-modernizr-mediaquery-device
 *****************************************************/
@@ -720,46 +804,3 @@ This is fixed by overwriting the last size with "inherit"
 */
 .fa-inside-circle.fa-inside-circle {
   font-size: inherit; }
-
-.touch-menu-la {
-    width: 100%; //280px;
-    height: 280px; //100%;
-    position: absolute;
-    top: -280px; //0;
-    left: 0; //-280px;
-    background-color: #FFF;
-}
-
-    .touch-menu-la .tmla-handle {
-        position: absolute;
-        /* right: -20px; */
-        top: 0;
-        /* width: 20px; */
-        height: 100%;
-    }
-
-    .touch-menu-la.opened {
-        transition: all 0.3s ease-out !important;
-        -webkit-transition: all 0.3s ease-out !important;
-        -moz-transition: all 0.3s ease-out !important;
-    }
-
-    .touch-menu-la.closed {
-        transition: all 0.3s ease-out !important;
-        -webkit-transition: all 0.3s ease-out !important;
-        -moz-transition: all 0.3s ease-out !important;
-        transform: none !important;
-        -webkit-transform: none !important;
-        -moz-transform: none !important;
-    }
-
-.tmla-mask {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: red; //#000;
-    opacity: 1; //0.0;
-    z-index: -1;
-}

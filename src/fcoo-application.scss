@@ -33,6 +33,7 @@ adjustments to Bootstrap from fcoo/jquery-bootstrap
 @import "../bower_components/bootstrap/scss/mixins";
 
 @import "../bower_components/jquery-bootstrap/src/variables";
+@import "../bower_components/jquery-bootstrap/src/color";
 @import "../bower_components/jquery-bootstrap/src/mixins";
 
 
@@ -81,6 +82,11 @@ Style for top menu
 Style for 'About FCOO'
 *****************************************************/
 @import "about";
+
+/*****************************************************
+Style for touch menus
+*****************************************************/
+@import "touch-menu";
 
 /*****************************************************
 Create classes invisible-for-XX a la hide-for-XX using

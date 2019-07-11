@@ -3,15 +3,31 @@
 <head>
 	<title>fcoo.dk - fcoo-application</title>
 	<meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta http-equiv='x-dns-prefetch-control' content='on'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv='x-dns-prefetch-control' content='on'>
 
 	<meta name='copyright' content='FCOO'>
 	<meta name='owner' content='FCOO'>
 
-  <link  href="bower_components.css" rel="stylesheet">
-  <link  href="../src/fcoo-application.css" rel="stylesheet">
-  <link  href="../src/touch-menu-la.css" rel="stylesheet">
+    <link  href="bower_components.css" rel="stylesheet">
+    <link  href="../src/fcoo-application.css" rel="stylesheet">
+    <style>
+        /* Test */
+
+        body {
+//            background-color: gray;
+        }
+
+        .main-container {
+            background-color: yellow;//gray;
+//            border: 10px solid red;
+        }
+
+        .touch-menu-handle {
+            background-color: green;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -20,37 +36,24 @@
         <div class="logo fcoo-app-color"></div>
     </div>
 
-	<div id="menu" class="touch-menu-la">
-    HER ER JEG :-)
-    </div>
-
-
-    <div class="main-container">
-        <select id="theSelect" style="width:200px"></select><br>
-        <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>
-        <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>
-        <button onClick="modalDemo();">Modal demo</button><br><br>
-        <button onClick="notyDemo();">Noty demo</button><br><br>
-
-        <div class="show-for-mouse">Vises kun, hvis der er en mus</div>
-    </div>
 
     <script src="bower_components.js"></script>
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
+
+    <script src="../src/fcoo-application-main.js"></script>
+
     <script src="../src/fcoo-application-top-menu.js"></script>
+
     <script src="../src/fcoo-application-touch.js"></script>
+
     <script src="../src/fcoo-application-about.js"></script>
     <script src="../src/fcoo-application.js"></script>
 
 
 	<script>
-	    var TouchMenu = TouchMenuLA({
-		    target: document.getElementById('menu')
-	    });
-
-
         var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
 
+/*
         var $select = $('#theSelect');
         var optionList = [
             { da: 'Dette er nummer ET', en:'This is number ONE'},
@@ -74,6 +77,7 @@
                             .appendTo($select);
 
         }
+*/
 
         function modalDemo(){
             $.bsModal({
@@ -122,46 +126,91 @@
 
         }
 
+        function setModeOver(menu){
+//HER            menu.close(true);
+            menu.setMode(true);
+        };
+        function setModeSide(menu){
+//HER            menu.close(true);
+            menu.setMode(false);
+
+        };
+
+        var main;
         $(function() {
-            var topMenu =
-                window.fcoo.createTopMenu({
-                    //search: false,
-                    help: {
-                        url: 'data/help.json data/about_fcoo.json'
+            main = window.fcoo.createMain({
+                    mainContainerAsHandleContainer: true,
+                    minMainWidth: 456,
+                    topMenu: {
+                        //search: false,
+                        help: {
+                            url: 'data/help.json data/about_fcoo.json'
+                        },
+                        messages: {
+                            url: 'data/info.json'
+                        },
+                        warning: {
+                            url: 'data/oceanforecast_warning.json',
+//                            reloadPeriod: 'PT5S',
+                        },
                     },
-                    messages: {
-                        url: 'data/info.json'
+                    leftMenu  : {
+                        width: 321
                     },
-                    warning: {
-                        url: 'data/oceanforecast_warning.json',
-//                        reloadPeriod: 'PT5S',
-                    },
-                    //rightMenu: false,
-                });
-
-//console.log(topMenu);
-
-            $('.main-container').on('click', function( event ){
-                if (event.target === this){
-                    colorIndex = (colorIndex+1) % colors.length;
-                    $('.top-menu').css('background-color', colors[colorIndex]);
-                }
+                    rightMenu : {},
+                    bottomMenu: {
+                        height : 120,
+                        handleWidth: 456,
+                        handleHeight: 40,
+                        toggleOnHandleClick: true,
+                        hideHandleWhenOpen: true
+                    }
             });
+
+            main.leftMenu.$menu
+//HER                .css('background-color', 'pink')
+                .append($('<button onClick="modalDemo();">Modal demo</button>'))
+                .append($('<button onClick="setModeSide(main.leftMenu);">setMode(false)</button>'))
+                .append($('<button onClick="setModeOver(main.leftMenu);">setMode(true)</button>'));
+
+            main.bottomMenu.$menu
+//HER                .css('background-color', 'aqua')
+
+            main.rightMenu.$menu
+//HER                .css('background-color', 'brown')
+                .append('Start<br>1<br>2<br>1<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>slut');
+
+
+            $('<select id="theSelect" style="width:200px"></select><br>'+
+            '<button onClick="fcoo.settings.set("language", "da");"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>'+
+            '<button onClick="fcoo.settings.set("language", "en");"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>'+
+            '<button onClick="modalDemo();">Modal demo</button><br><br>'+
+            '<button onClick="notyDemo();">Noty demo</button><br><br>'+
+            '<div class="show-for-mouse">Vises kun, hvis der er en mus</div>').appendTo(main.$mainContainer);
+
+
 /*
-        function w( str ){
-            document.body.innerHTML = document.body.innerHTML + '<br>' + str;
-        }
-        w(fcoo.localStorageExists  ? 'localStorage exists' : 'localStorage NOT exists');
+    <div id="touchMenuLeft">LEFT MENU</div>
+    <div class="outer-container">
+	    <div id="touchMenuTop">TOP MENU</div>
+        <div class="main-container">
+            <select id="theSelect" style="width:200px"></select><br>
+            <button onClick="fcoo.settings.set('language', 'da');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>
+            <button onClick="fcoo.settings.set('language', 'en');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>
+            <button onClick="modalDemo();">Modal demo</button><br><br>
+            <button onClick="notyDemo();">Noty demo</button><br><br>
 
-        w('localStorage.getItem("niels_test")="' + localStorage.getItem('niels_test') + '"');
-
-        localStorage.setItem("niels_test", "Saved  "+ (new Date()).toString());
-        w('localStorage.setItem("niels_test", "Saved  "+ (new Date()).toString());');
-
-
-        w('localStorage.getItem("niels_test")="' + localStorage.getItem('niels_test') + '"');
+            <div class="show-for-mouse">Vises kun, hvis der er en mus</div>
+        </div>
+        <div id="touchMenuBottom">BOTTOM MENU<button>En knap</button></div>
+    </div>
+    <div id="touchMenuRight">RIGHT MENU</div>
 
 */
+
+
+
+
 
         });
 

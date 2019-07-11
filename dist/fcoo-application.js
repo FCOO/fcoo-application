@@ -17,7 +17,7 @@ Create and display "About FCOO" info and modal-box
             //Create the modal-content
 
             var $content = $('<div/>')
-                .addClass("_d-flex justify-content-center _flex-wrap about-fcoo")
+                .addClass("about-fcoo")
                 .append(
                     //Bar with title of application
                     $('<div/>')
@@ -56,6 +56,217 @@ Create and display "About FCOO" info and modal-box
 
 ;
 /****************************************************************************
+	fcoo-application-main.js
+
+	(c) 2017, FCOO
+
+	https://gitlab.com/fcoo/fcoo-application
+	https://gitlab.com/fcoo
+
+Create and manage the main structure for FCOO web applications
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+	window.fcoo = window.fcoo || {};
+	var ns = window.fcoo,
+        $body = $('body');
+
+    /*****************************************************************
+    createMain = function( options )
+    Create the main structure return a object with the created element
+    ******************************************************************/
+    ns.createMain = function( options ){
+        options = $.extend({}, {
+            $mainContainer     : null,
+            mainContainerAsHandleContainer: false,
+            maxMenuWidthPercent: 0.5, //Max total width of open menus when change to mode over
+            minMainWidth       : 0,   //Min width of main-container when menu(s) are open
+            globalModeOver     : false
+        }, options );
+
+        var result = {
+                menus  : [],
+                options: options
+            },
+            //Container for all elements used in top-menu
+            $outerContainer = result.$outerContainer =
+                $('<div/>')
+                    .addClass("outer-container"),
+
+            $mainContainer = result.$mainContainer = result.options.$mainContainer || $('<div/>'),
+            $leftAndRightHandleContainer =
+                result.options.$handleContainer ? options.$handleContainer :
+                result.options.mainContainerAsHandleContainer ? $mainContainer :
+                null;
+
+        $mainContainer.addClass("main-container");
+
+        //Append left-menu (if any)
+        if (result.options.leftMenu){
+            result.leftMenu = ns.touchMenu( $.extend({}, result.options.leftMenu, {
+                position           : 'left',
+                $neighbourContainer: $outerContainer,
+                preMenuClassName   : 'vertical-pre-menu',
+                hideHandleWhenOpen : true,
+                $handleContainer   : $leftAndRightHandleContainer,
+                multiMode          : true,
+            }));
+            $body.append( result.leftMenu.$container );
+            result.menus.push(result.leftMenu);
+        }
+
+        //Append the outer container
+        $outerContainer.appendTo( $body );
+
+        //Create and append top-menu (if any)
+        if (result.options.topMenu){
+            var topMenuOptions = $.extend({}, result.options.topMenu, {
+                    leftMenu : !!result.options.leftMenu,
+                    rightMenu: !!result.options.rightMenu
+                });
+
+            result.topMenuObject = ns.createTopMenu( topMenuOptions );
+            $outerContainer.append( result.topMenuObject.$container );
+
+            result.topMenu = ns.touchMenu({
+                position           : 'top',
+                height             : result.topMenuObject.$menu.outerHeight(),
+                $neighbourContainer: $mainContainer,
+                $container         : result.topMenuObject.$menu,
+                $menu              : false,
+                isOpen             : true,
+                handleWidth        : 3*16,
+                handleClassName    : 'top-bar top-bar fa fa-minus',
+                toggleOnHandleClick: true,
+                hideHandleWhenOpen : true,
+            });
+            result.menus.push(result.topMenu);
+        }
+
+        //Append main-container to outer-container
+        $outerContainer.append( $mainContainer );
+
+        //Create and append bottom-menu (if any)
+        if (result.options.bottomMenu){
+            result.bottomMenu = ns.touchMenu( $.extend({}, result.options.bottomMenu, {
+                position           : 'bottom',
+                $neighbourContainer: $mainContainer
+            }));
+            $outerContainer.append( result.bottomMenu.$container );
+            result.menus.push(result.bottomMenu);
+        }
+
+        //Create and append right-menu (if any). It appear as a box
+        if (result.options.rightMenu){
+            result.rightMenu = ns.touchMenu( $.extend({}, result.options.rightMenu, {
+                position           : 'right',
+                $neighbourContainer: $outerContainer,
+                preMenuClassName   : 'vertical-pre-menu',
+                hideHandleWhenOpen : true,
+                $handleContainer   : $leftAndRightHandleContainer,
+                multiMode          : true,
+            }));
+            $body.append( result.rightMenu.$container );
+            result.menus.push(result.rightMenu);
+        }
+
+        //Create close-button in left and right pre-menu
+        var iconPrefix = 'fa-chevron-';
+        //OR var iconPrefix = 'fa-chevron-circle-';
+        //OR var iconPrefix = 'fa-arrow-';
+        function setHeightAndCreateCloseButton(side, className){
+            var menu = result[side+'Menu'];
+            if (menu){
+                $.bsButton({
+                    bigIcon: true,
+                    square : true,
+                    icon   : iconPrefix + side,
+                    onClick: menu.close,
+                    context: menu
+                })
+                    .addClass(className)
+                    .appendTo(menu.$preMenu);
+
+                menu.$preMenu.addClass('d-flex');
+            }
+        }
+        setHeightAndCreateCloseButton('left', '');
+        setHeightAndCreateCloseButton('right', 'ml-auto');
+
+
+        //Toggle left and right-menu on click
+        if (result.options.leftMenu)
+            result.topMenuObject.leftMenu.on('click', $.proxy(result.leftMenu.toggle, result.leftMenu));
+
+        if (result.options.rightMenu)
+            result.topMenuObject.rightMenu.on('click', $.proxy(result.rightMenu.toggle, result.rightMenu));
+
+        //If application has left-menu and/or right-menu: Set up event to change between mode=side and mode=over
+        if (result.options.leftMenu || result.options.rightMenu){
+            result.totalOpenMenuWidth = 0;
+            result.maxSingleMenuWidth = 0;
+
+            if (result.options.leftMenu)
+                result.maxSingleMenuWidth = Math.max(result.maxSingleMenuWidth, result.leftMenu.options.menuDimAndSize.size);
+
+            if (result.options.rightMenu){
+                result.rightMenu._onOpen = _onOpen;
+                result.maxSingleMenuWidth = Math.max(result.maxSingleMenuWidth, result.rightMenu.options.menuDimAndSize.size);
+            }
+
+            //Left and right points to each other
+            if (result.options.leftMenu && result.options.rightMenu){
+                result.totalMenuWidth = result.leftMenu.options.menuDimAndSize.size + result.rightMenu.options.menuDimAndSize.size;
+
+                var _onOpen = $.proxy(menu_onOpen, result);
+                result.leftMenu._onOpen = _onOpen;
+                result.leftMenu.theOtherMenu = result.rightMenu;
+
+                result.rightMenu._onOpen = _onOpen;
+                result.rightMenu.theOtherMenu = result.leftMenu;
+            }
+
+            result.onBodyResize = onBodyResize;
+            $body.resize( $.proxy(onBodyResize, result) );
+            result.onBodyResize();
+        }
+
+        return result;
+    }; //end of createMain
+
+    function menu_onOpen(menu){
+        this.lastOpenedMenu = menu;
+        this.onBodyResize();
+    }
+
+    function onBodyResize(){
+        if (this.isResizing) return;
+
+        var bodyWidth = $body.width(),
+            maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
+            newModeIsOver = this.maxSingleMenuWidth >=  maxTotalMenuWidthAllowed,
+            //Find last opened menu if there are two oen menus
+            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? this.lastOpenedMenu.theOtherMenu : null;
+
+        this.isResizing = true;
+        this.options.globalModeOver = newModeIsOver;
+        if (this.leftMenu)  this.leftMenu.setMode ( newModeIsOver );
+        if (this.rightMenu) this.rightMenu.setMode( newModeIsOver );
+        this.isResizing = false;
+
+
+        //If both menus are open and mode == over or nor sspace for both => close the menu first opened
+        if (firstOpenedMenu && (newModeIsOver || (this.totalMenuWidth > maxTotalMenuWidthAllowed)))
+            firstOpenedMenu.close();
+
+    }
+}(jQuery, this, document));
+;
+/****************************************************************************
 	fcoo-application-top-menu.js
 
 	(c) 2017, FCOO
@@ -74,33 +285,39 @@ Create and manage the top-menu for FCOO web applications
 	window.fcoo = window.fcoo || {};
 	var ns = window.fcoo;
 
-    var $topMenu;
-
     /**************************************************
     defaultTopMenuButton
     Create standard button for the top-menu
     **************************************************/
-    function defaultTopMenuButton( options ){
+    function defaultTopMenuButton( $menu, options ){
         options = $.extend({}, options, {
             transparent: true,
             bigIcon    : true,
-            square     : true
+            square     : true,
         });
         var $result = $.bsButton( options );
         if (options.title)
             $result.i18n(options.title, 'title');
+        $result.addClass('top-menu-item');
         return $result;
     }
 
+    function defaultAddToElementList( $element, elementList, priority, minWidth ){
+        elementList.push({
+            $element: $element,
+            minWidth: minWidth || 0,
+            priority: priority
+        });
+    }
 
     /**************************************************
-    messageGroupTopMenuButton( allReadIcon, notAllReadIcon )
+    messageGroupTopMenuButton( $menu, allReadIcon, notAllReadIcon )
     Create a button used for message-groups
     The button contains two icons:
         allReadIcon   : displayed when all messages are read
         notAllReadIcon: displayed when one or more message is unread
     **************************************************/
-    function messageGroupTopMenuButton( allReadIcon, notAllReadIcon ){
+    function messageGroupTopMenuButton( $menu, allReadIcon, notAllReadIcon ){
         var iconList = [];
         function addIcon( icon, className ){
             icon = $.isArray(icon) ? icon : [icon];
@@ -110,13 +327,8 @@ Create and manage the top-menu for FCOO web applications
         }
         addIcon(allReadIcon,     'show-for-all-read');
         addIcon(notAllReadIcon , 'hide-for-all-read');
-        return defaultTopMenuButton( {icon: [iconList]} ).addClass('all-read'); //all-read: Default no new message
+        return defaultTopMenuButton($menu, {icon: [iconList]} ).addClass('all-read'); //all-read: Default no new message
     }
-
-
-    //Class-name to be used to hide buttons when screen-width get to small - is set later
-    var logoHideClassName = '',
-        headerHideClassName = '';
 
     /**********************************************
     topMenuElementList = list of options for elements in the top menu
@@ -126,47 +338,50 @@ Create and manage the top-menu for FCOO web applications
         exclude  : true/false - if true the button is not included in claculation of the total width
         title    : null - title for the button
         icon     : null - icon-class for the button
-        create   : function(elementOptions, menuOptions) create and return $element. - function to create the button
+        create   : function($menu, elementOptions, menuOptions) create and return $element. - function to create the button
     **********************************************/
     var topMenuElementList = [
         {
-            id: 'leftMenu',
-            icon:'fa-bars'
+            id      : 'leftMenu',
+            icon    :'fa-bars',
+            priority: 0
         },
+
         //***************************************************************
         {
             id: 'logo',
-            create: function( /*elementOptions, menuOptions*/ ){
+            create: function( /*$menu, elementOptions, menuOptions*/ ){
                 //FCOO logo with click to show "About FCOO"
                 return $('<a/>')
-                            .addClass( 'icon-fcoo-app-logo' )
-                            .addClass( logoHideClassName )
+                            .addClass( 'icon-fcoo-app-logo top-menu-item' )
                             .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
                             .on('click', ns.aboutFCOO);
             },
+            priority : 5,
             exclude: true
         },
 
         //***************************************************************
         {
             id: 'header',
-            create: function( elementOptions, menuOptions ){
+            create: function( $menu, elementOptions, menuOptions ){
                 return $('<div/>')
-                           .addClass('text-nowrap header')
-                           .addClass(headerHideClassName)
+                           .addClass('text-nowrap top-menu-item top-menu-header')
                            .i18n( menuOptions );
             },
-            exclude: true
+            priority: 7,
+            minWidth: 200,
+            exclude : true
         },
 
         //***************************************************************
         {
             id: 'search',
-            create: function( /*elementOptions, menuOptions*/ ){
+            create: function( $menu /*, elementOptions, menuOptions*/ ){
                 var $element =
                     $('<form onsubmit="return false;"/>')
-                        .addClass('form-inline')
-                        .appendTo($topMenu),
+                        .addClass('form-inline top-menu-item')
+                        .appendTo($menu),
                     $inputGroup =
                         $('<div/>')
                             .addClass('input-group')
@@ -177,9 +392,13 @@ Create and manage the top-menu for FCOO web applications
                     .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
                     .appendTo( $inputGroup );
 
-                defaultTopMenuButton({ icon:'fa-search' })
+                defaultTopMenuButton($menu, { icon:'fa-search' })
                     .appendTo( $inputGroup );
                 return $element;
+            },
+            addToElementList: function( $element, elementList ){
+                defaultAddToElementList( $element.find('input'), elementList, 6 );
+                defaultAddToElementList( $element.find('.btn'),  elementList, 3 );
             },
             rightSide: true
         },
@@ -187,40 +406,43 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'warning',
-            create: function( elementOptions, menuOptions ){
+            create: function( $menu, elementOptions, menuOptions ){
                 //Create yellow warning square by overlaying two icons
                 var iconClass = 'fa-exclamation-square';
-                var $result = messageGroupTopMenuButton('far ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
+                var $result = messageGroupTopMenuButton($menu, 'far ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
 
                 //Create message-group with warnings
                 ns.createFCOOMessageGroup( 'warning', menuOptions, $result );
                 return $result;
             },
+            priority : 1,
             rightSide: true
         },
 
         //***************************************************************
         {
             id: 'messages',
-            create: function( elementOptions, menuOptions ){
-                var $result = messageGroupTopMenuButton('far fa-envelope', 'fas fa-envelope');
+            create: function( $menu, elementOptions, menuOptions ){
+                var $result = messageGroupTopMenuButton($menu, 'far fa-envelope', 'fas fa-envelope');
                 //Create message-group with info
                 ns.createFCOOMessageGroup( 'info', menuOptions, $result );
                 return $result;
             },
+            priority : 2,
             rightSide: true
         },
 
         //***************************************************************
         {
             id: 'help',
-            create: function( elementOptions, menuOptions ){
-                var $result = defaultTopMenuButton({icon: 'far fa-question-circle'});
+            create: function( $menu, elementOptions, menuOptions ){
+                var $result = defaultTopMenuButton($menu, {icon: 'far fa-question-circle'});
 
                 //Create message-group with help
                 ns.createFCOOMessageGroup( 'help', menuOptions, $result );
                 return $result;
             },
+            priority : 4,
             rightSide: true
         },
 
@@ -228,37 +450,87 @@ Create and manage the top-menu for FCOO web applications
         {
             id: 'rightMenu',
             icon:'far fa-list',
+            priority : 0,
             rightSide: true
         }
 
     ].map( function( options ){
         return $.extend({}, {
             //Default options
-            create: defaultTopMenuButton
+            create          : defaultTopMenuButton,
+            addToElementList: defaultAddToElementList,
+            priority        : 0,
         } ,options);
     });
 
-    /*******************************************
+    var topMenuPrototype = {
+        /*****************************************************************
+        calculateElementSize = function()
+        Calculate the total width of the elements for each of the priority
+        ******************************************************************/
+        calculateElementSize: function (){
+            this.elementsWidthFound = true;
+            var allFound = true;
+            $.each( this.elementList, function(index, elementInfo){
+                elementInfo.width = elementInfo.minWidth || elementInfo.$element.outerWidth(true)+6 || 0; //6 = extra space to prevent flicking
+                if (!elementInfo.width)
+                    allFound = false;
+            });
+            if (allFound){
+                //Calculate the totalWidth for each of the priory
+                var priorityWidth = this.priorityWidth = [0,0,0,0,0,0,0,0,0,0];
+
+                $.each( this.elementList, function(index, elementInfo){
+                    priorityWidth[elementInfo.priority] += elementInfo.width;
+                });
+
+                var totalWidth = 0;
+                for (var i=0; i<priorityWidth.length; i++){
+                    totalWidth = totalWidth + priorityWidth[i];
+                    priorityWidth[i] = totalWidth;
+                }
+
+                this.elementsWidthFound = true;
+                this.onResize();
+            }
+            else
+                setTimeout( $.proxy(this.calculateElementSize, this), 50 );
+        },
+
+        /*****************************************************************
+        onResize = function()
+        Called on topMenu-object when the size of the container is changed
+        Recalculate and adjust the number of visible elements
+        ******************************************************************/
+        onResize: function(){
+            if (!this.elementsWidthFound)
+                return;
+
+            var maxPriority = 0,
+                containerWidth = this.$container.width();
+            $.each( this.priorityWidth, function(priority, width){
+                if (width <= containerWidth)
+                    maxPriority = priority;
+            });
+
+            $.each( this.elementList, function(index, elementInfo){
+                var show = (elementInfo.priority <= maxPriority);
+                elementInfo.$element
+                    .toggleClass('top-menu-element-show', show)
+                    .toggleClass('top-menu-element-hide', !show);
+            });
+        }
+    };
+
+    /*****************************************************************
     createTopMenu = function( options )
-    Create the top menu and return a object with
-    the created element
-    *******************************************/
+    Create the top menu and return a object with the created element
+    ******************************************************************/
     ns.createTopMenu = function( options ){
-//HER        var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
         options = $.extend({}, {
             leftMenu : true,
             logo     : true,
-
-//HER            //Get the application name from grunt.js
-//HER            //Support both
-//HER            //  { application: {name:"..."}} and
-//HER            //  { application: {name_da:"...", name_en:"..."}}
-//HER            //in the applications gruntfile.js
-//HER            //header   : ns.getApplicationJSONOption( '{APPLICATION_NAME}', '{"da":"{APPLICATION_NAME_DA}", "en":"{APPLICATION_NAME_EN}"}'),
-//HER            header   : {
-//HER                da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
-//HER                en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
-//HER            },
+            header   : ns.applicationHeader,
             messages : null,
             warning  : null,
             search   : true,
@@ -266,75 +538,26 @@ Create and manage the top-menu for FCOO web applications
             rightMenu: true
         }, options );
 
+        var result = {
+                elementsWidthFound: false
+            };
+        $.extend(result, topMenuPrototype);
 
-        var $body = $('body'),
-            result = {};
+        /*
+        elementList = []{$element, width, priority}
+        List of the meta-data for the different element on the emnu.
+        'width' is in 'relative' units: 1 equals one button
+        'priority' is 0-9 where 0 is higest priority => will become hidden after priority 1
+        */
+        var elementList = result.elementList = [];
 
         //Container for all elements used in top-menu
-        var $topMenuContainer = result.topMenuContainer =
-            $('<div/>')
-                .addClass("top-menu-container invisible")
-                .appendTo( $body );
+        var $container = result.$container = $('<div/>').addClass("top-menu-container");
 
         //Create the menu-bar
-        $topMenu = result.topMenu = $('<nav/>')
+        var $menu = result.$menu = $('<nav/>')
                 .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu")
-                .prependTo( $topMenuContainer );
-
-        //Create the bar to drag down the top-menu when it is hidden
-/* Skal bruges senere til ny swip-bort
-        var $topBar = result.topBar = $('<div/>')
-                    .addClass('top-bar fa fa-minus')
-                    .appendTo( $topMenuContainer )
-                    .actionPan({
-                        direction       : 'down',
-                        max             : topMenuHeight,
-                        threshold       : topMenuHeight()/2,
-                        resetAfterAction: false,
-                        shadows         : $('.top-menu, .about-fcoo'),
-                        action          : function(){
-                                              $topBar.css('margin-top', 0);
-                                              setTopMenuState('normal');
-                                          }
-                    })
-                    .on('swipedown click', function(){
-                        $topBar.actionPanForce( 'down', true);
-                    });
-*/
-
-        //Count the number of buttons to decide the width of the screen where the header and/or the logo disappears
-        var totalWidth = 0;
-        $.each( topMenuElementList, function( index, elementOptions ){
-            if (options[elementOptions.id]){
-                if (!elementOptions.exclude)
-                    totalWidth++;
-            }
-        });
-
-        //Very rough estimate of max width where there is enuogh space to show the logo
-        var minScreenWidth = (totalWidth + 2) * 2.5 * 16; //1=extra 2=width of logo
-        logoHideClassName = '';
-        if (minScreenWidth > 200){
-            //Find the smallest mediaQuery breakpoint larger than minScreenWidth
-            var mqBreakpoint = 10000;
-            $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
-                if ((minMax.min == 0) && (minMax.max <= mqBreakpoint) && (minMax.max >= minScreenWidth)){
-                    mqBreakpoint = minMax.max;
-                    logoHideClassName = 'hide-for-'+minMax.id;
-                }
-            });
-        }
-
-        //Set the minimum width of the visible header to 4 times a button and calculate the breakpoint for the header
-        headerHideClassName = '';
-        minScreenWidth = minScreenWidth + 4 * 2.5 * 16;
-        mqBreakpoint = 10000;
-        $.each( ns.modernizrMediaquery.minMaxRatioList, function( index, minMax ){
-            if ((minMax.min == 0) && (minMax.max < mqBreakpoint) && (minMax.max > minScreenWidth)){
-                mqBreakpoint = minMax.max;
-                headerHideClassName = 'invisible-for-'+minMax.id;
-            }
-        });
+                .prependTo( $container );
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
         var firstRightSideFound = false;
@@ -343,42 +566,32 @@ Create and manage the top-menu for FCOO web applications
             if (!menuOptions)
                 return true;
 
-            var $element = elementOptions.create( elementOptions, menuOptions );
+            var $element = elementOptions.create( $menu, elementOptions, menuOptions );
             if ($element){
                 result[elementOptions.id] = $element;
-                $element.appendTo( $topMenu );
+                $element.appendTo( $menu );
                 if ((!firstRightSideFound) && elementOptions.rightSide){
                     $element.addClass('right-side');
                     firstRightSideFound = true;
                 }
+                elementOptions.addToElementList( $element, elementList, elementOptions.priority, elementOptions.minWidth);
             }
-
         });
 
-        //Initialize
-        //Create init-function and use timeout  to wait for the browser to update DOM and get height of the top-menu
-        function topMenuReady(){
-            var topMenuH = $topMenu.outerHeight();
-            if (topMenuH <= 0){
-                setTimeout( topMenuReady, 50 );
-                return;
-            }
+        //Add onResize-event
+        result.$container.resize( $.proxy(result.onResize, result) );
 
-            //Now the height of the yop-mernu is known
-            $body.css('padding-top', topMenuH+'px');
-            $topMenuContainer.removeClass('invisible');
-        }
-        topMenuReady();
+        var onResizeFunc = $.proxy(result.calculateElementSize, result);
+        $('body').resize( onResizeFunc );
+
+        onResizeFunc();
 
         return result;
-
     }; //end of createTopMenu
 }(jQuery, this, document));
 ;
 /****************************************************************************
 fcoo-application-touch.js
-
-
 
 Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touch-Menu-Like-Android)
 
@@ -387,234 +600,401 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 (function ($, Hammer, window/*, document, undefined*/) {
     "use strict";
 
-    var ns = window;
+    //Create fcoo-namespace
+    window.fcoo = window.fcoo || {};
+    var ns = window.fcoo;
 
-    ns.TouchMenuLA = function (options) {
-        var self,
-            defaults,
-            menuClassName = '',
-            mask,
-            handle,
-            menuHammer,
-            maskHammer,
-            newPos = 0,
-            currentPos = 0,
-            startPoint = 0,
-            countStart = 0,
-            velocity = 0.0;
+    var maxMaskOpacity = 0.5; //Equal $modal-backdrop-opacity in \bower_components\bootstrap\scss\_variables.scss
 
-        var TouchMenuLA = function () {
-            self = this;
+    ns.TouchMenu = function (options) {
+        this.newPos     = 0;
+        this.currentPos = 0;
+        this.startPoint = 0;
+        this.countStart = 0;
+        this.velocity   = 0.0;
 
-            defaults = {
-                width: 280,
-                zIndex: 99999,
-                disableSlide: false,
-                handleSize: 20,
-                disableMask: false,
-                maxMaskOpacity: 0.5
-            };
+        this.isOpen = false;
 
-            this.isVisible = false;
+        this.options = $.extend({
+            //Default options
+            position     : 'left',
+            modeOver     : false,
+            multiMode    : false,
+            menuClassName: '',
+            isOpen       : false,
 
-            this.initialize();
-        };
+            handleClassname    : '',
+            $handleContainer   : null,
+            allwaysHandle      : false, //When true: Create handle for no-touch browser
+            toggleOnHandleClick: false,
+            hideHandleWhenOpen : false,
 
-        TouchMenuLA.prototype.setDefaultsOptions = function () {
-            for (var key in defaults) {
-                if (!options[key]) {
-                    options[key] = defaults[key];
-                }
+            $neighbourContainer: null,  //$-container that gets resized when the touch-menu is opened/closed
+
+        }, options || {} );
+
+        this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
+        this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
+
+        this.options.hammerDirection = this.options.verticalMenu ? Hammer.DIRECTION_HORIZONTAL : Hammer.DIRECTION_VERTICAL;
+
+        if (this.options.$neighbourContainer)
+            this.options.$neighbourContainer.addClass('neighbour-container');
+
+
+        //Initialize the menu
+        this.$container = this.options.$container ? this.options.$container : $('<div/>');
+        this.$container
+            .addClass('touch-menu-container')
+            .addClass(this.options.position)
+            .addClass(this.options.menuClassName);
+
+        this.setMode( this.options.modeOver );
+
+        //Create container for the contents
+        if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName || this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
+
+            //Change container to flex-display
+            this.$container.addClass('d-flex');
+            this.$container.addClass(this.options.verticalMenu ? 'flex-column' : 'flex-row');
+
+            if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName){
+                this.$preMenu = this.options.$preMenu ? this.options.$preMenu : $('<div/>');
+                this.$preMenu
+                    .addClass('touch-pre-menu flex-shrink-0')
+                    .addClass(this.options.preMenuClassName)
+                    .appendTo(this.$container);
             }
-        };
 
-        TouchMenuLA.prototype.initElements = function () {
-            options.target.style.zIndex = options.zIndex;
-            options.target.style./*width*/height = options.width + 'px';
-            options.target.style./*left*/top = -options.width + 'px';
+            this.$menu = this.options.$menu ? this.options.$menu : $('<div/>');
+            this.$menu
+                .addClass('touch-menu flex-grow-1 flex-shrink-1')
+                .addClass(this.options.menuClassName)
+                .appendTo(this.$container);
 
-            handle = document.createElement('div');
-            handle.className = "tmla-handle";
-            handle.style./*width*/height = options.handleSize + 'px';
-            handle.style./*right*/bottom = -options.handleSize + 'px';
-
-            options.target.appendChild(handle);
-
-            if (!options.disableMask) {
-                mask = document.createElement('div');
-                mask.className = 'tmla-mask';
-                document.body.appendChild(mask);
-
-                maskHammer = new Hammer(mask, null);
+            if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
+                this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
+                this.$postMenu
+                    .addClass('touch-post-menu flex-shrink-0')
+                    .addClass(this.options.postMenuClassName)
+                    .appendTo(this.$container);
             }
-        };
+        }
+        else
+            this.$menu = this.$container;
 
-        TouchMenuLA.prototype.touchStartMenu = function () {
-            menuHammer.on('panstart panmove', function (ev) {
-                newPos = currentPos + ev./*deltaX*/deltaY;
-                self.changeMenuPos();
-                velocity = Math.abs(ev.velocity);
+        if (window.bsIsTouch){
+            var touchStartMenu = $.proxy(this.touchStartMenu, this),
+                touchEndMenu   = $.proxy(this.touchEndMenu  , this);
+
+            //Create menuHammer
+            this.menuHammer = this._createHammer(this.$container, touchStartMenu, touchEndMenu);
+        }
+
+        //Create the handle
+        if (window.bsIsTouch || this.options.allwaysHandle || this.options.toggleOnHandleClick){
+            this.$handle = this.options.$handle ? this.options.$handle : $('<div/>');
+            this.$handle
+                .addClass('touch-menu-handle')
+                .toggleClass(this.options.position, !!this.options.$handleContainer)
+                .addClass(options.handleClassName)
+                .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
+                .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
+
+            if (this.options.$handleContainer)
+                //Create individuel Hammer for handle outside the menu
+                this.handleHammer = this._createHammer(this.$handle, touchStartMenu, touchEndMenu);
+
+            if (this.options.toggleOnHandleClick)
+                this.$handle.on('click', $.proxy(this.toggle, this));
+        }
+
+        //Update dimention and size of the menu and handle
+        this.updateDimentionAndSize();
+
+        //Craete the mask
+        if (this.options.modeOver || this.options.multiMode) {
+            this.$mask =
+                $('<div/>')
+                .addClass('touch-menu-mask')
+                .appendTo('body');
+
+            if (window.bsIsTouch)
+                //Create maskHammer
+                this.maskHammer = this._createHammer(this.$mask, $.proxy(this.touchStartMask, this), $.proxy(this.touchEndMask, this));
+
+            this.$mask.on('click', $.proxy(this.close, this));
+        }
+
+        if (this.options.isOpen)
+            this.open(true);
+        else
+            this.close(true);
+    };
+
+    /******************************************
+    Extend the prototype
+    ******************************************/
+    ns.TouchMenu.prototype = {
+        _createHammer: function($element, touchStart, touchEnd){
+            var result = new Hammer($element[0], null);
+            result.get('pan').set({ direction: this.options.hammerDirection });
+            result.on('panstart panmove', touchStart);
+            result.on('panend pancancel', touchEnd);
+            return result;
+        },
+
+        updateDimentionAndSize: function(){
+            var _this = this,
+                cssDimensionId = this.options.verticalMenu ? 'height' : 'width',
+                cssPosId       = this.options.verticalMenu ? 'top'    : 'left',
+                cssPositionId;
+            switch (this.options.position){
+                case 'left'  : cssPositionId = 'right';  break;
+                case 'right' : cssPositionId = 'left';   break;
+                case 'top'   : cssPositionId = 'bottom'; break;
+                case 'bottom': cssPositionId = 'top';    break;
+            }
+
+            //*********************************************************************
+            function getDimensionAndSize( width, height, defaultSize ){
+                var result =
+                    _this.options.verticalMenu ? {
+                        dimension: height || 0,
+                        size     : width  || defaultSize
+                    } : {
+                        dimension: width || 0,
+                        size     : height || defaultSize
+                    };
+                result.halfDimension = result.dimension/2;
+                result.halfSize = result.size/2;
+                return result;
+            }
+            //*********************************************************************
+            function setElementDimensionAndSize( $elem, options ){
+                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                if (options.dimension)
+                    $elem
+                        .css(cssDimensionId, options.dimension + 'px')
+                        .css(cssPosId, '50%')
+                        .css(_this.options.verticalMenu ? 'margin-top' : 'margin-left', -1*options.halfDimension);
+                else
+                    $elem
+                        .css(cssDimensionId, '100%')
+                        .css(cssPosId,   '0px');
+
+                $elem.css(_this.options.verticalMenu ? 'width' : 'height', options.size);
+                return $elem;
+            }
+            //*********************************************************************
+
+            this.options.menuDimAndSize   = getDimensionAndSize( this.options.width,       this.options.height,       280 );
+            this.options.handleDimAndSize = getDimensionAndSize( this.options.handleWidth, this.options.handleHeight,  20 );
+
+            //Update the menu-element
+            this.$container.css(this.options.position, -1*this.options.menuDimAndSize.size + 'px');
+            //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+            setElementDimensionAndSize(this.$container, this.options.menuDimAndSize);
+
+            if (this.$handle){
+                if (!this.options.$handleContainer)
+                    this.$handle.css(cssPositionId, -1*this.options.handleDimAndSize.size + 'px');
+
+                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                setElementDimensionAndSize(this.$handle, this.options.handleDimAndSize);
+            }
+        },
+
+        setMode: function( over ){
+            var isOpen = this.isOpen;
+            if (isOpen)
+                this.close(true);
+
+            this.options.modeOver = !!over;
+
+            this.$container.removeClass('mode-over mode-side');
+            this.$container.addClass(this.options.modeOver ? 'mode-over' : 'mode-side');
+
+            if (isOpen)
+                this.open(true);
+        },
+
+
+        _getEventDelta: function( event ){
+            return this.options.verticalMenu ?  event.deltaX : event.deltaY;
+        },
+
+        _copyClassName: function(){
+            //Sets the class-name of this.$handle equal to this.$container if the handle is outrside the container
+            var _this = this;
+            $.each(['closed', 'opening', 'opened', 'closing'], function(index, className){
+                var hasClass = _this.$container.hasClass(className);
+                if (_this.$handle)
+                    _this.$handle.toggleClass(className, hasClass);
+                if (_this.$mask)
+                    _this.$mask.toggleClass(className, hasClass);
             });
-        };
+        },
 
-        TouchMenuLA.prototype.animateToPosition = function (pos) {
-            options.target.style.transform = 'translate3d(' + pos + 'px, 0, 0)';
-            options.target.style.WebkitTransform = 'translate3d(' + pos + 'px, 0, 0)';
-            options.target.style.MozTransform = 'translate3d(' + pos + 'px, 0, 0)';
+        //Events on menuHammer
+        touchStartMenu: function (event) {
 
-        };
+            if (this.$container.hasClass('closed'))
+                this.$container.addClass('opening');
 
-        TouchMenuLA.prototype.changeMenuPos = function () {
-            if (newPos <= options.width) {
-                options.target.className = menuClassName + ' tmla-menu';
-                this.animateToPosition(newPos);
+            if (this.$container.hasClass('opened'))
+                this.$container.addClass('closing');
 
-                if (!options.disableMask) {
-                    this.setMaskOpacity(newPos);
+            this._copyClassName();
+
+            this.newPos = Math.max(0, this.currentPos + this.options.directionFactor*this._getEventDelta(event));
+            this.changeMenuPos();
+            this.velocity = Math.abs(event.velocity);
+        },
+
+        touchEndMenu: function (event) {
+            this.currentPos = this._getEventDelta(event);
+            this.checkMenuState(this.currentPos);
+        },
+
+        //Events on maskHammer
+        touchStartMask: function (event) {
+            var eventDelta = this._getEventDelta(event),
+                eventCenter = this.options.verticalMenu ?  event.center.x : event.center.y;
+            if (eventCenter <= this.options.menuDimAndSize.dimension && this.isOpen) {
+                this.countStart++;
+
+                if (this.countStart == 1)
+                    this.startPoint = eventDelta;
+
+                if (eventDelta < 0) {
+                    this.newPos = (eventDelta - this.startPoint) + this.options.menuDimAndSize.dimension;
+                    this.changeMenuPos();
+                    this.velocity = Math.abs(event.velocity);
                 }
             }
-        };
+        },
 
-        TouchMenuLA.prototype.setMaskOpacity = function (newMenuPos) {
-            var opacity = parseFloat((newMenuPos / options.width) * options.maxMaskOpacity);
+        touchEndMask: function (event) {
+           this.checkMenuState(this._getEventDelta(event));
+           this.countStart = 0;
+        },
 
-            mask.style.opacity = opacity;
+        animateToPosition: function (pos, animateMain, noAnimation) {
+            this.$container.toggleClass('no-animation', !!noAnimation);
 
-            if (opacity === 0) {
-                mask.style.zIndex = -1;
-            } else {
-                mask.style.zIndex = options.zIndex - 1;
+            if (this.options.verticalMenu)
+                this.$container.css('transform', 'translate3d(' + this.options.directionFactor*pos + 'px, 0, 0)');
+            else
+                this.$container.css('transform', 'translate3d(0, ' + this.options.directionFactor*pos + 'px, 0)');
+
+            this.changeNeighbourContainerPos(pos, animateMain && !noAnimation);
+        },
+
+        changeMenuPos: function () {
+            if (this.newPos <= this.options.menuDimAndSize.size) {
+                this.$container.removeClass('opened closed');
+                this._copyClassName();
+
+                this.animateToPosition(this.newPos);
+                this.setMaskOpacity(this.newPos);
             }
-        };
+        },
 
-        TouchMenuLA.prototype.touchEndMenu = function () {
-            menuHammer.on('panend pancancel', function (ev) {
-                currentPos = ev.deltaX;
-                self.checkMenuState(ev./*deltaX*/deltaY);
-            });
-        };
+        changeNeighbourContainerPos: function( pos, animate ){
+            if (this.options.$neighbourContainer && !this.options.modeOver)
+                this.options.$neighbourContainer
+                    .toggleClass('no-animation', !animate)
+                    .css('margin-'+this.options.position, Math.max(0,pos)+'px');
+        },
 
-        TouchMenuLA.prototype.eventStartMask = function () {
-            maskHammer.on('panstart panmove', function (ev) {
-                if (ev.center./*x*/y <= options.width && self.isVisible) {
-                    countStart++;
+        setMaskOpacity: function (newMenuPos) {
+            this._setMaskOpacity( parseFloat((newMenuPos / this.options.menuDimAndSize.size) * maxMaskOpacity) );
+        },
 
-                    if (countStart == 1) {
-                        startPoint = ev./*deltaX*/deltaY;
-                    }
+        _setMaskOpacity: function (opacity) {
+            if (this.$mask)
+                    this.$mask
+                        .css('opacity', opacity)
+                        .toggleClass('visible', !!(this.options.modeOver && opacity));
+        },
 
-                    if (ev./*deltaX*/deltaY < 0) {
-                        newPos = (ev./*deltaX*/deltaY - startPoint) + options.width;
-                        self.changeMenuPos();
-                        velocity = Math.abs(ev.velocity);
-                    }
-                }
-            });
-        };
+        showMask: function () {
+            this._setMaskOpacity(maxMaskOpacity);
+        },
 
-        TouchMenuLA.prototype.eventEndMask = function () {
-            maskHammer.on('panend pancancel', function (ev) {
-                self.checkMenuState(ev./*deltaX*/deltaY);
-                countStart = 0;
-            });
-        };
+        hideMask: function () {
+            this._setMaskOpacity(0);
+        },
 
-        TouchMenuLA.prototype.clickMaskClose = function () {
-            mask.addEventListener('click', function () {
-                self.close();
-            });
-        };
-
-        TouchMenuLA.prototype.checkMenuState = function (deltaX) {
-            if (velocity >= 1.0) {
-                if (deltaX >= 0) {
-                    self.open();
-                } else {
-                    self.close();
-                }
-            } else {
-                if (newPos >= 100) {
-                    self.open();
-                } else {
-                    self.close();
-                }
+        checkMenuState: function (delta) {
+            if (this.velocity >= 1.0) {
+                if (this.options.directionFactor*delta >= 0)
+                    this.open();
+                else
+                    this.close();
             }
-        };
-
-        TouchMenuLA.prototype.open = function () {
-            options.target.className = menuClassName + " tmla-menu opened";
-            this.animateToPosition(options.width);
-
-            currentPos = options.width;
-            this.isVisible = true;
-
-            self.showMask();
-            self.invoke(options.onOpen);
-        };
-
-        TouchMenuLA.prototype.close = function () {
-            options.target.className = menuClassName + " tmla-menu closed";
-            currentPos = 0;
-            self.isVisible = false;
-
-            self.hideMask();
-            self.invoke(options.onClose);
-        };
-
-        TouchMenuLA.prototype.toggle = function () {
-            if (self.isVisible) {
-                self.close();
-            } else {
-                self.open();
+            else {
+                if (this.newPos >= this.options.menuDimAndSize.halfSize)
+                    this.open();
+                else
+                    this.close();
             }
-        };
+        },
 
-        TouchMenuLA.prototype.showMask = function () {
-            mask.className = "tmla-mask transition";
-            mask.style.opacity = options.maxMaskOpacity;
-            mask.style.zIndex = options.zIndex - 1;
-        };
+        _invoke: function (fn) {
+            if (fn)
+                fn.apply(this);
+        },
 
-        TouchMenuLA.prototype.hideMask = function () {
-            mask.className = "tmla-mask transition";
-            mask.style.opacity = 0;
-            mask.style.zIndex = -1;
-        };
+        _onOpen: function(){
+            //Empty
+        },
 
-        TouchMenuLA.prototype.setMenuClassName = function () {
-            menuClassName = options.target.className;
-        };
+        open: function (noAnimation) {
+            this.$container.addClass('opened').removeClass('opening closing closed');
+            this._copyClassName();
 
-        TouchMenuLA.prototype.invoke = function (fn) {
-            if (fn) {
-                fn.apply(self);
-            }
-        };
+            this.animateToPosition(this.options.menuDimAndSize.size, true, noAnimation);
 
-        TouchMenuLA.prototype.initialize = function () {
-            if (options.target) {
-                menuHammer = Hammer(options.target, null);
+            this.currentPos = this.options.menuDimAndSize.size;
+            this.isOpen = true;
 
-                self.setDefaultsOptions();
-                self.setMenuClassName();
-                self.initElements();
+            this.$container.removeClass('no-animation');
 
-                if (!options.disableSlide) {
-                    self.touchStartMenu();
-                    self.touchEndMenu();
-                    self.eventStartMask();
-                    self.eventEndMask();
-                }
+            this.showMask();
+            this._onOpen(this);
+            this._invoke(this.options.onOpen);
+        },
 
-                if (!options.disableMask) {
-                    self.clickMaskClose();
-                }
-            } else {
-                //console.error('TouchMenuLA: The option \'target\' is required.');
-            }
-        };
+        _onClose: function(){
+            //Empty
+        },
+        close: function (noAnimation) {
+            this.$container.addClass('closed').removeClass('opening closing opened');
+            this._copyClassName();
 
-        return new TouchMenuLA();
+            this.currentPos = 0;
+            this.changeNeighbourContainerPos(0, !noAnimation);
+
+            this.isOpen = false;
+            this.hideMask();
+
+            this._onClose(this);
+            this._invoke(this.options.onClose);
+        },
+
+        toggle: function () {
+            if (this.isOpen)
+                this.close();
+            else
+                this.open();
+        },
+
+    };
+
+    ns.touchMenu = function(options){
+        return new ns.TouchMenu(options);
     };
 
 }(jQuery, this.Hammer, this, document));
@@ -717,12 +1097,13 @@ Sections:
     ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
     ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null);
 
-    //Get the application name from grunt.js
-    //Support both
-    //  { application: {name:"..."}} and
-    //  { application: {name_da:"...", name_en:"..."}}
-    //in the applications gruntfile.js
-    //header   : ns.getApplicationJSONOption( '{APPLICATION_NAME}', '{"da":"{APPLICATION_NAME_DA}", "en":"{APPLICATION_NAME_EN}"}'),
+    /*
+    Get the application name from grunt.js
+    Support both
+      { application: {name:"..."}} and
+      { application: {name_da:"...", name_en:"..."}}
+    in the applications gruntfile.js
+    */
     var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
     ns.applicationHeader = {
         da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
@@ -1452,18 +1833,5 @@ Sections:
                 });
             }
     };
-
-
-
-
-
-
-    /******************************************
-	Initialize/ready
-	*******************************************/
-	$(function() {
-
-	});
-	//******************************************
 
 }(jQuery, this, this.Promise, document));

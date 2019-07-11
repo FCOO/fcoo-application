@@ -1,8 +1,6 @@
 /****************************************************************************
 fcoo-application-touch.js
 
-
-
 Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touch-Menu-Like-Android)
 
 ****************************************************************************/
@@ -10,234 +8,401 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 (function ($, Hammer, window/*, document, undefined*/) {
     "use strict";
 
-    var ns = window;
+    //Create fcoo-namespace
+    window.fcoo = window.fcoo || {};
+    var ns = window.fcoo;
 
-    ns.TouchMenuLA = function (options) {
-        var self,
-            defaults,
-            menuClassName = '',
-            mask,
-            handle,
-            menuHammer,
-            maskHammer,
-            newPos = 0,
-            currentPos = 0,
-            startPoint = 0,
-            countStart = 0,
-            velocity = 0.0;
+    var maxMaskOpacity = 0.5; //Equal $modal-backdrop-opacity in \bower_components\bootstrap\scss\_variables.scss
 
-        var TouchMenuLA = function () {
-            self = this;
+    ns.TouchMenu = function (options) {
+        this.newPos     = 0;
+        this.currentPos = 0;
+        this.startPoint = 0;
+        this.countStart = 0;
+        this.velocity   = 0.0;
 
-            defaults = {
-                width: 280,
-                zIndex: 99999,
-                disableSlide: false,
-                handleSize: 20,
-                disableMask: false,
-                maxMaskOpacity: 0.5
-            };
+        this.isOpen = false;
 
-            this.isVisible = false;
+        this.options = $.extend({
+            //Default options
+            position     : 'left',
+            modeOver     : false,
+            multiMode    : false,
+            menuClassName: '',
+            isOpen       : false,
 
-            this.initialize();
-        };
+            handleClassname    : '',
+            $handleContainer   : null,
+            allwaysHandle      : false, //When true: Create handle for no-touch browser
+            toggleOnHandleClick: false,
+            hideHandleWhenOpen : false,
 
-        TouchMenuLA.prototype.setDefaultsOptions = function () {
-            for (var key in defaults) {
-                if (!options[key]) {
-                    options[key] = defaults[key];
-                }
+            $neighbourContainer: null,  //$-container that gets resized when the touch-menu is opened/closed
+
+        }, options || {} );
+
+        this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
+        this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
+
+        this.options.hammerDirection = this.options.verticalMenu ? Hammer.DIRECTION_HORIZONTAL : Hammer.DIRECTION_VERTICAL;
+
+        if (this.options.$neighbourContainer)
+            this.options.$neighbourContainer.addClass('neighbour-container');
+
+
+        //Initialize the menu
+        this.$container = this.options.$container ? this.options.$container : $('<div/>');
+        this.$container
+            .addClass('touch-menu-container')
+            .addClass(this.options.position)
+            .addClass(this.options.menuClassName);
+
+        this.setMode( this.options.modeOver );
+
+        //Create container for the contents
+        if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName || this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
+
+            //Change container to flex-display
+            this.$container.addClass('d-flex');
+            this.$container.addClass(this.options.verticalMenu ? 'flex-column' : 'flex-row');
+
+            if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName){
+                this.$preMenu = this.options.$preMenu ? this.options.$preMenu : $('<div/>');
+                this.$preMenu
+                    .addClass('touch-pre-menu flex-shrink-0')
+                    .addClass(this.options.preMenuClassName)
+                    .appendTo(this.$container);
             }
-        };
 
-        TouchMenuLA.prototype.initElements = function () {
-            options.target.style.zIndex = options.zIndex;
-            options.target.style./*width*/height = options.width + 'px';
-            options.target.style./*left*/top = -options.width + 'px';
+            this.$menu = this.options.$menu ? this.options.$menu : $('<div/>');
+            this.$menu
+                .addClass('touch-menu flex-grow-1 flex-shrink-1')
+                .addClass(this.options.menuClassName)
+                .appendTo(this.$container);
 
-            handle = document.createElement('div');
-            handle.className = "tmla-handle";
-            handle.style./*width*/height = options.handleSize + 'px';
-            handle.style./*right*/bottom = -options.handleSize + 'px';
-
-            options.target.appendChild(handle);
-
-            if (!options.disableMask) {
-                mask = document.createElement('div');
-                mask.className = 'tmla-mask';
-                document.body.appendChild(mask);
-
-                maskHammer = new Hammer(mask, null);
+            if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
+                this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
+                this.$postMenu
+                    .addClass('touch-post-menu flex-shrink-0')
+                    .addClass(this.options.postMenuClassName)
+                    .appendTo(this.$container);
             }
-        };
+        }
+        else
+            this.$menu = this.$container;
 
-        TouchMenuLA.prototype.touchStartMenu = function () {
-            menuHammer.on('panstart panmove', function (ev) {
-                newPos = currentPos + ev./*deltaX*/deltaY;
-                self.changeMenuPos();
-                velocity = Math.abs(ev.velocity);
+        if (window.bsIsTouch){
+            var touchStartMenu = $.proxy(this.touchStartMenu, this),
+                touchEndMenu   = $.proxy(this.touchEndMenu  , this);
+
+            //Create menuHammer
+            this.menuHammer = this._createHammer(this.$container, touchStartMenu, touchEndMenu);
+        }
+
+        //Create the handle
+        if (window.bsIsTouch || this.options.allwaysHandle || this.options.toggleOnHandleClick){
+            this.$handle = this.options.$handle ? this.options.$handle : $('<div/>');
+            this.$handle
+                .addClass('touch-menu-handle')
+                .toggleClass(this.options.position, !!this.options.$handleContainer)
+                .addClass(options.handleClassName)
+                .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
+                .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
+
+            if (this.options.$handleContainer)
+                //Create individuel Hammer for handle outside the menu
+                this.handleHammer = this._createHammer(this.$handle, touchStartMenu, touchEndMenu);
+
+            if (this.options.toggleOnHandleClick)
+                this.$handle.on('click', $.proxy(this.toggle, this));
+        }
+
+        //Update dimention and size of the menu and handle
+        this.updateDimentionAndSize();
+
+        //Craete the mask
+        if (this.options.modeOver || this.options.multiMode) {
+            this.$mask =
+                $('<div/>')
+                .addClass('touch-menu-mask')
+                .appendTo('body');
+
+            if (window.bsIsTouch)
+                //Create maskHammer
+                this.maskHammer = this._createHammer(this.$mask, $.proxy(this.touchStartMask, this), $.proxy(this.touchEndMask, this));
+
+            this.$mask.on('click', $.proxy(this.close, this));
+        }
+
+        if (this.options.isOpen)
+            this.open(true);
+        else
+            this.close(true);
+    };
+
+    /******************************************
+    Extend the prototype
+    ******************************************/
+    ns.TouchMenu.prototype = {
+        _createHammer: function($element, touchStart, touchEnd){
+            var result = new Hammer($element[0], null);
+            result.get('pan').set({ direction: this.options.hammerDirection });
+            result.on('panstart panmove', touchStart);
+            result.on('panend pancancel', touchEnd);
+            return result;
+        },
+
+        updateDimentionAndSize: function(){
+            var _this = this,
+                cssDimensionId = this.options.verticalMenu ? 'height' : 'width',
+                cssPosId       = this.options.verticalMenu ? 'top'    : 'left',
+                cssPositionId;
+            switch (this.options.position){
+                case 'left'  : cssPositionId = 'right';  break;
+                case 'right' : cssPositionId = 'left';   break;
+                case 'top'   : cssPositionId = 'bottom'; break;
+                case 'bottom': cssPositionId = 'top';    break;
+            }
+
+            //*********************************************************************
+            function getDimensionAndSize( width, height, defaultSize ){
+                var result =
+                    _this.options.verticalMenu ? {
+                        dimension: height || 0,
+                        size     : width  || defaultSize
+                    } : {
+                        dimension: width || 0,
+                        size     : height || defaultSize
+                    };
+                result.halfDimension = result.dimension/2;
+                result.halfSize = result.size/2;
+                return result;
+            }
+            //*********************************************************************
+            function setElementDimensionAndSize( $elem, options ){
+                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                if (options.dimension)
+                    $elem
+                        .css(cssDimensionId, options.dimension + 'px')
+                        .css(cssPosId, '50%')
+                        .css(_this.options.verticalMenu ? 'margin-top' : 'margin-left', -1*options.halfDimension);
+                else
+                    $elem
+                        .css(cssDimensionId, '100%')
+                        .css(cssPosId,   '0px');
+
+                $elem.css(_this.options.verticalMenu ? 'width' : 'height', options.size);
+                return $elem;
+            }
+            //*********************************************************************
+
+            this.options.menuDimAndSize   = getDimensionAndSize( this.options.width,       this.options.height,       280 );
+            this.options.handleDimAndSize = getDimensionAndSize( this.options.handleWidth, this.options.handleHeight,  20 );
+
+            //Update the menu-element
+            this.$container.css(this.options.position, -1*this.options.menuDimAndSize.size + 'px');
+            //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+            setElementDimensionAndSize(this.$container, this.options.menuDimAndSize);
+
+            if (this.$handle){
+                if (!this.options.$handleContainer)
+                    this.$handle.css(cssPositionId, -1*this.options.handleDimAndSize.size + 'px');
+
+                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                setElementDimensionAndSize(this.$handle, this.options.handleDimAndSize);
+            }
+        },
+
+        setMode: function( over ){
+            var isOpen = this.isOpen;
+            if (isOpen)
+                this.close(true);
+
+            this.options.modeOver = !!over;
+
+            this.$container.removeClass('mode-over mode-side');
+            this.$container.addClass(this.options.modeOver ? 'mode-over' : 'mode-side');
+
+            if (isOpen)
+                this.open(true);
+        },
+
+
+        _getEventDelta: function( event ){
+            return this.options.verticalMenu ?  event.deltaX : event.deltaY;
+        },
+
+        _copyClassName: function(){
+            //Sets the class-name of this.$handle equal to this.$container if the handle is outrside the container
+            var _this = this;
+            $.each(['closed', 'opening', 'opened', 'closing'], function(index, className){
+                var hasClass = _this.$container.hasClass(className);
+                if (_this.$handle)
+                    _this.$handle.toggleClass(className, hasClass);
+                if (_this.$mask)
+                    _this.$mask.toggleClass(className, hasClass);
             });
-        };
+        },
 
-        TouchMenuLA.prototype.animateToPosition = function (pos) {
-            options.target.style.transform = 'translate3d(' + pos + 'px, 0, 0)';
-            options.target.style.WebkitTransform = 'translate3d(' + pos + 'px, 0, 0)';
-            options.target.style.MozTransform = 'translate3d(' + pos + 'px, 0, 0)';
+        //Events on menuHammer
+        touchStartMenu: function (event) {
 
-        };
+            if (this.$container.hasClass('closed'))
+                this.$container.addClass('opening');
 
-        TouchMenuLA.prototype.changeMenuPos = function () {
-            if (newPos <= options.width) {
-                options.target.className = menuClassName + ' tmla-menu';
-                this.animateToPosition(newPos);
+            if (this.$container.hasClass('opened'))
+                this.$container.addClass('closing');
 
-                if (!options.disableMask) {
-                    this.setMaskOpacity(newPos);
+            this._copyClassName();
+
+            this.newPos = Math.max(0, this.currentPos + this.options.directionFactor*this._getEventDelta(event));
+            this.changeMenuPos();
+            this.velocity = Math.abs(event.velocity);
+        },
+
+        touchEndMenu: function (event) {
+            this.currentPos = this._getEventDelta(event);
+            this.checkMenuState(this.currentPos);
+        },
+
+        //Events on maskHammer
+        touchStartMask: function (event) {
+            var eventDelta = this._getEventDelta(event),
+                eventCenter = this.options.verticalMenu ?  event.center.x : event.center.y;
+            if (eventCenter <= this.options.menuDimAndSize.dimension && this.isOpen) {
+                this.countStart++;
+
+                if (this.countStart == 1)
+                    this.startPoint = eventDelta;
+
+                if (eventDelta < 0) {
+                    this.newPos = (eventDelta - this.startPoint) + this.options.menuDimAndSize.dimension;
+                    this.changeMenuPos();
+                    this.velocity = Math.abs(event.velocity);
                 }
             }
-        };
+        },
 
-        TouchMenuLA.prototype.setMaskOpacity = function (newMenuPos) {
-            var opacity = parseFloat((newMenuPos / options.width) * options.maxMaskOpacity);
+        touchEndMask: function (event) {
+           this.checkMenuState(this._getEventDelta(event));
+           this.countStart = 0;
+        },
 
-            mask.style.opacity = opacity;
+        animateToPosition: function (pos, animateMain, noAnimation) {
+            this.$container.toggleClass('no-animation', !!noAnimation);
 
-            if (opacity === 0) {
-                mask.style.zIndex = -1;
-            } else {
-                mask.style.zIndex = options.zIndex - 1;
+            if (this.options.verticalMenu)
+                this.$container.css('transform', 'translate3d(' + this.options.directionFactor*pos + 'px, 0, 0)');
+            else
+                this.$container.css('transform', 'translate3d(0, ' + this.options.directionFactor*pos + 'px, 0)');
+
+            this.changeNeighbourContainerPos(pos, animateMain && !noAnimation);
+        },
+
+        changeMenuPos: function () {
+            if (this.newPos <= this.options.menuDimAndSize.size) {
+                this.$container.removeClass('opened closed');
+                this._copyClassName();
+
+                this.animateToPosition(this.newPos);
+                this.setMaskOpacity(this.newPos);
             }
-        };
+        },
 
-        TouchMenuLA.prototype.touchEndMenu = function () {
-            menuHammer.on('panend pancancel', function (ev) {
-                currentPos = ev.deltaX;
-                self.checkMenuState(ev./*deltaX*/deltaY);
-            });
-        };
+        changeNeighbourContainerPos: function( pos, animate ){
+            if (this.options.$neighbourContainer && !this.options.modeOver)
+                this.options.$neighbourContainer
+                    .toggleClass('no-animation', !animate)
+                    .css('margin-'+this.options.position, Math.max(0,pos)+'px');
+        },
 
-        TouchMenuLA.prototype.eventStartMask = function () {
-            maskHammer.on('panstart panmove', function (ev) {
-                if (ev.center./*x*/y <= options.width && self.isVisible) {
-                    countStart++;
+        setMaskOpacity: function (newMenuPos) {
+            this._setMaskOpacity( parseFloat((newMenuPos / this.options.menuDimAndSize.size) * maxMaskOpacity) );
+        },
 
-                    if (countStart == 1) {
-                        startPoint = ev./*deltaX*/deltaY;
-                    }
+        _setMaskOpacity: function (opacity) {
+            if (this.$mask)
+                    this.$mask
+                        .css('opacity', opacity)
+                        .toggleClass('visible', !!(this.options.modeOver && opacity));
+        },
 
-                    if (ev./*deltaX*/deltaY < 0) {
-                        newPos = (ev./*deltaX*/deltaY - startPoint) + options.width;
-                        self.changeMenuPos();
-                        velocity = Math.abs(ev.velocity);
-                    }
-                }
-            });
-        };
+        showMask: function () {
+            this._setMaskOpacity(maxMaskOpacity);
+        },
 
-        TouchMenuLA.prototype.eventEndMask = function () {
-            maskHammer.on('panend pancancel', function (ev) {
-                self.checkMenuState(ev./*deltaX*/deltaY);
-                countStart = 0;
-            });
-        };
+        hideMask: function () {
+            this._setMaskOpacity(0);
+        },
 
-        TouchMenuLA.prototype.clickMaskClose = function () {
-            mask.addEventListener('click', function () {
-                self.close();
-            });
-        };
-
-        TouchMenuLA.prototype.checkMenuState = function (deltaX) {
-            if (velocity >= 1.0) {
-                if (deltaX >= 0) {
-                    self.open();
-                } else {
-                    self.close();
-                }
-            } else {
-                if (newPos >= 100) {
-                    self.open();
-                } else {
-                    self.close();
-                }
+        checkMenuState: function (delta) {
+            if (this.velocity >= 1.0) {
+                if (this.options.directionFactor*delta >= 0)
+                    this.open();
+                else
+                    this.close();
             }
-        };
-
-        TouchMenuLA.prototype.open = function () {
-            options.target.className = menuClassName + " tmla-menu opened";
-            this.animateToPosition(options.width);
-
-            currentPos = options.width;
-            this.isVisible = true;
-
-            self.showMask();
-            self.invoke(options.onOpen);
-        };
-
-        TouchMenuLA.prototype.close = function () {
-            options.target.className = menuClassName + " tmla-menu closed";
-            currentPos = 0;
-            self.isVisible = false;
-
-            self.hideMask();
-            self.invoke(options.onClose);
-        };
-
-        TouchMenuLA.prototype.toggle = function () {
-            if (self.isVisible) {
-                self.close();
-            } else {
-                self.open();
+            else {
+                if (this.newPos >= this.options.menuDimAndSize.halfSize)
+                    this.open();
+                else
+                    this.close();
             }
-        };
+        },
 
-        TouchMenuLA.prototype.showMask = function () {
-            mask.className = "tmla-mask transition";
-            mask.style.opacity = options.maxMaskOpacity;
-            mask.style.zIndex = options.zIndex - 1;
-        };
+        _invoke: function (fn) {
+            if (fn)
+                fn.apply(this);
+        },
 
-        TouchMenuLA.prototype.hideMask = function () {
-            mask.className = "tmla-mask transition";
-            mask.style.opacity = 0;
-            mask.style.zIndex = -1;
-        };
+        _onOpen: function(){
+            //Empty
+        },
 
-        TouchMenuLA.prototype.setMenuClassName = function () {
-            menuClassName = options.target.className;
-        };
+        open: function (noAnimation) {
+            this.$container.addClass('opened').removeClass('opening closing closed');
+            this._copyClassName();
 
-        TouchMenuLA.prototype.invoke = function (fn) {
-            if (fn) {
-                fn.apply(self);
-            }
-        };
+            this.animateToPosition(this.options.menuDimAndSize.size, true, noAnimation);
 
-        TouchMenuLA.prototype.initialize = function () {
-            if (options.target) {
-                menuHammer = Hammer(options.target, null);
+            this.currentPos = this.options.menuDimAndSize.size;
+            this.isOpen = true;
 
-                self.setDefaultsOptions();
-                self.setMenuClassName();
-                self.initElements();
+            this.$container.removeClass('no-animation');
 
-                if (!options.disableSlide) {
-                    self.touchStartMenu();
-                    self.touchEndMenu();
-                    self.eventStartMask();
-                    self.eventEndMask();
-                }
+            this.showMask();
+            this._onOpen(this);
+            this._invoke(this.options.onOpen);
+        },
 
-                if (!options.disableMask) {
-                    self.clickMaskClose();
-                }
-            } else {
-                //console.error('TouchMenuLA: The option \'target\' is required.');
-            }
-        };
+        _onClose: function(){
+            //Empty
+        },
+        close: function (noAnimation) {
+            this.$container.addClass('closed').removeClass('opening closing opened');
+            this._copyClassName();
 
-        return new TouchMenuLA();
+            this.currentPos = 0;
+            this.changeNeighbourContainerPos(0, !noAnimation);
+
+            this.isOpen = false;
+            this.hideMask();
+
+            this._onClose(this);
+            this._invoke(this.options.onClose);
+        },
+
+        toggle: function () {
+            if (this.isOpen)
+                this.close();
+            else
+                this.open();
+        },
+
+    };
+
+    ns.touchMenu = function(options){
+        return new ns.TouchMenu(options);
     };
 
 }(jQuery, this.Hammer, this, document));
