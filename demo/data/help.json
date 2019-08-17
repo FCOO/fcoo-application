@@ -4,13 +4,15 @@
     },
     "messages": [
         {
+            "id"   : "help1",
             "title": {"da":"Hvordan...", "en":"How to..."},
-            "url": "data/browser/da.md",
+            "url": "data/browser/da.txt",
             "link": "http://ifm.fcoo.dk/browser/"
         },
         {
+            "id"   : "help2",
             "title": {"da":"Eller hvordan...", "en":"or how to..."},
-            "url": "data/browser/da.md",
+            "url": "data/browser/da.txt",
             "link": "http://ifm.fcoo.dk/browser/"
         }
     ]

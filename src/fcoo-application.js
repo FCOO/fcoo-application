@@ -581,7 +581,7 @@ Sections:
     **************************************************************/
 
     var messageGroupOptions = {
-            icons  : { externalLink: 'fa-external-link' },
+            icons  : { externalLink: $.bsExternalLinkIcon /* == 'fa-external-link'*/ },
             loading: { icon: ns.icons.working },
 
             onStartLoading : function( messageGroup ){

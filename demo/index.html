@@ -51,6 +51,9 @@
 
 
 	<script>
+        window.bsIsTouch = false;
+        window.bsIsTouch = (window.location.search =='?touch');
+
         var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
 
 /*
@@ -138,6 +141,18 @@
 
         var main;
         $(function() {
+            var $rightMenu = $('<div/>');
+            $rightMenu.append('Start');
+            for (var i=0; i<100; i++){
+                $('<div/>')
+                    .css({width: '100%', border:'1px solid red'})
+                    .text(i)
+                    .on('click', function(){ alert( $(this).text()); })
+                    .appendTo($rightMenu);
+            }
+            $rightMenu.append('SLUT');
+
+
             main = window.fcoo.createMain({
                     mainContainerAsHandleContainer: true,
                     minMainWidth: 456,
@@ -157,7 +172,13 @@
                     leftMenu  : {
                         width: 321
                     },
-                    rightMenu : {},
+                    keepLeftMenuButton: true, //Keeps the left menu-button even if leftMenu is null
+                    rightMenu : {
+                        width: 200,
+                        $menu: $rightMenu
+                    },
+                    keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
+
                     bottomMenu: {
                         height : 120,
                         handleWidth: 456,
@@ -176,9 +197,7 @@
             main.bottomMenu.$menu
 //HER                .css('background-color', 'aqua')
 
-            main.rightMenu.$menu
-//HER                .css('background-color', 'brown')
-                .append('Start<br>1<br>2<br>1<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>slut');
+
 
 
             $('<select id="theSelect" style="width:200px"></select><br>'+

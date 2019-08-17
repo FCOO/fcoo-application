@@ -4,13 +4,15 @@
     },
     "messages": [
         {
+            "id"   : "about1",
             "title": {"da":"Data og Produkter fra FCOO", "en":"Data and Product from FCOO"},
-            "url": "data/browser/da.md",
+            "url": "data/browser/da.txt",
             "link": "http://ifm.fcoo.dk/browser/"
         },
         {
+            "id"   : "about2",
             "title": {"da":"Om FCOO", "en":"About FCOO"},
-            "url": "data/browser/da.md",
+            "url": "data/browser/da.txt",
             "link": "http://ifm.fcoo.dk/browser/"
         }
     ]

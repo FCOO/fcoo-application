@@ -26,12 +26,14 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.options = $.extend({
             //Default options
             position     : 'left',
+            scroll       : false, //Only for bottom. left and right are always with scroll
+            scrollOptions: null, //Individuel options for jquery-scroll-container
             modeOver     : false,
             multiMode    : false,
             menuClassName: '',
             isOpen       : false,
 
-            handleClassname    : '',
+            handleClassName    : '',
             $handleContainer   : null,
             allwaysHandle      : false, //When true: Create handle for no-touch browser
             toggleOnHandleClick: false,
@@ -74,12 +76,21 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                     .appendTo(this.$container);
             }
 
-            this.$menu = this.options.$menu ? this.options.$menu : $('<div/>');
-            this.$menu
+            var $menuContainer = $('<div/>')
                 .addClass('touch-menu flex-grow-1 flex-shrink-1')
-                .addClass(this.options.menuClassName)
                 .appendTo(this.$container);
 
+            this.$menu =
+                this.options.verticalMenu || this.options.scroll ?
+                $menuContainer.addScrollbar( this.options.scrollOptions ) :
+                $menuContainer;
+
+            //Move any content into the menu
+            if (this.options.$menu)
+                this.options.$menu.contents().detach().appendTo(this.$menu);
+
+
+            //Create the bottom/rigth part
             if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
                 this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
                 this.$postMenu

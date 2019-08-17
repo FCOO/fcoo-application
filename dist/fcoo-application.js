@@ -81,11 +81,18 @@ Create and manage the main structure for FCOO web applications
     ******************************************************************/
     ns.createMain = function( options ){
         options = $.extend({}, {
-            $mainContainer     : null,
+            $mainContainer      : null,
             mainContainerAsHandleContainer: false,
-            maxMenuWidthPercent: 0.5, //Max total width of open menus when change to mode over
-            minMainWidth       : 0,   //Min width of main-container when menu(s) are open
-            globalModeOver     : false
+            maxMenuWidthPercent : 0.5, //Max total width of open menus when change to mode over
+            minMainWidth        : 0,   //Min width of main-container when menu(s) are open
+            globalModeOver      : false,
+
+            topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
+            leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js
+            keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
+            rightMenu           : null,  //Options for right-menu. See src/fcoo-application-touch.js
+            keepRightMenuButton : false, //Keeps the right menu-button even if leftMenu is null
+            bottomMenu          : null,  //Options for bottom-menu. See src/fcoo-application-touch.js
         }, options );
 
         var result = {
@@ -125,8 +132,8 @@ Create and manage the main structure for FCOO web applications
         //Create and append top-menu (if any)
         if (result.options.topMenu){
             var topMenuOptions = $.extend({}, result.options.topMenu, {
-                    leftMenu : !!result.options.leftMenu,
-                    rightMenu: !!result.options.rightMenu
+                    leftMenu : !!result.options.leftMenu  || result.options.keepLeftMenuButton,
+                    rightMenu: !!result.options.rightMenu || result.options.keepRightMenuButton
                 });
 
             result.topMenuObject = ns.createTopMenu( topMenuOptions );
@@ -222,11 +229,14 @@ Create and manage the main structure for FCOO web applications
             if (result.options.leftMenu && result.options.rightMenu){
                 result.totalMenuWidth = result.leftMenu.options.menuDimAndSize.size + result.rightMenu.options.menuDimAndSize.size;
 
-                var _onOpen = $.proxy(menu_onOpen, result);
+                var _onOpen  = $.proxy(menu_onOpen, result),
+                    _onClose = $.proxy(menu_onClose, result);
                 result.leftMenu._onOpen = _onOpen;
+                result.leftMenu._onClose = _onClose;
                 result.leftMenu.theOtherMenu = result.rightMenu;
 
                 result.rightMenu._onOpen = _onOpen;
+                result.rightMenu._onClose = _onClose;
                 result.rightMenu.theOtherMenu = result.leftMenu;
             }
 
@@ -238,14 +248,21 @@ Create and manage the main structure for FCOO web applications
         return result;
     }; //end of createMain
 
+    var wasForcedToClose = null;
     function menu_onOpen(menu){
         this.lastOpenedMenu = menu;
         this.onBodyResize();
     }
 
+    function menu_onClose(menu){
+        if (wasForcedToClose && (wasForcedToClose !== menu))
+            wasForcedToClose.open();
+        wasForcedToClose = null;
+    }
+
     function onBodyResize(){
         if (this.isResizing) return;
-
+        wasForcedToClose = null;
         var bodyWidth = $body.width(),
             maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
             newModeIsOver = this.maxSingleMenuWidth >=  maxTotalMenuWidthAllowed,
@@ -258,10 +275,12 @@ Create and manage the main structure for FCOO web applications
         if (this.rightMenu) this.rightMenu.setMode( newModeIsOver );
         this.isResizing = false;
 
-
-        //If both menus are open and mode == over or nor sspace for both => close the menu first opened
-        if (firstOpenedMenu && (newModeIsOver || (this.totalMenuWidth > maxTotalMenuWidthAllowed)))
+        //If both menus are open and mode == over or not space for both => close the menu first opened
+        if (firstOpenedMenu && (newModeIsOver || (this.totalMenuWidth > maxTotalMenuWidthAllowed))){
             firstOpenedMenu.close();
+            if (!newModeIsOver)
+                wasForcedToClose = firstOpenedMenu;
+        }
 
     }
 }(jQuery, this, document));
@@ -618,12 +637,14 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.options = $.extend({
             //Default options
             position     : 'left',
+            scroll       : false, //Only for bottom. left and right are always with scroll
+            scrollOptions: null, //Individuel options for jquery-scroll-container
             modeOver     : false,
             multiMode    : false,
             menuClassName: '',
             isOpen       : false,
 
-            handleClassname    : '',
+            handleClassName    : '',
             $handleContainer   : null,
             allwaysHandle      : false, //When true: Create handle for no-touch browser
             toggleOnHandleClick: false,
@@ -666,12 +687,21 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                     .appendTo(this.$container);
             }
 
-            this.$menu = this.options.$menu ? this.options.$menu : $('<div/>');
-            this.$menu
+            var $menuContainer = $('<div/>')
                 .addClass('touch-menu flex-grow-1 flex-shrink-1')
-                .addClass(this.options.menuClassName)
                 .appendTo(this.$container);
 
+            this.$menu =
+                this.options.verticalMenu || this.options.scroll ?
+                $menuContainer.addScrollbar( this.options.scrollOptions ) :
+                $menuContainer;
+
+            //Move any content into the menu
+            if (this.options.$menu)
+                this.options.$menu.contents().detach().appendTo(this.$menu);
+
+
+            //Create the bottom/rigth part
             if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
                 this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
                 this.$postMenu
@@ -1582,7 +1612,7 @@ Sections:
     **************************************************************/
 
     var messageGroupOptions = {
-            icons  : { externalLink: 'fa-external-link' },
+            icons  : { externalLink: $.bsExternalLinkIcon /* == 'fa-external-link'*/ },
             loading: { icon: ns.icons.working },
 
             onStartLoading : function( messageGroup ){
