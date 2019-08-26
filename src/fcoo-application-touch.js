@@ -156,7 +156,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     ******************************************/
     ns.TouchMenu.prototype = {
         _createHammer: function($element, touchStart, touchEnd){
-            var result = new Hammer($element[0], null);
+            var result = new Hammer($element[0], {touchAction:'none'});
             result.get('pan').set({ direction: this.options.hammerDirection });
             result.on('panstart panmove', touchStart);
             result.on('panend pancancel', touchEnd);
@@ -257,7 +257,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
         //Events on menuHammer
         touchStartMenu: function (event) {
-
             if (this.$container.hasClass('closed'))
                 this.$container.addClass('opening');
 

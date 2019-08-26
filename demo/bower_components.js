@@ -19150,7 +19150,13 @@ return jQuery;
       _classCallCheck(this, Interpolator);
 
       this.logger = baseLogger.create('interpolator');
-      this.init(options, true);
+      this.options = options;
+
+      this.format = options.interpolation && options.interpolation.format || function (value) {
+        return value;
+      };
+
+      this.init(options);
     }
     /* eslint no-param-reassign: 0 */
 
@@ -19159,16 +19165,6 @@ return jQuery;
       key: "init",
       value: function init() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        var reset = arguments.length > 1 ? arguments[1] : undefined;
-
-        if (reset) {
-          this.options = options;
-
-          this.format = options.interpolation && options.interpolation.format || function (value) {
-            return value;
-          };
-        }
-
         if (!options.interpolation) options.interpolation = {
           escapeValue: true
         };
@@ -19232,6 +19228,19 @@ return jQuery;
 
         while (match = this.regexpUnescape.exec(str)) {
           value = handleFormat(match[1].trim());
+
+          if (value === undefined) {
+            if (typeof missingInterpolationHandler === 'function') {
+              var temp = missingInterpolationHandler(str, match, options);
+              value = typeof temp === 'string' ? temp : '';
+            } else {
+              this.logger.warn("missed to pass in variable ".concat(match[1], " for interpolating ").concat(str));
+              value = '';
+            }
+          } else if (typeof value !== 'string' && !this.useRawValueToEscape) {
+            value = makeString(value);
+          }
+
           str = str.replace(match[0], regexSafe(value));
           this.regexpUnescape.lastIndex = 0;
           replaces++;
@@ -19248,8 +19257,9 @@ return jQuery;
 
           if (value === undefined) {
             if (typeof missingInterpolationHandler === 'function') {
-              var temp = missingInterpolationHandler(str, match, options);
-              value = typeof temp === 'string' ? temp : '';
+              var _temp = missingInterpolationHandler(str, match, options);
+
+              value = typeof _temp === 'string' ? _temp : '';
             } else {
               this.logger.warn("missed to pass in variable ".concat(match[1], " for interpolating ").concat(str));
               value = '';

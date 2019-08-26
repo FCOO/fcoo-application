@@ -3,8 +3,17 @@ TOUCH-MENU
 
 Style for touch-menus at the left, right, top and bottom edge
 *****************************************************/
-$border: $modal-content-border-width solid $modal-content-border-color;
 
+//Bug fix. Chrome bug => problem with pan AND scroll. See https://github.com/hammerjs/hammer.js/issues/1050
+//.touch-menu-container, .touch-menu-container * { touch-action: none; }
+
+.touch-menu {
+    touch-action: pan-down; //pan-up pan-down do not seem to be supported
+}
+
+
+
+$border: $modal-content-border-width solid $modal-content-border-color;
 
 /*
 Two modes:
