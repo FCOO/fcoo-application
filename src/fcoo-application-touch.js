@@ -46,7 +46,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
         this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
 
-        this.options.hammerDirection = this.options.verticalMenu ? Hammer.DIRECTION_HORIZONTAL : Hammer.DIRECTION_VERTICAL;
+        this.options.hammerDirection = Hammer.DIRECTION_ALL;//HER this.options.verticalMenu ? Hammer.DIRECTION_HORIZONTAL : Hammer.DIRECTION_VERTICAL;
 
         if (this.options.$neighbourContainer)
             this.options.$neighbourContainer.addClass('neighbour-container');
@@ -257,6 +257,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
         //Events on menuHammer
         touchStartMenu: function (event) {
+            if (!this.currentHammerDirection)
+                this.currentHammerDirection = event.direction;
+
+            if (this.currentHammerDirection & Hammer.DIRECTION_VERTICAL)
+                return;
+
             if (this.$container.hasClass('closed'))
                 this.$container.addClass('opening');
 
@@ -271,8 +277,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         touchEndMenu: function (event) {
-            this.currentPos = this._getEventDelta(event);
-            this.checkMenuState(this.currentPos);
+            if (this.currentHammerDirection & Hammer.DIRECTION_HORIZONTAL){
+                this.currentPos = this._getEventDelta(event);
+                this.checkMenuState(this.currentPos);
+            }
+            this.currentHammerDirection = 0;
         },
 
         //Events on maskHammer

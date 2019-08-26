@@ -8,7 +8,7 @@ Style for touch-menus at the left, right, top and bottom edge
 //.touch-menu-container, .touch-menu-container * { touch-action: none; }
 
 .touch-menu {
-    touch-action: pan-down; //pan-up pan-down do not seem to be supported
+//VIRKER IKKE    touch-action: pan-down; //pan-up pan-down do not seem to be supported
 }
 
 

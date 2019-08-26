@@ -675,9 +675,6 @@ TOUCH-MENU
 
 Style for touch-menus at the left, right, top and bottom edge
 *****************************************************/
-.touch-menu {
-  touch-action: pan-down; }
-
 /*
 Two modes:
     side: Touch menu side-by-side with content
