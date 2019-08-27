@@ -76,7 +76,9 @@ Two modes:
         transform : none !important;
     }
 
-    .touch-menu {}
+    .touch-menu {
+        position: relative;
+    }
     .touch-pre-menu {}
     .touch-post-menu {}
 }

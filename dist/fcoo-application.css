@@ -712,6 +712,8 @@ Two modes:
     transform: none !important; }
     .touch-menu-container.closed.no-animation {
       transition: none !important; }
+  .touch-menu-container .touch-menu {
+    position: relative; }
 
 .touch-menu-handle {
   position: absolute; }
