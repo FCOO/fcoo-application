@@ -655,14 +655,14 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         }, options || {} );
 
         this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
+        this.options.scroll = this.options.scroll || this.options.verticalMenu;
         this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
 
-        this.options.hammerDirection = Hammer.DIRECTION_ALL;
-//        this.options.hammerDirection = this.options.verticalMenu ? Hammer.DIRECTION_HORIZONTAL : Hammer.DIRECTION_VERTICAL;
-
+        this.options.hammerDirection =  this.options.verticalMenu ? Hammer.DIRECTION_ALL :
+                                        this.options.scroll ? Hammer.DIRECTION_ALL : Hammer.DIRECTION_VERTICAL;
+        this.options.scrollDirection = this.options.verticalMenu ? Hammer.DIRECTION_VERTICAL : Hammer.DIRECTION_HORIZONTAL;
         if (this.options.$neighbourContainer)
             this.options.$neighbourContainer.addClass('neighbour-container');
-
 
         //Initialize the menu
         this.$container = this.options.$container ? this.options.$container : $('<div/>');
@@ -672,6 +672,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             .addClass(this.options.menuClassName);
 
         this.setMode( this.options.modeOver );
+
+        this.isPanning = false;
+        this.onlyScroll = false;
 
         //Create container for the contents
         if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName || this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
@@ -692,10 +695,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .addClass('touch-menu flex-grow-1 flex-shrink-1')
                 .appendTo(this.$container);
 
-            this.$menu =
-                this.options.verticalMenu || this.options.scroll ?
-                $menuContainer.addScrollbar( this.options.scrollOptions ) :
-                $menuContainer;
+                if (this.options.verticalMenu || this.options.scroll){
+                    this.$menu = $menuContainer.addScrollbar( this.options.scrollOptions );
+                    this.perfectScrollbar = $menuContainer.perfectScrollbar;
+                }
+                else
+                    this.$menu = $menuContainer;
 
             //Move any content into the menu
             if (this.options.$menu)
@@ -869,10 +874,26 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
         //Events on menuHammer
         touchStartMenu: function (event) {
-            if (!this.currentHammerDirection)
-                this.currentHammerDirection = event.direction;
+            //Detect if only one direction is allowed
+            if (
+                //No already panning
+                !this.isPanning
+                //and has scroll
+                && this.options.scroll
+                //and scroll avaiable (content > container)
+                && (
+                    ( this.options.verticalMenu && (this.perfectScrollbar.contentHeight > this.perfectScrollbar.containerHeight)) ||
+                    (!this.options.verticalMenu && (this.perfectScrollbar.contentWidth > this.perfectScrollbar.containerWidth))
+                )
+            ){
+                this.isPanning = true;
+                if (event.direction & this.options.scrollDirection)
+                    this.onlyScroll = true;
+                else
+                    this.$menu.lockScrollbar();
+            }
 
-            if (this.currentHammerDirection & Hammer.DIRECTION_VERTICAL)
+            if (this.onlyScroll)
                 return;
 
             if (this.$container.hasClass('closed'))
@@ -889,11 +910,13 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         touchEndMenu: function (event) {
-            if (this.currentHammerDirection & Hammer.DIRECTION_HORIZONTAL){
+            if (!this.onlyScroll){
                 this.currentPos = this._getEventDelta(event);
                 this.checkMenuState(this.currentPos);
             }
-            this.currentHammerDirection = 0;
+            this.onlyScroll = false;
+            this.isPanning = false;
+            this.$menu.unlockScrollbar();
         },
 
         //Events on maskHammer
