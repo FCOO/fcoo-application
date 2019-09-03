@@ -36,14 +36,7 @@
         <div class="logo fcoo-app-color"></div>
     </div>
 
-
-    <script>
-//TEST        delete window.PointerEvent;
-    </script>
-
     <script src="bower_components.js"></script>
-
-
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
 
@@ -192,11 +185,13 @@
                         handleHeight: 40,
                         toggleOnHandleClick: true,
                         hideHandleWhenOpen: true
+                    },
+                    onResize: function(main){
+                        //Do something
                     }
             });
 
             main.leftMenu.$menu
-//HER                .css('background-color', 'pink')
                 .append($('<button onClick="modalDemo();">Modal demo</button>'))
                 .append($('<button onClick="setModeSide(main.leftMenu);">setMode(false)</button>'))
                 .append($('<button onClick="setModeOver(main.leftMenu);">setMode(true)</button>'));
