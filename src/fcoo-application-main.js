@@ -38,6 +38,7 @@ Create and manage the main structure for FCOO web applications
             bottomMenu          : null,  //Options for bottom-menu. See src/fcoo-application-touch.js
 
             onResize            : null,  //function(main) to be called when the main-container is finish resizing
+            onResizeDelay       :    0,  //mS before onResize is fired to avoid many calls if the size is changed rapidly
         }, options );
 
         var result = {
@@ -250,9 +251,13 @@ Create and manage the main structure for FCOO web applications
     var timeout = null;
 
     function _onMainResize(){
-        if (timeout)
-            window.clearTimeout(timeout);
-        timeout = setTimeout( this._onMainResizeFinish, 300);
+        if (this.options.onResizeDelay){
+            if (timeout)
+                window.clearTimeout(timeout);
+            timeout = setTimeout( this._onMainResizeFinish, this.options.onResizeDelay);
+        }
+        else
+            this._onMainResizeFinish();
     }
 
     function _onMainResizeFinish(){
