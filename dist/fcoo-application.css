@@ -42,6 +42,19 @@ $spacer                 : 1rem !default;
 Adjust dropdown-menu
 ************************************************************/
 /************************************************************
+Adjust modal
+************************************************************/
+/************************************************************
+COLOR
+
+background-color and text-color for
+headers modal, popover, tables, buttons, list-items etc.
+
+"$header-" is used for header to modal-windows and popover
+"$title-" is used for headers on content - table, accordion etc.
+"$control-" is used for buttons, list-items etc.
+************************************************************/
+/************************************************************
 VARIABLES
 ************************************************************/
 /***********************************************
@@ -61,6 +74,10 @@ $font-size-sm  : .8125rem   13px
 $font-size-xs  : .75rem     12px
 ************************************************************/
 /************************************************************
+BUTTON AND MODAL
+Opacity for semi-transparent and transparent content
+************************************************************/
+/************************************************************
 LABEL
 Font-sizes for labels are same siae as header but incl a xxs-size
 ************************************************************/
@@ -72,16 +89,6 @@ Using same font-size and vertical/horizontal padding as buttons
 /************************************************************
 MARGIN-BOTTOM
 All elements in modal-windows get same margin-bottom
-************************************************************/
-/************************************************************
-COLOR
-
-background-color and text-color for
-headers modal, popover, tables, buttons, list-items etc.
-
-"$header-" is used for header to modal-windows and popover
-"$title-" is used for headers on content - table, accordion etc.
-"$control-" is used for buttons, list-items etc.
 ************************************************************/
 /************************************************************
 MIXIN

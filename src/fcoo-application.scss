@@ -31,9 +31,10 @@ adjustments to Bootstrap from fcoo/jquery-bootstrap
 @import "../bower_components/bootstrap/scss/functions";
 @import "../bower_components/bootstrap/scss/variables";
 @import "../bower_components/bootstrap/scss/mixins";
+$niels: $gray-100;
 
-@import "../bower_components/jquery-bootstrap/src/variables";
 @import "../bower_components/jquery-bootstrap/src/color";
+@import "../bower_components/jquery-bootstrap/src/variables";
 @import "../bower_components/jquery-bootstrap/src/mixins";
 
 
