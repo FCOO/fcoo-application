@@ -398,19 +398,19 @@ Create and manage the top-menu for FCOO web applications
         exclude  : true/false - if true the button is not included in claculation of the total width
         title    : null - title for the button
         icon     : null - icon-class for the button
-        create   : function($menu, elementOptions, menuOptions) create and return $element. - function to create the button
+        create   : function($menu, elementOptions, menuOptions, topMenu) create and return $element. - function to create the button
     **********************************************/
     var topMenuElementList = [
         {
             id      : 'leftMenu',
-            icon    :'fa-bars',
+            icon    : 'fa-bars',
             priority: 0
         },
 
         //***************************************************************
         {
             id: 'logo',
-            create: function( /*$menu, elementOptions, menuOptions*/ ){
+            create: function( /*$menu, elementOptions, menuOptions, topMenu*/ ){
                 //FCOO logo with click to show "About FCOO"
                 return $('<a/>')
                             .addClass( 'icon-fcoo-app-logo top-menu-item' )
@@ -424,7 +424,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'header',
-            create: function( $menu, elementOptions, menuOptions ){
+            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
                 return $('<div/>')
                            .addClass('text-nowrap top-menu-item top-menu-header')
                            .i18n( menuOptions );
@@ -437,7 +437,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'search',
-            create: function( $menu /*, elementOptions, menuOptions*/ ){
+            create: function( $menu, elementOptions, menuOptions, topMenu ){
                 var $element =
                     $('<form onsubmit="return false;"/>')
                         .addClass('form-inline top-menu-item')
@@ -447,13 +447,16 @@ Create and manage the top-menu for FCOO web applications
                             .addClass('input-group')
                             .appendTo($element);
 
-                $('<input type="text" class="form-control"></div>')
-                    .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
-                    .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
-                    .appendTo( $inputGroup );
+                topMenu.searchInput =
+                    $('<input type="text" class="form-control"></div>')
+                        .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
+                        .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
+                        .appendTo( $inputGroup );
 
-                defaultTopMenuButton($menu, { icon:'fa-search' })
-                    .appendTo( $inputGroup );
+                topMenu.searchButton =
+                    defaultTopMenuButton($menu, { icon:'fa-search' })
+                        .appendTo( $inputGroup );
+
                 return $element;
             },
             addToElementList: function( $element, elementList ){
@@ -466,7 +469,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'warning',
-            create: function( $menu, elementOptions, menuOptions ){
+            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
                 //Create yellow warning square by overlaying two icons
                 var iconClass = 'fa-exclamation-square';
                 var $result = messageGroupTopMenuButton($menu, 'far ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
@@ -626,7 +629,7 @@ Create and manage the top-menu for FCOO web applications
             if (!menuOptions)
                 return true;
 
-            var $element = elementOptions.create( $menu, elementOptions, menuOptions );
+            var $element = elementOptions.create( $menu, elementOptions, menuOptions, result );
             if ($element){
                 result[elementOptions.id] = $element;
                 $element.appendTo( $menu );
@@ -1112,15 +1115,15 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 Set-up of common systems, objects, and methods for FCOO web applications
 Sections:
-1: Namespace, application states, system variables, global events, "FCOO"-variables
-2: Methods to load and save all hash and parameters
-3: Set up 'loading...'
-4: Initialize offline.js - http://github.hubspot.com/offline/
-5: Initialize raven to report all uncaught exceptions to sentry AND
+1: Set-up standard error-handler and message for promise
+2: Namespace, application states, system variables, global events, "FCOO"-variables
+3: Methods to load and save all hash and parameters
+4: Set up 'loading...'
+5: Initialize offline.js - http://github.hubspot.com/offline/
+6: Initialize raven to report all uncaught exceptions to sentry AND
    Adding the Piwik Tracking Code
-6: Set up and initialize jquery-bootstrap
-7: Set-up jquery-bootstrap-message for different type of messages
-8: Set-up standard error-handler and message for promise
+7: Set up and initialize jquery-bootstrap
+8: Set-up jquery-bootstrap-message for different type of messages
 ****************************************************************************/
 
 (function ($, window, Promise/*, document, undefined*/) {
@@ -1128,7 +1131,122 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    1: Namespace, application states, system variables, , global events, "FCOO"-variables
+    1: Set-up standard error-handler and message for promise
+    ************************************************************************
+    ***********************************************************************/
+    //Maintain a list of open notys with promise errors. Prevent showing the same error in multi notys
+    var promiseErrorNotys = {};
+
+    //urlToNotyQueueId {url: QueueId}. The queue-id to be used for a given url
+    var urlToNotyQueueId = {};
+
+    //Create a default error-handle. Can be overwritten
+    Promise.defaultErrorHandler = function( error ){
+        //Create the content of the error-noty like
+        //"Error"
+        //"Error-message (error-code)"
+        var message =   error.status ?
+                        window.i18next.t( 'error:'+error.status ) :
+                        error.message || '';
+        if (message && (message == error.status))
+            //No status-code or translation => use error.message
+            message = error.message || '';
+
+        var url = error.url || '';
+
+        //Adjust url to absolute path (very simple)
+        if (url.indexOf('http') == -1){
+            var parts = window.location.href.split('/');
+            parts.pop();
+            url = parts.join('/') + (url.indexOf('/') != 0 ? '/' : '') + url;
+        }
+
+        //Remove any "dummy=ANYTHING" from url to prevent multi error-noty for same url (NOT PRETTY :-) )
+        if (url.indexOf('dummy=') != -1){
+            var newUrl = url.split('dummy=');
+            newUrl.pop();
+            url = newUrl.join('');
+            if ((url.charAt(url.length-1) == '&') || (url.charAt(url.length-1) == '?'))
+                url = url.slice(0, -1);
+        }
+
+        var content = [
+                $('<div class="font-weight-bold"/>').i18n({da:'Fejl', en:'Error'}),
+                $('<span/>').text( message ),
+                error.status ? ' (' + error.status  + ')' : null
+            ],
+            $details = $('<div style="font-family: monospace" class="d-none error-details"><hr></div>'),
+            hasDetails = false,
+            descKey = error.status ? 'error:'+error.status+'-desc' : '',
+            desc = descKey ? window.i18next.t( descKey ) : '';
+
+        if (desc == descKey)
+            desc = '';
+
+        //Create details
+        var details = [
+                {prompt: {da:'Kode', en:'Code'}              , property: error.status },
+                {prompt: 'Url'                               , property: url          },
+                {prompt: {da:'Beskrivelse', en:'Description'}, property: desc         }
+                //TODO Add rest of possible properties (if any?)
+            ];
+
+        $.each( details, function( index, detail ){
+            var content = detail.property || '';
+            if (content){
+                if (hasDetails)
+                    $details.append('<br>');
+                $details.append( $('<span/>').i18n( detail.prompt) );
+                $details.append(': '+content);
+                hasDetails = true;
+            }
+        });
+
+        if (hasDetails)
+            content.push( $details );
+
+        //Create a noty-id to prevent showing same error in more than one noty
+        var notyId = (error.status || '999') +
+                     url.replace(/\//g, "_") +
+                     message.replace(/ /g, "_");
+
+        //If a noty with same id already existe => flash if!
+        if (promiseErrorNotys[notyId])
+            promiseErrorNotys[notyId].flash();
+        else
+            //If no network connection => flash the noty with "No network connection"-error
+            if (ns.offlineNoty && ns.offlineNoty.shown && !ns.offlineNoty.closed){
+                ns.offlineNoty.flash();
+            }
+            else {
+                //Create a new noty
+                var toggleDetails = function(event){
+                        $(promiseErrorNotys[notyId].barDom).find('.noty-footer a, .error-details').toggleClass('d-none');
+                        event.stopPropagation();
+                    };
+
+                promiseErrorNotys[notyId] = $.bsNoty({
+                    id       : notyId,
+                    type     : 'error',
+
+                    onTop    : true,
+                    onTopLayerClassName: 'noty-on-top',
+                    queue    : error.url ? urlToNotyQueueId[error.url] || null : null,
+                    callbacks: { onClose: function(){ promiseErrorNotys[notyId] = null; } },
+                    layout   : 'topCenter',
+                    closeWith: ['button'],
+                    content  : content,
+                    footer   : hasDetails ? [
+                                   {                    text:{da:'Vis detaljer',   en:'Show details'}, onClick: toggleDetails},
+                                   {textClass:'d-none', text:{da:'Skjul detaljer', en:'Hide details'}, onClick: toggleDetails}
+                               ] : null
+                });
+            }
+    };
+
+    /***********************************************************************
+    ************************************************************************
+    2: Namespace, application states, system variables, , global events, "FCOO"-variables
     ************************************************************************
     ***********************************************************************/
 
@@ -1231,11 +1349,8 @@ Sections:
     /*********************************************************************
     Global class-names for icons
     *********************************************************************/
-
     ns.icons = {
         working: 'far fa-spinner fa-spin',
-
-
     };
 
     //Alternative
@@ -1243,7 +1358,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    2: Methods to load and save all hash and parameters
+    3: Methods to load and save all hash and parameters
     ************************************************************************
     ***********************************************************************/
     //window.fcoo.parseAll - return object with all parameter and hash from url or localStorage
@@ -1298,7 +1413,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    3: Set up 'loading...'
+    4: Set up 'loading...'
     ************************************************************************
     ***********************************************************************/
     var $html = $('html'),
@@ -1343,7 +1458,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    4: Initialize offline.js - http://github.hubspot.com/offline/
+    5: Initialize offline.js - http://github.hubspot.com/offline/
     ************************************************************************
     ***********************************************************************/
     //Add modernizr-test-style connected
@@ -1548,7 +1663,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    5: Initialize raven to report all uncaught exceptions to sentry AND
+    6: Initialize raven to report all uncaught exceptions to sentry AND
        Adding the Piwik Tracking Code
     ************************************************************************
     ***********************************************************************/
@@ -1589,7 +1704,7 @@ Sections:
 */
     /***********************************************************************
     ************************************************************************
-    6: Set up and initialize jquery-bootstrap
+    7: Set up and initialize jquery-bootstrap
     ************************************************************************
     ***********************************************************************/
     //window.bsIsTouch is used by jquery-bootstrap to determent the size of different elements.
@@ -1652,7 +1767,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    7: Set-up jquery-bootstrap-message for different type of messages
+    8: Set-up jquery-bootstrap-message for different type of messages
     ************************************************************************
     ***********************************************************************/
     //Add 'messages' to fcoo.settings
@@ -1689,21 +1804,26 @@ Sections:
             loading: { icon: ns.icons.working },
 
             onStartLoading : function( messageGroup ){
-                //Disable the button while reading data
-                messageGroup.options.$button.addClass('disabled');
-            },
+                //Add messageGroup-id as noty-queue-id for all data-files in the message-group
+                $.each(messageGroup.options.url, function(id, nextUrl){
+                    urlToNotyQueueId[nextUrl] = messageGroup.options.id;
+                });
 
+                if (messageGroup.options.hideOnError)
+                    //Hide button while reading data
+                    messageGroup.options.$button.hide();
+                else
+                    //Disable the button while reading data
+                    messageGroup.options.$button.addClass('disabled');
+
+            },
+/*
             onErrorLoading : function( messageGroup ){
-                //Save the notyId
-                messageGroup.errorNotyIdList = messageGroup.errorNotyIdList || [];
-                messageGroup.errorNotyIdList.push( ns.lastNotyId );
             },
-
+*/
             onFinishLoading: function( messageGroup ){
                 //Close all error-noty displayed during loading
-                $.each(messageGroup.errorNotyIdList || [], function(index, notyId){
-                    window.Noty.closeAll(notyId);
-                });
+                window.Noty.closeAll(messageGroup.options.id);
 
                 //Set the header to singular or plural
                 var type = messageGroup.options.type;
@@ -1712,8 +1832,12 @@ Sections:
                     text: messageGroup.getAllStatus().publish == 1 ? $.bsNotyName[type] : $.bsNotyNames[type]
                 };
 
-                //Enable the button after reading data
-                messageGroup.options.$button.removeClass('disabled');
+                if (messageGroup.options.hideOnError)
+                    //Show button after reading data
+                    messageGroup.options.$button.show();
+                else
+                    //Enable the button after reading data
+                    messageGroup.options.$button.removeClass('disabled');
             },
 
             shakeWhenUnread: false,
@@ -1750,6 +1874,7 @@ Sections:
                 showTypeHeader : true,
                 showTypeColor  : true,
                 vfFormat       : 'time_local',
+                hideOnError    : true,
                 shakeWhenUnread: true,
 
                 //Save status as sessionStorage
@@ -1823,118 +1948,5 @@ Sections:
     };
 
 
-    /***********************************************************************
-    ************************************************************************
-    8: Set-up standard error-handler and message for promise
-    ************************************************************************
-    ***********************************************************************/
-    //Maintain a list of open notys with promise errors. Prevent showing the same error in multi notys
-    var promiseErrorNotys = {};
-
-    //Create a default error-handle. Can be overwritten
-    Promise.defaultErrorHandler = function( reason, url ){
-        var error = Promise.convertReasonToError( reason );
-
-        //Create the content of the error-noty like
-        //"Error"
-        //"Error-message (error-code)"
-        var message =   error.status ?
-                        window.i18next.t( 'error:'+error.status ) :
-                        error.message || '';
-        if (message && (message == error.status))
-            //No status-code or translation => use error.message
-            message = error.message || '';
-
-        //Adjust url to absolute path (very simple)
-        if (url.indexOf('http') == -1){
-            var parts = window.location.href.split('/');
-            parts.pop();
-            url = parts.join('/') + (url.indexOf('/') != 0 ? '/' : '') + url;
-        }
-
-        //Remove any "dummy=ANYTHING" from url to prevent multi error-noty for same url (NOT PRETTY :-) )
-        if (url.indexOf('dummy=') != -1){
-            var newUrl = url.split('dummy=');
-            newUrl.pop();
-            url = newUrl.join('');
-            if ((url.charAt(url.length-1) == '&') || (url.charAt(url.length-1) == '?'))
-                url = url.slice(0, -1);
-        }
-
-        var content = [
-                $('<div class="font-weight-bold"/>').i18n({da:'Fejl', en:'Error'}),
-                $('<span/>').text( message ),
-                error.status ? ' (' + error.status  + ')' : null
-            ],
-            $details = $('<div style="font-family: monospace" class="d-none error-details"><hr></div>'),
-            hasDetails = false,
-            descKey = error.status ? 'error:'+error.status+'-desc' : '',
-            desc = descKey ? window.i18next.t( descKey ) : '';
-
-        if (desc == descKey)
-            desc = '';
-
-        //Create details
-        var details = [
-                {prompt: {da:'Kode', en:'Code'}              , property: error.status },
-                {prompt: 'Url'                               , property: url          },
-                {prompt: {da:'Beskrivelse', en:'Description'}, property: desc         }
-                //TODO Add rest of possible properties (if any?)
-            ];
-
-        $.each( details, function( index, detail ){
-            var content = detail.property || '';
-            if (content){
-                if (hasDetails)
-                    $details.append('<br>');
-                $details.append( $('<span/>').i18n( detail.prompt) );
-                $details.append(': '+content);
-                hasDetails = true;
-            }
-        });
-
-        if (hasDetails)
-            content.push( $details );
-
-        //Create a noty-id to prevent showing same error in more than one noty
-        var notyId = (error.status || '999') +
-                     url.replace(/\//g, "_") +
-                     message.replace(/ /g, "_");
-
-        ns.lastNotyId = notyId;
-
-        //If a noty with same id already existe => flash if!
-        if (promiseErrorNotys[notyId])
-            promiseErrorNotys[notyId].flash();
-        else
-            //If no network connection => flash the noty with "No network connection"-error
-            if (ns.offlineNoty && ns.offlineNoty.shown && !ns.offlineNoty.closed){
-                ns.offlineNoty.flash();
-            }
-            else {
-                //Create a new noty
-                var toggleDetails = function(event){
-                        $(promiseErrorNotys[notyId].barDom).find('.noty-footer a, .error-details').toggleClass('d-none');
-                        event.stopPropagation();
-                    };
-
-                promiseErrorNotys[notyId] = $.bsNoty({
-                    id       : notyId,
-                    type     : 'error',
-
-                    onTop    : true,
-                    onTopLayerClassName: 'noty-on-top',
-
-                    callbacks: { onClose: function(){ promiseErrorNotys[notyId] = null; } },
-                    layout: 'topCenter',
-                    closeWith:['button'],
-                    content: content,
-                    footer: hasDetails ? [
-                                {                    text:{da:'Vis detaljer',   en:'Show details'}, onClick: toggleDetails},
-                                {textClass:'d-none', text:{da:'Skjul detaljer', en:'Hide details'}, onClick: toggleDetails}
-                            ] : null
-                });
-            }
-    };
 
 }(jQuery, this, this.Promise, document));

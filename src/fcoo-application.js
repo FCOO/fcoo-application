@@ -30,6 +30,9 @@ Sections:
     //Maintain a list of open notys with promise errors. Prevent showing the same error in multi notys
     var promiseErrorNotys = {};
 
+    //urlToNotyQueueId {url: QueueId}. The queue-id to be used for a given url
+    var urlToNotyQueueId = {};
+
     //Create a default error-handle. Can be overwritten
     Promise.defaultErrorHandler = function( error ){
         //Create the content of the error-noty like
@@ -100,8 +103,6 @@ Sections:
                      url.replace(/\//g, "_") +
                      message.replace(/ /g, "_");
 
-        ns.lastNotyId = notyId;
-
         //If a noty with same id already existe => flash if!
         if (promiseErrorNotys[notyId])
             promiseErrorNotys[notyId].flash();
@@ -116,21 +117,22 @@ Sections:
                         $(promiseErrorNotys[notyId].barDom).find('.noty-footer a, .error-details').toggleClass('d-none');
                         event.stopPropagation();
                     };
+
                 promiseErrorNotys[notyId] = $.bsNoty({
                     id       : notyId,
                     type     : 'error',
 
                     onTop    : true,
                     onTopLayerClassName: 'noty-on-top',
-
+                    queue    : error.url ? urlToNotyQueueId[error.url] || null : null,
                     callbacks: { onClose: function(){ promiseErrorNotys[notyId] = null; } },
-                    layout: 'topCenter',
-                    closeWith:['button'],
-                    content: content,
-                    footer: hasDetails ? [
-                                {                    text:{da:'Vis detaljer',   en:'Show details'}, onClick: toggleDetails},
-                                {textClass:'d-none', text:{da:'Skjul detaljer', en:'Hide details'}, onClick: toggleDetails}
-                            ] : null
+                    layout   : 'topCenter',
+                    closeWith: ['button'],
+                    content  : content,
+                    footer   : hasDetails ? [
+                                   {                    text:{da:'Vis detaljer',   en:'Show details'}, onClick: toggleDetails},
+                                   {textClass:'d-none', text:{da:'Skjul detaljer', en:'Hide details'}, onClick: toggleDetails}
+                               ] : null
                 });
             }
     };
@@ -695,23 +697,26 @@ Sections:
             loading: { icon: ns.icons.working },
 
             onStartLoading : function( messageGroup ){
-                //Disable the button while reading data
-                messageGroup.options.$button.addClass('disabled');
-            },
+                //Add messageGroup-id as noty-queue-id for all data-files in the message-group
+                $.each(messageGroup.options.url, function(id, nextUrl){
+                    urlToNotyQueueId[nextUrl] = messageGroup.options.id;
+                });
 
+                if (messageGroup.options.hideOnError)
+                    //Hide button while reading data
+                    messageGroup.options.$button.hide();
+                else
+                    //Disable the button while reading data
+                    messageGroup.options.$button.addClass('disabled');
+
+            },
+/*
             onErrorLoading : function( messageGroup ){
-                //Save the notyId
-                messageGroup.errorNotyIdList = messageGroup.errorNotyIdList || [];
-                messageGroup.errorNotyIdList.push( ns.lastNotyId );
-
-console.log('ERROR', messageGroup);
             },
-
+*/
             onFinishLoading: function( messageGroup ){
                 //Close all error-noty displayed during loading
-                $.each(messageGroup.errorNotyIdList || [], function(index, notyId){
-                    window.Noty.closeAll(notyId);
-                });
+                window.Noty.closeAll(messageGroup.options.id);
 
                 //Set the header to singular or plural
                 var type = messageGroup.options.type;
@@ -720,8 +725,12 @@ console.log('ERROR', messageGroup);
                     text: messageGroup.getAllStatus().publish == 1 ? $.bsNotyName[type] : $.bsNotyNames[type]
                 };
 
-                //Enable the button after reading data
-                messageGroup.options.$button.removeClass('disabled');
+                if (messageGroup.options.hideOnError)
+                    //Show button after reading data
+                    messageGroup.options.$button.show();
+                else
+                    //Enable the button after reading data
+                    messageGroup.options.$button.removeClass('disabled');
             },
 
             shakeWhenUnread: false,
