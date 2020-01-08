@@ -40,6 +40,8 @@
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
 
+    <script src="../src/fcoo-application.js"></script>
+
     <script src="../src/fcoo-application-main.js"></script>
 
     <script src="../src/fcoo-application-top-menu.js"></script>
@@ -47,7 +49,6 @@
     <script src="../src/fcoo-application-touch.js"></script>
 
     <script src="../src/fcoo-application-about.js"></script>
-    <script src="../src/fcoo-application.js"></script>
 
 
 	<script>
@@ -204,8 +205,8 @@
 
 
             $('<select id="theSelect" style="width:200px"></select><br>'+
-            '<button onClick="fcoo.settings.set("language", "da");"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>'+
-            '<button onClick="fcoo.settings.set("language", "en");"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>'+
+            '<button onClick="fcoo.settings.set(\'language\', \'da\');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button><br>'+
+            '<button onClick="fcoo.settings.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br><br>'+
             '<button onClick="modalDemo();">Modal demo</button><br><br>'+
             '<button onClick="notyDemo();">Noty demo</button><br><br>'+
             '<div class="show-for-mouse">Vises kun, hvis der er en mus</div>').appendTo(main.$mainContainer);

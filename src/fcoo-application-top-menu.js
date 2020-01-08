@@ -70,19 +70,19 @@ Create and manage the top-menu for FCOO web applications
         exclude  : true/false - if true the button is not included in claculation of the total width
         title    : null - title for the button
         icon     : null - icon-class for the button
-        create   : function($menu, elementOptions, menuOptions) create and return $element. - function to create the button
+        create   : function($menu, elementOptions, menuOptions, topMenu) create and return $element. - function to create the button
     **********************************************/
     var topMenuElementList = [
         {
             id      : 'leftMenu',
-            icon    :'fa-bars',
+            icon    : 'fa-bars',
             priority: 0
         },
 
         //***************************************************************
         {
             id: 'logo',
-            create: function( /*$menu, elementOptions, menuOptions*/ ){
+            create: function( /*$menu, elementOptions, menuOptions, topMenu*/ ){
                 //FCOO logo with click to show "About FCOO"
                 return $('<a/>')
                             .addClass( 'icon-fcoo-app-logo top-menu-item' )
@@ -96,7 +96,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'header',
-            create: function( $menu, elementOptions, menuOptions ){
+            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
                 return $('<div/>')
                            .addClass('text-nowrap top-menu-item top-menu-header')
                            .i18n( menuOptions );
@@ -109,7 +109,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'search',
-            create: function( $menu /*, elementOptions, menuOptions*/ ){
+            create: function( $menu, elementOptions, menuOptions, topMenu ){
                 var $element =
                     $('<form onsubmit="return false;"/>')
                         .addClass('form-inline top-menu-item')
@@ -119,13 +119,16 @@ Create and manage the top-menu for FCOO web applications
                             .addClass('input-group')
                             .appendTo($element);
 
-                $('<input type="text" class="form-control"></div>')
-                    .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
-                    .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
-                    .appendTo( $inputGroup );
+                topMenu.searchInput =
+                    $('<input type="text" class="form-control"></div>')
+                        .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
+                        .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
+                        .appendTo( $inputGroup );
 
-                defaultTopMenuButton($menu, { icon:'fa-search' })
-                    .appendTo( $inputGroup );
+                topMenu.searchButton =
+                    defaultTopMenuButton($menu, { icon:'fa-search' })
+                        .appendTo( $inputGroup );
+
                 return $element;
             },
             addToElementList: function( $element, elementList ){
@@ -138,7 +141,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'warning',
-            create: function( $menu, elementOptions, menuOptions ){
+            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
                 //Create yellow warning square by overlaying two icons
                 var iconClass = 'fa-exclamation-square';
                 var $result = messageGroupTopMenuButton($menu, 'far ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
@@ -298,7 +301,7 @@ Create and manage the top-menu for FCOO web applications
             if (!menuOptions)
                 return true;
 
-            var $element = elementOptions.create( $menu, elementOptions, menuOptions );
+            var $element = elementOptions.create( $menu, elementOptions, menuOptions, result );
             if ($element){
                 result[elementOptions.id] = $element;
                 $element.appendTo( $menu );

@@ -19735,7 +19735,7 @@ return jQuery;
             lng = _name$split4[0],
             ns = _name$split4[1];
 
-        this.read(lng, ns, 'read', null, null, function (err, data) {
+        this.read(lng, ns, 'read', undefined, undefined, function (err, data) {
           if (err) _this5.logger.warn("".concat(prefix, "loading namespace ").concat(ns, " for language ").concat(lng, " failed"), err);
           if (!err && data) _this5.logger.log("".concat(prefix, "loaded namespace ").concat(ns, " for language ").concat(lng), data);
 
@@ -26630,37 +26630,42 @@ module.exports = ret;
 (function ($, window, Promise/*, document, undefined*/) {
     "use strict";
 
-    //Convert a reason to error-object
-    Promise.convertReasonToError = function( reason ){
-        var result = new Error(),
-            response = reason ? reason.response || {} : {};
-
-        result.name    = 'Error';
-        result.message = reason.message || '';
-        result.url     = response.url || '';
-        result.status  = response.status || '';
-        return result;
-    };
-
     //Create a default error-handle. Can be overwritten
-    Promise.defaultErrorHandler = Promise.defaultErrorHandler || function( /* reason, url */ ){};
+    Promise.defaultErrorHandler = Promise.defaultErrorHandler || function( /* error: {name, status, message, text, statusText}  */ ){};
+
+    function createErrorObject( reason, url ){
+        var response = reason.response,
+            text = response ? response.statusText :
+                    reason.message ? reason.message :
+                    reason;
+        return {
+            name      : 'Error',
+            status    : response ? response.status : null,
+            url       : url,
+            message   : text,
+            text      : text,
+            statusText: text
+        };
+    }
 
     //Set event handler for unhandled rejections
-    window.onunhandledrejection = function(e){
+    window.onunhandledrejection = function(e, promise){
         if (e && e.preventDefault)
             e.preventDefault();
 
-        if (e && e.detail){
-            var reason = e.detail.reason || {},
-                promise = e.detail.promise,
-                promiseOptions = promise.promiseOptions || {},
-                response = reason.response || {},
-                url = response.url || promiseOptions.url || '';
+        //Unknown why, but in some browwsers onunhandledrejection is called twice - one time with e.detail
+        if (e && e.detail)
+            return false;
 
-            //Call default error handler
-            Promise.defaultErrorHandler( reason, url );
-        }
+        var url = promise && promise.promiseOptions ? promise.promiseOptions.url : null;
+
+        Promise.defaultErrorHandler( createErrorObject( e, url ) );
     };
+
+    function callDefaultErrorHandle(reason, url){
+        return Promise.defaultErrorHandler( createErrorObject( reason, url ) );
+    }
+
 
     /**************************************************************
     Promise.fetch( url, options )
@@ -26683,8 +26688,6 @@ module.exports = ret;
         //Adding parame dummy=12345678 if options.noCache: true to force no-cache. TODO: Replaced with correct header
         if (options.noCache)
             url = url + (url.indexOf('?') > 0 ? '&' : '?') + 'dummy='+Math.random().toString(36).substr(2, 9);
-
-
 
         return new Promise(function(resolve, reject) {
             var wrappedFetch = function(n) {
@@ -26751,7 +26754,6 @@ module.exports = ret;
 
         if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
             var error = new Error("Invalid XML");
-            //error.response = response;
             throw error;
         }
         return xml;
@@ -26761,11 +26763,10 @@ module.exports = ret;
     Promise.get = function(url, options, resolve, reject, fin) {
         options = $.extend({}, {
             //Default options
-            url: url,
+            url                   : url,
             useDefaultErrorHandler: true,
             retries               : 0
         }, options || {} );
-
 
         resolve = resolve || options.resolve || options.done;
         reject  = reject  || options.reject  || options.fail;
@@ -26805,24 +26806,27 @@ module.exports = ret;
             result = result.then( resolve );
 
         //Adding error/reject promise
+        var defaultReject = function(reason){
+                return callDefaultErrorHandle(reason, options.url);
+            };
+
         if (reject){
             //If options.useDefaultErrorHandler => also needs to call => Promise.defaultErrorHandler
             if (options.useDefaultErrorHandler)
-                result = result.catch( function( /*reason, url */ ){
-                    reject.apply( null, arguments );
-                    return Promise.defaultErrorHandler.apply( null, arguments );
+                result = result.catch( function( reason ){
+                    reject( createErrorObject( reason, options.url ) );
+                    return defaultReject.call( null, reason );
                 });
             else
                 //Just use reject as catch
-                result = result.catch( reject );
-
+                result = result.catch( function( reason ){
+                    return reject( createErrorObject( reason, options.url ) );
+                });
         }
-        else {
+        else
             if (!options.useDefaultErrorHandler)
                 //Prevent the use of Promise.defaultErrorHandler
                 result = result.catch( function(){} );
-
-        }
 
         //Adding finally (if any)
         if (fin)
@@ -26861,12 +26865,6 @@ module.exports = ret;
                             $.extend( {}, options , { format: 'xml' }),
                             resolve, reject, fin );
     };
-
-
-    //Initialize/ready
-    $(function() {
-
-    });
 
 }(jQuery, this, Promise, document));
 
@@ -74331,22 +74329,14 @@ if (typeof define === 'function' && define.amd) {
             }
             window.Promise.getText(
                 _this.options.url, {
-                    "resolve": function( content ){ _this.content = content; },
-                    "finally": _this._onLoad.bind(_this),
-                }
+                    resolve: _this._resolve.bind(_this),
+                    reject : _this._reject.bind(_this)
+            }
             );
         },
 
-        _onLoad: function(){
-            //If no expected content was loaded => go back to previous file (if any) or close the modal-window
-            if (!this.content){
-                if (this.historyList.index >= 0)
-                    this.historyList.goBack();
-                else
-                    this.bsModal.modal('hide');
-                return;
-            }
-
+        _resolve: function( content ){
+            this.content = content;
             this.$modalContainer.empty();
 
             //Convert content (if any) to html OR use header as content
@@ -74361,6 +74351,18 @@ if (typeof define === 'function' && define.amd) {
 
             //Remove fixed height set during loading
             this.$modalContainer.parent().css('height', 'initial');
+        },
+
+
+        _reject: function(){
+            //If no expected content was loaded => go back to previous file (if any) or close the modal-window
+            var closeModal = (this.historyList.index <= 0);
+            if (this.historyList.index >= 0){
+                this.historyList.goBack();
+                this.historyList.clearFuture();
+            }
+            if (closeModal)
+                this.bsModal.close();
         },
 
         _onClose: function(){
@@ -74394,7 +74396,7 @@ if (typeof define === 'function' && define.amd) {
                     flexWidth    : true,
                     extraWidth   : this.options.extraWidth,
 //                    noVerticalPadding
-                    content      : function( $container ){ _this.$modalContainer = $container; },
+                    content      : '&nbsp;',//function( $container ){ _this.$modalContainer = _this.$modalContainer || $container; },
                     scroll       : true,
 
                     historyList: this.historyList,
@@ -74435,6 +74437,8 @@ if (typeof define === 'function' && define.amd) {
                               }] : [],
 //                    closeText
                 });
+
+            this.$modalContainer = this.$modalContainer || this.bsModal.bsModal.$content;
 
             if (this.options.reset || (this.historyList.lastIndex <= 0)){
                 //Hide back- and forward-icons
@@ -74627,13 +74631,11 @@ if (typeof define === 'function' && define.amd) {
 
             title.push( {text: this.options.title} );
 
-
             if (this.options.url)
                 title.push(
                     {text: '...'},
                     {icon: this.options.icons.angleRight}
                 );
-
 
             return {
                 id    : '_' + this.options.id,
@@ -74642,22 +74644,14 @@ if (typeof define === 'function' && define.amd) {
                 date  : this.options.date,
                 title : title
             };
-
         },
 
         /**********************************************
         asBsModal - return a bsModal with all messages
         **********************************************/
         asBsModal: function( show ){
-
-            if (this.parent.bsModalMessage){
-                this.parent.bsModalMessage.modal('hide');
-                this.parent.bsModalMessage.remove();
-            }
-            this.parent.bsModalMessage = null;
-
-
-
+            this.parent._closeCurrentMessageModal();
+            this.parent.currentMessage = this;
 
             this.setStatus( true );
             var footer = this.parent.options.vfFormat ? {
@@ -74687,14 +74681,13 @@ if (typeof define === 'function' && define.amd) {
                         footer : footer,
                         loading: this.parent.options.loading
                     });
-
-                this.parent.bsModalMessage = this.bsMarkdown.asBsModal( false );
+                this.currentModal = this.bsMarkdown.asBsModal( false );
             }
 
             else {
 
                 //No file => just display the title in a BsModal
-                this.parent.bsModalMessage = $.bsModal({
+                this.currentModal = $.bsModal({
                     scroll : false,
                     header : this.parent.options.showTypeHeader ? {
                                 icon: $.bsNotyIcon[this.options.type],
@@ -74713,7 +74706,7 @@ if (typeof define === 'function' && define.amd) {
             }
 
             if (show)
-                this.parent.bsModalMessage.show();
+                this.currentModal.show();
         }
 	};
 
@@ -74826,20 +74819,32 @@ if (typeof define === 'function' && define.amd) {
             });
         },
 
+        _closeCurrentMessageModal: function(){
+            //Close and remove modal for current message (if any)
+            if (!this.currentMessage) return;
+
+            if (this.currentMessage.bsMarkdown){
+                this.currentMessage.bsMarkdown.bsModal = null;
+                this.currentMessage.bsMarkdown.$modalContainer = null;
+                this.currentMessage.bsMarkdown = null;
+            }
+
+            if (this.currentMessage.currentModal){
+                this.currentMessage.currentModal.close();
+                this.currentMessage.currentModal.remove();
+                this.currentMessage.currentModal = null;
+            }
+            this.currentMessage = null;
+        },
+
         load: function(){
             var _this = this;
             this.isLoading = true;
 
-
-            if (this.bsModalMessage){
-                this.bsModalMessage.modal('hide');
-                this.bsModalMessage.remove();
-            }
-            this.bsModalMessage = null;
-
+            this._closeCurrentMessageModal();
 
             if (this.bsModal){
-                this.bsModal.modal('hide');
+                this.bsModal.close();
                 this.bsModal.remove();
             }
             this.bsModal = null;
@@ -74851,16 +74856,12 @@ if (typeof define === 'function' && define.amd) {
             Promise
                 .all(
                     this.options.url.map( function( url, index ){
-                        return Promise.getJSON( url )
-                                   .then ( function( json ){
-                                       _this._add( json, url, index );
-                                   });
+                        return Promise.getJSON( url, {},
+                                   function( json ){ _this._add( json, url, index ); },
+                                   function(){ _this.error = true; }
+                               );
                     })
                 )
-                .catch( function(error) {
-                    _this.error = true;
-                    throw error;
-                })
                 .finally( this._finally.bind(this) );
         },
 

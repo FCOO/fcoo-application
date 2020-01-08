@@ -43,8 +43,8 @@
             "id": "2",
             "date": "2017-01-01",
             "type": "error",
-            "url": "data/browser/da.txtFEJL",
-            "title": {"da":"Dette er info-besked 2", "en":"This is a info message 2"}
+            "url": "data/browser/da.txtEJL",
+            "title": {"da":"FEJL - Denne fil fil findes ikke", "en":"Error - This file do not exists"}
         },
         {
             "id": "1",
