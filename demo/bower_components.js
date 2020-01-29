@@ -10599,6 +10599,2386 @@ return jQuery;
 
 ;
 /*!
+ * modernizr v3.3.1
+ * Build http://modernizr.com/download?-csschunit-csspointerevents-cssremunit-flexbox-flexboxlegacy-flexboxtweener-flexwrap-fullscreen-touchevents-addtest-atrule-hasevent-mq-prefixed-setclasses-dontmin
+ *
+ * Copyright (c)
+ *  Faruk Ates
+ *  Paul Irish
+ *  Alex Sexton
+ *  Ryan Seddon
+ *  Patrick Kettner
+ *  Stu Cox
+ *  Richard Herrera
+
+ * MIT License
+ */
+
+/*
+ * Modernizr tests which native CSS3 and HTML5 features are available in the
+ * current UA and makes the results available to you in two ways: as properties on
+ * a global `Modernizr` object, and as classes on the `<html>` element. This
+ * information allows you to progressively enhance your pages with a granular level
+ * of control over the experience.
+*/
+
+;(function(window, document, undefined){
+  var tests = [];
+
+
+  /**
+   *
+   * ModernizrProto is the constructor for Modernizr
+   *
+   * @class
+   * @access public
+   */
+
+  var ModernizrProto = {
+    // The current version, dummy
+    _version: '3.3.1',
+
+    // Any settings that don't work as separate modules
+    // can go in here as configuration.
+    _config: {
+      'classPrefix': '',
+      'enableClasses': true,
+      'enableJSClass': true,
+      'usePrefixes': true
+    },
+
+    // Queue of tests
+    _q: [],
+
+    // Stub these for people who are listening
+    on: function(test, cb) {
+      // I don't really think people should do this, but we can
+      // safe guard it a bit.
+      // -- NOTE:: this gets WAY overridden in src/addTest for actual async tests.
+      // This is in case people listen to synchronous tests. I would leave it out,
+      // but the code to *disallow* sync tests in the real version of this
+      // function is actually larger than this.
+      var self = this;
+      setTimeout(function() {
+        cb(self[test]);
+      }, 0);
+    },
+
+    addTest: function(name, fn, options) {
+      tests.push({name: name, fn: fn, options: options});
+    },
+
+    addAsyncTest: function(fn) {
+      tests.push({name: null, fn: fn});
+    }
+  };
+
+
+
+  // Fake some of Object.create so we can force non test results to be non "own" properties.
+  var Modernizr = function() {};
+  Modernizr.prototype = ModernizrProto;
+
+  // Leak modernizr globally when you `require` it rather than force it here.
+  // Overwrite name so constructor name is nicer :D
+  Modernizr = new Modernizr();
+
+
+
+  var classes = [];
+
+
+  /**
+   * is returns a boolean if the typeof an obj is exactly type.
+   *
+   * @access private
+   * @function is
+   * @param {*} obj - A thing we want to check the type of
+   * @param {string} type - A string to compare the typeof against
+   * @returns {boolean}
+   */
+
+  function is(obj, type) {
+    return typeof obj === type;
+  }
+  ;
+
+  /**
+   * Run through all tests and detect their support in the current UA.
+   *
+   * @access private
+   */
+
+  function testRunner() {
+    var featureNames;
+    var feature;
+    var aliasIdx;
+    var result;
+    var nameIdx;
+    var featureName;
+    var featureNameSplit;
+
+    for (var featureIdx in tests) {
+      if (tests.hasOwnProperty(featureIdx)) {
+        featureNames = [];
+        feature = tests[featureIdx];
+        // run the test, throw the return value into the Modernizr,
+        // then based on that boolean, define an appropriate className
+        // and push it into an array of classes we'll join later.
+        //
+        // If there is no name, it's an 'async' test that is run,
+        // but not directly added to the object. That should
+        // be done with a post-run addTest call.
+        if (feature.name) {
+          featureNames.push(feature.name.toLowerCase());
+
+          if (feature.options && feature.options.aliases && feature.options.aliases.length) {
+            // Add all the aliases into the names list
+            for (aliasIdx = 0; aliasIdx < feature.options.aliases.length; aliasIdx++) {
+              featureNames.push(feature.options.aliases[aliasIdx].toLowerCase());
+            }
+          }
+        }
+
+        // Run the test, or use the raw value if it's not a function
+        result = is(feature.fn, 'function') ? feature.fn() : feature.fn;
+
+
+        // Set each of the names on the Modernizr object
+        for (nameIdx = 0; nameIdx < featureNames.length; nameIdx++) {
+          featureName = featureNames[nameIdx];
+          // Support dot properties as sub tests. We don't do checking to make sure
+          // that the implied parent tests have been added. You must call them in
+          // order (either in the test, or make the parent test a dependency).
+          //
+          // Cap it to TWO to make the logic simple and because who needs that kind of subtesting
+          // hashtag famous last words
+          featureNameSplit = featureName.split('.');
+
+          if (featureNameSplit.length === 1) {
+            Modernizr[featureNameSplit[0]] = result;
+          } else {
+            // cast to a Boolean, if not one already
+            /* jshint -W053 */
+            if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
+              Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
+            }
+
+            Modernizr[featureNameSplit[0]][featureNameSplit[1]] = result;
+          }
+
+          classes.push((result ? '' : 'no-') + featureNameSplit.join('-'));
+        }
+      }
+    }
+  }
+  ;
+
+  /**
+   * docElement is a convenience wrapper to grab the root element of the document
+   *
+   * @access private
+   * @returns {HTMLElement|SVGElement} The root element of the document
+   */
+
+  var docElement = document.documentElement;
+
+
+  /**
+   * A convenience helper to check if the document we are running in is an SVG document
+   *
+   * @access private
+   * @returns {boolean}
+   */
+
+  var isSVG = docElement.nodeName.toLowerCase() === 'svg';
+
+
+  /**
+   * setClasses takes an array of class names and adds them to the root element
+   *
+   * @access private
+   * @function setClasses
+   * @param {string[]} classes - Array of class names
+   */
+
+  // Pass in an and array of class names, e.g.:
+  //  ['no-webp', 'borderradius', ...]
+  function setClasses(classes) {
+    var className = docElement.className;
+    var classPrefix = Modernizr._config.classPrefix || '';
+
+    if (isSVG) {
+      className = className.baseVal;
+    }
+
+    // Change `no-js` to `js` (independently of the `enableClasses` option)
+    // Handle classPrefix on this too
+    if (Modernizr._config.enableJSClass) {
+      var reJS = new RegExp('(^|\\s)' + classPrefix + 'no-js(\\s|$)');
+      className = className.replace(reJS, '$1' + classPrefix + 'js$2');
+    }
+
+    if (Modernizr._config.enableClasses) {
+      // Add the new classes
+      className += ' ' + classPrefix + classes.join(' ' + classPrefix);
+      isSVG ? docElement.className.baseVal = className : docElement.className = className;
+    }
+
+  }
+
+  ;
+
+  /**
+   * hasOwnProp is a shim for hasOwnProperty that is needed for Safari 2.0 support
+   *
+   * @author kangax
+   * @access private
+   * @function hasOwnProp
+   * @param {object} object - The object to check for a property
+   * @param {string} property - The property to check for
+   * @returns {boolean}
+   */
+
+  // hasOwnProperty shim by kangax needed for Safari 2.0 support
+  var hasOwnProp;
+
+  (function() {
+    var _hasOwnProperty = ({}).hasOwnProperty;
+    /* istanbul ignore else */
+    /* we have no way of testing IE 5.5 or safari 2,
+     * so just assume the else gets hit */
+    if (!is(_hasOwnProperty, 'undefined') && !is(_hasOwnProperty.call, 'undefined')) {
+      hasOwnProp = function(object, property) {
+        return _hasOwnProperty.call(object, property);
+      };
+    }
+    else {
+      hasOwnProp = function(object, property) { /* yes, this can give false positives/negatives, but most of the time we don't care about those */
+        return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
+      };
+    }
+  })();
+
+
+
+
+   // _l tracks listeners for async tests, as well as tests that execute after the initial run
+  ModernizrProto._l = {};
+
+  /**
+   * Modernizr.on is a way to listen for the completion of async tests. Being
+   * asynchronous, they may not finish before your scripts run. As a result you
+   * will get a possibly false negative `undefined` value.
+   *
+   * @memberof Modernizr
+   * @name Modernizr.on
+   * @access public
+   * @function on
+   * @param {string} feature - String name of the feature detect
+   * @param {function} cb - Callback function returning a Boolean - true if feature is supported, false if not
+   * @example
+   *
+   * ```js
+   * Modernizr.on('flash', function( result ) {
+   *   if (result) {
+   *    // the browser has flash
+   *   } else {
+   *     // the browser does not have flash
+   *   }
+   * });
+   * ```
+   */
+
+  ModernizrProto.on = function(feature, cb) {
+    // Create the list of listeners if it doesn't exist
+    if (!this._l[feature]) {
+      this._l[feature] = [];
+    }
+
+    // Push this test on to the listener list
+    this._l[feature].push(cb);
+
+    // If it's already been resolved, trigger it on next tick
+    if (Modernizr.hasOwnProperty(feature)) {
+      // Next Tick
+      setTimeout(function() {
+        Modernizr._trigger(feature, Modernizr[feature]);
+      }, 0);
+    }
+  };
+
+  /**
+   * _trigger is the private function used to signal test completion and run any
+   * callbacks registered through [Modernizr.on](#modernizr-on)
+   *
+   * @memberof Modernizr
+   * @name Modernizr._trigger
+   * @access private
+   * @function _trigger
+   * @param {string} feature - string name of the feature detect
+   * @param {function|boolean} [res] - A feature detection function, or the boolean =
+   * result of a feature detection function
+   */
+
+  ModernizrProto._trigger = function(feature, res) {
+    if (!this._l[feature]) {
+      return;
+    }
+
+    var cbs = this._l[feature];
+
+    // Force async
+    setTimeout(function() {
+      var i, cb;
+      for (i = 0; i < cbs.length; i++) {
+        cb = cbs[i];
+        cb(res);
+      }
+    }, 0);
+
+    // Don't trigger these again
+    delete this._l[feature];
+  };
+
+  /**
+   * addTest allows you to define your own feature detects that are not currently
+   * included in Modernizr (under the covers it's the exact same code Modernizr
+   * uses for its own [feature detections](https://github.com/Modernizr/Modernizr/tree/master/feature-detects)). Just like the offical detects, the result
+   * will be added onto the Modernizr object, as well as an appropriate className set on
+   * the html element when configured to do so
+   *
+   * @memberof Modernizr
+   * @name Modernizr.addTest
+   * @optionName Modernizr.addTest()
+   * @optionProp addTest
+   * @access public
+   * @function addTest
+   * @param {string|object} feature - The string name of the feature detect, or an
+   * object of feature detect names and test
+   * @param {function|boolean} test - Function returning true if feature is supported,
+   * false if not. Otherwise a boolean representing the results of a feature detection
+   * @example
+   *
+   * The most common way of creating your own feature detects is by calling
+   * `Modernizr.addTest` with a string (preferably just lowercase, without any
+   * punctuation), and a function you want executed that will return a boolean result
+   *
+   * ```js
+   * Modernizr.addTest('itsTuesday', function() {
+   *  var d = new Date();
+   *  return d.getDay() === 2;
+   * });
+   * ```
+   *
+   * When the above is run, it will set Modernizr.itstuesday to `true` when it is tuesday,
+   * and to `false` every other day of the week. One thing to notice is that the names of
+   * feature detect functions are always lowercased when added to the Modernizr object. That
+   * means that `Modernizr.itsTuesday` will not exist, but `Modernizr.itstuesday` will.
+   *
+   *
+   *  Since we only look at the returned value from any feature detection function,
+   *  you do not need to actually use a function. For simple detections, just passing
+   *  in a statement that will return a boolean value works just fine.
+   *
+   * ```js
+   * Modernizr.addTest('hasJquery', 'jQuery' in window);
+   * ```
+   *
+   * Just like before, when the above runs `Modernizr.hasjquery` will be true if
+   * jQuery has been included on the page. Not using a function saves a small amount
+   * of overhead for the browser, as well as making your code much more readable.
+   *
+   * Finally, you also have the ability to pass in an object of feature names and
+   * their tests. This is handy if you want to add multiple detections in one go.
+   * The keys should always be a string, and the value can be either a boolean or
+   * function that returns a boolean.
+   *
+   * ```js
+   * var detects = {
+   *  'hasjquery': 'jQuery' in window,
+   *  'itstuesday': function() {
+   *    var d = new Date();
+   *    return d.getDay() === 2;
+   *  }
+   * }
+   *
+   * Modernizr.addTest(detects);
+   * ```
+   *
+   * There is really no difference between the first methods and this one, it is
+   * just a convenience to let you write more readable code.
+   */
+
+  function addTest(feature, test) {
+
+    if (typeof feature == 'object') {
+      for (var key in feature) {
+        if (hasOwnProp(feature, key)) {
+          addTest(key, feature[ key ]);
+        }
+      }
+    } else {
+
+      feature = feature.toLowerCase();
+      var featureNameSplit = feature.split('.');
+      var last = Modernizr[featureNameSplit[0]];
+
+      // Again, we don't check for parent test existence. Get that right, though.
+      if (featureNameSplit.length == 2) {
+        last = last[featureNameSplit[1]];
+      }
+
+      if (typeof last != 'undefined') {
+        // we're going to quit if you're trying to overwrite an existing test
+        // if we were to allow it, we'd do this:
+        //   var re = new RegExp("\\b(no-)?" + feature + "\\b");
+        //   docElement.className = docElement.className.replace( re, '' );
+        // but, no rly, stuff 'em.
+        return Modernizr;
+      }
+
+      test = typeof test == 'function' ? test() : test;
+
+      // Set the value (this is the magic, right here).
+      if (featureNameSplit.length == 1) {
+        Modernizr[featureNameSplit[0]] = test;
+      } else {
+        // cast to a Boolean, if not one already
+        /* jshint -W053 */
+        if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
+          Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
+        }
+
+        Modernizr[featureNameSplit[0]][featureNameSplit[1]] = test;
+      }
+
+      // Set a single class (either `feature` or `no-feature`)
+      /* jshint -W041 */
+      setClasses([(!!test && test != false ? '' : 'no-') + featureNameSplit.join('-')]);
+      /* jshint +W041 */
+
+      // Trigger the event
+      Modernizr._trigger(feature, test);
+    }
+
+    return Modernizr; // allow chaining.
+  }
+
+  // After all the tests are run, add self to the Modernizr prototype
+  Modernizr._q.push(function() {
+    ModernizrProto.addTest = addTest;
+  });
+
+
+
+
+  /**
+   * If the browsers follow the spec, then they would expose vendor-specific style as:
+   *   elem.style.WebkitBorderRadius
+   * instead of something like the following, which would be technically incorrect:
+   *   elem.style.webkitBorderRadius
+
+   * Webkit ghosts their properties in lowercase but Opera & Moz do not.
+   * Microsoft uses a lowercase `ms` instead of the correct `Ms` in IE8+
+   *   erik.eae.net/archives/2008/03/10/21.48.10/
+
+   * More here: github.com/Modernizr/Modernizr/issues/issue/21
+   *
+   * @access private
+   * @returns {string} The string representing the vendor-specific style properties
+   */
+
+  var omPrefixes = 'Moz O ms Webkit';
+
+
+  var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
+  ModernizrProto._cssomPrefixes = cssomPrefixes;
+
+
+  /**
+   * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
+   * some prefixed form, or false, in the case of an unsupported rule
+   *
+   * @memberof Modernizr
+   * @name Modernizr.atRule
+   * @optionName Modernizr.atRule()
+   * @optionProp atRule
+   * @access public
+   * @function atRule
+   * @param {string} prop - String name of the @-rule to test for
+   * @returns {string|boolean} The string representing the (possibly prefixed)
+   * valid version of the @-rule, or `false` when it is unsupported.
+   * @example
+   * ```js
+   *  var keyframes = Modernizr.atRule('@keyframes');
+   *
+   *  if (keyframes) {
+   *    // keyframes are supported
+   *    // could be `@-webkit-keyframes` or `@keyframes`
+   *  } else {
+   *    // keyframes === `false`
+   *  }
+   * ```
+   *
+   */
+
+  var atRule = function(prop) {
+    var length = prefixes.length;
+    var cssrule = window.CSSRule;
+    var rule;
+
+    if (typeof cssrule === 'undefined') {
+      return undefined;
+    }
+
+    if (!prop) {
+      return false;
+    }
+
+    // remove literal @ from beginning of provided property
+    prop = prop.replace(/^@/, '');
+
+    // CSSRules use underscores instead of dashes
+    rule = prop.replace(/-/g, '_').toUpperCase() + '_RULE';
+
+    if (rule in cssrule) {
+      return '@' + prop;
+    }
+
+    for (var i = 0; i < length; i++) {
+      // prefixes gives us something like -o-, and we want O_
+      var prefix = prefixes[i];
+      var thisRule = prefix.toUpperCase() + '_' + rule;
+
+      if (thisRule in cssrule) {
+        return '@-' + prefix.toLowerCase() + '-' + prop;
+      }
+    }
+
+    return false;
+  };
+
+  ModernizrProto.atRule = atRule;
+
+
+
+  /**
+   * createElement is a convenience wrapper around document.createElement. Since we
+   * use createElement all over the place, this allows for (slightly) smaller code
+   * as well as abstracting away issues with creating elements in contexts other than
+   * HTML documents (e.g. SVG documents).
+   *
+   * @access private
+   * @function createElement
+   * @returns {HTMLElement|SVGElement} An HTML or SVG element
+   */
+
+  function createElement() {
+    if (typeof document.createElement !== 'function') {
+      // This is the case in IE7, where the type of createElement is "object".
+      // For this reason, we cannot call apply() as Object is not a Function.
+      return document.createElement(arguments[0]);
+    } else if (isSVG) {
+      return document.createElementNS.call(document, 'http://www.w3.org/2000/svg', arguments[0]);
+    } else {
+      return document.createElement.apply(document, arguments);
+    }
+  }
+
+  ;
+
+  /**
+   * Modernizr.hasEvent() detects support for a given event
+   *
+   * @memberof Modernizr
+   * @name Modernizr.hasEvent
+   * @optionName Modernizr.hasEvent()
+   * @optionProp hasEvent
+   * @access public
+   * @function hasEvent
+   * @param  {string|*} eventName - the name of an event to test for (e.g. "resize")
+   * @param  {Element|string} [element=HTMLDivElement] - is the element|document|window|tagName to test on
+   * @returns {boolean}
+   * @example
+   *  `Modernizr.hasEvent` lets you determine if the browser supports a supplied event.
+   *  By default, it does this detection on a div element
+   *
+   * ```js
+   *  hasEvent('blur') // true;
+   * ```
+   *
+   * However, you are able to give an object as a second argument to hasEvent to
+   * detect an event on something other than a div.
+   *
+   * ```js
+   *  hasEvent('devicelight', window) // true;
+   * ```
+   *
+   */
+
+  var hasEvent = (function() {
+
+    // Detect whether event support can be detected via `in`. Test on a DOM element
+    // using the "blur" event b/c it should always exist. bit.ly/event-detection
+    var needsFallback = !('onblur' in document.documentElement);
+
+    function inner(eventName, element) {
+
+      var isSupported;
+      if (!eventName) { return false; }
+      if (!element || typeof element === 'string') {
+        element = createElement(element || 'div');
+      }
+
+      // Testing via the `in` operator is sufficient for modern browsers and IE.
+      // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and
+      // "resize", whereas `in` "catches" those.
+      eventName = 'on' + eventName;
+      isSupported = eventName in element;
+
+      // Fallback technique for old Firefox - bit.ly/event-detection
+      if (!isSupported && needsFallback) {
+        if (!element.setAttribute) {
+          // Switch to generic element if it lacks `setAttribute`.
+          // It could be the `document`, `window`, or something else.
+          element = createElement('div');
+        }
+
+        element.setAttribute(eventName, '');
+        isSupported = typeof element[eventName] === 'function';
+
+        if (element[eventName] !== undefined) {
+          // If property was created, "remove it" by setting value to `undefined`.
+          element[eventName] = undefined;
+        }
+        element.removeAttribute(eventName);
+      }
+
+      return isSupported;
+    }
+    return inner;
+  })();
+
+
+  ModernizrProto.hasEvent = hasEvent;
+
+
+  /**
+   * getBody returns the body of a document, or an element that can stand in for
+   * the body if a real body does not exist
+   *
+   * @access private
+   * @function getBody
+   * @returns {HTMLElement|SVGElement} Returns the real body of a document, or an
+   * artificially created element that stands in for the body
+   */
+
+  function getBody() {
+    // After page load injecting a fake body doesn't work so check if body exists
+    var body = document.body;
+
+    if (!body) {
+      // Can't use the real body create a fake one.
+      body = createElement(isSVG ? 'svg' : 'body');
+      body.fake = true;
+    }
+
+    return body;
+  }
+
+  ;
+
+  /**
+   * injectElementWithStyles injects an element with style element and some CSS rules
+   *
+   * @access private
+   * @function injectElementWithStyles
+   * @param {string} rule - String representing a css rule
+   * @param {function} callback - A function that is used to test the injected element
+   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
+   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
+   * @returns {boolean}
+   */
+
+  function injectElementWithStyles(rule, callback, nodes, testnames) {
+    var mod = 'modernizr';
+    var style;
+    var ret;
+    var node;
+    var docOverflow;
+    var div = createElement('div');
+    var body = getBody();
+
+    if (parseInt(nodes, 10)) {
+      // In order not to give false positives we create a node for each test
+      // This also allows the method to scale for unspecified uses
+      while (nodes--) {
+        node = createElement('div');
+        node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
+        div.appendChild(node);
+      }
+    }
+
+    style = createElement('style');
+    style.type = 'text/css';
+    style.id = 's' + mod;
+
+    // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
+    // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
+    (!body.fake ? div : body).appendChild(style);
+    body.appendChild(div);
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = rule;
+    } else {
+      style.appendChild(document.createTextNode(rule));
+    }
+    div.id = mod;
+
+    if (body.fake) {
+      //avoid crashing IE8, if background image is used
+      body.style.background = '';
+      //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
+      body.style.overflow = 'hidden';
+      docOverflow = docElement.style.overflow;
+      docElement.style.overflow = 'hidden';
+      docElement.appendChild(body);
+    }
+
+    ret = callback(div, rule);
+    // If this is done after page load we don't want to remove the body so check if body exists
+    if (body.fake) {
+      body.parentNode.removeChild(body);
+      docElement.style.overflow = docOverflow;
+      // Trigger layout so kinetic scrolling isn't disabled in iOS6+
+      docElement.offsetHeight;
+    } else {
+      div.parentNode.removeChild(div);
+    }
+
+    return !!ret;
+
+  }
+
+  ;
+
+  /**
+   * Modernizr.mq tests a given media query, live against the current state of the window
+   * adapted from matchMedia polyfill by Scott Jehl and Paul Irish
+   * gist.github.com/786768
+   *
+   * @memberof Modernizr
+   * @name Modernizr.mq
+   * @optionName Modernizr.mq()
+   * @optionProp mq
+   * @access public
+   * @function mq
+   * @param {string} mq - String of the media query we want to test
+   * @returns {boolean}
+   * @example
+   * Modernizr.mq allows for you to programmatically check if the current browser
+   * window state matches a media query.
+   *
+   * ```js
+   *  var query = Modernizr.mq('(min-width: 900px)');
+   *
+   *  if (query) {
+   *    // the browser window is larger than 900px
+   *  }
+   * ```
+   *
+   * Only valid media queries are supported, therefore you must always include values
+   * with your media query
+   *
+   * ```js
+   * // good
+   *  Modernizr.mq('(min-width: 900px)');
+   *
+   * // bad
+   *  Modernizr.mq('min-width');
+   * ```
+   *
+   * If you would just like to test that media queries are supported in general, use
+   *
+   * ```js
+   *  Modernizr.mq('only all'); // true if MQ are supported, false if not
+   * ```
+   *
+   *
+   * Note that if the browser does not support media queries (e.g. old IE) mq will
+   * always return false.
+   */
+
+  var mq = (function() {
+    var matchMedia = window.matchMedia || window.msMatchMedia;
+    if (matchMedia) {
+      return function(mq) {
+        var mql = matchMedia(mq);
+        return mql && mql.matches || false;
+      };
+    }
+
+    return function(mq) {
+      var bool = false;
+
+      injectElementWithStyles('@media ' + mq + ' { #modernizr { position: absolute; } }', function(node) {
+        bool = (window.getComputedStyle ?
+                window.getComputedStyle(node, null) :
+                node.currentStyle).position == 'absolute';
+      });
+
+      return bool;
+    };
+  })();
+
+
+  ModernizrProto.mq = mq;
+
+
+
+
+  /**
+   * contains checks to see if a string contains another string
+   *
+   * @access private
+   * @function contains
+   * @param {string} str - The string we want to check for substrings
+   * @param {string} substr - The substring we want to search the first string for
+   * @returns {boolean}
+   */
+
+  function contains(str, substr) {
+    return !!~('' + str).indexOf(substr);
+  }
+
+  ;
+
+  /**
+   * Create our "modernizr" element that we do most feature tests on.
+   *
+   * @access private
+   */
+
+  var modElem = {
+    elem: createElement('modernizr')
+  };
+
+  // Clean up this element
+  Modernizr._q.push(function() {
+    delete modElem.elem;
+  });
+
+
+
+  var mStyle = {
+    style: modElem.elem.style
+  };
+
+  // kill ref for gc, must happen before mod.elem is removed, so we unshift on to
+  // the front of the queue.
+  Modernizr._q.unshift(function() {
+    delete mStyle.style;
+  });
+
+
+
+  /**
+   * domToCSS takes a camelCase string and converts it to kebab-case
+   * e.g. boxSizing -> box-sizing
+   *
+   * @access private
+   * @function domToCSS
+   * @param {string} name - String name of camelCase prop we want to convert
+   * @returns {string} The kebab-case version of the supplied name
+   */
+
+  function domToCSS(name) {
+    return name.replace(/([A-Z])/g, function(str, m1) {
+      return '-' + m1.toLowerCase();
+    }).replace(/^ms-/, '-ms-');
+  }
+  ;
+
+  /**
+   * nativeTestProps allows for us to use native feature detection functionality if available.
+   * some prefixed form, or false, in the case of an unsupported rule
+   *
+   * @access private
+   * @function nativeTestProps
+   * @param {array} props - An array of property names
+   * @param {string} value - A string representing the value we want to check via @supports
+   * @returns {boolean|undefined} A boolean when @supports exists, undefined otherwise
+   */
+
+  // Accepts a list of property names and a single value
+  // Returns `undefined` if native detection not available
+  function nativeTestProps(props, value) {
+    var i = props.length;
+    // Start with the JS API: http://www.w3.org/TR/css3-conditional/#the-css-interface
+    if ('CSS' in window && 'supports' in window.CSS) {
+      // Try every prefixed variant of the property
+      while (i--) {
+        if (window.CSS.supports(domToCSS(props[i]), value)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    // Otherwise fall back to at-rule (for Opera 12.x)
+    else if ('CSSSupportsRule' in window) {
+      // Build a condition string for every prefixed variant
+      var conditionText = [];
+      while (i--) {
+        conditionText.push('(' + domToCSS(props[i]) + ':' + value + ')');
+      }
+      conditionText = conditionText.join(' or ');
+      return injectElementWithStyles('@supports (' + conditionText + ') { #modernizr { position: absolute; } }', function(node) {
+        return getComputedStyle(node, null).position == 'absolute';
+      });
+    }
+    return undefined;
+  }
+  ;
+
+  /**
+   * cssToDOM takes a kebab-case string and converts it to camelCase
+   * e.g. box-sizing -> boxSizing
+   *
+   * @access private
+   * @function cssToDOM
+   * @param {string} name - String name of kebab-case prop we want to convert
+   * @returns {string} The camelCase version of the supplied name
+   */
+
+  function cssToDOM(name) {
+    return name.replace(/([a-z])-([a-z])/g, function(str, m1, m2) {
+      return m1 + m2.toUpperCase();
+    }).replace(/^-/, '');
+  }
+  ;
+
+  // testProps is a generic CSS / DOM property test.
+
+  // In testing support for a given CSS property, it's legit to test:
+  //    `elem.style[styleName] !== undefined`
+  // If the property is supported it will return an empty string,
+  // if unsupported it will return undefined.
+
+  // We'll take advantage of this quick test and skip setting a style
+  // on our modernizr element, but instead just testing undefined vs
+  // empty string.
+
+  // Property names can be provided in either camelCase or kebab-case.
+
+  function testProps(props, prefixed, value, skipValueTest) {
+    skipValueTest = is(skipValueTest, 'undefined') ? false : skipValueTest;
+
+    // Try native detect first
+    if (!is(value, 'undefined')) {
+      var result = nativeTestProps(props, value);
+      if (!is(result, 'undefined')) {
+        return result;
+      }
+    }
+
+    // Otherwise do it properly
+    var afterInit, i, propsLength, prop, before;
+
+    // If we don't have a style element, that means we're running async or after
+    // the core tests, so we'll need to create our own elements to use
+
+    // inside of an SVG element, in certain browsers, the `style` element is only
+    // defined for valid tags. Therefore, if `modernizr` does not have one, we
+    // fall back to a less used element and hope for the best.
+    var elems = ['modernizr', 'tspan'];
+    while (!mStyle.style) {
+      afterInit = true;
+      mStyle.modElem = createElement(elems.shift());
+      mStyle.style = mStyle.modElem.style;
+    }
+
+    // Delete the objects if we created them.
+    function cleanElems() {
+      if (afterInit) {
+        delete mStyle.style;
+        delete mStyle.modElem;
+      }
+    }
+
+    propsLength = props.length;
+    for (i = 0; i < propsLength; i++) {
+      prop = props[i];
+      before = mStyle.style[prop];
+
+      if (contains(prop, '-')) {
+        prop = cssToDOM(prop);
+      }
+
+      if (mStyle.style[prop] !== undefined) {
+
+        // If value to test has been passed in, do a set-and-check test.
+        // 0 (integer) is a valid property value, so check that `value` isn't
+        // undefined, rather than just checking it's truthy.
+        if (!skipValueTest && !is(value, 'undefined')) {
+
+          // Needs a try catch block because of old IE. This is slow, but will
+          // be avoided in most cases because `skipValueTest` will be used.
+          try {
+            mStyle.style[prop] = value;
+          } catch (e) {}
+
+          // If the property value has changed, we assume the value used is
+          // supported. If `value` is empty string, it'll fail here (because
+          // it hasn't changed), which matches how browsers have implemented
+          // CSS.supports()
+          if (mStyle.style[prop] != before) {
+            cleanElems();
+            return prefixed == 'pfx' ? prop : true;
+          }
+        }
+        // Otherwise just return true, or the property name if this is a
+        // `prefixed()` call
+        else {
+          cleanElems();
+          return prefixed == 'pfx' ? prop : true;
+        }
+      }
+    }
+    cleanElems();
+    return false;
+  }
+
+  ;
+
+  /**
+   * List of JavaScript DOM values used for tests
+   *
+   * @memberof Modernizr
+   * @name Modernizr._domPrefixes
+   * @optionName Modernizr._domPrefixes
+   * @optionProp domPrefixes
+   * @access public
+   * @example
+   *
+   * Modernizr._domPrefixes is exactly the same as [_prefixes](#modernizr-_prefixes), but rather
+   * than kebab-case properties, all properties are their Capitalized variant
+   *
+   * ```js
+   * Modernizr._domPrefixes === [ "Moz", "O", "ms", "Webkit" ];
+   * ```
+   */
+
+  var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
+  ModernizrProto._domPrefixes = domPrefixes;
+
+
+  /**
+   * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
+   *
+   * @access private
+   * @function fnBind
+   * @param {function} fn - a function you want to change `this` reference to
+   * @param {object} that - the `this` you want to call the function with
+   * @returns {function} The wrapped version of the supplied function
+   */
+
+  function fnBind(fn, that) {
+    return function() {
+      return fn.apply(that, arguments);
+    };
+  }
+
+  ;
+
+  /**
+   * testDOMProps is a generic DOM property test; if a browser supports
+   *   a certain property, it won't return undefined for it.
+   *
+   * @access private
+   * @function testDOMProps
+   * @param {array.<string>} props - An array of properties to test for
+   * @param {object} obj - An object or Element you want to use to test the parameters again
+   * @param {boolean|object} elem - An Element to bind the property lookup again. Use `false` to prevent the check
+   */
+  function testDOMProps(props, obj, elem) {
+    var item;
+
+    for (var i in props) {
+      if (props[i] in obj) {
+
+        // return the property name as a string
+        if (elem === false) {
+          return props[i];
+        }
+
+        item = obj[props[i]];
+
+        // let's bind a function
+        if (is(item, 'function')) {
+          // bind to obj unless overriden
+          return fnBind(item, elem || obj);
+        }
+
+        // return the unbound function or obj or value
+        return item;
+      }
+    }
+    return false;
+  }
+
+  ;
+
+  /**
+   * testPropsAll tests a list of DOM properties we want to check against.
+   * We specify literally ALL possible (known and/or likely) properties on
+   * the element including the non-vendor prefixed one, for forward-
+   * compatibility.
+   *
+   * @access private
+   * @function testPropsAll
+   * @param {string} prop - A string of the property to test for
+   * @param {string|object} [prefixed] - An object to check the prefixed properties on. Use a string to skip
+   * @param {HTMLElement|SVGElement} [elem] - An element used to test the property and value against
+   * @param {string} [value] - A string of a css value
+   * @param {boolean} [skipValueTest] - An boolean representing if you want to test if value sticks when set
+   */
+  function testPropsAll(prop, prefixed, elem, value, skipValueTest) {
+
+    var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
+    props = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
+
+    // did they call .prefixed('boxSizing') or are we just testing a prop?
+    if (is(prefixed, 'string') || is(prefixed, 'undefined')) {
+      return testProps(props, prefixed, value, skipValueTest);
+
+      // otherwise, they called .prefixed('requestAnimationFrame', window[, elem])
+    } else {
+      props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
+      return testDOMProps(props, prefixed, elem);
+    }
+  }
+
+  // Modernizr.testAllProps() investigates whether a given style property,
+  // or any of its vendor-prefixed variants, is recognized
+  //
+  // Note that the property names must be provided in the camelCase variant.
+  // Modernizr.testAllProps('boxSizing')
+  ModernizrProto.testAllProps = testPropsAll;
+
+
+
+  /**
+   * prefixed returns the prefixed or nonprefixed property name variant of your input
+   *
+   * @memberof Modernizr
+   * @name Modernizr.prefixed
+   * @optionName Modernizr.prefixed()
+   * @optionProp prefixed
+   * @access public
+   * @function prefixed
+   * @param {string} prop - String name of the property to test for
+   * @param {object} [obj] - An object to test for the prefixed properties on
+   * @param {HTMLElement} [elem] - An element used to test specific properties against
+   * @returns {string|false} The string representing the (possibly prefixed) valid
+   * version of the property, or `false` when it is unsupported.
+   * @example
+   *
+   * Modernizr.prefixed takes a string css value in the DOM style camelCase (as
+   * opposed to the css style kebab-case) form and returns the (possibly prefixed)
+   * version of that property that the browser actually supports.
+   *
+   * For example, in older Firefox...
+   * ```js
+   * prefixed('boxSizing')
+   * ```
+   * returns 'MozBoxSizing'
+   *
+   * In newer Firefox, as well as any other browser that support the unprefixed
+   * version would simply return `boxSizing`. Any browser that does not support
+   * the property at all, it will return `false`.
+   *
+   * By default, prefixed is checked against a DOM element. If you want to check
+   * for a property on another object, just pass it as a second argument
+   *
+   * ```js
+   * var rAF = prefixed('requestAnimationFrame', window);
+   *
+   * raf(function() {
+   *  renderFunction();
+   * })
+   * ```
+   *
+   * Note that this will return _the actual function_ - not the name of the function.
+   * If you need the actual name of the property, pass in `false` as a third argument
+   *
+   * ```js
+   * var rAFProp = prefixed('requestAnimationFrame', window, false);
+   *
+   * rafProp === 'WebkitRequestAnimationFrame' // in older webkit
+   * ```
+   *
+   * One common use case for prefixed is if you're trying to determine which transition
+   * end event to bind to, you might do something like...
+   * ```js
+   * var transEndEventNames = {
+   *     'WebkitTransition' : 'webkitTransitionEnd', * Saf 6, Android Browser
+   *     'MozTransition'    : 'transitionend',       * only for FF < 15
+   *     'transition'       : 'transitionend'        * IE10, Opera, Chrome, FF 15+, Saf 7+
+   * };
+   *
+   * var transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
+   * ```
+   *
+   * If you want a similar lookup, but in kebab-case, you can use [prefixedCSS](#modernizr-prefixedcss).
+   */
+
+  var prefixed = ModernizrProto.prefixed = function(prop, obj, elem) {
+    if (prop.indexOf('@') === 0) {
+      return atRule(prop);
+    }
+
+    if (prop.indexOf('-') != -1) {
+      // Convert kebab-case to camelCase
+      prop = cssToDOM(prop);
+    }
+    if (!obj) {
+      return testPropsAll(prop, 'pfx');
+    } else {
+      // Testing DOM property e.g. Modernizr.prefixed('requestAnimationFrame', window) // 'mozRequestAnimationFrame'
+      return testPropsAll(prop, obj, elem);
+    }
+  };
+
+
+/*!
+{
+  "name": "Fullscreen API",
+  "property": "fullscreen",
+  "caniuse": "fullscreen",
+  "notes": [{
+    "name": "MDN documentation",
+    "href": "https://developer.mozilla.org/en/API/Fullscreen"
+  }],
+  "polyfills": ["screenfulljs"],
+  "builderAliases": ["fullscreen_api"]
+}
+!*/
+/* DOC
+Detects support for the ability to make the current website take over the user's entire screen
+*/
+
+  // github.com/Modernizr/Modernizr/issues/739
+  Modernizr.addTest('fullscreen', !!(prefixed('exitFullscreen', document, false) || prefixed('cancelFullScreen', document, false)));
+
+
+  /**
+   * List of property values to set for css tests. See ticket #21
+   * http://git.io/vUGl4
+   *
+   * @memberof Modernizr
+   * @name Modernizr._prefixes
+   * @optionName Modernizr._prefixes
+   * @optionProp prefixes
+   * @access public
+   * @example
+   *
+   * Modernizr._prefixes is the internal list of prefixes that we test against
+   * inside of things like [prefixed](#modernizr-prefixed) and [prefixedCSS](#-code-modernizr-prefixedcss). It is simply
+   * an array of kebab-case vendor prefixes you can use within your code.
+   *
+   * Some common use cases include
+   *
+   * Generating all possible prefixed version of a CSS property
+   * ```js
+   * var rule = Modernizr._prefixes.join('transform: rotate(20deg); ');
+   *
+   * rule === 'transform: rotate(20deg); webkit-transform: rotate(20deg); moz-transform: rotate(20deg); o-transform: rotate(20deg); ms-transform: rotate(20deg);'
+   * ```
+   *
+   * Generating all possible prefixed version of a CSS value
+   * ```js
+   * rule = 'display:' +  Modernizr._prefixes.join('flex; display:') + 'flex';
+   *
+   * rule === 'display:flex; display:-webkit-flex; display:-moz-flex; display:-o-flex; display:-ms-flex; display:flex'
+   * ```
+   */
+
+  var prefixes = (ModernizrProto._config.usePrefixes ? ' -webkit- -moz- -o- -ms- '.split(' ') : []);
+
+  // expose these for the plugin API. Look in the source for how to join() them against your input
+  ModernizrProto._prefixes = prefixes;
+
+
+
+  /**
+   * testStyles injects an element with style element and some CSS rules
+   *
+   * @memberof Modernizr
+   * @name Modernizr.testStyles
+   * @optionName Modernizr.testStyles()
+   * @optionProp testStyles
+   * @access public
+   * @function testStyles
+   * @param {string} rule - String representing a css rule
+   * @param {function} callback - A function that is used to test the injected element
+   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
+   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
+   * @returns {boolean}
+   * @example
+   *
+   * `Modernizr.testStyles` takes a CSS rule and injects it onto the current page
+   * along with (possibly multiple) DOM elements. This lets you check for features
+   * that can not be detected by simply checking the [IDL](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Interface_development_guide/IDL_interface_rules).
+   *
+   * ```js
+   * Modernizr.testStyles('#modernizr { width: 9px; color: papayawhip; }', function(elem, rule) {
+   *   // elem is the first DOM node in the page (by default #modernizr)
+   *   // rule is the first argument you supplied - the CSS rule in string form
+   *
+   *   addTest('widthworks', elem.style.width === '9px')
+   * });
+   * ```
+   *
+   * If your test requires multiple nodes, you can include a third argument
+   * indicating how many additional div elements to include on the page. The
+   * additional nodes are injected as children of the `elem` that is returned as
+   * the first argument to the callback.
+   *
+   * ```js
+   * Modernizr.testStyles('#modernizr {width: 1px}; #modernizr2 {width: 2px}', function(elem) {
+   *   document.getElementById('modernizr').style.width === '1px'; // true
+   *   document.getElementById('modernizr2').style.width === '2px'; // true
+   *   elem.firstChild === document.getElementById('modernizr2'); // true
+   * }, 1);
+   * ```
+   *
+   * By default, all of the additional elements have an ID of `modernizr[n]`, where
+   * `n` is its index (e.g. the first additional, second overall is `#modernizr2`,
+   * the second additional is `#modernizr3`, etc.).
+   * If you want to have more meaningful IDs for your function, you can provide
+   * them as the fourth argument, as an array of strings
+   *
+   * ```js
+   * Modernizr.testStyles('#foo {width: 10px}; #bar {height: 20px}', function(elem) {
+   *   elem.firstChild === document.getElementById('foo'); // true
+   *   elem.lastChild === document.getElementById('bar'); // true
+   * }, 2, ['foo', 'bar']);
+   * ```
+   *
+   */
+
+  var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
+
+/*!
+{
+  "name": "Touch Events",
+  "property": "touchevents",
+  "caniuse" : "touch",
+  "tags": ["media", "attribute"],
+  "notes": [{
+    "name": "Touch Events spec",
+    "href": "https://www.w3.org/TR/2013/WD-touch-events-20130124/"
+  }],
+  "warnings": [
+    "Indicates if the browser supports the Touch Events spec, and does not necessarily reflect a touchscreen device"
+  ],
+  "knownBugs": [
+    "False-positive on some configurations of Nokia N900",
+    "False-positive on some BlackBerry 6.0 builds – https://github.com/Modernizr/Modernizr/issues/372#issuecomment-3112695"
+  ]
+}
+!*/
+/* DOC
+Indicates if the browser supports the W3C Touch Events API.
+
+This *does not* necessarily reflect a touchscreen device:
+
+* Older touchscreen devices only emulate mouse events
+* Modern IE touch devices implement the Pointer Events API instead: use `Modernizr.pointerevents` to detect support for that
+* Some browsers & OS setups may enable touch APIs when no touchscreen is connected
+* Future browsers may implement other event models for touch interactions
+
+See this article: [You Can't Detect A Touchscreen](http://www.stucox.com/blog/you-cant-detect-a-touchscreen/).
+
+It's recommended to bind both mouse and touch/pointer events simultaneously – see [this HTML5 Rocks tutorial](http://www.html5rocks.com/en/mobile/touchandmouse/).
+
+This test will also return `true` for Firefox 4 Multitouch support.
+*/
+
+  // Chrome (desktop) used to lie about its support on this, but that has since been rectified: http://crbug.com/36415
+  Modernizr.addTest('touchevents', function() {
+    var bool;
+    if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+      bool = true;
+    } else {
+      // include the 'heartz' as a way to have a non matching MQ to help terminate the join
+      // https://git.io/vznFH
+      var query = ['@media (', prefixes.join('touch-enabled),('), 'heartz', ')', '{#modernizr{top:9px;position:absolute}}'].join('');
+      testStyles(query, function(node) {
+        bool = node.offsetTop === 9;
+      });
+    }
+    return bool;
+  });
+
+/*!
+{
+  "name": "CSS Font ch Units",
+  "authors": ["Ron Waldon (@jokeyrhyme)"],
+  "property": "csschunit",
+  "tags": ["css"],
+  "notes": [{
+    "name": "W3C Spec",
+    "href": "https://www.w3.org/TR/css3-values/#font-relative-lengths"
+  }]
+}
+!*/
+
+  Modernizr.addTest('csschunit', function() {
+    var elemStyle = modElem.elem.style;
+    var supports;
+    try {
+      elemStyle.fontSize = '3ch';
+      supports = elemStyle.fontSize.indexOf('ch') !== -1;
+    } catch (e) {
+      supports = false;
+    }
+    return supports;
+  });
+
+
+  /**
+   * testAllProps determines whether a given CSS property is supported in the browser
+   *
+   * @memberof Modernizr
+   * @name Modernizr.testAllProps
+   * @optionName Modernizr.testAllProps()
+   * @optionProp testAllProps
+   * @access public
+   * @function testAllProps
+   * @param {string} prop - String naming the property to test (either camelCase or kebab-case)
+   * @param {string} [value] - String of the value to test
+   * @param {boolean} [skipValueTest=false] - Whether to skip testing that the value is supported when using non-native detection
+   * @example
+   *
+   * testAllProps determines whether a given CSS property, in some prefixed form,
+   * is supported by the browser.
+   *
+   * ```js
+   * testAllProps('boxSizing')  // true
+   * ```
+   *
+   * It can optionally be given a CSS value in string form to test if a property
+   * value is valid
+   *
+   * ```js
+   * testAllProps('display', 'block') // true
+   * testAllProps('display', 'penguin') // false
+   * ```
+   *
+   * A boolean can be passed as a third parameter to skip the value check when
+   * native detection (@supports) isn't available.
+   *
+   * ```js
+   * testAllProps('shapeOutside', 'content-box', true);
+   * ```
+   */
+
+  function testAllProps(prop, value, skipValueTest) {
+    return testPropsAll(prop, undefined, undefined, value, skipValueTest);
+  }
+  ModernizrProto.testAllProps = testAllProps;
+
+/*!
+{
+  "name": "Flexbox",
+  "property": "flexbox",
+  "caniuse": "flexbox",
+  "tags": ["css"],
+  "notes": [{
+    "name": "The _new_ flexbox",
+    "href": "http://dev.w3.org/csswg/css3-flexbox"
+  }],
+  "warnings": [
+    "A `true` result for this detect does not imply that the `flex-wrap` property is supported; see the `flexwrap` detect."
+  ]
+}
+!*/
+/* DOC
+Detects support for the Flexible Box Layout model, a.k.a. Flexbox, which allows easy manipulation of layout order and sizing within a container.
+*/
+
+  Modernizr.addTest('flexbox', testAllProps('flexBasis', '1px', true));
+
+/*!
+{
+  "name": "Flexbox (legacy)",
+  "property": "flexboxlegacy",
+  "tags": ["css"],
+  "polyfills": ["flexie"],
+  "notes": [{
+    "name": "The _old_ flexbox",
+    "href": "https://www.w3.org/TR/2009/WD-css3-flexbox-20090723/"
+  }]
+}
+!*/
+
+  Modernizr.addTest('flexboxlegacy', testAllProps('boxDirection', 'reverse', true));
+
+/*!
+{
+  "name": "Flexbox (tweener)",
+  "property": "flexboxtweener",
+  "tags": ["css"],
+  "polyfills": ["flexie"],
+  "notes": [{
+    "name": "The _inbetween_ flexbox",
+    "href": "https://www.w3.org/TR/2011/WD-css3-flexbox-20111129/"
+  }],
+  "warnings": ["This represents an old syntax, not the latest standard syntax."]
+}
+!*/
+
+  Modernizr.addTest('flexboxtweener', testAllProps('flexAlign', 'end', true));
+
+/*!
+{
+  "name": "Flex Line Wrapping",
+  "property": "flexwrap",
+  "tags": ["css", "flexbox"],
+  "notes": [{
+    "name": "W3C Flexible Box Layout spec",
+    "href": "http://dev.w3.org/csswg/css3-flexbox"
+  }],
+  "warnings": [
+    "Does not imply a modern implementation – see documentation."
+  ]
+}
+!*/
+/* DOC
+Detects support for the `flex-wrap` CSS property, part of Flexbox, which isn’t present in all Flexbox implementations (notably Firefox).
+
+This featured in both the 'tweener' syntax (implemented by IE10) and the 'modern' syntax (implemented by others). This detect will return `true` for either of these implementations, as long as the `flex-wrap` property is supported. So to ensure the modern syntax is supported, use together with `Modernizr.flexbox`:
+
+```javascript
+if (Modernizr.flexbox && Modernizr.flexwrap) {
+  // Modern Flexbox with `flex-wrap` supported
+}
+else {
+  // Either old Flexbox syntax, or `flex-wrap` not supported
+}
+```
+*/
+
+  Modernizr.addTest('flexwrap', testAllProps('flexWrap', 'wrap', true));
+
+/*!
+{
+  "name": "CSS Pointer Events",
+  "caniuse": "pointer-events",
+  "property": "csspointerevents",
+  "authors": ["ausi"],
+  "tags": ["css"],
+  "builderAliases": ["css_pointerevents"],
+  "notes": [
+    {
+      "name": "MDN Docs",
+      "href": "https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events"
+    },{
+      "name": "Test Project Page",
+      "href": "https://ausi.github.com/Feature-detection-technique-for-pointer-events/"
+    },{
+      "name": "Test Project Wiki",
+      "href": "https://github.com/ausi/Feature-detection-technique-for-pointer-events/wiki"
+    },
+    {
+      "name": "Related Github Issue",
+      "href": "https://github.com/Modernizr/Modernizr/issues/80"
+    }
+  ]
+}
+!*/
+
+  Modernizr.addTest('csspointerevents', function() {
+    var style = createElement('a').style;
+    style.cssText = 'pointer-events:auto';
+    return style.pointerEvents === 'auto';
+  });
+
+/*!
+{
+  "name": "CSS Font rem Units",
+  "caniuse": "rem",
+  "authors": ["nsfmc"],
+  "property": "cssremunit",
+  "tags": ["css"],
+  "builderAliases": ["css_remunit"],
+  "notes": [{
+    "name": "W3C Spec",
+    "href": "https://www.w3.org/TR/css3-values/#relative0"
+  },{
+    "name": "Font Size with rem by Jonathan Snook",
+    "href": "http://snook.ca/archives/html_and_css/font-size-with-rem"
+  }]
+}
+!*/
+
+  // "The 'rem' unit ('root em') is relative to the computed
+  // value of the 'font-size' value of the root element."
+  // you can test by checking if the prop was ditched
+
+  Modernizr.addTest('cssremunit', function() {
+    var style = createElement('a').style;
+    try {
+      style.fontSize = '3rem';
+    }
+    catch (e) {}
+    return (/rem/).test(style.fontSize);
+  });
+
+
+  // Run each test
+  testRunner();
+
+  // Remove the "no-js" class if it exists
+  setClasses(classes);
+
+  delete ModernizrProto.addTest;
+  delete ModernizrProto.addAsyncTest;
+
+  // Run the things that are supposed to run after the tests
+  for (var i = 0; i < Modernizr._q.length; i++) {
+    Modernizr._q[i]();
+  }
+
+  // Leak Modernizr namespace
+  window.Modernizr = Modernizr;
+
+
+;
+
+})(window, document);
+;
+/***************************************************************************
+    modernizr-device.js,
+
+    (c) 2015, FCOO
+
+    https://github.com/FCOO/modernizr-device
+    https://github.com/FCOO
+
+****************************************************************************/
+
+(function (Modernizr, $, window, document/*, undefined*/) {
+    "use strict";
+
+    var ns = window;
+
+    function ModernizrDevice( options ) {
+        this.VERSION = "4.0.0";
+
+        this.modernizr = Modernizr;
+
+        this.options = $.extend({
+            scale          : false, //When true: Calculate 'best' scaling of font-size
+            referenceScreen: {
+                width       : 1366,
+                height      : 768,
+                diagonal_inc: 20
+            },
+            modernizr: {
+                device: false,  //When true: Add Modernizr-tests desktop mobile phone tablet
+                os    : true,   //When true: Add Modernizr-tests windows ios android
+                ie    : false   //When true: Add Modernizr-tests ie7 ie8 ie9 ie10
+            }
+        }, options || {} );
+
+        //Extend ModernizrDevice with some of the methods from Device.js (c) 2014 Matthew Hudson http://matthewhudson.me/projects/device.js/
+
+        // The client user agent string.
+        // Lowercase, so we can use the more efficient indexOf(), instead of Regex
+        this.userAgent = window.navigator.userAgent.toLowerCase();
+
+        this.find = function(needle) { return this.userAgent.indexOf(needle) !== -1; };
+
+        // Main functions
+        this.ios                = function () { return this.iphone() || this.ipod() || this.ipad(); };
+        this.iphone             = function () { return !this.windows() && this.find('iphone'); };
+        this.ipod               = function () { return this.find('ipod'); };
+        this.ipad               = function () { return this.find('ipad'); };
+        this.android            = function () { return !this.windows() && this.find('android'); };
+        this.androidPhone       = function () { return this.android() && this.find('mobile'); };
+        this.androidTablet      = function () { return this.android() && !this.find('mobile'); };
+        this.blackberry         = function () { return this.find('blackberry') || this.find('bb10') || this.find('rim'); };
+        this.blackberryPhone    = function () { return this.blackberry() && !this.find('tablet'); };
+        this.blackberryTablet   = function () { return this.blackberry() && this.find('tablet'); };
+        this.windows            = function () { return this.find('windows'); };
+        this.windowsPhone       = function () { return this.windows() && this.find('phone'); };
+        this.windowsTablet      = function () { return this.windows() && (this.find('touch') && !this.windowsPhone()); };
+        this.fxos               = function () { return (this.find('(mobile;') || this.find('(tablet;')) && this.find('; rv:'); };
+        this.fxosPhone          = function () { return this.fxos() && this.find('mobile'); };
+        this.fxosTablet         = function () { return this.fxos() && this.find('tablet'); };
+        this.meego              = function () { return this.find('meego'); };
+        this.cordova            = function () { return window.cordova && location.protocol === 'file:'; };
+        this.nodeWebkit         = function () { return typeof window.process === 'object';  };
+        this.mobile             = function () { return this.androidPhone() || this.iphone() || this.ipod() || this.windowsPhone() || this.blackberryPhone() || this.fxosPhone() || this.meego(); };
+        this.tablet             = function () { return this.ipad() || this.androidTablet() || this.blackberryTablet() || this.windowsTablet() || this.fxosTablet(); };
+        this.desktop            = function () { return !this.tablet() && !this.mobile(); };
+
+
+        if (this.options.scale){
+            var docEl = document.documentElement;
+            //this.devicePixelRatio = ('devicePixelRatio' in window) ? window.devicePixelRatio : 'unsupported';
+            this.screen_width  = screen.width;
+            this.screen_height = screen.height;
+
+            this.client_width = docEl.clientWidth;
+            this.client_width = docEl.clientHeight;
+
+            this.screen_width_em  = this.screen_width/16;
+            this.screen_height_em = this.screen_height/16;
+
+            this.dpi = 96;
+            for (var dpi=1; dpi<400; dpi++ )
+                if ( window.Modernizr.mq('(resolution: '+dpi+'dpi)') ){
+                    this.dpi = dpi;
+                    break;
+                }
+
+            this.dpr = window.devicePixelRatio;
+            if (!this.dpr){
+                this.dpr = 1;
+                for (var dpr=1; dpr<4; dpr=dpr+0.1 )
+                    if (
+                        Modernizr.mq('(-webkit-device-pixel-ratio: '+dpr+')') ||
+                        Modernizr.mq('(min--moz-device-pixel-ratio: '+dpr+')') ||
+                        Modernizr.mq('(-o-min-device-pixel-ratio: '+dpr+'/1)')
+                    ){
+                        this.dpr = dpr;
+                        break;
+                    }
+            }
+
+            this.dpr = Math.round(100*this.dpr)/100;
+
+            this.screen_diagonal = Math.sqrt( Math.pow(this.screen_width, 2) + Math.pow(this.screen_height,2) );
+            this.screen_diagonal_inc = this.screen_diagonal/this.dpi; //Best guest !
+
+            //Calculate the diagonal and dpi for the reference screen
+            var ref_screen_diagonal = Math.sqrt( Math.pow(this.options.referenceScreen.width, 2) + Math.pow(this.options.referenceScreen.height, 2) );
+            this.ref_dpi = ref_screen_diagonal/this.options.referenceScreen.diagonal_inc;
+
+            //The scale is best guest for a scale (eq. html.style.font-size=this.scale) of the screen to have elements the same size as on the reference screen
+            this.scale = 100;
+            if ((this.dpr != 1) || (this.dpi != 96))
+                this.scale = Math.sqrt(this.dpi / this.ref_dpi)*100;
+
+        } //if (this.options.scale){...
+
+        //Get a string with browser and version
+        this.browser_version = function() {
+            if(typeof navigator === 'undefined'){
+                return 'unknown';
+            }
+            var ua = navigator.userAgent, tem,
+            M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+            if(/trident/i.test(M[1])){
+                tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+                return 'IE '+(tem[1] || '');
+            }
+            if(M[1]=== 'Chrome'){
+                tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
+                if(tem!== null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+            }
+            M = M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+            if((tem= ua.match(/version\/(\d+)/i))!= null)
+                M.splice(1, 1, tem[1]);
+            return M.join(' ');
+        }();
+
+        //Set properties
+        this.isDesktop   = this.desktop();
+        this.isMobile    = this.mobile() || this.tablet();
+        this.isPhone     = this.mobile();
+        this.isTablet    = this.tablet();
+
+        this.isWindows   = this.windows();
+        this.isIos       = this.ios();
+        this.isAndroid   = this.android();
+
+        //Add tests to Modernizr
+        if (this.options.modernizr.device)
+            Modernizr.addTest({
+                desktop: this.isDesktop,
+                mobile : this.isMobile,
+                phone  : this.isPhone,
+                tablet : this.isTablet
+            });
+
+        if (this.options.modernizr.os)
+            Modernizr.addTest({
+                windows: this.isWindows,
+                ios    : this.isIos,
+                android: this.isAndroid
+            });
+
+        if (this.options.modernizr.ie){
+            //Adding test for Internet Explore versions 10
+            Modernizr.addTest('ie10', this.browser_version == 'MSIE 10' );
+
+            //Adding test for Internet Explore versions 11
+            Modernizr.addTest('ie11', this.browser_version == 'IE 11');
+        }
+    }
+
+    // expose access to the constructor
+    ns.ModernizrDevice = ModernizrDevice;
+
+
+}(window.Modernizr, jQuery, this, document));
+
+
+;
+/****************************************************************************
+	modernizr-javascript.js,
+
+	(c) 2016, FCOO
+
+	https://github.com/FCOO/modernizr-javascript
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window, document, undefined) {
+	"use strict";
+
+	var ns = window;
+
+    //Extend the jQuery prototype
+    $.fn.extend({
+        modernizrOn : function( test ){
+            return this.modernizrToggle( test, true );
+        },
+
+        modernizrOff: function( test ){
+            return this.modernizrToggle( test, false );
+        },
+
+        modernizrToggle: function( test, on ){
+		if ( on === undefined )
+            return this.modernizrToggle( test, !this.hasClass( test ) );
+
+            on = !!on; //on => Boolean
+            return this.toggleClass( test, on ).toggleClass( 'no-' + test, !on );
+        }
+    });
+
+
+    //Add methods to window = works on <html>
+    ns.modernizrOn  = function( test ){ ns.modernizrToggle( test, true ); };
+
+    ns.modernizrOff = function( test ){ ns.modernizrToggle( test, false ); };
+
+    ns.modernizrToggle = function( test, on ){ $('html').modernizrToggle( test, on ); };
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+    global-events, a plugin to administrate any events
+
+    (c) 2015, FCOO
+
+    https://github.com/FCOO/global-events
+    https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+    "use strict";
+
+    function GlobalEvents( ) {
+        this.events = {};
+
+        this._loop = function( eventNames, func, reverse ){
+			var eventName, j;
+			eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
+            for (j=0; j<eventNames.length; j++ ){
+                eventName = eventNames[j];
+                if (eventName){
+                    this.events[eventName] = this.events[eventName] || [];
+                    var i, lgd = this.events[eventName].length;
+                    if (reverse){
+                        for (i=lgd-1; i>=0; i-- )
+                            if (func( this.events[eventName][i], i, this.events[eventName] ))
+                                break;
+                    }
+                    else {
+                        for (i=0; i<lgd; i++ )
+                            if (func( this.events[eventName][i], i, this.events[eventName] ))
+                                break;
+                    }
+                }
+            }
+        };
+
+        this.on = function(eventNames, callback, context, options){
+			var eventName, i;
+			eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
+            for (i=0; i<eventNames.length; i++ ){
+                eventName = eventNames[i];
+                if (eventName){
+                    this.events[eventName] = this.events[eventName] || [];
+                    this.events[eventName].push( {
+                        callback: callback,
+                        context : context || null,
+                        options : $.extend( {once:false, first:false, last:false}, options )
+                    });
+                }
+            }
+        };
+
+        this.once      = function( eventName, callback, context ) { this.on( eventName, callback, context, { once:true             } ); };
+        this.onFirst   = function( eventName, callback, context ) { this.on( eventName, callback, context, {            first:true } ); };
+        this.onLast    = function( eventName, callback, context ) { this.on( eventName, callback, context, {            last:true  } ); };
+        this.onceFirst = function( eventName, callback, context ) { this.on( eventName, callback, context, { once:true, first:true } ); };
+        this.onceLast  = function( eventName, callback, context ) { this.on( eventName, callback, context, { once:true, last:true  } ); };
+
+        this.off = function(eventNames, callback, context){
+            var eventName, i, _loop_func;
+            eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
+            _loop_func = function( eventObj, index, list ){
+                if ( (callback == eventObj.callback) &&
+                    (!context || (context == eventObj.context)) ){
+                    list.splice(index, 1);
+                    return true;
+                }
+            };
+
+            for (i=0; i<eventNames.length; i++ ){
+                eventName = eventNames[i];
+                if (eventName){
+                    this._loop( eventName, _loop_func );
+                }
+            }
+        };
+
+
+        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){
+            var newArguments = [];
+            for (var i=1; i < arguments.length; i++) {
+                newArguments.push(arguments[i]);
+            }
+
+            //Fire the functions marked 'first'
+            this._loop( eventName, function( eventObj ){
+                if (eventObj.options.first)
+                    eventObj.callback.apply( eventObj.context, newArguments );
+            });
+
+            //Fire the functions not marked 'first' or 'last'
+            this._loop( eventName, function( eventObj ){
+                if (!eventObj.options.first && !eventObj.options.last)
+                    eventObj.callback.apply( eventObj.context, newArguments );
+            });
+
+            //Fire the functions marked 'last'
+            this._loop( eventName, function( eventObj ){
+                if (eventObj.options.last)
+                    eventObj.callback.apply( eventObj.context, newArguments );
+            });
+
+            //Remove all functions marked 'once'
+            this._loop( eventName, function( eventObj, index, list ){
+                if (eventObj.options.once)
+                    list.splice(index, 1);
+            }, true);
+        };
+
+        this.trigger  = function(){ this.fire( arguments );      };
+        this.one      = function(){ this.once( arguments );      };
+        this.oneFirst = function(){ this.onceFirst( arguments ); };
+        this.oneLast  = function(){ this.onceLast( arguments  ); };
+    }
+
+    // expose access to the constructor
+    window.GlobalEvents = GlobalEvents;
+
+}(jQuery, this, document));
+;
+/***************************************************************************
+    modernizr-mediaquery.js,
+
+    (c) 2015, FCOO
+
+    https://github.com/FCOO/modernizr-mediaquery
+    https://github.com/FCOO
+
+****************************************************************************/
+
+(function (Modernizr, $, window, document, undefined) {
+    "use strict";
+
+    //***********************************************
+    // Thank you: https://github.com/sindresorhus/query-string
+    function parseStyleToObject(str) {
+        var styleObject = {};
+        if (typeof str !== 'string')
+            return styleObject;
+
+        str = str.trim().slice(1, -1); // browsers re-quote string style values
+        if (!str)
+            return styleObject;
+
+        styleObject = str.split('&').reduce(function(ret, param) {
+            var parts = param.replace(/\+/g, ' ').split('='),
+                key = parts[0],
+                val = parts[1];
+            key = decodeURIComponent(key);
+
+            // missing `=` should be `null`:
+            // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+            val = val === undefined ? null : decodeURIComponent(val);
+
+            if (!ret.hasOwnProperty(key)) {
+                ret[key] = val;
+            } else
+                if (Array.isArray(ret[key])) {
+                    ret[key].push(val);
+                } else {
+                    ret[key] = [ret[key], val];
+                }
+            return ret;
+        }, {});
+
+        return styleObject;
+    }
+    //***********************************************
+
+    var ns = window;
+    var plugin_count = 1;
+
+    function ModernizrMediaquery( options ) {
+        this.plugin_count = plugin_count++;
+        this.modernizr           = Modernizr;
+        this.globalEvents        = new window.GlobalEvents();
+        this.defaultHtmlFontSize = this._getHtmlFontSize();
+
+        this.options = $.extend({
+            //Default options
+            VERSION             : "1.3.1",
+            htmlFontSize        : 16,
+            createFIRSTup       : false, //When true the media query FIRST-up (allway display) and no-FIRST-up (allways hidden) are created. MUST MATCH $create-FIRST-up
+            createLASTdown      : false, //When true the media query LAST-down (allway display) and no-LAST-down (allways hidden) are created. MUST MATCH $create-LAST-down
+            useWindowClientDim: true,
+        }, options || {} );
+
+        var _this = this,
+            meta,
+            mediaJSON  = {},
+            minMaxJSON = {};
+
+        if (this.options.breakpoints){
+            //Create mediaJSON and minMaxJSON from options.breakpoints
+            var breakpointList = [];
+            $.each( this.options.breakpoints, function( id, minPx ){
+                breakpointList.push( {id: id, minPx: minPx} );
+            });
+            breakpointList.sort( function( bp1, bp2 ){return bp1 > bp2; });
+
+            $.each( breakpointList, function( index, bp ){
+                //Set max eq next min - 1
+                var id = bp.id,
+                    minPx = bp.minPx,
+                    maxPx = (index == breakpointList.length-1) ? 0 : breakpointList[index+1].minPx-1,
+                    min = minPx / _this.options.htmlFontSize,
+                    minEm = min+'em',
+                    max = maxPx / _this.options.htmlFontSize,
+                    maxEm = max+'em',
+                    mq     = '',
+                    mqUp   = '',
+                    mqDown = '';
+
+                if (min > 0) {
+                    mq   = mq   + ' and (min-width: '+ minEm+')';
+                    mqUp = mqUp + ' and (min-width: '+ minEm+')';
+                }
+                if (max > 0) {
+                    mq     = mq     + ' and (max-width: '+ maxEm+')';
+                    mqDown = mqDown + ' and (max-width: '+ maxEm+')';
+                }
+
+                //Add mediaquery and minMax for id
+                mediaJSON[id]  = 'screen' + mq;
+                minMaxJSON[id] = minPx + 'px_' + maxPx+'px';
+
+                //Add mediaquery for id-down
+                if ((index < breakpointList.length-1) || options.createLASTdown){
+                    mediaJSON[id+'-down']  = 'screen' + mqDown;
+                    minMaxJSON[id+'-down'] = '0_' + maxPx+'px';
+                }
+
+                //Add mediaquery for id-up
+                if (index || options.createFIRSTup){
+                    mediaJSON[id+'-up']  = 'screen' + mqUp;
+                    minMaxJSON[id+'-up'] = minPx + 'px_0';
+                }
+            });
+
+            //Add special values for portrait and landscape
+            mediaJSON['landscape'] = 'screen and (orientation: landscape)';
+            minMaxJSON['landscape'] = '0_1_1';
+            mediaJSON['portrait'] = 'screen and (orientation: portrait)';
+            minMaxJSON['portrait'] = '0_1_0_1';
+        }
+        else {
+            //Reads the different media queries from the css-file using the 'dummy' class "modernizr-mediaquery-media-query"
+            meta      = $('<meta class="modernizr-mediaquery-media-query">').appendTo(document.head);
+            mediaJSON = parseStyleToObject(meta.css('font-family'));
+            meta.remove();
+
+            //Reads the different min-max-intervalls from the css-file using the 'dummy' class "modernizr-mediaquery-min-max"
+            meta      = $('<meta class="modernizr-mediaquery-min-max">').appendTo(document.head);
+            minMaxJSON = parseStyleToObject(meta.css('font-family'));
+            meta.remove();
+        }
+
+        //Convert mediaJSON
+        this.mediaQueryList = [];
+        $.each( mediaJSON, function( id, mq ){
+            _this.mediaQueryList.push({id: id, mq: mq, on: false });
+        });
+
+        //Convert minMaxJSON
+        this.minMaxRatioList = [];
+        $.each( minMaxJSON, function( id, value ){
+            var minMaxRatio = value.split('_');
+            _this.minMaxRatioList.push({
+                id      : id,
+                min     : parseFloat(minMaxRatio[0]),
+                max     : parseFloat(minMaxRatio[1]) || 100000,
+                minRatio: minMaxRatio.length > 2 ? parseFloat(minMaxRatio[2]) : 100000,
+                maxRatio: minMaxRatio.length > 3 ? parseFloat(minMaxRatio[3]) : 100000,
+                on      : false
+            });
+        });
+
+
+        //Set the 'change media-query event'
+        $(window).on('resize.mmq', $.proxy( this._onMediaQuery, this ));
+
+        this._onMediaQuery();
+    }
+
+    // expose access to the constructor
+    ns.ModernizrMediaquery = ModernizrMediaquery;
+
+    //Extend the prototype
+    ns.ModernizrMediaquery.prototype = {
+
+        //Methods to add media-query-events
+        on  : function( mediaQueries, callback, context ){ this.globalEvents.on(   mediaQueries, callback, context ); },
+        off : function( mediaQueries, callback, context ){ this.globalEvents.off(  mediaQueries, callback, context ); },
+        once: function( mediaQueries, callback, context ){ this.globalEvents.once( mediaQueries, callback, context ); },
+        one : function( mediaQueries, callback, context ){ this.globalEvents.one(  mediaQueries, callback, context ); },
+
+
+        setHtmlFontSizePx: function( fontSizePx ){
+            $('html').css('font-size', fontSizePx);
+            $(window).trigger('resize.mmq');
+            return fontSizePx;
+        },
+
+        setHtmlFontSizePercent: function( fontSizePercent ){
+            return this.setHtmlFontSizePx( fontSizePercent/100*this.defaultHtmlFontSize );
+        },
+
+        _getHtmlFontSize: function(){ return parseFloat( $('html').css('font-size') ); },
+
+        _isOn_mediaQueryMode: function( mediaQuery ){
+            return !!this.modernizr.mq(mediaQuery.mq);
+        },
+        _isOn_minMaxRatioMode: function( minMaxRatio ){
+            return ( (this.window_width_em >= (minMaxRatio.min / this.defaultHtmlFontSize)) &&
+                     (this.window_width_em <= (minMaxRatio.max / this.defaultHtmlFontSize)) ) ||
+                   ( (this.window_ratio >= minMaxRatio.minRatio) &&
+                     ( this.window_ratio <= minMaxRatio.maxRatio ) );
+        },
+
+        _onMediaQuery: function( /*event*/ ){
+            var i, list, listElem, isOn, isOnFunc;
+            this.screen_width  = screen.width;
+            this.screen_height = screen.height;
+            this.window_width  = window.innerWidth;
+            this.window_height = window.innerHeight;
+            this.htmlFontSize  = this._getHtmlFontSize();
+
+            this.window_width_em  = this.window_width / this.htmlFontSize;
+            this.window_height_em = this.window_height / this.htmlFontSize;
+
+            this.window_ratio = this.window_width / this.window_height;
+
+            if (this.options.useWindowClientDim){
+                list = this.minMaxRatioList;
+                isOnFunc = $.proxy(this._isOn_minMaxRatioMode, this);
+            }
+            else {
+                list = this.mediaQueryList;
+                isOnFunc = $.proxy(this._isOn_mediaQueryMode, this);
+            }
+
+            for (i=0; i<list.length; i++ ){
+                listElem = list[i];
+                isOn = isOnFunc(listElem);
+                window.modernizrToggle( listElem.id,  isOn );
+
+                if (isOn && !listElem.on)
+                    //Fire event
+                    this.globalEvents.fire(listElem.id, listElem.id, this);
+
+                listElem.on = isOn;
+            }
+        }
+
+
+    };
+
+}(window.Modernizr, jQuery, this, document));
+
+
+;
+/****************************************************************************
+    fcoo-modernizr-mediaquery-device.js,
+
+    (c) 2016, FCOO
+
+    https://github.com/FCOO/fcoo-modernizr-mediaquery-device
+    https://github.com/FCOO
+
+****************************************************************************/
+
+(function (Modernizr, $, window/*, document, undefined*/) {
+    "use strict";
+
+    //Create fcoo-namespace
+    window.fcoo = window.fcoo || {};
+    var ns = window.fcoo;
+
+    //modernizrMediaqueryOptions *MUST* match $html-font-size, $create-FIRST-up, $create-LAST-down and $breakpoints in src/_fcoo-modernizr-mediaquery-variables.scss
+    var modernizrMediaqueryOptions = {
+            useWindowClientDim: true,
+            htmlFontSize      : 16,     // = $html-font-size
+            createFIRSTup     : false,  // = $create-FIRST-up
+            createLASTdown    : false,  // = $create-LAST-down
+            breakpoints       : {       // = $breakpoints
+                "mini"       :    0, //Smaller than small phone portrait (< 320)
+                "xsmall-port":  320, //Small phone portrait (320-479)
+                "xsmall-land":  480, //Small phone landscape (480-576)
+                "small"      :  576, //Small devices
+                "medium"     :  768, //Tablets portrait
+                "large"      :  992, //Table landscape + desttop
+                "xlarge"     : 1200  //Large desttop
+            }
+        };
+
+
+    //Create fcoo.modernizrDevice
+    ns.modernizrDevice = new window.ModernizrDevice({
+        scale: false,
+        modernizr: {
+            device: false,
+            os    : true,
+            ie    : true
+        }
+    });
+
+    //Create fcoo.modernizrMediaquery
+    ns.modernizrMediaquery = new window.ModernizrMediaquery( modernizrMediaqueryOptions );
+
+    //For consistency: 'create' modernizr in window.fcoo
+    ns.modernizr = Modernizr;
+
+    //Add https-test
+    ns.modernizr.addTest('https', window.location.protocol == 'https:');
+
+}(window.Modernizr, jQuery, this, document));
+;
+/****************************************************************************
+	modernizr-mouse-events.js,
+
+	(c) 2018, FCOO
+
+	https://github.com/FCOO/modernizr-mouse-events
+	https://github.com/FCOO
+*****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    /*
+    Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
+    Solution by http://stackoverflow.com/users/1701813/hacktisch
+    Mouse devices (also touch screen laptops) first fire mousemove before they can fire touchstart and mouse is set to TRUE.
+    Touch devices (also for instance iOS which fires mousemove) FIRST fire touchstart upon click, and then mousemove.
+    That is why mouse will be set to FALSE.
+
+    Create a Modernizr-test named 'mouse-hover' to mark if hover "events" is fired. Can be use to prevent :hover {...} css to fail on touch devices
+    */
+
+    var mouseTest         = 'mouse',
+        mouseHoverTest    = 'mouse-hover',
+        mouseEventPostfix = '.modernizr.mouse.events',
+        hasModernizr = !!window.Modernizr,
+        hasTouchEventsTest = hasModernizr && (jQuery.type( window.Modernizr['touchevents'] ) === "boolean"),
+        hasTouchEvents = hasTouchEventsTest ? window.Modernizr['touchevents'] : true;
+
+    if (hasModernizr)
+        window.Modernizr.addTest(mouseTest, false);
+    window.modernizrOff(mouseTest);
+
+    //If Modernizr-test "touchevents" is included => use if to set "mouse-hover" else set "mouse-hover" = "mouse"
+    if (hasModernizr)
+        window.Modernizr.addTest( mouseHoverTest, !hasTouchEvents );
+    window.modernizrToggle( mouseHoverTest, !hasTouchEvents );
+
+    $(window)
+        //Check for mouse
+        .bind('mousemove'+mouseEventPostfix,function(){
+            $(window).unbind(mouseEventPostfix);
+            if (hasModernizr)
+                window.Modernizr[mouseTest] = true;
+            window.modernizrOn(mouseTest);
+/* REMOVED IN VERSION 2.0.0
+            if (!hasTouchEventsTest){
+                if (hasModernizr)
+                    window.Modernizr.addTest( mouseHoverTest, true );
+                window.modernizrOn(mouseHoverTest);
+            }
+*/
+        })
+        .bind('touchstart'+mouseEventPostfix,function(){
+            $(window).unbind(mouseEventPostfix);
+            if (hasModernizr)
+                window.Modernizr[mouseTest] = false;
+            window.modernizrOff(mouseTest);
+        })
+
+        //Create hidden dummy element to test for true hover support
+        .on( "load", function() {
+            var $elem = $('<i/>')
+                            .appendTo($('body'))
+                            .addClass('_test-for-hover_');
+
+            if ($elem.css('font-family') == "__HOVER_SUPPORT__"){
+                if (hasModernizr)
+                    window.Modernizr.addTest( mouseHoverTest, true );
+                window.modernizrOn(mouseHoverTest);
+            }
+        });
+
+
+}(jQuery, this, document));
+;
+/*!
   * Bootstrap v4.4.1 (https://getbootstrap.com/)
   * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -17735,128 +20115,6 @@ return jQuery;
 
 ;
 /****************************************************************************
-    global-events, a plugin to administrate any events
-
-    (c) 2015, FCOO
-
-    https://github.com/FCOO/global-events
-    https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window/*, document, undefined*/) {
-    "use strict";
-
-    function GlobalEvents( ) {
-        this.events = {};
-
-        this._loop = function( eventNames, func, reverse ){
-			var eventName, j;
-			eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
-            for (j=0; j<eventNames.length; j++ ){
-                eventName = eventNames[j];
-                if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
-                    var i, lgd = this.events[eventName].length;
-                    if (reverse){
-                        for (i=lgd-1; i>=0; i-- )
-                            if (func( this.events[eventName][i], i, this.events[eventName] ))
-                                break;
-                    } 
-                    else {
-                        for (i=0; i<lgd; i++ )
-                            if (func( this.events[eventName][i], i, this.events[eventName] ))
-                                break;
-                    }
-                }
-            }
-        };
-
-        this.on = function(eventNames, callback, context, options){
-			var eventName, i;
-			eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
-            for (i=0; i<eventNames.length; i++ ){
-                eventName = eventNames[i];
-                if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
-                    this.events[eventName].push( {
-                        callback: callback,
-                        context : context || null,
-                        options : $.extend( {once:false, first:false, last:false}, options ) 
-                    });
-                }
-            }
-        };
-
-        this.once      = function( eventName, callback, context ) { this.on( eventName, callback, context, { once:true             } ); };
-        this.onFirst   = function( eventName, callback, context ) { this.on( eventName, callback, context, {            first:true } ); };
-        this.onLast    = function( eventName, callback, context ) { this.on( eventName, callback, context, {            last:true  } ); };
-        this.onceFirst = function( eventName, callback, context ) { this.on( eventName, callback, context, { once:true, first:true } ); };
-        this.onceLast  = function( eventName, callback, context ) { this.on( eventName, callback, context, { once:true, last:true  } ); };
-
-        this.off = function(eventNames, callback, context){
-            var eventName, i, _loop_func;
-            eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
-            _loop_func = function( eventObj, index, list ){
-                if ( (callback == eventObj.callback) &&
-                    (!context || (context == eventObj.context)) ){ 
-                    list.splice(index, 1);
-                    return true;
-                }
-            };
-
-            for (i=0; i<eventNames.length; i++ ){
-                eventName = eventNames[i];
-                if (eventName){
-                    this._loop( eventName, _loop_func );
-                }
-            }
-        };
-
-
-        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){ 
-            var newArguments = [];
-            for (var i=1; i < arguments.length; i++) {
-                newArguments.push(arguments[i]);
-            }
-
-            //Fire the functions marked 'first'
-            this._loop( eventName, function( eventObj ){ 
-                if (eventObj.options.first)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
-            });
-
-            //Fire the functions not marked 'first' or 'last'
-            this._loop( eventName, function( eventObj ){ 
-                if (!eventObj.options.first && !eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
-            });
-
-            //Fire the functions marked 'last'
-            this._loop( eventName, function( eventObj ){ 
-                if (eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
-            });
-            
-            //Remove all functions marked 'once'
-            this._loop( eventName, function( eventObj, index, list ){ 
-                if (eventObj.options.once)
-                    list.splice(index, 1);
-            }, true);
-        };
-
-        this.trigger  = function(){ this.fire( arguments );      };
-        this.one      = function(){ this.once( arguments );      };
-        this.oneFirst = function(){ this.onceFirst( arguments ); };
-        this.oneLast  = function(){ this.onceLast( arguments  ); };
-    }
-  
-    // expose access to the constructor
-    window.GlobalEvents = GlobalEvents;
-
-}(jQuery, this, document));
-;
-/****************************************************************************
 	fcoo-global-events.js,
 
 	(c) 2016, FCOO
@@ -19316,7 +21574,8 @@ return jQuery;
         this.unescapeSuffix = this.unescapePrefix ? '' : iOpts.unescapeSuffix || '';
         this.nestingPrefix = iOpts.nestingPrefix ? regexEscape(iOpts.nestingPrefix) : iOpts.nestingPrefixEscaped || regexEscape('$t(');
         this.nestingSuffix = iOpts.nestingSuffix ? regexEscape(iOpts.nestingSuffix) : iOpts.nestingSuffixEscaped || regexEscape(')');
-        this.maxReplaces = iOpts.maxReplaces ? iOpts.maxReplaces : 1000; // the regexp
+        this.maxReplaces = iOpts.maxReplaces ? iOpts.maxReplaces : 1000;
+        this.alwaysFormat = iOpts.alwaysFormat !== undefined ? iOpts.alwaysFormat : false; // the regexp
 
         this.resetRegExp();
       }
@@ -19352,13 +21611,14 @@ return jQuery;
 
         var handleFormat = function handleFormat(key) {
           if (key.indexOf(_this.formatSeparator) < 0) {
-            return getPathWithDefaults(data, defaultData, key);
+            var path = getPathWithDefaults(data, defaultData, key);
+            return _this.alwaysFormat ? _this.format(path, undefined, lng) : path;
           }
 
           var p = key.split(_this.formatSeparator);
           var k = p.shift().trim();
           var f = p.join(_this.formatSeparator).trim();
-          return _this.format(getPathWithDefaults(data, defaultData, k), f, lng);
+          return _this.format(getPathWithDefaults(data, defaultData, k), f, lng, options);
         };
 
         this.resetRegExp();
@@ -19841,7 +22101,7 @@ return jQuery;
       },
       interpolation: {
         escapeValue: true,
-        format: function format(value, _format, lng) {
+        format: function format(value, _format, lng, options) {
           return value;
         },
         prefix: '{{',
@@ -19995,6 +22255,10 @@ return jQuery;
           this.modules.external.forEach(function (m) {
             if (m.init) m.init(_this2);
           });
+        }
+
+        if (!this.modules.languageDetector && !this.options.lng) {
+          this.logger.warn('init: no languageDetector is used and no lng is defined');
         } // append api
 
 
@@ -20372,19 +22636,19 @@ return jQuery;
 ;
 /* @preserve
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2013-2018 Petka Antonov
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -20392,7 +22656,7 @@ return jQuery;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
+ *
  */
 /**
  * bluebird build version 3.7.2
@@ -23984,28 +26248,28 @@ _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext,
 _dereq_('./any.js')(Promise);
 _dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./filter.js')(Promise, INTERNAL);
-                                                         
-    util.toFastProperties(Promise);                                          
-    util.toFastProperties(Promise.prototype);                                
-    function fillTypes(value) {                                              
-        var p = new Promise(INTERNAL);                                       
-        p._fulfillmentHandler0 = value;                                      
-        p._rejectionHandler0 = value;                                        
-        p._promise0 = value;                                                 
-        p._receiver0 = value;                                                
-    }                                                                        
-    // Complete slack tracking, opt out of field-type tracking and           
-    // stabilize map                                                         
-    fillTypes({a: 1});                                                       
-    fillTypes({b: 2});                                                       
-    fillTypes({c: 3});                                                       
-    fillTypes(1);                                                            
-    fillTypes(function(){});                                                 
-    fillTypes(undefined);                                                    
-    fillTypes(false);                                                        
-    fillTypes(new Promise(INTERNAL));                                        
-    debug.setBounds(Async.firstLineError, util.lastLineError);               
-    return Promise;                                                          
+
+    util.toFastProperties(Promise);
+    util.toFastProperties(Promise.prototype);
+    function fillTypes(value) {
+        var p = new Promise(INTERNAL);
+        p._fulfillmentHandler0 = value;
+        p._rejectionHandler0 = value;
+        p._promise0 = value;
+        p._receiver0 = value;
+    }
+    // Complete slack tracking, opt out of field-type tracking and
+    // stabilize map
+    fillTypes({a: 1});
+    fillTypes({b: 2});
+    fillTypes({c: 3});
+    fillTypes(1);
+    fillTypes(function(){});
+    fillTypes(undefined);
+    fillTypes(false);
+    fillTypes(new Promise(INTERNAL));
+    debug.setBounds(Async.firstLineError, util.lastLineError);
+    return Promise;
 
 };
 
@@ -27571,7 +29835,7 @@ return index;
 }(this.i18next, this.Promise, this, document));
 ;
 /****************************************************************************
-	jQuery.i18nLink.js, 
+	jQuery.i18nLink.js,
 
 	(c) 2017, FCOO
 
@@ -27592,18 +29856,18 @@ return index;
         return  $('<a/>')
                     .i18n('link:'+key, 'href', {defaultValue: null})
                     .i18n('name:'+key, 'title')
-                    .append( 
+                    .append(
                         $('<span/>')
-                            .i18n('abbr:'+key, {defaultValue: key.toUpperCase()} ) 
+                            .i18n('abbr:'+key, {defaultValue: key.toUpperCase()} )
                     );
-                     
+
     };
 
 
 }(this, document));
 ;
 /****************************************************************************
-	fake-localstorage.js, 
+	fake-localstorage.js,
 
 	(c) 2017, FCOO
 
@@ -27614,54 +29878,54 @@ return index;
 
 (function (window/*, document, undefined*/) {
 	"use strict";
-	
+
     /*********************************************************************
     Determinate if localStorage is supported and available
     If the browser is in 'Private' mode not all browser supports localStorage
     In localStorage isn't supported a fake version is installed
     At the moment no warning is given when localStorage isn't supported since
-    some browser in private-mode allows the use of window.localStorage but 
+    some browser in private-mode allows the use of window.localStorage but
     don't save it when the session ends
     *********************************************************************/
     window.fake_localstorage_installed = false;
 
     // Test taken from https://gist.github.com/engelfrost/fd707819658f72b42f55
     if (typeof window.localStorage === 'object') {
-        // Safari will throw a fit if we try to use localStorage.setItem in private browsing mode. 
+        // Safari will throw a fit if we try to use localStorage.setItem in private browsing mode.
         try {
             localStorage.setItem('localStorageTest', 1);
             localStorage.removeItem('localStorageTest');
             window.fake_localstorage_installed = false;
-        } 
+        }
         catch (e) {
             window.fake_localstorage_installed = true;
         }
-    } 
-    else 
-        window.fake_localstorage_installed = true;        
+    }
+    else
+        window.fake_localstorage_installed = true;
 
     if (window.fake_localstorage_installed){
         /*********************************************************************
         Create a fake localStorage for any browser that does not support it.
 
         Taken from https://gist.github.com/engelfrost/fd707819658f72b42f55:
-            Fake localStorage implementation. 
-            Mimics localStorage, including events. 
-            It will work just like localStorage, except for the persistant storage part. 
+            Fake localStorage implementation.
+            Mimics localStorage, including events.
+            It will work just like localStorage, except for the persistant storage part.
         *********************************************************************/
         var fakeLocalStorage = {};
-        var storage; 
-  
-        // If Storage exists we modify it to write to our fakeLocalStorage object instead. 
-        // If Storage does not exist we create an empty object. 
+        var storage;
+
+        // If Storage exists we modify it to write to our fakeLocalStorage object instead.
+        // If Storage does not exist we create an empty object.
         if (window.Storage && window.localStorage) {
-            storage = window.Storage.prototype; 
+            storage = window.Storage.prototype;
         } else {
             // We don't bother implementing a fake Storage object
-            window.localStorage = {}; 
-            storage = window.localStorage; 
+            window.localStorage = {};
+            storage = window.localStorage;
         }
-  
+
         // For older IE
         if (!window.location.origin) {
             window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
@@ -27718,11 +29982,11 @@ return index;
 	var minor = parseInt(splitVersion[1]);
 
 	var JQ_LT_17 = (major < 1) || (major == 1 && minor < 7);
-	
+
 	function eventsData($el) {
 		return JQ_LT_17 ? $el.data('events') : $._data($el[0]).events;
 	}
-	
+
 	function moveHandlerToTop($el, eventName, isDelegated) {
 		var data = eventsData($el);
 		var events = data[eventName];
@@ -27740,7 +30004,7 @@ return index;
 			events.unshift(events.pop());
 		}
 	}
-	
+
 	function moveEventHandlers($elems, eventsString, isDelegate) {
 		var events = eventsString.split(/\s+/);
 		$elems.each(function() {
@@ -27750,7 +30014,7 @@ return index;
 			}
 		});
 	}
-	
+
 	function makeMethod(methodName) {
 		$.fn[methodName + 'First'] = function() {
 			var args = $.makeArray(arguments);
@@ -27775,7 +30039,7 @@ return index;
 	$.fn.delegateFirst = function() {
 		var args = $.makeArray(arguments);
 		var eventsString = args[1];
-		
+
 		if (eventsString) {
 			args.splice(0, 2);
 			$.fn.delegate.apply(this, arguments);
@@ -27795,7 +30059,7 @@ return index;
 
 		return this;
 	};
-	
+
 	// on (jquery >= 1.7)
 	if (!JQ_LT_17) {
 		$.fn.onFirst = function(types, selector) {
@@ -33933,8 +36197,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -34028,8 +36292,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, window, undefined) {
@@ -35542,7 +37806,7 @@ if (typeof define === 'function' && define.amd) {
             function seekPrevious(pos, newBlock) {
                 var position = pos, tests;
                 if (position <= 0) return 0;
-                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position), 
+                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position),
                 tests.length < 2 || tests.length === 2 && tests[1].match.def === ""))) {}
                 return position;
             }
@@ -36779,8 +39043,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($) {
@@ -36809,8 +39073,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -37061,8 +39325,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -37612,8 +39876,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, Inputmask) {
@@ -37763,9 +40027,9 @@ if (typeof define === 'function' && define.amd) {
 (function ( $ ) {
 	var attachEvent = document.attachEvent,
 		stylesCreated = false;
-	
+
 	var jQuery_resize = $.fn.resize;
-	
+
 	$.fn.resize = function(callback) {
 		return this.each(function() {
 			if(this == window)
@@ -37780,14 +40044,14 @@ if (typeof define === 'function' && define.amd) {
 			removeResizeListener(this, callback);
 		});
 	}
-	
+
 	if (!attachEvent) {
 		var requestFrame = (function(){
 			var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
 								function(fn){ return window.setTimeout(fn, 20); };
 			return function(fn){ return raf(fn); };
 		})();
-		
+
 		var cancelFrame = (function(){
 			var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
 								   window.clearTimeout;
@@ -37811,7 +40075,7 @@ if (typeof define === 'function' && define.amd) {
 			return element.offsetWidth != element.__resizeLast__.width ||
 						 element.offsetHeight != element.__resizeLast__.height;
 		}
-		
+
 		function scrollListener(e){
 			var element = this;
 			resetTriggers(this);
@@ -37826,7 +40090,7 @@ if (typeof define === 'function' && define.amd) {
 				}
 			});
 		};
-		
+
 		/* Detect CSS Animations support to detect element display/re-attach */
 		var animation = false,
 			animationstring = 'animation',
@@ -37837,8 +40101,8 @@ if (typeof define === 'function' && define.amd) {
 			pfx  = '';
 		{
 			var elm = document.createElement('fakeelement');
-			if( elm.style.animationName !== undefined ) { animation = true; }    
-			
+			if( elm.style.animationName !== undefined ) { animation = true; }
+
 			if( animation === false ) {
 				for( var i = 0; i < domPrefixes.length; i++ ) {
 					if( elm.style[ domPrefixes[i] + 'AnimationName' ] !== undefined ) {
@@ -37852,12 +40116,12 @@ if (typeof define === 'function' && define.amd) {
 				}
 			}
 		}
-		
+
 		var animationName = 'resizeanim';
 		var animationKeyframes = '@' + keyframeprefix + 'keyframes ' + animationName + ' { from { opacity: 0; } to { opacity: 0; } } ';
 		var animationStyle = keyframeprefix + 'animation: 1ms ' + animationName + '; ';
 	}
-	
+
 	function createStyles() {
 		if (!stylesCreated) {
 			//opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
@@ -37866,7 +40130,7 @@ if (typeof define === 'function' && define.amd) {
 					'.resize-triggers, .resize-triggers > div, .contract-trigger:before { content: \" \"; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; } .resize-triggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }',
 				head = document.head || document.getElementsByTagName('head')[0],
 				style = document.createElement('style');
-			
+
 			style.type = 'text/css';
 			if (style.styleSheet) {
 				style.styleSheet.cssText = css;
@@ -37878,7 +40142,7 @@ if (typeof define === 'function' && define.amd) {
 			stylesCreated = true;
 		}
 	}
-	
+
 	window.addResizeListener = function(element, fn){
 		if (attachEvent) element.attachEvent('onresize', fn);
 		else {
@@ -37893,7 +40157,7 @@ if (typeof define === 'function' && define.amd) {
 				element.appendChild(element.__resizeTriggers__);
 				resetTriggers(element);
 				element.addEventListener('scroll', scrollListener, true);
-				
+
 				/* Listen for a css animation to detect element display/re-attach */
 				animationstartevent && element.__resizeTriggers__.addEventListener(animationstartevent, function(e) {
 					if(e.animationName == animationName)
@@ -37903,7 +40167,7 @@ if (typeof define === 'function' && define.amd) {
 			element.__resizeListeners__.push(fn);
 		}
 	};
-	
+
 	window.removeResizeListener = function(element, fn){
 		if (attachEvent) element.detachEvent('onresize', fn);
 		else {
@@ -38272,125 +40536,6 @@ if (typeof define === 'function' && define.amd) {
 
 }));
 
-;
-/****************************************************************************
-	modernizr-javascript.js, 
-
-	(c) 2016, FCOO
-
-	https://github.com/FCOO/modernizr-javascript
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($, window, document, undefined) {
-	"use strict";
-	
-	var ns = window;
-
-    //Extend the jQuery prototype
-    $.fn.extend({
-        modernizrOn : function( test ){ 
-            return this.modernizrToggle( test, true ); 
-        },
-
-        modernizrOff: function( test ){ 
-            return this.modernizrToggle( test, false ); 
-        },
-        
-        modernizrToggle: function( test, on ){ 
-		if ( on === undefined )
-            return this.modernizrToggle( test, !this.hasClass( test ) );
-
-            on = !!on; //on => Boolean
-            return this.toggleClass( test, on ).toggleClass( 'no-' + test, !on );
-        }
-    });
-
-
-    //Add methods to window = works on <html>
-    ns.modernizrOn  = function( test ){ ns.modernizrToggle( test, true ); };
-
-    ns.modernizrOff = function( test ){ ns.modernizrToggle( test, false ); };
-
-    ns.modernizrToggle = function( test, on ){ $('html').modernizrToggle( test, on ); };
-
-}(jQuery, this, document));
-;
-/****************************************************************************
-	modernizr-mouse-events.js,
-
-	(c) 2018, FCOO
-
-	https://github.com/FCOO/modernizr-mouse-events
-	https://github.com/FCOO
-*****************************************************************************/
-(function ($, window/*, document, undefined*/) {
-	"use strict";
-
-    /*
-    Create a Modernizr-test named 'mouse' to detect if there are a mouse-device
-    Solution by http://stackoverflow.com/users/1701813/hacktisch
-    Mouse devices (also touch screen laptops) first fire mousemove before they can fire touchstart and mouse is set to TRUE.
-    Touch devices (also for instance iOS which fires mousemove) FIRST fire touchstart upon click, and then mousemove.
-    That is why mouse will be set to FALSE.
-
-    Create a Modernizr-test named 'mouse-hover' to mark if hover "events" is fired. Can be use to prevent :hover {...} css to fail on touch devices
-    */
-
-    var mouseTest         = 'mouse',
-        mouseHoverTest    = 'mouse-hover',
-        mouseEventPostfix = '.modernizr.mouse.events',
-        hasModernizr = !!window.Modernizr,
-        hasTouchEventsTest = hasModernizr && (jQuery.type( window.Modernizr['touchevents'] ) === "boolean"),
-        hasTouchEvents = hasTouchEventsTest ? window.Modernizr['touchevents'] : true;
-
-    if (hasModernizr)
-        window.Modernizr.addTest(mouseTest, false);
-    window.modernizrOff(mouseTest);
-
-    //If Modernizr-test "touchevents" is included => use if to set "mouse-hover" else set "mouse-hover" = "mouse"
-    if (hasModernizr)
-        window.Modernizr.addTest( mouseHoverTest, !hasTouchEvents );
-    window.modernizrToggle( mouseHoverTest, !hasTouchEvents );
-
-    $(window)
-        //Check for mouse
-        .bind('mousemove'+mouseEventPostfix,function(){
-            $(window).unbind(mouseEventPostfix);
-            if (hasModernizr)
-                window.Modernizr[mouseTest] = true;
-            window.modernizrOn(mouseTest);
-/* REMOVED IN VERSION 2.0.0
-            if (!hasTouchEventsTest){
-                if (hasModernizr)
-                    window.Modernizr.addTest( mouseHoverTest, true );
-                window.modernizrOn(mouseHoverTest);
-            }
-*/
-        })
-        .bind('touchstart'+mouseEventPostfix,function(){
-            $(window).unbind(mouseEventPostfix);
-            if (hasModernizr)
-                window.Modernizr[mouseTest] = false;
-            window.modernizrOff(mouseTest);
-        })
-
-        //Create hidden dummy element to test for true hover support
-        .on( "load", function() {
-            var $elem = $('<i/>')
-                            .appendTo($('body'))
-                            .addClass('_test-for-hover_');
-
-            if ($elem.css('font-family') == "__HOVER_SUPPORT__"){
-                if (hasModernizr)
-                    window.Modernizr.addTest( mouseHoverTest, true );
-                window.modernizrOn(mouseHoverTest);
-            }
-        });
-
-
-}(jQuery, this, document));
 ;
 /****************************************************************************
     jquery-base-slider-handle,
@@ -41159,1329 +43304,1354 @@ if (typeof define === 'function' && define.amd) {
 }(jQuery, this, document));
 ;
 /*!
- * perfect-scrollbar v1.4.0
- * (c) 2018 Hyunje Jun
- * @license MIT
+ * perfect-scrollbar v1.5.0
+ * Copyright 2020 Hyunje Jun, MDBootstrap and Contributors
+ * Licensed under MIT
  */
+
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.PerfectScrollbar = factory());
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.PerfectScrollbar = factory());
 }(this, (function () { 'use strict';
 
-function get(element) {
-  return getComputedStyle(element);
-}
+  function get(element) {
+    return getComputedStyle(element);
+  }
 
-function set(element, obj) {
-  for (var key in obj) {
-    var val = obj[key];
-    if (typeof val === 'number') {
-      val = val + "px";
+  function set(element, obj) {
+    for (var key in obj) {
+      var val = obj[key];
+      if (typeof val === 'number') {
+        val = val + "px";
+      }
+      element.style[key] = val;
     }
-    element.style[key] = val;
-  }
-  return element;
-}
-
-function div(className) {
-  var div = document.createElement('div');
-  div.className = className;
-  return div;
-}
-
-var elMatches =
-  typeof Element !== 'undefined' &&
-  (Element.prototype.matches ||
-    Element.prototype.webkitMatchesSelector ||
-    Element.prototype.mozMatchesSelector ||
-    Element.prototype.msMatchesSelector);
-
-function matches(element, query) {
-  if (!elMatches) {
-    throw new Error('No element matching method supported');
+    return element;
   }
 
-  return elMatches.call(element, query);
-}
+  function div(className) {
+    var div = document.createElement('div');
+    div.className = className;
+    return div;
+  }
 
-function remove(element) {
-  if (element.remove) {
-    element.remove();
-  } else {
-    if (element.parentNode) {
-      element.parentNode.removeChild(element);
+  var elMatches =
+    typeof Element !== 'undefined' &&
+    (Element.prototype.matches ||
+      Element.prototype.webkitMatchesSelector ||
+      Element.prototype.mozMatchesSelector ||
+      Element.prototype.msMatchesSelector);
+
+  function matches(element, query) {
+    if (!elMatches) {
+      throw new Error('No element matching method supported');
+    }
+
+    return elMatches.call(element, query);
+  }
+
+  function remove(element) {
+    if (element.remove) {
+      element.remove();
+    } else {
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
     }
   }
-}
 
-function queryChildren(element, selector) {
-  return Array.prototype.filter.call(element.children, function (child) { return matches(child, selector); }
-  );
-}
-
-var cls = {
-  main: 'ps',
-  element: {
-    thumb: function (x) { return ("ps__thumb-" + x); },
-    rail: function (x) { return ("ps__rail-" + x); },
-    consuming: 'ps__child--consume',
-  },
-  state: {
-    focus: 'ps--focus',
-    clicking: 'ps--clicking',
-    active: function (x) { return ("ps--active-" + x); },
-    scrolling: function (x) { return ("ps--scrolling-" + x); },
-  },
-};
-
-/*
- * Helper methods
- */
-var scrollingClassTimeout = { x: null, y: null };
-
-function addScrollingClass(i, x) {
-  var classList = i.element.classList;
-  var className = cls.state.scrolling(x);
-
-  if (classList.contains(className)) {
-    clearTimeout(scrollingClassTimeout[x]);
-  } else {
-    classList.add(className);
+  function queryChildren(element, selector) {
+    return Array.prototype.filter.call(element.children, function (child) { return matches(child, selector); }
+    );
   }
-}
 
-function removeScrollingClass(i, x) {
-  scrollingClassTimeout[x] = setTimeout(
-    function () { return i.isAlive && i.element.classList.remove(cls.state.scrolling(x)); },
-    i.settings.scrollingThreshold
-  );
-}
-
-function setScrollingClassInstantly(i, x) {
-  addScrollingClass(i, x);
-  removeScrollingClass(i, x);
-}
-
-var EventElement = function EventElement(element) {
-  this.element = element;
-  this.handlers = {};
-};
-
-var prototypeAccessors = { isEmpty: { configurable: true } };
-
-EventElement.prototype.bind = function bind (eventName, handler) {
-  if (typeof this.handlers[eventName] === 'undefined') {
-    this.handlers[eventName] = [];
-  }
-  this.handlers[eventName].push(handler);
-  this.element.addEventListener(eventName, handler, false);
-};
-
-EventElement.prototype.unbind = function unbind (eventName, target) {
-    var this$1 = this;
-
-  this.handlers[eventName] = this.handlers[eventName].filter(function (handler) {
-    if (target && handler !== target) {
-      return true;
-    }
-    this$1.element.removeEventListener(eventName, handler, false);
-    return false;
-  });
-};
-
-EventElement.prototype.unbindAll = function unbindAll () {
-    var this$1 = this;
-
-  for (var name in this$1.handlers) {
-    this$1.unbind(name);
-  }
-};
-
-prototypeAccessors.isEmpty.get = function () {
-    var this$1 = this;
-
-  return Object.keys(this.handlers).every(
-    function (key) { return this$1.handlers[key].length === 0; }
-  );
-};
-
-Object.defineProperties( EventElement.prototype, prototypeAccessors );
-
-var EventManager = function EventManager() {
-  this.eventElements = [];
-};
-
-EventManager.prototype.eventElement = function eventElement (element) {
-  var ee = this.eventElements.filter(function (ee) { return ee.element === element; })[0];
-  if (!ee) {
-    ee = new EventElement(element);
-    this.eventElements.push(ee);
-  }
-  return ee;
-};
-
-EventManager.prototype.bind = function bind (element, eventName, handler) {
-  this.eventElement(element).bind(eventName, handler);
-};
-
-EventManager.prototype.unbind = function unbind (element, eventName, handler) {
-  var ee = this.eventElement(element);
-  ee.unbind(eventName, handler);
-
-  if (ee.isEmpty) {
-    // remove
-    this.eventElements.splice(this.eventElements.indexOf(ee), 1);
-  }
-};
-
-EventManager.prototype.unbindAll = function unbindAll () {
-  this.eventElements.forEach(function (e) { return e.unbindAll(); });
-  this.eventElements = [];
-};
-
-EventManager.prototype.once = function once (element, eventName, handler) {
-  var ee = this.eventElement(element);
-  var onceHandler = function (evt) {
-    ee.unbind(eventName, onceHandler);
-    handler(evt);
+  var cls = {
+    main: 'ps',
+    rtl: 'ps__rtl',
+    element: {
+      thumb: function (x) { return ("ps__thumb-" + x); },
+      rail: function (x) { return ("ps__rail-" + x); },
+      consuming: 'ps__child--consume',
+    },
+    state: {
+      focus: 'ps--focus',
+      clicking: 'ps--clicking',
+      active: function (x) { return ("ps--active-" + x); },
+      scrolling: function (x) { return ("ps--scrolling-" + x); },
+    },
   };
-  ee.bind(eventName, onceHandler);
-};
 
-function createEvent(name) {
-  if (typeof window.CustomEvent === 'function') {
-    return new CustomEvent(name);
-  } else {
-    var evt = document.createEvent('CustomEvent');
-    evt.initCustomEvent(name, false, false, undefined);
-    return evt;
-  }
-}
+  /*
+   * Helper methods
+   */
+  var scrollingClassTimeout = { x: null, y: null };
 
-var processScrollDiff = function(
-  i,
-  axis,
-  diff,
-  useScrollingClass,
-  forceFireReachEvent
-) {
-  if ( useScrollingClass === void 0 ) useScrollingClass = true;
-  if ( forceFireReachEvent === void 0 ) forceFireReachEvent = false;
+  function addScrollingClass(i, x) {
+    var classList = i.element.classList;
+    var className = cls.state.scrolling(x);
 
-  var fields;
-  if (axis === 'top') {
-    fields = [
-      'contentHeight',
-      'containerHeight',
-      'scrollTop',
-      'y',
-      'up',
-      'down' ];
-  } else if (axis === 'left') {
-    fields = [
-      'contentWidth',
-      'containerWidth',
-      'scrollLeft',
-      'x',
-      'left',
-      'right' ];
-  } else {
-    throw new Error('A proper axis should be provided');
-  }
-
-  processScrollDiff$1(i, diff, fields, useScrollingClass, forceFireReachEvent);
-};
-
-function processScrollDiff$1(
-  i,
-  diff,
-  ref,
-  useScrollingClass,
-  forceFireReachEvent
-) {
-  var contentHeight = ref[0];
-  var containerHeight = ref[1];
-  var scrollTop = ref[2];
-  var y = ref[3];
-  var up = ref[4];
-  var down = ref[5];
-  if ( useScrollingClass === void 0 ) useScrollingClass = true;
-  if ( forceFireReachEvent === void 0 ) forceFireReachEvent = false;
-
-  var element = i.element;
-
-  // reset reach
-  i.reach[y] = null;
-
-  // 1 for subpixel rounding
-  if (element[scrollTop] < 1) {
-    i.reach[y] = 'start';
-  }
-
-  // 1 for subpixel rounding
-  if (element[scrollTop] > i[contentHeight] - i[containerHeight] - 1) {
-    i.reach[y] = 'end';
-  }
-
-  if (diff) {
-    element.dispatchEvent(createEvent(("ps-scroll-" + y)));
-
-    if (diff < 0) {
-      element.dispatchEvent(createEvent(("ps-scroll-" + up)));
-    } else if (diff > 0) {
-      element.dispatchEvent(createEvent(("ps-scroll-" + down)));
-    }
-
-    if (useScrollingClass) {
-      setScrollingClassInstantly(i, y);
-    }
-  }
-
-  if (i.reach[y] && (diff || forceFireReachEvent)) {
-    element.dispatchEvent(createEvent(("ps-" + y + "-reach-" + (i.reach[y]))));
-  }
-}
-
-function toInt(x) {
-  return parseInt(x, 10) || 0;
-}
-
-function isEditable(el) {
-  return (
-    matches(el, 'input,[contenteditable]') ||
-    matches(el, 'select,[contenteditable]') ||
-    matches(el, 'textarea,[contenteditable]') ||
-    matches(el, 'button,[contenteditable]')
-  );
-}
-
-function outerWidth(element) {
-  var styles = get(element);
-  return (
-    toInt(styles.width) +
-    toInt(styles.paddingLeft) +
-    toInt(styles.paddingRight) +
-    toInt(styles.borderLeftWidth) +
-    toInt(styles.borderRightWidth)
-  );
-}
-
-var env = {
-  isWebKit:
-    typeof document !== 'undefined' &&
-    'WebkitAppearance' in document.documentElement.style,
-  supportsTouch:
-    typeof window !== 'undefined' &&
-    ('ontouchstart' in window ||
-      (window.DocumentTouch && document instanceof window.DocumentTouch)),
-  supportsIePointer:
-    typeof navigator !== 'undefined' && navigator.msMaxTouchPoints,
-  isChrome:
-    typeof navigator !== 'undefined' &&
-    /Chrome/i.test(navigator && navigator.userAgent),
-};
-
-var updateGeometry = function(i) {
-  var element = i.element;
-  var roundedScrollTop = Math.floor(element.scrollTop);
-
-  i.containerWidth = element.clientWidth;
-  i.containerHeight = element.clientHeight;
-  i.contentWidth = element.scrollWidth;
-  i.contentHeight = element.scrollHeight;
-
-  if (!element.contains(i.scrollbarXRail)) {
-    // clean up and append
-    queryChildren(element, cls.element.rail('x')).forEach(function (el) { return remove(el); }
-    );
-    element.appendChild(i.scrollbarXRail);
-  }
-  if (!element.contains(i.scrollbarYRail)) {
-    // clean up and append
-    queryChildren(element, cls.element.rail('y')).forEach(function (el) { return remove(el); }
-    );
-    element.appendChild(i.scrollbarYRail);
-  }
-
-  if (
-    !i.settings.suppressScrollX &&
-    i.containerWidth + i.settings.scrollXMarginOffset < i.contentWidth
-  ) {
-    i.scrollbarXActive = true;
-    i.railXWidth = i.containerWidth - i.railXMarginWidth;
-    i.railXRatio = i.containerWidth / i.railXWidth;
-    i.scrollbarXWidth = getThumbSize(
-      i,
-      toInt(i.railXWidth * i.containerWidth / i.contentWidth)
-    );
-    i.scrollbarXLeft = toInt(
-      (i.negativeScrollAdjustment + element.scrollLeft) *
-        (i.railXWidth - i.scrollbarXWidth) /
-        (i.contentWidth - i.containerWidth)
-    );
-  } else {
-    i.scrollbarXActive = false;
-  }
-
-  if (
-    !i.settings.suppressScrollY &&
-    i.containerHeight + i.settings.scrollYMarginOffset < i.contentHeight
-  ) {
-    i.scrollbarYActive = true;
-    i.railYHeight = i.containerHeight - i.railYMarginHeight;
-    i.railYRatio = i.containerHeight / i.railYHeight;
-    i.scrollbarYHeight = getThumbSize(
-      i,
-      toInt(i.railYHeight * i.containerHeight / i.contentHeight)
-    );
-    i.scrollbarYTop = toInt(
-      roundedScrollTop *
-        (i.railYHeight - i.scrollbarYHeight) /
-        (i.contentHeight - i.containerHeight)
-    );
-  } else {
-    i.scrollbarYActive = false;
-  }
-
-  if (i.scrollbarXLeft >= i.railXWidth - i.scrollbarXWidth) {
-    i.scrollbarXLeft = i.railXWidth - i.scrollbarXWidth;
-  }
-  if (i.scrollbarYTop >= i.railYHeight - i.scrollbarYHeight) {
-    i.scrollbarYTop = i.railYHeight - i.scrollbarYHeight;
-  }
-
-  updateCss(element, i);
-
-  if (i.scrollbarXActive) {
-    element.classList.add(cls.state.active('x'));
-  } else {
-    element.classList.remove(cls.state.active('x'));
-    i.scrollbarXWidth = 0;
-    i.scrollbarXLeft = 0;
-    element.scrollLeft = 0;
-  }
-  if (i.scrollbarYActive) {
-    element.classList.add(cls.state.active('y'));
-  } else {
-    element.classList.remove(cls.state.active('y'));
-    i.scrollbarYHeight = 0;
-    i.scrollbarYTop = 0;
-    element.scrollTop = 0;
-  }
-};
-
-function getThumbSize(i, thumbSize) {
-  if (i.settings.minScrollbarLength) {
-    thumbSize = Math.max(thumbSize, i.settings.minScrollbarLength);
-  }
-  if (i.settings.maxScrollbarLength) {
-    thumbSize = Math.min(thumbSize, i.settings.maxScrollbarLength);
-  }
-  return thumbSize;
-}
-
-function updateCss(element, i) {
-  var xRailOffset = { width: i.railXWidth };
-  var roundedScrollTop = Math.floor(element.scrollTop);
-
-  if (i.isRtl) {
-    xRailOffset.left =
-      i.negativeScrollAdjustment +
-      element.scrollLeft +
-      i.containerWidth -
-      i.contentWidth;
-  } else {
-    xRailOffset.left = element.scrollLeft;
-  }
-  if (i.isScrollbarXUsingBottom) {
-    xRailOffset.bottom = i.scrollbarXBottom - roundedScrollTop;
-  } else {
-    xRailOffset.top = i.scrollbarXTop + roundedScrollTop;
-  }
-  set(i.scrollbarXRail, xRailOffset);
-
-  var yRailOffset = { top: roundedScrollTop, height: i.railYHeight };
-  if (i.isScrollbarYUsingRight) {
-    if (i.isRtl) {
-      yRailOffset.right =
-        i.contentWidth -
-        (i.negativeScrollAdjustment + element.scrollLeft) -
-        i.scrollbarYRight -
-        i.scrollbarYOuterWidth;
+    if (classList.contains(className)) {
+      clearTimeout(scrollingClassTimeout[x]);
     } else {
-      yRailOffset.right = i.scrollbarYRight - element.scrollLeft;
-    }
-  } else {
-    if (i.isRtl) {
-      yRailOffset.left =
-        i.negativeScrollAdjustment +
-        element.scrollLeft +
-        i.containerWidth * 2 -
-        i.contentWidth -
-        i.scrollbarYLeft -
-        i.scrollbarYOuterWidth;
-    } else {
-      yRailOffset.left = i.scrollbarYLeft + element.scrollLeft;
+      classList.add(className);
     }
   }
-  set(i.scrollbarYRail, yRailOffset);
 
-  set(i.scrollbarX, {
-    left: i.scrollbarXLeft,
-    width: i.scrollbarXWidth - i.railBorderXWidth,
-  });
-  set(i.scrollbarY, {
-    top: i.scrollbarYTop,
-    height: i.scrollbarYHeight - i.railBorderYWidth,
-  });
-}
-
-var clickRail = function(i) {
-  i.event.bind(i.scrollbarY, 'mousedown', function (e) { return e.stopPropagation(); });
-  i.event.bind(i.scrollbarYRail, 'mousedown', function (e) {
-    var positionTop =
-      e.pageY -
-      window.pageYOffset -
-      i.scrollbarYRail.getBoundingClientRect().top;
-    var direction = positionTop > i.scrollbarYTop ? 1 : -1;
-
-    i.element.scrollTop += direction * i.containerHeight;
-    updateGeometry(i);
-
-    e.stopPropagation();
-  });
-
-  i.event.bind(i.scrollbarX, 'mousedown', function (e) { return e.stopPropagation(); });
-  i.event.bind(i.scrollbarXRail, 'mousedown', function (e) {
-    var positionLeft =
-      e.pageX -
-      window.pageXOffset -
-      i.scrollbarXRail.getBoundingClientRect().left;
-    var direction = positionLeft > i.scrollbarXLeft ? 1 : -1;
-
-    i.element.scrollLeft += direction * i.containerWidth;
-    updateGeometry(i);
-
-    e.stopPropagation();
-  });
-};
-
-var dragThumb = function(i) {
-  bindMouseScrollHandler(i, [
-    'containerWidth',
-    'contentWidth',
-    'pageX',
-    'railXWidth',
-    'scrollbarX',
-    'scrollbarXWidth',
-    'scrollLeft',
-    'x',
-    'scrollbarXRail' ]);
-  bindMouseScrollHandler(i, [
-    'containerHeight',
-    'contentHeight',
-    'pageY',
-    'railYHeight',
-    'scrollbarY',
-    'scrollbarYHeight',
-    'scrollTop',
-    'y',
-    'scrollbarYRail' ]);
-};
-
-function bindMouseScrollHandler(
-  i,
-  ref
-) {
-  var containerHeight = ref[0];
-  var contentHeight = ref[1];
-  var pageY = ref[2];
-  var railYHeight = ref[3];
-  var scrollbarY = ref[4];
-  var scrollbarYHeight = ref[5];
-  var scrollTop = ref[6];
-  var y = ref[7];
-  var scrollbarYRail = ref[8];
-
-  var element = i.element;
-
-  var startingScrollTop = null;
-  var startingMousePageY = null;
-  var scrollBy = null;
-
-  function mouseMoveHandler(e) {
-    element[scrollTop] =
-      startingScrollTop + scrollBy * (e[pageY] - startingMousePageY);
-    addScrollingClass(i, y);
-    updateGeometry(i);
-
-    e.stopPropagation();
-    e.preventDefault();
+  function removeScrollingClass(i, x) {
+    scrollingClassTimeout[x] = setTimeout(
+      function () { return i.isAlive && i.element.classList.remove(cls.state.scrolling(x)); },
+      i.settings.scrollingThreshold
+    );
   }
 
-  function mouseUpHandler() {
-    removeScrollingClass(i, y);
-    i[scrollbarYRail].classList.remove(cls.state.clicking);
-    i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+  function setScrollingClassInstantly(i, x) {
+    addScrollingClass(i, x);
+    removeScrollingClass(i, x);
   }
 
-  i.event.bind(i[scrollbarY], 'mousedown', function (e) {
-    startingScrollTop = element[scrollTop];
-    startingMousePageY = e[pageY];
-    scrollBy =
-      (i[contentHeight] - i[containerHeight]) /
-      (i[railYHeight] - i[scrollbarYHeight]);
+  var EventElement = function EventElement(element) {
+    this.element = element;
+    this.handlers = {};
+  };
 
-    i.event.bind(i.ownerDocument, 'mousemove', mouseMoveHandler);
-    i.event.once(i.ownerDocument, 'mouseup', mouseUpHandler);
+  var prototypeAccessors = { isEmpty: { configurable: true } };
 
-    i[scrollbarYRail].classList.add(cls.state.clicking);
-
-    e.stopPropagation();
-    e.preventDefault();
-  });
-}
-
-var keyboard = function(i) {
-  var element = i.element;
-
-  var elementHovered = function () { return matches(element, ':hover'); };
-  var scrollbarFocused = function () { return matches(i.scrollbarX, ':focus') || matches(i.scrollbarY, ':focus'); };
-
-  function shouldPreventDefault(deltaX, deltaY) {
-    var scrollTop = Math.floor(element.scrollTop);
-    if (deltaX === 0) {
-      if (!i.scrollbarYActive) {
-        return false;
-      }
-      if (
-        (scrollTop === 0 && deltaY > 0) ||
-        (scrollTop >= i.contentHeight - i.containerHeight && deltaY < 0)
-      ) {
-        return !i.settings.wheelPropagation;
-      }
+  EventElement.prototype.bind = function bind (eventName, handler) {
+    if (typeof this.handlers[eventName] === 'undefined') {
+      this.handlers[eventName] = [];
     }
+    this.handlers[eventName].push(handler);
+    this.element.addEventListener(eventName, handler, false);
+  };
 
-    var scrollLeft = element.scrollLeft;
-    if (deltaY === 0) {
-      if (!i.scrollbarXActive) {
-        return false;
-      }
-      if (
-        (scrollLeft === 0 && deltaX < 0) ||
-        (scrollLeft >= i.contentWidth - i.containerWidth && deltaX > 0)
-      ) {
-        return !i.settings.wheelPropagation;
-      }
-    }
-    return true;
-  }
+  EventElement.prototype.unbind = function unbind (eventName, target) {
+      var this$1 = this;
 
-  i.event.bind(i.ownerDocument, 'keydown', function (e) {
-    if (
-      (e.isDefaultPrevented && e.isDefaultPrevented()) ||
-      e.defaultPrevented
-    ) {
-      return;
-    }
-
-    if (!elementHovered() && !scrollbarFocused()) {
-      return;
-    }
-
-    var activeElement = document.activeElement
-      ? document.activeElement
-      : i.ownerDocument.activeElement;
-    if (activeElement) {
-      if (activeElement.tagName === 'IFRAME') {
-        activeElement = activeElement.contentDocument.activeElement;
-      } else {
-        // go deeper if element is a webcomponent
-        while (activeElement.shadowRoot) {
-          activeElement = activeElement.shadowRoot.activeElement;
-        }
-      }
-      if (isEditable(activeElement)) {
-        return;
-      }
-    }
-
-    var deltaX = 0;
-    var deltaY = 0;
-
-    switch (e.which) {
-      case 37: // left
-        if (e.metaKey) {
-          deltaX = -i.contentWidth;
-        } else if (e.altKey) {
-          deltaX = -i.containerWidth;
-        } else {
-          deltaX = -30;
-        }
-        break;
-      case 38: // up
-        if (e.metaKey) {
-          deltaY = i.contentHeight;
-        } else if (e.altKey) {
-          deltaY = i.containerHeight;
-        } else {
-          deltaY = 30;
-        }
-        break;
-      case 39: // right
-        if (e.metaKey) {
-          deltaX = i.contentWidth;
-        } else if (e.altKey) {
-          deltaX = i.containerWidth;
-        } else {
-          deltaX = 30;
-        }
-        break;
-      case 40: // down
-        if (e.metaKey) {
-          deltaY = -i.contentHeight;
-        } else if (e.altKey) {
-          deltaY = -i.containerHeight;
-        } else {
-          deltaY = -30;
-        }
-        break;
-      case 32: // space bar
-        if (e.shiftKey) {
-          deltaY = i.containerHeight;
-        } else {
-          deltaY = -i.containerHeight;
-        }
-        break;
-      case 33: // page up
-        deltaY = i.containerHeight;
-        break;
-      case 34: // page down
-        deltaY = -i.containerHeight;
-        break;
-      case 36: // home
-        deltaY = i.contentHeight;
-        break;
-      case 35: // end
-        deltaY = -i.contentHeight;
-        break;
-      default:
-        return;
-    }
-
-    if (i.settings.suppressScrollX && deltaX !== 0) {
-      return;
-    }
-    if (i.settings.suppressScrollY && deltaY !== 0) {
-      return;
-    }
-
-    element.scrollTop -= deltaY;
-    element.scrollLeft += deltaX;
-    updateGeometry(i);
-
-    if (shouldPreventDefault(deltaX, deltaY)) {
-      e.preventDefault();
-    }
-  });
-};
-
-var wheel = function(i) {
-  var element = i.element;
-
-  function shouldPreventDefault(deltaX, deltaY) {
-    var roundedScrollTop = Math.floor(element.scrollTop);
-    var isTop = element.scrollTop === 0;
-    var isBottom =
-      roundedScrollTop + element.offsetHeight === element.scrollHeight;
-    var isLeft = element.scrollLeft === 0;
-    var isRight =
-      element.scrollLeft + element.offsetWidth === element.scrollWidth;
-
-    var hitsBound;
-
-    // pick axis with primary direction
-    if (Math.abs(deltaY) > Math.abs(deltaX)) {
-      hitsBound = isTop || isBottom;
-    } else {
-      hitsBound = isLeft || isRight;
-    }
-
-    return hitsBound ? !i.settings.wheelPropagation : true;
-  }
-
-  function getDeltaFromEvent(e) {
-    var deltaX = e.deltaX;
-    var deltaY = -1 * e.deltaY;
-
-    if (typeof deltaX === 'undefined' || typeof deltaY === 'undefined') {
-      // OS X Safari
-      deltaX = -1 * e.wheelDeltaX / 6;
-      deltaY = e.wheelDeltaY / 6;
-    }
-
-    if (e.deltaMode && e.deltaMode === 1) {
-      // Firefox in deltaMode 1: Line scrolling
-      deltaX *= 10;
-      deltaY *= 10;
-    }
-
-    if (deltaX !== deltaX && deltaY !== deltaY /* NaN checks */) {
-      // IE in some mouse drivers
-      deltaX = 0;
-      deltaY = e.wheelDelta;
-    }
-
-    if (e.shiftKey) {
-      // reverse axis with shift key
-      return [-deltaY, -deltaX];
-    }
-    return [deltaX, deltaY];
-  }
-
-  function shouldBeConsumedByChild(target, deltaX, deltaY) {
-    // FIXME: this is a workaround for <select> issue in FF and IE #571
-    if (!env.isWebKit && element.querySelector('select:focus')) {
-      return true;
-    }
-
-    if (!element.contains(target)) {
-      return false;
-    }
-
-    var cursor = target;
-
-    while (cursor && cursor !== element) {
-      if (cursor.classList.contains(cls.element.consuming)) {
+    this.handlers[eventName] = this.handlers[eventName].filter(function (handler) {
+      if (target && handler !== target) {
         return true;
       }
+      this$1.element.removeEventListener(eventName, handler, false);
+      return false;
+    });
+  };
 
-      var style = get(cursor);
-      var overflow = [style.overflow, style.overflowX, style.overflowY].join(
-        ''
-      );
-
-      // if scrollable
-      if (overflow.match(/(scroll|auto)/)) {
-        var maxScrollTop = cursor.scrollHeight - cursor.clientHeight;
-        if (maxScrollTop > 0) {
-          if (
-            !(cursor.scrollTop === 0 && deltaY > 0) &&
-            !(cursor.scrollTop === maxScrollTop && deltaY < 0)
-          ) {
-            return true;
-          }
-        }
-        var maxScrollLeft = cursor.scrollWidth - cursor.clientWidth;
-        if (maxScrollLeft > 0) {
-          if (
-            !(cursor.scrollLeft === 0 && deltaX < 0) &&
-            !(cursor.scrollLeft === maxScrollLeft && deltaX > 0)
-          ) {
-            return true;
-          }
-        }
-      }
-
-      cursor = cursor.parentNode;
+  EventElement.prototype.unbindAll = function unbindAll () {
+    for (var name in this.handlers) {
+      this.unbind(name);
     }
+  };
 
-    return false;
+  prototypeAccessors.isEmpty.get = function () {
+      var this$1 = this;
+
+    return Object.keys(this.handlers).every(
+      function (key) { return this$1.handlers[key].length === 0; }
+    );
+  };
+
+  Object.defineProperties( EventElement.prototype, prototypeAccessors );
+
+  var EventManager = function EventManager() {
+    this.eventElements = [];
+  };
+
+  EventManager.prototype.eventElement = function eventElement (element) {
+    var ee = this.eventElements.filter(function (ee) { return ee.element === element; })[0];
+    if (!ee) {
+      ee = new EventElement(element);
+      this.eventElements.push(ee);
+    }
+    return ee;
+  };
+
+  EventManager.prototype.bind = function bind (element, eventName, handler) {
+    this.eventElement(element).bind(eventName, handler);
+  };
+
+  EventManager.prototype.unbind = function unbind (element, eventName, handler) {
+    var ee = this.eventElement(element);
+    ee.unbind(eventName, handler);
+
+    if (ee.isEmpty) {
+      // remove
+      this.eventElements.splice(this.eventElements.indexOf(ee), 1);
+    }
+  };
+
+  EventManager.prototype.unbindAll = function unbindAll () {
+    this.eventElements.forEach(function (e) { return e.unbindAll(); });
+    this.eventElements = [];
+  };
+
+  EventManager.prototype.once = function once (element, eventName, handler) {
+    var ee = this.eventElement(element);
+    var onceHandler = function (evt) {
+      ee.unbind(eventName, onceHandler);
+      handler(evt);
+    };
+    ee.bind(eventName, onceHandler);
+  };
+
+  function createEvent(name) {
+    if (typeof window.CustomEvent === 'function') {
+      return new CustomEvent(name);
+    } else {
+      var evt = document.createEvent('CustomEvent');
+      evt.initCustomEvent(name, false, false, undefined);
+      return evt;
+    }
   }
 
-  function mousewheelHandler(e) {
-    var ref = getDeltaFromEvent(e);
-    var deltaX = ref[0];
-    var deltaY = ref[1];
+  function processScrollDiff(
+    i,
+    axis,
+    diff,
+    useScrollingClass,
+    forceFireReachEvent
+  ) {
+    if ( useScrollingClass === void 0 ) useScrollingClass = true;
+    if ( forceFireReachEvent === void 0 ) forceFireReachEvent = false;
 
-    if (shouldBeConsumedByChild(e.target, deltaX, deltaY)) {
-      return;
+    var fields;
+    if (axis === 'top') {
+      fields = [
+        'contentHeight',
+        'containerHeight',
+        'scrollTop',
+        'y',
+        'up',
+        'down' ];
+    } else if (axis === 'left') {
+      fields = [
+        'contentWidth',
+        'containerWidth',
+        'scrollLeft',
+        'x',
+        'left',
+        'right' ];
+    } else {
+      throw new Error('A proper axis should be provided');
     }
 
-    var shouldPrevent = false;
-    if (!i.settings.useBothWheelAxes) {
-      // deltaX will only be used for horizontal scrolling and deltaY will
-      // only be used for vertical scrolling - this is the default
-      element.scrollTop -= deltaY * i.settings.wheelSpeed;
-      element.scrollLeft += deltaX * i.settings.wheelSpeed;
-    } else if (i.scrollbarYActive && !i.scrollbarXActive) {
-      // only vertical scrollbar is active and useBothWheelAxes option is
-      // active, so let's scroll vertical bar using both mouse wheel axes
-      if (deltaY) {
-        element.scrollTop -= deltaY * i.settings.wheelSpeed;
-      } else {
-        element.scrollTop += deltaX * i.settings.wheelSpeed;
-      }
-      shouldPrevent = true;
-    } else if (i.scrollbarXActive && !i.scrollbarYActive) {
-      // useBothWheelAxes and only horizontal bar is active, so use both
-      // wheel axes for horizontal bar
-      if (deltaX) {
-        element.scrollLeft += deltaX * i.settings.wheelSpeed;
-      } else {
-        element.scrollLeft -= deltaY * i.settings.wheelSpeed;
-      }
-      shouldPrevent = true;
+    processScrollDiff$1(i, diff, fields, useScrollingClass, forceFireReachEvent);
+  }
+
+  function processScrollDiff$1(
+    i,
+    diff,
+    ref,
+    useScrollingClass,
+    forceFireReachEvent
+  ) {
+    var contentHeight = ref[0];
+    var containerHeight = ref[1];
+    var scrollTop = ref[2];
+    var y = ref[3];
+    var up = ref[4];
+    var down = ref[5];
+    if ( useScrollingClass === void 0 ) useScrollingClass = true;
+    if ( forceFireReachEvent === void 0 ) forceFireReachEvent = false;
+
+    var element = i.element;
+
+    // reset reach
+    i.reach[y] = null;
+
+    // 1 for subpixel rounding
+    if (element[scrollTop] < 1) {
+      i.reach[y] = 'start';
     }
 
-    updateGeometry(i);
+    // 1 for subpixel rounding
+    if (element[scrollTop] > i[contentHeight] - i[containerHeight] - 1) {
+      i.reach[y] = 'end';
+    }
 
-    shouldPrevent = shouldPrevent || shouldPreventDefault(deltaX, deltaY);
-    if (shouldPrevent && !e.ctrlKey) {
+    if (diff) {
+      element.dispatchEvent(createEvent(("ps-scroll-" + y)));
+
+      if (diff < 0) {
+        element.dispatchEvent(createEvent(("ps-scroll-" + up)));
+      } else if (diff > 0) {
+        element.dispatchEvent(createEvent(("ps-scroll-" + down)));
+      }
+
+      if (useScrollingClass) {
+        setScrollingClassInstantly(i, y);
+      }
+    }
+
+    if (i.reach[y] && (diff || forceFireReachEvent)) {
+      element.dispatchEvent(createEvent(("ps-" + y + "-reach-" + (i.reach[y]))));
+    }
+  }
+
+  function toInt(x) {
+    return parseInt(x, 10) || 0;
+  }
+
+  function isEditable(el) {
+    return (
+      matches(el, 'input,[contenteditable]') ||
+      matches(el, 'select,[contenteditable]') ||
+      matches(el, 'textarea,[contenteditable]') ||
+      matches(el, 'button,[contenteditable]')
+    );
+  }
+
+  function outerWidth(element) {
+    var styles = get(element);
+    return (
+      toInt(styles.width) +
+      toInt(styles.paddingLeft) +
+      toInt(styles.paddingRight) +
+      toInt(styles.borderLeftWidth) +
+      toInt(styles.borderRightWidth)
+    );
+  }
+
+  var env = {
+    isWebKit:
+      typeof document !== 'undefined' &&
+      'WebkitAppearance' in document.documentElement.style,
+    supportsTouch:
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window ||
+        ('maxTouchPoints' in window.navigator &&
+          window.navigator.maxTouchPoints > 0) ||
+        (window.DocumentTouch && document instanceof window.DocumentTouch)),
+    supportsIePointer:
+      typeof navigator !== 'undefined' && navigator.msMaxTouchPoints,
+    isChrome:
+      typeof navigator !== 'undefined' &&
+      /Chrome/i.test(navigator && navigator.userAgent),
+  };
+
+  function updateGeometry(i) {
+    var element = i.element;
+    var roundedScrollTop = Math.floor(element.scrollTop);
+    var rect = element.getBoundingClientRect();
+
+    i.containerWidth = Math.ceil(rect.width);
+    i.containerHeight = Math.ceil(rect.height);
+    i.contentWidth = element.scrollWidth;
+    i.contentHeight = element.scrollHeight;
+
+    if (!element.contains(i.scrollbarXRail)) {
+      // clean up and append
+      queryChildren(element, cls.element.rail('x')).forEach(function (el) { return remove(el); }
+      );
+      element.appendChild(i.scrollbarXRail);
+    }
+    if (!element.contains(i.scrollbarYRail)) {
+      // clean up and append
+      queryChildren(element, cls.element.rail('y')).forEach(function (el) { return remove(el); }
+      );
+      element.appendChild(i.scrollbarYRail);
+    }
+
+    if (
+      !i.settings.suppressScrollX &&
+      i.containerWidth + i.settings.scrollXMarginOffset < i.contentWidth
+    ) {
+      i.scrollbarXActive = true;
+      i.railXWidth = i.containerWidth - i.railXMarginWidth;
+      i.railXRatio = i.containerWidth / i.railXWidth;
+      i.scrollbarXWidth = getThumbSize(
+        i,
+        toInt((i.railXWidth * i.containerWidth) / i.contentWidth)
+      );
+      i.scrollbarXLeft = toInt(
+        ((i.negativeScrollAdjustment + element.scrollLeft) *
+          (i.railXWidth - i.scrollbarXWidth)) /
+          (i.contentWidth - i.containerWidth)
+      );
+    } else {
+      i.scrollbarXActive = false;
+    }
+
+    if (
+      !i.settings.suppressScrollY &&
+      i.containerHeight + i.settings.scrollYMarginOffset < i.contentHeight
+    ) {
+      i.scrollbarYActive = true;
+      i.railYHeight = i.containerHeight - i.railYMarginHeight;
+      i.railYRatio = i.containerHeight / i.railYHeight;
+      i.scrollbarYHeight = getThumbSize(
+        i,
+        toInt((i.railYHeight * i.containerHeight) / i.contentHeight)
+      );
+      i.scrollbarYTop = toInt(
+        (roundedScrollTop * (i.railYHeight - i.scrollbarYHeight)) /
+          (i.contentHeight - i.containerHeight)
+      );
+    } else {
+      i.scrollbarYActive = false;
+    }
+
+    if (i.scrollbarXLeft >= i.railXWidth - i.scrollbarXWidth) {
+      i.scrollbarXLeft = i.railXWidth - i.scrollbarXWidth;
+    }
+    if (i.scrollbarYTop >= i.railYHeight - i.scrollbarYHeight) {
+      i.scrollbarYTop = i.railYHeight - i.scrollbarYHeight;
+    }
+
+    updateCss(element, i);
+
+    if (i.scrollbarXActive) {
+      element.classList.add(cls.state.active('x'));
+    } else {
+      element.classList.remove(cls.state.active('x'));
+      i.scrollbarXWidth = 0;
+      i.scrollbarXLeft = 0;
+      element.scrollLeft = i.isRtl === true ? i.contentWidth : 0;
+    }
+    if (i.scrollbarYActive) {
+      element.classList.add(cls.state.active('y'));
+    } else {
+      element.classList.remove(cls.state.active('y'));
+      i.scrollbarYHeight = 0;
+      i.scrollbarYTop = 0;
+      element.scrollTop = 0;
+    }
+  }
+
+  function getThumbSize(i, thumbSize) {
+    if (i.settings.minScrollbarLength) {
+      thumbSize = Math.max(thumbSize, i.settings.minScrollbarLength);
+    }
+    if (i.settings.maxScrollbarLength) {
+      thumbSize = Math.min(thumbSize, i.settings.maxScrollbarLength);
+    }
+    return thumbSize;
+  }
+
+  function updateCss(element, i) {
+    var xRailOffset = { width: i.railXWidth };
+    var roundedScrollTop = Math.floor(element.scrollTop);
+
+    if (i.isRtl) {
+      xRailOffset.left =
+        i.negativeScrollAdjustment +
+        element.scrollLeft +
+        i.containerWidth -
+        i.contentWidth;
+    } else {
+      xRailOffset.left = element.scrollLeft;
+    }
+    if (i.isScrollbarXUsingBottom) {
+      xRailOffset.bottom = i.scrollbarXBottom - roundedScrollTop;
+    } else {
+      xRailOffset.top = i.scrollbarXTop + roundedScrollTop;
+    }
+    set(i.scrollbarXRail, xRailOffset);
+
+    var yRailOffset = { top: roundedScrollTop, height: i.railYHeight };
+    if (i.isScrollbarYUsingRight) {
+      if (i.isRtl) {
+        yRailOffset.right =
+          i.contentWidth -
+          (i.negativeScrollAdjustment + element.scrollLeft) -
+          i.scrollbarYRight -
+          i.scrollbarYOuterWidth -
+          9;
+      } else {
+        yRailOffset.right = i.scrollbarYRight - element.scrollLeft;
+      }
+    } else {
+      if (i.isRtl) {
+        yRailOffset.left =
+          i.negativeScrollAdjustment +
+          element.scrollLeft +
+          i.containerWidth * 2 -
+          i.contentWidth -
+          i.scrollbarYLeft -
+          i.scrollbarYOuterWidth;
+      } else {
+        yRailOffset.left = i.scrollbarYLeft + element.scrollLeft;
+      }
+    }
+    set(i.scrollbarYRail, yRailOffset);
+
+    set(i.scrollbarX, {
+      left: i.scrollbarXLeft,
+      width: i.scrollbarXWidth - i.railBorderXWidth,
+    });
+    set(i.scrollbarY, {
+      top: i.scrollbarYTop,
+      height: i.scrollbarYHeight - i.railBorderYWidth,
+    });
+  }
+
+  function clickRail(i) {
+    var element = i.element;
+
+    i.event.bind(i.scrollbarY, 'mousedown', function (e) { return e.stopPropagation(); });
+    i.event.bind(i.scrollbarYRail, 'mousedown', function (e) {
+      var positionTop =
+        e.pageY -
+        window.pageYOffset -
+        i.scrollbarYRail.getBoundingClientRect().top;
+      var direction = positionTop > i.scrollbarYTop ? 1 : -1;
+
+      i.element.scrollTop += direction * i.containerHeight;
+      updateGeometry(i);
+
+      e.stopPropagation();
+    });
+
+    i.event.bind(i.scrollbarX, 'mousedown', function (e) { return e.stopPropagation(); });
+    i.event.bind(i.scrollbarXRail, 'mousedown', function (e) {
+      var positionLeft =
+        e.pageX -
+        window.pageXOffset -
+        i.scrollbarXRail.getBoundingClientRect().left;
+      var direction = positionLeft > i.scrollbarXLeft ? 1 : -1;
+
+      i.element.scrollLeft += direction * i.containerWidth;
+      updateGeometry(i);
+
+      e.stopPropagation();
+    });
+  }
+
+  function dragThumb(i) {
+    bindMouseScrollHandler(i, [
+      'containerWidth',
+      'contentWidth',
+      'pageX',
+      'railXWidth',
+      'scrollbarX',
+      'scrollbarXWidth',
+      'scrollLeft',
+      'x',
+      'scrollbarXRail' ]);
+    bindMouseScrollHandler(i, [
+      'containerHeight',
+      'contentHeight',
+      'pageY',
+      'railYHeight',
+      'scrollbarY',
+      'scrollbarYHeight',
+      'scrollTop',
+      'y',
+      'scrollbarYRail' ]);
+  }
+
+  function bindMouseScrollHandler(
+    i,
+    ref
+  ) {
+    var containerHeight = ref[0];
+    var contentHeight = ref[1];
+    var pageY = ref[2];
+    var railYHeight = ref[3];
+    var scrollbarY = ref[4];
+    var scrollbarYHeight = ref[5];
+    var scrollTop = ref[6];
+    var y = ref[7];
+    var scrollbarYRail = ref[8];
+
+    var element = i.element;
+
+    var startingScrollTop = null;
+    var startingMousePageY = null;
+    var scrollBy = null;
+
+    function mouseMoveHandler(e) {
+      if (e.touches && e.touches[0]) {
+        e[pageY] = e.touches[0].pageY;
+      }
+      element[scrollTop] =
+        startingScrollTop + scrollBy * (e[pageY] - startingMousePageY);
+      addScrollingClass(i, y);
+      updateGeometry(i);
+
       e.stopPropagation();
       e.preventDefault();
     }
-  }
 
-  if (typeof window.onwheel !== 'undefined') {
-    i.event.bind(element, 'wheel', mousewheelHandler);
-  } else if (typeof window.onmousewheel !== 'undefined') {
-    i.event.bind(element, 'mousewheel', mousewheelHandler);
-  }
-};
+    function mouseUpHandler() {
+      removeScrollingClass(i, y);
+      i[scrollbarYRail].classList.remove(cls.state.clicking);
+      i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+    }
 
-var touch = function(i) {
-  if (!env.supportsTouch && !env.supportsIePointer) {
-    return;
-  }
-
-  var element = i.element;
-
-  function shouldPrevent(deltaX, deltaY) {
-    var scrollTop = Math.floor(element.scrollTop);
-    var scrollLeft = element.scrollLeft;
-    var magnitudeX = Math.abs(deltaX);
-    var magnitudeY = Math.abs(deltaY);
-
-    if (magnitudeY > magnitudeX) {
-      // user is perhaps trying to swipe up/down the page
-
-      if (
-        (deltaY < 0 && scrollTop === i.contentHeight - i.containerHeight) ||
-        (deltaY > 0 && scrollTop === 0)
-      ) {
-        // set prevent for mobile Chrome refresh
-        return window.scrollY === 0 && deltaY > 0 && env.isChrome;
+    function bindMoves(e, touchMode) {
+      startingScrollTop = element[scrollTop];
+      if (touchMode && e.touches) {
+        e[pageY] = e.touches[0].pageY;
       }
-    } else if (magnitudeX > magnitudeY) {
-      // user is perhaps trying to swipe left/right across the page
-
-      if (
-        (deltaX < 0 && scrollLeft === i.contentWidth - i.containerWidth) ||
-        (deltaX > 0 && scrollLeft === 0)
-      ) {
-        return true;
-      }
-    }
-
-    return true;
-  }
-
-  function applyTouchMove(differenceX, differenceY) {
-    element.scrollTop -= differenceY;
-    element.scrollLeft -= differenceX;
-
-    updateGeometry(i);
-  }
-
-  var startOffset = {};
-  var startTime = 0;
-  var speed = {};
-  var easingLoop = null;
-
-  function getTouch(e) {
-    if (e.targetTouches) {
-      return e.targetTouches[0];
-    } else {
-      // Maybe IE pointer
-      return e;
-    }
-  }
-
-  function shouldHandle(e) {
-    if (e.pointerType && e.pointerType === 'pen' && e.buttons === 0) {
-      return false;
-    }
-    if (e.targetTouches && e.targetTouches.length === 1) {
-      return true;
-    }
-    if (
-      e.pointerType &&
-      e.pointerType !== 'mouse' &&
-      e.pointerType !== e.MSPOINTER_TYPE_MOUSE
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  function touchStart(e) {
-    if (!shouldHandle(e)) {
-      return;
-    }
-
-    var touch = getTouch(e);
-
-    startOffset.pageX = touch.pageX;
-    startOffset.pageY = touch.pageY;
-
-    startTime = new Date().getTime();
-
-    if (easingLoop !== null) {
-      clearInterval(easingLoop);
-    }
-  }
-
-  function shouldBeConsumedByChild(target, deltaX, deltaY) {
-    if (!element.contains(target)) {
-      return false;
-    }
-
-    var cursor = target;
-
-    while (cursor && cursor !== element) {
-      if (cursor.classList.contains(cls.element.consuming)) {
-        return true;
+      startingMousePageY = e[pageY];
+      scrollBy =
+        (i[contentHeight] - i[containerHeight]) /
+        (i[railYHeight] - i[scrollbarYHeight]);
+      if (!touchMode) {
+        i.event.bind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+        i.event.once(i.ownerDocument, 'mouseup', mouseUpHandler);
+        e.preventDefault();
+      } else {
+        i.event.bind(i.ownerDocument, 'touchmove', mouseMoveHandler);
       }
 
-      var style = get(cursor);
-      var overflow = [style.overflow, style.overflowX, style.overflowY].join(
-        ''
-      );
+      i[scrollbarYRail].classList.add(cls.state.clicking);
 
-      // if scrollable
-      if (overflow.match(/(scroll|auto)/)) {
-        var maxScrollTop = cursor.scrollHeight - cursor.clientHeight;
-        if (maxScrollTop > 0) {
-          if (
-            !(cursor.scrollTop === 0 && deltaY > 0) &&
-            !(cursor.scrollTop === maxScrollTop && deltaY < 0)
-          ) {
-            return true;
-          }
+      e.stopPropagation();
+    }
+
+    i.event.bind(i[scrollbarY], 'mousedown', function (e) {
+      bindMoves(e);
+    });
+    i.event.bind(i[scrollbarY], 'touchstart', function (e) {
+      bindMoves(e, true);
+    });
+  }
+
+  function keyboard(i) {
+    var element = i.element;
+
+    var elementHovered = function () { return matches(element, ':hover'); };
+    var scrollbarFocused = function () { return matches(i.scrollbarX, ':focus') || matches(i.scrollbarY, ':focus'); };
+
+    function shouldPreventDefault(deltaX, deltaY) {
+      var scrollTop = Math.floor(element.scrollTop);
+      if (deltaX === 0) {
+        if (!i.scrollbarYActive) {
+          return false;
         }
-        var maxScrollLeft = cursor.scrollLeft - cursor.clientWidth;
-        if (maxScrollLeft > 0) {
-          if (
-            !(cursor.scrollLeft === 0 && deltaX < 0) &&
-            !(cursor.scrollLeft === maxScrollLeft && deltaX > 0)
-          ) {
-            return true;
-          }
+        if (
+          (scrollTop === 0 && deltaY > 0) ||
+          (scrollTop >= i.contentHeight - i.containerHeight && deltaY < 0)
+        ) {
+          return !i.settings.wheelPropagation;
         }
       }
 
-      cursor = cursor.parentNode;
+      var scrollLeft = element.scrollLeft;
+      if (deltaY === 0) {
+        if (!i.scrollbarXActive) {
+          return false;
+        }
+        if (
+          (scrollLeft === 0 && deltaX < 0) ||
+          (scrollLeft >= i.contentWidth - i.containerWidth && deltaX > 0)
+        ) {
+          return !i.settings.wheelPropagation;
+        }
+      }
+      return true;
     }
 
-    return false;
-  }
-
-  function touchMove(e) {
-    if (shouldHandle(e)) {
-      var touch = getTouch(e);
-
-      var currentOffset = { pageX: touch.pageX, pageY: touch.pageY };
-
-      var differenceX = currentOffset.pageX - startOffset.pageX;
-      var differenceY = currentOffset.pageY - startOffset.pageY;
-
-      if (shouldBeConsumedByChild(e.target, differenceX, differenceY)) {
+    i.event.bind(i.ownerDocument, 'keydown', function (e) {
+      if (
+        (e.isDefaultPrevented && e.isDefaultPrevented()) ||
+        e.defaultPrevented
+      ) {
         return;
       }
 
-      applyTouchMove(differenceX, differenceY);
-      startOffset = currentOffset;
-
-      var currentTime = new Date().getTime();
-
-      var timeGap = currentTime - startTime;
-      if (timeGap > 0) {
-        speed.x = differenceX / timeGap;
-        speed.y = differenceY / timeGap;
-        startTime = currentTime;
+      if (!elementHovered() && !scrollbarFocused()) {
+        return;
       }
 
-      if (shouldPrevent(differenceX, differenceY)) {
+      var activeElement = document.activeElement
+        ? document.activeElement
+        : i.ownerDocument.activeElement;
+      if (activeElement) {
+        if (activeElement.tagName === 'IFRAME') {
+          activeElement = activeElement.contentDocument.activeElement;
+        } else {
+          // go deeper if element is a webcomponent
+          while (activeElement.shadowRoot) {
+            activeElement = activeElement.shadowRoot.activeElement;
+          }
+        }
+        if (isEditable(activeElement)) {
+          return;
+        }
+      }
+
+      var deltaX = 0;
+      var deltaY = 0;
+
+      switch (e.which) {
+        case 37: // left
+          if (e.metaKey) {
+            deltaX = -i.contentWidth;
+          } else if (e.altKey) {
+            deltaX = -i.containerWidth;
+          } else {
+            deltaX = -30;
+          }
+          break;
+        case 38: // up
+          if (e.metaKey) {
+            deltaY = i.contentHeight;
+          } else if (e.altKey) {
+            deltaY = i.containerHeight;
+          } else {
+            deltaY = 30;
+          }
+          break;
+        case 39: // right
+          if (e.metaKey) {
+            deltaX = i.contentWidth;
+          } else if (e.altKey) {
+            deltaX = i.containerWidth;
+          } else {
+            deltaX = 30;
+          }
+          break;
+        case 40: // down
+          if (e.metaKey) {
+            deltaY = -i.contentHeight;
+          } else if (e.altKey) {
+            deltaY = -i.containerHeight;
+          } else {
+            deltaY = -30;
+          }
+          break;
+        case 32: // space bar
+          if (e.shiftKey) {
+            deltaY = i.containerHeight;
+          } else {
+            deltaY = -i.containerHeight;
+          }
+          break;
+        case 33: // page up
+          deltaY = i.containerHeight;
+          break;
+        case 34: // page down
+          deltaY = -i.containerHeight;
+          break;
+        case 36: // home
+          deltaY = i.contentHeight;
+          break;
+        case 35: // end
+          deltaY = -i.contentHeight;
+          break;
+        default:
+          return;
+      }
+
+      if (i.settings.suppressScrollX && deltaX !== 0) {
+        return;
+      }
+      if (i.settings.suppressScrollY && deltaY !== 0) {
+        return;
+      }
+
+      element.scrollTop -= deltaY;
+      element.scrollLeft += deltaX;
+      updateGeometry(i);
+
+      if (shouldPreventDefault(deltaX, deltaY)) {
+        e.preventDefault();
+      }
+    });
+  }
+
+  function wheel(i) {
+    var element = i.element;
+
+    function shouldPreventDefault(deltaX, deltaY) {
+      var roundedScrollTop = Math.floor(element.scrollTop);
+      var isTop = element.scrollTop === 0;
+      var isBottom =
+        roundedScrollTop + element.offsetHeight === element.scrollHeight;
+      var isLeft = element.scrollLeft === 0;
+      var isRight =
+        element.scrollLeft + element.offsetWidth === element.scrollWidth;
+
+      var hitsBound;
+
+      // pick axis with primary direction
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        hitsBound = isTop || isBottom;
+      } else {
+        hitsBound = isLeft || isRight;
+      }
+
+      return hitsBound ? !i.settings.wheelPropagation : true;
+    }
+
+    function getDeltaFromEvent(e) {
+      var deltaX = e.deltaX;
+      var deltaY = -1 * e.deltaY;
+
+      if (typeof deltaX === 'undefined' || typeof deltaY === 'undefined') {
+        // OS X Safari
+        deltaX = (-1 * e.wheelDeltaX) / 6;
+        deltaY = e.wheelDeltaY / 6;
+      }
+
+      if (e.deltaMode && e.deltaMode === 1) {
+        // Firefox in deltaMode 1: Line scrolling
+        deltaX *= 10;
+        deltaY *= 10;
+      }
+
+      if (deltaX !== deltaX && deltaY !== deltaY /* NaN checks */) {
+        // IE in some mouse drivers
+        deltaX = 0;
+        deltaY = e.wheelDelta;
+      }
+
+      if (e.shiftKey) {
+        // reverse axis with shift key
+        return [-deltaY, -deltaX];
+      }
+      return [deltaX, deltaY];
+    }
+
+    function shouldBeConsumedByChild(target, deltaX, deltaY) {
+      // FIXME: this is a workaround for <select> issue in FF and IE #571
+      if (!env.isWebKit && element.querySelector('select:focus')) {
+        return true;
+      }
+
+      if (!element.contains(target)) {
+        return false;
+      }
+
+      var cursor = target;
+
+      while (cursor && cursor !== element) {
+        if (cursor.classList.contains(cls.element.consuming)) {
+          return true;
+        }
+
+        var style = get(cursor);
+
+        // if deltaY && vertical scrollable
+        if (deltaY && style.overflowY.match(/(scroll|auto)/)) {
+          var maxScrollTop = cursor.scrollHeight - cursor.clientHeight;
+          if (maxScrollTop > 0) {
+            if (
+              (cursor.scrollTop > 0 && deltaY < 0) ||
+              (cursor.scrollTop < maxScrollTop && deltaY > 0)
+            ) {
+              return true;
+            }
+          }
+        }
+        // if deltaX && horizontal scrollable
+        if (deltaX && style.overflowX.match(/(scroll|auto)/)) {
+          var maxScrollLeft = cursor.scrollWidth - cursor.clientWidth;
+          if (maxScrollLeft > 0) {
+            if (
+              (cursor.scrollLeft > 0 && deltaX < 0) ||
+              (cursor.scrollLeft < maxScrollLeft && deltaX > 0)
+            ) {
+              return true;
+            }
+          }
+        }
+
+        cursor = cursor.parentNode;
+      }
+
+      return false;
+    }
+
+    function mousewheelHandler(e) {
+      var ref = getDeltaFromEvent(e);
+      var deltaX = ref[0];
+      var deltaY = ref[1];
+
+      if (shouldBeConsumedByChild(e.target, deltaX, deltaY)) {
+        return;
+      }
+
+      var shouldPrevent = false;
+      if (!i.settings.useBothWheelAxes) {
+        // deltaX will only be used for horizontal scrolling and deltaY will
+        // only be used for vertical scrolling - this is the default
+        element.scrollTop -= deltaY * i.settings.wheelSpeed;
+        element.scrollLeft += deltaX * i.settings.wheelSpeed;
+      } else if (i.scrollbarYActive && !i.scrollbarXActive) {
+        // only vertical scrollbar is active and useBothWheelAxes option is
+        // active, so let's scroll vertical bar using both mouse wheel axes
+        if (deltaY) {
+          element.scrollTop -= deltaY * i.settings.wheelSpeed;
+        } else {
+          element.scrollTop += deltaX * i.settings.wheelSpeed;
+        }
+        shouldPrevent = true;
+      } else if (i.scrollbarXActive && !i.scrollbarYActive) {
+        // useBothWheelAxes and only horizontal bar is active, so use both
+        // wheel axes for horizontal bar
+        if (deltaX) {
+          element.scrollLeft += deltaX * i.settings.wheelSpeed;
+        } else {
+          element.scrollLeft -= deltaY * i.settings.wheelSpeed;
+        }
+        shouldPrevent = true;
+      }
+
+      updateGeometry(i);
+
+      shouldPrevent = shouldPrevent || shouldPreventDefault(deltaX, deltaY);
+      if (shouldPrevent && !e.ctrlKey) {
+        e.stopPropagation();
         e.preventDefault();
       }
     }
-  }
-  function touchEnd() {
-    if (i.settings.swipeEasing) {
-      clearInterval(easingLoop);
-      easingLoop = setInterval(function() {
-        if (i.isInitialized) {
-          clearInterval(easingLoop);
-          return;
-        }
 
-        if (!speed.x && !speed.y) {
-          clearInterval(easingLoop);
-          return;
-        }
-
-        if (Math.abs(speed.x) < 0.01 && Math.abs(speed.y) < 0.01) {
-          clearInterval(easingLoop);
-          return;
-        }
-
-        applyTouchMove(speed.x * 30, speed.y * 30);
-
-        speed.x *= 0.8;
-        speed.y *= 0.8;
-      }, 10);
+    if (typeof window.onwheel !== 'undefined') {
+      i.event.bind(element, 'wheel', mousewheelHandler);
+    } else if (typeof window.onmousewheel !== 'undefined') {
+      i.event.bind(element, 'mousewheel', mousewheelHandler);
     }
   }
 
-  if (env.supportsTouch) {
-    i.event.bind(element, 'touchstart', touchStart);
-    i.event.bind(element, 'touchmove', touchMove);
-    i.event.bind(element, 'touchend', touchEnd);
-  } else if (env.supportsIePointer) {
-    if (window.PointerEvent) {
-      i.event.bind(element, 'pointerdown', touchStart);
-      i.event.bind(element, 'pointermove', touchMove);
-      i.event.bind(element, 'pointerup', touchEnd);
-    } else if (window.MSPointerEvent) {
-      i.event.bind(element, 'MSPointerDown', touchStart);
-      i.event.bind(element, 'MSPointerMove', touchMove);
-      i.event.bind(element, 'MSPointerUp', touchEnd);
+  function touch(i) {
+    if (!env.supportsTouch && !env.supportsIePointer) {
+      return;
+    }
+
+    var element = i.element;
+
+    function shouldPrevent(deltaX, deltaY) {
+      var scrollTop = Math.floor(element.scrollTop);
+      var scrollLeft = element.scrollLeft;
+      var magnitudeX = Math.abs(deltaX);
+      var magnitudeY = Math.abs(deltaY);
+
+      if (magnitudeY > magnitudeX) {
+        // user is perhaps trying to swipe up/down the page
+
+        if (
+          (deltaY < 0 && scrollTop === i.contentHeight - i.containerHeight) ||
+          (deltaY > 0 && scrollTop === 0)
+        ) {
+          // set prevent for mobile Chrome refresh
+          return window.scrollY === 0 && deltaY > 0 && env.isChrome;
+        }
+      } else if (magnitudeX > magnitudeY) {
+        // user is perhaps trying to swipe left/right across the page
+
+        if (
+          (deltaX < 0 && scrollLeft === i.contentWidth - i.containerWidth) ||
+          (deltaX > 0 && scrollLeft === 0)
+        ) {
+          return true;
+        }
+      }
+
+      return true;
+    }
+
+    function applyTouchMove(differenceX, differenceY) {
+      element.scrollTop -= differenceY;
+      element.scrollLeft -= differenceX;
+
+      updateGeometry(i);
+    }
+
+    var startOffset = {};
+    var startTime = 0;
+    var speed = {};
+    var easingLoop = null;
+
+    function getTouch(e) {
+      if (e.targetTouches) {
+        return e.targetTouches[0];
+      } else {
+        // Maybe IE pointer
+        return e;
+      }
+    }
+
+    function shouldHandle(e) {
+      if (e.pointerType && e.pointerType === 'pen' && e.buttons === 0) {
+        return false;
+      }
+      if (e.targetTouches && e.targetTouches.length === 1) {
+        return true;
+      }
+      if (
+        e.pointerType &&
+        e.pointerType !== 'mouse' &&
+        e.pointerType !== e.MSPOINTER_TYPE_MOUSE
+      ) {
+        return true;
+      }
+      return false;
+    }
+
+    function touchStart(e) {
+      if (!shouldHandle(e)) {
+        return;
+      }
+
+      var touch = getTouch(e);
+
+      startOffset.pageX = touch.pageX;
+      startOffset.pageY = touch.pageY;
+
+      startTime = new Date().getTime();
+
+      if (easingLoop !== null) {
+        clearInterval(easingLoop);
+      }
+    }
+
+    function shouldBeConsumedByChild(target, deltaX, deltaY) {
+      if (!element.contains(target)) {
+        return false;
+      }
+
+      var cursor = target;
+
+      while (cursor && cursor !== element) {
+        if (cursor.classList.contains(cls.element.consuming)) {
+          return true;
+        }
+
+        var style = get(cursor);
+
+        // if deltaY && vertical scrollable
+        if (deltaY && style.overflowY.match(/(scroll|auto)/)) {
+          var maxScrollTop = cursor.scrollHeight - cursor.clientHeight;
+          if (maxScrollTop > 0) {
+            if (
+              (cursor.scrollTop > 0 && deltaY < 0) ||
+              (cursor.scrollTop < maxScrollTop && deltaY > 0)
+            ) {
+              return true;
+            }
+          }
+        }
+        // if deltaX && horizontal scrollable
+        if (deltaX && style.overflowX.match(/(scroll|auto)/)) {
+          var maxScrollLeft = cursor.scrollWidth - cursor.clientWidth;
+          if (maxScrollLeft > 0) {
+            if (
+              (cursor.scrollLeft > 0 && deltaX < 0) ||
+              (cursor.scrollLeft < maxScrollLeft && deltaX > 0)
+            ) {
+              return true;
+            }
+          }
+        }
+
+        cursor = cursor.parentNode;
+      }
+
+      return false;
+    }
+
+    function touchMove(e) {
+      if (shouldHandle(e)) {
+        var touch = getTouch(e);
+
+        var currentOffset = { pageX: touch.pageX, pageY: touch.pageY };
+
+        var differenceX = currentOffset.pageX - startOffset.pageX;
+        var differenceY = currentOffset.pageY - startOffset.pageY;
+
+        if (shouldBeConsumedByChild(e.target, differenceX, differenceY)) {
+          return;
+        }
+
+        applyTouchMove(differenceX, differenceY);
+        startOffset = currentOffset;
+
+        var currentTime = new Date().getTime();
+
+        var timeGap = currentTime - startTime;
+        if (timeGap > 0) {
+          speed.x = differenceX / timeGap;
+          speed.y = differenceY / timeGap;
+          startTime = currentTime;
+        }
+
+        if (shouldPrevent(differenceX, differenceY)) {
+          e.preventDefault();
+        }
+      }
+    }
+    function touchEnd() {
+      if (i.settings.swipeEasing) {
+        clearInterval(easingLoop);
+        easingLoop = setInterval(function() {
+          if (i.isInitialized) {
+            clearInterval(easingLoop);
+            return;
+          }
+
+          if (!speed.x && !speed.y) {
+            clearInterval(easingLoop);
+            return;
+          }
+
+          if (Math.abs(speed.x) < 0.01 && Math.abs(speed.y) < 0.01) {
+            clearInterval(easingLoop);
+            return;
+          }
+
+          applyTouchMove(speed.x * 30, speed.y * 30);
+
+          speed.x *= 0.8;
+          speed.y *= 0.8;
+        }, 10);
+      }
+    }
+
+    if (env.supportsTouch) {
+      i.event.bind(element, 'touchstart', touchStart);
+      i.event.bind(element, 'touchmove', touchMove);
+      i.event.bind(element, 'touchend', touchEnd);
+    } else if (env.supportsIePointer) {
+      if (window.PointerEvent) {
+        i.event.bind(element, 'pointerdown', touchStart);
+        i.event.bind(element, 'pointermove', touchMove);
+        i.event.bind(element, 'pointerup', touchEnd);
+      } else if (window.MSPointerEvent) {
+        i.event.bind(element, 'MSPointerDown', touchStart);
+        i.event.bind(element, 'MSPointerMove', touchMove);
+        i.event.bind(element, 'MSPointerUp', touchEnd);
+      }
     }
   }
-};
 
-var defaultSettings = function () { return ({
-  handlers: ['click-rail', 'drag-thumb', 'keyboard', 'wheel', 'touch'],
-  maxScrollbarLength: null,
-  minScrollbarLength: null,
-  scrollingThreshold: 1000,
-  scrollXMarginOffset: 0,
-  scrollYMarginOffset: 0,
-  suppressScrollX: false,
-  suppressScrollY: false,
-  swipeEasing: true,
-  useBothWheelAxes: false,
-  wheelPropagation: true,
-  wheelSpeed: 1,
-}); };
+  var defaultSettings = function () { return ({
+    handlers: ['click-rail', 'drag-thumb', 'keyboard', 'wheel', 'touch'],
+    maxScrollbarLength: null,
+    minScrollbarLength: null,
+    scrollingThreshold: 1000,
+    scrollXMarginOffset: 0,
+    scrollYMarginOffset: 0,
+    suppressScrollX: false,
+    suppressScrollY: false,
+    swipeEasing: true,
+    useBothWheelAxes: false,
+    wheelPropagation: true,
+    wheelSpeed: 1,
+  }); };
 
-var handlers = {
-  'click-rail': clickRail,
-  'drag-thumb': dragThumb,
-  keyboard: keyboard,
-  wheel: wheel,
-  touch: touch,
-};
-
-var PerfectScrollbar = function PerfectScrollbar(element, userSettings) {
-  var this$1 = this;
-  if ( userSettings === void 0 ) userSettings = {};
-
-  if (typeof element === 'string') {
-    element = document.querySelector(element);
-  }
-
-  if (!element || !element.nodeName) {
-    throw new Error('no element is specified to initialize PerfectScrollbar');
-  }
-
-  this.element = element;
-
-  element.classList.add(cls.main);
-
-  this.settings = defaultSettings();
-  for (var key in userSettings) {
-    this$1.settings[key] = userSettings[key];
-  }
-
-  this.containerWidth = null;
-  this.containerHeight = null;
-  this.contentWidth = null;
-  this.contentHeight = null;
-
-  var focus = function () { return element.classList.add(cls.state.focus); };
-  var blur = function () { return element.classList.remove(cls.state.focus); };
-
-  this.isRtl = get(element).direction === 'rtl';
-  this.isNegativeScroll = (function () {
-    var originalScrollLeft = element.scrollLeft;
-    var result = null;
-    element.scrollLeft = -1;
-    result = element.scrollLeft < 0;
-    element.scrollLeft = originalScrollLeft;
-    return result;
-  })();
-  this.negativeScrollAdjustment = this.isNegativeScroll
-    ? element.scrollWidth - element.clientWidth
-    : 0;
-  this.event = new EventManager();
-  this.ownerDocument = element.ownerDocument || document;
-
-  this.scrollbarXRail = div(cls.element.rail('x'));
-  element.appendChild(this.scrollbarXRail);
-  this.scrollbarX = div(cls.element.thumb('x'));
-  this.scrollbarXRail.appendChild(this.scrollbarX);
-  this.scrollbarX.setAttribute('tabindex', 0);
-  this.event.bind(this.scrollbarX, 'focus', focus);
-  this.event.bind(this.scrollbarX, 'blur', blur);
-  this.scrollbarXActive = null;
-  this.scrollbarXWidth = null;
-  this.scrollbarXLeft = null;
-  var railXStyle = get(this.scrollbarXRail);
-  this.scrollbarXBottom = parseInt(railXStyle.bottom, 10);
-  if (isNaN(this.scrollbarXBottom)) {
-    this.isScrollbarXUsingBottom = false;
-    this.scrollbarXTop = toInt(railXStyle.top);
-  } else {
-    this.isScrollbarXUsingBottom = true;
-  }
-  this.railBorderXWidth =
-    toInt(railXStyle.borderLeftWidth) + toInt(railXStyle.borderRightWidth);
-  // Set rail to display:block to calculate margins
-  set(this.scrollbarXRail, { display: 'block' });
-  this.railXMarginWidth =
-    toInt(railXStyle.marginLeft) + toInt(railXStyle.marginRight);
-  set(this.scrollbarXRail, { display: '' });
-  this.railXWidth = null;
-  this.railXRatio = null;
-
-  this.scrollbarYRail = div(cls.element.rail('y'));
-  element.appendChild(this.scrollbarYRail);
-  this.scrollbarY = div(cls.element.thumb('y'));
-  this.scrollbarYRail.appendChild(this.scrollbarY);
-  this.scrollbarY.setAttribute('tabindex', 0);
-  this.event.bind(this.scrollbarY, 'focus', focus);
-  this.event.bind(this.scrollbarY, 'blur', blur);
-  this.scrollbarYActive = null;
-  this.scrollbarYHeight = null;
-  this.scrollbarYTop = null;
-  var railYStyle = get(this.scrollbarYRail);
-  this.scrollbarYRight = parseInt(railYStyle.right, 10);
-  if (isNaN(this.scrollbarYRight)) {
-    this.isScrollbarYUsingRight = false;
-    this.scrollbarYLeft = toInt(railYStyle.left);
-  } else {
-    this.isScrollbarYUsingRight = true;
-  }
-  this.scrollbarYOuterWidth = this.isRtl ? outerWidth(this.scrollbarY) : null;
-  this.railBorderYWidth =
-    toInt(railYStyle.borderTopWidth) + toInt(railYStyle.borderBottomWidth);
-  set(this.scrollbarYRail, { display: 'block' });
-  this.railYMarginHeight =
-    toInt(railYStyle.marginTop) + toInt(railYStyle.marginBottom);
-  set(this.scrollbarYRail, { display: '' });
-  this.railYHeight = null;
-  this.railYRatio = null;
-
-  this.reach = {
-    x:
-      element.scrollLeft <= 0
-        ? 'start'
-        : element.scrollLeft >= this.contentWidth - this.containerWidth
-          ? 'end'
-          : null,
-    y:
-      element.scrollTop <= 0
-        ? 'start'
-        : element.scrollTop >= this.contentHeight - this.containerHeight
-          ? 'end'
-          : null,
+  var handlers = {
+    'click-rail': clickRail,
+    'drag-thumb': dragThumb,
+    keyboard: keyboard,
+    wheel: wheel,
+    touch: touch,
   };
 
-  this.isAlive = true;
+  var PerfectScrollbar = function PerfectScrollbar(element, userSettings) {
+    var this$1 = this;
+    if ( userSettings === void 0 ) userSettings = {};
 
-  this.settings.handlers.forEach(function (handlerName) { return handlers[handlerName](this$1); });
+    if (typeof element === 'string') {
+      element = document.querySelector(element);
+    }
 
-  this.lastScrollTop = Math.floor(element.scrollTop); // for onScroll only
-  this.lastScrollLeft = element.scrollLeft; // for onScroll only
-  this.event.bind(this.element, 'scroll', function (e) { return this$1.onScroll(e); });
-  updateGeometry(this);
-};
+    if (!element || !element.nodeName) {
+      throw new Error('no element is specified to initialize PerfectScrollbar');
+    }
 
-PerfectScrollbar.prototype.update = function update () {
-  if (!this.isAlive) {
-    return;
-  }
+    this.element = element;
 
-  // Recalcuate negative scrollLeft adjustment
-  this.negativeScrollAdjustment = this.isNegativeScroll
-    ? this.element.scrollWidth - this.element.clientWidth
-    : 0;
+    element.classList.add(cls.main);
 
-  // Recalculate rail margins
-  set(this.scrollbarXRail, { display: 'block' });
-  set(this.scrollbarYRail, { display: 'block' });
-  this.railXMarginWidth =
-    toInt(get(this.scrollbarXRail).marginLeft) +
-    toInt(get(this.scrollbarXRail).marginRight);
-  this.railYMarginHeight =
-    toInt(get(this.scrollbarYRail).marginTop) +
-    toInt(get(this.scrollbarYRail).marginBottom);
+    this.settings = defaultSettings();
+    for (var key in userSettings) {
+      this.settings[key] = userSettings[key];
+    }
 
-  // Hide scrollbars not to affect scrollWidth and scrollHeight
-  set(this.scrollbarXRail, { display: 'none' });
-  set(this.scrollbarYRail, { display: 'none' });
+    this.containerWidth = null;
+    this.containerHeight = null;
+    this.contentWidth = null;
+    this.contentHeight = null;
 
-  updateGeometry(this);
+    var focus = function () { return element.classList.add(cls.state.focus); };
+    var blur = function () { return element.classList.remove(cls.state.focus); };
 
-  processScrollDiff(this, 'top', 0, false, true);
-  processScrollDiff(this, 'left', 0, false, true);
+    this.isRtl = get(element).direction === 'rtl';
+    if (this.isRtl === true) {
+      element.classList.add(cls.rtl);
+    }
+    this.isNegativeScroll = (function () {
+      var originalScrollLeft = element.scrollLeft;
+      var result = null;
+      element.scrollLeft = -1;
+      result = element.scrollLeft < 0;
+      element.scrollLeft = originalScrollLeft;
+      return result;
+    })();
+    this.negativeScrollAdjustment = this.isNegativeScroll
+      ? element.scrollWidth - element.clientWidth
+      : 0;
+    this.event = new EventManager();
+    this.ownerDocument = element.ownerDocument || document;
 
-  set(this.scrollbarXRail, { display: '' });
-  set(this.scrollbarYRail, { display: '' });
-};
+    this.scrollbarXRail = div(cls.element.rail('x'));
+    element.appendChild(this.scrollbarXRail);
+    this.scrollbarX = div(cls.element.thumb('x'));
+    this.scrollbarXRail.appendChild(this.scrollbarX);
+    this.scrollbarX.setAttribute('tabindex', 0);
+    this.event.bind(this.scrollbarX, 'focus', focus);
+    this.event.bind(this.scrollbarX, 'blur', blur);
+    this.scrollbarXActive = null;
+    this.scrollbarXWidth = null;
+    this.scrollbarXLeft = null;
+    var railXStyle = get(this.scrollbarXRail);
+    this.scrollbarXBottom = parseInt(railXStyle.bottom, 10);
+    if (isNaN(this.scrollbarXBottom)) {
+      this.isScrollbarXUsingBottom = false;
+      this.scrollbarXTop = toInt(railXStyle.top);
+    } else {
+      this.isScrollbarXUsingBottom = true;
+    }
+    this.railBorderXWidth =
+      toInt(railXStyle.borderLeftWidth) + toInt(railXStyle.borderRightWidth);
+    // Set rail to display:block to calculate margins
+    set(this.scrollbarXRail, { display: 'block' });
+    this.railXMarginWidth =
+      toInt(railXStyle.marginLeft) + toInt(railXStyle.marginRight);
+    set(this.scrollbarXRail, { display: '' });
+    this.railXWidth = null;
+    this.railXRatio = null;
 
-PerfectScrollbar.prototype.onScroll = function onScroll (e) {
-  if (!this.isAlive) {
-    return;
-  }
+    this.scrollbarYRail = div(cls.element.rail('y'));
+    element.appendChild(this.scrollbarYRail);
+    this.scrollbarY = div(cls.element.thumb('y'));
+    this.scrollbarYRail.appendChild(this.scrollbarY);
+    this.scrollbarY.setAttribute('tabindex', 0);
+    this.event.bind(this.scrollbarY, 'focus', focus);
+    this.event.bind(this.scrollbarY, 'blur', blur);
+    this.scrollbarYActive = null;
+    this.scrollbarYHeight = null;
+    this.scrollbarYTop = null;
+    var railYStyle = get(this.scrollbarYRail);
+    this.scrollbarYRight = parseInt(railYStyle.right, 10);
+    if (isNaN(this.scrollbarYRight)) {
+      this.isScrollbarYUsingRight = false;
+      this.scrollbarYLeft = toInt(railYStyle.left);
+    } else {
+      this.isScrollbarYUsingRight = true;
+    }
+    this.scrollbarYOuterWidth = this.isRtl ? outerWidth(this.scrollbarY) : null;
+    this.railBorderYWidth =
+      toInt(railYStyle.borderTopWidth) + toInt(railYStyle.borderBottomWidth);
+    set(this.scrollbarYRail, { display: 'block' });
+    this.railYMarginHeight =
+      toInt(railYStyle.marginTop) + toInt(railYStyle.marginBottom);
+    set(this.scrollbarYRail, { display: '' });
+    this.railYHeight = null;
+    this.railYRatio = null;
 
-  updateGeometry(this);
-  processScrollDiff(this, 'top', this.element.scrollTop - this.lastScrollTop);
-  processScrollDiff(
-    this,
-    'left',
-    this.element.scrollLeft - this.lastScrollLeft
-  );
+    this.reach = {
+      x:
+        element.scrollLeft <= 0
+          ? 'start'
+          : element.scrollLeft >= this.contentWidth - this.containerWidth
+          ? 'end'
+          : null,
+      y:
+        element.scrollTop <= 0
+          ? 'start'
+          : element.scrollTop >= this.contentHeight - this.containerHeight
+          ? 'end'
+          : null,
+    };
 
-  this.lastScrollTop = Math.floor(this.element.scrollTop);
-  this.lastScrollLeft = this.element.scrollLeft;
-};
+    this.isAlive = true;
 
-PerfectScrollbar.prototype.destroy = function destroy () {
-  if (!this.isAlive) {
-    return;
-  }
+    this.settings.handlers.forEach(function (handlerName) { return handlers[handlerName](this$1); });
 
-  this.event.unbindAll();
-  remove(this.scrollbarX);
-  remove(this.scrollbarY);
-  remove(this.scrollbarXRail);
-  remove(this.scrollbarYRail);
-  this.removePsClasses();
+    this.lastScrollTop = Math.floor(element.scrollTop); // for onScroll only
+    this.lastScrollLeft = element.scrollLeft; // for onScroll only
+    this.event.bind(this.element, 'scroll', function (e) { return this$1.onScroll(e); });
+    updateGeometry(this);
+  };
 
-  // unset elements
-  this.element = null;
-  this.scrollbarX = null;
-  this.scrollbarY = null;
-  this.scrollbarXRail = null;
-  this.scrollbarYRail = null;
+  PerfectScrollbar.prototype.update = function update () {
+    if (!this.isAlive) {
+      return;
+    }
 
-  this.isAlive = false;
-};
+    // Recalcuate negative scrollLeft adjustment
+    this.negativeScrollAdjustment = this.isNegativeScroll
+      ? this.element.scrollWidth - this.element.clientWidth
+      : 0;
 
-PerfectScrollbar.prototype.removePsClasses = function removePsClasses () {
-  this.element.className = this.element.className
-    .split(' ')
-    .filter(function (name) { return !name.match(/^ps([-_].+|)$/); })
-    .join(' ');
-};
+    // Recalculate rail margins
+    set(this.scrollbarXRail, { display: 'block' });
+    set(this.scrollbarYRail, { display: 'block' });
+    this.railXMarginWidth =
+      toInt(get(this.scrollbarXRail).marginLeft) +
+      toInt(get(this.scrollbarXRail).marginRight);
+    this.railYMarginHeight =
+      toInt(get(this.scrollbarYRail).marginTop) +
+      toInt(get(this.scrollbarYRail).marginBottom);
 
-return PerfectScrollbar;
+    // Hide scrollbars not to affect scrollWidth and scrollHeight
+    set(this.scrollbarXRail, { display: 'none' });
+    set(this.scrollbarYRail, { display: 'none' });
+
+    updateGeometry(this);
+
+    processScrollDiff(this, 'top', 0, false, true);
+    processScrollDiff(this, 'left', 0, false, true);
+
+    set(this.scrollbarXRail, { display: '' });
+    set(this.scrollbarYRail, { display: '' });
+  };
+
+  PerfectScrollbar.prototype.onScroll = function onScroll (e) {
+    if (!this.isAlive) {
+      return;
+    }
+
+    updateGeometry(this);
+    processScrollDiff(this, 'top', this.element.scrollTop - this.lastScrollTop);
+    processScrollDiff(
+      this,
+      'left',
+      this.element.scrollLeft - this.lastScrollLeft
+    );
+
+    this.lastScrollTop = Math.floor(this.element.scrollTop);
+    this.lastScrollLeft = this.element.scrollLeft;
+  };
+
+  PerfectScrollbar.prototype.destroy = function destroy () {
+    if (!this.isAlive) {
+      return;
+    }
+
+    this.event.unbindAll();
+    remove(this.scrollbarX);
+    remove(this.scrollbarY);
+    remove(this.scrollbarXRail);
+    remove(this.scrollbarYRail);
+    this.removePsClasses();
+
+    // unset elements
+    this.element = null;
+    this.scrollbarX = null;
+    this.scrollbarY = null;
+    this.scrollbarXRail = null;
+    this.scrollbarYRail = null;
+
+    this.isAlive = false;
+  };
+
+  PerfectScrollbar.prototype.removePsClasses = function removePsClasses () {
+    this.element.className = this.element.className
+      .split(' ')
+      .filter(function (name) { return !name.match(/^ps([-_].+|)$/); })
+      .join(' ');
+  };
+
+  return PerfectScrollbar;
 
 })));
+//# sourceMappingURL=perfect-scrollbar.js.map
 
 ;
 /****************************************************************************
@@ -49757,7 +51927,7 @@ return PerfectScrollbar;
 
     var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
     var maxValues = [24, 60, 60, 1000];
-    
+
     // Capitalize first letter
     key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
@@ -52015,213 +54185,12 @@ options:
 
 }(jQuery, this, document));
 ;
-(function() {
-    var url = (function() {
-
-        function _t() {
-            return new RegExp(/(.*?)\.?([^\.]*?)\.(gl|com|net|org|biz|ws|in|me|co\.uk|co|org\.uk|ltd\.uk|plc\.uk|me\.uk|edu|mil|br\.com|cn\.com|eu\.com|hu\.com|no\.com|qc\.com|sa\.com|se\.com|se\.net|us\.com|uy\.com|ac|co\.ac|gv\.ac|or\.ac|ac\.ac|af|am|as|at|ac\.at|co\.at|gv\.at|or\.at|asn\.au|com\.au|edu\.au|org\.au|net\.au|id\.au|be|ac\.be|adm\.br|adv\.br|am\.br|arq\.br|art\.br|bio\.br|cng\.br|cnt\.br|com\.br|ecn\.br|eng\.br|esp\.br|etc\.br|eti\.br|fm\.br|fot\.br|fst\.br|g12\.br|gov\.br|ind\.br|inf\.br|jor\.br|lel\.br|med\.br|mil\.br|net\.br|nom\.br|ntr\.br|odo\.br|org\.br|ppg\.br|pro\.br|psc\.br|psi\.br|rec\.br|slg\.br|tmp\.br|tur\.br|tv\.br|vet\.br|zlg\.br|br|ab\.ca|bc\.ca|mb\.ca|nb\.ca|nf\.ca|ns\.ca|nt\.ca|on\.ca|pe\.ca|qc\.ca|sk\.ca|yk\.ca|ca|cc|ac\.cn|com\.cn|edu\.cn|gov\.cn|org\.cn|bj\.cn|sh\.cn|tj\.cn|cq\.cn|he\.cn|nm\.cn|ln\.cn|jl\.cn|hl\.cn|js\.cn|zj\.cn|ah\.cn|gd\.cn|gx\.cn|hi\.cn|sc\.cn|gz\.cn|yn\.cn|xz\.cn|sn\.cn|gs\.cn|qh\.cn|nx\.cn|xj\.cn|tw\.cn|hk\.cn|mo\.cn|cn|cx|cz|de|dk|fo|com\.ec|tm\.fr|com\.fr|asso\.fr|presse\.fr|fr|gf|gs|co\.il|net\.il|ac\.il|k12\.il|gov\.il|muni\.il|ac\.in|co\.in|org\.in|ernet\.in|gov\.in|net\.in|res\.in|is|it|ac\.jp|co\.jp|go\.jp|or\.jp|ne\.jp|ac\.kr|co\.kr|go\.kr|ne\.kr|nm\.kr|or\.kr|li|lt|lu|asso\.mc|tm\.mc|com\.mm|org\.mm|net\.mm|edu\.mm|gov\.mm|ms|nl|no|nu|pl|ro|org\.ro|store\.ro|tm\.ro|firm\.ro|www\.ro|arts\.ro|rec\.ro|info\.ro|nom\.ro|nt\.ro|se|si|com\.sg|org\.sg|net\.sg|gov\.sg|sk|st|tf|ac\.th|co\.th|go\.th|mi\.th|net\.th|or\.th|tm|to|com\.tr|edu\.tr|gov\.tr|k12\.tr|net\.tr|org\.tr|com\.tw|org\.tw|net\.tw|ac\.uk|uk\.com|uk\.net|gb\.com|gb\.net|vg|sh|kz|ch|info|ua|gov|name|pro|ie|hk|com\.hk|org\.hk|net\.hk|edu\.hk|us|tk|cd|by|ad|lv|eu\.lv|bz|es|jp|cl|ag|mobi|eu|co\.nz|org\.nz|net\.nz|maori\.nz|iwi\.nz|io|la|md|sc|sg|vc|tw|travel|my|se|tv|pt|com\.pt|edu\.pt|asia|fi|com\.ve|net\.ve|fi|org\.ve|web\.ve|info\.ve|co\.ve|tel|im|gr|ru|net\.ru|org\.ru|hr|com\.hr|ly|xyz)$/);
-        }
-
-        function _d(s) {
-          return decodeURIComponent(s.replace(/\+/g, ' '));
-        }
-
-        function _i(arg, str) {
-            var sptr = arg.charAt(0),
-                split = str.split(sptr);
-
-            if (sptr === arg) { return split; }
-
-            arg = parseInt(arg.substring(1), 10);
-
-            return split[arg < 0 ? split.length + arg : arg - 1];
-        }
-
-        function _f(arg, str) {
-            var sptr = arg.charAt(0),
-                split = str.split('&'),
-                field = [],
-                params = {},
-                tmp = [],
-                arg2 = arg.substring(1);
-
-            for (var i = 0, ii = split.length; i < ii; i++) {
-                field = split[i].match(/(.*?)=(.*)/);
-
-                // TODO: regex should be able to handle this.
-                if ( ! field) {
-                    field = [split[i], split[i], ''];
-                }
-
-                if (field[1].replace(/\s/g, '') !== '') {
-                    field[2] = _d(field[2] || '');
-
-                    // If we have a match just return it right away.
-                    if (arg2 === field[1]) { return field[2]; }
-
-                    // Check for array pattern.
-                    tmp = field[1].match(/(.*)\[([0-9]+)\]/);
-
-                    if (tmp) {
-                        params[tmp[1]] = params[tmp[1]] || [];
-
-                        params[tmp[1]][tmp[2]] = field[2];
-                    }
-                    else {
-                        params[field[1]] = field[2];
-                    }
-                }
-            }
-
-            if (sptr === arg) { return params; }
-
-            return params[arg2];
-        }
-
-        return function(arg, url) {
-            var _l = {}, tmp, tmp2;
-
-            if (arg === 'tld?') { return _t(); }
-
-            url = url || window.location.toString();
-
-            if ( ! arg) { return url; }
-
-            arg = arg.toString();
-
-            if (tmp = url.match(/^mailto:([^\/].+)/)) {
-                _l.protocol = 'mailto';
-                _l.email = tmp[1];
-            }
-            else {
-
-                // Ignore Hashbangs.
-                if (tmp = url.match(/(.*?)\/#\!(.*)/)) {
-                    url = tmp[1] + tmp[2];
-                }
-
-                // Hash.
-                if (tmp = url.match(/(.*?)#(.*)/)) {
-                    _l.hash = tmp[2];
-                    url = tmp[1];
-                }
-
-                // Return hash parts.
-                if (_l.hash && arg.match(/^#/)) { return _f(arg, _l.hash); }
-
-                // Query
-                if (tmp = url.match(/(.*?)\?(.*)/)) {
-                    _l.query = tmp[2];
-                    url = tmp[1];
-                }
-
-                // Return query parts.
-                if (_l.query && arg.match(/^\?/)) { return _f(arg, _l.query); }
-
-                // Protocol.
-                if (tmp = url.match(/(.*?)\:?\/\/(.*)/)) {
-                    _l.protocol = tmp[1].toLowerCase();
-                    url = tmp[2];
-                }
-
-                // Path.
-                if (tmp = url.match(/(.*?)(\/.*)/)) {
-                    _l.path = tmp[2];
-                    url = tmp[1];
-                }
-
-                // Clean up path.
-                _l.path = (_l.path || '').replace(/^([^\/])/, '/$1');
-
-                // Return path parts.
-                if (arg.match(/^[\-0-9]+$/)) { arg = arg.replace(/^([^\/])/, '/$1'); }
-                if (arg.match(/^\//)) { return _i(arg, _l.path.substring(1)); }
-
-                // File.
-                tmp = _i('/-1', _l.path.substring(1));
-
-                if (tmp && (tmp = tmp.match(/(.*?)\.([^.]+)$/))) {
-                    _l.file = tmp[0];
-                    _l.filename = tmp[1];
-                    _l.fileext = tmp[2];
-                }
-
-                // Port.
-                if (tmp = url.match(/(.*)\:([0-9]+)$/)) {
-                    _l.port = tmp[2];
-                    url = tmp[1];
-                }
-
-                // Auth.
-                if (tmp = url.match(/(.*?)@(.*)/)) {
-                    _l.auth = tmp[1];
-                    url = tmp[2];
-                }
-
-                // User and pass.
-                if (_l.auth) {
-                    tmp = _l.auth.match(/(.*)\:(.*)/);
-
-                    _l.user = tmp ? tmp[1] : _l.auth;
-                    _l.pass = tmp ? tmp[2] : undefined;
-                }
-
-                // Hostname.
-                _l.hostname = url.toLowerCase();
-
-                // Return hostname parts.
-                if (arg.charAt(0) === '.') { return _i(arg, _l.hostname); }
-
-                // Domain, tld and sub domain.
-                if (_t()) {
-                    tmp = _l.hostname.match(_t());
-
-                    if (tmp) {
-                        _l.tld = tmp[3];
-                        _l.domain = tmp[2] ? tmp[2] + '.' + tmp[3] : undefined;
-                        _l.sub = tmp[1] || undefined;
-                    }
-                }
-
-                // Set port and protocol defaults if not set.
-                _l.port = _l.port || (_l.protocol === 'https' ? '443' : '80');
-                _l.protocol = _l.protocol || (_l.port === '443' ? 'https' : 'http');
-            }
-
-            // Return arg.
-            if (arg in _l) { return _l[arg]; }
-
-            // Return everything.
-            if (arg === '{}') { return _l; }
-
-            // Default to undefined for no match.
-            return undefined;
-        };
-    })();
-
-	if (typeof window.define === 'function' && window.define.amd) {
-		window.define('js-url', [], function () {
-		    return url;
-		});
-	} else {
-		if(typeof window.jQuery !== 'undefined') {
-			window.jQuery.extend({
-				url: function(arg, url) { return window.url(arg, url); }
-			});
-		}
-
-		window.url = url;
-	}
-
-})();
-
-;
-/* 
-  @package NOTY - Dependency-free notification library 
-  @version version: 3.1.4 
-  @contributors https://github.com/needim/noty/graphs/contributors 
-  @documentation Examples and Documentation - http://needim.github.com/noty 
-  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php 
+/*
+  @package NOTY - Dependency-free notification library
+  @version version: 3.1.4
+  @contributors https://github.com/needim/noty/graphs/contributors
+  @documentation Examples and Documentation - http://needim.github.com/noty
+  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
 */
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -54254,7 +56223,7 @@ Promise$2.prototype = {
     The primary way of interacting with a promise is through its `then` method,
     which registers callbacks to receive either a promise's eventual value or the
     reason why the promise cannot be fulfilled.
-  
+
     ```js
     findUser().then(function(user){
       // user is available
@@ -54262,14 +56231,14 @@ Promise$2.prototype = {
       // user is unavailable, and you are given the reason why
     });
     ```
-  
+
     Chaining
     --------
-  
+
     The return value of `then` is itself a promise.  This second, 'downstream'
     promise is resolved with the return value of the first promise's fulfillment
     or rejection handler, or rejected if the handler throws an exception.
-  
+
     ```js
     findUser().then(function (user) {
       return user.name;
@@ -54279,7 +56248,7 @@ Promise$2.prototype = {
       // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
       // will be `'default name'`
     });
-  
+
     findUser().then(function (user) {
       throw new Error('Found user, but still unhappy');
     }, function (reason) {
@@ -54292,7 +56261,7 @@ Promise$2.prototype = {
     });
     ```
     If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-  
+
     ```js
     findUser().then(function (user) {
       throw new PedagogicalException('Upstream error');
@@ -54304,15 +56273,15 @@ Promise$2.prototype = {
       // The `PedgagocialException` is propagated all the way down to here
     });
     ```
-  
+
     Assimilation
     ------------
-  
+
     Sometimes the value you want to propagate to a downstream promise can only be
     retrieved asynchronously. This can be achieved by returning a promise in the
     fulfillment or rejection handler. The downstream promise will then be pending
     until the returned promise is settled. This is called *assimilation*.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -54320,9 +56289,9 @@ Promise$2.prototype = {
       // The user's comments are now available
     });
     ```
-  
+
     If the assimliated promise rejects, then the downstream promise will also reject.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -54332,15 +56301,15 @@ Promise$2.prototype = {
       // If `findCommentsByAuthor` rejects, we'll have the reason here
     });
     ```
-  
+
     Simple Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let result;
-  
+
     try {
       result = findResult();
       // success
@@ -54348,9 +56317,9 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
     findResult(function(result, err){
       if (err) {
@@ -54360,9 +56329,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findResult().then(function(result){
       // success
@@ -54370,15 +56339,15 @@ Promise$2.prototype = {
       // failure
     });
     ```
-  
+
     Advanced Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let author, books;
-  
+
     try {
       author = findAuthor();
       books  = findBooksByAuthor(author);
@@ -54387,19 +56356,19 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
-  
+
     function foundBooks(books) {
-  
+
     }
-  
+
     function failure(reason) {
-  
+
     }
-  
+
     findAuthor(function(author, err){
       if (err) {
         failure(err);
@@ -54424,9 +56393,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findAuthor().
       then(findBooksByAuthor).
@@ -54436,7 +56405,7 @@ Promise$2.prototype = {
       // something went wrong
     });
     ```
-  
+
     @method then
     @param {Function} onFulfilled
     @param {Function} onRejected
@@ -54448,25 +56417,25 @@ Promise$2.prototype = {
   /**
     `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
     as the catch block of a try/catch statement.
-  
+
     ```js
     function findAuthor(){
       throw new Error('couldn't find that author');
     }
-  
+
     // synchronous
     try {
       findAuthor();
     } catch(reason) {
       // something went wrong
     }
-  
+
     // async with promises
     findAuthor().catch(function(reason){
       // something went wrong
     });
     ```
-  
+
     @method catch
     @param {Function} onRejection
     Useful for tooling.
@@ -55393,7 +57362,7 @@ module.exports = g;
         //Therefore if iOS, we shall assume that PDF support is not available
         !isIOS && (
             //Modern versions of Firefox come bundled with PDFJS
-            isFirefoxWithPDFJS || 
+            isFirefoxWithPDFJS ||
             //Browsers that still support the original MIME type check
             supportsPdfMimeType || (
                 //Pity the poor souls still using IE
@@ -55851,6 +57820,7 @@ module.exports = g;
                 semiTransparent: 'semi-transparent',
                 square         : 'square',
                 bigIcon        : 'big-icon',
+                extraLargeIcon : 'extra-large-icon',
                 selected       : 'active',
                 focus          : 'init_focus'
             };
@@ -55863,12 +57833,12 @@ module.exports = g;
                 baseClass       : 'btn',
                 styleClass      : bsButtonClass,
                 class           : function( opt ){
-                                      var result = '';
+                                      var result = [opt.class || ''];
                                       $.each( optionToClassName, function( id, className ){
                                           if (opt[id] && (!$.isFunction(opt[id]) || opt[id]()))
-                                              result = result + (result?' ':'') + className;
+                                              result.push(className);
                                       });
-                                     return result;
+                                     return result.join(' ');
                                   } (options),
                 useTouchSize    : true,
                 addOnClick      : true,
@@ -56009,6 +57979,10 @@ module.exports = g;
 
         if (options.fullWidth)
             result.addClass('btn-group-full-width');
+
+        if (options.centerInParent)
+            result.addClass('btn-group-center-in-parent');
+
 
         if (options.border)
             result.addClass('btn-group-border');
@@ -56498,7 +58472,13 @@ module.exports = g;
                     this.resetValue( true );
                 }
 
-                this.getFormGroup().css('visibility', show ? 'visible' : 'hidden');
+                if (this.options.freeSpaceWhenHidden)
+                    //When the element is invisible: Use display:none
+                    this.getFormGroup().toggleClass('d-none', !show);
+                else
+                    //When the element is invisible: Use visibility:hidden to keep structure of form and it elements
+                    this.getFormGroup().css('visibility', show ? 'visible' : 'hidden');
+
                 this.getElement().prop('disabled', !show);
 
                 this.modalForm._enableInputValidation( this, show );
@@ -56512,8 +58492,9 @@ module.exports = g;
     BsModalForm( options )
     options:
         content: json-object with full content Samer as content for bsModal with extention of
-            id, and
+            id = STRING
             showWhen and hideWhen = [id] of value: hide or show element when another element with id has value
+            freeSpaceWhenHidden = BOOLEAN, when true the element will not appear in the form when it is hidden (as display: none). If false the space is allocated to the hidden element (as visibility: hidden)
 
         extended.content: Same as options.content, but NOT BOTH
         useExtended: false - When true the extended.content is used as the content of the form
@@ -56575,7 +58556,6 @@ module.exports = g;
 
         //Create the form
         this.$form = $('<form/>');
-
         if (this.options.extended && this.options.useExtended){
             this.$form._bsAppendContent( this.options.extended.content, this.options.contentContext );
             this.options.extended.content = this.$form;
@@ -60555,16 +62535,9 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         //*********************************************************************
         //adjustContentOptions: Adjust options for the content of elements
         function adjustContentAndContextOptions( options, context ){
-            options.icon     = options.icon || options.headerIcon || options.titleIcon;
-            options.text     = options.text || options.header || options.title;
-
-            options.iconClass = options.iconClass       || options.iconClassName       ||
-                                options.headerIconClass || options.headerIconClassName ||
-                                options.titleIconClass  || options.titleIconClassName;
-
-            options.textClass = options.textClass   || options.textClassName   ||
-                                options.headerClass || options.headerClassName ||
-                                options.titleClass  || options.titleClassName;
+            options.text      = options.text || options.title;
+            options.iconClass = options.iconClass || options.iconClassName;
+            options.textClass = options.textClass || options.textClassName;
 
             //If context is given => convert all function to proxy
             if (context)
@@ -60841,12 +62814,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             }
 
             //**************************************************
-//Removed since no content is given
-//            if (checkForContent && (options.content != null))
-//                return this._bsAddHtml( options.content );
-
             options = options || '';
-
             var _this = this;
 
             //options = array => add each
@@ -61107,7 +63075,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 "use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj};(function(f){if((typeof exports==="undefined"?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Url=f()}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o])}return s}({1:[function(require,module,exports){window.addEventListener("popstate",function(e){Url.triggerPopStateCb(e)});var Url=module.exports={_onPopStateCbs:[],_isHash:false,queryString:function queryString(name,notDecoded){name=name.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var regex=new RegExp("[\\?&]"+name+"=([^&#]*)"),results=regex.exec(location.search),encoded=null;if(results===null){regex=new RegExp("[\\?&]"+name+"(\\&([^&#]*)|$)");if(regex.test(location.search)){return true}return undefined}else{encoded=results[1].replace(/\+/g," ");if(notDecoded){return encoded}return decodeURIComponent(encoded)}},parseQuery:function parseQuery(search){var query={};if(typeof search!=="string"){search=window.location.search}search=search.replace(/^\?/g,"");if(!search){return{}}var a=search.split("&"),i=0,iequ,value=null;for(;i<a.length;++i){iequ=a[i].indexOf("=");if(iequ<0){iequ=a[i].length;value=true}else{value=decodeURIComponent(a[i].slice(iequ+1))}query[decodeURIComponent(a[i].slice(0,iequ))]=value}return query},stringify:function stringify(queryObj){if(!queryObj||queryObj.constructor!==Object){throw new Error("Query object should be an object.")}var stringified="";Object.keys(queryObj).forEach(function(c){var value=queryObj[c];stringified+=c;if(value!==true){stringified+="="+encodeURIComponent(queryObj[c])}stringified+="&"});stringified=stringified.replace(/\&$/g,"");return stringified},updateSearchParam:function updateSearchParam(param,value,push,triggerPopState){var searchParsed=this.parseQuery();if(value===undefined){delete searchParsed[param]}else{if(searchParsed[param]===value){return Url}searchParsed[param]=value}var newSearch="?"+this.stringify(searchParsed);this._updateAll(window.location.pathname+newSearch+location.hash,push,triggerPopState);return Url},getLocation:function getLocation(){return window.location.pathname+window.location.search+window.location.hash},hash:function hash(newHash,triggerPopState){if(newHash===undefined){return location.hash.substring(1)}if(!triggerPopState){setTimeout(function(){Url._isHash=false},0);Url._isHash=true}return location.hash=newHash},_updateAll:function _updateAll(s,push,triggerPopState){window.history[push?"pushState":"replaceState"](null,"",s);if(triggerPopState){Url.triggerPopStateCb({})}return s},pathname:function pathname(_pathname,push,triggerPopState){if(_pathname===undefined){return location.pathname}return this._updateAll(_pathname+window.location.search+window.location.hash,push,triggerPopState)},triggerPopStateCb:function triggerPopStateCb(e){if(this._isHash){return}this._onPopStateCbs.forEach(function(c){c(e)})},onPopState:function onPopState(cb){this._onPopStateCbs.push(cb)},removeHash:function removeHash(){this._updateAll(window.location.pathname+window.location.search,false,false)},removeQuery:function removeQuery(){this._updateAll(window.location.pathname+window.location.hash,false,false)},version:"2.3.1"}},{}]},{},[1])(1)});
 ;
 /****************************************************************************
-    url.js-extensions.js, 
+    url.js-extensions.js,
 
     (c) 2016, FCOO
 
@@ -61136,13 +63104,13 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
     //Overwrite Url._updateAll to handle Security Error in Safari on Mac that prevent more that 100 history updates in 30 sec
     window.Url._updateAll = function(s, push, triggerPopState) {
         try {
-            window.history[push ? "pushState" : "replaceState"](null, "", s);          
+            window.history[push ? "pushState" : "replaceState"](null, "", s);
         }
         catch (e) {
-            //Use 'old' methods - perhaps it will reload the page 
+            //Use 'old' methods - perhaps it will reload the page
             window.location.replace( s );
         }
-        
+
         if (triggerPopState) {
             window.Url.triggerPopStateCb({});
         }
@@ -61152,7 +63120,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
     /******************************************
     anyString(name, notDecoded, search, sep)
-    Copy of Url.queryString with optional input string (search) 
+    Copy of Url.queryString with optional input string (search)
     and separaator (sep)
     ******************************************/
     function anyString(name, notDecoded, search, sep){
@@ -61182,7 +63150,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
     /******************************************
     _correctSearchOrHash
     Check and correct search or hash = ID_VALUE[&ID_VALUE]
-        ID_VALUE = 
+        ID_VALUE =
             ID or
             ID=VALUE or
             ID=VALUE,VALUE2,...,VALUEN
@@ -61192,10 +63160,10 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
     function _correctSearchOrHash( str, preChar ){
         function decodeStr( str ){
             try {
-                decodeURIComponent( str ); 
-                return decodeURIComponent( str ); 
+                decodeURIComponent( str );
+                return decodeURIComponent( str );
             }
-            catch(err) { 
+            catch(err) {
                 return undefined;
             }
         }
@@ -61221,12 +63189,12 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         while (preChar && str.length && (str.charAt(0) == preChar) )
             str = str.slice(1);
 
-        strList = str.split('&'); 
+        strList = str.split('&');
 
         for (i=0; i<strList.length; i++ ){
             idValues = strList[i].split('=');
             id = decodeStr( idValues[0] );
-            values = idValues[1] || undefined; 
+            values = idValues[1] || undefined;
             oneValueOk = false;
             if ( id && (idRegEx.exec(id) == id ) ){
                 //Correct id
@@ -61253,7 +63221,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
                     var firstValue = true;
                     for (j=0; j<valueList.length; j++ ){
                         value = valueList[j];
-                        result += (firstValue ? '=' : ',') + (value ? value : ''); 
+                        result += (firstValue ? '=' : ',') + (value ? value : '');
                         firstValue = false;
                     }
                 }
@@ -61267,30 +63235,30 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
     adjustUrl
     Check and correct the url
     *******************************************/
-    function adjustUrl(){ 
+    function adjustUrl(){
         var oldSearch = window.location.search,
             newSearch = this._correctSearchOrHash( oldSearch, '?' ),
             oldHash   = window.location.hash,
             newHash   = this._correctSearchOrHash( oldHash, '#' ),
-            newUrl    = window.location.pathname +  
-                          (newSearch ? '?' + encodeURI(newSearch) : '') + 
+            newUrl    = window.location.pathname +
+                          (newSearch ? '?' + encodeURI(newSearch) : '') +
                           (newHash   ? '#' + encodeURI(newHash)   : '');
 
-        this._updateAll( newUrl );          
+        this._updateAll( newUrl );
         return newUrl;
     }
 
     /******************************************
     onHashchange( handler [, context])
     Add handler = function( event) to the event "hashchange"
-    Can by omitted if the hash-tag is updated using 
+    Can by omitted if the hash-tag is updated using
     Url.updateHashParam(..) or Url.updateHash(..)
     *******************************************/
     function onHashchange( handler, context ){
         this.hashchange = this.hashchange || [];
         this.hashchange.push( $.proxy(handler, context) );
     }
-   
+
     /******************************************
     hashString
     Same as queryString but for the hash
@@ -61299,19 +63267,19 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
     function hashString(name, notDecoded){
         return anyString(name, notDecoded, window.location.hash, '#');
     }
-    
+
     /******************************************
     parseHash
     Same as parseQuery but for the hash
     *******************************************/
     function parseHash(){
-        return this.parseQuery( this.hash() );    
+        return this.parseQuery( this.hash() );
     }
 
     /******************************************
     updateHash(hashObj, dontCallHashChange)
     Update hash-tag with the id-value in hashObj
-    If dontCallHashChange==true the hashchange-event-functions 
+    If dontCallHashChange==true the hashchange-event-functions
     added with Url.onHashchange( function[, context]) will not be called
     *******************************************/
     function updateHash(hashObj, dontCallHashChange){
@@ -61321,11 +63289,11 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         //return window.location.hash = '#'+newHash;
         return this._updateAll(window.location.pathname + window.location.search + '#' + newHash, false);
     }
-     
+
     /******************************************
     updateHashParam
     Adds, updates or deletes a hash-tag
-    If dontCallHashChange==true the hashchange-event-functions 
+    If dontCallHashChange==true the hashchange-event-functions
     added with Url.onHashchange( function[, context]) will not be called
     *******************************************/
     function updateHashParam(hashParam, value, dontCallHashChange){
@@ -61357,7 +63325,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             if ($.type( jsonObj ) == 'object')
                 return true;
         }
-        catch (e) { 
+        catch (e) {
             return false;
         }
         return false;
@@ -61366,7 +63334,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
     function validateValue( value, validator ){
         //Convert Boolean into String
         if ($.type( value ) === "boolean")
-            value = value ? 'true' : 'false';  
+            value = value ? 'true' : 'false';
         value = value || '';
 
         if (validator === undefined)
@@ -61391,11 +63359,11 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             case 'NOTEMPTY': validator = /.+/;                   break;
 
             //Special case for json-object-string
-            case 'JSON'    : return validateValue( value, validateJSONValue); 
+            case 'JSON'    : return validateValue( value, validateJSONValue);
         }
 
         var regExp = new RegExp(validator),
-            execResult = regExp.exec(value); 
+            execResult = regExp.exec(value);
         return !!(execResult && (execResult.length == 1) && (execResult[0] == value));
     }
 
@@ -61405,26 +63373,26 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
     Parse obj after it is validated and converted acording to
     validatorObj, defaultObj, and options
 
-    validatorObj: object with {id: validator,..}. Failed values are removed 
-    defaultObj  : object with {id: value}. Values to be used if `id` is missing or fails validation 
+    validatorObj: object with {id: validator,..}. Failed values are removed
+    defaultObj  : object with {id: value}. Values to be used if `id` is missing or fails validation
     options: {
         convertBoolean: Boolean (default = true ) If true all values == "true" or "false" are converted into Boolean
         convertNumber : Boolean (default = true ) If true all values representing a number is converted to float
         convertJSON   : Boolean (default = true ) If true all values representing a stringify json-object is converted to a real json-object
-        queryOverHash : Boolean (default = true ) If true and the same id is given in both query-string and hash-tag the value from query-string is returned. 
+        queryOverHash : Boolean (default = true ) If true and the same id is given in both query-string and hash-tag the value from query-string is returned.
                                                   If false the value from hash-tag is returned
     }
     *******************************************/
     function _parseObject( obj, validatorObj, defaultObj, options ){
-        validatorObj = validatorObj || {}; 
-        defaultObj = defaultObj || {}; 
-        options = $.extend( {}, options, { 
-            convertBoolean: true, 
-            convertNumber : true, 
+        validatorObj = validatorObj || {};
+        defaultObj = defaultObj || {};
+        options = $.extend( {}, options, {
+            convertBoolean: true,
+            convertNumber : true,
             convertJSON   : true,
-            queryOverHash : true 
-        }); 
-        
+            queryOverHash : true
+        });
+
         var _this = this;
 
         //Validate all values
@@ -61432,20 +63400,20 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             //Convert '+' to space
             if ( $.type(value) == 'string' )
                 value = value.replace(/\+/g, " ");
-            
+
             //Validate value
             if ( !_this.validateValue( value, validatorObj[id] ) )
-                value = undefined; 
+                value = undefined;
 
             //Convert "true" and false" to Boolean
             if ( options.convertBoolean && ( (value == 'true') || (value == 'false') ) )
               value = (value == 'true');
-                
+
             //Convert String to Float
             if (options.convertNumber && _this.validateValue( value, 'NUMBER') ){
                 value = parseFloat( value );
             }
-                
+
             //Remove deleted keys
             if (value === undefined)
                 delete obj[id];
@@ -61458,8 +63426,8 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             $.each( obj, function( id, value ){
                 if ( _this.validateValue( value, 'JSON') )
                     obj[id] = JSON.parse( value );
-            });        
-        
+            });
+
         //Insert default values
         $.each( defaultObj, function( id, value ){
             if (obj[id] === undefined)
@@ -61479,7 +63447,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         var _this = this,
             queryOverHash = options ? !!options.queryOverHash : true;
 
-        function parseObj( str ){ 
+        function parseObj( str ){
             var obj = _this.parseQuery( str );
 
             //Use anyString(..) to get adjusted value
@@ -61487,14 +63455,14 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
                 obj[id] = anyString(id, false, '?'+str, '?');
             });
 
-            return _this._parseObject( obj, validatorObj, defaultObj, options ); 
+            return _this._parseObject( obj, validatorObj, defaultObj, options );
         }
 
         var queryObj = parseObj( this._correctSearchOrHash( window.location.search, '?' ) ),
             hashObj  = parseObj( this._correctSearchOrHash( window.location.hash,   '#' ) );
 
-        return $.extend( queryOverHash ? hashObj  : queryObj, 
-                         queryOverHash ? queryObj : hashObj   ); 
+        return $.extend( queryOverHash ? hashObj  : queryObj,
+                         queryOverHash ? queryObj : hashObj   );
     }
 
     /******************************************
@@ -61543,11 +63511,11 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
 
     /******************************************
-    Initialize/ready 
+    Initialize/ready
     *******************************************/
-    $(function() { 
+    $(function() {
         window.Url.adjustUrl();
-    }); 
+    });
     //******************************************
 
 
@@ -61556,14 +63524,14 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
 /******************************************
 Variables in window.location making up the full url
-    
+
 var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + window.location.search + window.location.hash;
 
 window.location.protocol
 window.location.host
 window.location.pathname
-window.location.search 
-window.location.hash 
+window.location.search
+window.location.hash
 
 ******************************************/
 
@@ -61675,7 +63643,7 @@ window.location.hash
 }(jQuery, this, document));
 ;
 /****************************************************************************
-    fcoo-settings.js, 
+    fcoo-settings.js,
 
     (c) 2016, FCOO
 
@@ -61686,7 +63654,7 @@ window.location.hash
 
 (function ($, window, document, undefined) {
     "use strict";
-    
+
     //Create fcoo.settings-namespace
     window.fcoo = window.fcoo || {};
     var ns = window.fcoo.settings = window.fcoo.settings || {};
@@ -61697,12 +63665,12 @@ window.location.hash
         storageIdSave  = 'fcoo_settings',
         storageIdForce = 'fcoo_settings_FORCE';
 
-        //Get query settings            
-        try { 
-            queryValues = JSON.parse( window.Url.queryString('settings') ); 
+        //Get query settings
+        try {
+            queryValues = JSON.parse( window.Url.queryString('settings') );
         }
-        catch (e) { 
-            queryValues = {}; 
+        catch (e) {
+            queryValues = {};
         }
 
     /**********************************
@@ -61711,7 +63679,7 @@ window.location.hash
     id [String]
     validator [null] | [String] | [function( value)]. If [String] => using Url.js-extensions validation
     applyFunc [function( value, id, defaultValue )] function to apply the settings for id
-    defaultValue 
+    defaultValue
     globalEvents {String} = Id of global-events in fcoo.events that aare fired when the setting is changed
     onError [function( value, id )] (optional). Called if a new value is invalid according to validator
     **********************************/
@@ -61732,16 +63700,16 @@ window.location.hash
 
     //Extend the prototype
     ns.Setting.prototype = {
-        apply:  function ( newValue, dontCallApplyFunc ){ 
+        apply:  function ( newValue, dontCallApplyFunc ){
                     var id = this.options.id;
                     newValue = (newValue === undefined) ? this.options.defaultValue : newValue;
 
-                    if ( !window.Url.validateValue(''+newValue, this.options.validator) ){ 
+                    if ( !window.Url.validateValue(''+newValue, this.options.validator) ){
                         if (this.options.onError)
                             this.options.onError( newValue, id );
                         newValue = this.options.defaultValue;
                     }
-                    
+
                     this.value = newValue;
 
                     //Set saveValue = newValue unless it is the value from query-string
@@ -61756,28 +63724,28 @@ window.location.hash
                     if (this.options.globalEvents && window.fcoo.events && window.fcoo.events.fire)
                         window.fcoo.events.fire( this.options.globalEvents, id, this.value );
 
-                }    
-    };    
+                }
+    };
 
     /**********************************
     add( options )
     options = {id, validator, applyFunc, defaultValue, globalEvents )
     id [String]
-    validator [null] | [String] | [function( value)]. If [String] = 
-    defaultValue 
+    validator [null] | [String] | [function( value)]. If [String] =
+    defaultValue
     **********************************/
     ns.add = function( options ){
         options = $.extend( {}, { callApply: true }, options );
         var setting = new ns.Setting( options );
         settings[options.id] = setting;
-        setting.apply( loadedValues[setting.options.id], !options.callApply );                       
+        setting.apply( loadedValues[setting.options.id], !options.callApply );
     };
-    
+
     /**********************************
     set( id, value, reload )
     id [String]
     value [any]
-    reload [Boolean] 
+    reload [Boolean]
     **********************************/
     ns.set = function( id, value, reload ){
         var setting = settings[id];
@@ -61792,7 +63760,7 @@ window.location.hash
         if (reload)
           window.location.reload();
     };
-    
+
     /**********************************
     get( id )
     id [String]
@@ -61820,7 +63788,7 @@ window.location.hash
             c: default values
     **********************************/
     ns.load = function(){
-        //1) Try loading from storageIdForce 
+        //1) Try loading from storageIdForce
         var str = window.sessionStorage.getItem( storageIdForce );
         if (str){
             window.sessionStorage.removeItem( storageIdForce );
@@ -61830,7 +63798,7 @@ window.location.hash
             //2) Load settings from...
             //a: url param 'settings = queryValues
 
-            //b: localStorage 'fcoo-settings', 
+            //b: localStorage 'fcoo-settings',
             var savedValues = this.loadFromLocalStorage();
 
             //c: default values - is set by fcoo.settings.add(...)
@@ -61839,14 +63807,14 @@ window.location.hash
             loadedValues =  $.extend( {}, savedValues, queryValues );
         }
 
-        $.each( settings, function( id, setting ){ 
-            setting.apply( loadedValues[id] ); 
+        $.each( settings, function( id, setting ){
+            setting.apply( loadedValues[id] );
         });
     };
-    
+
     /**********************************
     save( toForce, saveStr )
-    Save the settings in 
+    Save the settings in
     toForce == false: localStorage 'fcoo-settings'
     toForce == true : sessionStorage 'fcoo-settings-FORCE'
 
@@ -61855,7 +63823,7 @@ window.location.hash
     ns.save = function( toForce, saveStr ){
         //Save all saveValue from settings
         var settingValuesToSave = this.loadFromLocalStorage();
-        $.each( settings, function( id, setting ){ 
+        $.each( settings, function( id, setting ){
             if (setting.saveValue)
                 settingValuesToSave[ setting.options.id ] = setting.saveValue;
         });
@@ -61874,10 +63842,10 @@ window.location.hash
     ns.load();
 
     /******************************************
-    Initialize/ready 
+    Initialize/ready
     *******************************************/
-//    $(function() { 
-//    }); 
+//    $(function() {
+//    });
 
 }(jQuery, this, document));
 ;
@@ -62288,2145 +64256,6 @@ return index;
 
 }(jQuery, this.i18next, this, document));
 ;
-/*!
- * modernizr v3.3.1
- * Build http://modernizr.com/download?-csschunit-csspointerevents-cssremunit-flexbox-flexboxlegacy-flexboxtweener-flexwrap-fullscreen-touchevents-addtest-atrule-hasevent-mq-prefixed-setclasses-dontmin
- *
- * Copyright (c)
- *  Faruk Ates
- *  Paul Irish
- *  Alex Sexton
- *  Ryan Seddon
- *  Patrick Kettner
- *  Stu Cox
- *  Richard Herrera
-
- * MIT License
- */
-
-/*
- * Modernizr tests which native CSS3 and HTML5 features are available in the
- * current UA and makes the results available to you in two ways: as properties on
- * a global `Modernizr` object, and as classes on the `<html>` element. This
- * information allows you to progressively enhance your pages with a granular level
- * of control over the experience.
-*/
-
-;(function(window, document, undefined){
-  var tests = [];
-  
-
-  /**
-   *
-   * ModernizrProto is the constructor for Modernizr
-   *
-   * @class
-   * @access public
-   */
-
-  var ModernizrProto = {
-    // The current version, dummy
-    _version: '3.3.1',
-
-    // Any settings that don't work as separate modules
-    // can go in here as configuration.
-    _config: {
-      'classPrefix': '',
-      'enableClasses': true,
-      'enableJSClass': true,
-      'usePrefixes': true
-    },
-
-    // Queue of tests
-    _q: [],
-
-    // Stub these for people who are listening
-    on: function(test, cb) {
-      // I don't really think people should do this, but we can
-      // safe guard it a bit.
-      // -- NOTE:: this gets WAY overridden in src/addTest for actual async tests.
-      // This is in case people listen to synchronous tests. I would leave it out,
-      // but the code to *disallow* sync tests in the real version of this
-      // function is actually larger than this.
-      var self = this;
-      setTimeout(function() {
-        cb(self[test]);
-      }, 0);
-    },
-
-    addTest: function(name, fn, options) {
-      tests.push({name: name, fn: fn, options: options});
-    },
-
-    addAsyncTest: function(fn) {
-      tests.push({name: null, fn: fn});
-    }
-  };
-
-  
-
-  // Fake some of Object.create so we can force non test results to be non "own" properties.
-  var Modernizr = function() {};
-  Modernizr.prototype = ModernizrProto;
-
-  // Leak modernizr globally when you `require` it rather than force it here.
-  // Overwrite name so constructor name is nicer :D
-  Modernizr = new Modernizr();
-
-  
-
-  var classes = [];
-  
-
-  /**
-   * is returns a boolean if the typeof an obj is exactly type.
-   *
-   * @access private
-   * @function is
-   * @param {*} obj - A thing we want to check the type of
-   * @param {string} type - A string to compare the typeof against
-   * @returns {boolean}
-   */
-
-  function is(obj, type) {
-    return typeof obj === type;
-  }
-  ;
-
-  /**
-   * Run through all tests and detect their support in the current UA.
-   *
-   * @access private
-   */
-
-  function testRunner() {
-    var featureNames;
-    var feature;
-    var aliasIdx;
-    var result;
-    var nameIdx;
-    var featureName;
-    var featureNameSplit;
-
-    for (var featureIdx in tests) {
-      if (tests.hasOwnProperty(featureIdx)) {
-        featureNames = [];
-        feature = tests[featureIdx];
-        // run the test, throw the return value into the Modernizr,
-        // then based on that boolean, define an appropriate className
-        // and push it into an array of classes we'll join later.
-        //
-        // If there is no name, it's an 'async' test that is run,
-        // but not directly added to the object. That should
-        // be done with a post-run addTest call.
-        if (feature.name) {
-          featureNames.push(feature.name.toLowerCase());
-
-          if (feature.options && feature.options.aliases && feature.options.aliases.length) {
-            // Add all the aliases into the names list
-            for (aliasIdx = 0; aliasIdx < feature.options.aliases.length; aliasIdx++) {
-              featureNames.push(feature.options.aliases[aliasIdx].toLowerCase());
-            }
-          }
-        }
-
-        // Run the test, or use the raw value if it's not a function
-        result = is(feature.fn, 'function') ? feature.fn() : feature.fn;
-
-
-        // Set each of the names on the Modernizr object
-        for (nameIdx = 0; nameIdx < featureNames.length; nameIdx++) {
-          featureName = featureNames[nameIdx];
-          // Support dot properties as sub tests. We don't do checking to make sure
-          // that the implied parent tests have been added. You must call them in
-          // order (either in the test, or make the parent test a dependency).
-          //
-          // Cap it to TWO to make the logic simple and because who needs that kind of subtesting
-          // hashtag famous last words
-          featureNameSplit = featureName.split('.');
-
-          if (featureNameSplit.length === 1) {
-            Modernizr[featureNameSplit[0]] = result;
-          } else {
-            // cast to a Boolean, if not one already
-            /* jshint -W053 */
-            if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
-              Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
-            }
-
-            Modernizr[featureNameSplit[0]][featureNameSplit[1]] = result;
-          }
-
-          classes.push((result ? '' : 'no-') + featureNameSplit.join('-'));
-        }
-      }
-    }
-  }
-  ;
-
-  /**
-   * docElement is a convenience wrapper to grab the root element of the document
-   *
-   * @access private
-   * @returns {HTMLElement|SVGElement} The root element of the document
-   */
-
-  var docElement = document.documentElement;
-  
-
-  /**
-   * A convenience helper to check if the document we are running in is an SVG document
-   *
-   * @access private
-   * @returns {boolean}
-   */
-
-  var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-  
-
-  /**
-   * setClasses takes an array of class names and adds them to the root element
-   *
-   * @access private
-   * @function setClasses
-   * @param {string[]} classes - Array of class names
-   */
-
-  // Pass in an and array of class names, e.g.:
-  //  ['no-webp', 'borderradius', ...]
-  function setClasses(classes) {
-    var className = docElement.className;
-    var classPrefix = Modernizr._config.classPrefix || '';
-
-    if (isSVG) {
-      className = className.baseVal;
-    }
-
-    // Change `no-js` to `js` (independently of the `enableClasses` option)
-    // Handle classPrefix on this too
-    if (Modernizr._config.enableJSClass) {
-      var reJS = new RegExp('(^|\\s)' + classPrefix + 'no-js(\\s|$)');
-      className = className.replace(reJS, '$1' + classPrefix + 'js$2');
-    }
-
-    if (Modernizr._config.enableClasses) {
-      // Add the new classes
-      className += ' ' + classPrefix + classes.join(' ' + classPrefix);
-      isSVG ? docElement.className.baseVal = className : docElement.className = className;
-    }
-
-  }
-
-  ;
-
-  /**
-   * hasOwnProp is a shim for hasOwnProperty that is needed for Safari 2.0 support
-   *
-   * @author kangax
-   * @access private
-   * @function hasOwnProp
-   * @param {object} object - The object to check for a property
-   * @param {string} property - The property to check for
-   * @returns {boolean}
-   */
-
-  // hasOwnProperty shim by kangax needed for Safari 2.0 support
-  var hasOwnProp;
-
-  (function() {
-    var _hasOwnProperty = ({}).hasOwnProperty;
-    /* istanbul ignore else */
-    /* we have no way of testing IE 5.5 or safari 2,
-     * so just assume the else gets hit */
-    if (!is(_hasOwnProperty, 'undefined') && !is(_hasOwnProperty.call, 'undefined')) {
-      hasOwnProp = function(object, property) {
-        return _hasOwnProperty.call(object, property);
-      };
-    }
-    else {
-      hasOwnProp = function(object, property) { /* yes, this can give false positives/negatives, but most of the time we don't care about those */
-        return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
-      };
-    }
-  })();
-
-  
-
-
-   // _l tracks listeners for async tests, as well as tests that execute after the initial run
-  ModernizrProto._l = {};
-
-  /**
-   * Modernizr.on is a way to listen for the completion of async tests. Being
-   * asynchronous, they may not finish before your scripts run. As a result you
-   * will get a possibly false negative `undefined` value.
-   *
-   * @memberof Modernizr
-   * @name Modernizr.on
-   * @access public
-   * @function on
-   * @param {string} feature - String name of the feature detect
-   * @param {function} cb - Callback function returning a Boolean - true if feature is supported, false if not
-   * @example
-   *
-   * ```js
-   * Modernizr.on('flash', function( result ) {
-   *   if (result) {
-   *    // the browser has flash
-   *   } else {
-   *     // the browser does not have flash
-   *   }
-   * });
-   * ```
-   */
-
-  ModernizrProto.on = function(feature, cb) {
-    // Create the list of listeners if it doesn't exist
-    if (!this._l[feature]) {
-      this._l[feature] = [];
-    }
-
-    // Push this test on to the listener list
-    this._l[feature].push(cb);
-
-    // If it's already been resolved, trigger it on next tick
-    if (Modernizr.hasOwnProperty(feature)) {
-      // Next Tick
-      setTimeout(function() {
-        Modernizr._trigger(feature, Modernizr[feature]);
-      }, 0);
-    }
-  };
-
-  /**
-   * _trigger is the private function used to signal test completion and run any
-   * callbacks registered through [Modernizr.on](#modernizr-on)
-   *
-   * @memberof Modernizr
-   * @name Modernizr._trigger
-   * @access private
-   * @function _trigger
-   * @param {string} feature - string name of the feature detect
-   * @param {function|boolean} [res] - A feature detection function, or the boolean =
-   * result of a feature detection function
-   */
-
-  ModernizrProto._trigger = function(feature, res) {
-    if (!this._l[feature]) {
-      return;
-    }
-
-    var cbs = this._l[feature];
-
-    // Force async
-    setTimeout(function() {
-      var i, cb;
-      for (i = 0; i < cbs.length; i++) {
-        cb = cbs[i];
-        cb(res);
-      }
-    }, 0);
-
-    // Don't trigger these again
-    delete this._l[feature];
-  };
-
-  /**
-   * addTest allows you to define your own feature detects that are not currently
-   * included in Modernizr (under the covers it's the exact same code Modernizr
-   * uses for its own [feature detections](https://github.com/Modernizr/Modernizr/tree/master/feature-detects)). Just like the offical detects, the result
-   * will be added onto the Modernizr object, as well as an appropriate className set on
-   * the html element when configured to do so
-   *
-   * @memberof Modernizr
-   * @name Modernizr.addTest
-   * @optionName Modernizr.addTest()
-   * @optionProp addTest
-   * @access public
-   * @function addTest
-   * @param {string|object} feature - The string name of the feature detect, or an
-   * object of feature detect names and test
-   * @param {function|boolean} test - Function returning true if feature is supported,
-   * false if not. Otherwise a boolean representing the results of a feature detection
-   * @example
-   *
-   * The most common way of creating your own feature detects is by calling
-   * `Modernizr.addTest` with a string (preferably just lowercase, without any
-   * punctuation), and a function you want executed that will return a boolean result
-   *
-   * ```js
-   * Modernizr.addTest('itsTuesday', function() {
-   *  var d = new Date();
-   *  return d.getDay() === 2;
-   * });
-   * ```
-   *
-   * When the above is run, it will set Modernizr.itstuesday to `true` when it is tuesday,
-   * and to `false` every other day of the week. One thing to notice is that the names of
-   * feature detect functions are always lowercased when added to the Modernizr object. That
-   * means that `Modernizr.itsTuesday` will not exist, but `Modernizr.itstuesday` will.
-   *
-   *
-   *  Since we only look at the returned value from any feature detection function,
-   *  you do not need to actually use a function. For simple detections, just passing
-   *  in a statement that will return a boolean value works just fine.
-   *
-   * ```js
-   * Modernizr.addTest('hasJquery', 'jQuery' in window);
-   * ```
-   *
-   * Just like before, when the above runs `Modernizr.hasjquery` will be true if
-   * jQuery has been included on the page. Not using a function saves a small amount
-   * of overhead for the browser, as well as making your code much more readable.
-   *
-   * Finally, you also have the ability to pass in an object of feature names and
-   * their tests. This is handy if you want to add multiple detections in one go.
-   * The keys should always be a string, and the value can be either a boolean or
-   * function that returns a boolean.
-   *
-   * ```js
-   * var detects = {
-   *  'hasjquery': 'jQuery' in window,
-   *  'itstuesday': function() {
-   *    var d = new Date();
-   *    return d.getDay() === 2;
-   *  }
-   * }
-   *
-   * Modernizr.addTest(detects);
-   * ```
-   *
-   * There is really no difference between the first methods and this one, it is
-   * just a convenience to let you write more readable code.
-   */
-
-  function addTest(feature, test) {
-
-    if (typeof feature == 'object') {
-      for (var key in feature) {
-        if (hasOwnProp(feature, key)) {
-          addTest(key, feature[ key ]);
-        }
-      }
-    } else {
-
-      feature = feature.toLowerCase();
-      var featureNameSplit = feature.split('.');
-      var last = Modernizr[featureNameSplit[0]];
-
-      // Again, we don't check for parent test existence. Get that right, though.
-      if (featureNameSplit.length == 2) {
-        last = last[featureNameSplit[1]];
-      }
-
-      if (typeof last != 'undefined') {
-        // we're going to quit if you're trying to overwrite an existing test
-        // if we were to allow it, we'd do this:
-        //   var re = new RegExp("\\b(no-)?" + feature + "\\b");
-        //   docElement.className = docElement.className.replace( re, '' );
-        // but, no rly, stuff 'em.
-        return Modernizr;
-      }
-
-      test = typeof test == 'function' ? test() : test;
-
-      // Set the value (this is the magic, right here).
-      if (featureNameSplit.length == 1) {
-        Modernizr[featureNameSplit[0]] = test;
-      } else {
-        // cast to a Boolean, if not one already
-        /* jshint -W053 */
-        if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
-          Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
-        }
-
-        Modernizr[featureNameSplit[0]][featureNameSplit[1]] = test;
-      }
-
-      // Set a single class (either `feature` or `no-feature`)
-      /* jshint -W041 */
-      setClasses([(!!test && test != false ? '' : 'no-') + featureNameSplit.join('-')]);
-      /* jshint +W041 */
-
-      // Trigger the event
-      Modernizr._trigger(feature, test);
-    }
-
-    return Modernizr; // allow chaining.
-  }
-
-  // After all the tests are run, add self to the Modernizr prototype
-  Modernizr._q.push(function() {
-    ModernizrProto.addTest = addTest;
-  });
-
-  
-
-
-  /**
-   * If the browsers follow the spec, then they would expose vendor-specific style as:
-   *   elem.style.WebkitBorderRadius
-   * instead of something like the following, which would be technically incorrect:
-   *   elem.style.webkitBorderRadius
-
-   * Webkit ghosts their properties in lowercase but Opera & Moz do not.
-   * Microsoft uses a lowercase `ms` instead of the correct `Ms` in IE8+
-   *   erik.eae.net/archives/2008/03/10/21.48.10/
-
-   * More here: github.com/Modernizr/Modernizr/issues/issue/21
-   *
-   * @access private
-   * @returns {string} The string representing the vendor-specific style properties
-   */
-
-  var omPrefixes = 'Moz O ms Webkit';
-  
-
-  var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
-  ModernizrProto._cssomPrefixes = cssomPrefixes;
-  
-
-  /**
-   * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
-   * some prefixed form, or false, in the case of an unsupported rule
-   *
-   * @memberof Modernizr
-   * @name Modernizr.atRule
-   * @optionName Modernizr.atRule()
-   * @optionProp atRule
-   * @access public
-   * @function atRule
-   * @param {string} prop - String name of the @-rule to test for
-   * @returns {string|boolean} The string representing the (possibly prefixed)
-   * valid version of the @-rule, or `false` when it is unsupported.
-   * @example
-   * ```js
-   *  var keyframes = Modernizr.atRule('@keyframes');
-   *
-   *  if (keyframes) {
-   *    // keyframes are supported
-   *    // could be `@-webkit-keyframes` or `@keyframes`
-   *  } else {
-   *    // keyframes === `false`
-   *  }
-   * ```
-   *
-   */
-
-  var atRule = function(prop) {
-    var length = prefixes.length;
-    var cssrule = window.CSSRule;
-    var rule;
-
-    if (typeof cssrule === 'undefined') {
-      return undefined;
-    }
-
-    if (!prop) {
-      return false;
-    }
-
-    // remove literal @ from beginning of provided property
-    prop = prop.replace(/^@/, '');
-
-    // CSSRules use underscores instead of dashes
-    rule = prop.replace(/-/g, '_').toUpperCase() + '_RULE';
-
-    if (rule in cssrule) {
-      return '@' + prop;
-    }
-
-    for (var i = 0; i < length; i++) {
-      // prefixes gives us something like -o-, and we want O_
-      var prefix = prefixes[i];
-      var thisRule = prefix.toUpperCase() + '_' + rule;
-
-      if (thisRule in cssrule) {
-        return '@-' + prefix.toLowerCase() + '-' + prop;
-      }
-    }
-
-    return false;
-  };
-
-  ModernizrProto.atRule = atRule;
-
-  
-
-  /**
-   * createElement is a convenience wrapper around document.createElement. Since we
-   * use createElement all over the place, this allows for (slightly) smaller code
-   * as well as abstracting away issues with creating elements in contexts other than
-   * HTML documents (e.g. SVG documents).
-   *
-   * @access private
-   * @function createElement
-   * @returns {HTMLElement|SVGElement} An HTML or SVG element
-   */
-
-  function createElement() {
-    if (typeof document.createElement !== 'function') {
-      // This is the case in IE7, where the type of createElement is "object".
-      // For this reason, we cannot call apply() as Object is not a Function.
-      return document.createElement(arguments[0]);
-    } else if (isSVG) {
-      return document.createElementNS.call(document, 'http://www.w3.org/2000/svg', arguments[0]);
-    } else {
-      return document.createElement.apply(document, arguments);
-    }
-  }
-
-  ;
-
-  /**
-   * Modernizr.hasEvent() detects support for a given event
-   *
-   * @memberof Modernizr
-   * @name Modernizr.hasEvent
-   * @optionName Modernizr.hasEvent()
-   * @optionProp hasEvent
-   * @access public
-   * @function hasEvent
-   * @param  {string|*} eventName - the name of an event to test for (e.g. "resize")
-   * @param  {Element|string} [element=HTMLDivElement] - is the element|document|window|tagName to test on
-   * @returns {boolean}
-   * @example
-   *  `Modernizr.hasEvent` lets you determine if the browser supports a supplied event.
-   *  By default, it does this detection on a div element
-   *
-   * ```js
-   *  hasEvent('blur') // true;
-   * ```
-   *
-   * However, you are able to give an object as a second argument to hasEvent to
-   * detect an event on something other than a div.
-   *
-   * ```js
-   *  hasEvent('devicelight', window) // true;
-   * ```
-   *
-   */
-
-  var hasEvent = (function() {
-
-    // Detect whether event support can be detected via `in`. Test on a DOM element
-    // using the "blur" event b/c it should always exist. bit.ly/event-detection
-    var needsFallback = !('onblur' in document.documentElement);
-
-    function inner(eventName, element) {
-
-      var isSupported;
-      if (!eventName) { return false; }
-      if (!element || typeof element === 'string') {
-        element = createElement(element || 'div');
-      }
-
-      // Testing via the `in` operator is sufficient for modern browsers and IE.
-      // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and
-      // "resize", whereas `in` "catches" those.
-      eventName = 'on' + eventName;
-      isSupported = eventName in element;
-
-      // Fallback technique for old Firefox - bit.ly/event-detection
-      if (!isSupported && needsFallback) {
-        if (!element.setAttribute) {
-          // Switch to generic element if it lacks `setAttribute`.
-          // It could be the `document`, `window`, or something else.
-          element = createElement('div');
-        }
-
-        element.setAttribute(eventName, '');
-        isSupported = typeof element[eventName] === 'function';
-
-        if (element[eventName] !== undefined) {
-          // If property was created, "remove it" by setting value to `undefined`.
-          element[eventName] = undefined;
-        }
-        element.removeAttribute(eventName);
-      }
-
-      return isSupported;
-    }
-    return inner;
-  })();
-
-
-  ModernizrProto.hasEvent = hasEvent;
-  
-
-  /**
-   * getBody returns the body of a document, or an element that can stand in for
-   * the body if a real body does not exist
-   *
-   * @access private
-   * @function getBody
-   * @returns {HTMLElement|SVGElement} Returns the real body of a document, or an
-   * artificially created element that stands in for the body
-   */
-
-  function getBody() {
-    // After page load injecting a fake body doesn't work so check if body exists
-    var body = document.body;
-
-    if (!body) {
-      // Can't use the real body create a fake one.
-      body = createElement(isSVG ? 'svg' : 'body');
-      body.fake = true;
-    }
-
-    return body;
-  }
-
-  ;
-
-  /**
-   * injectElementWithStyles injects an element with style element and some CSS rules
-   *
-   * @access private
-   * @function injectElementWithStyles
-   * @param {string} rule - String representing a css rule
-   * @param {function} callback - A function that is used to test the injected element
-   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
-   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
-   * @returns {boolean}
-   */
-
-  function injectElementWithStyles(rule, callback, nodes, testnames) {
-    var mod = 'modernizr';
-    var style;
-    var ret;
-    var node;
-    var docOverflow;
-    var div = createElement('div');
-    var body = getBody();
-
-    if (parseInt(nodes, 10)) {
-      // In order not to give false positives we create a node for each test
-      // This also allows the method to scale for unspecified uses
-      while (nodes--) {
-        node = createElement('div');
-        node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
-        div.appendChild(node);
-      }
-    }
-
-    style = createElement('style');
-    style.type = 'text/css';
-    style.id = 's' + mod;
-
-    // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
-    // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
-    (!body.fake ? div : body).appendChild(style);
-    body.appendChild(div);
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = rule;
-    } else {
-      style.appendChild(document.createTextNode(rule));
-    }
-    div.id = mod;
-
-    if (body.fake) {
-      //avoid crashing IE8, if background image is used
-      body.style.background = '';
-      //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
-      body.style.overflow = 'hidden';
-      docOverflow = docElement.style.overflow;
-      docElement.style.overflow = 'hidden';
-      docElement.appendChild(body);
-    }
-
-    ret = callback(div, rule);
-    // If this is done after page load we don't want to remove the body so check if body exists
-    if (body.fake) {
-      body.parentNode.removeChild(body);
-      docElement.style.overflow = docOverflow;
-      // Trigger layout so kinetic scrolling isn't disabled in iOS6+
-      docElement.offsetHeight;
-    } else {
-      div.parentNode.removeChild(div);
-    }
-
-    return !!ret;
-
-  }
-
-  ;
-
-  /**
-   * Modernizr.mq tests a given media query, live against the current state of the window
-   * adapted from matchMedia polyfill by Scott Jehl and Paul Irish
-   * gist.github.com/786768
-   *
-   * @memberof Modernizr
-   * @name Modernizr.mq
-   * @optionName Modernizr.mq()
-   * @optionProp mq
-   * @access public
-   * @function mq
-   * @param {string} mq - String of the media query we want to test
-   * @returns {boolean}
-   * @example
-   * Modernizr.mq allows for you to programmatically check if the current browser
-   * window state matches a media query.
-   *
-   * ```js
-   *  var query = Modernizr.mq('(min-width: 900px)');
-   *
-   *  if (query) {
-   *    // the browser window is larger than 900px
-   *  }
-   * ```
-   *
-   * Only valid media queries are supported, therefore you must always include values
-   * with your media query
-   *
-   * ```js
-   * // good
-   *  Modernizr.mq('(min-width: 900px)');
-   *
-   * // bad
-   *  Modernizr.mq('min-width');
-   * ```
-   *
-   * If you would just like to test that media queries are supported in general, use
-   *
-   * ```js
-   *  Modernizr.mq('only all'); // true if MQ are supported, false if not
-   * ```
-   *
-   *
-   * Note that if the browser does not support media queries (e.g. old IE) mq will
-   * always return false.
-   */
-
-  var mq = (function() {
-    var matchMedia = window.matchMedia || window.msMatchMedia;
-    if (matchMedia) {
-      return function(mq) {
-        var mql = matchMedia(mq);
-        return mql && mql.matches || false;
-      };
-    }
-
-    return function(mq) {
-      var bool = false;
-
-      injectElementWithStyles('@media ' + mq + ' { #modernizr { position: absolute; } }', function(node) {
-        bool = (window.getComputedStyle ?
-                window.getComputedStyle(node, null) :
-                node.currentStyle).position == 'absolute';
-      });
-
-      return bool;
-    };
-  })();
-
-
-  ModernizrProto.mq = mq;
-
-  
-
-
-  /**
-   * contains checks to see if a string contains another string
-   *
-   * @access private
-   * @function contains
-   * @param {string} str - The string we want to check for substrings
-   * @param {string} substr - The substring we want to search the first string for
-   * @returns {boolean}
-   */
-
-  function contains(str, substr) {
-    return !!~('' + str).indexOf(substr);
-  }
-
-  ;
-
-  /**
-   * Create our "modernizr" element that we do most feature tests on.
-   *
-   * @access private
-   */
-
-  var modElem = {
-    elem: createElement('modernizr')
-  };
-
-  // Clean up this element
-  Modernizr._q.push(function() {
-    delete modElem.elem;
-  });
-
-  
-
-  var mStyle = {
-    style: modElem.elem.style
-  };
-
-  // kill ref for gc, must happen before mod.elem is removed, so we unshift on to
-  // the front of the queue.
-  Modernizr._q.unshift(function() {
-    delete mStyle.style;
-  });
-
-  
-
-  /**
-   * domToCSS takes a camelCase string and converts it to kebab-case
-   * e.g. boxSizing -> box-sizing
-   *
-   * @access private
-   * @function domToCSS
-   * @param {string} name - String name of camelCase prop we want to convert
-   * @returns {string} The kebab-case version of the supplied name
-   */
-
-  function domToCSS(name) {
-    return name.replace(/([A-Z])/g, function(str, m1) {
-      return '-' + m1.toLowerCase();
-    }).replace(/^ms-/, '-ms-');
-  }
-  ;
-
-  /**
-   * nativeTestProps allows for us to use native feature detection functionality if available.
-   * some prefixed form, or false, in the case of an unsupported rule
-   *
-   * @access private
-   * @function nativeTestProps
-   * @param {array} props - An array of property names
-   * @param {string} value - A string representing the value we want to check via @supports
-   * @returns {boolean|undefined} A boolean when @supports exists, undefined otherwise
-   */
-
-  // Accepts a list of property names and a single value
-  // Returns `undefined` if native detection not available
-  function nativeTestProps(props, value) {
-    var i = props.length;
-    // Start with the JS API: http://www.w3.org/TR/css3-conditional/#the-css-interface
-    if ('CSS' in window && 'supports' in window.CSS) {
-      // Try every prefixed variant of the property
-      while (i--) {
-        if (window.CSS.supports(domToCSS(props[i]), value)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    // Otherwise fall back to at-rule (for Opera 12.x)
-    else if ('CSSSupportsRule' in window) {
-      // Build a condition string for every prefixed variant
-      var conditionText = [];
-      while (i--) {
-        conditionText.push('(' + domToCSS(props[i]) + ':' + value + ')');
-      }
-      conditionText = conditionText.join(' or ');
-      return injectElementWithStyles('@supports (' + conditionText + ') { #modernizr { position: absolute; } }', function(node) {
-        return getComputedStyle(node, null).position == 'absolute';
-      });
-    }
-    return undefined;
-  }
-  ;
-
-  /**
-   * cssToDOM takes a kebab-case string and converts it to camelCase
-   * e.g. box-sizing -> boxSizing
-   *
-   * @access private
-   * @function cssToDOM
-   * @param {string} name - String name of kebab-case prop we want to convert
-   * @returns {string} The camelCase version of the supplied name
-   */
-
-  function cssToDOM(name) {
-    return name.replace(/([a-z])-([a-z])/g, function(str, m1, m2) {
-      return m1 + m2.toUpperCase();
-    }).replace(/^-/, '');
-  }
-  ;
-
-  // testProps is a generic CSS / DOM property test.
-
-  // In testing support for a given CSS property, it's legit to test:
-  //    `elem.style[styleName] !== undefined`
-  // If the property is supported it will return an empty string,
-  // if unsupported it will return undefined.
-
-  // We'll take advantage of this quick test and skip setting a style
-  // on our modernizr element, but instead just testing undefined vs
-  // empty string.
-
-  // Property names can be provided in either camelCase or kebab-case.
-
-  function testProps(props, prefixed, value, skipValueTest) {
-    skipValueTest = is(skipValueTest, 'undefined') ? false : skipValueTest;
-
-    // Try native detect first
-    if (!is(value, 'undefined')) {
-      var result = nativeTestProps(props, value);
-      if (!is(result, 'undefined')) {
-        return result;
-      }
-    }
-
-    // Otherwise do it properly
-    var afterInit, i, propsLength, prop, before;
-
-    // If we don't have a style element, that means we're running async or after
-    // the core tests, so we'll need to create our own elements to use
-
-    // inside of an SVG element, in certain browsers, the `style` element is only
-    // defined for valid tags. Therefore, if `modernizr` does not have one, we
-    // fall back to a less used element and hope for the best.
-    var elems = ['modernizr', 'tspan'];
-    while (!mStyle.style) {
-      afterInit = true;
-      mStyle.modElem = createElement(elems.shift());
-      mStyle.style = mStyle.modElem.style;
-    }
-
-    // Delete the objects if we created them.
-    function cleanElems() {
-      if (afterInit) {
-        delete mStyle.style;
-        delete mStyle.modElem;
-      }
-    }
-
-    propsLength = props.length;
-    for (i = 0; i < propsLength; i++) {
-      prop = props[i];
-      before = mStyle.style[prop];
-
-      if (contains(prop, '-')) {
-        prop = cssToDOM(prop);
-      }
-
-      if (mStyle.style[prop] !== undefined) {
-
-        // If value to test has been passed in, do a set-and-check test.
-        // 0 (integer) is a valid property value, so check that `value` isn't
-        // undefined, rather than just checking it's truthy.
-        if (!skipValueTest && !is(value, 'undefined')) {
-
-          // Needs a try catch block because of old IE. This is slow, but will
-          // be avoided in most cases because `skipValueTest` will be used.
-          try {
-            mStyle.style[prop] = value;
-          } catch (e) {}
-
-          // If the property value has changed, we assume the value used is
-          // supported. If `value` is empty string, it'll fail here (because
-          // it hasn't changed), which matches how browsers have implemented
-          // CSS.supports()
-          if (mStyle.style[prop] != before) {
-            cleanElems();
-            return prefixed == 'pfx' ? prop : true;
-          }
-        }
-        // Otherwise just return true, or the property name if this is a
-        // `prefixed()` call
-        else {
-          cleanElems();
-          return prefixed == 'pfx' ? prop : true;
-        }
-      }
-    }
-    cleanElems();
-    return false;
-  }
-
-  ;
-
-  /**
-   * List of JavaScript DOM values used for tests
-   *
-   * @memberof Modernizr
-   * @name Modernizr._domPrefixes
-   * @optionName Modernizr._domPrefixes
-   * @optionProp domPrefixes
-   * @access public
-   * @example
-   *
-   * Modernizr._domPrefixes is exactly the same as [_prefixes](#modernizr-_prefixes), but rather
-   * than kebab-case properties, all properties are their Capitalized variant
-   *
-   * ```js
-   * Modernizr._domPrefixes === [ "Moz", "O", "ms", "Webkit" ];
-   * ```
-   */
-
-  var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
-  ModernizrProto._domPrefixes = domPrefixes;
-  
-
-  /**
-   * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
-   *
-   * @access private
-   * @function fnBind
-   * @param {function} fn - a function you want to change `this` reference to
-   * @param {object} that - the `this` you want to call the function with
-   * @returns {function} The wrapped version of the supplied function
-   */
-
-  function fnBind(fn, that) {
-    return function() {
-      return fn.apply(that, arguments);
-    };
-  }
-
-  ;
-
-  /**
-   * testDOMProps is a generic DOM property test; if a browser supports
-   *   a certain property, it won't return undefined for it.
-   *
-   * @access private
-   * @function testDOMProps
-   * @param {array.<string>} props - An array of properties to test for
-   * @param {object} obj - An object or Element you want to use to test the parameters again
-   * @param {boolean|object} elem - An Element to bind the property lookup again. Use `false` to prevent the check
-   */
-  function testDOMProps(props, obj, elem) {
-    var item;
-
-    for (var i in props) {
-      if (props[i] in obj) {
-
-        // return the property name as a string
-        if (elem === false) {
-          return props[i];
-        }
-
-        item = obj[props[i]];
-
-        // let's bind a function
-        if (is(item, 'function')) {
-          // bind to obj unless overriden
-          return fnBind(item, elem || obj);
-        }
-
-        // return the unbound function or obj or value
-        return item;
-      }
-    }
-    return false;
-  }
-
-  ;
-
-  /**
-   * testPropsAll tests a list of DOM properties we want to check against.
-   * We specify literally ALL possible (known and/or likely) properties on
-   * the element including the non-vendor prefixed one, for forward-
-   * compatibility.
-   *
-   * @access private
-   * @function testPropsAll
-   * @param {string} prop - A string of the property to test for
-   * @param {string|object} [prefixed] - An object to check the prefixed properties on. Use a string to skip
-   * @param {HTMLElement|SVGElement} [elem] - An element used to test the property and value against
-   * @param {string} [value] - A string of a css value
-   * @param {boolean} [skipValueTest] - An boolean representing if you want to test if value sticks when set
-   */
-  function testPropsAll(prop, prefixed, elem, value, skipValueTest) {
-
-    var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
-    props = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
-
-    // did they call .prefixed('boxSizing') or are we just testing a prop?
-    if (is(prefixed, 'string') || is(prefixed, 'undefined')) {
-      return testProps(props, prefixed, value, skipValueTest);
-
-      // otherwise, they called .prefixed('requestAnimationFrame', window[, elem])
-    } else {
-      props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
-      return testDOMProps(props, prefixed, elem);
-    }
-  }
-
-  // Modernizr.testAllProps() investigates whether a given style property,
-  // or any of its vendor-prefixed variants, is recognized
-  //
-  // Note that the property names must be provided in the camelCase variant.
-  // Modernizr.testAllProps('boxSizing')
-  ModernizrProto.testAllProps = testPropsAll;
-
-  
-
-  /**
-   * prefixed returns the prefixed or nonprefixed property name variant of your input
-   *
-   * @memberof Modernizr
-   * @name Modernizr.prefixed
-   * @optionName Modernizr.prefixed()
-   * @optionProp prefixed
-   * @access public
-   * @function prefixed
-   * @param {string} prop - String name of the property to test for
-   * @param {object} [obj] - An object to test for the prefixed properties on
-   * @param {HTMLElement} [elem] - An element used to test specific properties against
-   * @returns {string|false} The string representing the (possibly prefixed) valid
-   * version of the property, or `false` when it is unsupported.
-   * @example
-   *
-   * Modernizr.prefixed takes a string css value in the DOM style camelCase (as
-   * opposed to the css style kebab-case) form and returns the (possibly prefixed)
-   * version of that property that the browser actually supports.
-   *
-   * For example, in older Firefox...
-   * ```js
-   * prefixed('boxSizing')
-   * ```
-   * returns 'MozBoxSizing'
-   *
-   * In newer Firefox, as well as any other browser that support the unprefixed
-   * version would simply return `boxSizing`. Any browser that does not support
-   * the property at all, it will return `false`.
-   *
-   * By default, prefixed is checked against a DOM element. If you want to check
-   * for a property on another object, just pass it as a second argument
-   *
-   * ```js
-   * var rAF = prefixed('requestAnimationFrame', window);
-   *
-   * raf(function() {
-   *  renderFunction();
-   * })
-   * ```
-   *
-   * Note that this will return _the actual function_ - not the name of the function.
-   * If you need the actual name of the property, pass in `false` as a third argument
-   *
-   * ```js
-   * var rAFProp = prefixed('requestAnimationFrame', window, false);
-   *
-   * rafProp === 'WebkitRequestAnimationFrame' // in older webkit
-   * ```
-   *
-   * One common use case for prefixed is if you're trying to determine which transition
-   * end event to bind to, you might do something like...
-   * ```js
-   * var transEndEventNames = {
-   *     'WebkitTransition' : 'webkitTransitionEnd', * Saf 6, Android Browser
-   *     'MozTransition'    : 'transitionend',       * only for FF < 15
-   *     'transition'       : 'transitionend'        * IE10, Opera, Chrome, FF 15+, Saf 7+
-   * };
-   *
-   * var transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
-   * ```
-   *
-   * If you want a similar lookup, but in kebab-case, you can use [prefixedCSS](#modernizr-prefixedcss).
-   */
-
-  var prefixed = ModernizrProto.prefixed = function(prop, obj, elem) {
-    if (prop.indexOf('@') === 0) {
-      return atRule(prop);
-    }
-
-    if (prop.indexOf('-') != -1) {
-      // Convert kebab-case to camelCase
-      prop = cssToDOM(prop);
-    }
-    if (!obj) {
-      return testPropsAll(prop, 'pfx');
-    } else {
-      // Testing DOM property e.g. Modernizr.prefixed('requestAnimationFrame', window) // 'mozRequestAnimationFrame'
-      return testPropsAll(prop, obj, elem);
-    }
-  };
-
-  
-/*!
-{
-  "name": "Fullscreen API",
-  "property": "fullscreen",
-  "caniuse": "fullscreen",
-  "notes": [{
-    "name": "MDN documentation",
-    "href": "https://developer.mozilla.org/en/API/Fullscreen"
-  }],
-  "polyfills": ["screenfulljs"],
-  "builderAliases": ["fullscreen_api"]
-}
-!*/
-/* DOC
-Detects support for the ability to make the current website take over the user's entire screen
-*/
-
-  // github.com/Modernizr/Modernizr/issues/739
-  Modernizr.addTest('fullscreen', !!(prefixed('exitFullscreen', document, false) || prefixed('cancelFullScreen', document, false)));
-
-
-  /**
-   * List of property values to set for css tests. See ticket #21
-   * http://git.io/vUGl4
-   *
-   * @memberof Modernizr
-   * @name Modernizr._prefixes
-   * @optionName Modernizr._prefixes
-   * @optionProp prefixes
-   * @access public
-   * @example
-   *
-   * Modernizr._prefixes is the internal list of prefixes that we test against
-   * inside of things like [prefixed](#modernizr-prefixed) and [prefixedCSS](#-code-modernizr-prefixedcss). It is simply
-   * an array of kebab-case vendor prefixes you can use within your code.
-   *
-   * Some common use cases include
-   *
-   * Generating all possible prefixed version of a CSS property
-   * ```js
-   * var rule = Modernizr._prefixes.join('transform: rotate(20deg); ');
-   *
-   * rule === 'transform: rotate(20deg); webkit-transform: rotate(20deg); moz-transform: rotate(20deg); o-transform: rotate(20deg); ms-transform: rotate(20deg);'
-   * ```
-   *
-   * Generating all possible prefixed version of a CSS value
-   * ```js
-   * rule = 'display:' +  Modernizr._prefixes.join('flex; display:') + 'flex';
-   *
-   * rule === 'display:flex; display:-webkit-flex; display:-moz-flex; display:-o-flex; display:-ms-flex; display:flex'
-   * ```
-   */
-
-  var prefixes = (ModernizrProto._config.usePrefixes ? ' -webkit- -moz- -o- -ms- '.split(' ') : []);
-
-  // expose these for the plugin API. Look in the source for how to join() them against your input
-  ModernizrProto._prefixes = prefixes;
-
-  
-
-  /**
-   * testStyles injects an element with style element and some CSS rules
-   *
-   * @memberof Modernizr
-   * @name Modernizr.testStyles
-   * @optionName Modernizr.testStyles()
-   * @optionProp testStyles
-   * @access public
-   * @function testStyles
-   * @param {string} rule - String representing a css rule
-   * @param {function} callback - A function that is used to test the injected element
-   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
-   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
-   * @returns {boolean}
-   * @example
-   *
-   * `Modernizr.testStyles` takes a CSS rule and injects it onto the current page
-   * along with (possibly multiple) DOM elements. This lets you check for features
-   * that can not be detected by simply checking the [IDL](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Interface_development_guide/IDL_interface_rules).
-   *
-   * ```js
-   * Modernizr.testStyles('#modernizr { width: 9px; color: papayawhip; }', function(elem, rule) {
-   *   // elem is the first DOM node in the page (by default #modernizr)
-   *   // rule is the first argument you supplied - the CSS rule in string form
-   *
-   *   addTest('widthworks', elem.style.width === '9px')
-   * });
-   * ```
-   *
-   * If your test requires multiple nodes, you can include a third argument
-   * indicating how many additional div elements to include on the page. The
-   * additional nodes are injected as children of the `elem` that is returned as
-   * the first argument to the callback.
-   *
-   * ```js
-   * Modernizr.testStyles('#modernizr {width: 1px}; #modernizr2 {width: 2px}', function(elem) {
-   *   document.getElementById('modernizr').style.width === '1px'; // true
-   *   document.getElementById('modernizr2').style.width === '2px'; // true
-   *   elem.firstChild === document.getElementById('modernizr2'); // true
-   * }, 1);
-   * ```
-   *
-   * By default, all of the additional elements have an ID of `modernizr[n]`, where
-   * `n` is its index (e.g. the first additional, second overall is `#modernizr2`,
-   * the second additional is `#modernizr3`, etc.).
-   * If you want to have more meaningful IDs for your function, you can provide
-   * them as the fourth argument, as an array of strings
-   *
-   * ```js
-   * Modernizr.testStyles('#foo {width: 10px}; #bar {height: 20px}', function(elem) {
-   *   elem.firstChild === document.getElementById('foo'); // true
-   *   elem.lastChild === document.getElementById('bar'); // true
-   * }, 2, ['foo', 'bar']);
-   * ```
-   *
-   */
-
-  var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
-/*!
-{
-  "name": "Touch Events",
-  "property": "touchevents",
-  "caniuse" : "touch",
-  "tags": ["media", "attribute"],
-  "notes": [{
-    "name": "Touch Events spec",
-    "href": "https://www.w3.org/TR/2013/WD-touch-events-20130124/"
-  }],
-  "warnings": [
-    "Indicates if the browser supports the Touch Events spec, and does not necessarily reflect a touchscreen device"
-  ],
-  "knownBugs": [
-    "False-positive on some configurations of Nokia N900",
-    "False-positive on some BlackBerry 6.0 builds – https://github.com/Modernizr/Modernizr/issues/372#issuecomment-3112695"
-  ]
-}
-!*/
-/* DOC
-Indicates if the browser supports the W3C Touch Events API.
-
-This *does not* necessarily reflect a touchscreen device:
-
-* Older touchscreen devices only emulate mouse events
-* Modern IE touch devices implement the Pointer Events API instead: use `Modernizr.pointerevents` to detect support for that
-* Some browsers & OS setups may enable touch APIs when no touchscreen is connected
-* Future browsers may implement other event models for touch interactions
-
-See this article: [You Can't Detect A Touchscreen](http://www.stucox.com/blog/you-cant-detect-a-touchscreen/).
-
-It's recommended to bind both mouse and touch/pointer events simultaneously – see [this HTML5 Rocks tutorial](http://www.html5rocks.com/en/mobile/touchandmouse/).
-
-This test will also return `true` for Firefox 4 Multitouch support.
-*/
-
-  // Chrome (desktop) used to lie about its support on this, but that has since been rectified: http://crbug.com/36415
-  Modernizr.addTest('touchevents', function() {
-    var bool;
-    if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
-      bool = true;
-    } else {
-      // include the 'heartz' as a way to have a non matching MQ to help terminate the join
-      // https://git.io/vznFH
-      var query = ['@media (', prefixes.join('touch-enabled),('), 'heartz', ')', '{#modernizr{top:9px;position:absolute}}'].join('');
-      testStyles(query, function(node) {
-        bool = node.offsetTop === 9;
-      });
-    }
-    return bool;
-  });
-
-/*!
-{
-  "name": "CSS Font ch Units",
-  "authors": ["Ron Waldon (@jokeyrhyme)"],
-  "property": "csschunit",
-  "tags": ["css"],
-  "notes": [{
-    "name": "W3C Spec",
-    "href": "https://www.w3.org/TR/css3-values/#font-relative-lengths"
-  }]
-}
-!*/
-
-  Modernizr.addTest('csschunit', function() {
-    var elemStyle = modElem.elem.style;
-    var supports;
-    try {
-      elemStyle.fontSize = '3ch';
-      supports = elemStyle.fontSize.indexOf('ch') !== -1;
-    } catch (e) {
-      supports = false;
-    }
-    return supports;
-  });
-
-
-  /**
-   * testAllProps determines whether a given CSS property is supported in the browser
-   *
-   * @memberof Modernizr
-   * @name Modernizr.testAllProps
-   * @optionName Modernizr.testAllProps()
-   * @optionProp testAllProps
-   * @access public
-   * @function testAllProps
-   * @param {string} prop - String naming the property to test (either camelCase or kebab-case)
-   * @param {string} [value] - String of the value to test
-   * @param {boolean} [skipValueTest=false] - Whether to skip testing that the value is supported when using non-native detection
-   * @example
-   *
-   * testAllProps determines whether a given CSS property, in some prefixed form,
-   * is supported by the browser.
-   *
-   * ```js
-   * testAllProps('boxSizing')  // true
-   * ```
-   *
-   * It can optionally be given a CSS value in string form to test if a property
-   * value is valid
-   *
-   * ```js
-   * testAllProps('display', 'block') // true
-   * testAllProps('display', 'penguin') // false
-   * ```
-   *
-   * A boolean can be passed as a third parameter to skip the value check when
-   * native detection (@supports) isn't available.
-   *
-   * ```js
-   * testAllProps('shapeOutside', 'content-box', true);
-   * ```
-   */
-
-  function testAllProps(prop, value, skipValueTest) {
-    return testPropsAll(prop, undefined, undefined, value, skipValueTest);
-  }
-  ModernizrProto.testAllProps = testAllProps;
-  
-/*!
-{
-  "name": "Flexbox",
-  "property": "flexbox",
-  "caniuse": "flexbox",
-  "tags": ["css"],
-  "notes": [{
-    "name": "The _new_ flexbox",
-    "href": "http://dev.w3.org/csswg/css3-flexbox"
-  }],
-  "warnings": [
-    "A `true` result for this detect does not imply that the `flex-wrap` property is supported; see the `flexwrap` detect."
-  ]
-}
-!*/
-/* DOC
-Detects support for the Flexible Box Layout model, a.k.a. Flexbox, which allows easy manipulation of layout order and sizing within a container.
-*/
-
-  Modernizr.addTest('flexbox', testAllProps('flexBasis', '1px', true));
-
-/*!
-{
-  "name": "Flexbox (legacy)",
-  "property": "flexboxlegacy",
-  "tags": ["css"],
-  "polyfills": ["flexie"],
-  "notes": [{
-    "name": "The _old_ flexbox",
-    "href": "https://www.w3.org/TR/2009/WD-css3-flexbox-20090723/"
-  }]
-}
-!*/
-
-  Modernizr.addTest('flexboxlegacy', testAllProps('boxDirection', 'reverse', true));
-
-/*!
-{
-  "name": "Flexbox (tweener)",
-  "property": "flexboxtweener",
-  "tags": ["css"],
-  "polyfills": ["flexie"],
-  "notes": [{
-    "name": "The _inbetween_ flexbox",
-    "href": "https://www.w3.org/TR/2011/WD-css3-flexbox-20111129/"
-  }],
-  "warnings": ["This represents an old syntax, not the latest standard syntax."]
-}
-!*/
-
-  Modernizr.addTest('flexboxtweener', testAllProps('flexAlign', 'end', true));
-
-/*!
-{
-  "name": "Flex Line Wrapping",
-  "property": "flexwrap",
-  "tags": ["css", "flexbox"],
-  "notes": [{
-    "name": "W3C Flexible Box Layout spec",
-    "href": "http://dev.w3.org/csswg/css3-flexbox"
-  }],
-  "warnings": [
-    "Does not imply a modern implementation – see documentation."
-  ]
-}
-!*/
-/* DOC
-Detects support for the `flex-wrap` CSS property, part of Flexbox, which isn’t present in all Flexbox implementations (notably Firefox).
-
-This featured in both the 'tweener' syntax (implemented by IE10) and the 'modern' syntax (implemented by others). This detect will return `true` for either of these implementations, as long as the `flex-wrap` property is supported. So to ensure the modern syntax is supported, use together with `Modernizr.flexbox`:
-
-```javascript
-if (Modernizr.flexbox && Modernizr.flexwrap) {
-  // Modern Flexbox with `flex-wrap` supported
-}
-else {
-  // Either old Flexbox syntax, or `flex-wrap` not supported
-}
-```
-*/
-
-  Modernizr.addTest('flexwrap', testAllProps('flexWrap', 'wrap', true));
-
-/*!
-{
-  "name": "CSS Pointer Events",
-  "caniuse": "pointer-events",
-  "property": "csspointerevents",
-  "authors": ["ausi"],
-  "tags": ["css"],
-  "builderAliases": ["css_pointerevents"],
-  "notes": [
-    {
-      "name": "MDN Docs",
-      "href": "https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events"
-    },{
-      "name": "Test Project Page",
-      "href": "https://ausi.github.com/Feature-detection-technique-for-pointer-events/"
-    },{
-      "name": "Test Project Wiki",
-      "href": "https://github.com/ausi/Feature-detection-technique-for-pointer-events/wiki"
-    },
-    {
-      "name": "Related Github Issue",
-      "href": "https://github.com/Modernizr/Modernizr/issues/80"
-    }
-  ]
-}
-!*/
-
-  Modernizr.addTest('csspointerevents', function() {
-    var style = createElement('a').style;
-    style.cssText = 'pointer-events:auto';
-    return style.pointerEvents === 'auto';
-  });
-
-/*!
-{
-  "name": "CSS Font rem Units",
-  "caniuse": "rem",
-  "authors": ["nsfmc"],
-  "property": "cssremunit",
-  "tags": ["css"],
-  "builderAliases": ["css_remunit"],
-  "notes": [{
-    "name": "W3C Spec",
-    "href": "https://www.w3.org/TR/css3-values/#relative0"
-  },{
-    "name": "Font Size with rem by Jonathan Snook",
-    "href": "http://snook.ca/archives/html_and_css/font-size-with-rem"
-  }]
-}
-!*/
-
-  // "The 'rem' unit ('root em') is relative to the computed
-  // value of the 'font-size' value of the root element."
-  // you can test by checking if the prop was ditched
-
-  Modernizr.addTest('cssremunit', function() {
-    var style = createElement('a').style;
-    try {
-      style.fontSize = '3rem';
-    }
-    catch (e) {}
-    return (/rem/).test(style.fontSize);
-  });
-
-
-  // Run each test
-  testRunner();
-
-  // Remove the "no-js" class if it exists
-  setClasses(classes);
-
-  delete ModernizrProto.addTest;
-  delete ModernizrProto.addAsyncTest;
-
-  // Run the things that are supposed to run after the tests
-  for (var i = 0; i < Modernizr._q.length; i++) {
-    Modernizr._q[i]();
-  }
-
-  // Leak Modernizr namespace
-  window.Modernizr = Modernizr;
-
-
-;
-
-})(window, document);
-;
-/***************************************************************************
-    modernizr-device.js,
-
-    (c) 2015, FCOO
-
-    https://github.com/FCOO/modernizr-device
-    https://github.com/FCOO
-
-****************************************************************************/
-
-(function (Modernizr, $, window, document/*, undefined*/) {
-    "use strict";
-
-    var ns = window;
-
-    function ModernizrDevice( options ) {
-        this.VERSION = "4.0.0";
-
-        this.modernizr = Modernizr;
-
-        this.options = $.extend({
-            scale          : false, //When true: Calculate 'best' scaling of font-size
-            referenceScreen: {
-                width       : 1366,
-                height      : 768,
-                diagonal_inc: 20
-            },
-            modernizr: {
-                device: false,  //When true: Add Modernizr-tests desktop mobile phone tablet
-                os    : true,   //When true: Add Modernizr-tests windows ios android
-                ie    : false   //When true: Add Modernizr-tests ie7 ie8 ie9 ie10
-            }
-        }, options || {} );
-
-        //Extend ModernizrDevice with some of the methods from Device.js (c) 2014 Matthew Hudson http://matthewhudson.me/projects/device.js/
-
-        // The client user agent string.
-        // Lowercase, so we can use the more efficient indexOf(), instead of Regex
-        this.userAgent = window.navigator.userAgent.toLowerCase();
-
-        this.find = function(needle) { return this.userAgent.indexOf(needle) !== -1; };
-
-        // Main functions
-        this.ios                = function () { return this.iphone() || this.ipod() || this.ipad(); };
-        this.iphone             = function () { return !this.windows() && this.find('iphone'); };
-        this.ipod               = function () { return this.find('ipod'); };
-        this.ipad               = function () { return this.find('ipad'); };
-        this.android            = function () { return !this.windows() && this.find('android'); };
-        this.androidPhone       = function () { return this.android() && this.find('mobile'); };
-        this.androidTablet      = function () { return this.android() && !this.find('mobile'); };
-        this.blackberry         = function () { return this.find('blackberry') || this.find('bb10') || this.find('rim'); };
-        this.blackberryPhone    = function () { return this.blackberry() && !this.find('tablet'); };
-        this.blackberryTablet   = function () { return this.blackberry() && this.find('tablet'); };
-        this.windows            = function () { return this.find('windows'); };
-        this.windowsPhone       = function () { return this.windows() && this.find('phone'); };
-        this.windowsTablet      = function () { return this.windows() && (this.find('touch') && !this.windowsPhone()); };
-        this.fxos               = function () { return (this.find('(mobile;') || this.find('(tablet;')) && this.find('; rv:'); };
-        this.fxosPhone          = function () { return this.fxos() && this.find('mobile'); };
-        this.fxosTablet         = function () { return this.fxos() && this.find('tablet'); };
-        this.meego              = function () { return this.find('meego'); };
-        this.cordova            = function () { return window.cordova && location.protocol === 'file:'; };
-        this.nodeWebkit         = function () { return typeof window.process === 'object';  };
-        this.mobile             = function () { return this.androidPhone() || this.iphone() || this.ipod() || this.windowsPhone() || this.blackberryPhone() || this.fxosPhone() || this.meego(); };
-        this.tablet             = function () { return this.ipad() || this.androidTablet() || this.blackberryTablet() || this.windowsTablet() || this.fxosTablet(); };
-        this.desktop            = function () { return !this.tablet() && !this.mobile(); };
-
-
-        if (this.options.scale){
-            var docEl = document.documentElement;
-            //this.devicePixelRatio = ('devicePixelRatio' in window) ? window.devicePixelRatio : 'unsupported';
-            this.screen_width  = screen.width;
-            this.screen_height = screen.height;
-
-            this.client_width = docEl.clientWidth;
-            this.client_width = docEl.clientHeight;
-
-            this.screen_width_em  = this.screen_width/16;
-            this.screen_height_em = this.screen_height/16;
-
-            this.dpi = 96;
-            for (var dpi=1; dpi<400; dpi++ )
-                if ( window.Modernizr.mq('(resolution: '+dpi+'dpi)') ){
-                    this.dpi = dpi;
-                    break;
-                }
-
-            this.dpr = window.devicePixelRatio;
-            if (!this.dpr){
-                this.dpr = 1;
-                for (var dpr=1; dpr<4; dpr=dpr+0.1 )
-                    if (
-                        Modernizr.mq('(-webkit-device-pixel-ratio: '+dpr+')') ||
-                        Modernizr.mq('(min--moz-device-pixel-ratio: '+dpr+')') ||
-                        Modernizr.mq('(-o-min-device-pixel-ratio: '+dpr+'/1)')
-                    ){
-                        this.dpr = dpr;
-                        break;
-                    }
-            }
-
-            this.dpr = Math.round(100*this.dpr)/100;
-
-            this.screen_diagonal = Math.sqrt( Math.pow(this.screen_width, 2) + Math.pow(this.screen_height,2) );
-            this.screen_diagonal_inc = this.screen_diagonal/this.dpi; //Best guest !
-
-            //Calculate the diagonal and dpi for the reference screen
-            var ref_screen_diagonal = Math.sqrt( Math.pow(this.options.referenceScreen.width, 2) + Math.pow(this.options.referenceScreen.height, 2) );
-            this.ref_dpi = ref_screen_diagonal/this.options.referenceScreen.diagonal_inc;
-
-            //The scale is best guest for a scale (eq. html.style.font-size=this.scale) of the screen to have elements the same size as on the reference screen
-            this.scale = 100;
-            if ((this.dpr != 1) || (this.dpi != 96))
-                this.scale = Math.sqrt(this.dpi / this.ref_dpi)*100;
-
-        } //if (this.options.scale){...
-
-        //Get a string with browser and version
-        this.browser_version = function() {
-            if(typeof navigator === 'undefined'){
-                return 'unknown';
-            }
-            var ua = navigator.userAgent, tem,
-            M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-            if(/trident/i.test(M[1])){
-                tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-                return 'IE '+(tem[1] || '');
-            }
-            if(M[1]=== 'Chrome'){
-                tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
-                if(tem!== null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
-            }
-            M = M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
-            if((tem= ua.match(/version\/(\d+)/i))!= null)
-                M.splice(1, 1, tem[1]);
-            return M.join(' ');
-        }();
-
-        //Set properties
-        this.isDesktop   = this.desktop();
-        this.isMobile    = this.mobile() || this.tablet();
-        this.isPhone     = this.mobile();
-        this.isTablet    = this.tablet();
-
-        this.isWindows   = this.windows();
-        this.isIos       = this.ios();
-        this.isAndroid   = this.android();
-
-        //Add tests to Modernizr
-        if (this.options.modernizr.device)
-            Modernizr.addTest({
-                desktop: this.isDesktop,
-                mobile : this.isMobile,
-                phone  : this.isPhone,
-                tablet : this.isTablet
-            });
-
-        if (this.options.modernizr.os)
-            Modernizr.addTest({
-                windows: this.isWindows,
-                ios    : this.isIos,
-                android: this.isAndroid
-            });
-
-        if (this.options.modernizr.ie){
-            //Adding test for Internet Explore versions 10
-            Modernizr.addTest('ie10', this.browser_version == 'MSIE 10' );
-
-            //Adding test for Internet Explore versions 11
-            Modernizr.addTest('ie11', this.browser_version == 'IE 11');
-        }
-    }
-
-    // expose access to the constructor
-    ns.ModernizrDevice = ModernizrDevice;
-
-
-}(window.Modernizr, jQuery, this, document));
-
-
-;
-/***************************************************************************
-    modernizr-mediaquery.js,
-
-    (c) 2015, FCOO
-
-    https://github.com/FCOO/modernizr-mediaquery
-    https://github.com/FCOO
-
-****************************************************************************/
-
-(function (Modernizr, $, window, document, undefined) {
-    "use strict";
-
-    //***********************************************
-    // Thank you: https://github.com/sindresorhus/query-string
-    function parseStyleToObject(str) {
-        var styleObject = {};
-        if (typeof str !== 'string')
-            return styleObject;
-
-        str = str.trim().slice(1, -1); // browsers re-quote string style values
-        if (!str)
-            return styleObject;
-
-        styleObject = str.split('&').reduce(function(ret, param) {
-            var parts = param.replace(/\+/g, ' ').split('='),
-                key = parts[0],
-                val = parts[1];
-            key = decodeURIComponent(key);
-
-            // missing `=` should be `null`:
-            // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
-            val = val === undefined ? null : decodeURIComponent(val);
-
-            if (!ret.hasOwnProperty(key)) {
-                ret[key] = val;
-            } else
-                if (Array.isArray(ret[key])) {
-                    ret[key].push(val);
-                } else {
-                    ret[key] = [ret[key], val];
-                }
-            return ret;
-        }, {});
-
-        return styleObject;
-    }
-    //***********************************************
-
-    var ns = window;
-    var plugin_count = 1;
-
-    function ModernizrMediaquery( options ) {
-        this.plugin_count = plugin_count++;
-        this.modernizr           = Modernizr;
-        this.globalEvents        = new window.GlobalEvents();
-        this.defaultHtmlFontSize = this._getHtmlFontSize();
-
-        this.options = $.extend({
-            //Default options
-            VERSION             : "1.3.1",
-            htmlFontSize        : 16,
-            createFIRSTup       : false, //When true the media query FIRST-up (allway display) and no-FIRST-up (allways hidden) are created. MUST MATCH $create-FIRST-up
-            createLASTdown      : false, //When true the media query LAST-down (allway display) and no-LAST-down (allways hidden) are created. MUST MATCH $create-LAST-down
-            useWindowClientDim: true,
-        }, options || {} );
-
-        var _this = this,
-            meta,
-            mediaJSON  = {},
-            minMaxJSON = {};
-
-        if (this.options.breakpoints){
-            //Create mediaJSON and minMaxJSON from options.breakpoints
-            var breakpointList = [];
-            $.each( this.options.breakpoints, function( id, minPx ){
-                breakpointList.push( {id: id, minPx: minPx} );
-            });
-            breakpointList.sort( function( bp1, bp2 ){return bp1 > bp2; });
-
-            $.each( breakpointList, function( index, bp ){
-                //Set max eq next min - 1
-                var id = bp.id,
-                    minPx = bp.minPx,
-                    maxPx = (index == breakpointList.length-1) ? 0 : breakpointList[index+1].minPx-1,
-                    min = minPx / _this.options.htmlFontSize,
-                    minEm = min+'em',
-                    max = maxPx / _this.options.htmlFontSize,
-                    maxEm = max+'em',
-                    mq     = '',
-                    mqUp   = '',
-                    mqDown = '';
-
-                if (min > 0) {
-                    mq   = mq   + ' and (min-width: '+ minEm+')';
-                    mqUp = mqUp + ' and (min-width: '+ minEm+')';
-                }
-                if (max > 0) {
-                    mq     = mq     + ' and (max-width: '+ maxEm+')';
-                    mqDown = mqDown + ' and (max-width: '+ maxEm+')';
-                }
-
-                //Add mediaquery and minMax for id
-                mediaJSON[id]  = 'screen' + mq;
-                minMaxJSON[id] = minPx + 'px_' + maxPx+'px';
-
-                //Add mediaquery for id-down
-                if ((index < breakpointList.length-1) || options.createLASTdown){
-                    mediaJSON[id+'-down']  = 'screen' + mqDown;
-                    minMaxJSON[id+'-down'] = '0_' + maxPx+'px';
-                }
-
-                //Add mediaquery for id-up
-                if (index || options.createFIRSTup){
-                    mediaJSON[id+'-up']  = 'screen' + mqUp;
-                    minMaxJSON[id+'-up'] = minPx + 'px_0';
-                }
-            });
-
-            //Add special values for portrait and landscape
-            mediaJSON['landscape'] = 'screen and (orientation: landscape)';
-            minMaxJSON['landscape'] = '0_1_1';
-            mediaJSON['portrait'] = 'screen and (orientation: portrait)';
-            minMaxJSON['portrait'] = '0_1_0_1';
-        }
-        else {
-            //Reads the different media queries from the css-file using the 'dummy' class "modernizr-mediaquery-media-query"
-            meta      = $('<meta class="modernizr-mediaquery-media-query">').appendTo(document.head);
-            mediaJSON = parseStyleToObject(meta.css('font-family'));
-            meta.remove();
-
-            //Reads the different min-max-intervalls from the css-file using the 'dummy' class "modernizr-mediaquery-min-max"
-            meta      = $('<meta class="modernizr-mediaquery-min-max">').appendTo(document.head);
-            minMaxJSON = parseStyleToObject(meta.css('font-family'));
-            meta.remove();
-        }
-
-        //Convert mediaJSON
-        this.mediaQueryList = [];
-        $.each( mediaJSON, function( id, mq ){
-            _this.mediaQueryList.push({id: id, mq: mq, on: false });
-        });
-
-        //Convert minMaxJSON
-        this.minMaxRatioList = [];
-        $.each( minMaxJSON, function( id, value ){
-            var minMaxRatio = value.split('_');
-            _this.minMaxRatioList.push({
-                id      : id,
-                min     : parseFloat(minMaxRatio[0]),
-                max     : parseFloat(minMaxRatio[1]) || 100000,
-                minRatio: minMaxRatio.length > 2 ? parseFloat(minMaxRatio[2]) : 100000,
-                maxRatio: minMaxRatio.length > 3 ? parseFloat(minMaxRatio[3]) : 100000,
-                on      : false
-            });
-        });
-
-
-        //Set the 'change media-query event'
-        $(window).on('resize.mmq', $.proxy( this._onMediaQuery, this ));
-
-        this._onMediaQuery();
-    }
-
-    // expose access to the constructor
-    ns.ModernizrMediaquery = ModernizrMediaquery;
-
-    //Extend the prototype
-    ns.ModernizrMediaquery.prototype = {
-
-        //Methods to add media-query-events
-        on  : function( mediaQueries, callback, context ){ this.globalEvents.on(   mediaQueries, callback, context ); },
-        off : function( mediaQueries, callback, context ){ this.globalEvents.off(  mediaQueries, callback, context ); },
-        once: function( mediaQueries, callback, context ){ this.globalEvents.once( mediaQueries, callback, context ); },
-        one : function( mediaQueries, callback, context ){ this.globalEvents.one(  mediaQueries, callback, context ); },
-
-
-        setHtmlFontSizePx: function( fontSizePx ){
-            $('html').css('font-size', fontSizePx);
-            $(window).trigger('resize.mmq');
-            return fontSizePx;
-        },
-
-        setHtmlFontSizePercent: function( fontSizePercent ){
-            return this.setHtmlFontSizePx( fontSizePercent/100*this.defaultHtmlFontSize );
-        },
-
-        _getHtmlFontSize: function(){ return parseFloat( $('html').css('font-size') ); },
-
-        _isOn_mediaQueryMode: function( mediaQuery ){
-            return !!this.modernizr.mq(mediaQuery.mq);
-        },
-        _isOn_minMaxRatioMode: function( minMaxRatio ){
-            return ( (this.window_width_em >= (minMaxRatio.min / this.defaultHtmlFontSize)) &&
-                     (this.window_width_em <= (minMaxRatio.max / this.defaultHtmlFontSize)) ) ||
-                   ( (this.window_ratio >= minMaxRatio.minRatio) &&
-                     ( this.window_ratio <= minMaxRatio.maxRatio ) );
-        },
-
-        _onMediaQuery: function( /*event*/ ){
-            var i, list, listElem, isOn, isOnFunc;
-            this.screen_width  = screen.width;
-            this.screen_height = screen.height;
-            this.window_width  = window.innerWidth;
-            this.window_height = window.innerHeight;
-            this.htmlFontSize  = this._getHtmlFontSize();
-
-            this.window_width_em  = this.window_width / this.htmlFontSize;
-            this.window_height_em = this.window_height / this.htmlFontSize;
-
-            this.window_ratio = this.window_width / this.window_height;
-
-            if (this.options.useWindowClientDim){
-                list = this.minMaxRatioList;
-                isOnFunc = $.proxy(this._isOn_minMaxRatioMode, this);
-            }
-            else {
-                list = this.mediaQueryList;
-                isOnFunc = $.proxy(this._isOn_mediaQueryMode, this);
-            }
-
-            for (i=0; i<list.length; i++ ){
-                listElem = list[i];
-                isOn = isOnFunc(listElem);
-                window.modernizrToggle( listElem.id,  isOn );
-
-                if (isOn && !listElem.on)
-                    //Fire event
-                    this.globalEvents.fire(listElem.id, listElem.id, this);
-
-                listElem.on = isOn;
-            }
-        }
-
-
-    };
-
-}(window.Modernizr, jQuery, this, document));
-
-
-;
-/****************************************************************************
-    fcoo-modernizr-mediaquery-device.js,
-
-    (c) 2016, FCOO
-
-    https://github.com/FCOO/fcoo-modernizr-mediaquery-device
-    https://github.com/FCOO
-
-****************************************************************************/
-
-(function (Modernizr, $, window/*, document, undefined*/) {
-    "use strict";
-
-    //Create fcoo-namespace
-    window.fcoo = window.fcoo || {};
-    var ns = window.fcoo;
-
-    //modernizrMediaqueryOptions *MUST* match $html-font-size, $create-FIRST-up, $create-LAST-down and $breakpoints in src/_fcoo-modernizr-mediaquery-variables.scss
-    var modernizrMediaqueryOptions = {
-            useWindowClientDim: true,
-            htmlFontSize      : 16,     // = $html-font-size
-            createFIRSTup     : false,  // = $create-FIRST-up
-            createLASTdown    : false,  // = $create-LAST-down
-            breakpoints       : {       // = $breakpoints
-                "mini"       :    0, //Smaller than small phone portrait (< 320)
-                "xsmall-port":  320, //Small phone portrait (320-479)
-                "xsmall-land":  480, //Small phone landscape (480-576)
-                "small"      :  576, //Small devices
-                "medium"     :  768, //Tablets portrait
-                "large"      :  992, //Table landscape + desttop
-                "xlarge"     : 1200  //Large desttop
-            }
-        };
-
-
-    //Create fcoo.modernizrDevice
-    ns.modernizrDevice = new window.ModernizrDevice({
-        scale: false,
-        modernizr: {
-            device: false,
-            os    : true,
-            ie    : true
-        }
-    });
-
-    //Create fcoo.modernizrMediaquery
-    ns.modernizrMediaquery = new window.ModernizrMediaquery( modernizrMediaqueryOptions );
-
-    //For consistency: 'create' modernizr in window.fcoo
-    ns.modernizr = Modernizr;
-
-    //Add https-test
-    ns.modernizr.addTest('https', window.location.protocol == 'https:');
-
-}(window.Modernizr, jQuery, this, document));
-;
 /****************************************************************************
 	fcoo-moment.js,
 
@@ -64655,7 +64484,7 @@ Greenland
 }(jQuery, moment, i18next, this, document));
 ;
 /****************************************************************************
-    kl.js, 
+    kl.js,
 
     Translation of Moment text to Kalaallisut/Greenlandic (language code = kl)
 
@@ -64663,7 +64492,7 @@ Greenland
 
 moment.defineLocale('kl', {
     parentLocale: 'da',
-  
+
     /* TODO */
 
 
@@ -65362,7 +65191,7 @@ moment.defineLocale('kl', {
         }
     });
 
-    
+
 
 (function() {
         numeral.register('format', 'bps', {
@@ -75124,7 +74953,7 @@ if (typeof define === 'function' && define.amd) {
       _error;
     }
     return results;
-  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{}, 
+  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{},
   defaultOptions = {
     checks:{
       xhr:{
@@ -75147,22 +74976,22 @@ if (typeof define === 'function' && define.amd) {
     deDupBody:!1
   }, grab = function(obj, key) {
     var cur, i, j, len, part, parts;
-    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i], 
+    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i],
     "object" == typeof (cur = cur[part])); i = ++j) ;
     return i === parts.length - 1 ? cur :void 0;
   }, Offline.getOption = function(key) {
     var ref, val;
-    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key), 
+    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key),
     "function" == typeof val ? val() :val;
   }, "function" == typeof window.addEventListener && window.addEventListener("online", function() {
     return setTimeout(Offline.confirmUp, 100);
   }, !1), "function" == typeof window.addEventListener && window.addEventListener("offline", function() {
     return Offline.confirmDown();
   }, !1), Offline.state = "up", Offline.markUp = function() {
-    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up", 
+    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up",
     Offline.trigger("up");
   }, Offline.markDown = function() {
-    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down", 
+    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down",
     Offline.trigger("down");
   }, handlers = {}, Offline.on = function(event, handler, ctx) {
     var e, events, j, len, results;
@@ -75175,7 +75004,7 @@ if (typeof define === 'function' && define.amd) {
     var _handler, i, ref, results;
     if (null != handlers[event]) {
       if (handler) {
-        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i], 
+        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i],
         ref[0], _handler = ref[1], _handler === handler ? results.push(handlers[event].splice(i, 1)) :results.push(i++);
         return results;
       }
@@ -75184,7 +75013,7 @@ if (typeof define === 'function' && define.amd) {
   }, Offline.trigger = function(event) {
     var ctx, handler, j, len, ref, ref1, results;
     if (null != handlers[event]) {
-      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j], 
+      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j],
       ctx = ref1[0], handler = ref1[1], results.push(handler.call(ctx));
       return results;
     }
@@ -75203,8 +75032,8 @@ if (typeof define === 'function' && define.amd) {
     });
   }, Offline.checks = {}, Offline.checks.xhr = function() {
     var xhr;
-    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0), 
-    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")), 
+    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0),
+    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")),
     checkXHR(xhr, Offline.markUp, Offline.markDown);
     try {
       xhr.send();
@@ -75214,7 +75043,7 @@ if (typeof define === 'function' && define.amd) {
     return xhr;
   }, Offline.checks.image = function() {
     var img;
-    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp, 
+    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp,
     img.src = Offline.getOption("checks.image.url");
   }, Offline.checks.down = Offline.markDown, Offline.checks.up = Offline.markUp, Offline.check = function() {
     return Offline.trigger("checking"), Offline.checks[Offline.getOption("checks.active")]();
@@ -75235,13 +75064,13 @@ if (typeof define === 'function' && define.amd) {
       };
     }, _XMLHttpRequest = window.XMLHttpRequest, window.XMLHttpRequest = function(flags) {
       var _overrideMimeType, _setRequestHeader, req;
-      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader, 
+      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader,
       req.headers = {}, req.setRequestHeader = function(name, value) {
         return req.headers[name] = value, _setRequestHeader.call(req, name, value);
       }, _overrideMimeType = req.overrideMimeType, req.overrideMimeType = function(type) {
         return req.mimeType = type, _overrideMimeType.call(req, type);
       }, req;
-    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest, 
+    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest,
     window.XDomainRequest = function() {
       var req;
       return req = new _XDomainRequest(), monitorXHR(req), req;
@@ -75257,37 +75086,37 @@ if (typeof define === 'function' && define.amd) {
   if (!window.Offline) throw new Error("Offline Reconnect brought in without offline.js");
   rc = Offline.reconnect = {}, retryIntv = null, reset = function() {
     var ref;
-    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"), 
+    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"),
     rc.state = "inactive", rc.remaining = rc.delay = null != (ref = Offline.getOption("reconnect.initialDelay")) ? ref :3;
   }, next = function() {
     var delay, ref;
-    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600), 
+    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600),
     rc.remaining = rc.delay = delay;
   }, tick = function() {
-    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"), 
+    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"),
     0 === rc.remaining ? tryNow() :void 0;
   }, tryNow = function() {
-    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting", 
+    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting",
     Offline.check();
   }, down = function() {
-    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"), 
+    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"),
     retryIntv = setInterval(tick, 1e3);
   }, up = function() {
     return null != retryIntv && clearInterval(retryIntv), reset();
   }, nope = function() {
-    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"), 
+    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"),
     rc.state = "waiting", next()) :void 0;
-  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope), 
+  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope),
   Offline.on("up", up);
 }.call(this), function() {
   var clear, flush, held, holdRequest, makeRequest, waitingOnConfirm;
   if (!window.Offline) throw new Error("Requests module brought in without offline.js");
   held = [], waitingOnConfirm = !1, holdRequest = function(req) {
-    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"), 
+    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"),
     "down" !== Offline.state && (waitingOnConfirm = !0), held.push(req);
   }, makeRequest = function(arg) {
     var body, name, password, ref, type, url, user, val, xhr;
-    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password, 
+    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password,
     body = arg.body, !1 !== Offline.getOption("requests")) {
       xhr.abort(), xhr.open(type, url, !0, user, password), ref = xhr.headers;
       for (name in ref) val = ref[name], xhr.setRequestHeader(name, val);
@@ -75298,10 +75127,10 @@ if (typeof define === 'function' && define.amd) {
   }, flush = function() {
     var body, i, key, len, request, requests, url;
     if (!1 !== Offline.getOption("requests")) {
-      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i], 
+      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i],
       url = request.url.replace(/(\?|&)_=[0-9]+/, function(match, chr) {
         return "?" === chr ? chr :"";
-      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(), 
+      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(),
       requests[request.type.toUpperCase() + " - " + url + " - " + body] = request) :requests[request.type.toUpperCase() + " - " + url] = request;
       for (key in requests) request = requests[key], makeRequest(request);
       return clear();
@@ -75317,10 +75146,10 @@ if (typeof define === 'function' && define.amd) {
         return holdRequest(request);
       }, _send = xhr.send, xhr.send = function(body) {
         return request.body = body, _send.apply(xhr, arguments);
-      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1), 
-      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange, 
+      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1),
+      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange,
       xhr.onreadystatechange = function() {
-        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(), 
+        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(),
         "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
       });
     }), Offline.requests = {
@@ -75339,12 +75168,12 @@ if (typeof define === 'function' && define.amd) {
       _error, simulate = !1;
     }
   }
-  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}), 
+  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}),
   Offline.options.checks.active = state);
 }.call(this), function() {
   var RETRY_TEMPLATE, TEMPLATE, _onreadystatechange, addClass, content, createFromHTML, el, flashClass, flashTimeouts, init, removeClass, render, roundTime;
   if (!window.Offline) throw new Error("Offline UI brought in without offline.js");
-  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>', 
+  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>',
   RETRY_TEMPLATE = '<a href class="offline-ui-retry"></a>', createFromHTML = function(html) {
     var el;
     return el = document.createElement("div"), el.innerHTML = html, el.children[0];
@@ -75353,7 +75182,7 @@ if (typeof define === 'function' && define.amd) {
   }, removeClass = function(name) {
     return el.className = el.className.replace(new RegExp("(^| )" + name.split(" ").join("|") + "( |$)", "gi"), " ");
   }, flashTimeouts = {}, flashClass = function(name, time) {
-    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]), 
+    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]),
     flashTimeouts[name] = setTimeout(function() {
       return removeClass(name), delete flashTimeouts[name];
     }, 1e3 * time);
@@ -75365,39 +75194,39 @@ if (typeof define === 'function' && define.amd) {
       minute:60,
       second:1
     };
-    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult), 
+    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult),
     [ val, unit ];
     return [ "now", "" ];
   }, render = function() {
     var button, handler;
-    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)), 
+    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)),
     button = el.querySelector(".offline-ui-retry"), handler = function(e) {
       return e.preventDefault(), Offline.reconnect.tryNow();
-    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)), 
+    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)),
     addClass("offline-ui-" + Offline.state), content = el.querySelector(".offline-ui-content");
   }, init = function() {
     return render(), Offline.on("up", function() {
-      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2), 
+      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2),
       flashClass("offline-ui-up-5s", 5);
     }), Offline.on("down", function() {
-      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2), 
+      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2),
       flashClass("offline-ui-down-5s", 5);
     }), Offline.on("reconnect:connecting", function() {
       return addClass("offline-ui-connecting"), removeClass("offline-ui-waiting");
     }), Offline.on("reconnect:tick", function() {
       var ref, time, unit;
-      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining), 
-      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time), 
+      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining),
+      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time),
       content.setAttribute("data-retry-in-unit", unit);
     }), Offline.on("reconnect:stopped", function() {
-      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null), 
+      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null),
       content.setAttribute("data-retry-in-unit", null);
     }), Offline.on("reconnect:failure", function() {
       return flashClass("offline-ui-reconnect-failed-2s", 2), flashClass("offline-ui-reconnect-failed-5s", 5);
     }), Offline.on("reconnect:success", function() {
       return flashClass("offline-ui-reconnect-succeeded-2s", 2), flashClass("offline-ui-reconnect-succeeded-5s", 5);
     });
-  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange, 
+  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange,
   document.onreadystatechange = function() {
     return "complete" === document.readyState && init(), "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
   });

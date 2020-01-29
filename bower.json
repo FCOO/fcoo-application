@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "7.4.0",
+  "version": "7.4.1",
   "homepage": "https://gitlab.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -54,6 +54,11 @@
     "hammerjs": "^2.0.8"
   },
   "overrides": {
+    "modernizr-mouse-events": {
+      "dependencies": {
+        "fcoo-modernizr-mediaquery-device": "latest"
+      }
+    },
     "offline": {
       "main": [
         "offline.js"
