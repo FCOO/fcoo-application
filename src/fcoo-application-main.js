@@ -194,13 +194,15 @@ Create and manage the main structure for FCOO web applications
         /*
         Set up for detecting resize-start and resize-end of main-container
         */
-        result.options.onResizeStart = result.options.onResizeStart || result.options.onResize;
-        $mainContainer.resize( $.proxy(main_onResize, result) );
 
         //Detect when any of the touch-menus are opened/closed using touch
         var mainResize_onTouchStart  = $.proxy(_mainResize_onTouchStart, result),
-            mainResize_onTouchEnd    = $.proxy(main_onResize, result),
+            mainResize_onTouchEnd    = $.proxy(_mainResize_onTouchEnd, result),
             mainResize_onOpenOrClose = $.proxy(_mainResize_onOpenOrClose, result);
+
+        result.options.onResizeStart = result.options.onResizeStart || result.options.onResize;
+
+        $mainContainer.resize( $.proxy(main_onResize, result) );
 
         $.each(['leftMenu', 'rightMenu', 'topMenu', 'bottomMenu'], function(index, menuId){
             var menu = result[menuId];
@@ -260,11 +262,13 @@ Create and manage the main structure for FCOO web applications
     Functions to detect resize of main-container
     ******************************************************/
     function _mainResize_onTouchStart(){
-        if (!this.resizeStartCalled){
-            if (this.options.onResizeStart)
-                this.options.onResizeStart(this);
-            this.resizeStartCalled = true;
-        }
+        this.resizeWait = true;
+        main_onResize.call(this);
+    }
+
+    function _mainResize_onTouchEnd(){
+        this.resizeWait = false;
+        main_onResize.call(this);
     }
 
     function _mainResize_onOpenOrClose(){
@@ -274,23 +278,24 @@ Create and manage the main structure for FCOO web applications
         }
     }
 
-    var mainResizeTimeoutId = null;
+    var mainResizeTimeoutId;
     function main_onResize(){
-        if (this.checkForResizeEnd){
-            if (mainResizeTimeoutId)
-                window.clearTimeout(mainResizeTimeoutId);
-            mainResizeTimeoutId = window.setTimeout($.proxy(main_onResizeEnd, this), 400);
-        }
+        if (!this.resizeStarted){
+            this.resizeStarted = true;
+            if (this.options.onResizeStart)
+                this.options.onResizeStart(this);
+        };
+        window.clearTimeout(mainResizeTimeoutId);
+        mainResizeTimeoutId = window.setTimeout($.proxy(main_onResizeEnd, this), 400);
     }
 
     function main_onResizeEnd(){
-        if (mainResizeTimeoutId)
-            window.clearTimeout(mainResizeTimeoutId);
-        mainResizeTimeoutId = null;
-        this.checkForResizeEnd = false;
-        this.resizeStartCalled = false;
-
-        if (this.options.onResizeEnd)
-            this.options.onResizeEnd(this);
+        if (this.resizeWait)
+            main_onResize.call(this);
+        else {
+            this.resizeStarted = false;
+            if (this.options.onResizeEnd)
+                this.options.onResizeEnd(this);
+        }
     }
 }(jQuery, this, document));
