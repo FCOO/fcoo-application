@@ -37,8 +37,10 @@ Create and manage the main structure for FCOO web applications
             keepRightMenuButton : false, //Keeps the right menu-button even if leftMenu is null
             bottomMenu          : null,  //Options for bottom-menu. See src/fcoo-application-touch.js
 
-            onResize            : null,  //function(main) to be called when the main-container is finish resizing
-            onResizeDelay       :    0,  //mS before onResize is fired to avoid many calls if the size is changed rapidly
+            onResizeStart       : null,  //function(main) to be called when the main-container starts resizing
+            onResizeFinish      : null,  //function(main) to be called when the main-container is finish resizing
+            onResize            : null,  //Alternative to onResizeFinish
+            onResizeDelay       :  100,  //mS before onResize is fired to avoid many calls if the size is changed rapidly
         }, options );
 
         var result = {
@@ -57,7 +59,6 @@ Create and manage the main structure for FCOO web applications
                 null;
 
         $mainContainer.addClass("main-container");
-
 
         //Append left-menu (if any)
         if (result.options.leftMenu){
@@ -151,7 +152,6 @@ Create and manage the main structure for FCOO web applications
         setHeightAndCreateCloseButton('left', '');
         setHeightAndCreateCloseButton('right', 'ml-auto');
 
-
         //Toggle left and right-menu on click
         if (result.options.leftMenu)
             result.topMenuObject.leftMenu.on('click', $.proxy(result.leftMenu.toggle, result.leftMenu));
@@ -167,23 +167,21 @@ Create and manage the main structure for FCOO web applications
             if (result.options.leftMenu)
                 result.maxSingleMenuWidth = Math.max(result.maxSingleMenuWidth, result.leftMenu.options.menuDimAndSize.size);
 
-            if (result.options.rightMenu){
-                result.rightMenu._onOpen = _onOpen;
+            if (result.options.rightMenu)
                 result.maxSingleMenuWidth = Math.max(result.maxSingleMenuWidth, result.rightMenu.options.menuDimAndSize.size);
-            }
 
             //Left and right points to each other
             if (result.options.leftMenu && result.options.rightMenu){
                 result.totalMenuWidth = result.leftMenu.options.menuDimAndSize.size + result.rightMenu.options.menuDimAndSize.size;
 
-                var _onOpen  = $.proxy(_menu_onOpen, result),
-                    _onClose = $.proxy(_menu_onClose, result);
-                result.leftMenu._onOpen = _onOpen;
-                result.leftMenu._onClose = _onClose;
+                var _onOpen  = $.proxy(_left_right_menu_onOpen, result),
+                    _onClose = $.proxy(_left_right_menu_onClose, result);
+                result.leftMenu._onOpen.push(_onOpen);
+                result.leftMenu._onClose.push(_onClose);
                 result.leftMenu.theOtherMenu = result.rightMenu;
 
-                result.rightMenu._onOpen = _onOpen;
-                result.rightMenu._onClose = _onClose;
+                result.rightMenu._onOpen.push(_onOpen);
+                result.rightMenu._onClose.push(_onClose);
                 result.rightMenu.theOtherMenu = result.leftMenu;
             }
 
@@ -192,27 +190,44 @@ Create and manage the main structure for FCOO web applications
             result._onBodyResize();
         }
 
-        //Methods for main-container resize
-        result.onResizeList = [];
-        if (result.options.onResize)
-            result.onResizeList.push(result.options.onResize);
-        result.onResize = addOnResize;
-        result._onMainResize = _onMainResize;
-        result._onMainResizeFinish = $.proxy(_onMainResizeFinish, result);
-        $mainContainer.resize( $.proxy(_onMainResize, result) );
-        result._onMainResize();
 
+        /*
+        Set up for detecting resize-start and resize-end of main-container
+        */
+        result.options.onResizeStart = result.options.onResizeStart || result.options.onResize;
+        $mainContainer.resize( $.proxy(main_onResize, result) );
+
+        //Detect when any of the touch-menus are opened/closed using touch
+        var mainResize_onTouchStart  = $.proxy(_mainResize_onTouchStart, result),
+            mainResize_onTouchEnd    = $.proxy(main_onResize, result),
+            mainResize_onOpenOrClose = $.proxy(_mainResize_onOpenOrClose, result);
+
+        $.each(['leftMenu', 'rightMenu', 'topMenu', 'bottomMenu'], function(index, menuId){
+            var menu = result[menuId];
+            if (menu){
+                menu.onTouchStart = mainResize_onTouchStart;
+                menu.onTouchEnd   = mainResize_onTouchEnd;
+
+                menu._onOpen.push(mainResize_onOpenOrClose);
+                menu._onClose.push(mainResize_onOpenOrClose);
+            }
+        });
 
         return result;
     }; //end of createMain
 
+
+    /******************************************************
+    Functions to manage the automatic closing of the menu
+    on the other side when a left or right menu is opened
+    ******************************************************/
     var wasForcedToClose = null;
-    function _menu_onOpen(menu){
+    function _left_right_menu_onOpen(menu){
         this.lastOpenedMenu = menu;
         this._onBodyResize();
     }
 
-    function _menu_onClose(menu){
+    function _left_right_menu_onClose(menu){
         if (wasForcedToClose && (wasForcedToClose !== menu))
             wasForcedToClose.open();
         wasForcedToClose = null;
@@ -239,32 +254,43 @@ Create and manage the main structure for FCOO web applications
             if (!newModeIsOver)
                 wasForcedToClose = firstOpenedMenu;
         }
-
     }
 
-    //On-resize main-container
-    function addOnResize( method, context ){
-        this.onResizeList.push($.proxy(method, context));
-    }
-
-    //To prevent calling the events every time the user drag the touch menus a delay is ibsert before calling the events-methods
-    var timeout = null;
-
-    function _onMainResize(){
-        if (this.options.onResizeDelay){
-            if (timeout)
-                window.clearTimeout(timeout);
-            timeout = setTimeout( this._onMainResizeFinish, this.options.onResizeDelay);
+    /******************************************************
+    Functions to detect resize of main-container
+    ******************************************************/
+    function _mainResize_onTouchStart(){
+        if (!this.resizeStartCalled){
+            if (this.options.onResizeStart)
+                this.options.onResizeStart(this);
+            this.resizeStartCalled = true;
         }
-        else
-            this._onMainResizeFinish();
     }
 
-    function _onMainResizeFinish(){
-        var _this = this;
-        $.each(this.onResizeList, function(index, func){
-            func(_this);
-        });
+    function _mainResize_onOpenOrClose(){
+        if (!this.checkForResizeEnd){
+            this.checkForResizeEnd = true;
+            _mainResize_onTouchStart.call(this);
+        }
     }
 
+    var mainResizeTimeoutId = null;
+    function main_onResize(){
+        if (this.checkForResizeEnd){
+            if (mainResizeTimeoutId)
+                window.clearTimeout(mainResizeTimeoutId);
+            mainResizeTimeoutId = window.setTimeout($.proxy(main_onResizeEnd, this), 400);
+        }
+    }
+
+    function main_onResizeEnd(){
+        if (mainResizeTimeoutId)
+            window.clearTimeout(mainResizeTimeoutId);
+        mainResizeTimeoutId = null;
+        this.checkForResizeEnd = false;
+        this.resizeStartCalled = false;
+
+        if (this.options.onResizeEnd)
+            this.options.onResizeEnd(this);
+    }
 }(jQuery, this, document));

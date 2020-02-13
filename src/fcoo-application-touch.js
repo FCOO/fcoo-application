@@ -21,6 +21,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.countStart = 0;
         this.velocity   = 0.0;
 
+        this._onOpen = [];
+        this._onClose = [];
         this.isOpen = false;
 
         this.options = $.extend({
@@ -263,6 +265,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
         //Events on menuHammer
         touchStartMenu: function (event) {
+            var firstTime = !this.isPanning;
             //Detect if only one direction is allowed
             if (
                 //No already panning
@@ -285,6 +288,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             if (this.onlyScroll)
                 return;
 
+            if (firstTime && !this.touchOpening){
+                this.touchOpening = true;
+                if (this.onTouchStart)
+                    this.onTouchStart(this);
+            }
+
             if (this.$container.hasClass('closed'))
                 this.$container.addClass('opening');
 
@@ -302,10 +311,16 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             if (!this.onlyScroll){
                 this.currentPos = this._getEventDelta(event);
                 this.checkMenuState(this.currentPos);
+
+                this.touchOpening = false;
+                if (this.onTouchEnd)
+                    this.onTouchEnd(this);
             }
             this.onlyScroll = false;
             this.isPanning = false;
             this.$menu.unlockScrollbar();
+
+
         },
 
         //Events on maskHammer
@@ -398,11 +413,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 fn.apply(this);
         },
 
-        _onOpen: function(){
-            //Empty
-        },
+        _onOpen: [],
 
         open: function (noAnimation) {
+            var _this = this;
             this.$container.addClass('opened').removeClass('opening closing closed');
             this._copyClassName();
 
@@ -414,14 +428,17 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.$container.removeClass('no-animation');
 
             this.showMask();
-            this._onOpen(this);
+            $.each(this._onOpen, function(index, func){
+                func(_this);
+            });
+
             this._invoke(this.options.onOpen);
         },
 
-        _onClose: function(){
-            //Empty
-        },
+        _onClose: [],
+
         close: function (noAnimation) {
+            var _this = this;
             this.$container.addClass('closed').removeClass('opening closing opened');
             this._copyClassName();
 
@@ -431,7 +448,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.isOpen = false;
             this.hideMask();
 
-            this._onClose(this);
+            $.each(this._onClose, function(index, func){
+                func(_this);
+            });
+
             this._invoke(this.options.onClose);
         },
 

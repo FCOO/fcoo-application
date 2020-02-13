@@ -148,7 +148,9 @@
                 $('<div/>')
                     .css({width: '100%', border:'1px solid red'})
                     .text(i)
-                    .on('click', function(){ alert( $(this).text()); })
+                    .on('click', function(){
+                        //alert( $(this).text());
+                    })
                     .appendTo($rightMenu);
             }
             $rightMenu.append('SLUT');
@@ -187,9 +189,11 @@
                         toggleOnHandleClick: true,
                         hideHandleWhenOpen: true
                     },
-//                    onResizeDelay: 2000,
-                    onResize: function(main){
-                        //Do something
+                    onResizeStart: function(main){
+                        console.log('>>resize START', main.$mainContainer.width());
+                    },
+                    onResizeEnd: function(main){
+                        console.log('>>resize END', main.$mainContainer.width());
                     }
             });
 
