@@ -95,6 +95,7 @@ Create and manage the main structure for FCOO web applications
             bottomMenu          : null,  //Options for bottom-menu. See src/fcoo-application-touch.js
 
             onResizeStart       : null,  //function(main) to be called when the main-container starts resizing
+            onResizing          : null,  //function(main) to be called when the main-container is being resized
             onResizeFinish      : null,  //function(main) to be called when the main-container is finish resizing
             onResize            : null,  //Alternative to onResizeFinish
             onResizeDelay       :  100,  //mS before onResize is fired to avoid many calls if the size is changed rapidly
@@ -336,8 +337,10 @@ Create and manage the main structure for FCOO web applications
         }
     }
 
-    var mainResizeTimeoutId;
+    var mainResizeTimeoutId,
+        mainResizingTimeoutId;
     function main_onResize(){
+
         if (!this.resizeStarted){
             this.resizeStarted = true;
             if (this.options.onResizeStart)
@@ -345,6 +348,14 @@ Create and manage the main structure for FCOO web applications
         };
         window.clearTimeout(mainResizeTimeoutId);
         mainResizeTimeoutId = window.setTimeout($.proxy(main_onResizeEnd, this), 400);
+
+        window.clearTimeout(mainResizingTimeoutId);
+        mainResizingTimeoutId = window.setTimeout($.proxy(main_onResizing, this), 20);
+    }
+
+    function main_onResizing(){
+        if (this.options.onResizing)
+            this.options.onResizing(this);
     }
 
     function main_onResizeEnd(){
@@ -353,6 +364,7 @@ Create and manage the main structure for FCOO web applications
         else {
             this.resizeStarted = false;
             this.checkForResizeEnd = false;
+
             if (this.options.onResizeEnd)
                 this.options.onResizeEnd(this);
         }
