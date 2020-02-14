@@ -274,7 +274,8 @@ Create and manage the main structure for FCOO web applications
     function _mainResize_onOpenOrClose(){
         if (!this.checkForResizeEnd){
             this.checkForResizeEnd = true;
-            _mainResize_onTouchStart.call(this);
+            this.resizeWait = false;
+            main_onResize.call(this);
         }
     }
 
@@ -294,6 +295,7 @@ Create and manage the main structure for FCOO web applications
             main_onResize.call(this);
         else {
             this.resizeStarted = false;
+            this.checkForResizeEnd = false;
             if (this.options.onResizeEnd)
                 this.options.onResizeEnd(this);
         }
