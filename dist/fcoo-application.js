@@ -345,7 +345,7 @@ Create and manage the main structure for FCOO web applications
             this.resizeStarted = true;
             if (this.options.onResizeStart)
                 this.options.onResizeStart(this);
-        };
+        }
         window.clearTimeout(mainResizeTimeoutId);
         mainResizeTimeoutId = window.setTimeout($.proxy(main_onResizeEnd, this), 400);
 
@@ -1835,6 +1835,9 @@ Sections:
     8: Set-up jquery-bootstrap-message for different type of messages
     ************************************************************************
     ***********************************************************************/
+    //Version 7.x: Using ns.settings = localStorage
+    //Version 8.x: Using ns.globalSetting = indexedDB. Check for localStorage and convert
+
     //Add 'messages' to fcoo.settings
     ns.messageStatus = {};
     ns.settings.add({

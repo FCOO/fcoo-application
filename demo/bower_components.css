@@ -20378,6 +20378,8 @@ The default bootstrap structure used for elements in a form is
   margin-bottom: 0;
   padding-top: 0.3125rem;
   padding-bottom: 0.625rem; }
+  .form-group.small-bottom-padding {
+    padding-bottom: 0.3125rem; }
   .form-group hr {
     margin-top: 0;
     margin-bottom: 0.3125rem;
@@ -20388,12 +20390,16 @@ The default bootstrap structure used for elements in a form is
 .form-group.form-group-sm {
   padding-top: 0.25rem;
   padding-bottom: 0.5rem; }
+  .form-group.form-group-sm.small-bottom-padding {
+    padding-bottom: 0.25rem; }
   .form-group.form-group-sm hr.above-label {
     margin-bottom: 0.75rem; }
 
 .form-group.form-group-xs {
   padding-top: 0.125rem;
   padding-bottom: 0.25rem; }
+  .form-group.form-group-xs.small-bottom-padding {
+    padding-bottom: 0.125rem; }
   .form-group.form-group-xs hr.above-label {
     margin-bottom: 0.375rem; }
 
@@ -20538,6 +20544,8 @@ Only supports the html-structure
       z-index: -1;
       background: #fff;
       content: " "; }
+    .input-group .has-float-label > span:empty {
+      display: none; }
   .input-group .has-float-label > input[type="text"] + span {
     cursor: text; }
   .input-group .has-float-label .form-control-with-label::-webkit-input-placeholder, .input-group .has-float-label .form-control-with-label::-moz-placeholder, .input-group .has-float-label .form-control-with-label:-ms-input-placeholder, .input-group .has-float-label .form-control-with-label::placeholder {

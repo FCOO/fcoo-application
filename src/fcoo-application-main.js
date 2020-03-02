@@ -288,7 +288,7 @@ Create and manage the main structure for FCOO web applications
             this.resizeStarted = true;
             if (this.options.onResizeStart)
                 this.options.onResizeStart(this);
-        };
+        }
         window.clearTimeout(mainResizeTimeoutId);
         mainResizeTimeoutId = window.setTimeout($.proxy(main_onResizeEnd, this), 400);
 

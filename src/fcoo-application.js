@@ -663,6 +663,9 @@ Sections:
     8: Set-up jquery-bootstrap-message for different type of messages
     ************************************************************************
     ***********************************************************************/
+    //Version 7.x: Using ns.settings = localStorage
+    //Version 8.x: Using ns.globalSetting = indexedDB. Check for localStorage and convert
+
     //Add 'messages' to fcoo.settings
     ns.messageStatus = {};
     ns.settings.add({
