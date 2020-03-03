@@ -663,15 +663,22 @@ Sections:
     8: Set-up jquery-bootstrap-message for different type of messages
     ************************************************************************
     ***********************************************************************/
-    //Version 7.x: Using ns.settings = localStorage
-    //Version 8.x: Using ns.globalSetting = indexedDB. Check for localStorage and convert
+    //messageGroupList = [] of messageGroup that savess status in globalSetting
+    var messageGroupList =  [];
 
-    //Add 'messages' to fcoo.settings
-    ns.messageStatus = {};
-    ns.settings.add({
+    //Add 'messages' to fcoo.globalSetting
+    ns.globalSetting.add({
         id          : 'messages',
         validator   : function(){ return true; },
-        applyFunc   : function( messageStatus ){ ns.messageStatus = messageStatus; },
+        applyFunc   : function( messageStatus ){
+            $.each(messageGroupList, function(index, messageGroup){
+                $.each(messageGroup.list, function(index2, message){
+                    var newStatus = messageStatus[message.getFCOOId()];
+                    if ((newStatus !== undefined) && (message.getStatus() != newStatus))
+                        message.setStatus(newStatus);
+                });
+            });
+        },
         defaultValue: {},
         callApply   : true
     });
@@ -775,7 +782,7 @@ Sections:
 
                 //Save status as sessionStorage
                 loadStatus: function( message ){
-                    return sessionStorage.getItem( message.getFCOOId()  ) == 'READ';
+                    return sessionStorage.getItem( message.getFCOOId() ) == 'READ';
                 },
                 saveStatus: function( message ){
                     sessionStorage.setItem( message.getFCOOId(), message.options.status ? 'READ' : 'NOTREAD' );
@@ -791,16 +798,17 @@ Sections:
 
                 showStatus: true,
                 vfFormat  : 'date_local',
+                saveStatusInGlobalSetting: true,
 
-                //Status are loaded from and saved in fcoo.settings under 'messages' as {id: date}
+                //Status are loaded from and saved in fcoo.globalSetting under 'messages' as {id: date}
                 loadStatus: function( message ){
-                    ns.settings.get('messages');
-                    return !!ns.messageStatus[message.getFCOOId()];
+                    var messageStatus = ns.globalSetting.get('messages');
+                    return !!messageStatus[message.getFCOOId()];
                 },
                 saveStatus: function( message ){
-                    ns.settings.get('messages');
-                    ns.messageStatus[message.getFCOOId()] = ns.messageStatus[message.getFCOOId()] || moment().format('YYYY-MM-DD');
-                    ns.settings.set('messages', ns.messageStatus);
+                    var messageStatus = ns.globalSetting.get('messages');
+                    messageStatus[message.getFCOOId()] = messageStatus[message.getFCOOId()] || moment().format('YYYY-MM-DD');
+                    ns.globalSetting.set({messages: messageStatus});
                 },
 
             },
@@ -833,8 +841,10 @@ Sections:
 
         var messageGroup = $.bsMessageGroup( options ),
             setMessageGroupLanguage = function(){
-                messageGroup.setLanguage( ns.settings.get('language') );
+                messageGroup.setLanguage( ns.globalSetting.get('language') );
             };
+        if (options.saveStatusInGlobalSetting)
+            messageGroupList.push(messageGroup);
         setMessageGroupLanguage();
 
         //Change language in message-group when the global setting change
