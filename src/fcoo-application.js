@@ -17,6 +17,7 @@ Sections:
    Adding the Piwik Tracking Code
 7: Set up and initialize jquery-bootstrap
 8: Set-up jquery-bootstrap-message for different type of messages
+9: Adjust globalSetting and remove not-ready parts
 ****************************************************************************/
 
 (function ($, window, Promise/*, document, undefined*/) {
@@ -853,6 +854,26 @@ Sections:
         $button.on('click', function(){ messageGroup.asBsModal( true ); });
     };
 
+    /***********************************************************************
+    ************************************************************************
+    9: Adjust globalSetting and remove not-ready parts
+    ************************************************************************
+    ***********************************************************************/
+    //accordionList = {ID}OPTIONS, ID = global event id OPTIONS = corrections to default options
+    var accordionList = {};
+/*
+    window.fcoo.events = new window.GlobalEvents();
+    var globalEventsNames = ['languagechanged', 'timezonechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged']
+*/
+    //Using globe with sub clock as icon for time-zone
+    accordionList[ns.events.TIMEZONECHANGED] = {
+        header: {
+            icon     : ns.iconSub('fa-globe', 'fa-clock'),
+            iconClass: 'fa-fw fa-sub-icons-container'
+        }
+    };
 
-
+    $.each(ns.globalSetting.options.accordionList, function(index, accordionOptions){
+        $.extend(true, ns.globalSetting.options.accordionList[index], accordionList[accordionOptions.id] || {});
+    });
 }(jQuery, this, this.Promise, document));

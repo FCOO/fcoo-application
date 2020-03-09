@@ -169,6 +169,19 @@ Create and manage the top-menu for FCOO web applications
 
         //***************************************************************
         {
+            id: 'setting',
+            create: function( $menu, elementOptions, menuOptions ){
+                var $result = defaultTopMenuButton($menu, {
+                        icon   : 'far fa-cog',
+                        onClick: function(){ ns.globalSetting.edit(); }
+                    });
+                return $result;
+            },
+            priority : 2,
+            rightSide: true
+        },
+        //***************************************************************
+        {
             id: 'help',
             create: function( $menu, elementOptions, menuOptions ){
                 var $result = defaultTopMenuButton($menu, {icon: 'far fa-question-circle'});
@@ -269,6 +282,7 @@ Create and manage the top-menu for FCOO web applications
             messages : null,
             warning  : null,
             search   : true,
+            setting  : true,
             help     : null,
             rightMenu: true
         }, options );

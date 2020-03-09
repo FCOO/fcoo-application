@@ -1,0 +1,96 @@
+/***********************************************
+icons.scss,
+************************************************/
+/*
+sub-icons = a big icon with a small - normally round - icon in the right-bottom corner
+Each of the sub-icons may need a individual class to adjust size and position
+
+The structure is (BIG = the big icon, SUB = the small icon)
+<div class="container-stacked-icons">
+    <i class="fal fa-BIG fa-lg stacked-icon"></i>
+    <i class="fas fa-circle fa-circle-small-right-bottom stacked-icon"></i>
+    <i class="far fa-BIG fa-BIG-small-right-bottom stacked-icon"></i>
+</div>
+
+Different versions of sub-icons can be created using different methods in namespace fcoo.map.icon (see src/fcoo-maps-icon.js)
+
+*/
+
+$sub-position            : -5em / 16;
+$inside-button-adjustment: 2em / 16;
+
+$inside-big-icon-button-adjustment : 3em / 16;
+$inside-big-icon-button-font-factor: .85;
+
+
+//Adjust stacked icon container with sub-icons to be left-align
+.container-stacked-icons.fa-fw.fa-sub-icons-container {
+    position: relative;
+    left    : -1 * $inside-button-adjustment;
+};
+
+//.fa-MAIN-small-right-bottom = the main icon
+.fa-MAIN-small-right-bottom {
+    //Adjust placment when inside a button
+    .btn & {
+        position: relative;
+        right : $inside-button-adjustment;
+        bottom: $inside-button-adjustment;
+    }
+    .btn.big-icon & {
+        font-size: $inside-big-icon-button-font-factor * 1em;
+        right : $inside-big-icon-button-adjustment;
+        bottom: $inside-big-icon-button-adjustment;
+    }
+}
+
+
+
+//.fa-[circle/square]-small-right-bottom = background icon
+.fa-circle-small-right-bottom,
+.fa-square-small-right-bottom {
+    position: relative;
+    right    : $sub-position;
+    bottom   : $sub-position;
+    font-size: 0.9em;
+    color    : $control-bg-color !important;
+    .active & {
+        //When inside a active (selected) button => use active-color
+        color: $control-active-bg-color !important;
+    }
+    .card-header & {
+        //When inside a accordion-headeractive (selected) button => use active-color
+        color: $title-bg-color !important;
+    }
+
+    //Adjust placment when inside a button
+    .btn & {
+        right : $sub-position + $inside-button-adjustment;
+        bottom: $sub-position + $inside-button-adjustment;
+    }
+    .btn.big-icon & {
+        font-size: $inside-big-icon-button-font-factor * 0.9em;
+        right : $sub-position + $inside-big-icon-button-adjustment;
+        bottom: $sub-position + $inside-big-icon-button-adjustment;
+    }
+
+}
+
+.fa-SUB-small-right-bottom {
+    position: relative;
+    right    : $sub-position;
+    bottom   : $sub-position;
+    font-size: 0.95em;
+
+    //Adjust placment when inside a button
+    .btn & {
+        right : $sub-position + $inside-button-adjustment;
+        bottom: $sub-position + $inside-button-adjustment;
+    }
+    .btn.big-icon & {
+        font-size: $inside-big-icon-button-font-factor * 0.95em;
+        right : $sub-position + $inside-big-icon-button-adjustment;
+        bottom: $sub-position + $inside-big-icon-button-adjustment;
+    }
+}
+
