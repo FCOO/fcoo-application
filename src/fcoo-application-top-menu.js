@@ -170,7 +170,7 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'setting',
-            create: function( $menu, elementOptions, menuOptions ){
+            create: function( $menu/*, elementOptions, menuOptions */){
                 var $result = defaultTopMenuButton($menu, {
                         icon   : 'far fa-cog',
                         onClick: function(){ ns.globalSetting.edit(); }

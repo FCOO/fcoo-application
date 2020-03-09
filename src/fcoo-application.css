@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /***********************************************
     fcoo-application.scss,
 
@@ -9,8 +8,6 @@
 
 
 ************************************************/
-/* stylelint-disable order/properties-alphabetical-order */
-/* stylelint-enable */
 /***************************************************
 Import Bootstrap variables and variables and the
 adjustments to Bootstrap from fcoo/jquery-bootstrap
@@ -158,16 +155,13 @@ MARGIN-BOTTOM FOR ELEMENTS IN MODAL
 All elements in modal-windows get same margin-bottom
 ************************************************************/
 .hide {
-  display: none !important;
-}
+  display: none !important; }
 
 .invisible {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 .bold {
-  font-weight: bold;
-}
+  font-weight: bold; }
 
 /*****************************************************
 Global variables
@@ -199,14 +193,14 @@ fcoo-background = background-color = default blue
 fcoo-app-background = background-color = application background-color
 *****************************************************/
 @font-face {
-  font-family: "fcoo-logo";
+  font-family: 'fcoo-logo';
   src: url("fonts/fcoo-logo.woff?ma2cie") format("woff");
   font-weight: normal;
-  font-style: normal;
-}
+  font-style: normal; }
+
 .icon-fcoo-logo, .icon-fcoo-app-logo {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: "fcoo-logo" !important;
+  font-family: 'fcoo-logo' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -216,52 +210,43 @@ fcoo-app-background = background-color = application background-color
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: white;
-}
-.icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
-  content: "";
-}
+  color: white; }
+  .icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
+    content: "\e900"; }
 
 .icon-fcoo-app-logo {
-  color: {APPLICATION_FAVICONCOLOR} !important;
-}
+  color: {APPLICATION_FAVICONCOLOR} !important; }
 
 .fcoo-color, .fcoo-app-color, .top-menu-container .top-menu {
-  color: white;
-}
+  color: white; }
 
 .fcoo-app-color, .top-menu-container .top-menu {
-  color: {APPLICATION_FAVICONCOLOR} !important;
-}
+  color: {APPLICATION_FAVICONCOLOR} !important; }
 
 .fcoo-background, .fcoo-app-background, .top-menu-container .top-menu {
-  background-color: #214b87;
-}
+  background-color: #214b87; }
 
 .fcoo-app-background, .top-menu-container .top-menu {
-  background-color: {APPLICATION_COLOR} !important;
-}
+  background-color: {APPLICATION_COLOR} !important; }
 
 /**********************************************************
 fcoo-name = the font used for the FCOO name in the logo - TODO
 **********************************************************/
 @font-face {
-  font-family: "fcoo-name";
+  font-family: 'fcoo-name';
   src: url("fonts/svenings.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-variant: normal;
   text-transform: none;
   speak: none;
-  line-height: 1;
-}
+  line-height: 1; }
+
 .fcoo-name {
-  font-family: fcoo-name;
-}
+  font-family: fcoo-name; }
 
 .fcoo-name-color {
-  color: #214b87;
-}
+  color: #214b87; }
 
 /*****************************************************
 Style for the <div> covering the page during loading
@@ -271,24 +256,19 @@ LOADING
 Style for the <div> covering the page during loading
 *****************************************************/
 html.loading .hide-for-loading {
-  display: none !important;
-}
+  display: none !important; }
 
 html.no-loading .show-for-loading {
-  display: none !important;
-}
+  display: none !important; }
 
 @keyframes flashingLogo {
   0% {
-    opacity: 1;
-  }
+    opacity: 1; }
   50% {
-    opacity: 0.5;
-  }
+    opacity: .5; }
   100% {
-    opacity: 1;
-  }
-}
+    opacity: 1; } }
+
 div.loading {
   position: absolute;
   left: 0;
@@ -304,49 +284,42 @@ div.loading {
   width: 100%;
   height: 100%;
   opacity: 1;
-  cursor: progress;
-}
-div.loading > div {
-  flex: 0 0 auto;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  cursor: inherit;
-  text-align: center;
-}
-div.loading > div.version {
-  font-family: sans-serif;
-  font-size: 2rem;
-  height: 3rem;
-  margin-bottom: -3rem;
-  background-color: red;
-  color: white;
-}
-div.loading > div.version:empty {
-  visibility: hidden;
-}
-div.loading > div.logo {
-  flex: 1 1 auto;
-  width: 95%;
-  max-width: 600px;
-  background-image: url("images/FCOO_logo_notext.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center center;
-  animation-name: flashingLogo;
-  animation-duration: 2s;
-  animation-fill-mode: both;
-  animation-iteration-count: infinite;
-}
-html.no-loading div.loading {
-  width: 0;
-  height: 0;
-  opacity: 0;
-  transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
-}
-html.no-loading div.loading:before, html.no-loading div.loading > div {
-  display: none !important;
-}
+  cursor: progress; }
+  div.loading > div {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    cursor: inherit;
+    text-align: center; }
+    div.loading > div.version {
+      font-family: sans-serif;
+      font-size: 2rem;
+      height: 3rem;
+      margin-bottom: -3rem;
+      background-color: red;
+      color: white; }
+      div.loading > div.version:empty {
+        visibility: hidden; }
+    div.loading > div.logo {
+      flex: 1 1 auto;
+      width: 95%;
+      max-width: 600px;
+      background-image: url("images/FCOO_logo_notext.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center center;
+      animation-name: flashingLogo;
+      animation-duration: 2s;
+      animation-fill-mode: both;
+      animation-iteration-count: infinite; }
+  html.no-loading div.loading {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s; }
+    html.no-loading div.loading:before, html.no-loading div.loading > div {
+      display: none !important; }
 
 /*****************************************************
 Style for offline.js
@@ -355,16 +328,13 @@ Style for offline.js
 OFFLINE-JS
 *****************************************************/
 .offline-ui {
-  display: none !important;
-}
+  display: none !important; }
 
 html.connected .hide-for-connected {
-  display: none !important;
-}
+  display: none !important; }
 
 html.no-connected .show-for-connected {
-  display: none !important;
-}
+  display: none !important; }
 
 .no-connected-shadow {
   position: absolute;
@@ -375,15 +345,12 @@ html.no-connected .show-for-connected {
   z-index: 2147483646;
   box-shadow: inset 0px 0px 10px 5px red;
   pointer-events: none;
-  opacity: 0;
-}
-.no-connected .no-connected-shadow {
-  opacity: 1;
-}
+  opacity: 0; }
+  .no-connected .no-connected-shadow {
+    opacity: 1; }
 
 .noty-on-top {
-  z-index: 2147483647;
-}
+  z-index: 2147483647; }
 
 /*****************************************************
 Style for html, body and main structure
@@ -400,23 +367,20 @@ devices and to fix the size and prevent any scrolling in body
 html, body {
   height: 100%;
   width: 100%;
-  overflow: hidden;
-}
+  overflow: hidden; }
 
 body {
   padding: 0;
   margin: 0;
   width: -webkit-calc(100% - 0px);
   height: -webkit-calc(100% - 0px);
-  position: fixed;
-}
-body .outer-container, body .main-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
+  position: fixed; }
+  body .outer-container, body .main-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
 
 /*****************************************************
 Style for top menu
@@ -437,87 +401,69 @@ confussions another name is used
   left: 0;
   z-index: 1030;
   opacity: 1;
-  transition: opacity 0.15s ease-in-out;
-  cursor: default;
-}
+  transition: opacity .15s ease-in-out;
+  cursor: default; }
+
 .top-menu-container .top-menu {
   margin-top: 0px;
   padding: 0.25rem;
   font-size: 0.8125rem;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
-.touchevents .top-menu-container .top-menu {
-  font-size: 1rem;
-}
-.top-menu-container .top-menu .top-menu-element-show {
-  display: initial;
-}
-.top-menu-container .top-menu .top-menu-element-hide {
-  display: none;
-}
-.top-menu-container .top-menu > .top-menu-item {
-  flex-shrink: 0;
-  flex-grow: 0;
-}
-.top-menu-container .top-menu > .top-menu-item:not(:first-child) {
-  margin-left: 0.25rem !important;
-}
-.touchevents .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
-  margin-left: 0.3125rem !important;
-}
-.top-menu-container .top-menu .left-side {
-  margin-right: auto !important;
-}
-.top-menu-container .top-menu .right-side {
-  margin-left: auto !important;
-}
-.top-menu-container .top-menu .icon-fcoo-app-logo {
-  padding: 0;
-  margin: 0;
-  line-height: 0.5;
-  opacity: 0.8;
-  font-size: 4em;
-}
-.touchevents .top-menu-container .top-menu .icon-fcoo-app-logo {
-  opacity: 1;
-}
-.top-menu-container .top-menu .icon-fcoo-app-logo:hover, .top-menu-container .top-menu .icon-fcoo-app-logo:focus {
-  opacity: 1;
-}
-.top-menu-container .top-menu .top-menu-header {
-  flex-shrink: 1;
-  flex-grow: 1;
-  text-align: center;
-  font-size: 1.5em;
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.top-menu-container .top-menu .top-menu-header.top-menu-element-hide {
-  display: block;
-  visibility: hidden;
-}
-.top-menu-container .top-menu .form-inline .form-control {
-  padding: 0.25rem 0.25rem;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-  border-right: none;
-  width: 6rem;
-}
-.small-up .top-menu-container .top-menu .form-inline .form-control {
-  width: 10rem;
-}
-.top-menu-container .top-menu .form-inline .form-control.top-menu-element-show + .btn {
-  border-left: none;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-}
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+  .touchevents .top-menu-container .top-menu {
+    font-size: 1rem; }
+  .top-menu-container .top-menu .top-menu-element-show {
+    display: initial; }
+  .top-menu-container .top-menu .top-menu-element-hide {
+    display: none; }
+  .top-menu-container .top-menu > .top-menu-item {
+    flex-shrink: 0;
+    flex-grow: 0; }
+  .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
+    margin-left: 0.25rem !important; }
+    .touchevents .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
+      margin-left: 0.3125rem !important; }
+  .top-menu-container .top-menu .left-side {
+    margin-right: auto !important; }
+  .top-menu-container .top-menu .right-side {
+    margin-left: auto !important; }
+  .top-menu-container .top-menu .icon-fcoo-app-logo {
+    padding: 0;
+    margin: 0;
+    line-height: .5;
+    opacity: 0.8;
+    font-size: 4em; }
+    .touchevents .top-menu-container .top-menu .icon-fcoo-app-logo {
+      opacity: 1; }
+    .top-menu-container .top-menu .icon-fcoo-app-logo:hover, .top-menu-container .top-menu .icon-fcoo-app-logo:focus {
+      opacity: 1; }
+  .top-menu-container .top-menu .top-menu-header {
+    flex-shrink: 1;
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.5em;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+    .top-menu-container .top-menu .top-menu-header.top-menu-element-hide {
+      display: block;
+      visibility: hidden; }
+  .top-menu-container .top-menu .form-inline .form-control {
+    padding: 0.25rem 0.25rem;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: none;
+    width: 6rem; }
+    .small-up .top-menu-container .top-menu .form-inline .form-control {
+      width: 10rem; }
+    .top-menu-container .top-menu .form-inline .form-control.top-menu-element-show + .btn {
+      border-left: none;
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0; }
 
 a.all-read .hide-for-all-read,
 a.no-all-read .show-for-all-read {
-  opacity: 0 !important;
-}
+  opacity: 0 !important; }
 
 /*****************************************************
 TOP-MENU-BTN-SHAKE
@@ -533,164 +479,112 @@ animations and to apply to button even when no-hover
   animation-name: shake-little;
   animation-duration: 10000ms;
   animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
+  animation-iteration-count: infinite; }
 
 @keyframes shake-little {
   .2% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   .4% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   .6% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   .8% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   1.0% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   1.2% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   1.4% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   1.6% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   1.8% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   2.0% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   2.2% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   2.4% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   2.6% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   2.8% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   3.0% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   3.2% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   3.4% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   3.6% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   3.8% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   4.0% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   4.2% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   4.4% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   4.6% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   4.8% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   5.0% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   5.2% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   5.4% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   5.6% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   5.8% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   6.0% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   6.2% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   6.4% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   6.6% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   6.8% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   7.0% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   7.2% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   7.4% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   7.6% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   7.8% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   8.0% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   8.2% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   8.4% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   8.6% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   8.8% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   9.0% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   9.2% {
-    transform: translate(0px, 0px) rotate(0.5deg);
-  }
+    transform: translate(0px, 0px) rotate(0.5deg); }
   9.4% {
-    transform: translate(2px, 2px) rotate(0.5deg);
-  }
+    transform: translate(2px, 2px) rotate(0.5deg); }
   9.6% {
-    transform: translate(0px, 2px) rotate(0.5deg);
-  }
+    transform: translate(0px, 2px) rotate(0.5deg); }
   9.8% {
-    transform: translate(2px, 0px) rotate(0.5deg);
-  }
+    transform: translate(2px, 0px) rotate(0.5deg); }
   10% {
-    transform: translate(0, 0) rotate(0);
-  }
+    transform: translate(0, 0) rotate(0); }
   0%, 100% {
-    transform: translate(0, 0) rotate(0);
-  }
-}
+    transform: translate(0, 0) rotate(0); } }
+
 /*
 @keyframes shake-rotate {
    .2% { transform: translate(0, 0) rotate(7.5deg); }
@@ -756,31 +650,27 @@ Style for 'About FCOO' modal-content
 *****************************************************/
 .about-fcoo {
   text-align: center;
-  font-size: 0.8rem;
-}
-.about-fcoo > * {
-  width: 100%;
-}
-.about-fcoo .application-header {
-  margin: 0;
-  padding: 0.25rem;
-  text-align: center;
-  font-size: 1.21875rem;
-  line-height: 1.21875rem;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.about-fcoo .fcoo-logo {
-  width: 290px;
-  height: 66.9230769231px;
-  margin: 0.75em auto;
-  background-image: url("images/FCOO_logo_260x60.jpg");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: contain;
-}
+  font-size: 0.8rem; }
+  .about-fcoo > * {
+    width: 100%; }
+  .about-fcoo .application-header {
+    margin: 0;
+    padding: 0.25rem;
+    text-align: center;
+    font-size: 1.21875rem;
+    line-height: 1.21875rem;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+  .about-fcoo .fcoo-logo {
+    width: 290px;
+    height: 66.9230769231px;
+    margin: 0.75em auto;
+    background-image: url("images/FCOO_logo_260x60.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain; }
 
 /*****************************************************
 Style for touch menus
@@ -797,87 +687,65 @@ Two modes:
 */
 .touch-menu-container {
   position: absolute;
-  background-color: #fff;
-}
-.touch-menu-container.left {
-  border-right: 1px solid #868e96;
-}
-.touch-menu-container.right {
-  border-left: 1px solid #868e96;
-}
-.touch-menu-container.top {
-  border-bottom: 1px solid #868e96;
-}
-.touch-menu-container.bottom {
-  border-top: 1px solid #868e96;
-}
-.touch-menu-container.mode-over {
-  z-index: 1044;
-}
-.touch-menu-container.mode-over.closed {
-  z-index: 1038;
-}
-.touch-menu-container.mode-over:not(.closed) {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
-}
-.touch-menu-container.mode-side {
-  z-index: 1038;
-}
-.touch-menu-container.opened {
-  transition-property: transform !important;
-  transition-duration: 0.3s !important;
-  transition-timing-function: ease-out !important;
-}
-.touch-menu-container.opened.no-animation {
-  transition: none !important;
-}
-.touch-menu-container.closed {
-  transition-property: transform, z-index !important;
-  transition-duration: 0.3s !important;
-  transition-timing-function: ease-out !important;
-  transform: none !important;
-}
-.touch-menu-container.closed.no-animation {
-  transition: none !important;
-}
-.touch-menu-container .touch-menu {
-  position: relative;
-}
+  background-color: #fff; }
+  .touch-menu-container.left {
+    border-right: 1px solid #868e96; }
+  .touch-menu-container.right {
+    border-left: 1px solid #868e96; }
+  .touch-menu-container.top {
+    border-bottom: 1px solid #868e96; }
+  .touch-menu-container.bottom {
+    border-top: 1px solid #868e96; }
+  .touch-menu-container.mode-over {
+    z-index: 1044; }
+    .touch-menu-container.mode-over.closed {
+      z-index: 1038; }
+    .touch-menu-container.mode-over:not(.closed) {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5); }
+  .touch-menu-container.mode-side {
+    z-index: 1038; }
+  .touch-menu-container.opened {
+    transition-property: transform !important;
+    transition-duration: 0.3s !important;
+    transition-timing-function: ease-out !important; }
+    .touch-menu-container.opened.no-animation {
+      transition: none !important; }
+  .touch-menu-container.closed {
+    transition-property: transform, z-index !important;
+    transition-duration: 0.3s !important;
+    transition-timing-function: ease-out !important;
+    transform: none !important; }
+    .touch-menu-container.closed.no-animation {
+      transition: none !important; }
+  .touch-menu-container .touch-menu {
+    position: relative; }
+
 .touch-menu-handle {
-  position: absolute;
-}
-.touch-menu-handle.left {
-  left: 0;
-}
-.touch-menu-handle.right {
-  right: 0;
-}
-.touch-menu-handle.top {
-  top: 0;
-}
-.touch-menu-handle.bottom {
-  bottom: 0;
-}
-.touch-menu-handle.hide-when-open.opened, .touch-menu-handle.hide-when-open.closing {
-  display: none;
-}
+  position: absolute; }
+  .touch-menu-handle.left {
+    left: 0; }
+  .touch-menu-handle.right {
+    right: 0; }
+  .touch-menu-handle.top {
+    top: 0; }
+  .touch-menu-handle.bottom {
+    bottom: 0; }
+  .touch-menu-handle.hide-when-open.opened, .touch-menu-handle.hide-when-open.closing {
+    display: none; }
 
 .touch-menu-mask {
   position: absolute;
-  opacity: 0;
+  opacity: 0.0;
   z-index: -1;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  background-color: #000;
-}
-.touch-menu-mask.opened, .touch-menu-mask.closed {
-  transition: opacity 0.3s ease-out;
-}
-.touch-menu-mask.visible {
-  z-index: 1043;
-}
+  background-color: #000; }
+  .touch-menu-mask.opened, .touch-menu-mask.closed {
+    transition: opacity 0.3s ease-out; }
+  .touch-menu-mask.visible {
+    z-index: 1043; }
 
 .top-bar {
   font-size: 2rem;
@@ -885,23 +753,19 @@ Two modes:
   line-height: 0.7;
   color: #343a40;
   text-shadow: -1px 0 rgba(255, 255, 255, 0.5), 0 1px rgba(255, 255, 255, 0.5), 1px 0 rgba(255, 255, 255, 0.5), 0 -1px rgba(255, 255, 255, 0.5);
-  background-color: transparent;
-}
+  background-color: transparent; }
 
 .vertical-pre-menu {
   border-bottom: 1px solid #868e96;
   background-color: #f2f2f2;
-  padding: 0.25rem;
-}
+  padding: 0.25rem; }
 
 .neighbour-container {
   transition-property: margin-left, margin-right, margin-top, margin-bottom !important;
   transition-duration: 0.3s !important;
-  transition-timing-function: ease-out !important;
-}
-.neighbour-container.no-animation {
-  transition-duration: 0s !important;
-}
+  transition-timing-function: ease-out !important; }
+  .neighbour-container.no-animation {
+    transition-duration: 0s !important; }
 
 /*****************************************************
 Style for icons
@@ -925,19 +789,17 @@ Different versions of sub-icons can be created using different methods in namesp
 */
 .container-stacked-icons.fa-fw.fa-sub-icons-container {
   position: relative;
-  left: -0.125em;
-}
+  left: -0.125em; }
 
 .btn .fa-MAIN-small-right-bottom {
   position: relative;
   right: 0.125em;
-  bottom: 0.125em;
-}
+  bottom: 0.125em; }
+
 .btn.big-icon .fa-MAIN-small-right-bottom {
   font-size: 0.85em;
   right: 0.1875em;
-  bottom: 0.1875em;
-}
+  bottom: 0.1875em; }
 
 .fa-circle-small-right-bottom,
 .fa-square-small-right-bottom {
@@ -945,43 +807,35 @@ Different versions of sub-icons can be created using different methods in namesp
   right: -0.3125em;
   bottom: -0.3125em;
   font-size: 0.9em;
-  color: #f8f9fa !important;
-}
-.active .fa-circle-small-right-bottom,
-.active .fa-square-small-right-bottom {
-  color: #007bff !important;
-}
-.card-header .fa-circle-small-right-bottom,
-.card-header .fa-square-small-right-bottom {
-  color: #e9ecef !important;
-}
-.btn .fa-circle-small-right-bottom,
-.btn .fa-square-small-right-bottom {
-  right: -0.1875em;
-  bottom: -0.1875em;
-}
-.btn.big-icon .fa-circle-small-right-bottom,
-.btn.big-icon .fa-square-small-right-bottom {
-  font-size: 0.765em;
-  right: -0.125em;
-  bottom: -0.125em;
-}
+  color: #f8f9fa !important; }
+  .active .fa-circle-small-right-bottom, .active
+  .fa-square-small-right-bottom {
+    color: #007bff !important; }
+  .card-header .fa-circle-small-right-bottom, .card-header
+  .fa-square-small-right-bottom {
+    color: #e9ecef !important; }
+  .btn .fa-circle-small-right-bottom, .btn
+  .fa-square-small-right-bottom {
+    right: -0.1875em;
+    bottom: -0.1875em; }
+  .btn.big-icon .fa-circle-small-right-bottom, .btn.big-icon
+  .fa-square-small-right-bottom {
+    font-size: 0.765em;
+    right: -0.125em;
+    bottom: -0.125em; }
 
 .fa-SUB-small-right-bottom {
   position: relative;
   right: -0.3125em;
   bottom: -0.3125em;
-  font-size: 0.95em;
-}
-.btn .fa-SUB-small-right-bottom {
-  right: -0.1875em;
-  bottom: -0.1875em;
-}
-.btn.big-icon .fa-SUB-small-right-bottom {
-  font-size: 0.8075em;
-  right: -0.125em;
-  bottom: -0.125em;
-}
+  font-size: 0.95em; }
+  .btn .fa-SUB-small-right-bottom {
+    right: -0.1875em;
+    bottom: -0.1875em; }
+  .btn.big-icon .fa-SUB-small-right-bottom {
+    font-size: 0.8075em;
+    right: -0.125em;
+    bottom: -0.125em; }
 
 /*****************************************************
 Create classes invisible-for-XX a la hide-for-XX using
@@ -997,32 +851,25 @@ the break-points defined in fcoo-modernizr-mediaquery-device
 
 ************************************************/
 html.mini-down .invisible-for-mini-down {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 html.xsmall-port-down .invisible-for-xsmall-port-down {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 html.xsmall-land-down .invisible-for-xsmall-land-down {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 html.small-down .invisible-for-small-down {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 html.medium-down .invisible-for-medium-down {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 html.large-down .invisible-for-large-down {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 html.xlarge-down .invisible-for-xlarge-down {
-  visibility: hidden;
-}
+  visibility: hidden; }
 
 /*****************************************************
 Special adjustments and bug fix
@@ -1033,7 +880,4 @@ resulting in font-size = 0.65*0.65 = .4225
 This is fixed by overwriting the last size with "inherit"
 */
 .fa-inside-circle.fa-inside-circle {
-  font-size: inherit;
-}
-
-/*# sourceMappingURL=fcoo-application.css.map */
+  font-size: inherit; }

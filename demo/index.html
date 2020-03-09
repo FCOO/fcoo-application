@@ -40,18 +40,13 @@
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
 
+    <script src="../src/fcoo-application-setting.js"></script>
     <script src="../src/fcoo-application-icon.js"></script>
-
     <script src="../src/fcoo-application.js"></script>
-
     <script src="../src/fcoo-application-main.js"></script>
-
     <script src="../src/fcoo-application-top-menu.js"></script>
-
     <script src="../src/fcoo-application-touch.js"></script>
-
     <script src="../src/fcoo-application-about.js"></script>
-
 
 	<script>
         window.bsIsTouch = false;
@@ -236,6 +231,14 @@
     <div id="touchMenuRight">RIGHT MENU</div>
 
 */
+            $.each(['languagechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged', 'timezonechanged'], function(index, id){
+                $.bsModal({
+                    header: 'Test af footer '+id,
+                    content: 'Davs',
+                    footer : fcoo.globalSettingFooter(id, true),
+                    show: true
+                });
+            });
 
             $('<br>').appendTo(main.$mainContainer);
 

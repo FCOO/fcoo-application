@@ -69443,12 +69443,12 @@ window.location.hash
                 text: {da: 'Indstillinger', en:'Settings'}
             },
             accordionList: [
-                {id: ns.events.LANGUAGECHANGED,       header: {icon: 'fa-fw fa-comments',       text: {da: 'Sprog', en: 'Language'}} },
-                {id: ns.events.TIMEZONECHANGED,       header: {icon: 'fa-fw fa-globe',          text: {da: 'Tidszone', en: 'Time Zone'}} },
-                {id: ns.events.DATETIMEFORMATCHANGED, header: {icon: 'fa-fw fa-calendar-alt',   text: {da: 'Dato og klokkeslæt', en: 'Date and Time'}} },
-                {id: ns.events.LATLNGFORMATCHANGED,   header: {icon: 'fa-fw fa-map-marker-alt', text: {da: 'Positioner', en: 'Positions'}} },
-                {id: ns.events.UNITCHANGED,           header: {icon: 'fa-fw fa-ruler',          text: {da: 'Enheder', en: 'Units'}} },
-                {id: ns.events.NUMBERFORMATCHANGED,   header: {                                 text: ['12',{da: 'Talformat', en: 'Number Format'}], textClass:['fa-fw', ''] } },
+                {id: ns.events.LANGUAGECHANGED,       header: {icon: 'fa-comments',       iconClass: 'fa-fw', text: {da: 'Sprog', en: 'Language'}} },
+                {id: ns.events.TIMEZONECHANGED,       header: {icon: 'fa-globe',          iconClass: 'fa-fw', text: {da: 'Tidszone', en: 'Time Zone'}} },
+                {id: ns.events.DATETIMEFORMATCHANGED, header: {icon: 'fa-calendar-alt',   iconClass: 'fa-fw', text: {da: 'Dato og klokkeslæt', en: 'Date and Time'}} },
+                {id: ns.events.LATLNGFORMATCHANGED,   header: {icon: 'fa-map-marker-alt', iconClass: 'fa-fw', text: {da: 'Positioner', en: 'Positions'}} },
+                {id: ns.events.UNITCHANGED,           header: {icon: 'fa-ruler',          iconClass: 'fa-fw', text: {da: 'Enheder', en: 'Units'}} },
+                {id: ns.events.NUMBERFORMATCHANGED,   header: {                                               text: ['12',{da: 'Talformat', en: 'Number Format'}], textClass:['fa-fw', ''] } },
             ]
         });
 
@@ -73725,6 +73725,14 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
     *************************************/
     setGlobalEvent( ns.events.UNITCHANGED );
 
+    ns._globalSetting_edit_UNITCHANGED = function(){
+        ns.globalSetting.edit(ns.events.UNITCHANGED);
+    };
+
+    function unitWithLink(unitStr, withLink){
+        return withLink ? '<a href="javascript:fcoo._globalSetting_edit_UNITCHANGED()">' + unitStr + '</a>' : unitStr;
+    }
+
     //length
     addFormat({
         id    : 'length',
@@ -73744,12 +73752,16 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
                 else
                     nrOfDigits = 0;
             }
-            return ns.number.numberFixedWidth(
-                ns.unit.getLength( value ),
-                nrOfDigits,
-                removeTrailingZeros
-            ) + '&nbsp;' + unitStr;
+            return ns.number.numberFixedWidth(ns.unit.getLength( value ), nrOfDigits, removeTrailingZeros) + '&nbsp;' + unitWithLink(unitStr, options && options.withUnitLink);
 
+        }
+    });
+
+    //length unit
+    addFormat({
+        id    : 'length_unit',
+        format: function(){
+            return unitWithLink(ns.globalSetting.get('length') == ns.unit.NAUTICAL ? 'nm' : 'km', true);
         }
     });
 
@@ -73776,8 +73788,16 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
                 ns.unit.getArea( value ),
                 nrOfDigits,
                 removeTrailingZeros
-            ) + '&nbsp;' + unitStr + '<sup>2</sup>';
+            ) + '&nbsp;' + unitWithLink(unitStr + '<sup>2</sup>', options && options.withUnitLink);
 
+        }
+    });
+
+    //area unit
+    addFormat({
+        id    : 'area_unit',
+        format: function(){
+            return unitWithLink((ns.globalSetting.get('area') == ns.unit.NAUTICAL ? 'nm' : 'km')+'<sup>2</sup>', true);
         }
     });
 
@@ -73792,7 +73812,23 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
                 case ns.unit.GRADIAN: unitStr = '<sup>g</sup>'; break; //or <sup>c</sup> or <sup>R</sup>
             }
 
-            return formatNumber(ns.unit.getDirection( value ), options ) +  unitStr;
+            return formatNumber(ns.unit.getDirection( value ), options ) +  unitWithLink(unitStr, options.withUnit);
+        }
+    });
+
+    //speed and direction unit - also updated on language changed
+    setGlobalEvent( ns.events.UNITCHANGED + ' ' + ns.events.LANGUAGECHANGED );
+
+    //direction unit
+    addFormat({
+        id    : 'direction_unit',
+        format: function(){
+            var unitStr;
+            switch (ns.globalSetting.get('direction')){
+                case ns.unit.DEGREE : unitStr = window.i18next.sentence({ da:'Grader (0-360<sup>o</sup>)',   en:'Degree (0-360<sup>o</sup>)'  }); break;
+                case ns.unit.GRADIAN: unitStr = window.i18next.sentence({ da:'Nygrader (0-400<sup>g</sup>)', en:'Gradian (0-400<sup>g</sup>)' }); break;
+            }
+            return unitWithLink(unitStr, true);
         }
     });
 
@@ -73809,7 +73845,20 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
                 case ns.unit.NAUTICAL: unitStr = 'kn'; break; //window.i18next.sentence( {da:'knob', en:'knots'}); break;
             }
 
-            return ns.number.numberFixedWidth(ns.unit.getSpeed( value ), 3, removeTrailingZeros) + '&nbsp;' + unitStr;
+            return ns.number.numberFixedWidth(ns.unit.getSpeed( value ), 3, removeTrailingZeros) + '&nbsp;' + unitWithLink(unitStr, options && options.withUnitLink);
+        }
+    });
+    //Speed unit
+    addFormat({
+        id    : 'speed_unit',
+        format: function(){
+            var unitStr = '';
+            switch (ns.globalSetting.get('speed')){
+                case ns.unit.METRIC  : unitStr = 'm/s'; break;
+                case ns.unit.METRIC2 : unitStr = window.i18next.sentence( {da:'km/t', en:'km/h'}); break;
+                case ns.unit.NAUTICAL: unitStr = window.i18next.sentence( {da:'knob', en:'knots'}); break;
+            }
+            return unitWithLink(unitStr, true);
         }
     });
 
