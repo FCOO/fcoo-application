@@ -37,7 +37,7 @@ Determinate if the application is running in "*standalone mode*". The app operat
 - the `display-mode` is `standalone` (Android).
 For standalone apps we use localStorage for persisting state.
 
-#### `window.fcoo.settings` [Object]
+#### `window.fcoo.globalSetting` [Object]
 Contains the data and methods to get and set settings for the user.
 See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details 
 
@@ -49,8 +49,6 @@ See [fcoo/url.js-extensions](https://github.com/FCOO/url.js-extensions) for desc
 
 #### `window.fcoo.saveLocalStorage [function()]`
 Saves all temporary parameters in `localStorage[fcoo.localStorageTempKey]` to `localStorage[fcoo.localStorageKey]` => Will be reloaded next time
-
-
 
 
 ### CSS Classes

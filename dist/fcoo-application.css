@@ -8,8 +8,6 @@
 
 
 ************************************************/
-/* stylelint-disable order/properties-alphabetical-order */
-/* stylelint-enable */
 /***************************************************
 Import Bootstrap variables and variables and the
 adjustments to Bootstrap from fcoo/jquery-bootstrap
@@ -768,6 +766,76 @@ Two modes:
   transition-timing-function: ease-out !important; }
   .neighbour-container.no-animation {
     transition-duration: 0s !important; }
+
+/*****************************************************
+Style for icons
+*****************************************************/
+/***********************************************
+icons.scss,
+************************************************/
+/*
+sub-icons = a big icon with a small - normally round - icon in the right-bottom corner
+Each of the sub-icons may need a individual class to adjust size and position
+
+The structure is (BIG = the big icon, SUB = the small icon)
+<div class="container-stacked-icons">
+    <i class="fal fa-BIG fa-lg stacked-icon"></i>
+    <i class="fas fa-circle fa-circle-small-right-bottom stacked-icon"></i>
+    <i class="far fa-BIG fa-BIG-small-right-bottom stacked-icon"></i>
+</div>
+
+Different versions of sub-icons can be created using different methods in namespace fcoo.map.icon (see src/fcoo-maps-icon.js)
+
+*/
+.container-stacked-icons.fa-fw.fa-sub-icons-container {
+  position: relative;
+  left: -0.125em; }
+
+.btn .fa-MAIN-small-right-bottom {
+  position: relative;
+  right: 0.125em;
+  bottom: 0.125em; }
+
+.btn.big-icon .fa-MAIN-small-right-bottom {
+  font-size: 0.85em;
+  right: 0.1875em;
+  bottom: 0.1875em; }
+
+.fa-circle-small-right-bottom,
+.fa-square-small-right-bottom {
+  position: relative;
+  right: -0.3125em;
+  bottom: -0.3125em;
+  font-size: 0.9em;
+  color: #f8f9fa !important; }
+  .active .fa-circle-small-right-bottom, .active
+  .fa-square-small-right-bottom {
+    color: #007bff !important; }
+  .card-header .fa-circle-small-right-bottom, .card-header
+  .fa-square-small-right-bottom {
+    color: #e9ecef !important; }
+  .btn .fa-circle-small-right-bottom, .btn
+  .fa-square-small-right-bottom {
+    right: -0.1875em;
+    bottom: -0.1875em; }
+  .btn.big-icon .fa-circle-small-right-bottom, .btn.big-icon
+  .fa-square-small-right-bottom {
+    font-size: 0.765em;
+    right: -0.125em;
+    bottom: -0.125em; }
+
+.fa-SUB-small-right-bottom {
+  position: relative;
+  right: -0.3125em;
+  bottom: -0.3125em;
+  font-size: 0.95em; }
+  .btn .fa-SUB-small-right-bottom {
+    right: -0.1875em;
+    bottom: -0.1875em; }
+  .btn.big-icon .fa-SUB-small-right-bottom {
+    font-size: 0.8075em;
+    right: -0.125em;
+    bottom: -0.125em; }
 
 /*****************************************************
 Create classes invisible-for-XX a la hide-for-XX using

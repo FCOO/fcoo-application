@@ -56,6 +56,36 @@ Create and display "About FCOO" info and modal-box
 
 ;
 /****************************************************************************
+fcoo-application-icon
+Objects and methods to create icons for buttons etc.
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    var ns = window.fcoo = window.fcoo || {};
+
+    ns.iconSub = function(mainIcon, subIcon, square){
+        return [[
+            'far ' + mainIcon + ' fa-MAIN-small-right-bottom',
+            square ? 'fas fa-square fa-square-small-right-bottom' : 'fas fa-circle fa-circle-small-right-bottom',
+            'far ' + subIcon + ' fa-SUB-small-right-bottom'
+        ]];
+    };
+
+
+    ns.settingIcon = function(mainIcon){
+        return ns.iconSub(mainIcon, 'fa-cog');
+    };
+    ns.NYsettingIcon = function(mainIcon){
+        return ns.NYiconSub(mainIcon, 'fa-cog');
+    };
+}(jQuery, this, document));
+
+
+
+
+;
+/****************************************************************************
 	fcoo-application-main.js
 
 	(c) 2017, FCOO
@@ -372,6 +402,71 @@ Create and manage the main structure for FCOO web applications
 }(jQuery, this, document));
 ;
 /****************************************************************************
+fcoo-application-setting.js
+
+Methods for content  releted to fcoo-setting
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+    var ns = window.fcoo = window.fcoo || {},
+        link          = {},
+        footerOptions = {}; //{text, vfFormat, vfValue etc}
+
+/*
+ns.events.
+    LANGUAGECHANGED
+    TIMEZONECHANGED
+    DATETIMEFORMATCHANGED
+    NUMBERFORMATCHANGED
+    LATLNGFORMATCHANGED
+    UNITCHANGED
+*/
+    //Timezone
+    footerOptions[ns.events.TIMEZONECHANGED] = function(extended){
+        return {
+            vfValue  : ' ',
+            vfFormat : extended ? 'timezone_full' : 'timezone',
+            iconClass: true
+        };
+    };
+
+    //Position - MANGLER
+/*
+    footerOptions[ns.events.LATLNGFORMATCHANGED] = {
+        vfValue  : ' ',
+        vfFormat : 'MANGLER', //Måske 'latlng_format' <- skal laves
+        iconClass: true
+    };
+*/
+
+    ns.globalSettingFooter = function(id, extended){
+        //Find icon for accordionList
+        var accordionOptions = {};
+        $.each( ns.globalSetting.options.accordionList, function(index, accOptions){
+            if (accOptions.id == id)
+                accordionOptions = accOptions;
+        });
+
+        var options = footerOptions[id] ?  footerOptions[id](extended) : {text: accordionOptions.header.text};
+
+        options.icon = accordionOptions.header.icon;
+
+        link[id] = link[id] || function(){ ns.globalSetting.edit(id); };
+        options.link = options.link || link[id];
+
+        if (options.iconClass)
+            options.iconClass = accordionOptions.header.iconClass;
+
+        return options;
+    };
+
+
+}(jQuery, this, document));
+
+;
+/****************************************************************************
 	fcoo-application-top-menu.js
 
 	(c) 2017, FCOO
@@ -542,6 +637,19 @@ Create and manage the top-menu for FCOO web applications
 
         //***************************************************************
         {
+            id: 'setting',
+            create: function( $menu/*, elementOptions, menuOptions */){
+                var $result = defaultTopMenuButton($menu, {
+                        icon   : 'far fa-cog',
+                        onClick: function(){ ns.globalSetting.edit(); }
+                    });
+                return $result;
+            },
+            priority : 2,
+            rightSide: true
+        },
+        //***************************************************************
+        {
             id: 'help',
             create: function( $menu, elementOptions, menuOptions ){
                 var $result = defaultTopMenuButton($menu, {icon: 'far fa-question-circle'});
@@ -642,6 +750,7 @@ Create and manage the top-menu for FCOO web applications
             messages : null,
             warning  : null,
             search   : true,
+            setting  : true,
             help     : null,
             rightMenu: true
         }, options );
@@ -1189,6 +1298,7 @@ Sections:
    Adding the Piwik Tracking Code
 7: Set up and initialize jquery-bootstrap
 8: Set-up jquery-bootstrap-message for different type of messages
+9: Adjust globalSetting and remove not-ready parts
 ****************************************************************************/
 
 (function ($, window, Promise/*, document, undefined*/) {
@@ -1835,15 +1945,22 @@ Sections:
     8: Set-up jquery-bootstrap-message for different type of messages
     ************************************************************************
     ***********************************************************************/
-    //Version 7.x: Using ns.settings = localStorage
-    //Version 8.x: Using ns.globalSetting = indexedDB. Check for localStorage and convert
+    //messageGroupList = [] of messageGroup that savess status in globalSetting
+    var messageGroupList =  [];
 
-    //Add 'messages' to fcoo.settings
-    ns.messageStatus = {};
-    ns.settings.add({
+    //Add 'messages' to fcoo.globalSetting
+    ns.globalSetting.add({
         id          : 'messages',
         validator   : function(){ return true; },
-        applyFunc   : function( messageStatus ){ ns.messageStatus = messageStatus; },
+        applyFunc   : function( messageStatus ){
+            $.each(messageGroupList, function(index, messageGroup){
+                $.each(messageGroup.list, function(index2, message){
+                    var newStatus = messageStatus[message.getFCOOId()];
+                    if ((newStatus !== undefined) && (message.getStatus() != newStatus))
+                        message.setStatus(newStatus);
+                });
+            });
+        },
         defaultValue: {},
         callApply   : true
     });
@@ -1947,7 +2064,7 @@ Sections:
 
                 //Save status as sessionStorage
                 loadStatus: function( message ){
-                    return sessionStorage.getItem( message.getFCOOId()  ) == 'READ';
+                    return sessionStorage.getItem( message.getFCOOId() ) == 'READ';
                 },
                 saveStatus: function( message ){
                     sessionStorage.setItem( message.getFCOOId(), message.options.status ? 'READ' : 'NOTREAD' );
@@ -1963,16 +2080,17 @@ Sections:
 
                 showStatus: true,
                 vfFormat  : 'date_local',
+                saveStatusInGlobalSetting: true,
 
-                //Status are loaded from and saved in fcoo.settings under 'messages' as {id: date}
+                //Status are loaded from and saved in fcoo.globalSetting under 'messages' as {id: date}
                 loadStatus: function( message ){
-                    ns.settings.get('messages');
-                    return !!ns.messageStatus[message.getFCOOId()];
+                    var messageStatus = ns.globalSetting.get('messages');
+                    return !!messageStatus[message.getFCOOId()];
                 },
                 saveStatus: function( message ){
-                    ns.settings.get('messages');
-                    ns.messageStatus[message.getFCOOId()] = ns.messageStatus[message.getFCOOId()] || moment().format('YYYY-MM-DD');
-                    ns.settings.set('messages', ns.messageStatus);
+                    var messageStatus = ns.globalSetting.get('messages');
+                    messageStatus[message.getFCOOId()] = messageStatus[message.getFCOOId()] || moment().format('YYYY-MM-DD');
+                    ns.globalSetting.set({messages: messageStatus});
                 },
 
             },
@@ -2005,8 +2123,10 @@ Sections:
 
         var messageGroup = $.bsMessageGroup( options ),
             setMessageGroupLanguage = function(){
-                messageGroup.setLanguage( ns.settings.get('language') );
+                messageGroup.setLanguage( ns.globalSetting.get('language') );
             };
+        if (options.saveStatusInGlobalSetting)
+            messageGroupList.push(messageGroup);
         setMessageGroupLanguage();
 
         //Change language in message-group when the global setting change
@@ -2015,6 +2135,26 @@ Sections:
         $button.on('click', function(){ messageGroup.asBsModal( true ); });
     };
 
+    /***********************************************************************
+    ************************************************************************
+    9: Adjust globalSetting and remove not-ready parts
+    ************************************************************************
+    ***********************************************************************/
+    //accordionList = {ID}OPTIONS, ID = global event id OPTIONS = corrections to default options
+    var accordionList = {};
+/*
+    window.fcoo.events = new window.GlobalEvents();
+    var globalEventsNames = ['languagechanged', 'timezonechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged']
+*/
+    //Using globe with sub clock as icon for time-zone
+    accordionList[ns.events.TIMEZONECHANGED] = {
+        header: {
+            icon     : ns.iconSub('fa-globe', 'fa-clock'),
+            iconClass: 'fa-fw fa-sub-icons-container'
+        }
+    };
 
-
+    $.each(ns.globalSetting.options.accordionList, function(index, accordionOptions){
+        $.extend(true, ns.globalSetting.options.accordionList[index], accordionList[accordionOptions.id] || {});
+    });
 }(jQuery, this, this.Promise, document));
