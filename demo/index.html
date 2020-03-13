@@ -152,6 +152,7 @@
             }
             $rightMenu.append('SLUT');
 
+console.log(window.browser);
 
             main = window.fcoo.createMain({
                     mainContainerAsHandleContainer: true,
@@ -173,6 +174,30 @@
                         width: 321
                     },
                     keepLeftMenuButton: true, //Keeps the left menu-button even if leftMenu is null
+                    leftMenuButtons: {
+                        //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                        save    :   function(){ console.log('save') }, //Standard save-button
+                        load    :   function(){ console.log('load') }, //Standard load-button
+                        bookmark:   function(){ console.log('bookmark') }, //Standard bootmark-button
+                        share   :   function(){
+                                        if (navigator.share) {
+                                            navigator.share({
+                                                title: 'WebShare API Demo',
+                                                url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+                                            })
+                                            .then(function(){
+                                                console.log('Thanks for sharing!');
+                                            })
+                                            .catch(console.error);
+                                        }
+                                        else {
+                                            // fallback
+                                            console.log('no share')
+                                        }
+                                    },
+                        postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
+                    },
+
                     rightMenu : {
                         width: 200,
                         $menu: $rightMenu
@@ -231,6 +256,7 @@
     <div id="touchMenuRight">RIGHT MENU</div>
 
 */
+/*
             $.each(['languagechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged', 'timezonechanged'], function(index, id){
                 $.bsModal({
                     header: 'Test af footer '+id,
@@ -239,7 +265,7 @@
                     show: true
                 });
             });
-
+*/
             $('<br>').appendTo(main.$mainContainer);
 
             $.bsButton({

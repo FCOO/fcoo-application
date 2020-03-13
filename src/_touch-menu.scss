@@ -79,7 +79,13 @@ Two modes:
     .touch-menu {
         position: relative;
     }
-    .touch-pre-menu {}
+    .touch-pre-menu {
+        .button-group {
+            &:not(:first-child) {
+                margin-left: .5em;
+            }
+        }
+    }
     .touch-post-menu {}
 }
 

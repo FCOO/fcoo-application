@@ -32,9 +32,11 @@ Create and manage the main structure for FCOO web applications
 
             topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
             leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js
+            leftMenuButtons     : null,  //Options for buttons in the header of the left-menu. See format below
             keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
             rightMenu           : null,  //Options for right-menu. See src/fcoo-application-touch.js
-            keepRightMenuButton : false, //Keeps the right menu-button even if leftMenu is null
+            keepRightMenuButton : false, //Keeps the right menu-button even if rightMenu is null
+            rightMenuButtons    : null,  //Options for buttons in the header of the right-menu. See format below
             bottomMenu          : null,  //Options for bottom-menu. See src/fcoo-application-touch.js
 
             onResizeStart       : null,  //function(main) to be called when the main-container starts resizing
@@ -43,6 +45,60 @@ Create and manage the main structure for FCOO web applications
             onResize            : null,  //Alternative to onResizeFinish
             onResizeDelay       :  100,  //mS before onResize is fired to avoid many calls if the size is changed rapidly
         }, options );
+
+        /*
+        leftMenuButtons and rightMenuButtons = {
+            preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+            save        = onClick or buttonOptions, //Standard save-button
+            load        = onClick or buttonOptions, //Standard load-button
+            bookmark    = onClick or buttonOptions, //Standard bootmark-button
+            share       = onClick or buttonOptions, //Standard share-button
+            postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
+        */
+        function createMenuButtons(options, $container){
+            var buttonGroups = [];
+            if (options.preButtons)
+                buttonGroups.push( $.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
+
+            //Add standard buttons
+            var shareIcon = 'fa-share-alt'; //TODO check os for different icons
+            var buttonList = [];
+            $.each([
+                {id:'save',     icon: 'fa-save',        title: {da: 'Gem',             en: 'Save'        }, newGroup: true},
+                {id:'load',     icon: 'fa-folder-open', title: {da: 'Hent',            en: 'Load'        } },
+                {id:'bookmark', icon: 'fa-star',        title: {da: 'Tilføj bogmærke', en: 'Add bookmark'}, newGroup: true},
+                {id:'share',    icon: shareIcon,        title: {da: 'Del',             en: 'Share'       } }
+            ],
+            function(index, defaultButtonOptions){
+                var nextButtonOptions = options[defaultButtonOptions.id];
+                if (nextButtonOptions){
+                    if (buttonList.length && defaultButtonOptions.newGroup){
+                        buttonGroups.push(buttonList);
+                        buttonList = [];
+                    }
+                    buttonList.push( $.extend(defaultButtonOptions, $.isFunction(nextButtonOptions) ? {onClick:nextButtonOptions} : nextButtonOptions) );
+                }
+            });
+            if (buttonList.length)
+                buttonGroups.push(buttonList);
+
+            if (options.postButtons)
+                buttonGroups.push( $.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
+
+            //Create the buttons
+            $.each(buttonGroups, function(index, buttonList){
+                var $div = $('<div/>')
+                            .toggleClass('ml-auto', index == 0)
+                            .addClass('button-group')
+                            .appendTo($container);
+                $.each(buttonList, function(index2, buttonOptions){
+                    $.extend(buttonOptions, {bigIcon: true, square: true});
+                    $.bsButton(buttonOptions).appendTo($div);
+                });
+            });
+
+
+        }
 
         var result = {
                 menus  : [],
@@ -191,6 +247,12 @@ Create and manage the main structure for FCOO web applications
             result._onBodyResize();
         }
 
+
+        //Add menu-buttons to left and right menu
+        if (result.options.leftMenu && result.options.leftMenuButtons)
+            createMenuButtons(result.options.leftMenuButtons, result.leftMenu.$preMenu);
+        if (result.options.rightMenu && result.options.rightMenuButtons)
+            createMenuButtons(result.options.rightMenuButtons, result.rightMenu.$preMenu);
 
         /*
         Set up for detecting resize-start and resize-end of main-container

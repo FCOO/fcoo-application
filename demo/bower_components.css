@@ -11036,8 +11036,6 @@ Class ps__rail added by jquery-scroll-container
 
 
 ************************************************/
-/* stylelint-disable order/properties-alphabetical-order */
-/* stylelint-enable */
 /***********************************************
 SET AND ADJUST BOOTSTRAP DEFAULT VALUES
 ************************************************/
@@ -19757,7 +19755,7 @@ bsSelectList
       color: rgba(81, 89, 97, 0.65);
       background: #f8f9fa linear-gradient(180deg, #f9fafb, #f8f9fa) repeat-x; }
   .dropdown-menu .dropdown-header, .selectList .dropdown-header {
-    font-weight: 400;
+    font-weight: 700;
     display: flex;
     align-items: center;
     cursor: default;
@@ -19783,7 +19781,7 @@ bsSelectList
   border-radius: 0.1875rem; }
 
 .selectList.selectList-sm .dropdown-header, .dropdown-menu.dropdown-menu-sm .dropdown-header {
-  font-weight: 400;
+  font-weight: 700;
   display: flex;
   align-items: center;
   cursor: default;
@@ -19807,7 +19805,7 @@ bsSelectList
   border-radius: 0.125rem; }
 
 .selectList.selectList-xs .dropdown-header, .dropdown-menu.dropdown-menu-xs .dropdown-header {
-  font-weight: 400;
+  font-weight: 700;
   display: flex;
   align-items: center;
   cursor: default;

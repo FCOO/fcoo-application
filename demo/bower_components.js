@@ -58169,6 +58169,12 @@ module.exports = g;
 
         var result = $('<'+ options.tagName + ' tabindex="0"/>');
 
+        //title are added to the button instead of only to the <span> with the text
+        if (options.title){
+            result.i18n(options.title, 'title');
+            options.title = null;
+        }
+
         if (options.tagName == 'a'){
             if (options.link)
                 result
@@ -59075,6 +59081,21 @@ module.exports = g;
             $.each( this.inputs, function( id, input ){
                 func( input );
             });
+        },
+
+        /*******************************************************
+        getInput(id or userId)
+        *******************************************************/
+        getInput: function(id){
+            var result = this.inputs[id];
+            if (!result)
+                this._eachInput( function( input ){
+                    if (input.options.userId == id){
+                        result = input;
+                        return false;
+                    }
+                });
+            return result;
         },
 
         /*******************************************************
@@ -62854,12 +62875,11 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         return options;
     };
 
-    //$._bsAdjustOptions: Adjust options to allow text/name/title/header etc.
+    //$._bsAdjustOptions: Adjust options to allow text/name/header etc.
     $._bsAdjustOptions = function( options, defaultOptions, forceOptions ){
         //*********************************************************************
         //adjustContentOptions: Adjust options for the content of elements
         function adjustContentAndContextOptions( options, context ){
-            options.text      = options.text || options.title;
             options.iconClass = options.iconClass || options.iconClassName;
             options.textClass = options.textClass || options.textClassName;
 
@@ -63220,9 +63240,13 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             });
 
             //Add value-format content
-            $.each( vfValueArray, function( index, vfValue ){
+            $.each( vfFormatArray, function( index ){
                 $._bsCreateElement( 'span', linkArray[ index ], titleArray[ index ], textStyleArray[ index ], textClassArray[index] )
-                    .vfValueFormat( vfValue || '', vfFormatArray[index], vfOptionsArray[index] )
+                    .vfValueFormat(
+                        vfValueArray[index] || '',
+                        vfFormatArray[index],
+                        vfOptionsArray[index]
+                    )
                     .appendTo( _this );
             });
 
@@ -69100,6 +69124,7 @@ window.location.hash
                 setting.group = _this;
                 _this.settings[settingOptions.id] = setting;
                 setting.apply( _this.data[setting.options.id], !options.callApply );
+                _this.data[setting.options.id] = setting.value;
             });
         },
 
@@ -69261,7 +69286,6 @@ window.location.hash
             //Open accordion with id
             if (id)
                 this.modalForm.$bsModal.find('form > .accordion').bsOpenCard(id);
-
             this.modalForm.edit(data || this.data);
         },
 
@@ -69368,7 +69392,6 @@ window.location.hash
             var _this = this,
                 id = this.options.id;
             newValue = (newValue === undefined) ? this.options.defaultValue : newValue;
-
             if ( !window.Url.validateValue(''+newValue, this.options.validator) ){
                 if (this.options.onError)
                     this.options.onError( newValue, id );
@@ -73521,9 +73544,9 @@ this.next=0;this.sent=undefined;this.done=false;this.delegate=null;this.tryEntri
 
     //Set default unit for the different scales
     $.extend(ns.unit, {
-        length   : ns.unit.METRIC,
-        area     : ns.unit.METRIC,
-        speed    : ns.unit.METRIC,
+        length   : ns.unit.NAUTICAL,
+        area     : ns.unit.NAUTICAL,
+        speed    : ns.unit.NAUTICAL,
         direction: ns.unit.DEGREE
     });
 
@@ -73535,18 +73558,40 @@ this.next=0;this.sent=undefined;this.done=false;this.delegate=null;this.tryEntri
             direction: {'DEGREE': 1, 'GRADIAN': 400/360}
         };
 
-    function convertValue(value, scale, unit){
+    /*
+    convertValue((value, scale, unit)
+    Convert value [SI-unit] of scale to current unit or unit (specified)
+    */
+    ns.unit.convertValue = function(value, scale, unit, round){
         unit = unit || ns.unit[scale];
-        var factor = conversion[scale] ? conversion[scale][unit] || 1 : 1;
-        return value*factor;
-    }
+        var factor = conversion[scale] ? conversion[scale][unit] || 1 : 1,
+            result = value*factor;
+        return round ? Math.round(result) : result;
+    };
 
     //Create convertion-methods
     $.extend(ns.unit, {
-        getLength    : function( m   ){ return convertValue( m,  'length'     ); },
-        getArea      : function( m2  ){ return convertValue( m2, 'area'       ); },
-        getSpeed     : function( ms  ){ return convertValue( ms, 'speed'      ); },
-        getDirection : function( deg ){ return convertValue( deg, 'direction' ); }
+        getLength    : function( m  , round ){ return ns.unit.convertValue( m,   'length'   , null, round ); },
+        getArea      : function( m2 , round ){ return ns.unit.convertValue( m2,  'area'     , null, round ); },
+        getSpeed     : function( ms , round ){ return ns.unit.convertValue( ms,  'speed'    , null, round ); },
+        getDirection : function( deg, round ){ return ns.unit.convertValue( deg, 'direction', null, round ); }
+    });
+
+    /*
+    convertValueBack((value, scale, unit)
+    Convert value [current unit or unit (specified)] of scale to SI-unit
+    */
+    ns.unit.convertValueBack = function(value, scale, unit, round){
+        var result = value / ns.unit.convertValue(1, scale, unit);
+        return round ? Math.round(result) : result;
+    };
+
+    //Create convertion-back-methods
+    $.extend(ns.unit, {
+        getLengthBack   : function( length   , round ){ return ns.unit.convertValueBack( length,   'length'    , null, round ); },
+        getAreaBack     : function( area     , round ){ return ns.unit.convertValueBack( area,      'area'     , null, round ); },
+        getSpeedBack    : function( speed    , round ){ return ns.unit.convertValueBack( speed,     'speed'    , null, round ); },
+        getDirectionBack: function( direction, round ){ return ns.unit.convertValueBack( direction, 'direction', null, round ); }
     });
 
     /***********************************************************
@@ -73563,10 +73608,10 @@ this.next=0;this.sent=undefined;this.done=false;this.delegate=null;this.tryEntri
         });
     }
 
-    addSetting('length',    ns.unit.METRIC, [ns.unit.METRIC, ns.unit.NAUTICAL]);
-    addSetting('area',      ns.unit.METRIC, [ns.unit.METRIC, ns.unit.NAUTICAL]);
-    addSetting('speed',     ns.unit.METRIC, [ns.unit.METRIC, ns.unit.METRIC2, ns.unit.NAUTICAL]);
-    addSetting('direction', ns.unit.DEGREE, [ns.unit.DEGREE, ns.unit.GRADIAN]);
+    addSetting('length',    ns.unit.NAUTICAL, [ns.unit.METRIC, ns.unit.NAUTICAL]);
+    addSetting('area',      ns.unit.NAUTICAL, [ns.unit.METRIC, ns.unit.NAUTICAL]);
+    addSetting('speed',     ns.unit.NAUTICAL, [ns.unit.METRIC, ns.unit.METRIC2, ns.unit.NAUTICAL]);
+    addSetting('direction', ns.unit.DEGREE,   [ns.unit.DEGREE, ns.unit.GRADIAN]);
 
 
     /***********************************************************
@@ -73617,9 +73662,9 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
             type: 'radiobuttongroup',
             label: {icon:'far fa-tachometer', text:{da:'Fart', en:'Speed'}},
             items: [
-                {id: ns.unit.METRIC,   text: 'm/s',                   title: {da:'Meter pr. sekund',  en:'Metre per second'     }},
-                {id: ns.unit.METRIC2,  text: {da:'km/t', en:'km/h'},  title: {da:'Kilometer i timen', en:'Kilometre per hour'     }},
-                {id: ns.unit.NAUTICAL, text: {da:'Kn(ob)', en:'Kn(ot)'},                    title: {da:'Knob', en:'Knot'}},
+                {id: ns.unit.METRIC,   text: 'm/s',                             title: {da:'Meter pr. sekund',  en:'Metre per second'     }},
+                {id: ns.unit.METRIC2,  text: {da:'km/t', en:'km/h'},            title: {da:'Kilometer i timen', en:'Kilometre per hour'     }},
+                {id: ns.unit.NAUTICAL, text: {da:'Kn (Knob)', en:'Kn (Knot)'},  title: {da:'Knob', en:'Knot'}},
             ]
         },
         {

@@ -719,6 +719,8 @@ Two modes:
       transition: none !important; }
   .touch-menu-container .touch-menu {
     position: relative; }
+  .touch-menu-container .touch-pre-menu .button-group:not(:first-child) {
+    margin-left: .5em; }
 
 .touch-menu-handle {
   position: absolute; }
