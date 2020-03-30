@@ -411,8 +411,6 @@ confussions another name is used
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
   .touchevents .top-menu-container .top-menu {
     font-size: 1rem; }
-  .top-menu-container .top-menu .top-menu-element-show {
-    display: initial; }
   .top-menu-container .top-menu .top-menu-element-hide {
     display: none; }
   .top-menu-container .top-menu > .top-menu-item {
@@ -800,8 +798,8 @@ Different versions of sub-icons can be created using different methods in namesp
 
 .btn.big-icon .fa-MAIN-small-right-bottom {
   font-size: 0.85em;
-  right: 0.1875em;
-  bottom: 0.1875em; }
+  right: 0.125em;
+  bottom: 0.21875em; }
 
 .fa-circle-small-right-bottom,
 .fa-square-small-right-bottom {
@@ -823,21 +821,21 @@ Different versions of sub-icons can be created using different methods in namesp
   .btn.big-icon .fa-circle-small-right-bottom, .btn.big-icon
   .fa-square-small-right-bottom {
     font-size: 0.765em;
-    right: -0.125em;
-    bottom: -0.125em; }
+    right: -0.1875em;
+    bottom: -0.09375em; }
 
 .fa-SUB-small-right-bottom {
   position: relative;
   right: -0.3125em;
   bottom: -0.3125em;
-  font-size: 0.95em; }
+  font-size: 0.9em; }
   .btn .fa-SUB-small-right-bottom {
     right: -0.1875em;
     bottom: -0.1875em; }
   .btn.big-icon .fa-SUB-small-right-bottom {
-    font-size: 0.8075em;
-    right: -0.125em;
-    bottom: -0.125em; }
+    font-size: 0.765em;
+    right: -0.1875em;
+    bottom: -0.09375em; }
 
 /*****************************************************
 Create classes invisible-for-XX a la hide-for-XX using

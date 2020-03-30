@@ -24,7 +24,7 @@
         }
 
         .touch-menu-handle {
-            background-color: green;
+//            background-color: green;
         }
     </style>
 
@@ -152,8 +152,6 @@
             }
             $rightMenu.append('SLUT');
 
-console.log(window.browser);
-
             main = window.fcoo.createMain({
                     mainContainerAsHandleContainer: true,
                     minMainWidth: 456,
@@ -270,18 +268,23 @@ console.log(window.browser);
 
             $.bsButton({
                 icon  : fcoo.settingIcon('fa-map'),
-                bigIcon: true,
                 square: true,
              }).appendTo(main.$mainContainer);
 
             $.bsButton({
                 icon  : fcoo.settingIcon('fa-map'),
                 square: true,
+                bigIcon: true,
              }).appendTo(main.$mainContainer);
-
+main.$mainContainer.append('<br>');
             $.bsButton({
                 icon  : 'fa-map',
                 square: true,
+             }).appendTo(main.$mainContainer);
+            $.bsButton({
+                icon  : 'fa-map',
+                square: true,
+                bigIcon: true,
              }).appendTo(main.$mainContainer);
             $.bsButton({
                 icon  : 'fa-sync',

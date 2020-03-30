@@ -19,9 +19,11 @@ Different versions of sub-icons can be created using different methods in namesp
 $sub-position            : -5em / 16;
 $inside-button-adjustment: 2em / 16;
 
-$inside-big-icon-button-adjustment : 3em / 16;
+$inside-big-icon-button-horizontal-adjustment: 2em / 16; //3
+$inside-big-icon-button-vertical-adjustment  : 3.5em / 16; //3
 $inside-big-icon-button-font-factor: .85;
 
+$sub-icon-font-size: 0.9em;
 
 //Adjust stacked icon container with sub-icons to be left-align
 .container-stacked-icons.fa-fw.fa-sub-icons-container {
@@ -39,8 +41,8 @@ $inside-big-icon-button-font-factor: .85;
     }
     .btn.big-icon & {
         font-size: $inside-big-icon-button-font-factor * 1em;
-        right : $inside-big-icon-button-adjustment;
-        bottom: $inside-big-icon-button-adjustment;
+        right : $inside-big-icon-button-horizontal-adjustment;
+        bottom: $inside-big-icon-button-vertical-adjustment;
     }
 }
 
@@ -52,7 +54,7 @@ $inside-big-icon-button-font-factor: .85;
     position: relative;
     right    : $sub-position;
     bottom   : $sub-position;
-    font-size: 0.9em;
+    font-size: $sub-icon-font-size;
     color    : $control-bg-color !important;
     .active & {
         //When inside a active (selected) button => use active-color
@@ -69,9 +71,9 @@ $inside-big-icon-button-font-factor: .85;
         bottom: $sub-position + $inside-button-adjustment;
     }
     .btn.big-icon & {
-        font-size: $inside-big-icon-button-font-factor * 0.9em;
-        right : $sub-position + $inside-big-icon-button-adjustment;
-        bottom: $sub-position + $inside-big-icon-button-adjustment;
+        font-size: $inside-big-icon-button-font-factor * $sub-icon-font-size;
+        right : $sub-position + $inside-big-icon-button-horizontal-adjustment;
+        bottom: $sub-position + $inside-big-icon-button-vertical-adjustment;
     }
 
 }
@@ -80,17 +82,18 @@ $inside-big-icon-button-font-factor: .85;
     position: relative;
     right    : $sub-position;
     bottom   : $sub-position;
-    font-size: 0.95em;
+    font-size: $sub-icon-font-size;
 
     //Adjust placment when inside a button
     .btn & {
         right : $sub-position + $inside-button-adjustment;
         bottom: $sub-position + $inside-button-adjustment;
     }
+    //Adjust placment when inside a button with big icon
     .btn.big-icon & {
-        font-size: $inside-big-icon-button-font-factor * 0.95em;
-        right : $sub-position + $inside-big-icon-button-adjustment;
-        bottom: $sub-position + $inside-big-icon-button-adjustment;
+        font-size: $inside-big-icon-button-font-factor * $sub-icon-font-size;
+        right : $sub-position + $inside-big-icon-button-horizontal-adjustment;
+        bottom: $sub-position + $inside-big-icon-button-vertical-adjustment;
     }
 }
 

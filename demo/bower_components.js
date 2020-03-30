@@ -20128,14 +20128,13 @@ else {
 	"use strict";
 
 	//Create fcoo-namespace
-	window.fcoo = window.fcoo || {};
+	var ns = window.fcoo = window.fcoo || {};
 
-    window.fcoo.events = new window.GlobalEvents();
+    ns.events = new window.GlobalEvents();
+    ns.events.eventNames = ['LANGUAGECHANGED', 'TIMEZONECHANGED', 'DATETIMEFORMATCHANGED', 'NUMBERFORMATCHANGED', 'LATLNGFORMATCHANGED', 'UNITCHANGED'];
 
-    var globalEventsNames = ['languagechanged', 'timezonechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged']
-
-    $.each( globalEventsNames, function( index, eventName ){
-        window.fcoo.events[ eventName.toUpperCase() ] = eventName;
+    $.each( ns.events.eventNames, function( index, eventName ){
+        ns.events[ eventName ] = eventName;
     });
 
 }(this, document));
@@ -21928,7 +21927,7 @@ else {
         var _this3 = this;
 
         var tried = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-        var wait = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 250;
+        var wait = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 350;
         var callback = arguments.length > 5 ? arguments[5] : undefined;
         if (!lng.length) return callback(null, {}); // noting to load
 
@@ -22613,6 +22612,10 @@ else {
         membersToCopy.forEach(function (m) {
           clone[m] = _this8[m];
         });
+        clone.services = _objectSpread({}, this.services);
+        clone.services.utils = {
+          hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
+        };
         clone.translator = new Translator(clone.services, clone.options);
         clone.translator.on('*', function (event) {
           for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
@@ -22624,6 +22627,9 @@ else {
         clone.init(mergedOptions, callback);
         clone.translator.options = clone.options; // sync options
 
+        clone.translator.backendConnector.services.utils = {
+          hasLoadedNamespace: clone.hasLoadedNamespace.bind(clone)
+        };
         return clone;
       }
     }]);
@@ -58261,7 +58267,13 @@ module.exports = g;
                 'far fa-square'                                          //Border
             ]]
         });
-        return $.bsButton( options ).checkbox( $.extend(options, {className: 'checked'}) );
+
+        //Bug fix: To avoid bsButton to add class 'active', selected is set to false in options for bsButton
+        var bsButtonOptions = $.extend({}, options);
+        bsButtonOptions.selected = false;
+        var $result = $.bsButton( bsButtonOptions ).checkbox( $.extend(options, {className: 'checked'}) );
+
+        return $result;
     };
 
     /**********************************************************
@@ -58286,6 +58298,7 @@ module.exports = g;
             });
 
         options.baseClassPostfix = options.vertical ? options.verticalClassPostfix : options.horizontalClassPostfix;
+
         var result = $('<'+ options.tagName + '/>')
                         ._bsAddIdAndName( options )
                         ._bsAddBaseClassAndSize( options );
@@ -58662,14 +58675,6 @@ module.exports = g;
         },
 
         /*******************************************************
-        getFormGroup
-        *******************************************************/
-        getFormGroup: function(){
-            this.$formGroup = this.$formGroup || this.getElement().parents('.form-group').first();
-            return this.$formGroup;
-        },
-
-        /*******************************************************
         setValue
         *******************************************************/
         setValue: function(value, validate){
@@ -58799,12 +58804,19 @@ module.exports = g;
                     this.resetValue( true );
                 }
 
+                if (!this.$outerElement){
+                    //Find the element to show/hide
+                    this.$outerElement = this.getElement().parents('.form-group').first();
+                    if (!this.$outerElement.length)
+                        this.$outerElement = this.getElement();
+                }
+
                 if (this.options.freeSpaceWhenHidden)
                     //When the element is invisible: Use display:none
-                    this.getFormGroup().toggleClass('d-none', !show);
+                    this.$outerElement.toggleClass('d-none', !show);
                 else
                     //When the element is invisible: Use visibility:hidden to keep structure of form and it elements
-                    this.getFormGroup().css('visibility', show ? 'visible' : 'hidden');
+                    this.$outerElement.css('visibility', show ? 'visible' : 'hidden');
 
                 this.getElement().prop('disabled', !show);
 
@@ -58954,6 +58966,7 @@ module.exports = g;
 
             this.showOrHide( null );
             this.isCreated = true;
+            this.onChanging();
         },
 
         /*******************************************************
@@ -59599,7 +59612,7 @@ options
 
         //Append the items
         $.each(list, function(index, itemOptions){
-            var $item = null;
+            var $item = null, radioGroup = null;
             switch (itemOptions.type){
                 case 'button':
                     $item = $.bsButton($.extend(itemOptions, {returnFromClick: true}));
@@ -59610,7 +59623,8 @@ options
                     break;
 
                 case 'radio':
-                    $item = $.bsRadioButtonGroup(itemOptions).children();
+                    $item = $.bsRadioButtonGroup( $.extend({vertical: true}, itemOptions));
+                    radioGroup = $item.data('radioGroup');
                     break;
 
                 case 'content':
@@ -59637,6 +59651,7 @@ options
                 );
 
             options.list[index].$item = $item;
+            options.list[index].radioGroup = radioGroup;
         });
         $result.data('bsMenu_options', options);
         var update = $.proxy(updateBsMenu, $result);
@@ -59647,8 +59662,55 @@ options
         return $result;
     };
 
+    function eachBsMenuListItem( itemFunc, values, $this ){
+        $.each($this.data('bsMenu_options').list, function(index, item){
+            if (item.id && ( (item.type == 'checkbox') || (item.type == 'radio') ) )
+                itemFunc(item, values, $this );
+        });
+        return values;
+    }
 
+    $.fn._bsMenu_getValues = function(){
+        var values = {};
+        eachBsMenuListItem(
+            function( item, values ){
+                switch (item.type){
+                    case 'checkbox':
+                        values[item.id] = item.$item._cbxGet();
+                        break;
+                    case 'radio':
+                        values[item.id] = item.radioGroup.getSelected();
+                        break;
+                }
+            },
+            values,
+            this
+        );
+        return values;
+    };
 
+    $.fn._bsMenu_setValues = function(values){
+        eachBsMenuListItem(
+            function( item, values ){
+                var newValue = values[item.id];
+                if (newValue !== undefined){
+                    switch (item.type){
+                        case 'checkbox':
+                            if (item.$item._cbxGet() != newValue)
+                                item.$item._cbxSet( newValue );
+                            break;
+                        case 'radio':
+                            if (item.radioGroup.getSelected() != newValue)
+                                item.radioGroup.setSelected( newValue );
+                            break;
+                    }
+                }
+            },
+            values,
+            this
+        );
+        return values;
+    };
 }(jQuery, this, document));
 ;
 /****************************************************************************
@@ -61622,10 +61684,22 @@ options
     **********************************************************/
     $.fn.bsMenuPopover = function( options ){
         options = adjustItemOptionsForPopover(options, 'list');
-        return this.bsPopover( $.extend(options, {content: $.bsMenu(options)}) );
+
+        options.content = $.bsMenu(options);
+        this.data('popover_menu', options.content);
+
+        return this.bsPopover( options );
     };
 
 
+
+    $.fn.bsMenuPopover_getValues = function(){
+        return this.data('popover_menu')._bsMenu_getValues();
+    };
+
+    $.fn.bsMenuPopover_setValues = function( values ){
+        this.data('popover_menu')._bsMenu_setValues(values);
+    };
 
 
 }(jQuery, this, document));
@@ -69049,9 +69123,9 @@ window.location.hash
 
     There are two versions of settings:
     A: fcoo.globalSetting: Global settings for all FCOO applications. Eq. language, date-format etc.
-    B: fc..appSetting    : Application settings. Specific for each application
+    B: fcoo.appSetting   : Application settings. Specific for each application
 
-    Both type are ccreated as SettingGroup in
+    Both type are created as SettingGroup in
     A: fcoo.globalSetting and saved in indexedDB "GLOBAL"
     B: fcoo.appSetting and saved in indexedDB named by sub-directory of the application
 
@@ -69064,11 +69138,13 @@ window.location.hash
         data (optional): The initial data to be stored
         simpleMode (BOOLEAN) if true no setting in this.settings are use to store data. New data are set directly in this.data
         autoSave: BOOLEAN - if true the data are saved whenever they are changed. If false the method save() need to be called
-
+//        dontSave: BOOLEAN - if true the data are not saved in indexedDB
         modalHeader: Header for the modal-window used to edit the data
         accordionList: []{id, header} - id and header for the different accordion used to edit the setting-group data.
                                      Content to each accordion are added using method SettingGroup.addModalContent: function(accordionId, content)
-        onSubmit: function(newData, originalData) - called after the data was edited. newData = all changed data, originalData = the original version of the data
+        flexWidth : Options for formModal
+        onChanging: function(newData, originalData) - called when the data are changed during editing
+        onSubmit  : function(newData, originalData) - called after the data was edited. newData = all changed data, originalData = the original version of the data
 
 *****************************************************************************************/
 
@@ -69088,7 +69164,8 @@ window.location.hash
         this.options.storeId =  this.options.storeId ||
                                 window.URI().directory().replace(/^\/+|\/+$/g, '') || //directory trimmed from "/"
                                 'GLOBAL';
-        this.store = window.localforage.createInstance({name: this.options.storeId});
+//        if (!this.options.dontSave)
+            this.store = window.localforage.createInstance({name: this.options.storeId});
 
         //this.data = All settings. Each part of this.data is managed by a Setting in this.settings
         this.data = $.extend({}, this.options.data || {});
@@ -69124,7 +69201,7 @@ window.location.hash
                 setting.group = _this;
                 _this.settings[settingOptions.id] = setting;
                 setting.apply( _this.data[setting.options.id], !options.callApply );
-                _this.data[setting.options.id] = setting.value;
+                _this.data[setting.options.id] = setting.getValue();
             });
         },
 
@@ -69169,7 +69246,7 @@ window.location.hash
             var dataToSave = this.data;
             $.each( this.settings, function( id, setting ){
                 if (setting.value)
-                    dataToSave[ setting.options.id ] = setting.value;
+                    dataToSave[ setting.options.id ] = setting.getValue();
             });
 
 
@@ -69225,7 +69302,7 @@ window.location.hash
                 return this.data[id];
             else {
                 var setting = this.settings[id];
-                return setting ? setting.value : undefined;
+                return setting ? setting.getValue() : undefined;
             }
         },
 
@@ -69272,7 +69349,7 @@ window.location.hash
                     id        : this.options.storeId,
                     show      : false,
                     header    : this.options.modalHeader,
-                    flexWidth : true,
+                    flexWidth : this.options.flexWidth,
                     content   : {type: 'accordion', list: list },
                     onChanging: $.proxy(this.onChanging, this),
                     onCancel  : $.proxy(this.onCancel,   this),
@@ -69305,9 +69382,16 @@ window.location.hash
             //Set data during editing
             $.each(data, function(id, value){
                 var setting = _this.settings[id];
-                if (setting && setting.options.saveOnChanging && (_this.get(id) != value))
-                    newData[id] = value;
+                if (setting){
+                    if (setting.options.saveOnChanging && (_this.get(id) != value))
+                        newData[id] = value;
+                    if (setting.options.onChanging)
+                        setting.options.onChanging(value);
+                }
             });
+
+            if (this.options.onChanging)
+                this.options.onChanging(newData, this.data);
             this.set(newData);
         },
 
@@ -69364,8 +69448,10 @@ window.location.hash
         applyFunc [function( value, id, defaultValue )] function to apply the settings for id
         defaultValue
         globalEvents {String} = Id of global-events in fcoo.events that aare fired when the setting is changed
+        getValue [function(value, setting) return a value (optional) Used to adjust value before it is saved or used
         onError [function( value, id )] (optional). Called if a new value is invalid according to validator
         saveOnChanging [BOOLEAN]. If true the setting is saved during editing. When false the setting is only saved when edit-form submits
+        onChanging [FUNCTION(value)]. Called when the value of the setting is changed during editing
         modernizr BOOLEAN` (optional) default=false: If true the modernizr-class descriped in `src\_fcoo-settings.scss` is updated
         modernizrOnlyValues []ID: List of the only values that are modernizr'ed. If empty all values are modernizr
 
@@ -69436,7 +69522,11 @@ window.location.hash
 
             //Fire global-events (if any)
             if (this.options.globalEvents && ns.events && ns.events.fire)
-                ns.events.fire( this.options.globalEvents, id, this.value );
+                ns.events.fire( this.options.globalEvents, id, this.getValue() );
+        },
+
+        getValue: function(){
+            return this.options.getValue ? this.options.getValue(this.value, this) : this.value;
         }
     };
 
@@ -69456,9 +69546,10 @@ window.location.hash
 
     var globalSetting = ns.globalSetting =
         new SettingGroup({
-            storeId : 'GLOBAL',
-            data    : localStorageData,
-            autoSave: true,
+            storeId        : 'GLOBAL',
+            data           : localStorageData,
+            autoSave       : true,
+            flexWidth      : true,
             modernizrPrefix: 'global-setting-',
 
             modalHeader: {
@@ -69485,8 +69576,7 @@ window.location.hash
     *************************************************************************************/
     ns.appSetting =
         new SettingGroup({
-            simpleMode: true,
-            autoSave  : true,
+            autoSave: true,
         });
 
     /*******************************************************
@@ -69739,6 +69829,10 @@ return index;
     //global events "languagechanged" fired when the language is changed
     var languagechanged = window.fcoo.events.LANGUAGECHANGED;
 
+    //dont_call_global_events = true => ns.events.fire( languagechanged ); is NOT called when language is changed
+    var dont_call_global_events = false;
+
+
     //*****************************************************************************
     // All available languages.
     // **NOTE ** THIS LIST MUST MATCH THE LIST $lang-list IN src/fcoo-language.scss
@@ -69830,7 +69924,12 @@ return index;
         applyFunc     : function( lang ){ setLanguageAndLanguage2( lang, ns.globalSetting.get('language2') ); },
         defaultValue  : defaultLanguage,
         callApply     : false,
-        saveOnChanging: true,
+        onChanging    : function( lang ){
+                            dont_call_global_events = true;
+                            i18next.changeLanguage(lang);
+                            ns.globalSetting.modalForm.$bsModal.localize();
+                            dont_call_global_events = false;
+                        },
         globalEvents  : ns.events.LANGUAGECHANGED
     });
 
@@ -69847,7 +69946,6 @@ return index;
         applyFunc     : function( lang2 ){ setLanguageAndLanguage2( i18next.language, lang2 ); },
         defaultValue  : standardLanguage,
         callApply     : false,
-        saveOnChanging: true,
         globalEvents  : ns.events.LANGUAGECHANGED
     });
 
@@ -69922,7 +70020,8 @@ return index;
     //To capture both language-change by fcoo.settings and by i18next direct
     //fire globalEvent LANGUAGECHENGED when language is changed via i18next
     i18next.on('languageChanged', function() {
-        ns.events.fire( languagechanged );
+        if (!dont_call_global_events)
+            ns.events.fire( languagechanged );
     });
 
     //Set modernizr-test and set all element when language changes
@@ -71334,7 +71433,8 @@ latlng-format-base, a class to validate, format, and transform positions (eq. le
         setFormat
         ************************************/
         setFormat: function( formatId, dontCallOnChange ){
-            var oldFormatId = this.options.formatId;
+            var oldFormatId = this.options.formatId,
+                oldDecimal = this.options.delimitersDecimal;
             if (formatId !== undefined)
                 this.options.formatId = formatId;
 
@@ -71375,7 +71475,7 @@ latlng-format-base, a class to validate, format, and transform positions (eq. le
                 $.extend( this.options, newOptions );
             }
 
-            if (!dontCallOnChange && (oldFormatId != formatId))
+            if (!dontCallOnChange && ((oldFormatId != formatId) || (oldDecimal != dS)))
                 $.each( this.onChangeList, function( index, rec ){
                     (rec.context ? $.proxy(rec.method, rec.context) : rec.method)(formatId, oldFormatId);
                 });
@@ -71431,7 +71531,7 @@ latlng-format-base, a class to validate, format, and transform positions (eq. le
                 var result = locale.apply(this, arguments);
 
                 //Update format
-                window.latLngFormat.setTempFormat();
+                window.latLngFormat.setFormat();
 
                 return result;
             };
@@ -73913,7 +74013,7 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
     LATLNG
     **************************************
     *************************************/
-    setGlobalEvent( ns.events.LATLNGFORMATCHANGED );
+    setGlobalEvent( ns.events.LATLNGFORMATCHANGED + ' ' + ns.events.NUMBERFORMATCHANGED );
 
     /*************************************
     formatId = latlng

@@ -71,13 +71,8 @@ Objects and methods to create icons for buttons etc.
             'far ' + subIcon + ' fa-SUB-small-right-bottom'
         ]];
     };
-
-
     ns.settingIcon = function(mainIcon){
         return ns.iconSub(mainIcon, 'fa-cog');
-    };
-    ns.NYsettingIcon = function(mainIcon){
-        return ns.NYiconSub(mainIcon, 'fa-cog');
     };
 }(jQuery, this, document));
 
