@@ -814,6 +814,9 @@ Different versions of sub-icons can be created using different methods in namesp
   .card-header .fa-circle-small-right-bottom, .card-header
   .fa-square-small-right-bottom {
     color: #e9ecef !important; }
+  .semi-transparent .fa-circle-small-right-bottom, .semi-transparent
+  .fa-square-small-right-bottom {
+    color: #e6e6e6 !important; }
   .btn .fa-circle-small-right-bottom, .btn
   .fa-square-small-right-bottom {
     right: -0.1875em;

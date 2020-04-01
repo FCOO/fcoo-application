@@ -19,8 +19,8 @@ Different versions of sub-icons can be created using different methods in namesp
 $sub-position            : -5em / 16;
 $inside-button-adjustment: 2em / 16;
 
-$inside-big-icon-button-horizontal-adjustment: 2em / 16; //3
-$inside-big-icon-button-vertical-adjustment  : 3.5em / 16; //3
+$inside-big-icon-button-horizontal-adjustment: 2em / 16;
+$inside-big-icon-button-vertical-adjustment  : 3.5em / 16;
 $inside-big-icon-button-font-factor: .85;
 
 $sub-icon-font-size: 0.9em;
@@ -63,6 +63,10 @@ $sub-icon-font-size: 0.9em;
     .card-header & {
         //When inside a accordion-headeractive (selected) button => use active-color
         color: $title-bg-color !important;
+    }
+    .semi-transparent & {
+        //When inside a semi-transparent button => use 'gray' color
+        color: rgb(230,230,230) !important;
     }
 
     //Adjust placment when inside a button
