@@ -225,6 +225,10 @@ Sections:
         en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
     };
 
+    //Change the title of the document when the language is changed
+    ns.events.on( ns.events.LANGUAGECHANGED, function(){
+        document.title = 'fcoo.dk - ' + window.i18next.sentence(ns.applicationHeader);
+    });
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
@@ -336,6 +340,10 @@ Sections:
         $.each( ['BETA', 'STAGING','DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
             if (urlStr.indexOf(name) > -1){
                 $versionDiv.text( name + (ns.applicationVersion ? ' - ' + ns.applicationVersion : ''));
+
+                ns.applicationHeader.da = name +' - ' + ns.applicationHeader.da;
+                ns.applicationHeader.en = name +' - ' + ns.applicationHeader.en;
+
                 window.document.title = name +' - ' + window.document.title;
                 return false;
             }
