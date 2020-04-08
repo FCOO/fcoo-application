@@ -569,7 +569,7 @@ Sections:
        Adding the Piwik Tracking Code
     ************************************************************************
     ***********************************************************************/
-
+/* REMOVED. CODE FOR SENTRY MUST BE ADDED DIRECTLY INTO index.html OF THE APPLICATION
     //Initialize raven to report all uncaught exceptions to sentry
     var sentryDSN = ns.getApplicationOption( '{APPLICATION_SENTRYDSN}', '');
     if (sentryDSN)
@@ -583,9 +583,10 @@ Sections:
             ignoreUrls   : [],
             ignoreErrors : [],
             includePaths : [], //An array of regex patterns to indicate which urls are a part of your app in the stack trace
-            //dataCallback : null, //A function that allows mutation of the data payload right before being sent to Sentry. dataCallback: function(data) { /*do something to data*/ return data;
+            //dataCallback : null, //A function that allows mutation of the data payload right before being sent to Sentry. dataCallback: function(data) { do something to data return data;
         }).install();
 
+*/
     //Adding the Piwik Tracking Code
 /* REMOVED AGAIN AND PUT BACK IN app/_index.html.tmpl OF THE APPLICATION
     var piwikSiteId = ns.getApplicationNumberOption( '{APPLICATION_PIWIKSITEID}', 0);
