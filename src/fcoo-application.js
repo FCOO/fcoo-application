@@ -350,10 +350,6 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
     //Set <html> class = 'loading' and adds logo and spinner
     $html.modernizrOn('loading');
 
-//    $(window).on('load', function() { $html.modernizrOff('loading'); });
-    window.fcoo.events.onLast( 'load', function(){ $html.modernizrOff('loading'); });
-
-
     $(function() {
         //Find or create outer div displayed when loading
         var $loadingDiv = $body.find('div.loading');
