@@ -1346,13 +1346,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 Set-up of common systems, objects, and methods for FCOO web applications
 Sections:
-1: Set-up standard error-handler and message for promise
+1: Set-up standard error-handler, message for promise and default Promise prefetch and finally
 2: Namespace, application states, system variables, global events, "FCOO"-variables
 3: Methods to load and save all hash and parameters
 4: Set up 'loading...'
 5: Initialize offline.js - http://github.hubspot.com/offline/
-6: Initialize raven to report all uncaught exceptions to sentry AND
-   Adding the Piwik Tracking Code
+REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Adding the Piwik Tracking Code
 7: Set up and initialize jquery-bootstrap
 8: Set-up jquery-bootstrap-message for different type of messages
 9: Adjust globalSetting and remove not-ready parts
@@ -1363,7 +1362,7 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    1: Set-up standard error-handler and message for promise
+    1: Set-up standard error-handler, message for promise and default Promise prefetch and finally
     ************************************************************************
     ***********************************************************************/
     //Maintain a list of open notys with promise errors. Prevent showing the same error in multi notys
@@ -1474,7 +1473,38 @@ Sections:
                                ] : null
                 });
             }
-    };
+    }; //End of Promise.defaultErrorHandler
+
+    //Create defaultPrefetch and defaultFinally to handle when "Loading..." can be removed
+    function finishLoading(){
+        $('html').modernizrOff('loading');
+    }
+
+    //Set fallback to remove 'loading...' after 10 sec
+    window.setTimeout(finishLoading, 10*1000);
+
+    var fetchInProgress = 0,
+        loadingTimeoutId = null;
+
+    Promise.defaultPrefetch = function(/*url, options*/){
+        fetchInProgress++;
+        if (loadingTimeoutId){
+            window.clearTimeout(loadingTimeoutId);
+            loadingTimeoutId = null;
+        }
+    }
+
+    Promise.defaultFinally = function(){
+        fetchInProgress--;
+        if (!fetchInProgress){
+            if (loadingTimeoutId)
+                window.clearTimeout(loadingTimeoutId);
+
+            //Set timeout to end loading alowing new fetch to start
+            loadingTimeoutId = window.setTimeout(finishLoading, 200);
+        }
+    }
+
 
     /***********************************************************************
     ************************************************************************
