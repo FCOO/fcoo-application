@@ -154,7 +154,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
             window.clearTimeout(loadingTimeoutId);
             loadingTimeoutId = null;
         }
-    }
+    };
 
     Promise.defaultFinally = function(){
         fetchInProgress--;
@@ -165,7 +165,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
             //Set timeout to end loading alowing new fetch to start
             loadingTimeoutId = window.setTimeout(finishLoading, 200);
         }
-    }
+    };
 
 
     /***********************************************************************
@@ -699,7 +699,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
     8: Set-up jquery-bootstrap-message for different type of messages
     ************************************************************************
     ***********************************************************************/
-    //messageGroupList = [] of messageGroup that savess status in globalSetting
+    //messageGroupList = [] of messageGroup that saves status in globalSetting
     var messageGroupList =  [];
 
     //Add 'messages' to fcoo.globalSetting
@@ -723,6 +723,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
     $.BsMessage.prototype.getFCOOId = function(){
         return 'fcoo_' + this.options.urlId + '_' + this.options.id;
     };
+
 
     /************************************************************
     messageGroupOptions =
@@ -884,8 +885,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
         setMessageGroupLanguage();
 
         //Change language in message-group when the global setting change
-        ns.events.on( 'languagechanged', setMessageGroupLanguage );
-
+        ns.events.on( ns.events.LANGUAGECHANGED, setMessageGroupLanguage );
         $button.on('click', function(){ messageGroup.asBsModal( true ); });
     };
 
@@ -896,10 +896,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
     ***********************************************************************/
     //accordionList = {ID}OPTIONS, ID = global event id OPTIONS = corrections to default options
     var accordionList = {};
-/*
-    window.fcoo.events = new window.GlobalEvents();
-    var globalEventsNames = ['languagechanged', 'timezonechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged']
-*/
+
     //Using globe with sub clock as icon for time-zone
     accordionList[ns.events.TIMEZONECHANGED] = {
         header: {

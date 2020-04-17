@@ -229,8 +229,8 @@
 
 
             $('<select id="theSelect" style="width:200px"></select><br>'+
-            '<button onClick="fcoo.settings.set(\'language\', \'da\');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button>'+
-            '<button onClick="fcoo.settings.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>'+
+            '<button onClick="fcoo.globalSetting.set(\'language\', \'da\');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button>'+
+            '<button onClick="fcoo.globalSetting.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>'+
             '<button onClick="modalDemo();">Modal demo</button>'+
             '<button onClick="notyDemo();">Noty demo</button>'+
             '<div class="show-for-mouse">Vises kun, hvis der er en mus</div>').appendTo(main.$mainContainer);
