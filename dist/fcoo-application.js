@@ -174,7 +174,7 @@ Create and manage the main structure for FCOO web applications
                             .addClass('button-group')
                             .appendTo($container);
                 $.each(buttonList, function(index2, buttonOptions){
-                    $.extend(buttonOptions, {bigIcon: true, square: true});
+                    buttonOptions = $.extend({bigIcon: true, square: true}, buttonOptions);
                     $.bsButton(buttonOptions).appendTo($div);
                 });
             });
