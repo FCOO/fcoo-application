@@ -694,6 +694,15 @@ Create and manage the top-menu for FCOO web applications
 
         //***************************************************************
         {
+            id: 'preSetting',
+            create: function( $menu, elementOptions, menuOptions ){
+                return defaultTopMenuButton($menu, menuOptions);
+            },
+            priority : 2,
+            rightSide: true
+        },
+        //***************************************************************
+        {
             id: 'setting',
             create: function( $menu/*, elementOptions, menuOptions */){
                 var $result = defaultTopMenuButton($menu, {
@@ -701,6 +710,15 @@ Create and manage the top-menu for FCOO web applications
                         onClick: function(){ ns.globalSetting.edit(); }
                     });
                 return $result;
+            },
+            priority : 2,
+            rightSide: true
+        },
+        //***************************************************************
+        {
+            id: 'postSetting',
+            create: function( $menu, elementOptions, menuOptions ){
+                return defaultTopMenuButton($menu, menuOptions);
             },
             priority : 2,
             rightSide: true
@@ -801,15 +819,17 @@ Create and manage the top-menu for FCOO web applications
     ******************************************************************/
     ns.createTopMenu = function( options ){
         options = $.extend({}, {
-            leftMenu : true,
-            logo     : true,
-            header   : ns.applicationHeader,
-            messages : null,
-            warning  : null,
-            search   : true,
-            setting  : true,
-            help     : null,
-            rightMenu: true
+            leftMenu   : true,
+            logo       : true,
+            header     : ns.applicationHeader,
+            messages   : null,
+            warning    : null,
+            search     : true,
+            preSetting : false, //or {icon, onClick}
+            setting    : true,
+            postSetting: false, //or {icon, onClick}
+            help       : null,
+            rightMenu  : true
         }, options );
 
         var result = {
