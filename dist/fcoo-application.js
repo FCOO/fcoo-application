@@ -135,6 +135,8 @@ Create and manage the main structure for FCOO web applications
             load        = onClick or buttonOptions, //Standard load-button
             bookmark    = onClick or buttonOptions, //Standard bootmark-button
             share       = onClick or buttonOptions, //Standard share-button
+            user        = onClick or buttonOptions, //Standard user-button
+            setting     = onClick or buttonOptions, //Standard setting-button
             postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
         */
         function createMenuButtons(options, $container){
@@ -149,7 +151,9 @@ Create and manage the main structure for FCOO web applications
                 {id:'save',     icon: 'fa-save',        title: {da: 'Gem',             en: 'Save'        }, newGroup: true},
                 {id:'load',     icon: 'fa-folder-open', title: {da: 'Hent',            en: 'Load'        } },
                 {id:'bookmark', icon: 'fa-star',        title: {da: 'Tilføj bogmærke', en: 'Add bookmark'}, newGroup: true},
-                {id:'share',    icon: shareIcon,        title: {da: 'Del',             en: 'Share'       } }
+                {id:'share',    icon: shareIcon,        title: {da: 'Del',             en: 'Share'       } },
+                {id:'user',     icon: 'fa-user',        title: {da: 'Bruger',          en: 'User'        }, newGroup: true},
+                {id:'setting',  icon: 'fa-cog',         title: {da: 'Indstillinger',   en: 'Settings'    } }
             ],
             function(index, defaultButtonOptions){
                 var nextButtonOptions = options[defaultButtonOptions.id];
