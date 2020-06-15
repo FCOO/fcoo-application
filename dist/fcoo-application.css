@@ -811,7 +811,8 @@ Different versions of sub-icons can be created using different methods in namesp
   right: -0.3125em;
   bottom: -0.3125em;
   font-size: 0.9em;
-  color: #f8f9fa !important; }
+  color: #f8f9fa !important;
+  text-shadow: none; }
   .active .fa-circle-small-right-bottom, .active
   .fa-square-small-right-bottom {
     color: #007bff !important; }
@@ -821,6 +822,10 @@ Different versions of sub-icons can be created using different methods in namesp
   .semi-transparent .fa-circle-small-right-bottom, .semi-transparent
   .fa-square-small-right-bottom {
     color: #e6e6e6 !important; }
+  .top-menu-container .top-menu .fa-circle-small-right-bottom, .top-menu-container .top-menu
+  .fa-square-small-right-bottom {
+    color: #214b87 !important;
+    color: {APPLICATION_COLOR} !important; }
   .btn .fa-circle-small-right-bottom, .btn
   .fa-square-small-right-bottom {
     right: -0.1875em;

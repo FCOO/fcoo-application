@@ -56,6 +56,7 @@ $sub-icon-font-size: 0.9em;
     bottom   : $sub-position;
     font-size: $sub-icon-font-size;
     color    : $control-bg-color !important;
+    text-shadow: none;
     .active & {
         //When inside a active (selected) button => use active-color
         color: $control-active-bg-color !important;
@@ -68,6 +69,13 @@ $sub-icon-font-size: 0.9em;
         //When inside a semi-transparent button => use 'gray' color
         color: rgb(230,230,230) !important;
     }
+
+    .top-menu-container .top-menu & {
+        //When inside top-menu => color = application background color (or fallback)
+        color: $default-background-color !important;
+        color: #{$app-background-color} !important;
+    }
+
 
     //Adjust placment when inside a button
     .btn & {
