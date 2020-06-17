@@ -75924,16 +75924,6 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
                 minutes : formatContain('M')
             }
         });
-/*
-        var options = {};
-        switch (format){
-          case 'H'  : options.relativeFormat = {now: true, days: false, hours: true, minutes: false }; break;
-          case 'HM' : options.relativeFormat = {now: true, days: false, hours: true, minutes: true  }; break;
-          case 'DHM': options.relativeFormat = {now: true, days: true,  hours: true, minutes: true  }; break;
-          default   : options.relativeFormat = {now: true, days: true,  hours: true, minutes: false };
-        }
-        return m.relativeFormat( options );
-*/
     }
 
     addMomentFormat( 'relative',     function( m ){ return momentRelativeFormat( m, 'DH'  ); } );
@@ -75943,6 +75933,43 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
     addMomentFormat( 'relative_hm',  function( m ){ return momentRelativeFormat( m, 'HM'  ); } );
     addMomentFormat( 'relative_dh',  function( m ){ return momentRelativeFormat( m, 'DH'  ); } );
     addMomentFormat( 'relative_dhm', function( m ){ return momentRelativeFormat( m, 'DHM' ); } );
+
+
+    /*************************************
+    formatId = time_sup_XX
+    *************************************/
+    function momentTimeSupFormat(m, relativeHours/*rel2m*/){
+        //Return m.timeFormat() with sup +/-1,2,... if m and rel2m has different date
+        //Eq. m=22:00 may 1th, rel2m = 02:00 may 2th => result = 22:00<sup>-1</sup> "22:00 the day before"
+        if (!m.isValid()) return '';
+        var relativeM = m.clone().add(relativeHours, 'hours'),
+            result = m.timeFormat();
+        if (m.dateFormat() != relativeM.dateFormat()){
+            var dayDiff = m.clone().startOf('day').diff(relativeM.startOf('day'), 'days');
+            result = result + '<sup>' + (dayDiff > 0 ? '+' : '') + dayDiff + '</sup>';
+        }
+        return result;
+    }
+
+    //time_utc_sup = time of utc with sup of day-different
+    addMomentFormat( 'time_utc_sup', function( m ){
+        if (!m.isValid()) return '';
+        return momentTimeSupFormat( moment.utc(m), m.tzMoment().utcOffset()/60  );
+    });
+
+    //time_now_sup = time of current tz with sup of day-different to now (same tz)
+    addMomentFormat( 'time_now_sup', function( m ){
+        if (!m.isValid()) return '';
+        return momentTimeSupFormat( m.tzMoment(), moment().diff(m.tzMoment(), 'hours') );
+    });
+
+    //time_other_sup = time of current tz with sup of day-different to another moment given in options (same tz)
+    addMomentFormat( 'time_other_sup', function( m, options ){
+        if (!m.isValid()) return '';
+        return momentTimeSupFormat( m.tzMoment(), moment(options.other).diff(m.tzMoment(), 'hours') );
+    });
+
+
 
 
     //Flush global-events
@@ -75957,7 +75984,6 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
 */
 }(jQuery, this, document));
 
-//}, 2000);//HER
 ;
 /**
  * EvEmitter v1.1.0
