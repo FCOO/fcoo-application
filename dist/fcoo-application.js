@@ -2157,6 +2157,8 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
                     //Hide the button if there are no message
                     $button.addClass('d-none');
                 }
+                if (this.saveStatusInGlobalSetting)
+                    ns.globalSetting.save();
             }
 
         },
