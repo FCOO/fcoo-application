@@ -502,15 +502,19 @@ ns.events.
     };
 */
 
-    ns.globalSettingFooter = function(id, extended){
-        //Find icon for accordionList
+    ns.globalSettingAccordion = function(id){
         var accordionOptions = {};
         $.each( ns.globalSetting.options.accordionList, function(index, accOptions){
             if (accOptions.id == id)
                 accordionOptions = accOptions;
         });
+        return accordionOptions;
+    }
 
-        var options = footerOptions[id] ?  footerOptions[id](extended) : {text: accordionOptions.header.text};
+    ns.globalSettingFooter = function(id, extended){
+        //Find icon for accordionList
+        var accordionOptions = ns.globalSettingAccordion(id),
+            options = footerOptions[id] ?  footerOptions[id](extended) : {text: accordionOptions.header.text};
 
         options.icon = accordionOptions.header.icon;
 
