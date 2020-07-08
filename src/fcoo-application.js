@@ -743,6 +743,8 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
             icons  : { externalLink: $.bsExternalLinkIcon /* == 'fa-external-link'*/ },
             loading: { icon: ns.icons.working },
 
+            convertUrl: ns.dataFilePath,
+
             onStartLoading : function( messageGroup ){
                 //Add messageGroup-id as noty-queue-id for all data-files in the message-group
                 $.each(messageGroup.options.url, function(id, nextUrl){

@@ -45,7 +45,7 @@ ns.events.
                 accordionOptions = accOptions;
         });
         return accordionOptions;
-    }
+    };
 
     ns.globalSettingFooter = function(id, extended){
         //Find icon for accordionList

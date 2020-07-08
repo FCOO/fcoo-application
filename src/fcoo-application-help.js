@@ -29,7 +29,7 @@ Methods for managing help-files
             }
             return _bsModalContent.call(this, options);
         };
-    }($.fn._bsModalContent)
+    }($.fn._bsModalContent);
 
     function showHelpFile(helpId){
         ns.messageGroupList.help._getMessageById(helpId).asBsModal( true );

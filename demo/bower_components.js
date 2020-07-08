@@ -20047,7 +20047,10 @@ else {
 	https://github.com/FCOO
 
     fcoo.LOCAL_DATA: {boolean}
-    fcoo.dataFilePath: function(subDirName, fileName);
+    fcoo.dataFilePath:
+        function(subDir:STRING, fileName:STRING) OR
+        function(pathAndFileName:STRING) OR
+        function(subAndFileName:{subDirName;STRING, fileName:STRING})
 
     if fcoo.LOCAL_DATA == false:
     fcoo.dataFilePath("theSubDir", "fileName.json") returns "https://app.fcoo.dk/static/theSubDir/fileName.json"
@@ -20067,7 +20070,26 @@ else {
 
     ns.LOCAL_DATA = false;
 
-    ns.dataFilePath = function(subDir, fileName){
+    ns.dataFilePath = function(){
+        // Detect mode
+        var subDir, fileName;
+        if (arguments.length == 2){
+            //(subDir:STRING, fileName:STRING)
+            subDir   = arguments[0];
+            fileName = arguments[1];
+        }
+        else
+        if (arguments.length == 1){
+            if ($.type(arguments[0]) == 'string')
+                //(pathAndFileName:STRING)
+                return arguments[0];
+            else {
+                //(subAndFileName:{subDirName;STRING, fileName:STRING})
+                subDir   = arguments[0].subDir;
+                fileName = arguments[0].fileName;
+            }
+        }
+
         if (ns.LOCAL_DATA === true)
             return '/src/data/_' + fileName;
         else
@@ -20075,6 +20097,8 @@ else {
     };
 
 }(this, document));
+
+
 ;
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -70702,16 +70726,22 @@ window.location.hash
                         });
                 });
 
-                this.modalForm = $.bsModalForm({
-                    id        : this.options.storeId,
-                    show      : false,
-                    header    : this.options.modalHeader,
-                    flexWidth : this.options.flexWidth,
-                    content   : {type: 'accordion', list: list },
-                    onChanging: $.proxy(this.onChanging, this),
-                    onCancel  : $.proxy(this.onCancel,   this),
-                    onSubmit  : $.proxy(this.onSubmit,   this)
-                });
+                this.modalForm = $.bsModalForm(
+                    $.extend(
+                        this.options.modalOptions || {},
+                        {
+                            id        : this.options.storeId,
+                            show      : false,
+                            header    : this.options.modalHeader,
+                            flexWidth : this.options.flexWidth,
+
+                            content   : {type: 'accordion', list: list },
+                            onChanging: $.proxy(this.onChanging, this),
+                            onCancel  : $.proxy(this.onCancel,   this),
+                            onSubmit  : $.proxy(this.onSubmit,   this)
+                        }
+                    )
+                );
             }
 
             //Get data and save data
@@ -81962,6 +81992,9 @@ if (typeof define === 'function' && define.amd) {
         this.options.status = this.parent.options.loadStatus( this );
         this.options.icons = this.parent.options.icons;
 
+        this.options.url  = this.parent.options.convertUrl( this.options.url  );
+        this.options.link = this.parent.options.convertUrl( this.options.link );
+
         /*
         Find the publishMoment = the moment where the message is published
         Used with options.expire and options.becomeRead to determinate if the messsage is expired or read
@@ -82030,7 +82063,7 @@ if (typeof define === 'function' && define.amd) {
                     '<br>'
                 );
 
-            title.push( {text: this.options.title} );
+            title.push( {text: this.options.title, textClass:'mr-0'} );
 
             if (this.options.url)
                 title.push(
@@ -82142,12 +82175,13 @@ if (typeof define === 'function' && define.amd) {
             },
             reloadPeriod  : '', //period-string with interval for reloading
 
-            onStartLoading : function( /*messageGroup*/){ },          //Called when loading of messages starts
-            onFinishLoading: function( /*messageGroup*/){ },          //Called when loading of messages finish
-            onErrorLoading : function( /*messageGroup*/){ },          //Called when loading of messages fails
+            convertUrl     : function( url ){ return url; }, //function to convert url (optional)
+            onStartLoading : function( /*messageGroup*/){ }, //Called when loading of messages starts
+            onFinishLoading: function( /*messageGroup*/){ }, //Called when loading of messages finish
+            onErrorLoading : function( /*messageGroup*/){ }, //Called when loading of messages fails
 
-            onCreate  : function( /*messageGroup*/){ },          //Called when group is created
-            onChange  : function( /*messageGroup*/){ },          //Called when the status of the group is changed. (Status=nr of messages, no of (un)read merssages)
+            onCreate  : function( /*messageGroup*/){ },      //Called when group is created
+            onChange  : function( /*messageGroup*/){ },      //Called when the status of the group is changed. (Status=nr of messages, no of (un)read merssages)
 
             loadStatus: function( /*message*/ ){ return true; }, //Return true if the message is read
             saveStatus: function( /*message [,status]*/ ){},     //Save the status for message
@@ -82172,9 +82206,14 @@ if (typeof define === 'function' && define.amd) {
 		}, options || {} );
 
         //Convert url to array of string
-        if (!$.isArray(this.options.url))
+        //if (!$.isArray(this.options.url))
+        if ($.type(this.options.url) == 'string')
             this.options.url = this.options.url.split(' ');
 
+        var _this = this;
+        $.each(this.options.url, function(index, singleUrl){
+            _this.options.url[index] = _this.options.convertUrl(singleUrl);
+        });
 
         //convert reloadPeriod to ms
         if (this.options.reloadPeriod){
