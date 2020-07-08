@@ -889,6 +889,10 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
         //Change language in message-group when the global setting change
         ns.events.on( ns.events.LANGUAGECHANGED, setMessageGroupLanguage );
         $button.on('click', function(){ messageGroup.asBsModal( true ); });
+
+        //Save messageGroup in global list of messagesGroups
+        ns.messageGroupList = ns.messageGroupList || {};
+        ns.messageGroupList[type] = messageGroup;
     };
 
     /***********************************************************************

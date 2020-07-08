@@ -40,6 +40,7 @@
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
 
+    <script src="../src/fcoo-application-help.js"></script>
     <script src="../src/fcoo-application-setting.js"></script>
     <script src="../src/fcoo-application-icon.js"></script>
     <script src="../src/fcoo-application.js"></script>
@@ -54,6 +55,7 @@
 
         var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
 
+        window.fcoo.LOCAL_DATA = true;//false;
 /*
         var $select = $('#theSelect');
         var optionList = [
@@ -92,10 +94,14 @@
 
                 onPin : function(){},
                 onNew : function(){},
+                helpId: 'help1',
+                helpButton: true,
                 extended: {
                     content: 'Hej<br>Dette er udvidet'
                 },
-
+                buttons: [
+                    {text:'Test', onClick: function(){ alert('Test'); }},
+                ],
                 content: 'Content',
                 show: true
             });
