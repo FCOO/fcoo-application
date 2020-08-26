@@ -202,7 +202,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
         catch(e) {
             return false;
         }
-    };
+    }
 
     ns.localStorageExists   = testStorage('localStorage');
     ns.sessionStorageExists = testStorage('sessionStorage');
