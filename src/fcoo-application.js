@@ -183,27 +183,40 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
 
 
     /*********************************************************************
-    Determinate if localStorage is supported and available
+    Determinate if localStorage and/or sessionStorage is supported and available
     If the browser is in 'Private' mode not all browser supports localStorage
-    In localStorage isn't supported a fake version is installed
-    At the moment no warning is given when localStorage isn't supported since
-    some browser in private-mode allows the use of window.localStorage but
-    don't save it when the session ends
-    The test is done in fcoo/fake-localstorage
+
+    REMOVED: The use of fake-localstorage "fcoo/fake-localstorage#^1.0.0"
     *********************************************************************/
-    ns.localStorageExists = !window.fake_localstorage_installed;
+    function testStorage( storageName ){
+        try {
+            var storage = window[storageName],
+                id      = '__storage_test__',
+                dataIn  = '__storage_test__',
+                dataOut;
+            storage.setItem(id, dataIn);
+            dataOut = storage.getItem(id);
+            storage.removeItem(id);
+            return dataIn == dataOut;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
+    ns.localStorageExists   = testStorage('localStorage');
+    ns.sessionStorageExists = testStorage('sessionStorage');
+
 
     /*********************************************************************
     Determinate if the application is running in "standalone mode"
 
     The app operates in standalone mode when
-    - it has a query string parameter "standalone=true" (generic), or
     - the navigator.standalone property is set (iOS), or
     - the display-mode is standalone (Android).
     For standalone apps we use localStorage for persisting state.
     *********************************************************************/
     ns.standalone =
-        window.Url.parseAll( {standalone:'BOOLEAN'}, {standalone:false} ).standalone ||
         ( ("standalone" in window.navigator) && window.navigator.standalone ) ||
         ( window.matchMedia('(display-mode: standalone)').matches );
 
@@ -822,12 +835,16 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
                 shakeWhenUnread: true,
 
                 //Save status as sessionStorage
-                loadStatus: function( message ){
-                    return sessionStorage.getItem( message.getFCOOId() ) == 'READ';
-                },
-                saveStatus: function( message ){
-                    sessionStorage.setItem( message.getFCOOId(), message.options.status ? 'READ' : 'NOTREAD' );
-                }
+                loadStatus: ns.sessionStorageExists ?
+                                function( message ){
+                                    return sessionStorage.getItem( message.getFCOOId() ) == 'READ';
+                                } :
+                                function(){ return false; },
+                saveStatus: ns.sessionStorageExists ?
+                                function( message ){
+                                    sessionStorage.setItem( message.getFCOOId(), message.options.status ? 'READ' : 'NOTREAD' );
+                                } :
+                                function(){}
             },
 
             //Info:
