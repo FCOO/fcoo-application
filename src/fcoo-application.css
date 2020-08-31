@@ -437,7 +437,8 @@ confussions another name is used
     .touchevents .top-menu-container .top-menu .icon-fcoo-app-logo {
       opacity: 1; }
     .top-menu-container .top-menu .icon-fcoo-app-logo:hover, .top-menu-container .top-menu .icon-fcoo-app-logo:focus {
-      opacity: 1; }
+      opacity: 1;
+      text-decoration: none; }
   .top-menu-container .top-menu .top-menu-header {
     flex-shrink: 1;
     flex-grow: 1;
