@@ -60302,6 +60302,11 @@ module.exports = g;
 
         new     : ['far fa-window-maximize fa-inside-circle2', 'far fa-circle'],
 
+        warning : [['fas fa-circle back text-warning', 'far fa-circle front'], 'fas fa-exclamation middle'],
+
+        info    : 'fa-info-circle',
+
+
         help    : 'far fa-question-circle',
 
         close   : ['fas fa-circle back', 'far fa-times-circle middle', 'far fa-circle front']
@@ -60309,7 +60314,8 @@ module.exports = g;
 
     //mandatoryHeaderIconClass = mandatory class-names and title for the different icons on the header
     var mandatoryHeaderIconClassAndTitle = {
-        close: {class:'header-icon-close', title: {da:'Luk', en:'Close'}},
+        warning: {class:'header-icon-colored-background header-icon-warning', __title: {da:'Luk', en:'Close'}},
+        close  : {class:'header-icon-colored-background header-icon-close',   title: {da:'Luk', en:'Close'}},
     };
 
     /******************************************************
@@ -60356,7 +60362,7 @@ module.exports = g;
                         .appendTo( this );
 
             //Add icons
-            $.each( ['back', 'forward', 'pin', 'unpin', 'extend', 'diminish', 'new', 'help', 'close'], function( index, id ){
+            $.each( ['back', 'forward', 'pin', 'unpin', 'extend', 'diminish', 'new', 'warning', 'info', 'help', 'close'], function( index, id ){
                 var iconOptions = options.icons[id],
                     classAndTitle = mandatoryHeaderIconClassAndTitle[id] || {};
 
@@ -60893,14 +60899,14 @@ options
     Display/hide a bagdrop while some process is 'working'
     ******************************************************/
     $.workingOn = function(){
+        $._addModalBackdropLevel();
         window.setTimeout(function(){
-            $._addModalBackdropLevel();
             $modalBackdrop.addClass('working');
         }, 100);
     };
     $.workingOff = function(){
+        $._removeModalBackdropLevel(true);
         window.setTimeout(function(){
-            $._removeModalBackdropLevel(true);
             $modalBackdrop.removeClass('working');
         }, 100);
 
@@ -61782,6 +61788,8 @@ jquery-bootstrap-modal-promise.js
                 extend  : { className: iconExtendClassName,     onClick: multiSize ? modalExtend   : null, altEvents:'swipeup'   },
                 diminish: { className: iconDiminishClassName,   onClick: multiSize ? modalDiminish : null, altEvents:'swipedown' },
                 new     : { className: '',                      onClick: options.onNew ? $.proxy(options.onNew, this) : null },
+                info    : { className: '',                      onClick: options.onInfo ? $.proxy(options.onInfo, this) : null },
+                warning : { className: '',                      onClick: options.onWarning ? $.proxy(options.onWarning, this) : null },
                 help    : { className: '',                      onClick: options.onHelp ? $.proxy(options.onHelp, this) : null },
             }
         }, options );
@@ -64793,7 +64801,8 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             function buildTimeSlider(options, $parent){ buildSlider(options, 'timeSlider', $parent); }
 
             function buildTextBox( options ){
-                return $('<div/>')._bsAddHtml( options );
+                return $('<div/>')
+                        ._bsAddHtml( options );
             }
 
             function buildHidden( options ){
@@ -64911,6 +64920,10 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
                     buildFunc.call( this, options, $parent );
                 else
                     buildFunc.call( this, options ).appendTo( $parent );
+
+                if (options.center)
+                    $parent.addClass('justify-content-center');
+
 
                 var prepend = options.prepend || options.before;
                 if (prepend)
@@ -73409,7 +73422,9 @@ latlng-format-base, a class to validate, format, and transform positions (eq. le
         },
 
 
+        /**********************************************************
         //convertTo - If value is valid => convert it to newFormatId format and return it as text-string, else return false
+        **********************************************************/
         convertTo: function( newFormatId, options ){
             var formatId = latLngFormat.options.formatId,
                 result   = this.value(options);
@@ -73422,7 +73437,21 @@ latlng-format-base, a class to validate, format, and transform positions (eq. le
             }
 
             return result;
-        }
+        },
+
+        /**********************************************************
+        outputs - return a list of possible output-formats to be used in other applications etc.
+        Default = [format()]
+        **********************************************************/
+        _outputs: function(){
+            return latLngFormat._callMethodFromFormatList( 'outputs', this, arguments );
+        },
+
+        outputs: function(){
+            return this._valueMethod( this._outputs, {twoValueMode: false} ) || (this.format() ? [this.format()] : []);
+        },
+
+
     };//end of latLngFormat.fn = LatLngFormat.prototype = {
 
 
@@ -73664,9 +73693,39 @@ Set methodes and options for format degrees, minutes, seconds
                 }
             }
             return sign*result;
-        }
+        },
 
+        /**********************************************************
+        outputs - return a list of possible output-formats to be used in other applications etc.
+        **********************************************************/
+        outputs: function( latLng ){
+            var result = [];
+
+            if (!this.inputIsValid)
+                return result;
+
+            //Create two outputs: 1: As format 2: Without hemisphere, degree, minutes and second chars and with +/-
+            result.push( this.format() );
+
+            var format = this.format({asArray: true});
+            if (latLng[0] < 0) format[0] = '-'+format[0];
+            if (latLng[1] < 0) format[1] = '-'+format[1];
+
+            function trimPos(str){
+                str = str.replace(/\D/g, function(char){
+                    return (char=='-') || (char==',') || (char=='.') ? char : ' ';
+                });
+                str = str.trim();
+                return str;
+            }
+
+            result.push( trimPos(format[0])+' '+trimPos(format[1]) );
+
+            return result;
+        }
     }; //end of window.latLngFormat.formatList[...] =
+
+
 
     //Set LATLNGFORMAT_DMSS as default
     if (!window.latLngFormat.options.formatId)
