@@ -1427,7 +1427,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
 9: Adjust globalSetting and remove not-ready parts
 ****************************************************************************/
 
-(function ($, window, Promise/*, document, undefined*/) {
+(function ($, i18next, window, Promise/*, document, undefined*/) {
 	"use strict";
 
     /***********************************************************************
@@ -1447,7 +1447,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
         //"Error"
         //"Error-message (error-code)"
         var message =   error.status ?
-                        window.i18next.t( 'error:'+error.status ) :
+                        i18next.t( 'error:'+error.status ) :
                         error.message || '';
         if (message && (message == error.status))
             //No status-code or translation => use error.message
@@ -1479,7 +1479,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
             $details = $('<div style="font-family: monospace" class="d-none error-details"><hr></div>'),
             hasDetails = false,
             descKey = error.status ? 'error:'+error.status+'-desc' : '',
-            desc = descKey ? window.i18next.t( descKey ) : '';
+            desc = descKey ? i18next.t( descKey ) : '';
 
         if (desc == descKey)
             desc = '';
@@ -1678,7 +1678,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
 
     //Change the title of the document when the language is changed
     ns.events.on( ns.events.LANGUAGECHANGED, function(){
-        document.title = 'fcoo.dk - ' + window.i18next.sentence(ns.applicationHeader);
+        document.title = 'fcoo.dk - ' + i18next.sentence(ns.applicationHeader);
     });
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
@@ -1945,7 +1945,7 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
     ns.offlineNoty = $.bsNotyError( {icon: $.bsNotyIcon.error, text: {da:'Ingen netværksforbindelse', en:'No network connection'}}, offlineNotyOptions_main );
 
     //Create i18n-phrases for second(s) and minute(s) and reconnecti
-    window.i18next.addPhrases({
+    i18next.addPhrases({
         'offline_sec'         : {da: 'Genopretter om {{count}} sekund...',   en: 'Reconnecting in {{count}} second...'  },
         'offline_sec_plural'  : {da: 'Genopretter om {{count}} sekunder...', en: 'Reconnecting in {{count}} seconds...' },
         'offline_min'         : {da: 'Genopretter om {{count}} minut...',    en: 'Reconnecting in {{count}} minute...'  },
@@ -1973,10 +1973,10 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
 
         $('.offline-remaning-text').text(
             remaining >= 60 ?
-            window.i18next.t('offline_min', { count: Math.floor(remaining/60) }) :
+            i18next.t('offline_min', { count: Math.floor(remaining/60) }) :
             remaining > 0 ?
-            window.i18next.t('offline_sec', { count: remaining                }) :
-            window.i18next.t('offline_reconnecting')
+            i18next.t('offline_sec', { count: remaining                }) :
+            i18next.t('offline_reconnecting')
         );
 
         //Enable/disable reconnect-button
@@ -2341,4 +2341,4 @@ REMOVED 6: Initialize raven to report all uncaught exceptions to sentry AND Addi
     $.each(ns.globalSetting.options.accordionList, function(index, accordionOptions){
         $.extend(true, ns.globalSetting.options.accordionList[index], accordionList[accordionOptions.id] || {});
     });
-}(jQuery, this, this.Promise, document));
+}(jQuery, this.i18next, this, this.Promise, document));
