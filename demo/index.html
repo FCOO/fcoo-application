@@ -39,23 +39,34 @@
     <script src="bower_components.js"></script>
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
-
-    <script src="../src/fcoo-application-help.js"></script>
-    <script src="../src/fcoo-application-setting.js"></script>
-    <script src="../src/fcoo-application-icon.js"></script>
-    <script src="../src/fcoo-application.js"></script>
-    <script src="../src/fcoo-application-main.js"></script>
-    <script src="../src/fcoo-application-top-menu.js"></script>
-    <script src="../src/fcoo-application-touch.js"></script>
     <script src="../src/fcoo-application-about.js"></script>
+    <script src="../src/fcoo-application-general.js"></script>
+    <script src="../src/fcoo-application-help.js"></script>
+    <script src="../src/fcoo-application-icon.js"></script>
+    <script src="../src/fcoo-application-main.js"></script>
+    <script src="../src/fcoo-application-message-group.js"></script>
+    <script src="../src/fcoo-application-offline.js"></script>
+    <script src="../src/fcoo-application-promise.js"></script>
+    <script src="../src/fcoo-application-setting.js"></script>
+    <script src="../src/fcoo-application-touch.js"></script>
+    <script src="../src/fcoo-application-top-menu.js"></script>
+
+
 
 	<script>
+        //window.fcoo.LOCAL_DATA = true;
+
         window.bsIsTouch = false;
         window.bsIsTouch = (window.location.search =='?touch');
 
+
+        i18next.init();
+        i18next.changeLanguage('en');
+
+
         var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
 
-        window.fcoo.LOCAL_DATA = true;//false;
+//        window.fcoo.LOCAL_DATA = true;
 /*
         var $select = $('#theSelect');
         var optionList = [
@@ -171,14 +182,16 @@
                             onClick: function(){alert('godt');  }
                         },
                         help: {
-                            url: 'data/help.json data/about_fcoo.json'
+                            //url: ['data/help.json', 'data/about_fcoo.json', {fileName: "fcoo-maps-help_NY.json", subDir: "help"}]
+                            url: {fileName: "fcoo-maps-help.json", subDir: "help"}
+
                         },
                         messages: {
                             url: 'data/info.json'
                         },
                         warning: {
                             url: 'data/oceanforecast_warning.json data/oceanforecast_warning2.json',
-//                            reloadPeriod: 'PT5S',
+                            //reloadPeriod: 'PT5S',
                         },
                         preSetting: {
                             icon   : window.fcoo.settingIcon('fa-map'),
@@ -322,6 +335,14 @@ main.$mainContainer.append('<br>');
              }).appendTo(main.$mainContainer);
 
         });
+
+
+
+
+    $(function() {
+        fcoo.promiseList_getAll();
+    });
+
     </script>
 </body>
 </html>

@@ -7,7 +7,7 @@
             "id": "error_1",
             "date": "2017-11-02T14:20Z",
             "type": "error",
-            "publish": false,
+            "publish": true,
             "url": "",
             "title": {"da":"Error: Der er noget galt med...(UTC=14:20)", "en":"Error: Something is wrong with...(UTC=14:20)"}
         },

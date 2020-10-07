@@ -14,8 +14,7 @@ Create and manage the top-menu for FCOO web applications
 	"use strict";
 
     //Create fcoo-namespace
-	window.fcoo = window.fcoo || {};
-	var ns = window.fcoo;
+    var ns = window.fcoo = window.fcoo || {};
 
     /**************************************************
     defaultTopMenuButton

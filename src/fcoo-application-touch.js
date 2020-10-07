@@ -9,8 +9,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     "use strict";
 
     //Create fcoo-namespace
-    window.fcoo = window.fcoo || {};
-    var ns = window.fcoo;
+    var ns = window.fcoo = window.fcoo || {};
 
     var maxMaskOpacity = 0.5; //Equal $modal-backdrop-opacity in \bower_components\bootstrap\scss\_variables.scss
 

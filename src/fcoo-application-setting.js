@@ -64,4 +64,19 @@ ns.events.
     };
 
 
+    //Adjust globalSetting and remove not-ready parts
+    //accordionList = {ID}OPTIONS, ID = global event id OPTIONS = corrections to default options
+    var accordionList = {};
+
+    //Using globe with sub clock as icon for time-zone
+    accordionList[ns.events.TIMEZONECHANGED] = {
+        header: {
+            icon     : ns.iconSub('fa-globe', 'fa-clock'),
+            iconClass: 'fa-fw fa-sub-icons-container'
+        }
+    };
+
+    $.each(ns.globalSetting.options.accordionList, function(index, accordionOptions){
+        $.extend(true, ns.globalSetting.options.accordionList[index], accordionList[accordionOptions.id] || {});
+    });
 }(jQuery, this, document));

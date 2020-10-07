@@ -20038,12 +20038,16 @@ else {
 
     fcoo.LOCAL_DATA: {boolean}
     fcoo.dataFilePath:
-        function(subDir:STRING, fileName:STRING) OR
+        function([mainDir:STRING|BOOLEAN], subDir:STRING, fileName:STRING) OR
         function(pathAndFileName:STRING) OR
-        function(subAndFileName:{subDirName;STRING, fileName:STRING})
+        function(subAndFileName:{mainDirNa<me:STRING|BOOLEAN, subDirName;STRING, fileName:STRING})
+
+    mainDir = STRING or BOOLEAN. if true => "dynamic", if false => "static"
 
     if fcoo.LOCAL_DATA == false:
     fcoo.dataFilePath("theSubDir", "fileName.json") returns "https://app.fcoo.dk/static/theSubDir/fileName.json"
+    fcoo.dataFilePath(false, "theSubDir", "fileName.json") returns "https://app.fcoo.dk/static/theSubDir/fileName.json"
+    fcoo.dataFilePath(true, "theSubDir", "fileName.json") returns "https://app.fcoo.dk/dynamic/theSubDir/fileName.json"
 
     if fcoo.LOCAL_DATA == true:
     fcoo.dataFilePath("theSubDir", "fileName.json") returns "/src/data/_fileName.json"
@@ -20054,27 +20058,41 @@ else {
 	"use strict";
 
 	//Create fcoo-namespace
-	window.fcoo = window.fcoo || {};
-    var ns = window.fcoo,
-        fcooDataPath = 'https://app.fcoo.dk/static/';
+    var ns     = window.fcoo = window.fcoo || {},
+        nsPath = ns.path = ns.path || {};
 
     ns.LOCAL_DATA = false;
 
-    ns.dataFilePath = function(){
+
+    //Set default protocol and host
+    nsPath.protocol = 'https:';
+    nsPath.host = 'app.fcoo.dk';
+
+    function dataFileName(){
         // Detect mode
-        var subDir, fileName;
+        var mainDir, subDir, fileName;
+
+        if (arguments.length == 3){
+            //(mainDir: STRING|BOOLEAN, subDir:STRING, fileName:STRING)
+            mainDir  = arguments[0];
+            subDir   = arguments[1];
+            fileName = arguments[2];
+        }
+        else
         if (arguments.length == 2){
             //(subDir:STRING, fileName:STRING)
+            mainDir  = false,   //=> default 'static'
             subDir   = arguments[0];
             fileName = arguments[1];
         }
         else
         if (arguments.length == 1){
-            if ($.type(arguments[0]) == 'string')
+            if (typeof arguments[0] == 'string')
                 //(pathAndFileName:STRING)
                 return arguments[0];
             else {
-                //(subAndFileName:{subDirName;STRING, fileName:STRING})
+                //({mainDir:STRING|BOOLEAN, subDirName:STRING, fileName:STRING})
+                mainDir  = arguments[0].mainDir || false;
                 subDir   = arguments[0].subDir;
                 fileName = arguments[0].fileName;
             }
@@ -20083,15 +20101,25 @@ else {
         if (ns.LOCAL_DATA === true)
             return '/src/data/_' + fileName;
         else
-            return fcooDataPath + (subDir ? subDir + '/' : '') + fileName;
-    };
+            return  nsPath.protocol + '//' +
+                    nsPath.host + '/' +
+                    (mainDir ? (mainDir === true ? 'dynamic' : mainDir) : 'static') + '/' +
+                    (subDir ? subDir + '/' : '') +
+                    fileName;
+    }
+
+    //Export method
+    nsPath.dataFileName = dataFileName;
+
+    //Backward compability
+    ns.dataFilePath = dataFileName;
 
 }(this, document));
 
 
 ;
 //! moment.js
-//! version : 2.29.0
+//! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -22632,8 +22660,7 @@ else {
     hooks.createFromInputFallback = deprecate(
         'value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), ' +
             'which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are ' +
-            'discouraged and will be removed in an upcoming major release. Please refer to ' +
-            'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
+            'discouraged. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.',
         function (config) {
             config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
         }
@@ -25713,7 +25740,7 @@ else {
 
     //! moment.js
 
-    hooks.version = '2.29.0';
+    hooks.version = '2.29.1';
 
     setHookCallback(createLocal);
 
@@ -32921,49 +32948,19 @@ module.exports = ret;
     }
     window.PromiseList = PromiseList;
 
+    //asArray(options) - convert options into []OPTIONS
+    function asArray(options){
+        return options ? ($.isArray(options) ? options : [options]) : [];
+    }
+
+
     //Extend the prototype
     window.PromiseList.prototype = {
-
-        //_getList(options) - Convert options = {} or []{} into []{promise, resolve}
-        _getList: function(options){
-            if (!options) return [];
-
-            options = $.isArray(options) ? options : [options];
-            var result = [];
-            $.each(options, function(index, opt){
-                var promise;
-                if (opt.fileName){
-                    //File-name is given => use intervals.getFileName to convert filename and load it
-                    var format = opt.format || 'JSON',
-                        fileName = window.intervals.getFileName(opt.fileName);
-                    switch (format.toUpperCase() ){
-                        case 'JSON' : promise = window.Promise.getJSON(fileName, opt.promiseOptions ); break;
-                        case 'XML'  : promise = window.Promise.getXML (fileName, opt.promiseOptions ); break;
-                        default     : promise = window.Promise.getText(fileName, opt.promiseOptions ); break;
-                    }
-                }
-                else
-                    if (opt.data)
-                        //Data is given => resolve them
-                        promise = new Promise(function(resolve/*, reject*/) {
-                            resolve(opt.data);
-                        });
-                    else
-                        return;
-
-                result.push({
-                    promise: promise,
-                    options: opt
-                });
-            });
-            return result;
-        },
-
 
         //append( options )
         append: function( options, listId ){
             listId = listId || 'list';
-            this[listId] = this[listId].concat( this._getList(options) );
+            this[listId] = this[listId].concat( asArray(options) );
             return this;
         },
         appendFirst: function( options ){
@@ -32976,7 +32973,7 @@ module.exports = ret;
         //prepend( options )
         prepend: function( options, listId ){
             listId = listId || 'list';
-            this[listId] = this._getList(options).concat( this[listId] );
+            this[listId] = asArray(options).concat( this[listId] );
             return this;
         },
         prependFirst: function( options ){
@@ -32992,8 +32989,40 @@ module.exports = ret;
             //Create this.allList as this.firstList, this.list, this.lastlist
             this.allList = this.firstList.concat(this.list.concat(this.lastList));
 
+            //Create list of all the promises
             var promiseList = [];
-            $.each(this.allList, function(index, options){ promiseList.push(options.promise); });
+            $.each(this.allList, function(index, options){
+                var promise;
+                if (options.fileName){
+                    var get;
+                    options.format = options.format ? options.format.toUpperCase() : 'JSON';
+                    switch (options.format){
+                        case 'JSON' : get = window.Promise.getJSON; break;
+                        case 'XML'  : get = window.Promise.getXML; break;
+                        default     : get = window.Promise.getText; break;
+                    }
+
+                    if ($.isArray(options.fileName))
+                        promise = Promise.all(
+                            options.fileName.map( function(fName){
+                                return get( window.intervals.getFileName(fName), options.promiseOptions);
+                            })
+                        );
+                    else
+                        //File-name is given => use intervals.getFileName to convert filename and load it
+                        promise = get( window.intervals.getFileName(options.fileName), options.promiseOptions );
+                }
+                else
+                    if (options.data)
+                        //Data is given => resolve them
+                        promise = new Promise(function(resolve/*, reject*/) {
+                            resolve(options.data);
+                        });
+                    else
+                        return;
+
+                promiseList.push(promise);
+            });
 
             Promise.all( promiseList )
                 .then   ( $.proxy(this._then, this) )
@@ -33004,7 +33033,7 @@ module.exports = ret;
         _then: function( dataList ){
             var _this = this;
             $.each(dataList, function(index, data){
-                var opt = _this.allList[index].options;
+                var opt = _this.allList[index];
 
                 //Call the resolve-function
                 opt.resolve(data, opt);
@@ -33042,6 +33071,16 @@ module.exports = ret;
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {};
 
+    //Overwrite intervals.isFileName and window.intervals.getFileName to use FCOO filename conventions
+    window.intervals.isFileName = function(fileNameOrData){
+        return (($.type(fileNameOrData) == 'string') || (fileNameOrData.subDir && fileNameOrData.fileName));
+    };
+
+    window.intervals.getFileName = function(fileName){
+        return ns.dataFilePath(fileName);
+    };
+
+    //Create common FCOO PromiseList
     ns.promiseList = new window.PromiseList({
 
     });
@@ -33877,7 +33916,7 @@ module.exports = ret;
               args[_key] = arguments[_key];
             }
 
-            if (lastKey && lastKey[0] === args[0]) {
+            if (lastKey && lastKey[0] === args[0] && !options.context) {
               _this3.logger.warn("It seems you are nesting recursively key: ".concat(args[0], " in key: ").concat(key[0]));
 
               return null;
@@ -34094,6 +34133,7 @@ module.exports = ret;
       key: "getFallbackCodes",
       value: function getFallbackCodes(fallbacks, code) {
         if (!fallbacks) return [];
+        if (typeof fallbacks === 'function') fallbacks = fallbacks(code);
         if (typeof fallbacks === 'string') fallbacks = [fallbacks];
         if (Object.prototype.toString.apply(fallbacks) === '[object Array]') return fallbacks;
         if (!code) return fallbacks["default"] || [];
@@ -35050,7 +35090,7 @@ module.exports = ret;
           });
         }
 
-        if (!this.modules.languageDetector && !this.options.lng) {
+        if (!this.services.languageDetector && !this.options.lng) {
           this.logger.warn('init: no languageDetector is used and no lng is defined');
         }
 
@@ -35077,8 +35117,7 @@ module.exports = ret;
         var load = function load() {
           _this2.changeLanguage(_this2.options.lng, function (err, t) {
             _this2.isInitialized = true;
-
-            _this2.logger.log('initialized', _this2.options);
+            if (!_this2.options.isClone) _this2.logger.log('initialized', _this2.options);
 
             _this2.emit('initialized', _this2.options);
 
@@ -36005,7 +36044,8 @@ return index;
 
     function addPromise(fileName, resolve, context){
         ns.promiseList.append({
-            fileName: ns.dataFilePath("fcoo-i18next-phrases", fileName),
+//HER            fileName: ns.dataFilePath("fcoo-i18next-phrases", fileName),
+            fileName: {subDir: "fcoo-i18next-phrases", fileName: fileName},
             resolve : $.proxy(resolve, context)
         });
     }
@@ -46308,21 +46348,14 @@ if (typeof define === 'function' && define.amd) {
 })(jQuery);
 
 ;
-/**
-* Detect Element Resize Plugin for jQuery
-*
-* https://github.com/sdecima/javascript-detect-element-resize
-* Sebastian Decima
-*
-* version: 0.5.3
-**/
-
 (function ( $ ) {
 	var attachEvent = document.attachEvent,
 		stylesCreated = false;
-	
+
+    var resetTriggers, checkTriggers, scrollListener;
+
 	var jQuery_resize = $.fn.resize;
-	
+
 	$.fn.resize = function(callback) {
 		return this.each(function() {
 			if(this == window)
@@ -46337,21 +46370,21 @@ if (typeof define === 'function' && define.amd) {
 			removeResizeListener(this, callback);
 		});
 	}
-	
+
 	if (!attachEvent) {
 		var requestFrame = (function(){
 			var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
 								function(fn){ return window.setTimeout(fn, 20); };
 			return function(fn){ return raf(fn); };
 		})();
-		
+
 		var cancelFrame = (function(){
 			var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
 								   window.clearTimeout;
 		  return function(id){ return cancel(id); };
 		})();
 
-		function resetTriggers(element){
+		resetTriggers = function resetTriggers(element){
 			var triggers = element.__resizeTriggers__,
 				expand = triggers.firstElementChild,
 				contract = triggers.lastElementChild,
@@ -46364,12 +46397,12 @@ if (typeof define === 'function' && define.amd) {
 			expand.scrollTop = expand.scrollHeight;
 		};
 
-		function checkTriggers(element){
+		checkTriggers = function checkTriggers(element){
 			return element.offsetWidth != element.__resizeLast__.width ||
 						 element.offsetHeight != element.__resizeLast__.height;
 		}
-		
-		function scrollListener(e){
+
+		scrollListener = function scrollListener(e){
 			var element = this;
 			resetTriggers(this);
 			if (this.__resizeRAF__) cancelFrame(this.__resizeRAF__);
@@ -46383,7 +46416,7 @@ if (typeof define === 'function' && define.amd) {
 				}
 			});
 		};
-		
+
 		/* Detect CSS Animations support to detect element display/re-attach */
 		var animation = false,
 			animationstring = 'animation',
@@ -46394,8 +46427,8 @@ if (typeof define === 'function' && define.amd) {
 			pfx  = '';
 		{
 			var elm = document.createElement('fakeelement');
-			if( elm.style.animationName !== undefined ) { animation = true; }    
-			
+			if( elm.style.animationName !== undefined ) { animation = true; }
+
 			if( animation === false ) {
 				for( var i = 0; i < domPrefixes.length; i++ ) {
 					if( elm.style[ domPrefixes[i] + 'AnimationName' ] !== undefined ) {
@@ -46409,12 +46442,12 @@ if (typeof define === 'function' && define.amd) {
 				}
 			}
 		}
-		
+
 		var animationName = 'resizeanim';
 		var animationKeyframes = '@' + keyframeprefix + 'keyframes ' + animationName + ' { from { opacity: 0; } to { opacity: 0; } } ';
 		var animationStyle = keyframeprefix + 'animation: 1ms ' + animationName + '; ';
 	}
-	
+
 	function createStyles() {
 		if (!stylesCreated) {
 			//opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
@@ -46423,7 +46456,7 @@ if (typeof define === 'function' && define.amd) {
 					'.resize-triggers, .resize-triggers > div, .contract-trigger:before { content: \" \"; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; } .resize-triggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }',
 				head = document.head || document.getElementsByTagName('head')[0],
 				style = document.createElement('style');
-			
+
 			style.type = 'text/css';
 			if (style.styleSheet) {
 				style.styleSheet.cssText = css;
@@ -46435,7 +46468,7 @@ if (typeof define === 'function' && define.amd) {
 			stylesCreated = true;
 		}
 	}
-	
+
 	window.addResizeListener = function(element, fn){
 		if (attachEvent) element.attachEvent('onresize', fn);
 		else {
@@ -46450,7 +46483,7 @@ if (typeof define === 'function' && define.amd) {
 				element.appendChild(element.__resizeTriggers__);
 				resetTriggers(element);
 				element.addEventListener('scroll', scrollListener, true);
-				
+
 				/* Listen for a css animation to detect element display/re-attach */
 				animationstartevent && element.__resizeTriggers__.addEventListener(animationstartevent, function(e) {
 					if(e.animationName == animationName)
@@ -46460,7 +46493,7 @@ if (typeof define === 'function' && define.amd) {
 			element.__resizeListeners__.push(fn);
 		}
 	};
-	
+
 	window.removeResizeListener = function(element, fn){
 		if (attachEvent) element.detachEvent('onresize', fn);
 		else {
@@ -58938,23 +58971,20 @@ module.exports = g;
 });
 //# sourceMappingURL=noty.js.map
 ;
-/*global ActiveXObject, window, console, define, module, jQuery */
-//jshint unused:false, strict: false
-
 /**
- *  PDFObject v2.1.1
+ *  PDFObject v2.2.4
  *  https://github.com/pipwerks/PDFObject
  *  @license
- *  Copyright (c) 2008-2018 Philip Hutchison
+ *  Copyright (c) 2008-2020 Philip Hutchison
  *  MIT-style license: http://pipwerks.mit-license.org/
  *  UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
  */
 
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
+    if (typeof define === "function" && define.amd) {
         // AMD. Register as an anonymous module.
         define([], factory);
-    } else if (typeof module === 'object' && module.exports) {
+    } else if (typeof module === "object" && module.exports) {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
@@ -58966,53 +58996,67 @@ module.exports = g;
 }(this, function () {
 
     "use strict";
-    //jshint unused:true
 
     //PDFObject is designed for client-side (browsers), not server-side (node)
     //Will choke on undefined navigator and window vars when run on server
     //Return boolean false and exit function when running server-side
 
-    if(typeof window === "undefined" || typeof navigator === "undefined"){ return false; }
+    if( typeof window === "undefined" || 
+        window.navigator === undefined || 
+        window.navigator.userAgent === undefined || 
+        window.navigator.mimeTypes === undefined){ 
+            return false;
+    }
 
-    var pdfobjectversion = "2.1.1",
-        ua = window.navigator.userAgent,
+    let pdfobjectversion = "2.2.3";
+    let nav = window.navigator;
+    let ua = window.navigator.userAgent;
 
-        //declare booleans
-        supportsPDFs,
-        isIE,
-        isSafariOsx,
-        supportsPdfMimeType = (typeof navigator.mimeTypes !== "undefined" && typeof navigator.mimeTypes['application/pdf'] !== "undefined"),
-        supportsPdfActiveX,
-        isModernBrowser = (function (){ return (typeof window.Promise !== "undefined"); })(),
-        isFirefox = (function (){ return (ua.indexOf("irefox") !== -1); } )(),
-        isFirefoxWithPDFJS = (function (){
-            //Firefox started shipping PDF.js in Firefox 19.
-            //If this is Firefox 19 or greater, assume PDF.js is available
-            if(!isFirefox){ return false; }
-            //parse userAgent string to get release version ("rv")
-            //ex: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0
-            return (parseInt(ua.split("rv:")[1].split(".")[0], 10) > 18);
-        })(),
-        isIOS = (function (){ return (/iphone|ipad|ipod/i.test(ua.toLowerCase())); })(),
+    //Time to jump through hoops -- browser vendors do not make it easy to detect PDF support.
 
-        //declare functions
-        createAXO,
-        buildFragmentString,
-        log,
-        embedError,
-        embed,
-        getTargetElement,
-        appendTargetClassName,
-        generatePDFJSiframe,
-        generateEmbedElement,
-        generateIframeElement;
+    /*
+        IE11 still uses ActiveX for Adobe Reader, but IE 11 doesn't expose window.ActiveXObject the same way 
+        previous versions of IE did. window.ActiveXObject will evaluate to false in IE 11, but "ActiveXObject" 
+        in window evaluates to true.
+
+        MS Edge does not support ActiveX so this test will evaluate false
+    */
+    let isIE = ("ActiveXObject" in window);
+
+    /*
+        There is a coincidental correlation between implementation of window.promises and native PDF support in desktop browsers
+        We use this to assume if the browser supports promises it supports embedded PDFs
+        Is this fragile? Sort of. But browser vendors removed mimetype detection, so we're left to improvise
+    */
+    let isModernBrowser = (window.Promise !== undefined);
+
+    //Older browsers still expose the mimeType
+    let supportsPdfMimeType = (nav.mimeTypes["application/pdf"] !== undefined);
+
+    //Safari on iPadOS doesn't report as 'mobile' when requesting desktop site, yet still fails to embed PDFs
+    let isSafariIOSDesktopMode = (  nav.platform !== undefined && 
+                                    nav.platform === "MacIntel" && 
+                                    nav.maxTouchPoints !== undefined && 
+                                    nav.maxTouchPoints > 1 );
+
+    //Quick test for mobile devices.
+    let isMobileDevice = (isSafariIOSDesktopMode || /Mobi|Tablet|Android|iPad|iPhone/.test(ua));
+
+    //Safari desktop requires special handling 
+    let isSafariDesktop = ( !isMobileDevice && 
+                            nav.vendor !== undefined && 
+                            /Apple/.test(nav.vendor) && 
+                            /Safari/.test(ua) );
+    
+    //Firefox started shipping PDF.js in Firefox 19. If this is Firefox 19 or greater, assume PDF.js is available
+    let isFirefoxWithPDFJS = (!isMobileDevice && /irefox/.test(ua)) ? (parseInt(ua.split("rv:")[1].split(".")[0], 10) > 18) : false;
 
 
     /* ----------------------------------------------------
        Supporting functions
        ---------------------------------------------------- */
 
-    createAXO = function (type){
+    let createAXO = function (type){
         var ax;
         try {
             ax = new ActiveXObject(type);
@@ -59022,46 +59066,28 @@ module.exports = g;
         return ax;
     };
 
-    //IE11 still uses ActiveX for Adobe Reader, but IE 11 doesn't expose
-    //window.ActiveXObject the same way previous versions of IE did
-    //window.ActiveXObject will evaluate to false in IE 11, but "ActiveXObject" in window evaluates to true
-    //so check the first one for older IE, and the second for IE11
-    //FWIW, MS Edge (replacing IE11) does not support ActiveX at all, both will evaluate false
-    //Constructed as a method (not a prop) to avoid unneccesarry overhead -- will only be evaluated if needed
-    isIE = function (){ return !!(window.ActiveXObject || "ActiveXObject" in window); };
-
-    // Detect desktop Safari
-    isSafariOsx = (
-        !isIOS &&
-        navigator.vendor && navigator.vendor.indexOf('Apple') !== -1 &&
-        navigator.userAgent && navigator.userAgent.indexOf('Safari') !== -1
-    );
-
     //If either ActiveX support for "AcroPDF.PDF" or "PDF.PdfCtrl" are found, return true
     //Constructed as a method (not a prop) to avoid unneccesarry overhead -- will only be evaluated if needed
-    supportsPdfActiveX = function (){ return !!(createAXO("AcroPDF.PDF") || createAXO("PDF.PdfCtrl")); };
+    let supportsPdfActiveX = function (){ return !!(createAXO("AcroPDF.PDF") || createAXO("PDF.PdfCtrl")); };
 
     //Determines whether PDF support is available
-    supportsPDFs = (
-        //as of iOS 12, inline PDF rendering is still not supported in Safari or native webview
-        //3rd-party browsers (eg Chrome, Firefox) use Apple's webview for rendering, and thus the same result as Safari
-        //Therefore if iOS, we shall assume that PDF support is not available
-        !isIOS && (
+    let supportsPDFs = (
+        //As of Sept 2020 no mobile browsers properly support PDF embeds
+        !isMobileDevice && (
             //Modern versions of Firefox come bundled with PDFJS
             isFirefoxWithPDFJS ||
             //Browsers that still support the original MIME type check
-            supportsPdfMimeType || (
-                //Pity the poor souls still using IE
-                isIE() && supportsPdfActiveX()
-            )
+            supportsPdfMimeType ||
+            //Pity the poor souls still using IE
+            (isIE && supportsPdfActiveX())
         )
     );
 
     //Create a fragment identifier for using PDF Open parameters when embedding PDF
-    buildFragmentString = function(pdfParams){
+    let buildURLFragmentString = function(pdfParams){
 
-        var string = "",
-            prop;
+        let string = "";
+        let prop;
 
         if(pdfParams){
 
@@ -59087,21 +59113,23 @@ module.exports = g;
 
     };
 
-    log = function (msg){
-        if(typeof console !== "undefined" && console.log){
+    let embedError = function (msg, suppressConsole){
+        if(!suppressConsole){
             console.log("[PDFObject] " + msg);
         }
-    };
-
-    embedError = function (msg){
-        log(msg);
         return false;
     };
 
-    getTargetElement = function (targetSelector){
+    let emptyNodeContents = function (node){
+        while(node.firstChild){
+            node.removeChild(node.firstChild);
+        }
+    };
+
+    let getTargetElement = function (targetSelector){
 
         //Default to body for full-browser PDF
-        var targetNode = document.body;
+        let targetNode = document.body;
 
         //If a targetSelector is specified, check to see whether
         //it's passing a selector, jQuery object, or an HTML element
@@ -59111,12 +59139,12 @@ module.exports = g;
             //Is CSS selector
             targetNode = document.querySelector(targetSelector);
 
-        } else if (typeof jQuery !== "undefined" && targetSelector instanceof jQuery && targetSelector.length) {
+        } else if (window.jQuery !== undefined && targetSelector instanceof jQuery && targetSelector.length) {
 
             //Is jQuery element. Extract HTML node
             targetNode = targetSelector.get(0);
 
-        } else if (typeof targetSelector.nodeType !== "undefined" && targetSelector.nodeType === 1){
+        } else if (targetSelector.nodeType !== undefined && targetSelector.nodeType === 1){
 
             //Is HTML element
             targetNode = targetSelector;
@@ -59127,137 +59155,155 @@ module.exports = g;
 
     };
 
-    appendTargetClassName = function (targetNode) {
-        // Use classList if we don't need IE9 support
-        var classToAppend = "pdfobject-container";
-        var classes = targetNode.className.split(/\s+/);
-        if (classes.indexOf(classToAppend) === -1) {
-            classes.push(classToAppend);
-            targetNode.className = classes.join(' ');
+    let generatePDFJSMarkup = function (targetNode, url, pdfOpenFragment, PDFJS_URL, id, omitInlineStyles){
+
+        //Ensure target element is empty first
+        emptyNodeContents(targetNode);
+
+        let fullURL = PDFJS_URL + "?file=" + encodeURIComponent(url) + pdfOpenFragment;
+        let div = document.createElement("div");
+        let iframe = document.createElement("iframe");
+        
+        iframe.src = fullURL;
+        iframe.className = "pdfobject";
+        iframe.type = "application/pdf";
+        iframe.frameborder = "0";
+        
+        if(id){
+            iframe.id = id;
         }
-    }
 
-    generatePDFJSiframe = function (targetNode, url, pdfOpenFragment, PDFJS_URL, id){
+        if(!omitInlineStyles){
+            div.style.cssText = "position: absolute; top: 0; right: 0; bottom: 0; left: 0;";
+            iframe.style.cssText = "border: none; width: 100%; height: 100%;";
+            targetNode.style.position = "relative";
+            targetNode.style.overflow = "auto";        
+        }
 
-        var fullURL = PDFJS_URL + "?file=" + encodeURIComponent(url) + pdfOpenFragment;
-        var scrollfix = (isIOS) ? "-webkit-overflow-scrolling: touch; overflow-y: scroll; " : "overflow: hidden; ";
-        var iframe = "<div style='" + scrollfix + "position: absolute; top: 0; right: 0; bottom: 0; left: 0;'><iframe  " + id + " src='" + fullURL + "' style='border: none; width: 100%; height: 100%;' frameborder='0'></iframe></div>";
-        appendTargetClassName(targetNode);
-        targetNode.style.position = "relative";
-        targetNode.style.overflow = "auto";
-        targetNode.innerHTML = iframe;
+        div.appendChild(iframe);
+        targetNode.appendChild(div);
+        targetNode.classList.add("pdfobject-container");
+        
         return targetNode.getElementsByTagName("iframe")[0];
 
     };
 
-    generateEmbedElement = function (targetNode, targetSelector, url, pdfOpenFragment, width, height, id){
+    let generatePDFObjectMarkup = function (embedType, targetNode, targetSelector, url, pdfOpenFragment, width, height, id, omitInlineStyles){
 
-        var style = "";
+        //Ensure target element is empty first
+        emptyNodeContents(targetNode);
 
-        if(targetSelector && targetSelector !== document.body){
-            style = "width: " + width + "; height: " + height + ";";
-        } else {
-            style = "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
+        let embed = document.createElement(embedType);
+        embed.src = url + pdfOpenFragment;
+        embed.className = "pdfobject";
+        embed.type = "application/pdf";
+
+        if(id){
+            embed.id = id;
         }
 
-        appendTargetClassName(targetNode);
-        targetNode.innerHTML = "<embed " + id + " class='pdfobject' src='" + url + pdfOpenFragment + "' type='application/pdf' style='overflow: auto; " + style + "'/>";
+        if(!omitInlineStyles){
 
-        return targetNode.getElementsByTagName("embed")[0];
+            let style = (embedType === "embed") ? "overflow: auto;" : "border: none;";
+
+            if(targetSelector && targetSelector !== document.body){
+                style += "width: " + width + "; height: " + height + ";";
+            } else {
+                style += "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
+            }
+
+            embed.style.cssText = style; 
+
+        }
+
+        targetNode.classList.add("pdfobject-container");
+        targetNode.appendChild(embed);
+
+        return targetNode.getElementsByTagName(embedType)[0];
 
     };
 
-    generateIframeElement = function (targetNode, targetSelector, url, pdfOpenFragment, width, height, id){
-
-        var style = "";
-
-        if(targetSelector && targetSelector !== document.body){
-            style = "width: " + width + "; height: " + height + ";";
-        } else {
-            style = "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
-        }
-
-        targetNode.className += " pdfobject-container";
-        targetNode.innerHTML = "<iframe " + id + " class='pdfobject' src='" + url + pdfOpenFragment + "' type='application/pdf' style='border: none; " + style + "'/>";
-
-        return targetNode.getElementsByTagName("iframe")[0];
-
-    };
-
-    embed = function(url, targetSelector, options){
-
-        //Ensure URL is available. If not, exit now.
-        if(typeof url !== "string"){ return embedError("URL is not valid"); }
+    let embed = function(url, targetSelector, options){
 
         //If targetSelector is not defined, convert to boolean
-        targetSelector = (typeof targetSelector !== "undefined") ? targetSelector : false;
+        let selector = targetSelector || false;
 
         //Ensure options object is not undefined -- enables easier error checking below
-        options = (typeof options !== "undefined") ? options : {};
+        let opt = options || {};
 
         //Get passed options, or set reasonable defaults
-        var id = (options.id && typeof options.id === "string") ? "id='" + options.id + "'" : "",
-            page = (options.page) ? options.page : false,
-            pdfOpenParams = (options.pdfOpenParams) ? options.pdfOpenParams : {},
-            fallbackLink = (typeof options.fallbackLink !== "undefined") ? options.fallbackLink : true,
-            width = (options.width) ? options.width : "100%",
-            height = (options.height) ? options.height : "100%",
-            assumptionMode = (typeof options.assumptionMode === "boolean") ? options.assumptionMode : true,
-            forcePDFJS = (typeof options.forcePDFJS === "boolean") ? options.forcePDFJS : false,
-            supportRedirect = (typeof options.supportRedirect === "boolean") ? options.supportRedirect : false,
-            PDFJS_URL = (options.PDFJS_URL) ? options.PDFJS_URL : false,
-            targetNode = getTargetElement(targetSelector),
-            fallbackHTML = "",
-            pdfOpenFragment = "",
-            fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>";
+        let id = (typeof opt.id === "string") ? opt.id : "";
+        let page = opt.page || false;
+        let pdfOpenParams = opt.pdfOpenParams || {};
+        let fallbackLink = opt.fallbackLink || true;
+        let width = opt.width || "100%";
+        let height = opt.height || "100%";
+        let assumptionMode = (typeof opt.assumptionMode === "boolean") ? opt.assumptionMode : true;
+        let forcePDFJS = (typeof opt.forcePDFJS === "boolean") ? opt.forcePDFJS : false;
+        let supportRedirect = (typeof opt.supportRedirect === "boolean") ? opt.supportRedirect : false;
+        let omitInlineStyles = (typeof opt.omitInlineStyles === "boolean") ? opt.omitInlineStyles : false;
+        let suppressConsole = (typeof opt.suppressConsole === "boolean") ? opt.suppressConsole : false;
+        let forceIframe = (typeof opt.forceIframe === "boolean") ? opt.forceIframe : false;
+        let PDFJS_URL = opt.PDFJS_URL || false;
+        let targetNode = getTargetElement(selector);
+        let fallbackHTML = "";
+        let pdfOpenFragment = "";
+        let fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>";
+
+        //Ensure URL is available. If not, exit now.
+        if(typeof url !== "string"){ return embedError("URL is not valid", suppressConsole); }
 
         //If target element is specified but is not valid, exit without doing anything
-        if(!targetNode){ return embedError("Target element cannot be determined"); }
-
+        if(!targetNode){ return embedError("Target element cannot be determined", suppressConsole); }
 
         //page option overrides pdfOpenParams, if found
-        if(page){
-            pdfOpenParams.page = page;
-        }
+        if(page){ pdfOpenParams.page = page; }
 
         //Stringify optional Adobe params for opening document (as fragment identifier)
-        pdfOpenFragment = buildFragmentString(pdfOpenParams);
+        pdfOpenFragment = buildURLFragmentString(pdfOpenParams);
 
-        //Do the dance
+
+        // --== Do the dance: Embed attempt #1 ==--
 
         //If the forcePDFJS option is invoked, skip everything else and embed as directed
         if(forcePDFJS && PDFJS_URL){
+            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, omitInlineStyles);
+        }
+ 
+        // --== Embed attempt #2 ==--
 
-            return generatePDFJSiframe(targetNode, url, pdfOpenFragment, PDFJS_URL, id);
-
-        //If traditional support is provided, or if this is a modern browser and not iOS (see comment for supportsPDFs declaration)
-        } else if(supportsPDFs || (assumptionMode && isModernBrowser && !isIOS)){
-
-            // Safari will not honour redirect responses on embed src.
-            if (supportRedirect && isSafariOsx) {
-                return generateIframeElement(targetNode, targetSelector, url, pdfOpenFragment, width, height, id);
-            }
-
-            return generateEmbedElement(targetNode, targetSelector, url, pdfOpenFragment, width, height, id);
-
-        //If everything else has failed and a PDFJS fallback is provided, try to use it
-        } else if(PDFJS_URL){
-
-            return generatePDFJSiframe(targetNode, url, pdfOpenFragment, PDFJS_URL, id);
-
-        } else {
-
-            //Display the fallback link if available
-            if(fallbackLink){
-
-                fallbackHTML = (typeof fallbackLink === "string") ? fallbackLink : fallbackHTML_default;
-                targetNode.innerHTML = fallbackHTML.replace(/\[url\]/g, url);
-
-            }
-
-            return embedError("This browser does not support embedded PDFs");
+        //Embed PDF if traditional support is provided, or if this developer is willing to roll with assumption
+        //that modern desktop (not mobile) browsers natively support PDFs 
+        if(supportsPDFs || (assumptionMode && isModernBrowser && !isMobileDevice)){
+            
+            //Should we use <embed> or <iframe>? In most cases <embed>. 
+            //Allow developer to force <iframe>, if desired
+            //There is an edge case where Safari does not respect 302 redirect requests for PDF files when using <embed> element.
+            //Redirect appears to work fine when using <iframe> instead of <embed> (Addresses issue #210)
+            let embedtype = (forceIframe || (supportRedirect && isSafariDesktop)) ? "iframe" : "embed";
+            
+            return generatePDFObjectMarkup(embedtype, targetNode, targetSelector, url, pdfOpenFragment, width, height, id, omitInlineStyles);
 
         }
+        
+        // --== Embed attempt #3 ==--
+        
+        //If everything else has failed and a PDFJS fallback is provided, try to use it
+        if(PDFJS_URL){
+            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, omitInlineStyles);
+        }
+        
+        // --== PDF embed not supported! Use fallback ==-- 
+
+        //Display the fallback link if available
+        if(fallbackLink){
+
+            fallbackHTML = (typeof fallbackLink === "string") ? fallbackLink : fallbackHTML_default;
+            targetNode.innerHTML = fallbackHTML.replace(/\[url\]/g, url);
+
+        }
+
+        return embedError("This browser does not support embedded PDFs", suppressConsole);
 
     };
 
@@ -82653,18 +82699,18 @@ if (typeof define === 'function' && define.amd) {
             vfFormat  : '',     //Format-id for the date using jquery-value-format. The format must be defined in the application. If vfFormat == '' the date-column isn't shown
             vfOptions : null,   //Optional options for the format vfFormat when displaying the date using jquery-value-format
 
-            loading   : { icon: 'fa-circle-notch fa-spin', text: {da:'Indlæser...', en:'Loading...'}}        //Default icon and text displayed in the modal-window during loading
-		}, options || {} );
+            loading   : { icon: 'fa-circle-notch fa-spin', text: {da:'Indlæser...', en:'Loading...'}}, //Default icon and text displayed in the modal-window during loading
 
-        //Convert url to array of string
-        //if (!$.isArray(this.options.url))
+            dontLoad  : false   //If true the message-group will not load its data on creation
+
+        }, options || {} );
+
+        //Convert url to array of string or objects
         if ($.type(this.options.url) == 'string')
             this.options.url = this.options.url.split(' ');
 
-        var _this = this;
-        $.each(this.options.url, function(index, singleUrl){
-            _this.options.url[index] = _this.options.convertUrl(singleUrl);
-        });
+        if (!$.isArray(this.options.url))
+            this.options.url = [this.options.url];
 
         //convert reloadPeriod to ms
         if (this.options.reloadPeriod){
@@ -82674,8 +82720,10 @@ if (typeof define === 'function' && define.amd) {
                 this.options.reloadPeriod.as('ms') :
                 0;
         }
+        this.firstLoad = true;
 
-        this.load();
+        if (!this.options.dontLoad)
+            this.load();
     }
 
     // expose access to the constructor
@@ -82695,13 +82743,12 @@ if (typeof define === 'function' && define.amd) {
             $.each( options.messages || [], function( index, messageOptions ){
                 _this.list.push(
                     $.bsMessage(
-                        $.extend(
-                            {
-                                index     : index,
-                                totalIndex: urlIndex*10000 + index,
-                                urlIndex  : urlIndex,
-                                urlId     : urlId
-                            },
+                        $.extend({
+                            index     : index,
+                            totalIndex: urlIndex*10000 + index,
+                            urlIndex  : urlIndex,
+                            urlId     : urlId
+                        },
                             defaultMessageOptions,
                             messageOptions
                         ),
@@ -82728,8 +82775,7 @@ if (typeof define === 'function' && define.amd) {
             this.currentMessage = null;
         },
 
-        load: function(){
-            var _this = this;
+        preLoad: function(){
             this.isLoading = true;
 
             this._closeCurrentMessageModal();
@@ -82742,40 +82788,48 @@ if (typeof define === 'function' && define.amd) {
 
             this.list = [];
             this.bsTable = null;
-            this.error = false;
+
             this.options.onStartLoading( this );
-            Promise
-                .all(
-                    this.options.url.map( function( url, index ){
-                        return Promise.getJSON( url, {},
-                                   function( json ){ _this._add( json, url, index ); },
-                                   function(){ _this.error = true; }
-                               );
-                    })
-                )
-                .finally( this._finally.bind(this) );
         },
 
-        _finally: function(){
-            var _this = this,
-                reloadPeriod = 0;
-            if (this.error){
-                this.options.onErrorLoading( this );
-                this.retryPeriod = Math.min( this.options.reloadPeriod || 60*60*1000,  this.retryPeriod ? this.retryPeriod*1.5 : 1000 );
-                reloadPeriod = this.retryPeriod;
+        load: function(){
+            var _this = this;
+            this.preLoad();
+
+            if (this.firstLoad){
+                this.firstLoad = false;
+                $.each(this.options.url, function(index, singleUrl){
+                    _this.options.url[index] = _this.options.convertUrl(singleUrl);
+                });
             }
-            else {
-                this.isLoading = false;
-                this.retryPeriod = 0;
-                this.sort();
-                this.options.onCreate( this );
-                this.options.onFinishLoading( this );
-                this._onChange();
-                reloadPeriod = this.options.reloadPeriod;
-            }
-            if (reloadPeriod){
-                window.setTimeout( function(){ _this.load(); }, reloadPeriod );
-            }
+            Promise
+                .all( this.options.url.map( function(url){ return Promise.getJSON(url); }) )
+                .then ( $.proxy(this.resolve, this) )
+                .catch( $.proxy(this.reject,  this) );
+        },
+
+        resolve: function( jsonList ){
+            var _this = this;
+            $.each(jsonList, function(index, json){
+                if (json)
+                    _this._add( json, _this.options.url[index], index );
+            });
+
+            this.isLoading = false;
+            this.retryPeriod = 0;
+            this.sort();
+            this.options.onCreate( this );
+            this.options.onFinishLoading( this );
+            this._onChange();
+            if (this.options.reloadPeriod)
+                window.setTimeout( $.proxy(this.load, this), this.options.reloadPeriod );
+        },
+
+        reject: function(error){
+            Promise.defaultErrorHandler(error);
+            this.options.onErrorLoading( this );
+            this.retryPeriod = Math.min( this.options.reloadPeriod || 60*60*1000,  this.retryPeriod ? this.retryPeriod*1.5 : 1000 );
+            window.setTimeout( $.proxy(this.load, this), this.retryPeriod );
         },
 
         _onChange: function(){

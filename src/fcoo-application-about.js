@@ -7,8 +7,7 @@ Create and display "About FCOO" info and modal-box
 	"use strict";
 
     //Create fcoo-namespace
-	window.fcoo = window.fcoo || {};
-	var ns = window.fcoo,
+    var ns = window.fcoo = window.fcoo || {},
         aboutFCOOModal = null;
 
 
