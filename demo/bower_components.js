@@ -32898,7 +32898,7 @@ module.exports = ret;
                 //File-name is given => load file
                 var promiseOptions =
                         $.extend({
-                            resolve: this.options.resolve ? function(data) { _this.options.resolve(data,  _this); } : null,
+                            resolve: this.options.resolve ? $.proxy(this._resolve, this) : null,
                             reject : this.options.reject  ? function(error){ _this.options.reject (error, _this); } : null
                         }, this.options.promiseOptions);
 
@@ -32914,7 +32914,18 @@ module.exports = ret;
             else
                 //Data is given => resolve them
                 this.options.resolve(this.options.fileNameOrData);
+        },
+        _resolve: function(data){
+            var arg = [data];
+            if (this.options.resolveArguments)
+                arg = arg.concat(this.options.resolveArguments);
+            else
+                arg = arg.concat([this]);
+            this.options.resolve.apply(null, arg);
         }
+
+
+
     };
 
     //Create default intervals
@@ -32983,15 +32994,40 @@ module.exports = ret;
             return this.prepend( options, 'lastList');
         },
 
+        _createAllList: function(){
+            var _this = this;
+            this.allList = [];
+            $.each([this.firstList, this.list, this.lastList], function(index, list){
+                $.each(list, function(index, item){
+                    _this.allList.push(item);
+                });
+            });
+        },
+
+        //promiseAll = same as getAll
+        promiseAll: function(){
+            return this.getAll.apply(this, arguments);
+        },
 
         //getAll( reject ) - get all added promises
         getAll: function( reject ){
-            //Create this.allList as this.firstList, this.list, this.lastlist
-            this.allList = this.firstList.concat(this.list.concat(this.lastList));
+            var _this = this;
 
-            //Create list of all the promises
-            var promiseList = [];
+            //Create this.allList as this.firstList, this.list, this.lastlist
+            this._createAllList();
+
+            if (this.options.prePromiseAll)
+                this.allList = this.options.prePromiseAll(this.allList, this) || this.allList;
+
+            //Create list of all remaining promises and options
+            this.promiseList = [];
+            this.optionsList = [];
+
             $.each(this.allList, function(index, options){
+                //Skip allready resolved promise
+                if (options.isResolved)
+                    return true;
+
                 var promise;
                 if (options.fileName){
                     var get;
@@ -33021,35 +33057,65 @@ module.exports = ret;
                     else
                         return;
 
-                promiseList.push(promise);
+                _this.promiseList.push(promise);
+                _this.optionsList.push(options);
+
+                //Set as resolved to prevent loop if reject
+                options.isResolved = true;
+
+                //If the promise must wait before loading the rest => exit
+                if (options.wait)
+                    return false;
             });
 
-            Promise.all( promiseList )
+            Promise.all( this.promiseList )
                 .then   ( $.proxy(this._then, this) )
                 .catch  ( reject || this.options.reject )
-                .finally( this.options.finally );
+                .finally( $.proxy(this._finally, this) );
         },
 
         _then: function( dataList ){
             var _this = this;
             $.each(dataList, function(index, data){
-                var opt = _this.allList[index];
+                var opt = _this.optionsList[index];
 
                 //Call the resolve-function
-                opt.resolve(data, opt);
+                opt.resolve(data, opt, _this);
+
+                opt.isResolved = true;
 
                 //If the file/data needs to reload with some interval => adds the resolve to windows.intervals.addInterval after the first load
                 if (opt.reload)
                     window.intervals.addInterval({
-                        duration: opt.reload === true ? 60 : opt.reload,
-                        fileName: opt.fileName,
-                        data    : opt.data,
-                        resolve : opt.resolve,
-                        reject  : null,
-                        wait    : true
+                        duration        : opt.reload === true ? 60 : opt.reload,
+                        fileName        : opt.fileName,
+                        data            : opt.data,
+                        resolve         : opt.resolve,
+                        resolveArguments: [opt, _this],
+                        reject          : null,
+                        wait            : true
                     });
             });
             return true;
+        },
+
+        _finally: function(){
+            //Check if there are still promise(s) not resolved
+            var notResolvedFound = false;
+            this._createAllList();
+            $.each(this.allList, function(index, options){
+                notResolvedFound = notResolvedFound || !options.isResolved;
+            });
+
+            //Check if there are more promises in the list
+            if (notResolvedFound)
+                this.getAll();
+            else {
+                if (this.options.finally)
+                    this.options.finally(this);
+                if (this.options.finish)
+                    this.options.finish(this);
+            }
         }
     };
 

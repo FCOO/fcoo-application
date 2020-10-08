@@ -158,7 +158,6 @@ load setup-files in fcoo.promiseList after checking for test-modes
     Error-message for promise-list
     *************************************************************************/
     ns.promiseList.options.reject = function(){
-//HER    function promiseListError(){
         var appName = {da:'applikationen', en: 'the Application'};
         if (ns.applicationName.da)
             appName.da = '<em>' + ns.applicationName.da + '</em>';
@@ -181,7 +180,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
 
 
     /************************************************************
-    promiseList_getAll
+    promiseList_getAll and promiseList_promiseAll
     Called by the application when all setup-files needed have be
     added to fcoo.promiseList
 
@@ -189,6 +188,10 @@ load setup-files in fcoo.promiseList after checking for test-modes
     Will automatic finish with loading global and application settings
 
     ************************************************************/
+    ns.promiseList_promiseAll = function(){
+        ns.promiseList_getAll.apply(null, arguments);
+    },
+
     ns.promiseList_getAll = function(){
         //Set protocol
         ns.path.protocol = ns.protocol;
@@ -203,67 +206,77 @@ load setup-files in fcoo.promiseList after checking for test-modes
             ns.path.host = window.location.hostname;
 
 
-        //*******************************************
-        function getAll(){
-            ns.promiseList.getAll();
-        }
-        //*******************************************
-        function getFullName( rec ){
-            if (typeof rec == 'string')
-                return ns.dataFilePath.apply(null, rec.split('/'));
-            else
-                return ns.dataFilePath(rec);
-        }
-        //*******************************************
-        function resolveTestMode( data ){
-            var info = '<h5>TEST-MODE</h5>', found;
-
-            //*******************************************
-            function adjustFileName(fileNameOrList, from, to){
-                if ($.isArray(fileNameOrList)){
-                    $.each(fileNameOrList, function(index, fileName){
-                        fileNameOrList[index] = adjustFileName(fileName, from, to);
-                    });
-                }
-                else
-                    if (ns.dataFilePath(fileNameOrList) == from){
-                        found = true;
-                        return to;
-                    }
-                return fileNameOrList;
-            }
-            //*******************************************
-
-            $.each(data, function(from, to){
-                from = getFullName(from);
-                to = getFullName(to);
-                info = info+'<hr>'+from;
-
-                //Check if from match any of the files in fcoo.promiseList => change it to to
-                found = false;
-                $.each(ns.promiseList.list, function(index, promiseRec){
-                    if (promiseRec.fileName)
-                        promiseRec.fileName = adjustFileName(promiseRec.fileName, from, to);
-                });
-
-                if (found)
-                    info = info+'<br>to<br><em>'+to+'</em>';
-                else
-                    info = info + ' <strong>not found!</strong>';
-            });
-            window.notyInfo(info);
-        }
-        //*******************************************
-
-        //If url parameter contains test-mode=FILENAME[.json] try to load the file and adjust any paths
+        //If url parameter contains test-mode=FILENAME[.json] try to load the file first and adjust any paths
         var testFileName = ns.parseAll()["test-mode"];
-        if (testFileName){
-            testFileName = ns.dataFilePath({subDir:'test-mode', fileName: testFileName + (testFileName.indexOf('.json') == -1 ? '.json' : '')});
-            Promise.getJSON(testFileName, {resolve: resolveTestMode, finally: getAll});
-        }
-        else
-            getAll();
+        if (testFileName)
+            ns.promiseList.prependFirst({
+                fileName: ns.dataFilePath({subDir:'test-mode', fileName: testFileName + (testFileName.indexOf('.json') == -1 ? '.json' : '')}),
+                resolve : resolveTestMode,
+                wait    : true
+            });
+
+        ns.promiseList.promiseAll();
+
     };
 
+    //*******************************************
+    function getFullName( rec ){
+        if (typeof rec == 'string')
+            return ns.dataFilePath.apply(null, rec.split('/'));
+        else
+            return ns.dataFilePath(rec);
+    }
+    //*******************************************
+    function resolveTestMode(data, options, promiseList){
+        promiseList.testModeList = [];
+        $.each(data, function(from, to){
+            promiseList.testModeList.push({
+                from : getFullName(from),
+                to   : getFullName(to),
+                found: false
+            });
+        });
+        promiseList.options.prePromiseAll = adjustFileListWithTestMode;
+        promiseList.options.finish        = showTestModeInfo;
+    }
+    //*******************************************
+    function adjustFileListWithTestMode(allList, promiseList){
+
+        //*******************************************
+        function adjustFileName(fileNameOrList, testRec){
+            if ($.isArray(fileNameOrList)){
+                $.each(fileNameOrList, function(index, fileName){
+                    fileNameOrList[index] = adjustFileName(fileName, testRec);
+                });
+            }
+            else
+                if (ns.dataFilePath(fileNameOrList) == testRec.from){
+                    testRec.found = true;
+                    return testRec.to;
+                }
+            return fileNameOrList;
+        }
+        //*******************************************
+
+        $.each(promiseList.testModeList, function(index, testRec){
+            //Check if from match any of the files in current/next promiseList => change it to to
+            $.each(allList, function(index, promiseRec){
+               if (promiseRec.fileName)
+                    promiseRec.fileName = adjustFileName(promiseRec.fileName, testRec);
+            });
+        });
+    }
+    //*******************************************
+    function showTestModeInfo(promiseList){
+        var info = '<h5>TEST-MODE</h5>';
+        $.each(promiseList.testModeList, function(index, testRec){
+            info = info+'<hr>'+testRec.from;
+            if (testRec.found)
+                info = info+'<br>was replaced with<br><em>'+testRec.to+'</em>';
+            else
+                info = info + ' <strong>not found!</strong>';
+        });
+        window.notyInfo(info);
+    }
 
 }(jQuery, this, this.i18next, this.Promise, document));
