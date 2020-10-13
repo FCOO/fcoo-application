@@ -12,6 +12,7 @@ Sections:
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
 4: Set up and initialize jquery-bootstrap
+5: Load FCOO and default name,link,email and error-messages
 ****************************************************************************/
 
 (function ($, i18next, window/*, document, undefined*/) {
@@ -302,6 +303,15 @@ Sections:
     //Icon for external link
     $.bsExternalLinkIcon = 'fa-external-link';
 
+
+    /***********************************************************************
+    ************************************************************************
+    5: Load FCOO and default name,link,email and error-messages
+    ************************************************************************
+    ***********************************************************************/
+    ns.loadKeyPhraseFile('name-address-link.json',      'name-address-link');
+    ns.loadKeyPhraseFile('name-address-link_fcoo.json', 'name-address-link');
+    ns.loadPhraseFile   ('request.json',                'error-code-text'  );
 
 
 }(jQuery, this.i18next, this, document));

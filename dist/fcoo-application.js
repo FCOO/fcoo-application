@@ -3,7 +3,7 @@ fcoo-application-about.js
 
 Create and display "About FCOO" info and modal-box
 ****************************************************************************/
-(function ($, window/*, document, undefined*/) {
+(function ($, i18next, window/*, document, undefined*/) {
 	"use strict";
 
     //Create fcoo-namespace
@@ -16,28 +16,45 @@ Create and display "About FCOO" info and modal-box
             //Create the modal-content
 
             var $content = $('<div/>')
-                .addClass("about-fcoo")
-                .append(
-                    //Bar with title of application
-                    $('<div/>')
-                        .addClass('application-header fcoo-app-color fcoo-app-background')
-                        .i18n( ns.applicationHeader ),
+                    .addClass("about-fcoo")
+                    .append(
+                        //Bar with title of application
+                        $('<div/>')
+                            .addClass('application-header fcoo-app-color fcoo-app-background')
+                            .i18n( ns.applicationHeader ),
 
-                    //FCOO logo
-                    $('<div/>').addClass('fcoo-logo'),
+                        //FCOO logo
+                        $('<div/>').addClass('fcoo-logo')
+                    ),
 
-                    //FCOO name and address and email and link
-                    $('<div/>')
-                        .append(
-                            $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
-                            $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
-                            $('<span/>').i18n({da:'', en:' - Denmark'}),
-                            '<br>',
-                            $('<a target="_blank">fcoo.dk</a>').i18n('link:fcoo', 'href'),
-                            ' - ',
-                            $('<a href="mailto:info@fcoo.dk" target="_top">info@fcoo.dk</a>')
-                        )
-                );
+                //FCOO name and address and email and link
+                $contact = $('<div/>')
+                    .append(
+                        $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
+                        $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
+                        $('<span/>').i18n({da:'', en:' - Denmark'})
+                    )
+                    .appendTo($content),
+                link = i18next.t('link:fcoo'),
+                email = i18next.t('email:fcoo');
+
+            if (link == 'fcoo') link = '';
+            link = link.split('?')[0];
+            link = link + '\\\\\\///////';
+            var re = new RegExp('\\/', 'g');
+            link = link.replace(re, '');
+            link = link.replace(/\\/g, "");
+
+            if (email == 'fcoo') email = '';
+
+            if (link || email)
+                $contact.append('<br>');
+            if (link)
+                $contact.append( $('<a target="_blank">'+link+'</a>').i18n('link:fcoo', 'href').i18n('name:fcoo', 'title') );
+            if (link && email)
+                $contact.append(' - ');
+            if (email)
+                $contact.append( $('<a href="mailto:'+email+'" target="_top">'+email+'</a>') );
 
             aboutFCOOModal = $.bsModal({
                 noHeader   : true,
@@ -51,7 +68,7 @@ Create and display "About FCOO" info and modal-box
 
         aboutFCOOModal.show();
     };
-}(jQuery, this, document));
+}(jQuery, this.i18next, this, document));
 
 ;
 /****************************************************************************
@@ -68,6 +85,7 @@ Sections:
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
 4: Set up and initialize jquery-bootstrap
+5: Load FCOO and default name,link,email and error-messages
 ****************************************************************************/
 
 (function ($, i18next, window/*, document, undefined*/) {
@@ -358,6 +376,15 @@ Sections:
     //Icon for external link
     $.bsExternalLinkIcon = 'fa-external-link';
 
+
+    /***********************************************************************
+    ************************************************************************
+    5: Load FCOO and default name,link,email and error-messages
+    ************************************************************************
+    ***********************************************************************/
+    ns.loadKeyPhraseFile('name-address-link.json',      'name-address-link');
+    ns.loadKeyPhraseFile('name-address-link_fcoo.json', 'name-address-link');
+    ns.loadPhraseFile   ('request.json',                'error-code-text'  );
 
 
 }(jQuery, this.i18next, this, document));

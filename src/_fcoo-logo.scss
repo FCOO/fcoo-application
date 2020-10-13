@@ -44,6 +44,7 @@ $app-background-color    : "{APPLICATION_COLOR}";
 
 .icon-fcoo-app-logo {
     color: #{$app-favicon-color} !important;
+    color: white  !important; //Backup color
 }
 
 .fcoo-color, .fcoo-app-color {

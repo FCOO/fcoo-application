@@ -80,30 +80,13 @@ The FCOO logo are provided as at SVG-font and can be applied using the css class
     .icon-fcoo-logo      /* FCOO logo in default color (white) */
     .icon-fcoo-app-logo  /* FCOO logo in the application color (options.application.faviconColor) */
 
+### Namespace: `error`. File: `static/error-code-text/request.json.json`. Format: namespace-key-lang
+Translation of standard html errors and descriptions
 
-### Dependencies and versions
-In `bower.json` of the application correct the `fcoo-application` section in `dependencies` to
- 
-	"dependencies": {
-	  ...
-      "fcoo-application": "fcoo/fcoo-application#~1.2.3",
-	  ...
-	}
+E.g. 
 
-and add/update the `resolutions` section    
-
-	"resolutions": {
-	  ...
-      "fcoo-application": "~1.2.3",
-	  ...
-	}
-
-where `1.2.3` responses to a version
-
-**NOTE that the version must be added both in the `"dependencies"` and the `"resolutions"` section** 
-
-
-
+- key = `error:400`, translation `da:"Forkert anmodning", en:"Bad Request"`
+- key = `error:409-desc`, translation `en:"The request could not be completed because of a conflict in the request"`
 
 ### Embedded options from `gruntfile.js`
 
