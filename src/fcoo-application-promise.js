@@ -202,7 +202,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
             subDirs = path.split('/').length - 2,
             host    = window.location.hostname;
 
-        if ((subDirs >= 1) && !ns.LOCAL_DATA && (host != 'localhost'))
+        if ((subDirs >= 1) && !ns.LOCAL_DATA && !ns.DEMO_VERSION && (host != 'localhost'))
             ns.path.host = window.location.hostname;
 
 
