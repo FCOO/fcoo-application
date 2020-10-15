@@ -172,7 +172,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
                                 da: 'En eller flere af opsætningsfilerne kunne ikke læses<br>Det betyder, at ' + appName.da + ' ikke kan&nbsp;vises&nbsp;korrekt<br>Prøv evt. at <a ref="javascript:alert()">genindlæse siden</a>',
                                 en: 'One or more of the settings files could not be read<br>Therefore ' + appName.en + ' will not be&nbsp;displayed&nbsp;correct<br>If possible, try to reload the page'
                             }),
-            buttons : [{id:'fa-reload', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
+            buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
             show    : true
         });
         return false;
