@@ -28,6 +28,10 @@ All global variables, methods, and options in the package is located in namespac
 #### `window.fcoo.promiseList` [PromiseList] (see [https://github.com/FCOO/promise-list](https://github.com/FCOO/promise-list))
 List of setup-files to be loaded. Call `fcoo.promiseList.getAll()` when all setup-files are added
 
+**NOTE** It is possible to call an application with parameter `&test-mode=FILENAME` where `FILENAME` is a json-file with a list of witch setup-files to be replaced by a test-version. See `src/fcoo-application-promise.js` for details.
+**NOTE** Only files added to `fcoo.promiseList` via `.append(...)` or `.prepend(...)` can be replaced using `&test-mode=FILENAME`
+
+
 #### `window.fcoo.localStorageExists` [Boolean]
 Determinate if `localStorage` is supported and available. If the browser is in *Private* mode not all browser supports `localStorage`
 If `localStorage` isn't supported a fake version is installed

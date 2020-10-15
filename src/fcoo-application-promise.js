@@ -209,7 +209,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
         //If url parameter contains test-mode=FILENAME[.json] try to load the file first and adjust any paths
         var testFileName = ns.parseAll()["test-mode"];
         if (testFileName)
-            ns.promiseList.prependFirst({
+            ns.promiseList.prepend({
                 fileName: ns.dataFilePath({subDir:'test-mode', fileName: testFileName + (testFileName.indexOf('.json') == -1 ? '.json' : '')}),
                 resolve : resolveTestMode,
                 wait    : true
