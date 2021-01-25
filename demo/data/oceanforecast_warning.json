@@ -9,6 +9,7 @@
             "type": "error",
             "publish": false,
             "url": "",
+            "showAlways": true,
             "title": {"da":"Error: Der er noget galt med...(UTC=14:20)", "en":"Error: Something is wrong with...(UTC=14:20)"}
         },
         {

@@ -869,8 +869,31 @@ Objects and methods to create message-groups
             $.each(messageGroupList, function(index, messageGroup){
                 $.each(messageGroup.list, function(index2, message){
                     var newStatus = messageStatus[message.getFCOOId()];
-                    if ((newStatus !== undefined) && (message.getStatus() != newStatus))
+                    if (newStatus)
                         message.setStatus(newStatus);
+
+                    //Check if the message need to be shown on load
+                    var showOnLoad = false,
+                        opt = message.options;
+
+                    if (opt.publish){
+
+                        if ((opt.showOnce || opt.showAfter) && !opt.status)
+                            showOnLoad = true;
+
+                        //Check if the the last time the message was shownis more than options.showAfter
+                        if (!showOnLoad && opt.showAfter){
+                            var lastShown = moment(opt.status),
+                                duration  = moment.duration(opt.showAfter);
+
+                            if (lastShown.isValid() && moment.isDuration(duration)){
+                                lastShown.add(duration);
+                                showOnLoad = moment().isAfter(lastShown);
+                            }
+                        }
+                    }
+                    if (showOnLoad)
+                        message.asBsModal(true, true);
                 });
             });
         },
@@ -956,19 +979,6 @@ Objects and methods to create message-groups
                 if (opt.showAlways)
                     return true;
 
-                if (opt.showOnce && !opt.status)
-                    return true;
-
-                //Check if the the last time the message was shownis more than options.showAfter
-                if (opt.showAfter){
-                    var lastShown = moment(opt.statusFromSetting),
-                        duration  = moment.duration(opt.showAfter);
-
-                    if (lastShown.isValid() && moment.isDuration(duration)){
-                        lastShown.add(duration);
-                        return moment().isAfter(lastShown);
-                    }
-                }
                 return false;
             },
 
@@ -1036,17 +1046,14 @@ Objects and methods to create message-groups
                 vfFormat  : 'date_local',
                 saveStatusInGlobalSetting: true,
 
-                //Status are loaded from and saved in fcoo.globalSetting under 'messages' as {id: date}
-                loadStatus: function( message ){
-                    var messageStatus = ns.globalSetting.get('messages');
-                    message.options.statusFromSetting = messageStatus[message.getFCOOId()];
-                    return !!message.options.statusFromSetting;
-                },
+                loadStatus: function(/* message */){ return false; },
+
                 saveStatus: function( message ){
-                    var messageStatus = ns.globalSetting.get('messages');
-                    //messageStatus[message.getFCOOId()] = messageStatus[message.getFCOOId()] || moment().format('YYYY-MM-DD');
-                    messageStatus[message.getFCOOId()] = moment().format();
-                    ns.globalSetting.save({messages: messageStatus});
+                    if (message.options.status === true){
+                        var messageStatus = ns.globalSetting.get('messages');
+                        messageStatus[message.getFCOOId()] = moment().format();
+                        ns.globalSetting.save({messages: messageStatus});
+                    }
                 },
 
             },

@@ -187,7 +187,8 @@
 
                         },
                         messages: {
-                            url: 'data/info.json'
+//HER                            url: 'data/info.json data/show_on_load.json'
+                            url: 'data/show_on_load.json'
                         },
                         warning: {
                             url: 'data/oceanforecast_warning.json data/oceanforecast_warning2.json',
@@ -340,8 +341,11 @@ main.$mainContainer.append('<br>');
 
 
     $(function() {
+        fcoo.promiseList.options.finally = function(){
+            fcoo.globalSetting.load();
+        };
+
         fcoo.promiseList_getAll();
-        fcoo.globalSetting.load();
     });
 
     </script>
