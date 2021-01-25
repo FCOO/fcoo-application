@@ -896,6 +896,12 @@ Objects and methods to create message-groups
     'warning'   : Mesages about real-time production
     'info'      : Typical news about new releases of the application
     'help'      : Help to the application and generel info a la "About FCOO"
+
+
+    Implement tree options for each message:
+    showAlways: boolean. If true the message is shown every time the page is loaded
+    showOnce  : boolean. If true the message is shown if it hhasn't been shown before
+    showAfter : string A period given the period between each time the message is shown. Format = ISO 8601 https://en.wikipedia.org/wiki/ISO_8601#Durations
     **************************************************************/
 
     var messageGroupOptions = {
@@ -933,6 +939,7 @@ Objects and methods to create message-groups
                     text: messageGroup.getAllStatus().publish == 1 ? $.bsNotyName[type] : $.bsNotyNames[type]
                 };
 
+
                 if (messageGroup.options.hideOnError)
                     //Show button after reading data
                     messageGroup.options.$button.show();
@@ -940,6 +947,31 @@ Objects and methods to create message-groups
                     //Enable the button after reading data
                     messageGroup.options.$button.removeClass('disabled');
             },
+
+            showOnLoad: function( message ){
+                var opt = message.options;
+                if (!opt.publish)
+                    return false;
+
+                if (opt.showAlways)
+                    return true;
+
+                if (opt.showOnce && !opt.status)
+                    return true;
+
+                //Check if the the last time the message was shownis more than options.showAfter
+                if (opt.showAfter){
+                    var lastShown = moment(opt.statusFromSetting),
+                        duration  = moment.duration(opt.showAfter);
+
+                    if (lastShown.isValid() && moment.isDuration(duration)){
+                        lastShown.add(duration);
+                        return moment().isAfter(lastShown);
+                    }
+                }
+                return false;
+            },
+
 
             shakeWhenUnread: false,
 
@@ -1007,12 +1039,14 @@ Objects and methods to create message-groups
                 //Status are loaded from and saved in fcoo.globalSetting under 'messages' as {id: date}
                 loadStatus: function( message ){
                     var messageStatus = ns.globalSetting.get('messages');
-                    return !!messageStatus[message.getFCOOId()];
+                    message.options.statusFromSetting = messageStatus[message.getFCOOId()];
+                    return !!message.options.statusFromSetting;
                 },
                 saveStatus: function( message ){
                     var messageStatus = ns.globalSetting.get('messages');
-                    messageStatus[message.getFCOOId()] = messageStatus[message.getFCOOId()] || moment().format('YYYY-MM-DD');
-                    ns.globalSetting.set({messages: messageStatus});
+                    //messageStatus[message.getFCOOId()] = messageStatus[message.getFCOOId()] || moment().format('YYYY-MM-DD');
+                    messageStatus[message.getFCOOId()] = moment().format();
+                    ns.globalSetting.save({messages: messageStatus});
                 },
 
             },
@@ -1065,7 +1099,7 @@ Objects and methods to create message-groups
         messageGroup.preLoad();
         ns.promiseList.append({
             fileName: messageGroup.options.url,
-            resolve : $.proxy(messageGroup.resolve, messageGroup),
+            resolve : $.proxy(messageGroup.resolve, messageGroup)
         });
 
     };
