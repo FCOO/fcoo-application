@@ -928,6 +928,9 @@ Objects and methods to create message-groups
     **************************************************************/
 
     var messageGroupOptions = {
+
+            modalHeight: 350,
+
             icons  : { externalLink: $.bsExternalLinkIcon /* == 'fa-external-link'*/ },
             loading: { icon: ns.icons.working },
 

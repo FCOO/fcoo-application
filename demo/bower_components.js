@@ -39683,8 +39683,8 @@ if (typeof define === 'function' && define.amd) {
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.i18next = factory());
-}(this, function () { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.i18next = factory());
+}(this, (function () { 'use strict';
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -39997,7 +39997,7 @@ if (typeof define === 'function' && define.amd) {
       if (canNotTraverseDeeper()) return {};
       var key = cleanKey(stack.shift());
       if (!object[key] && Empty) object[key] = new Empty();
-      object = object[key];
+      if (object.hasOwnProperty(key)) object = object[key];
     }
 
     if (canNotTraverseDeeper()) return {};
@@ -40375,21 +40375,21 @@ if (typeof define === 'function' && define.amd) {
 
           if (keySeparator) {
             var resTypeIsArray = resType === '[object Array]';
-            var copy$$1 = resTypeIsArray ? [] : {};
+            var copy = resTypeIsArray ? [] : {};
             var newKeyToUse = resTypeIsArray ? resExactUsedKey : resUsedKey;
 
             for (var m in res) {
               if (Object.prototype.hasOwnProperty.call(res, m)) {
                 var deepKey = "".concat(newKeyToUse).concat(keySeparator).concat(m);
-                copy$$1[m] = this.translate(deepKey, _objectSpread({}, options, {
+                copy[m] = this.translate(deepKey, _objectSpread({}, options, {
                   joinArrays: false,
                   ns: namespaces
                 }));
-                if (copy$$1[m] === deepKey) copy$$1[m] = res[m];
+                if (copy[m] === deepKey) copy[m] = res[m];
               }
             }
 
-            res = copy$$1;
+            res = copy;
           }
         } else if (handleAsObjectInI18nFormat && typeof joinArrays === 'string' && resType === '[object Array]') {
           res = res.join(joinArrays);
@@ -41683,6 +41683,11 @@ if (typeof define === 'function' && define.amd) {
           });
         }
 
+        if (this.options.fallbackLng && !this.services.languageDetector && !this.options.lng) {
+          var codes = this.services.languageUtils.getFallbackCodes(this.options.fallbackLng);
+          if (codes.length > 0 && codes[0] !== 'dev') this.options.lng = codes[0];
+        }
+
         if (!this.services.languageDetector && !this.options.lng) {
           this.logger.warn('init: no languageDetector is used and no lng is defined');
         }
@@ -42071,7 +42076,7 @@ if (typeof define === 'function' && define.amd) {
 
   return i18next;
 
-}));
+})));
 
 ;
 /*!
@@ -60524,7 +60529,7 @@ module.exports = g;
         //this.input = simple object with all input-elements. Also convert element-id to unique id for input-element
         this.inputs = {};
 
-        var types = ['input', 'select', 'selectlist', 'radiobuttongroup', 'checkbox', 'radio', 'table', 'slider', 'timeslider', 'hidden', 'inputgroup'];
+        var types = ['button', 'input', 'select', 'selectlist', 'radiobuttongroup', 'checkbox', 'radio', 'table', 'slider', 'timeslider', 'hidden', 'inputgroup'];
 
         function setId( dummy, obj ){
             if ($.isPlainObject(obj) && (obj.type !== undefined) && (types.indexOf(obj.type) >= 0) && obj.id){
@@ -83028,6 +83033,7 @@ if (typeof define === 'function' && define.amd) {
             id            : '',
             url           : '',
             header        : '',
+            modalHeight   : null, //The total height of the modal with the list of messages
             icons: {
                 envelopeOpen  : 'fa-envelope-open',
                 envelopeClosed: 'fa-envelope',
@@ -83410,15 +83416,16 @@ if (typeof define === 'function' && define.amd) {
             this.bsModal =
                 this.bsModal ||
                 this.asBsTable().asModal({
-                    header: this.options.header,
-                    buttons: this.options.showStatus ?
-                                [{
-                                    icon   : this._getStatusIcon( true, true ),
-                                    text   : {da:'Márker alle som læst', en:'Mark all as read'},
-                                    onClick: function(){ _this.setAllStatus( true ); }
-                                }]
-                             : null,
-                    show  : false
+                    maxHeight: this.options.modalHeight,
+                    header   : this.options.header,
+                    buttons  : this.options.showStatus ?
+                                    [{
+                                        icon   : this._getStatusIcon( true, true ),
+                                        text   : {da:'Márker alle som læst', en:'Mark all as read'},
+                                        onClick: function(){ _this.setAllStatus( true ); }
+                                    }]
+                                : null,
+                    show     : false
                 });
 
             if (show)
