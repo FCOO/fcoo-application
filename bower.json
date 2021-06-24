@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "11.2.2",
+  "version": "11.3.0",
   "homepage": "https://gitlab.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -43,14 +43,14 @@
     "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^2.1.2",
     "fcoo-unit": "fcoo/fcoo-unit#^1.1.1",
     "fcoo-value-format": "fcoo/fcoo-value-format#^3.1.0",
-    "fcoo-fontawesome": "https://gitlab.com/fcoo/fcoo-fontawesome.git#^5.0.0",
+    "fcoo-fontawesome": "https://gitlab.com/fcoo/fcoo-fontawesome.git#^5.16.0",
     "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
     "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#^4.0.0",
     "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^4.1.0",
     "offline": "HubSpot/offline#~0.7.18",
     "imagesloaded": "desandro/imagesloaded#~4.1.1",
-    "jquery-bootstrap": "fcoo/jquery-bootstrap#^1.45.0",
+    "jquery-bootstrap": "fcoo/jquery-bootstrap#^1.91.1",
     "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^1.6.2",
     "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",
     "hammerjs": "^2.0.8"

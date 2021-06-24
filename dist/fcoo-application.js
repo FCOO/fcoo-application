@@ -328,6 +328,10 @@ Sections:
     //Set default fontawesome prefix to 'regular'
     $.FONTAWESOME_PREFIX = 'far';
 
+    //Set iconfont prefix to fa? or wi. ICONFONT_PREFIXES = STRING or []STRING with regexp to match class-name setting font-icon class-name. Fontawesome 5: 'fa.?' accepts 'fas', 'far', etc. as class-names => will not add $.FONTAWESOME_PREFIX
+    $.ICONFONT_PREFIXES = ['fa.?', 'wi'];
+
+
     //Set icon for the different icons on the header of modal windows etc.
     $.bsHeaderIcons = $.extend( $.bsHeaderIcons, {
         back    : 'fa-chevron-circle-left',
