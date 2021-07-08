@@ -22,9 +22,9 @@ Create and manage the top-menu for FCOO web applications
     **************************************************/
     function defaultTopMenuButton( $menu, options ){
         options = $.extend({}, options, {
-            transparent: true,
-            bigIcon    : true,
-            square     : true,
+            transparentOnDark: true,
+            bigIcon          : true,
+            square           : true,
         });
         var $result = $.bsButton( options );
         if (options.title)
