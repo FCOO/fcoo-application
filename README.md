@@ -18,7 +18,7 @@ http://FCOO.gitlab.io/fcoo-application/demo/  **TODO: Link not working**
 
 ### Create main structure with menus on left-, right, top- or bottom-side
 
-See `src/fcoo-application-main.js` and `src/fcoo-application-top-menu.js` for documentation on how to create main structure and top-menu
+See `src/fcoo-application-main.js` and `src/fcoo-application-top-menu.js` for documentation on how to create main structure, top-menu, and menus using [jquery-bootstrap-mmenu](https://github.com/FCOO/jquery-bootstrap-mmenu) and [mmenu](https://mmenujs.com/)
 
 ### Namespace `window.fcoo`
 All global variables, methods, and options in the package is located in namespace `window.fcoo`

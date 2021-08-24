@@ -27,8 +27,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.options = $.extend({
             //Default options
             position     : 'left',
-            scroll       : false, //Only for bottom. left and right are always with scroll
-            scrollOptions: null, //Individuel options for jquery-scroll-container
+            scroll       : false,  //Only for bottom. left and right are always with scroll expect when having menuOptions for $.bsMMenu
+            scrollOptions: null,   //Individuel options for jquery-scroll-container
             modeOver     : false,
             multiMode    : false,
             menuClassName: '',
@@ -45,7 +45,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         }, options || {} );
 
         this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
-        this.options.scroll = this.options.scroll || this.options.verticalMenu;
+        this.options.scroll          = this.options.scroll || (this.options.verticalMenu && !this.options.menuOptions);
         this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
 
         this.options.hammerDirection =  this.options.verticalMenu ? Hammer.DIRECTION_ALL :
@@ -85,7 +85,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .addClass('touch-menu flex-grow-1 flex-shrink-1')
                 .appendTo(this.$container);
 
-                if (this.options.verticalMenu || this.options.scroll){
+                if (this.options.scroll){
                     this.$menu = $menuContainer.addScrollbar( this.options.scrollOptions );
                     this.perfectScrollbar = $menuContainer.perfectScrollbar;
                 }
@@ -97,7 +97,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 this.options.$menu.contents().detach().appendTo(this.$menu);
 
 
-            //Create the bottom/rigth part
+            //Create the bottom/right part
             if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
                 this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
                 this.$postMenu
@@ -151,6 +151,13 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             this.$mask.on('click', $.proxy(this.close, this));
         }
+
+
+
+        //Create the $.bsMenu if menuOptions are given
+        if (this.options.menuOptions)
+            ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
+
 
         if (this.options.isOpen)
             this.open(true);

@@ -1126,6 +1126,82 @@ Objects and methods to create message-groups
 
 ;
 /****************************************************************************
+fcoo-application-mmenu
+Objects and methods to set up Mmenu via $.bsMmenu
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    var ns = window.fcoo = window.fcoo || {};
+
+
+    var favoriteSetting = null, //SettingGroup to hold the favorites in the menus
+        favoriteSettingId = '__FAVORITES__',
+
+        bsMenus = {}; //{id:BsMenu}
+
+
+    function setFavorites(menu){
+        $.each(favoriteSetting && favoriteSetting.data ? favoriteSetting.data[menu.id] : {}, function(itemId, inFavorites){
+            var item = menu.getItem(itemId);
+            if (item && (!!item.inFavorites != !!inFavorites))
+                item.toggleFavorite(inFavorites);
+        });
+    }
+
+    function favoritesSetting_afterLoad(){
+        $.each(bsMenus, function(id, bsMenu){
+            setFavorites(bsMenu);
+        });
+    }
+
+    function favorite_get(menuId, itemId){
+        if (favoriteSetting && favoriteSetting.data && favoriteSetting.data[menuId])
+            return favoriteSetting.data[menuId][itemId];
+        else
+            return false;
+    }
+
+    function favorite_set(menuId, itemId, isFavorite){
+        if (favoriteSetting && favoriteSetting.data){
+            favoriteSetting.data[menuId] = favoriteSetting.data[menuId] || {};
+            favoriteSetting.data[menuId][itemId] = isFavorite;
+            favoriteSetting.saveAs(favoriteSettingId);
+        }
+    }
+
+    ns.createMmenu = function( menuId, options, $container ){
+        if (!favoriteSetting){
+            favoriteSetting = new ns.SettingGroup({simpleMode: true});
+            favoriteSetting.load( favoriteSettingId, favoritesSetting_afterLoad );
+        }
+
+        options = $.extend(true, {}, {
+            inclBar    : true,
+            barCloseAll: true,
+            favorites: {
+                get   : function(id){ return favorite_get(menuId, id); },
+                add   : function(id){ favorite_set(menuId, id, true);  },
+                remove: function(id){ favorite_set(menuId, id, false); },
+            }
+        }, options);
+
+        var bsMenu = $.bsMmenu(options, {offCanvas: false}).create( $container );
+        bsMenu.id = bsMenu.options.id || menuId;
+        bsMenus[bsMenu.id] = bsMenu;
+        setFavorites(bsMenu);
+
+        return bsMenu;
+    };
+
+
+}(jQuery, this, document));
+
+
+
+
+;
+/****************************************************************************
 	fcoo-application-offlinr.js,
 Initialize offline.js - http://github.hubspot.com/offline/
 ****************************************************************************/
@@ -2096,8 +2172,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.options = $.extend({
             //Default options
             position     : 'left',
-            scroll       : false, //Only for bottom. left and right are always with scroll
-            scrollOptions: null, //Individuel options for jquery-scroll-container
+            scroll       : false,  //Only for bottom. left and right are always with scroll expect when having menuOptions for $.bsMMenu
+            scrollOptions: null,   //Individuel options for jquery-scroll-container
             modeOver     : false,
             multiMode    : false,
             menuClassName: '',
@@ -2114,7 +2190,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         }, options || {} );
 
         this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
-        this.options.scroll = this.options.scroll || this.options.verticalMenu;
+        this.options.scroll          = this.options.scroll || (this.options.verticalMenu && !this.options.menuOptions);
         this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
 
         this.options.hammerDirection =  this.options.verticalMenu ? Hammer.DIRECTION_ALL :
@@ -2154,7 +2230,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .addClass('touch-menu flex-grow-1 flex-shrink-1')
                 .appendTo(this.$container);
 
-                if (this.options.verticalMenu || this.options.scroll){
+                if (this.options.scroll){
                     this.$menu = $menuContainer.addScrollbar( this.options.scrollOptions );
                     this.perfectScrollbar = $menuContainer.perfectScrollbar;
                 }
@@ -2166,7 +2242,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 this.options.$menu.contents().detach().appendTo(this.$menu);
 
 
-            //Create the bottom/rigth part
+            //Create the bottom/right part
             if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
                 this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
                 this.$postMenu
@@ -2220,6 +2296,13 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             this.$mask.on('click', $.proxy(this.close, this));
         }
+
+
+
+        //Create the $.bsMenu if menuOptions are given
+        if (this.options.menuOptions)
+            ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
+
 
         if (this.options.isOpen)
             this.open(true);
