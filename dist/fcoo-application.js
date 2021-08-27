@@ -502,7 +502,7 @@ Create and manage the main structure for FCOO web applications
             globalModeOver      : false,
 
             topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
-            leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js
+            leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
             leftMenuButtons     : null,  //Options for buttons in the header of the left-menu. See format below
             keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
             rightMenu           : null,  //Options for right-menu. See src/fcoo-application-touch.js
@@ -518,7 +518,7 @@ Create and manage the main structure for FCOO web applications
         }, options );
 
         /*
-        leftMenuButtons and rightMenuButtons = {
+        leftMenuButtons or leftMenu.buttons, and rightMenuButtons rightMenu.buttons = {
             preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
             save        = onClick or buttonOptions, //Standard save-button
             load        = onClick or buttonOptions, //Standard load-button
@@ -528,52 +528,6 @@ Create and manage the main structure for FCOO web applications
             setting     = onClick or buttonOptions, //Standard setting-button
             postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
         */
-        function createMenuButtons(options, $container){
-            var buttonGroups = [];
-            if (options.preButtons)
-                buttonGroups.push( $.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
-
-            //Add standard buttons
-            var shareIcon = 'fa-share-alt'; //TODO check os for different icons
-            var buttonList = [];
-            $.each([
-                {id:'save',     icon: 'fa-save',        title: {da: 'Gem',             en: 'Save'        }, newGroup: true},
-                {id:'load',     icon: 'fa-folder-open', title: {da: 'Hent',            en: 'Load'        } },
-                {id:'bookmark', icon: 'fa-star',        title: {da: 'Tilføj bogmærke', en: 'Add bookmark'}, newGroup: true},
-                {id:'share',    icon: shareIcon,        title: {da: 'Del',             en: 'Share'       } },
-                {id:'user',     icon: 'fa-user',        title: {da: 'Bruger',          en: 'User'        }, newGroup: true},
-                {id:'setting',  icon: 'fa-cog',         title: {da: 'Indstillinger',   en: 'Settings'    } }
-            ],
-            function(index, defaultButtonOptions){
-                var nextButtonOptions = options[defaultButtonOptions.id];
-                if (nextButtonOptions){
-                    if (buttonList.length && defaultButtonOptions.newGroup){
-                        buttonGroups.push(buttonList);
-                        buttonList = [];
-                    }
-                    buttonList.push( $.extend(defaultButtonOptions, $.isFunction(nextButtonOptions) ? {onClick:nextButtonOptions} : nextButtonOptions) );
-                }
-            });
-            if (buttonList.length)
-                buttonGroups.push(buttonList);
-
-            if (options.postButtons)
-                buttonGroups.push( $.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
-
-            //Create the buttons
-            $.each(buttonGroups, function(index, buttonList){
-                var $div = $('<div/>')
-                            .toggleClass('ml-auto', index == 0)
-                            .addClass('button-group')
-                            .appendTo($container);
-                $.each(buttonList, function(index2, buttonOptions){
-                    buttonOptions = $.extend({bigIcon: true, square: true}, buttonOptions);
-                    $.bsButton(buttonOptions).appendTo($div);
-                });
-            });
-
-
-        }
 
         var result = {
                 menus  : [],
@@ -722,12 +676,65 @@ Create and manage the main structure for FCOO web applications
             result._onBodyResize();
         }
 
+        //**************************************************
+        //Add menu-buttons to left and right menu. button-options can be in options.[left/right]MenuButtons or options.[left/right]Menu.buttons
+        function createMenuButtons(prefix){
+            var menuOptions = result.options[prefix+'Menu'],
+                options     = menuOptions ? menuOptions.buttons || result.options[prefix+'MenuButtons'] || null : null,
+                menu        = result[prefix+'Menu'],
+                $container  = menu ? menu.$preMenu : null;
 
-        //Add menu-buttons to left and right menu
-        if (result.options.leftMenu && result.options.leftMenuButtons)
-            createMenuButtons(result.options.leftMenuButtons, result.leftMenu.$preMenu);
-        if (result.options.rightMenu && result.options.rightMenuButtons)
-            createMenuButtons(result.options.rightMenuButtons, result.rightMenu.$preMenu);
+            if (!options || !$container) return;
+
+            var buttonGroups = [];
+            if (options.preButtons)
+                buttonGroups.push( $.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
+
+            //Add standard buttons
+            var shareIcon = 'fa-share-alt'; //TODO check os for different icons
+            var buttonList = [];
+            $.each([
+                {id:'save',     icon: 'fa-save',        title: {da: 'Gem',             en: 'Save'        }, newGroup: true},
+                {id:'load',     icon: 'fa-folder-open', title: {da: 'Hent',            en: 'Load'        } },
+                {id:'bookmark', icon: 'fa-star',        title: {da: 'Tilføj bogmærke', en: 'Add bookmark'}, newGroup: true},
+                {id:'share',    icon: shareIcon,        title: {da: 'Del',             en: 'Share'       } },
+                {id:'user',     icon: 'fa-user',        title: {da: 'Bruger',          en: 'User'        }, newGroup: true},
+                {id:'setting',  icon: 'fa-cog',         title: {da: 'Indstillinger',   en: 'Settings'    } }
+            ],
+            function(index, defaultButtonOptions){
+                var nextButtonOptions = options[defaultButtonOptions.id];
+                if (nextButtonOptions){
+                    if (buttonList.length && defaultButtonOptions.newGroup){
+                        buttonGroups.push(buttonList);
+                        buttonList = [];
+                    }
+                    buttonList.push( $.extend(defaultButtonOptions, $.isFunction(nextButtonOptions) ? {onClick:nextButtonOptions} : nextButtonOptions) );
+                }
+            });
+            if (buttonList.length)
+                buttonGroups.push(buttonList);
+
+            if (options.postButtons)
+                buttonGroups.push( $.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
+
+            //Create the buttons
+            $.each(buttonGroups, function(index, buttonList){
+                var $div = $('<div/>')
+                            .toggleClass('ml-auto', index == 0)
+                            .addClass('button-group')
+                            .appendTo($container);
+                $.each(buttonList, function(index2, buttonOptions){
+                    buttonOptions = $.extend({bigIcon: true, square: true}, buttonOptions);
+                    $.bsButton(buttonOptions).appendTo($div);
+                });
+            });
+
+
+        }
+        //****************************************************
+        createMenuButtons('left');
+        createMenuButtons('right');
+
 
         /*
         Set up for detecting resize-start and resize-end of main-container

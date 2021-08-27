@@ -257,40 +257,41 @@
                                     }]
                                 }]
                             }]
+                        },
+
+                        keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
+                        buttons: {
+                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                            save    :   function(){ console.log('save') }, //Standard save-button
+                            load    :   function(){ console.log('load') }, //Standard load-button
+                            bookmark:   function(){ console.log('bookmark') }, //Standard bootmark-button
+                            share   :   function(){
+                                            if (navigator.share) {
+                                                navigator.share({
+                                                    title: 'WebShare API Demo',
+                                                    url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+                                                })
+                                                .then(function(){
+                                                    console.log('Thanks for sharing!');
+                                                })
+                                                .catch(console.error);
+                                            }
+                                            else {
+                                                // fallback
+                                                console.log('no share')
+                                            }
+                                        },
+                            user   : function(){ console.log('user') },
+                            setting: function(){ console.log('setting') },
+                            postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
                         }
-                    },
-                    keepLeftMenuButton: true, //Keeps the left menu-button even if leftMenu is null
-                    leftMenuButtons: {
-                        //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-                        save    :   function(){ console.log('save') }, //Standard save-button
-                        load    :   function(){ console.log('load') }, //Standard load-button
-                        bookmark:   function(){ console.log('bookmark') }, //Standard bootmark-button
-                        share   :   function(){
-                                        if (navigator.share) {
-                                            navigator.share({
-                                                title: 'WebShare API Demo',
-                                                url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-                                            })
-                                            .then(function(){
-                                                console.log('Thanks for sharing!');
-                                            })
-                                            .catch(console.error);
-                                        }
-                                        else {
-                                            // fallback
-                                            console.log('no share')
-                                        }
-                                    },
-                        user   : function(){ console.log('user') },
-                        setting: function(){ console.log('setting') },
-                        postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
                     },
 
                     rightMenu : {
                         width: 200,
                         $menu: $rightMenu
                     },
-                    keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
+                    _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
                     bottomMenu: {
                         height : 120,
