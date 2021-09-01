@@ -156,7 +156,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
         //Create the $.bsMenu if menuOptions are given
         if (this.options.menuOptions)
-            ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
+            this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
 
 
         if (this.options.isOpen)
