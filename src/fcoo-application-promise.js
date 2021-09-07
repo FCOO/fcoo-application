@@ -166,11 +166,12 @@ load setup-files in fcoo.promiseList after checking for test-modes
         $.bsModal({
             header  : {icon: $.bsNotyIcon.error, text: $.bsNotyName.error},
             type    : 'error',
+            width   : 360, //Needed to prevent "læses" on new line :-)
             content : $('<div/>')
                             .addClass('text-center')
                             ._bsAddHtml({
-                                da: 'En eller flere af opsætningsfilerne kunne ikke læses<br>Det betyder, at ' + appName.da + ' ikke kan&nbsp;vises&nbsp;korrekt<br>Prøv evt. at <a ref="javascript:alert()">genindlæse siden</a>',
-                                en: 'One or more of the settings files could not be read<br>Therefore ' + appName.en + ' will not be&nbsp;displayed&nbsp;correct<br>If possible, try to reload the page'
+                                da: 'En eller flere af opsætningsfilerne kunne ikke læses.<br>Det betyder, at ' + appName.da + ' ikke kan&nbsp;vises&nbsp;korrekt.<br>Prøv evt. at <a ref="javascript:alert()">genindlæse siden</a>',
+                                en: 'One or more of the settings files could not be read.<br>Therefore ' + appName.en + ' will not be&nbsp;displayed&nbsp;correct.<br>If possible, try to reload the page'
                             }),
             buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
             show    : true
