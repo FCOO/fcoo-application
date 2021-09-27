@@ -34,6 +34,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             menuClassName: '',
             isOpen       : false,
 
+            //$menu  : $-element with content, or
+            //content: object with options to create content using $.fn._bsAddHtml
+
             handleClassName    : '',
             $handleContainer   : null,
             allwaysHandle      : false, //When true: Create handle for no-touch browser
@@ -92,11 +95,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 else
                     this.$menu = $menuContainer;
 
-            //Move any content into the menu
-            if (this.options.$menu)
-                this.options.$menu.contents().detach().appendTo(this.$menu);
-
-
             //Create the bottom/right part
             if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
                 this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
@@ -108,6 +106,13 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         }
         else
             this.$menu = this.$container;
+
+        //Move or create any content into the menu
+        if (this.options.$menu)
+            this.options.$menu.contents().detach().appendTo(this.$menu);
+        else
+            if (this.options.content)
+                this.$menu._bsAddHtml(this.options.content);
 
         if (window.bsIsTouch){
             var touchStartMenu = $.proxy(this.touchStartMenu, this),

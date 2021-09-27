@@ -298,7 +298,11 @@
                         handleWidth: 456,
                         handleHeight: 40,
                         toggleOnHandleClick: true,
-                        hideHandleWhenOpen: true
+                        hideHandleWhenOpen: true,
+                        //$menu: $('<div>HEJ</div>'),                            
+                        content: function($container){
+                            $container.text('Davs'); 
+                        }
                     },
                     onResizeStart: function(main){
                         //console.log('>>resize START', main.$mainContainer.width());
