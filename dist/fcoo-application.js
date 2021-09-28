@@ -2184,8 +2184,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             menuClassName: '',
             isOpen       : false,
 
-            //$menu  : $-element with content (must be inside a <div>), or
-            //content: object with options to create content using $.fn._bsAddHtml
+            //$menu        : $-element with content (must be inside a <div>), or
+            //content      : object with options to create content using $.fn._bsAddHtml
+            //createContent: function($container) = function to create the content in $container
 
             handleClassName    : '',
             $handleContainer   : null,
@@ -2272,6 +2273,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         else
             if (this.options.content)
                 this.$menu._bsAddHtml(this.options.content);
+            else
+                if (this.options.createContent)
+                    this.options.createContent(this.$menu);
+
 
         if (window.bsIsTouch){
             var touchStartMenu = $.proxy(this.touchStartMenu, this),
