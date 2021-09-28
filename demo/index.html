@@ -20,7 +20,7 @@
 
         .main-container {
             background-color: yellow;//gray;
-//            border: 10px solid red;
+            border-bottom: 10px solid red;
         }
 
         .touch-menu-handle {
@@ -294,15 +294,16 @@
                     _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
                     bottomMenu: {
-                        height : 120,
-                        handleWidth: 456,
-                        handleHeight: 40,
-                        toggleOnHandleClick: true,
-                        hideHandleWhenOpen: true,
-                        //$menu: $('<div>HEJ</div>'),                            
-                        content: function($container){
-                            $container.text('Davs'); 
-                        }
+                        height : 'auto',
+                        standardHandler: true,
+
+
+                        $menu: $('<div style="background-color: green"/>')
+                                .append( $('<div style="width:50%; border-bottom: 10px solid blue" class="show-for-landscape">LANDSCAPE 1<br>2<br>3</div>') )
+                                .append( $('<div style="width:50%; border-bottom: 10px solid brown" class="show-for-portrait">PORTRAIT 1<br>2<br>3<br>4<br>5</div>') )
+//HER                        content: function($container){
+//HER                            $container.text('Davs'); 
+//HER                        }
                     },
                     onResizeStart: function(main){
                         //console.log('>>resize START', main.$mainContainer.width());
@@ -312,8 +313,6 @@
                     }
             });
 
-
-//        main.bottomMenu.$menu
             $('<select id="theSelect" style="width:200px"></select><br>'+
             '<button onClick="fcoo.globalSetting.set(\'language\', \'da\');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button>'+
             '<button onClick="fcoo.globalSetting.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>'+

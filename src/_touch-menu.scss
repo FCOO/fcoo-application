@@ -87,6 +87,15 @@ Two modes:
         }
     }
     .touch-post-menu {}
+
+
+    //Set dimention = 'auto' if the content have width/height = 'auto'
+    &.vertical-auto-width {
+        width: auto !important;
+    }
+    &.vertical-auto-height {
+        height: auto !important;
+    }
 }
 
 .touch-menu-handle {
@@ -124,8 +133,8 @@ Two modes:
     }
 }
 
-//.top-bar = the bar to drag down the top-menu when it is hidden
-.top-bar {
+//.horizontal-bar = the bar to drag down the top-or bottom-menu when it is hidden
+.horizontal-bar {
     font-size  : 2rem;
     text-align : center;
     line-height: 0.7;

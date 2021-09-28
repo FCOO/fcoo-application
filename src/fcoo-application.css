@@ -742,6 +742,10 @@ Two modes:
     position: relative; }
   .touch-menu-container .touch-pre-menu .button-group:not(:first-child) {
     margin-left: .5em; }
+  .touch-menu-container.vertical-auto-width {
+    width: auto !important; }
+  .touch-menu-container.vertical-auto-height {
+    height: auto !important; }
 
 .touch-menu-handle {
   position: absolute; }
@@ -770,7 +774,7 @@ Two modes:
   .touch-menu-mask.visible {
     z-index: 1043; }
 
-.top-bar {
+.horizontal-bar {
   font-size: 2rem;
   text-align: center;
   line-height: 0.7;

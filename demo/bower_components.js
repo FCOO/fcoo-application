@@ -20370,8 +20370,8 @@ else {
 
 
     //Set default protocol and host
-    nsPath.protocol = 'https:';
-    nsPath.host = 'app.fcoo.dk';
+    nsPath.protocol = nsPath.protocol || 'https:';
+    nsPath.host = nsPath.host || 'app.fcoo.dk';
 
     function dataFileName(){
         // Detect mode
@@ -33577,77 +33577,6 @@ module.exports = ret;
 })(jQuery);
 
 ;
-/****************************************************************************
-	bootstrap-popover-extensions.js,
-
-	(c) 2017, FCOO
-
-	https://github.com/FCOO/bootstrap-popover-extensions
-	https://github.com/FCOO
-
-****************************************************************************/
-
-(function ($/*, window, document, undefined*/) {
-	"use strict";
-
-    //Concert from all new placement to original
-    var truePlacement2placement = {
-            topleft   : 'top',    top   : 'top',    topright   : 'top',
-            bottomleft: 'bottom', bottom: 'bottom', bottomright: 'bottom',
-            lefttop   : 'left',   left  : 'left',   leftbottom : 'left',
-            righttop  : 'right',  right : 'right',  rightbottom: 'right'
-    };
-
-    /****************************************************
-    Overwrite Popover.show to save and modify new positions
-    *****************************************************/
-    $.fn.tooltip.Constructor.prototype.show = function( _show ){
-        return function(){
-            //If first time: Save 'true' placement
-            if (!this.config.truePlacement){
-                this.config.truePlacement = this.config.placement;
-                this.config.placement = truePlacement2placement[this.config.truePlacement];
-            }
-
-            //Original methods
-            _show.apply(this, arguments);
-
-            //Adjust popover
-            var $tip        = $(this.tip),
-                arrowDim    = $tip.find('.arrow').width() || 10,
-                arrowOffset = 6 + arrowDim,
-                offset      = 0,
-                sign        = 0;
-
-
-
-            switch (this.config.truePlacement){
-                case 'topright'   :
-                case 'rightbottom':
-                case 'bottomright':
-                case 'leftbottom' : sign = +1; break;
-
-                case 'topleft'    :
-                case 'righttop'   :
-                case 'bottomleft' :
-                case 'lefttop'    : sign = -1; break;
-
-                default           : sign = 0;
-            }
-
-            switch (sign) {
-                case +1: offset = '+50%p - ' + arrowOffset + 'px'; break;
-                case -1: offset = '-50%p + ' + arrowOffset + 'px'; break;
-                default: offset = 0;
-            }
-
-            this._popper.modifiers[1].offset = offset;
-        };
-
-    }( $.fn.tooltip.Constructor.prototype.show );
-
-}(jQuery, this, document));
-;
 /*!
  * Bootstrap-select v1.13.18 (https://developer.snapappointments.com/bootstrap-select)
  *
@@ -40101,6 +40030,8 @@ if (typeof define === 'function' && define.amd) {
     var current = obj;
 
     for (var i = 0; i < paths.length; ++i) {
+      if (!current) return undefined;
+
       if (typeof current[paths[i]] === 'string' && i + 1 < paths.length) {
         return undefined;
       }
@@ -40480,6 +40411,8 @@ if (typeof define === 'function' && define.amd) {
             res = key;
           }
 
+          var missingKeyNoValueFallbackToKey = options.missingKeyNoValueFallbackToKey || this.options.missingKeyNoValueFallbackToKey;
+          var resForMissing = missingKeyNoValueFallbackToKey && usedKey ? undefined : res;
           var updateMissing = hasDefaultValue && defaultValue !== res && this.options.updateMissing;
 
           if (usedKey || usedDefault || updateMissing) {
@@ -40507,9 +40440,9 @@ if (typeof define === 'function' && define.amd) {
 
             var send = function send(l, k, fallbackValue) {
               if (_this2.options.missingKeyHandler) {
-                _this2.options.missingKeyHandler(l, namespace, k, updateMissing ? fallbackValue : res, updateMissing, options);
+                _this2.options.missingKeyHandler(l, namespace, k, updateMissing ? fallbackValue : resForMissing, updateMissing, options);
               } else if (_this2.backendConnector && _this2.backendConnector.saveMissing) {
-                _this2.backendConnector.saveMissing(l, namespace, k, updateMissing ? fallbackValue : res, updateMissing, options);
+                _this2.backendConnector.saveMissing(l, namespace, k, updateMissing ? fallbackValue : resForMissing, updateMissing, options);
               }
 
               _this2.emit('missingKey', l, namespace, k, res);
@@ -41986,7 +41919,7 @@ if (typeof define === 'function' && define.amd) {
       }
     }, {
       key: "getFixedT",
-      value: function getFixedT(lng, ns) {
+      value: function getFixedT(lng, ns, keyPrefix) {
         var _this5 = this;
 
         var fixedT = function fixedT(key, opts) {
@@ -42005,7 +41938,9 @@ if (typeof define === 'function' && define.amd) {
           options.lng = options.lng || fixedT.lng;
           options.lngs = options.lngs || fixedT.lngs;
           options.ns = options.ns || fixedT.ns;
-          return _this5.t(key, options);
+          var keySeparator = _this5.options.keySeparator || '.';
+          var resultKey = keyPrefix ? "".concat(keyPrefix).concat(keySeparator).concat(key) : key;
+          return _this5.t(resultKey, options);
         };
 
         if (typeof lng === 'string') {
@@ -42015,6 +41950,7 @@ if (typeof define === 'function' && define.amd) {
         }
 
         fixedT.ns = ns;
+        fixedT.keyPrefix = keyPrefix;
         return fixedT;
       }
     }, {
@@ -59640,6 +59576,78 @@ module.exports = g;
 
 }));
 
+;
+/****************************************************************************
+	bootstrap-popover-extensions.js,
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/bootstrap-popover-extensions
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($/*, window, document, undefined*/) {
+	"use strict";
+
+    //Concert from all new placement to original
+    var truePlacement2placement = {
+            topleft   : 'top',    top   : 'top',    topright   : 'top',
+            bottomleft: 'bottom', bottom: 'bottom', bottomright: 'bottom',
+            lefttop   : 'left',   left  : 'left',   leftbottom : 'left',
+            righttop  : 'right',  right : 'right',  rightbottom: 'right'
+    };
+
+    /****************************************************
+    Overwrite Popover.show to save and modify new positions
+    *****************************************************/
+    $.fn.tooltip.Constructor.prototype.show = function( _show ){
+        return function(){
+            //If first time: Save 'true' placement
+            if (!this.config.truePlacement){
+                this.config.truePlacement = this.config.placement;
+                this.config.placement = truePlacement2placement[this.config.truePlacement];
+            }
+
+            //Original methods
+            _show.apply(this, arguments);
+
+            //Adjust popover
+            var $tip        = $(this.tip),
+                arrowDim    = $tip.find('.arrow').width() || 10,
+                arrowOffset = 6 + arrowDim,
+                offset      = 0,
+                sign        = 0;
+
+
+
+            switch (this.config.truePlacement){
+                case 'topright'   :
+                case 'rightbottom':
+                case 'bottomright':
+                case 'leftbottom' : sign = +1; break;
+
+                case 'topleft'    :
+                case 'righttop'   :
+                case 'bottomleft' :
+                case 'lefttop'    : sign = -1; break;
+
+                default           : sign = 0;
+            }
+
+            switch (sign) {
+                case +1: offset = '+50%p - ' + arrowOffset + 'px'; break;
+                case -1: offset = '-50%p + ' + arrowOffset + 'px'; break;
+                default: offset = 0;
+            }
+
+            if (this._popper)
+                this._popper.modifiers[1].offset = offset;
+        };
+
+    }( $.fn.tooltip.Constructor.prototype.show );
+
+}(jQuery, this, document));
 ;
 /****************************************************************************
 	jquery-bootstrap-accordion.js,

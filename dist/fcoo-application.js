@@ -580,10 +580,7 @@ Create and manage the main structure for FCOO web applications
                 $container         : result.topMenuObject.$menu,
                 $menu              : false,
                 isOpen             : true,
-                handleWidth        : 3*16,
-                handleClassName    : 'top-bar top-bar fa fa-minus',
-                toggleOnHandleClick: true,
-                hideHandleWhenOpen : true,
+                standardHandler    : true
             });
             result.menus.push(result.topMenu);
         }
@@ -2187,7 +2184,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             menuClassName: '',
             isOpen       : false,
 
-            //$menu  : $-element with content, or
+            //$menu  : $-element with content (must be inside a <div>), or
             //content: object with options to create content using $.fn._bsAddHtml
 
             handleClassName    : '',
@@ -2216,6 +2213,15 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             .addClass('touch-menu-container')
             .addClass(this.options.position)
             .addClass(this.options.menuClassName);
+
+
+        //If the dimention is 'auto' add on-resize event to update width/height
+        if (this.options[ this.options.verticalMenu ? 'width' : 'height' ] == 'auto'){
+            this.$container
+                .addClass(this.options.verticalMenu ? 'vertical-auto-width' : 'vertical-auto-height')
+                .resize( $.proxy( this.onResize, this) );
+        }
+
 
         this.setMode( this.options.modeOver );
 
@@ -2276,12 +2282,21 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         }
 
         //Create the handle
+        if (this.options.standardHandler){
+            this.options = $.extend(this.options, {
+                handleWidth        : 3*16,
+                handleClassName    : 'horizontal-bar fa fa-minus',
+                toggleOnHandleClick: true,
+                hideHandleWhenOpen : true
+            });
+        };
+
         if (window.bsIsTouch || this.options.allwaysHandle || this.options.toggleOnHandleClick){
             this.$handle = this.options.$handle ? this.options.$handle : $('<div/>');
             this.$handle
                 .addClass('touch-menu-handle')
                 .toggleClass(this.options.position, !!this.options.$handleContainer)
-                .addClass(options.handleClassName)
+                .addClass(this.options.handleClassName)
                 .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
                 .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
 
@@ -2333,6 +2348,21 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             result.on('panstart panmove', touchStart);
             result.on('panend pancancel', touchEnd);
             return result;
+        },
+
+        onResize: function(){
+            var dim = this.options.verticalMenu ? this.$container.outerWidth() : this.$container.outerHeight();
+
+            this.options[this.options.verticalMenu ? 'width' : 'height'] = dim;
+
+            this.currentPos = this.currentPos ? dim : 0;
+
+            this.updateDimentionAndSize();
+
+            this.animateToPosition(dim, false, true);
+
+
+            this.changeNeighbourContainerPos(this.isOpen ? dim : 0, false);
         },
 
         updateDimentionAndSize: function(){

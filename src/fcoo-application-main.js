@@ -108,10 +108,7 @@ Create and manage the main structure for FCOO web applications
                 $container         : result.topMenuObject.$menu,
                 $menu              : false,
                 isOpen             : true,
-                handleWidth        : 3*16,
-                handleClassName    : 'top-bar top-bar fa fa-minus',
-                toggleOnHandleClick: true,
-                hideHandleWhenOpen : true,
+                standardHandler    : true
             });
             result.menus.push(result.topMenu);
         }
