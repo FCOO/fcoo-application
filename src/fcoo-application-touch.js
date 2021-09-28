@@ -144,7 +144,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 toggleOnHandleClick: true,
                 hideHandleWhenOpen : true
             });
-        };
+        }
 
         if (window.bsIsTouch || this.options.allwaysHandle || this.options.toggleOnHandleClick){
             this.$handle = this.options.$handle ? this.options.$handle : $('<div/>');
