@@ -22,21 +22,8 @@
 
 
 
-/***************************************************
-Import Bootstrap variables and variables and the
-adjustments to Bootstrap from fcoo/jquery-bootstrap
-***************************************************/
-@import "../bower_components/jquery-bootstrap/src/bootstrap-variables";
-
-@import "../bower_components/bootstrap/scss/functions";
-@import "../bower_components/bootstrap/scss/variables";
-@import "../bower_components/bootstrap/scss/mixins";
-$niels: $gray-100;
-
-@import "../bower_components/jquery-bootstrap/src/color";
-@import "../bower_components/jquery-bootstrap/src/variables";
-@import "../bower_components/jquery-bootstrap/src/mixins";
-
+//JQUERY-BOOTSTRAP VARIABLES AND MIXINS
+@import "../bower_components/jquery-bootstrap/src/include-jquery-bootstrap-variables";
 
 //Standard classes
 .hide      { display: none !important; }
