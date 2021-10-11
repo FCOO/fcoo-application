@@ -20371,7 +20371,7 @@ else {
 
     //Set default protocol and host
     nsPath.protocol = nsPath.protocol || 'https:';
-    nsPath.host = nsPath.host || 'app.fcoo.dk';
+    nsPath.host     = nsPath.host     || 'app.fcoo.dk';
 
     function dataFileName(){
         // Detect mode
@@ -59223,7 +59223,7 @@ module.exports = g;
 //# sourceMappingURL=noty.js.map
 ;
 /**
- *  PDFObject v2.2.6
+ *  PDFObject v2.2.7
  *  https://github.com/pipwerks/PDFObject
  *  @license
  *  Copyright (c) 2008-2021 Philip Hutchison
@@ -59259,7 +59259,7 @@ module.exports = g;
             return false;
     }
 
-    let pdfobjectversion = "2.2.6";
+    let pdfobjectversion = "2.2.7";
     let nav = window.navigator;
     let ua = window.navigator.userAgent;
 
@@ -59408,7 +59408,7 @@ module.exports = g;
 
     };
 
-    let generatePDFJSMarkup = function (targetNode, url, pdfOpenFragment, PDFJS_URL, id, omitInlineStyles){
+    let generatePDFJSMarkup = function (targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles){
 
         //Ensure target element is empty first
         emptyNodeContents(targetNode);
@@ -59422,6 +59422,7 @@ module.exports = g;
         iframe.type = "application/pdf";
         iframe.frameborder = "0";
         iframe.allow = "fullscreen";
+        iframe.title = title;
         
         if(id){
             iframe.id = id;
@@ -59527,7 +59528,7 @@ module.exports = g;
 
         //If the forcePDFJS option is invoked, skip everything else and embed as directed
         if(forcePDFJS && PDFJS_URL){
-            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, omitInlineStyles);
+            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles);
         }
  
         // --== Embed attempt #2 ==--
@@ -59551,7 +59552,7 @@ module.exports = g;
         
         //If everything else has failed and a PDFJS fallback is provided, try to use it
         if(PDFJS_URL){
-            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, omitInlineStyles);
+            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles);
         }
         
         // --== PDF embed not supported! Use fallback ==-- 

@@ -230,6 +230,25 @@ The following options are set in Raven
 `release`: Set to current version of the application tags to assign to each event.
 `whitelistUrls`: `"/https?:\/\/(.*\.)?fcoo\.dk/"`
 
+## Development of packages or applications using fcoo-application
+When fcoo-application is included in a software-package or web-application the following global variables is available to control where setup-files etc. are located.
+
+All FCOO application is assumed to be in a sub-directory a la 
+
+`https://the.path.to.root/applccation_name/index.html` (example 1)
+
+or 'deeper'
+
+`https://the.path.to.root/applccation_name/some_sub_dir/index.html` (example 2)
+
+Calling methods `fcoo.promiseList_promiseAll()` will set the right path to the data-files. 
+E.q. static-data in sub-dir `"setup` = `https://the.path.to.root/static/setup/` (both example 1 and 2)
+
+When developing a package or application or in the demo version of a packages the following global variables can be set to direct the page to read data from the correct location.
+
+- `LOCAL_DATA`: It is a packages in development reading data from its own `src/data` directory => set `fcoo.LOCAL_DATA = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"/src/data/_fileName.json"`
+- `DEMO_VERSION`: It is the demo-version of a package on localhost, Github or Gitlab => set `fcoo.DEMO_VERSION = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"http(s)://app.fcoo.dk/static/theSubDir/fileName.json"`
+- `DEV_VERSION`: It is the demo-version of a application on localhost, Github or Gitlab => set `fcoo.DEV_VERSION = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"http(s)://app.fcoo.dk/static/theSubDir/fileName.json"`
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://choosealicense.com/licenses/mit/).
