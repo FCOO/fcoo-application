@@ -7,7 +7,8 @@ Initialize offline.js - http://github.hubspot.com/offline/
 	"use strict";
 
     //Create fcoo-namespace
-    var ns = window.fcoo = window.fcoo || {};
+    var ns = window.fcoo = window.fcoo || {},
+        nsPath = ns.path = ns.path || {};
 
     //Add modernizr-test-style connected
     window.modernizrOn('connected');
@@ -41,8 +42,7 @@ Initialize offline.js - http://github.hubspot.com/offline/
         checks: {
             image: {
                 url: function(){
-                        var result = ns.protocol + '//app.fcoo.dk/favicon.ico?_='+new Date().getTime();
-                        return result;
+                        return nsPath.protocol + '//' + nsPath.host + '/favicon.ico?_='+new Date().getTime();
                      }
             },
             active: 'image'
