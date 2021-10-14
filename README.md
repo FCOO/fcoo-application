@@ -246,9 +246,26 @@ E.q. static-data in sub-dir `"setup` = `https://the.path.to.root/static/setup/` 
 
 When developing a package or application or in the demo version of a packages the following global variables can be set to direct the page to read data from the correct location.
 
-- `LOCAL_DATA`: It is a packages in development reading data from its own `src/data` directory => set `fcoo.LOCAL_DATA = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"/src/data/_fileName.json"`
-- `DEMO_VERSION`: It is the demo-version of a package on localhost, Github or Gitlab => set `fcoo.DEMO_VERSION = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"http(s)://app.fcoo.dk/static/theSubDir/fileName.json"`
-- `DEV_VERSION`: It is the demo-version of a application on localhost, Github or Gitlab => set `fcoo.DEV_VERSION = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"http(s)://app.fcoo.dk/static/theSubDir/fileName.json"`
+- `window.fcoo.LOCAL_DATA`: It is a packages in development reading data from its own `src/data` directory => set `fcoo.LOCAL_DATA = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"/src/data/_fileName.json"`
+- `window.fcoo.DEMO_VERSION`: It is the demo-version of a package on localhost, Github or Gitlab => set `fcoo.DEMO_VERSION = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"http(s)://app.fcoo.dk/static/theSubDir/fileName.json"`
+- `window.fcoo.DEV_VERSION`: It is the demo-version of a application on localhost, Github or Gitlab => set `window.fcoo.DEV_VERSION = true;` and `fcoo.dataFilePath("theSubDir", "fileName.json")` returns `"http(s)://app.fcoo.dk/static/theSubDir/fileName.json"`
+
+### IMPORTANT NOTE
+The variables `window.fcoo.LOCAL_DATA`, `window.fcoo.DEMO_VERSION`, or `window.fcoo.DEV_VERSION` **MUST** be set **BEFORE** fcoo-application or the packages bower-file is included.
+
+#### Example
+    <body>
+
+        <script>
+            window.fcoo = window.fcoo || {};
+            window.fcoo.DEV_VERSION = true;
+        </script>
+
+        <script src="bower_components.js"></script>
+
+        ....
+    </body>
+  
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://choosealicense.com/licenses/mit/).

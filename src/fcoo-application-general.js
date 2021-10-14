@@ -20,15 +20,30 @@ Sections:
 
     /***********************************************************************
     ************************************************************************
-    1: Namespace, application states, system variables, , global events, "FCOO"-variables
+    1: Namespace, protocol, host, application states, system variables, , global events, "FCOO"-variables
     ************************************************************************
     ***********************************************************************/
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {};
 
-    //Setting protocol
+    //Setting protocol in fcoo and fcoo.path
     ns.protocol = window.location.protocol == 'https:' ? 'https:' : 'http:';
+    ns.path.protocol = ns.protocol;
+
+    /*
+    All FCOO application is assumed to be in a sub-directory a la https://the.path.to.root/applccation_name/index.html or 'deeper' = https://the.path.to.root/applccation_name/some_sub_dir/index.html
+    Check if this is the case and set the current host in fcoo.path - unless:
+    - It is a packages in development reading data from its own src/data directory => fcoo.LOCAL_DATA = true, or
+    - It is the demo-version of a package on localhost, Github or Gitlab => fcoo.DEMO_VERSION = true, or
+    - It is the demo-version of a application on localhost, Github or Gitlab => fcoo.DEV_VERSION = true
+    */
+    var path    = window.Url.pathname(),
+        subDirs = path.split('/').length - 2,
+        host    = window.location.hostname;
+
+    if ((subDirs >= 1) && !ns.LOCAL_DATA && !ns.DEMO_VERSION && !ns.DEV_VERSION)
+        ns.path.host = host;
 
 
     /*********************************************************************

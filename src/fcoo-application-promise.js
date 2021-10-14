@@ -10,6 +10,9 @@ load setup-files in fcoo.promiseList after checking for test-modes
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {};
 
+
+
+
     /***********************************************************************
     Set-up standard error-handler, message for promise and default Promise prefetch and finally
     ***********************************************************************/
@@ -194,23 +197,6 @@ load setup-files in fcoo.promiseList after checking for test-modes
     },
 
     ns.promiseList_getAll = function(){
-        //Set protocol
-        ns.path.protocol = ns.protocol;
-
-        /*
-        All FCOO application is assumed to be in a sub-directory a la https://the.path.to.root/applccation_name/index.html or 'deeper' = https://the.path.to.root/applccation_name/some_sub_dir/index.html
-        Check if this is the case and set the current host unless;
-        - It is a packages in development reading data from its own src/data directory => fcoo.LOCAL_DATA = true
-        - It is the demo-version of a package on localhost, Github or Gitlab => fcoo.DEMO_VERSION = true
-        - It is the demo-version of a application on localhost, Github or Gitlab => fcoo.DEV_VERSION = true
-        */
-        var path    = window.Url.pathname(),
-            subDirs = path.split('/').length - 2,
-            host    = window.location.hostname;
-
-        if ((subDirs >= 1) && !ns.LOCAL_DATA && !ns.DEMO_VERSION && !ns.DEV_VERSION)
-            ns.path.host = host;
-
 
         //If url parameter contains test-mode=FILENAME[.json] try to load the file first and adjust any paths
         var testFileName = ns.parseAll()["test-mode"];
