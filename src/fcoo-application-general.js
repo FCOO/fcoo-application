@@ -220,7 +220,7 @@ Sections:
         //Test if the path-name contains any of the words defining the version to be none-production
         var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
 
-        $.each( ['BETA', 'STAGING','DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
+        $.each( ['DEVEL01', 'DEVEL02', 'DEVEL03', 'ALPHA', 'BETA', 'DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
             if (urlStr.indexOf(name) > -1){
                 $versionDiv.text( name + (ns.applicationVersion ? ' - ' + ns.applicationVersion : ''));
 
