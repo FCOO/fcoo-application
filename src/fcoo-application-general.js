@@ -267,24 +267,28 @@ Sections:
         window.bsIsTouch = window.Modernizr.touchevents;
     }
 
-    //Set default fontawesome prefix to 'regular'
-    $.FONTAWESOME_PREFIX = 'far';
+    //Set default fontawesome prefix to 'regular'/'light'
+    $.FONTAWESOME_PREFIX          = 'NHO-DEFAULT fal text-warning'; //'far';
+    $.FONTAWESOME_PREFIX_STANDARD = 'NHO_STANDARD fal text-warning'; //$.FONTAWESOME_PREFIX; //or 'fal'
 
     //Set iconfont prefix to fa? or wi. ICONFONT_PREFIXES = STRING or []STRING with regexp to match class-name setting font-icon class-name. Fontawesome 5: 'fa.?' accepts 'fas', 'far', etc. as class-names => will not add $.FONTAWESOME_PREFIX
     $.ICONFONT_PREFIXES = ['fa.?', 'wi'];
 
-
     //Set icon for the different icons on the header of modal windows etc.
-    $.bsHeaderIcons = $.extend( $.bsHeaderIcons, {
+    $._set_bsHeaderIcons({
         back    : 'fa-chevron-circle-left',
         forward : 'fa-chevron-circle-right',
         extend  : 'fa-chevron-circle-up',
         diminish: 'fa-chevron-circle-down',
-        pin     : ['far fa-thumbtack fa-inside-circle', 'far fa-circle'],
-        unpin   : ['fas fa-thumbtack fa-inside-circle', 'far fa-circle'],
+        pin     : ['far fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
+        unpin   : ['fas fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
+
+        new     : ['far fa-window-maximize fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
+
+        info    : $.FONTAWESOME_PREFIX_STANDARD + ' fa-info-circle',
+
 
     });
-
 
     //Set icon and name for different message type
     $.bsNotyIcon = {

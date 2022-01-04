@@ -340,24 +340,28 @@ Sections:
         window.bsIsTouch = window.Modernizr.touchevents;
     }
 
-    //Set default fontawesome prefix to 'regular'
-    $.FONTAWESOME_PREFIX = 'far';
+    //Set default fontawesome prefix to 'regular'/'light'
+    $.FONTAWESOME_PREFIX          = 'NHO-DEFAULT fal text-warning'; //'far';
+    $.FONTAWESOME_PREFIX_STANDARD = 'NHO_STANDARD fal text-warning'; //$.FONTAWESOME_PREFIX; //or 'fal'
 
     //Set iconfont prefix to fa? or wi. ICONFONT_PREFIXES = STRING or []STRING with regexp to match class-name setting font-icon class-name. Fontawesome 5: 'fa.?' accepts 'fas', 'far', etc. as class-names => will not add $.FONTAWESOME_PREFIX
     $.ICONFONT_PREFIXES = ['fa.?', 'wi'];
 
-
     //Set icon for the different icons on the header of modal windows etc.
-    $.bsHeaderIcons = $.extend( $.bsHeaderIcons, {
+    $._set_bsHeaderIcons({
         back    : 'fa-chevron-circle-left',
         forward : 'fa-chevron-circle-right',
         extend  : 'fa-chevron-circle-up',
         diminish: 'fa-chevron-circle-down',
-        pin     : ['far fa-thumbtack fa-inside-circle', 'far fa-circle'],
-        unpin   : ['fas fa-thumbtack fa-inside-circle', 'far fa-circle'],
+        pin     : ['far fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
+        unpin   : ['fas fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
+
+        new     : ['far fa-window-maximize fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
+
+        info    : $.FONTAWESOME_PREFIX_STANDARD + ' fa-info-circle',
+
 
     });
-
 
     //Set icon and name for different message type
     $.bsNotyIcon = {
@@ -461,19 +465,18 @@ Objects and methods to create icons for buttons etc.
 
     //Global class-names for icons
     ns.icons = {
-        working: 'far fa-spinner fa-spin',
+        working: $.FONTAWESOME_PREFIX_STANDARD + ' fa-spinner fa-spin',
     };
 
     //Alternative
     ns.icons.spinner = ns.icons.working;
 
-
     //iconSub create a icon (mainIcon) wih a icon (subIcon) sub to the right
     ns.iconSub = function(mainIcon, subIcon, square){
         return [[
-            'far ' + mainIcon + ' fa-MAIN-small-right-bottom',
+            $.FONTAWESOME_PREFIX + ' ' + mainIcon + ' fa-MAIN-small-right-bottom',
             square ? 'fas fa-square fa-square-small-right-bottom' : 'fas fa-circle fa-circle-small-right-bottom',
-            'far ' + subIcon + ' fa-SUB-small-right-bottom'
+            $.FONTAWESOME_PREFIX + ' ' + subIcon + ' fa-SUB-small-right-bottom'
         ]];
     };
     ns.settingIcon = function(mainIcon){
@@ -1870,7 +1873,7 @@ Create and manage the top-menu for FCOO web applications
     var topMenuElementList = [
         {
             id      : 'leftMenu',
-            icon    : 'fa-bars',
+            icon    : $.FONTAWESOME_PREFIX_STANDARD + ' fa-bars',
             priority: 0
         },
 
@@ -1921,7 +1924,7 @@ Create and manage the top-menu for FCOO web applications
                         .appendTo( $inputGroup );
 
                 topMenu.searchButton =
-                    defaultTopMenuButton($menu, { icon:'fa-search' })
+                    defaultTopMenuButton($menu, { icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-search' })
                         .appendTo( $inputGroup );
 
                 return $element;
@@ -1939,7 +1942,7 @@ Create and manage the top-menu for FCOO web applications
             create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
                 //Create yellow warning square by overlaying two icons
                 var iconClass = 'fa-exclamation-square';
-                var $result = messageGroupTopMenuButton($menu, 'far ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
+                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
 
                 //Create message-group with warnings
                 ns.createFCOOMessageGroup( 'warning', menuOptions, $result );
@@ -1953,7 +1956,7 @@ Create and manage the top-menu for FCOO web applications
         {
             id: 'messages',
             create: function( $menu, elementOptions, menuOptions ){
-                var $result = messageGroupTopMenuButton($menu, 'far fa-envelope', 'fas fa-envelope');
+                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' fa-envelope', 'fas fa-envelope');
                 //Create message-group with info
                 ns.createFCOOMessageGroup( 'info', menuOptions, $result );
                 return $result;
@@ -1976,7 +1979,7 @@ Create and manage the top-menu for FCOO web applications
             id: 'setting',
             create: function( $menu/*, elementOptions, menuOptions */){
                 var $result = defaultTopMenuButton($menu, {
-                        icon   : 'far fa-cog',
+                        icon   : $.FONTAWESOME_PREFIX_STANDARD + ' fa-cog',
                         onClick: function(){ ns.globalSetting.edit(); }
                     });
                 return $result;
@@ -1997,7 +2000,7 @@ Create and manage the top-menu for FCOO web applications
         {
             id: 'help',
             create: function( $menu, elementOptions, menuOptions ){
-                var $result = defaultTopMenuButton($menu, {icon: 'far fa-question-circle'});
+                var $result = defaultTopMenuButton($menu, {icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-question-circle'});
 
                 //Create message-group with help
                 ns.createFCOOMessageGroup( 'help', menuOptions, $result );
@@ -2009,8 +2012,8 @@ Create and manage the top-menu for FCOO web applications
 
         //***************************************************************
         {
-            id: 'rightMenu',
-            icon:'far fa-list',
+            id       : 'rightMenu',
+            icon     : $.FONTAWESOME_PREFIX_STANDARD + ' fa-list',
             priority : 0,
             rightSide: true
         }
@@ -2296,7 +2299,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         if (this.options.standardHandler){
             this.options = $.extend(this.options, {
                 handleWidth        : 3*16,
-                handleClassName    : 'horizontal-bar fa fa-minus',
+                handleClassName    : 'horizontal-bar fas fa-minus',
                 toggleOnHandleClick: true,
                 hideHandleWhenOpen : true
             });

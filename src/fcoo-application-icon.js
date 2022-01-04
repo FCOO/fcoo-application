@@ -9,19 +9,18 @@ Objects and methods to create icons for buttons etc.
 
     //Global class-names for icons
     ns.icons = {
-        working: 'far fa-spinner fa-spin',
+        working: $.FONTAWESOME_PREFIX_STANDARD + ' fa-spinner fa-spin',
     };
 
     //Alternative
     ns.icons.spinner = ns.icons.working;
 
-
     //iconSub create a icon (mainIcon) wih a icon (subIcon) sub to the right
     ns.iconSub = function(mainIcon, subIcon, square){
         return [[
-            'far ' + mainIcon + ' fa-MAIN-small-right-bottom',
+            $.FONTAWESOME_PREFIX + ' ' + mainIcon + ' fa-MAIN-small-right-bottom',
             square ? 'fas fa-square fa-square-small-right-bottom' : 'fas fa-circle fa-circle-small-right-bottom',
-            'far ' + subIcon + ' fa-SUB-small-right-bottom'
+            $.FONTAWESOME_PREFIX + ' ' + subIcon + ' fa-SUB-small-right-bottom'
         ]];
     };
     ns.settingIcon = function(mainIcon){

@@ -140,7 +140,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         if (this.options.standardHandler){
             this.options = $.extend(this.options, {
                 handleWidth        : 3*16,
-                handleClassName    : 'horizontal-bar fa fa-minus',
+                handleClassName    : 'horizontal-bar fas fa-minus',
                 toggleOnHandleClick: true,
                 hideHandleWhenOpen : true
             });

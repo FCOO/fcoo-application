@@ -74,7 +74,7 @@ Create and manage the top-menu for FCOO web applications
     var topMenuElementList = [
         {
             id      : 'leftMenu',
-            icon    : 'fa-bars',
+            icon    : $.FONTAWESOME_PREFIX_STANDARD + ' fa-bars',
             priority: 0
         },
 
@@ -125,7 +125,7 @@ Create and manage the top-menu for FCOO web applications
                         .appendTo( $inputGroup );
 
                 topMenu.searchButton =
-                    defaultTopMenuButton($menu, { icon:'fa-search' })
+                    defaultTopMenuButton($menu, { icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-search' })
                         .appendTo( $inputGroup );
 
                 return $element;
@@ -143,7 +143,7 @@ Create and manage the top-menu for FCOO web applications
             create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
                 //Create yellow warning square by overlaying two icons
                 var iconClass = 'fa-exclamation-square';
-                var $result = messageGroupTopMenuButton($menu, 'far ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
+                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
 
                 //Create message-group with warnings
                 ns.createFCOOMessageGroup( 'warning', menuOptions, $result );
@@ -157,7 +157,7 @@ Create and manage the top-menu for FCOO web applications
         {
             id: 'messages',
             create: function( $menu, elementOptions, menuOptions ){
-                var $result = messageGroupTopMenuButton($menu, 'far fa-envelope', 'fas fa-envelope');
+                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' fa-envelope', 'fas fa-envelope');
                 //Create message-group with info
                 ns.createFCOOMessageGroup( 'info', menuOptions, $result );
                 return $result;
@@ -180,7 +180,7 @@ Create and manage the top-menu for FCOO web applications
             id: 'setting',
             create: function( $menu/*, elementOptions, menuOptions */){
                 var $result = defaultTopMenuButton($menu, {
-                        icon   : 'far fa-cog',
+                        icon   : $.FONTAWESOME_PREFIX_STANDARD + ' fa-cog',
                         onClick: function(){ ns.globalSetting.edit(); }
                     });
                 return $result;
@@ -201,7 +201,7 @@ Create and manage the top-menu for FCOO web applications
         {
             id: 'help',
             create: function( $menu, elementOptions, menuOptions ){
-                var $result = defaultTopMenuButton($menu, {icon: 'far fa-question-circle'});
+                var $result = defaultTopMenuButton($menu, {icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-question-circle'});
 
                 //Create message-group with help
                 ns.createFCOOMessageGroup( 'help', menuOptions, $result );
@@ -213,8 +213,8 @@ Create and manage the top-menu for FCOO web applications
 
         //***************************************************************
         {
-            id: 'rightMenu',
-            icon:'far fa-list',
+            id       : 'rightMenu',
+            icon     : $.FONTAWESOME_PREFIX_STANDARD + ' fa-list',
             priority : 0,
             rightSide: true
         }

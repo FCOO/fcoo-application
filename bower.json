@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "12.7.1",
+  "version": "13.0.0",
   "homepage": "https://gitlab.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -43,7 +43,7 @@
     "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^2.1.2",
     "fcoo-unit": "fcoo/fcoo-unit#^1.1.1",
     "fcoo-value-format": "fcoo/fcoo-value-format#^3.1.0",
-    "fcoo-fontawesome": "https://gitlab.com/fcoo/fcoo-fontawesome.git#^5.16.0",
+    "fcoo-fontawesome": "https://gitlab.com/fcoo/fcoo-fontawesome.git#6.0.0-beta2",
     "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
     "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
     "fcoo-polyfill": "fcoo/fcoo-polyfill#^4.0.0",
