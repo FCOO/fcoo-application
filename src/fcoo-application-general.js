@@ -268,8 +268,8 @@ Sections:
     }
 
     //Set default fontawesome prefix to 'regular'/'light'
-    $.FONTAWESOME_PREFIX          = 'NHO-DEFAULT fal text-warning'; //'far';
-    $.FONTAWESOME_PREFIX_STANDARD = 'NHO_STANDARD fal text-warning'; //$.FONTAWESOME_PREFIX; //or 'fal'
+    $.FONTAWESOME_PREFIX          = 'fal';                  //or 'far';
+    $.FONTAWESOME_PREFIX_STANDARD = $.FONTAWESOME_PREFIX;   //or 'fal';
 
     //Set iconfont prefix to fa? or wi. ICONFONT_PREFIXES = STRING or []STRING with regexp to match class-name setting font-icon class-name. Fontawesome 5: 'fa.?' accepts 'fas', 'far', etc. as class-names => will not add $.FONTAWESOME_PREFIX
     $.ICONFONT_PREFIXES = ['fa.?', 'wi'];
