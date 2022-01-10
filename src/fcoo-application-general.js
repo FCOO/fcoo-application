@@ -266,6 +266,7 @@ Sections:
     if (window.Modernizr && (typeof window.Modernizr.touchevents == 'boolean')){
         window.bsIsTouch = window.Modernizr.touchevents;
     }
+    window.JqueryScrollContainer.update(window.bsIsTouch);
 
     //Set default fontawesome prefix to 'regular'/'light'
     $.FONTAWESOME_PREFIX          = 'fal';                  //or 'far';
