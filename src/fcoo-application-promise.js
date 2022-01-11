@@ -177,6 +177,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
                                 en: 'One or more of the settings files could not be read.<br>Therefore ' + appName.en + ' will not be&nbsp;displayed&nbsp;correct.<br>If possible, try to reload the page'
                             }),
             buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
+            scroll  : false,
             show    : true
         });
         return false;

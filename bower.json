@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "13.0.1",
+  "version": "13.0.2",
   "homepage": "https://gitlab.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -71,7 +71,6 @@
     }
   },
   "resolutions": {
-    "fcoo-settings": "^3.0.0",
-    "fcoo-fontawesome": "6.0.0-beta2"
+    "fcoo-settings": "^3.0.0"
   }
 }

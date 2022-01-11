@@ -339,6 +339,7 @@ Sections:
     if (window.Modernizr && (typeof window.Modernizr.touchevents == 'boolean')){
         window.bsIsTouch = window.Modernizr.touchevents;
     }
+    window.JqueryScrollContainer.update(window.bsIsTouch);
 
     //Set default fontawesome prefix to 'regular'/'light'
     $.FONTAWESOME_PREFIX          = 'fal';                  //or 'far';
@@ -1616,6 +1617,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
                                 en: 'One or more of the settings files could not be read.<br>Therefore ' + appName.en + ' will not be&nbsp;displayed&nbsp;correct.<br>If possible, try to reload the page'
                             }),
             buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
+            scroll  : false,
             show    : true
         });
         return false;
