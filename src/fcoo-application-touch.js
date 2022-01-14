@@ -153,6 +153,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .toggleClass(this.options.position, !!this.options.$handleContainer)
                 .addClass(this.options.handleClassName)
                 .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
+
+.on('swiped-left', function(){ alert('left') })
+
                 .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
 
             if (this.options.$handleContainer)
