@@ -36,8 +36,9 @@
         <div class="logo fcoo-app-color"></div>
     </div>
 
-    <div id="contact_test" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top50%; left:20%">
-    </div>
+    <div id="contact_test" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top: 0%; left:20%"></div>
+
+    <div id="contact_log" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top: 50%; left:20%"></div>
     
 
     <script>
@@ -70,19 +71,21 @@ var count = 0;
         var $elem = $("#contact_test"),
             domElement = $elem.get(0);//document.getElementById("contact_test");
 
+        var $log = $("#contact_log");
+
         var options = {
 
             };
-        var pointerListener = new PointerListener(domElement, options);
+//HER        var pointerListener = new PointerListener(domElement, options);
 
-        var panOptions = {
-	            supportedDirections : DIRECTION_HORIZONTAL
-            };
-
-        var panRecognizer = new Pan(domElement, panOptions);
+//HER        var panOptions = {
+//HER	            supportedDirections : DIRECTION_HORIZONTAL
+//HER            };
+//HER
+//HER        var panRecognizer = new Pan(domElement, panOptions);
 
         var pointerListener = new PointerListener(domElement, {
-	            supportedGestures : [panRecognizer]
+//	            supportedGestures : [DIRECTION_HORIZONTAL]//[panRecognizer]
             });        
         
         
@@ -93,11 +96,11 @@ var count = 0;
 
         domElement.addEventListener('swiperight', function(event){
             console.log('onSwipeRight', event);
-            $elem.text('onSwipeRight '+count++);
+            $log.text('onSwipeRight '+count++);
         });
         domElement.addEventListener('swipeleft', function(event){
             console.log('onSwipeLeft', event);
-            $elem.text('onSwipeLeft ' + count++);
+            $log.text('onSwipeLeft ' + count++);
         });
 
 
