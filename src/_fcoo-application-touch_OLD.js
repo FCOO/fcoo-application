@@ -5,7 +5,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 ****************************************************************************/
 
-(function ($, window/*, document, undefined*/) {
+(function ($, Hammer, window/*, document, undefined*/) {
     "use strict";
 
     //Create fcoo-namespace
@@ -14,11 +14,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     var maxMaskOpacity = 0.5; //Equal $modal-backdrop-opacity in \bower_components\bootstrap\scss\_variables.scss
 
     ns.TouchMenu = function (options) {
-//HER        this.newPos     = 0;
-//HER        this.currentPos = 0;
-//HER        this.startPoint = 0;
-//HER        this.countStart = 0;
-//HER        this.velocity   = 0.0;
+        this.newPos     = 0;
+        this.currentPos = 0;
+        this.startPoint = 0;
+        this.countStart = 0;
+        this.velocity   = 0.0;
 
         this._onOpen = [];
         this._onClose = [];
@@ -52,19 +52,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.options.scroll          = this.options.scroll || (this.options.verticalMenu && !this.options.menuOptions);
         this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
 
-        if (this.options.verticalMenu){
-            this.options.openDirection  = this.options.position == 'left' ? 'right' : 'left';
-            this.options.closeDirection = this.options.position;
-        }
-        else {
-            this.options.openDirection  = this.options.position == 'top' ? 'down' : 'up';
-            this.options.closeDirection = this.options.position == 'top' ? 'up' : 'down';
-        }
-
-//HER        this.options.hammerDirection =  this.options.verticalMenu ? Hammer.DIRECTION_ALL :
-//HER                                        this.options.scroll ? Hammer.DIRECTION_ALL : Hammer.DIRECTION_VERTICAL;
-//HER        this.options.scrollDirection = this.options.verticalMenu ? Hammer.DIRECTION_VERTICAL : Hammer.DIRECTION_HORIZONTAL;
-
+        this.options.hammerDirection =  this.options.verticalMenu ? Hammer.DIRECTION_ALL :
+                                        this.options.scroll ? Hammer.DIRECTION_ALL : Hammer.DIRECTION_VERTICAL;
+        this.options.scrollDirection = this.options.verticalMenu ? Hammer.DIRECTION_VERTICAL : Hammer.DIRECTION_HORIZONTAL;
         if (this.options.$neighbourContainer)
             this.options.$neighbourContainer.addClass('neighbour-container');
 
@@ -108,11 +98,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .addClass('touch-menu flex-grow-1 flex-shrink-1')
                 .appendTo(this.$container);
 
-//HER                if (this.options.scroll){
-                if (this.options.scroll)
+                if (this.options.scroll){
                     this.$menu = $menuContainer.addScrollbar( this.options.scrollOptions );
-//HER                    this.perfectScrollbar = $menuContainer.perfectScrollbar;
-//HER                }
+                    this.perfectScrollbar = $menuContainer.perfectScrollbar;
+                }
                 else
                     this.$menu = $menuContainer;
 
@@ -140,11 +129,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 
         if (window.bsIsTouch){
-//HER            var touchStartMenu = $.proxy(this.touchStartMenu, this),
-//HER                touchEndMenu   = $.proxy(this.touchEndMenu  , this);
+            var touchStartMenu = $.proxy(this.touchStartMenu, this),
+                touchEndMenu   = $.proxy(this.touchEndMenu  , this);
 
-            //Add events to container
-            this._add_swiped(this.$container);
+            //Create menuHammer
+            this.menuHammer = this._createHammer(this.$container, touchStartMenu, touchEndMenu);
         }
 
         //Create the handle
@@ -165,14 +154,17 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .addClass(this.options.handleClassName)
                 .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
 
+.on('swiped-left', $.proxy(this.open, this) )
+.on('click', $.proxy(this.open, this) )
+
                 .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
 
-            if (this.options.$handleContainer)
-                //Add events on handle outside the menu
-                this._add_swiped(this.$handle);
+//HER            if (this.options.$handleContainer)
+//HER                //Create individuel Hammer for handle outside the menu
+//HER                this.handleHammer = this._createHammer(this.$handle, touchStartMenu, touchEndMenu);
 
-            if (this.options.toggleOnHandleClick)
-                this.$handle.on('click', $.proxy(this.toggle, this));
+//HER            if (this.options.toggleOnHandleClick)
+//HER                this.$handle.on('click', $.proxy(this.toggle, this));
         }
 
         //Update dimention and size of the menu and handle
@@ -186,8 +178,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .appendTo('body');
 
             if (window.bsIsTouch)
-                //Add events to mask
-                this._add_swiped(this.$mask);
+                //Create maskHammer
+                this.maskHammer = this._createHammer(this.$mask, $.proxy(this.touchStartMask, this), $.proxy(this.touchEndMask, this));
 
             this.$mask.on('click', $.proxy(this.close, this));
         }
@@ -209,21 +201,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     Extend the prototype
     ******************************************/
     ns.TouchMenu.prototype = {
-        _add_swiped: function($element){
-            this._this_open  = this._this_open  || $.proxy(this.open,  this);
-            this._this_close = this._this_close || $.proxy(this.close, this);
-            $element
-                .on('swiped-' + this.options.openDirection,  this._this_open  )
-                .on('swiped-' + this.options.closeDirection, this._this_close )
-
-            return $element;
-
-
-//HER            var result = new Hammer($element[0], {touchAction:'none'});
-//HER            result.get('pan').set({ direction: this.options.hammerDirection });
-//HER            result.on('panstart panmove', touchStart);
-//HER            result.on('panend pancancel', touchEnd);
-//HER            return result;
+        _createHammer: function($element, touchStart, touchEnd){
+            var result = new Hammer($element[0], {touchAction:'none'});
+            result.get('pan').set({ direction: this.options.hammerDirection });
+            result.on('panstart panmove', touchStart);
+            result.on('panend pancancel', touchEnd);
+            return result;
         },
 
         onResize: function(){
@@ -231,7 +214,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             this.options[this.options.verticalMenu ? 'width' : 'height'] = dim;
 
-//HER            this.currentPos = this.currentPos ? dim : 0;
+            this.currentPos = this.currentPos ? dim : 0;
 
             this.updateDimentionAndSize();
 
@@ -317,9 +300,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
 
-//HER        _getEventDelta: function( event ){
-//HER            return this.options.verticalMenu ?  event.deltaX : event.deltaY;
-//HER        },
+        _getEventDelta: function( event ){
+            return this.options.verticalMenu ?  event.deltaX : event.deltaY;
+        },
 
         _copyClassName: function(){
             //Sets the class-name of this.$handle equal to this.$container if the handle is outrside the container
@@ -333,88 +316,88 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             });
         },
 
-//HER        //Events on menuHammer
-//HER        touchStartMenu: function (event) {
-//HER            var firstTime = !this.isPanning;
-//HER            //Detect if only one direction is allowed
-//HER            if (
-//HER                //No already panning
-//HER                !this.isPanning
-//HER                //and has scroll
-//HER                && this.options.scroll
-//HER                //and scroll avaiable (content > container)
-//HER                && (
-//HER                    ( this.options.verticalMenu && (this.perfectScrollbar.contentHeight > this.perfectScrollbar.containerHeight)) ||
-//HER                    (!this.options.verticalMenu && (this.perfectScrollbar.contentWidth > this.perfectScrollbar.containerWidth))
-//HER                )
-//HER            ){
-//HER                this.isPanning = true;
-//HER                if (event.direction & this.options.scrollDirection)
-//HER                    this.onlyScroll = true;
-//HER                else
-//HER                    this.$menu.lockScrollbar();
-//HER            }
-//HER
-//HER            if (this.onlyScroll)
-//HER                return;
-//HER
-//HER            if (firstTime && !this.touchOpening){
-//HER                this.touchOpening = true;
-//HER                if (this.onTouchStart)
-//HER                    this.onTouchStart(this);
-//HER            }
-//HER
-//HER            if (this.$container.hasClass('closed'))
-//HER                this.$container.addClass('opening');
-//HER
-//HER            if (this.$container.hasClass('opened'))
-//HER                this.$container.addClass('closing');
-//HER
-//HER            this._copyClassName();
-//HER
-//HER            this.newPos = Math.max(0, this.currentPos + this.options.directionFactor*this._getEventDelta(event));
-//HER            this.changeMenuPos();
-//HER            this.velocity = Math.abs(event.velocity);
-//HER        },
-//HER
-//HER        touchEndMenu: function (event) {
-//HER            if (!this.onlyScroll){
-//HER                this.currentPos = this._getEventDelta(event);
-//HER                this.checkMenuState(this.currentPos);
-//HER
-//HER                this.touchOpening = false;
-//HER                if (this.onTouchEnd)
-//HER                    this.onTouchEnd(this);
-//HER            }
-//HER            this.onlyScroll = false;
-//HER            this.isPanning = false;
-//HER            this.$menu.unlockScrollbar();
-//HER
-//HER
-//HER        },
-//HER
-//HER        //Events on maskHammer
-//HER        touchStartMask: function (event) {
-//HER            var eventDelta = this._getEventDelta(event),
-//HER                eventCenter = this.options.verticalMenu ?  event.center.x : event.center.y;
-//HER            if (eventCenter <= this.options.menuDimAndSize.dimension && this.isOpen) {
-//HER                this.countStart++;
-//HER
-//HER                if (this.countStart == 1)
-//HER                    this.startPoint = eventDelta;
-//HER
-//HER                if (eventDelta < 0) {
-//HER                    this.newPos = (eventDelta - this.startPoint) + this.options.menuDimAndSize.dimension;
-//HER                    this.changeMenuPos();
-//HER                    this.velocity = Math.abs(event.velocity);
-//HER                }
-//HER            }
-//HER        },
-//HER
-//HER        touchEndMask: function (event) {
-//HER           this.checkMenuState(this._getEventDelta(event));
-//HER           this.countStart = 0;
-//HER        },
+        //Events on menuHammer
+        touchStartMenu: function (event) {
+            var firstTime = !this.isPanning;
+            //Detect if only one direction is allowed
+            if (
+                //No already panning
+                !this.isPanning
+                //and has scroll
+                && this.options.scroll
+                //and scroll avaiable (content > container)
+                && (
+                    ( this.options.verticalMenu && (this.perfectScrollbar.contentHeight > this.perfectScrollbar.containerHeight)) ||
+                    (!this.options.verticalMenu && (this.perfectScrollbar.contentWidth > this.perfectScrollbar.containerWidth))
+                )
+            ){
+                this.isPanning = true;
+                if (event.direction & this.options.scrollDirection)
+                    this.onlyScroll = true;
+                else
+                    this.$menu.lockScrollbar();
+            }
+
+            if (this.onlyScroll)
+                return;
+
+            if (firstTime && !this.touchOpening){
+                this.touchOpening = true;
+                if (this.onTouchStart)
+                    this.onTouchStart(this);
+            }
+
+            if (this.$container.hasClass('closed'))
+                this.$container.addClass('opening');
+
+            if (this.$container.hasClass('opened'))
+                this.$container.addClass('closing');
+
+            this._copyClassName();
+
+            this.newPos = Math.max(0, this.currentPos + this.options.directionFactor*this._getEventDelta(event));
+            this.changeMenuPos();
+            this.velocity = Math.abs(event.velocity);
+        },
+
+        touchEndMenu: function (event) {
+            if (!this.onlyScroll){
+                this.currentPos = this._getEventDelta(event);
+                this.checkMenuState(this.currentPos);
+
+                this.touchOpening = false;
+                if (this.onTouchEnd)
+                    this.onTouchEnd(this);
+            }
+            this.onlyScroll = false;
+            this.isPanning = false;
+            this.$menu.unlockScrollbar();
+
+
+        },
+
+        //Events on maskHammer
+        touchStartMask: function (event) {
+            var eventDelta = this._getEventDelta(event),
+                eventCenter = this.options.verticalMenu ?  event.center.x : event.center.y;
+            if (eventCenter <= this.options.menuDimAndSize.dimension && this.isOpen) {
+                this.countStart++;
+
+                if (this.countStart == 1)
+                    this.startPoint = eventDelta;
+
+                if (eventDelta < 0) {
+                    this.newPos = (eventDelta - this.startPoint) + this.options.menuDimAndSize.dimension;
+                    this.changeMenuPos();
+                    this.velocity = Math.abs(event.velocity);
+                }
+            }
+        },
+
+        touchEndMask: function (event) {
+           this.checkMenuState(this._getEventDelta(event));
+           this.countStart = 0;
+        },
 
         animateToPosition: function (pos, animateMain, noAnimation) {
             this.$container.toggleClass('no-animation', !!noAnimation);
@@ -427,15 +410,15 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.changeNeighbourContainerPos(pos, animateMain && !noAnimation);
         },
 
-//HER        changeMenuPos: function () {
-//HER            if (this.newPos <= this.options.menuDimAndSize.size) {
-//HER                this.$container.removeClass('opened closed');
-//HER                this._copyClassName();
-//HER
-//HER                this.animateToPosition(this.newPos);
-//HER                this.setMaskOpacity(this.newPos);
-//HER            }
-//HER        },
+        changeMenuPos: function () {
+            if (this.newPos <= this.options.menuDimAndSize.size) {
+                this.$container.removeClass('opened closed');
+                this._copyClassName();
+
+                this.animateToPosition(this.newPos);
+                this.setMaskOpacity(this.newPos);
+            }
+        },
 
         changeNeighbourContainerPos: function( pos, animate ){
             if (this.options.$neighbourContainer && !this.options.modeOver)
@@ -463,20 +446,20 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this._setMaskOpacity(0);
         },
 
-//HER        checkMenuState: function (delta) {
-//HER            if (this.velocity >= 1.0) {
-//HER                if (this.options.directionFactor*delta >= 0)
-//HER                    this.open();
-//HER                else
-//HER                    this.close();
-//HER            }
-//HER            else {
-//HER                if (this.newPos >= this.options.menuDimAndSize.halfSize)
-//HER                    this.open();
-//HER                else
-//HER                    this.close();
-//HER            }
-//HER        },
+        checkMenuState: function (delta) {
+            if (this.velocity >= 1.0) {
+                if (this.options.directionFactor*delta >= 0)
+                    this.open();
+                else
+                    this.close();
+            }
+            else {
+                if (this.newPos >= this.options.menuDimAndSize.halfSize)
+                    this.open();
+                else
+                    this.close();
+            }
+        },
 
         _invoke: function (fn) {
             if (fn)
@@ -492,7 +475,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             this.animateToPosition(this.options.menuDimAndSize.size, true, noAnimation);
 
-//HER            this.currentPos = this.options.menuDimAndSize.size;
+            this.currentPos = this.options.menuDimAndSize.size;
             this.isOpen = true;
 
             this.$container.removeClass('no-animation');
@@ -512,7 +495,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.$container.addClass('closed').removeClass('opening closing opened');
             this._copyClassName();
 
-//HER            this.currentPos = 0;
+            this.currentPos = 0;
             this.changeNeighbourContainerPos(0, !noAnimation);
 
             this.isOpen = false;
@@ -538,4 +521,4 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         return new ns.TouchMenu(options);
     };
 
-}(jQuery, this, document));
+}(jQuery, this.Hammer, this, document));

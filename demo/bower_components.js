@@ -10907,7 +10907,7 @@ return jQuery;
 
 ;(function(window, document, undefined){
   var tests = [];
-
+  
 
   /**
    *
@@ -10956,7 +10956,7 @@ return jQuery;
     }
   };
 
-
+  
 
   // Fake some of Object.create so we can force non test results to be non "own" properties.
   var Modernizr = function() {};
@@ -10966,10 +10966,10 @@ return jQuery;
   // Overwrite name so constructor name is nicer :D
   Modernizr = new Modernizr();
 
-
+  
 
   var classes = [];
-
+  
 
   /**
    * is returns a boolean if the typeof an obj is exactly type.
@@ -11065,7 +11065,7 @@ return jQuery;
    */
 
   var docElement = document.documentElement;
-
+  
 
   /**
    * A convenience helper to check if the document we are running in is an SVG document
@@ -11075,7 +11075,7 @@ return jQuery;
    */
 
   var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-
+  
 
   /**
    * setClasses takes an array of class names and adds them to the root element
@@ -11143,7 +11143,7 @@ return jQuery;
     }
   })();
 
-
+  
 
 
    // _l tracks listeners for async tests, as well as tests that execute after the initial run
@@ -11353,7 +11353,7 @@ return jQuery;
     ModernizrProto.addTest = addTest;
   });
 
-
+  
 
 
   /**
@@ -11373,11 +11373,11 @@ return jQuery;
    */
 
   var omPrefixes = 'Moz O ms Webkit';
-
+  
 
   var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
   ModernizrProto._cssomPrefixes = cssomPrefixes;
-
+  
 
   /**
    * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
@@ -11444,7 +11444,7 @@ return jQuery;
 
   ModernizrProto.atRule = atRule;
 
-
+  
 
   /**
    * createElement is a convenience wrapper around document.createElement. Since we
@@ -11545,7 +11545,7 @@ return jQuery;
 
 
   ModernizrProto.hasEvent = hasEvent;
-
+  
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -11718,7 +11718,7 @@ return jQuery;
 
   ModernizrProto.mq = mq;
 
-
+  
 
 
   /**
@@ -11752,7 +11752,7 @@ return jQuery;
     delete modElem.elem;
   });
 
-
+  
 
   var mStyle = {
     style: modElem.elem.style
@@ -11764,7 +11764,7 @@ return jQuery;
     delete mStyle.style;
   });
 
-
+  
 
   /**
    * domToCSS takes a camelCase string and converts it to kebab-case
@@ -11954,7 +11954,7 @@ return jQuery;
 
   var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
   ModernizrProto._domPrefixes = domPrefixes;
-
+  
 
   /**
    * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
@@ -12049,7 +12049,7 @@ return jQuery;
   // Modernizr.testAllProps('boxSizing')
   ModernizrProto.testAllProps = testPropsAll;
 
-
+  
 
   /**
    * prefixed returns the prefixed or nonprefixed property name variant of your input
@@ -12133,7 +12133,7 @@ return jQuery;
     }
   };
 
-
+  
 /*!
 {
   "name": "Fullscreen API",
@@ -12192,7 +12192,7 @@ Detects support for the ability to make the current website take over the user's
   // expose these for the plugin API. Look in the source for how to join() them against your input
   ModernizrProto._prefixes = prefixes;
 
-
+  
 
   /**
    * testStyles injects an element with style element and some CSS rules
@@ -12252,7 +12252,7 @@ Detects support for the ability to make the current website take over the user's
    */
 
   var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-
+  
 /*!
 {
   "name": "Touch Events",
@@ -12372,7 +12372,7 @@ This test will also return `true` for Firefox 4 Multitouch support.
     return testPropsAll(prop, undefined, undefined, value, skipValueTest);
   }
   ModernizrProto.testAllProps = testAllProps;
-
+  
 /*!
 {
   "name": "Flexbox",
@@ -12724,7 +12724,7 @@ else {
 
 ;
 /****************************************************************************
-	modernizr-javascript.js,
+	modernizr-javascript.js, 
 
 	(c) 2016, FCOO
 
@@ -12735,20 +12735,20 @@ else {
 
 (function ($, window, document, undefined) {
 	"use strict";
-
+	
 	var ns = window;
 
     //Extend the jQuery prototype
     $.fn.extend({
-        modernizrOn : function( test ){
-            return this.modernizrToggle( test, true );
+        modernizrOn : function( test ){ 
+            return this.modernizrToggle( test, true ); 
         },
 
-        modernizrOff: function( test ){
-            return this.modernizrToggle( test, false );
+        modernizrOff: function( test ){ 
+            return this.modernizrToggle( test, false ); 
         },
-
-        modernizrToggle: function( test, on ){
+        
+        modernizrToggle: function( test, on ){ 
 		if ( on === undefined )
             return this.modernizrToggle( test, !this.hasClass( test ) );
 
@@ -12789,13 +12789,13 @@ else {
             for (j=0; j<eventNames.length; j++ ){
                 eventName = eventNames[j];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];
+                    this.events[eventName] = this.events[eventName] || [];         
                     var i, lgd = this.events[eventName].length;
                     if (reverse){
                         for (i=lgd-1; i>=0; i-- )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
                                 break;
-                    }
+                    } 
                     else {
                         for (i=0; i<lgd; i++ )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
@@ -12811,11 +12811,11 @@ else {
             for (i=0; i<eventNames.length; i++ ){
                 eventName = eventNames[i];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];
+                    this.events[eventName] = this.events[eventName] || [];         
                     this.events[eventName].push( {
                         callback: callback,
                         context : context || null,
-                        options : $.extend( {once:false, first:false, last:false}, options )
+                        options : $.extend( {once:false, first:false, last:false}, options ) 
                     });
                 }
             }
@@ -12832,7 +12832,7 @@ else {
             eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
             _loop_func = function( eventObj, index, list ){
                 if ( (callback == eventObj.callback) &&
-                    (!context || (context == eventObj.context)) ){
+                    (!context || (context == eventObj.context)) ){ 
                     list.splice(index, 1);
                     return true;
                 }
@@ -12847,32 +12847,32 @@ else {
         };
 
 
-        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){
+        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){ 
             var newArguments = [];
             for (var i=1; i < arguments.length; i++) {
                 newArguments.push(arguments[i]);
             }
 
             //Fire the functions marked 'first'
-            this._loop( eventName, function( eventObj ){
+            this._loop( eventName, function( eventObj ){ 
                 if (eventObj.options.first)
-                    eventObj.callback.apply( eventObj.context, newArguments );
+                    eventObj.callback.apply( eventObj.context, newArguments );      
             });
 
             //Fire the functions not marked 'first' or 'last'
-            this._loop( eventName, function( eventObj ){
+            this._loop( eventName, function( eventObj ){ 
                 if (!eventObj.options.first && !eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );
+                    eventObj.callback.apply( eventObj.context, newArguments );      
             });
 
             //Fire the functions marked 'last'
-            this._loop( eventName, function( eventObj ){
+            this._loop( eventName, function( eventObj ){ 
                 if (eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );
+                    eventObj.callback.apply( eventObj.context, newArguments );      
             });
-
+            
             //Remove all functions marked 'once'
-            this._loop( eventName, function( eventObj, index, list ){
+            this._loop( eventName, function( eventObj, index, list ){ 
                 if (eventObj.options.once)
                     list.splice(index, 1);
             }, true);
@@ -12883,7 +12883,7 @@ else {
         this.oneFirst = function(){ this.onceFirst( arguments ); };
         this.oneLast  = function(){ this.onceLast( arguments  ); };
     }
-
+  
     // expose access to the constructor
     window.GlobalEvents = GlobalEvents;
 
@@ -20233,1641 +20233,6 @@ else {
 
 }));
 //# sourceMappingURL=bootstrap.bundle.js.map
-
-;
-"use strict";
-
-// contact.js - v1.1.0
-
-const DIRECTION_NONE = "0";
-const DIRECTION_LEFT = "left";
-const DIRECTION_RIGHT = "right";
-const DIRECTION_UP = "up";
-const DIRECTION_DOWN = "down";
-const DIRECTION_CLOCKWISE = 1;
-const DIRECTION_COUNTER_CLOCKWISE = -1;
-
-const DIRECTION_HORIZONTAL = [DIRECTION_LEFT, DIRECTION_RIGHT];
-const DIRECTION_VERTICAL = [DIRECTION_UP, DIRECTION_DOWN];
-const DIRECTION_ALL = [DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, DIRECTION_DOWN];
-
-const GESTURE_STATE_POSSIBLE = "possible";
-const GESTURE_STATE_BLOCKED = "blocked";
-
-/*
-* contact-js uses pointer events, which combine touch and mouse events (and more)
-* for readability, "touch" is used in comments
-*/
-
-/*
-* At the time the user touches the surface it is not known which gesture he will perform. He can also add or remove touches.
-* The contact phenomenon starts when the user initially touches the surface, and ends when no more touches are present.
-* During the contact phenonmenon between human being and artificial surface, different gestures can be detected.
-* According to the gesture definitions, a gesture can be possible or impossible at a given time. When a gesture has been rendered impossible, it can not become possible during the current contact phenomenon.
-*/
-
-
-/*
-* The Contact Prototype represents the contact phenomenon. It starts with the first pointerdown event and ends when the last pointer has become inactive (pointerup event).
-* Therefore, the first pointerdownEvent is the point in time where Contact becomes alive. It dies with the last pointerup event
-* Contact collects data of the interaction with the surface, but does not decide if a gesture has been detected.
-*/
-class Contact {
-
-	constructor (pointerdownEvent) {
-
-		this.DEBUG = false;
-
-		// a map of all active PointerInput instances
-		this.pointerInputs = {};
-		this.activePointerInputs = {};
-
-		this.primaryPointerId = pointerdownEvent.pointerId;
-
-		this.currentPointerEvent = pointerdownEvent;
-
-		this.addPointer(pointerdownEvent);
-
-		this.isActive = true;
-
-		// global timings
-		this.startTimestamp = pointerdownEvent.timeStamp;
-		this.currentTimestamp = this.startTimestamp;
-		this.endTimestamp = null;
-
-		// multipointer parameters
-		this.multipointer = {
-			liveParameters : {
-				centerMovement : null,
-				centerMovementVector : null,
-				distanceChange : null, // px
-				relativeDistanceChange : null, // %
-				rotationAngle : null //deg ccw[0,360], cw[0,-360]
-			},
-			globalParameters : {
-				centerMovement : null,
-				centerMovementVector : null,
-				distanceChange : null,
-				relativeDistanceChange: null,
-				rotationAngle : null
-			}
-		};
-
-	}
-
-	// add more pointers
-	addPointer (pointerdownEvent) {
-
-		this.currentPointerEvent = pointerdownEvent;
-
-		var pointerInput = new PointerInput(pointerdownEvent);
-		this.pointerInputs[pointerdownEvent.pointerId] = pointerInput;
-		this.activePointerInputs[pointerdownEvent.pointerId] = pointerInput;
-	}
-
-	removePointer (pointerId) {
-
-		delete this.activePointerInputs[pointerId];
-
-	}
-
-	// return a specific pointer input by its identifier
-	getPointerInput (pointerId) {
-
-		var hasPointerId = Object.prototype.hasOwnProperty.call(this.pointers, pointerId);
-
-		if (hasPointerId){
-
-			let pointerInput = this.pointers[pointerId];
-
-			return pointerInput;
-		}
-
-		else {
-			let msg = "invalid pointerId: " + pointerId + ". Pointer not found in Contact.pointers"
-			throw new Error(msg);
-		}
-	}
-
-	// return the pointer input which started this specific contact phenomenon
-	getPrimaryPointerInput () {
-		return this.pointerInputs[this.primaryPointerId];
-	}
-
-
-	// pointermove contains only one single pointer, not multiple like on touch events (touches, changedTouches,...)
-	onPointerMove (pointermoveEvent) {
-
-		this.currentPointerEvent = pointermoveEvent;
-		this.currentTimestamp = pointermoveEvent.timeStamp;
-
-		var movedPointer = this.pointerInputs[pointermoveEvent.pointerId];
-		movedPointer.onMove(pointermoveEvent);
-
-		if (this.DEBUG === true) {
-			console.log(this.pointerInputs);
-		}
-
-		this.updateState();
-
-	}
-
-	// pointerup event: finger released, or mouse button released
-	onPointerUp (pointerupEvent) {
-
-		var pointerId = pointerupEvent.pointerId;
-
-		this.currentPointerEvent = pointerupEvent;
-
-		this.currentTimestamp = pointerupEvent.timeStamp;
-
-		var removedPointer = this.pointerInputs[pointerId];
-		removedPointer.onUp(pointerupEvent);
-
-		this.removePointer(pointerId);
-
-		this.updateState();
-
-	}
-
-	onPointerCancel (pointercancelEvent) {
-
-		this.onPointerUp(pointercancelEvent);
-
-		if (this.DEBUG == true){
-			console.log("[Contact] pointercancel detected");
-		}
-
-	}
-
-	// also covers pointerleave
-	// not necessary - using element.setPointerCapture and element.releasePointerCapture instead
-	onPointerLeave (pointerleaveEvent){
-
-		this.onPointerUp(pointerleaveEvent);
-
-		if (this.DEBUG == true){
-			console.log("[Contact] pointerleave detected");
-		}
-	}
-
-	// update this contact instance. invoked on pointermove, pointerup and pointercancel events
-	updateState () {
-
-		var isActive = false;
-
-		if (Object.keys(this.activePointerInputs).length > 0){
-			isActive = true;
-		}
-
-		this.isActive = isActive;
-
-		if ( this.isActive == false ) {
-			this.endTimestamp = this.currentTimestamp;
-		}
-		else if (Object.keys(this.activePointerInputs).length >= 2){
-			this.updateMultipointerParameters();
-		}
-
-	}
-
-	// functions for multi pointer gestures, currently only 2 pointers are supported
-	updateMultipointerParameters () {
-
-		var pointerId_1 = Object.keys(this.activePointerInputs)[0];
-		var pointerInput_1 = this.activePointerInputs[pointerId_1];
-
-
-		var pointerId_2 = Object.keys(this.activePointerInputs)[1];
-		var pointerInput_2 = this.activePointerInputs[pointerId_2];
-
-		var vector_1 = pointerInput_1.liveParameters.vector;
-		var vector_2 = pointerInput_2.liveParameters.vector;
-
-		if (vector_1 != null && vector_2 != null){
-
-			var currentCenter = getCenter(vector_1.startPoint, vector_2.startPoint);
-			this.multipointer.liveParameters.center = currentCenter;
-
-			var centerMovementVector = this.calculateCenterMovement(vector_1, vector_2);
-			this.multipointer.liveParameters.centerMovementVector = centerMovementVector;
-			this.multipointer.liveParameters.centerMovement = centerMovementVector.vectorLength;
-
-			var liveDistanceChange = this.calculateDistanceChange(vector_1, vector_2);
-			this.multipointer.liveParameters.distanceChange = liveDistanceChange.absolute;
-			this.multipointer.liveParameters.relativeDistanceChange = liveDistanceChange.relative;
-
-
-			// calculate rotation angle. imagine the user turning a wheel with 2 fingers
-			var liveAngle = this.calculateAngle(vector_1, vector_2);
-			this.multipointer.liveParameters.rotationAngle = liveAngle;
-
-		}
-
-		// global distance change and rotation
-		var globalVector_1 = pointerInput_1.globalParameters.vector;
-		var globalVector_2 = pointerInput_2.globalParameters.vector;
-
-		if (globalVector_1 != null && globalVector_2 != null){
-
-			var globalCenter = getCenter(globalVector_1.startPoint, globalVector_2.startPoint);
-			this.multipointer.globalParameters.center = globalCenter;
-
-			var globalCenterMovementVector = this.calculateCenterMovement(globalVector_1, globalVector_2);
-			this.multipointer.globalParameters.centerMovementVector = globalCenterMovementVector;
-			this.multipointer.globalParameters.centerMovement = globalCenterMovementVector.vectorLength;
-
-			var globalDistanceChange = this.calculateDistanceChange(globalVector_1, globalVector_2);
-			this.multipointer.globalParameters.distanceChange = globalDistanceChange.absolute;
-			this.multipointer.globalParameters.relativeDistanceChange = globalDistanceChange.relative;
-
-
-			var globalAngle = this.calculateAngle(globalVector_1, globalVector_2);
-			this.multipointer.globalParameters.rotationAngle = globalAngle;
-
-		}
-
-		if (this.DEBUG === true){
-			console.log("[Contact] 2 fingers: centerMovement between pointer #" + pointerId_1 + " and pointer #" + pointerId_2 + " : " + this.multipointer.liveParameters.centerMovement + "px");
-			console.log("[Contact] 2 fingers: distanceChange: between pointer #" + pointerId_1 + " and pointer #" + pointerId_2 + " : "  + this.multipointer.liveParameters.distanceChange + "px");
-			console.log("[Contact] 2 fingers live angle: " + this.multipointer.liveParameters.rotationAngle + "deg");
-			console.log("[Contact] 2 fingers global angle: " + this.multipointer.globalParameters.rotationAngle + "deg");
-		}
-
-	}
-
-	calculateCenterMovement (vector_1, vector_2){
-
-		// start point is the center between the starting points of the 2 vectors
-		var startPoint = getCenter(vector_1.startPoint, vector_2.startPoint);
-
-		// center between the end points of the vectors
-		var endPoint = getCenter(vector_1.endPoint, vector_2.endPoint);
-
-		var vectorBetweenCenterPoints = new Vector(startPoint, endPoint);
-
-		return vectorBetweenCenterPoints;
-
-	}
-
-	calculateDistanceChange (vector_1, vector_2) {
-
-		var vectorBetweenStartPoints = new Vector(vector_1.startPoint, vector_2.startPoint);
-		var vectorBetweenEndPoints = new Vector(vector_1.endPoint, vector_2.endPoint);
-
-		var absoluteDistanceChange = vectorBetweenEndPoints.vectorLength - vectorBetweenStartPoints.vectorLength;
-		var relativeDistanceChange = vectorBetweenEndPoints.vectorLength / vectorBetweenStartPoints.vectorLength;
-
-		var distanceChange = {
-			absolute : absoluteDistanceChange,
-			relative : relativeDistanceChange
-		};
-
-		return distanceChange;
-	}
-
-	/*
-	* CALCULATE ROTATION
-	* this is not a trivial problem
-	* required output is: angle and direction (cw //ccw)
-	* direction is relative to the first touch with two fingers, not absolute to the screens default coordinate system
-	* to determine rotation direction, 3 points on the circle - with timestamps - are required
-	* imagine a steering wheel
-	* - initial state is 0 deg (0)
-	* - if the wheel has been turned ccw, its state has a negative angle
-	* - if the wheel has been turned cw, its state has a positive angle
-	* - possible values for the angle: [-360,360]
-	*/
-	calculateAngle (vector_1, vector_2) {
-
-		// vector_ are vectors between 2 points in time, same finger
-		// angleAector_ are vectors between 2 fingers
-		var angleVector_1 = new Vector(vector_1.startPoint, vector_2.startPoint); // in time: occured first
-		var angleVector_2 = new Vector(vector_1.endPoint, vector_2.endPoint); // in time: occured second
-
-		var origin = new Point(0,0);
-
-		// translate the points of the vector, so that their startPoints are attached to (0,0)
-		/*
-
-						^
-					   /
-					  /
-					 /
-					x
-					0
-
-		*/
-		var translationVector_1 = new Vector(angleVector_1.startPoint, origin);
-		var translatedEndPoint_1 = translatePoint(angleVector_1.endPoint, translationVector_1);
-
-		//var v_1_translated = new Vector(origin, translatedEndPoint_1);
-
-		var translationVector_2 = new Vector(angleVector_2.startPoint, origin);
-		var translatedEndPoint_2 = translatePoint(angleVector_2.endPoint, translationVector_2);
-
-		//var v2_translated = new Vector(origin, translatedEndPoint_2);
-
-
-		// rotate the first angle vector so its y-coordinate becomes 0
-		/*
-
-				x------->
-				0
-
-		*/
-		var rotationAngle = calcAngleRad(translatedEndPoint_1) * (-1);
-
-		// rottation matrix
-		//var x_1_rotated =  ( translatedEndPoint_1.x * Math.cos(rotationAngle) ) - ( translatedEndPoint_1.y * Math.sin(rotationAngle) );
-		//var y_1_rotated = Math.round(( translatedEndPoint_1.x * Math.sin(rotationAngle) ) + ( translatedEndPoint_1.y * Math.cos(rotationAngle) )); // should be 0
-
-		//var v_1_rotated = new Vector(origin, new Point(x_1_rotated, y_1_rotated));
-
-
-		// rotate the second vector (in time: after 1st)
-		var x_2_rotated =  ( translatedEndPoint_2.x * Math.cos(rotationAngle) ) - ( translatedEndPoint_2.y * Math.sin(rotationAngle) );
-		var y_2_rotated = Math.round(( translatedEndPoint_2.x * Math.sin(rotationAngle) ) + ( translatedEndPoint_2.y * Math.cos(rotationAngle) ));
-
-		//var v_2_rotated = new Vector(origin, new Point(x_2_rotated, y_2_rotated));
-
-		// calculate the angle between v_1 and v_2
-
-		var angleDeg = Math.atan2(y_2_rotated, x_2_rotated) * 180 / Math.PI;
-
-		return angleDeg;
-
-	}
-
-}
-
-
-/*********************************************************************************************
-	PointerInput
-
-	- contains data about one single finger / active pointer
-	- there are "live" parameters and "global" parameters
-	- "live" parameters are caluclated using liveTimespan
-	- "global" parameters are calculated using the whole timespan of this pointerdown
-	- the current vector. The vector should be calculated "live" and not over the whole pointerdown duration. The user expects the pointer input to be in sync with his current finger movement on the screen, not with something a second ago.
-	- start and end coordinates
-	- start and end timestamps
-	- speeds and distances
-**********************************************************************************************/
-
-class PointerInput {
-
-	constructor (pointerdownEvent, options) {
-
-		this.DEBUG = false;
-
-		options = options || {};
-
-
-		this.pointerId = pointerdownEvent.pointerId;
-		var hasVectorTimespan = Object.prototype.hasOwnProperty.call(options, "vectorTimespan");
-		this.vectorTimespan = hasVectorTimespan == true ? options.vectorTimespan : 100; // milliseconds
-
-		// events used for vector calculation
-		this.initialPointerEvent = pointerdownEvent;
-		this.currentPointerEvent = pointerdownEvent;
-		this.recognizedEvents = [pointerdownEvent];
-
-
-		this.canceled = false;
-		this.isActive = true;
-
-		// parameters within this.vectorTimespan
-		this.liveParameters = {
-			vector : null, // provides the traveled distance as length
-			speed : 0, // length of the vector
-			isMoving : false
-		};
-
-		// parameters that span across the whole pointerdown duration
-		this.globalParameters = {
-			startX : this.initialPointerEvent.clientX,
-			startY : this.initialPointerEvent.clientY,
-			vector : null,
-			deltaX : 0,
-			deltaY : 0,
-			startTimestamp : this.initialPointerEvent.timeStamp,
-			currentTimestamp : this.initialPointerEvent.timeStamp,
-			endTimestamp : null,
-			maximumSpeed : 0,
-			averageSpeed : 0,
-			finalSpeed : null,
-			traveledDistance : 0,
-			hasBeenMoved : false,
-			duration: 0
-		};
-
-	}
-
-	onMove (pointermoveEvent) {
-
-		this.globalParameters.hasBeenMoved = true;
-		this.liveParameters.isMoving = true;
-
-		this.update(pointermoveEvent, true);
-
-	}
-
-	onUp (pointerupEvent) {
-
-		this.globalParameters.finalSpeed = this.liveParameters.speed;
-
-		this.liveParameters.currentSpeed = 0;
-
-		this.liveParameters.isMoving = false;
-		this.isActive = false;
-
-		this.globalParameters.endTimestamp = pointerupEvent.timeStamp;
-
-		this.update(pointerupEvent);
-
-		if (this.DEBUG === true){
-			console.log("[Contact] pointerdown ended. pointerdown duration: " + this.globalParameters.duration + "ms");
-		}
-
-	}
-
-	onCancel (pointercancelEvent) {
-
-		this.update(pointercancelEvent);
-
-		this.liveParameters.speed = 0;
-
-		this.canceled = true;
-
-		this.liveParameters.isMoving = false;
-		this.isActive = false;
-
-		this.globalParameters.endTimestamp = pointercancelEvent.timeStamp;
-
-		if (this.DEBUG === true){
-			console.log("[Contact] canceled, pointerdown duration:" + this.duration);
-		}
-
-	}
-
-	update (pointerEvent) {
-
-		// update general parameters
-		this.currentPointerEvent = pointerEvent;
-		this.recognizedEvents.push(pointerEvent);
-
-		// update liveParameters
-
-		var timedPointerEvents = this.getTimedPointerEvents();
-
-		var liveVector = this.getVector(timedPointerEvents[0], timedPointerEvents[1]);
-
-		this.liveParameters.vector = liveVector;
-
-		if (liveVector != null){
-
-			this.liveParameters.speed = this.getSpeed(liveVector, timedPointerEvents[0].timeStamp, timedPointerEvents[1].timeStamp);
-
-			// update global parameters
-			if (this.liveParameters.speed > this.globalParameters.maximumSpeed){
-				this.globalParameters.maximumSpeed = this.liveParameters.speed;
-			}
-			this.globalParameters.currentTimestamp = pointerEvent.timeStamp;
-			this.globalParameters.duration = pointerEvent.timeStamp - this.globalParameters.startTimestamp;
-
-			this.globalParameters.deltaX = liveVector.endPoint.x - this.globalParameters.startX;
-			this.globalParameters.deltaY = liveVector.endPoint.y - this.globalParameters.startY;
-
-			var globalVector = this.getVector(this.initialPointerEvent, this.currentPointerEvent);
-			this.globalParameters.vector = globalVector;
-
-			if (this.DEBUG === true){
-				console.log("[Contact] current speed: " + this.liveParameters.speed + "px/s");
-				console.log("[Contact] pointerdown duration: " + this.globalParameters.duration + "ms");
-
-				console.log("[Contact] live vector length within vectorTimespan: " + this.liveParameters.vector.vectorLength + "px");
-			}
-
-		}
-
-	}
-
-	/*
-	* Get the two events which are necessary for vector calculation. This is based on this.vectorTimespan.
-	* vectorTimespan defines the timespan which actually defines the "live" vector
-	*/
-	getTimedPointerEvents () {
-
-		// if the duration is lower than the vectorTimespan, startPointerEvent would be null
-		// if so, use this.initialPointerEvent as a fallback
-		var startPointerEvent = this.initialPointerEvent;
-		var endPointerEvent = this.recognizedEvents[ this.recognizedEvents.length -1 ];
-
-		var startIndex = this.recognizedEvents.length - 1;
-
-		var elapsedTime = 0;
-		var endTimeStamp = endPointerEvent.timeStamp;
-
-		while (elapsedTime < this.vectorTimespan) {
-
-			startIndex = startIndex -1;
-
-			if (startIndex < 0){
-
-				break;
-			}
-
-			startPointerEvent = this.recognizedEvents[startIndex];
-
-			elapsedTime = endTimeStamp - startPointerEvent.timeStamp;
-
-		}
-
-		var pointerEvents = [startPointerEvent, endPointerEvent];
-
-		this.recognizedEvents = this.recognizedEvents.slice(-20);
-
-		return pointerEvents;
-	}
-
-	// create and return a vector based on 2 PointerEvents
-	getVector (startPointerEvent, endPointerEvent) {
-
-		var vector = null;
-
-		if (startPointerEvent != null && endPointerEvent != null){
-
-			let startPoint = new Point(startPointerEvent.clientX, startPointerEvent.clientY);
-
-			let endPoint = new Point(endPointerEvent.clientX, endPointerEvent.clientY);
-
-			vector = new Vector(startPoint, endPoint);
-
-		}
-
-		return vector;
-
-	}
-
-	// update speed. speed = distance / time
-	getSpeed (vector, startTimestamp, endTimestamp) {
-
-		if (this.DEBUG === true){
-			console.log("[PointerInput vector] " + vector);
-			console.log("[PointerInput startTimestamp] " + startTimestamp);
-			console.log("[PointerInput endTimestamp] " + endTimestamp);
-		}
-
-		var speed = 0;
-
-		var timespan_ms = endTimestamp - startTimestamp;
-		var timespan_s = timespan_ms / 1000;
-
-		if (vector != null && timespan_s != 0){
-
-			// px/s
-			speed = vector.vectorLength / timespan_s;
-
-		}
-
-		return speed;
-	}
-
-}
-
-
-
-class Point {
-
-	constructor (x, y){
-
-		this.x = x;
-		this.y = y;
-
-	}
-
-}
-
-
-class Vector {
-
-	// vector between 2 points: START(x,y) and END(x,y)
-	constructor (startPoint, endPoint) {
-
-		this.startPoint = startPoint;
-		this.endPoint = endPoint;
-
-		this.direction = DIRECTION_NONE;
-
-		this.deltaX = this.endPoint.x - this.startPoint.x;
-		this.deltaY = this.endPoint.y - this.startPoint.y;
-
-		this.x = this.deltaX;
-		this.y = this.deltaY;
-
-		// determine length
-		this.vectorLength = Math.sqrt( Math.pow(this.deltaX,2) + Math.pow(this.deltaY, 2) );
-
-		// determine direction
-		if (Math.abs(this.deltaX) > Math.abs(this.deltaY)){
-			// left or right
-			if (this.startPoint.x < this.endPoint.x){
-				this.direction = DIRECTION_RIGHT;
-			}
-			else {
-				this.direction = DIRECTION_LEFT;
-			}
-		}
-		else {
-			// up or down
-			if (this.startPoint.y < this.endPoint.y){
-				this.direction = DIRECTION_UP;
-			}
-			else {
-				this.direction = DIRECTION_DOWN;
-			}
-		}
-
-	}
-
-}
-
-
-// helper functions
-function deg2rad (angleDeg){
-
-	var rad = (Math.PI/180) * angleDeg;
-
-	return rad;
-
-}
-
-function rad2deg (angleRad){
-
-	var deg = angleRad / (Math.PI/180);
-
-	return deg
-
-}
-
-function getCenter (pointA, pointB){
-
-	var centerX = (pointA.x + pointB.x) / 2;
-	var centerY = (pointA.y + pointB.y) / 2;
-
-	var center = new Point(centerX, centerY);
-
-	return center
-}
-
-
-function translatePoint (point, vector){
-
-	var newX = point.x + vector.x;
-	var newY = point.y + vector.y;
-
-	var translatedPoint = new Point(newX, newY);
-
-	return translatedPoint;
-}
-
-
-// return the counter-clockwise angle between the positive x-axis and a point.
-// from 0 degrees to 360 degrees
-// see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2
-function calcAngleDegrees(point) {
-	// angle in degrees between -180 and 180
-	var angle = Math.atan2(point.y, point.x) * 180 / Math.PI;
-
-	if (angle < 0){
-		angle = 360 + angle;
-	}
-
-	return angle
-}
-
-function calcAngleRad (point) {
-
-	var angle = Math.atan2(point.y, point.x); // [-PI, PI]
-
-	if (angle < 0){
-		angle = 2 * Math.PI + angle;
-	}
-
-	return angle
-
-}
-
-// single finger gestures
-class Gesture {
-
-	constructor (domElement, options){
-
-		this.DEBUG = false;
-
-		this.domElement = domElement;
-
-		this.isActive = false;
-
-		this.state = GESTURE_STATE_POSSIBLE;
-
-		// the PointerEvent when the gesture has been recognized, used for some global calculations
-		// it is not always reasonable to use contact.pointerdownEvent, because the user could first rotate and object, and after some time perform a pinch
-		// the starting point of the pinch then is not contact.pointerdownEvent
-		this.initialPointerEvent = null;
-
-		this.boolParameters = {
-			requiresPointerMove : null,
-			requiresActivePointer : null
-		}
-
-		// intervals before a gesture is detected for the first time
-		this.initialMinMaxParameters = {
-			pointerCount : [null, null], // minimum number of fingers currently on the surface
-			duration : [null, null], // ms
-			currentSpeed : [null, null], // px/s
-			averageSpeed : [null, null], // px/s
-			finalSpeed : [null, null], // px/s
-			distance : [null, null] // px
-		};
-
-		// intervals to use if the gesture is active
-		this.activeStateMinMaxParameters = {
-			pointerCount : [null, null], // minimum number of fingers currently on the surface
-			duration : [null, null], // ms
-			currentSpeed : [null, null], // px/s
-			averageSpeed : [null, null], // px/s
-			finalSpeed : [null, null], // px/s
-			distance : [null, null] // px
-		}
-
-		this.options = options || {};
-
-	}
-
-	validateMinMax (minMaxParameters, parameterName, value){
-
-		var minValue = minMaxParameters[parameterName][0];
-		var maxValue = minMaxParameters[parameterName][1];
-
-
-		if (this.DEBUG == true){
-			console.log("[Gestures] checking " + parameterName + "[isActive: " + this.isActive.toString() + "]" +  " minValue: " + minValue + ", maxValue: " + maxValue + ", current value: " + value);
-		}
-
-		if (minValue != null && value != null && value < minValue){
-
-			if (this.DEBUG == true){
-				console.log("dismissing min" + this.constructor.name + ": required " + parameterName + ": " + minValue + ", current value: " + value);
-			}
-
-			return false;
-		}
-
-		if (maxValue != null && value != null && value > maxValue){
-
-			if (this.DEBUG == true){
-				console.log("dismissing max" + this.constructor.name + ": required " + parameterName + ": " + maxValue + ", current value: " + value);
-			}
-
-			return false;
-		}
-
-		return true;
-
-	}
-
-	validateBool (parameterName, value) {
-
-		// requiresPointerMove = false -> it does not matter if the pointer has been moved
-		var requiredValue = this.boolParameters[parameterName];
-
-		if (requiredValue != null && value != null && requiredValue === value){
-			return true;
-		}
-		else if (requiredValue == null){
-			return true;
-		}
-
-		if (this.DEBUG == true){
-			console.log("[Gestures] dismissing " + this.constructor.name + ": " + parameterName + " required: " + requiredValue + ", actual value: " + value);
-		}
-
-		return false;
-
-	}
-
-	getMinMaxParameters (contact) {
-
-		var primaryPointerInput = contact.getPrimaryPointerInput();
-
-		var minMaxParameters = {
-			pointerCount : Object.keys(contact.activePointerInputs).length,
-			duration : primaryPointerInput.globalParameters.duration,
-			currentSpeed : primaryPointerInput.liveParameters.speed,
-			averageSpeed : primaryPointerInput.globalParameters.averageSpeed,
-			finalSpeed : primaryPointerInput.globalParameters.finalSpeed,
-			distance : primaryPointerInput.liveParameters.vector.vectorLength
-		};
-
-		return minMaxParameters;
-
-	}
-
-
-	getBoolParameters (contact) {
-
-		var primaryPointerInput = contact.getPrimaryPointerInput();
-
-		var boolParameters = {
-			requiresPointerUp : primaryPointerInput.isActive === false,
-			requiresActivePointer : primaryPointerInput.isActive === true,
-			requiresPointerMove : primaryPointerInput.globalParameters.hasBeenMoved === true
-		};
-
-		return boolParameters;
-
-	}
-
-	validate (contact){
-
-		var isValid = false;
-
-		var primaryPointerInput = contact.getPrimaryPointerInput();
-
-		if (this.DEBUG == true){
-			console.log("[Gestures] running recognition for " + this.constructor.name);
-		}
-
-
-		var contactBoolParameters = this.getBoolParameters(contact);
-
-		for (let boolParameterName in this.boolParameters){
-			let boolValue = contactBoolParameters[boolParameterName];
-			isValid = this.validateBool(boolParameterName, boolValue);
-			if (isValid == false){
-				return false;
-				//break;
-			}
-		}
-
-		var contactMinMaxParameters = this.getMinMaxParameters(contact);
-		var minMaxParameters;
-
-		// check duration
-		if (this.isActive == true){
-			minMaxParameters = this.activeStateMinMaxParameters;
-		}
-		else {
-			minMaxParameters = this.initialMinMaxParameters;
-		}
-		for (let minMaxParameterName in minMaxParameters){
-
-			let value = contactMinMaxParameters[minMaxParameterName];
-			isValid = this.validateMinMax(minMaxParameters, minMaxParameterName, value);
-			if (isValid == false){
-				return false;
-				//break;
-			}
-		}
-
-		// check direction
-		var hasSupportedDirections = Object.prototype.hasOwnProperty.call(this.options, "supportedDirections");
-		if (hasSupportedDirections == true && this.options.supportedDirections.length > 0){
-			if (this.options.supportedDirections.indexOf(primaryPointerInput.liveParameters.vector.direction) == -1){
-
-				if (this.DEBUG == true){
-					console.log("[Gestures] dismissing " + this.constructor.name + ": supported directions: " + this.options.supportedDirections + ", current direction: " + primaryPointerInput.liveParameters.vector.direction);
-				}
-
-				return false;
-
-			}
-		}
-
-		return true;
-
-	}
-
-	recognize (contact) {
-
-		var isValid = this.validate(contact);
-
-		if (isValid == true && this.isActive == false){
-			this.onStart(contact);
-		}
-
-		if (isValid == true && this.state == GESTURE_STATE_POSSIBLE){
-			this.emit(contact);
-		}
-		else if (this.isActive == true && isValid == false){
-
-			this.onEnd(contact);
-		}
-
-	}
-
-	getEventData (contact) {
-
-		// provide short-cuts to the values collected in the Contact object
-		// match this to the event used by hammer.js
-		var eventData = {
-
-			contact : contact,
-			recognizer : this
-
-		};
-
-		return eventData;
-
-	}
-
-	// fire events
-	emit (contact, eventName) {
-
-		// fire general event like "pan" , "pinch", "rotate"
-		eventName = eventName || this.constructor.name.toLowerCase();
-
-		if (this.DEBUG === true){
-			console.log("[Gestures] detected and firing event " + eventName);
-		}
-
-		var eventData = this.getEventData(contact);
-
-		var event = new CustomEvent(eventName, { detail: eventData });
-
-		this.domElement.dispatchEvent(event);
-
-		// fire direction specific events
-		var currentDirection = eventData.live.direction;
-
-		var hasSupportedDirections = Object.prototype.hasOwnProperty.call(this.options, "supportedDirections");
-		if (hasSupportedDirections == true){
-
-			for (let d=0; d<this.options.supportedDirections.length; d++){
-				let direction = this.options.supportedDirections[d];
-
-				if (direction == currentDirection){
-
-					let directionEventName = eventName + direction;
-
-					if (this.DEBUG == true){
-						console.log("[Gestures] detected and firing event " + directionEventName);
-					}
-
-					let directionEvent = new CustomEvent(directionEventName, { detail: eventData });
-
-					this.domElement.dispatchEvent(directionEvent);
-
-				}
-			}
-
-		}
-
-	}
-
-	onStart (contact) {
-
-		this.isActive = true;
-
-		this.initialPointerEvent = contact.currentPointerEvent;
-
-		var eventName = "" + this.constructor.name.toLowerCase() + "start";
-
-		if (this.DEBUG === true) {
-			console.log("[Gestures] firing event: " + eventName);
-		}
-
-		// fire gestureend event
-		var eventData = this.getEventData(contact);
-
-		var event = new CustomEvent(eventName, { detail: eventData });
-
-		this.domElement.dispatchEvent(event);
-
-	}
-
-
-	onEnd (contact) {
-
-		this.isActive = false;
-
-		var eventName = "" + this.constructor.name.toLowerCase() + "end";
-
-		if (this.DEBUG === true) {
-			console.log("[Gestures] firing event: " + eventName);
-		}
-
-		// fire gestureend event
-		let eventData = this.getEventData(contact);
-
-		var event = new CustomEvent(eventName, { detail: eventData });
-
-		this.domElement.dispatchEvent(event);
-
-	}
-
-	// provide the ability to react (eg block) to touch events
-	onTouchStart () {}
-	onTouchMove () {}
-	onTouchEnd () {}
-	onTouchCancel (){}
-
-}
-
-
-class SinglePointerGesture extends Gesture {
-
-	constructor (domElement, options) {
-
-		options = options || {};
-
-		super(domElement, options);
-
-	}
-
-	getEventData (contact) {
-
-		// provide short-cuts to the values collected in the Contact object
-		// match this to the event used by hammer.js
-		var eventData = super.getEventData(contact);
-
-		// this should be optimized in the future, not using primaryPointerInput, but something like currentPointerInput
-		var primaryPointerInput = contact.getPrimaryPointerInput();
-
-		// gesture specific - dependant on the beginning of the gesture (when the gesture has initially been recognized)
-		var globalStartPoint = new Point(this.initialPointerEvent.clientX, this.initialPointerEvent.clientY);
-		var globalEndPoint = new Point(contact.currentPointerEvent.clientX, contact.currentPointerEvent.clientY);
-		var globalVector = new Vector(globalStartPoint, globalEndPoint);
-		var globalDuration = contact.currentPointerEvent.timeStamp - this.initialPointerEvent.timeStamp;
-
-		// global: global for this recognizer, not the Contact object
-		eventData["global"] = {
-			deltaX : globalVector.x,
-			deltaY : globalVector.y,
-			distance: globalVector.vectorLength,
-			speedX : globalVector.x / globalDuration,
-			speedY : globalVector.y / globalDuration,
-			speed : globalVector.vectorLength / globalDuration,
-			direction : globalVector.direction,
-			scale : 1,
-			rotation : 0,
-			srcEvent : contact.currentPointerEvent
-		};
-
-		eventData["live"] = {
-			deltaX : primaryPointerInput.liveParameters.vector.x,
-			deltaY : primaryPointerInput.liveParameters.vector.y,
-			distance : primaryPointerInput.liveParameters.vector.vectorLength,
-			speedX : primaryPointerInput.liveParameters.vector.x / contact.vectorTimespan,
-			speedY : primaryPointerInput.liveParameters.vector.y / contact.vectorTimespan,
-			speed : primaryPointerInput.liveParameters.speed,
-			direction : primaryPointerInput.liveParameters.vector.direction,
-			scale : 1,
-			rotation : 0,
-			center : {
-				x : primaryPointerInput.liveParameters.vector.endPoint.x,
-				y : primaryPointerInput.liveParameters.vector.endPoint.y
-			},
-			srcEvent : contact.currentPointerEvent/*,
-			target : primaryPointerInput.touch.target,
-			pointerType : ,
-			eventType : ,
-			isFirst : ,
-			isFinal :,
-			pointers : ,*/
-		};
-
-		return eventData;
-
-	}
-
-}
-
-/*
-* PAN DEFINITION:
-*	- user touches surface with only one finger, or presses the mouse down
-*	- user moves this one finger into different directions while staying on the surface, this movement is required
-*	- the start of a pan is defined by a minimum pointerdown/touch duration and a minimum distance
-*	- pan ends when the user removes the finger from the surface
-*	- to detect a "swipe", the final speed is used
-*	- a SWIPE is a pan that ended with a high speed (velocity without direction)
-*	- Pan supports directions. options["supportedDirections"] = []
-*/
-class Pan extends SinglePointerGesture {
-
-	constructor (domElement, options){
-
-		options = options || {};
-
-		super(domElement, options);
-
-		this.initialMinMaxParameters["pointerCount"] = [1,1]; // 1: no pan recognized at the pointerup event. 0: pan recognized at pointerup
-		this.initialMinMaxParameters["duration"] = [0, null];
-		this.initialMinMaxParameters["distance"] = [20, null];
-
-		this.activeStateMinMaxParameters["pointerCount"] = [1,1];
-
-		this.boolParameters["requiresPointerMove"] = true;
-		this.boolParameters["requiresActivePointer"] = true;
-
-		this.swipeFinalSpeed = 600;
-
-		this.isSwipe = false;
-
-		this.initialSupportedDirections = DIRECTION_ALL;
-
-		var hasSupportedDirections = Object.prototype.hasOwnProperty.call(options, "supportedDirections");
-		if (!hasSupportedDirections){
-			this.options.supportedDirections = DIRECTION_ALL;
-		}
-		else {
-			this.initialSupportedDirections = options.supportedDirections;
-		}
-	}
-
-	validate (contact) {
-
-		// on second recognition allow all directions. otherwise, the "pan" mode would end if the finger was moved right and then down during "panleft" mode
-		if (this.isActive == true){
-			this.options.supportedDirections = DIRECTION_ALL;
-		}
-
-		var isValid = super.validate(contact);
-
-		return isValid;
-	}
-
-	onStart (contact) {
-
-		this.isSwipe = false;
-
-		super.onStart(contact);
-
-	}
-
-	// check if it was a swipe
-	onEnd (contact) {
-
-		var primaryPointerInput = contact.getPrimaryPointerInput();
-
-		if (this.swipeFinalSpeed < primaryPointerInput.globalParameters.finalSpeed){
-			this.isSwipe = true;
-			this.emit(contact, "swipe");
-		}
-
-		super.onEnd(contact);
-
-		this.options.supportedDirections = this.initialSupportedDirections;
-
-	}
-
-	onTouchMove (event) {
-		if (this.isActive == true) {
-
-			if (this.DEBUG == true){
-				console.log("[Pan] preventing touchmove default");
-			}
-
-			event.preventDefault();
-			event.stopPropagation();
-		}
-	}
-}
-
-/*
-* TAP DEFINITION
-* - user touches the screen with one finger or presses the mouse button down
-* - the finger does not move for x ms
-* - the finger is released, Tap is no recognized
-*/
-class Tap extends SinglePointerGesture {
-
-	constructor (domElement, options) {
-
-		options = options || {};
-
-		super(domElement, options);
-
-		this.initialMinMaxParameters["pointerCount"] = [0,0]; // count of fingers touching the surface. a tap is fired AFTER the user removed his finger
-		this.initialMinMaxParameters["duration"] = [0, 200]; // milliseconds. after a certain touch duration, it is not a TAP anymore
-
-		this.initialMinMaxParameters["distance"] = [null, 30]; // if a certain distance is detected, TAP becomes impossible
-
-		this.boolParameters["requiresPointerMove"] = null;
-		this.boolParameters["requiresActivePointer"] = false;
-
-	}
-
-	onStart (contact) {
-		// no onStart event for tap
-		this.initialPointerEvent = contact.currentPointerEvent;
-	}
-
-}
-
-class MultiPointerGesture extends Gesture {
-
-
-	constructor (domElement, options) {
-
-		options = options || {};
-
-		super(domElement, options);
-
-		this.boolParameters = {
-			requiresPointerMove : null,
-			requiresActivePointer : null
-		}
-
-		this.initialMinMaxParameters = {
-			pointerCount : [2, null]
-		};
-
-		this.activeStateMinMaxParameters = {
-			pointerCount : [2, null]
-		};
-
-		this.options = options || {};
-
-	}
-
-}
-
-class TwoPointerGesture extends MultiPointerGesture {
-
-	constructor (domElement, options) {
-
-		options = options || {};
-
-		super(domElement, options);
-
-		this.boolParameters.requiresPointerMove = true;
-		this.boolParameters.requiresActivePointer = true;
-
-		this.initialMinMaxParameters["pointerCount"] = [2, 2]; // minimum number of fingers currently on the surface
-		this.initialMinMaxParameters["centerMovement"] = [null,null]; //px
-		this.initialMinMaxParameters["distanceChange"] = [null, null]; //px - distance between 2 fingers
-		this.initialMinMaxParameters["rotationAngle"] = [null, null]; // degrees: positive = clockwise, negative = counter-clockwise (js convention, not mathematical convention)
-
-		this.activeStateMinMaxParameters["pointerCount"] = [2, 2];
-		this.activeStateMinMaxParameters["centerMovement"] = [null,null];
-		this.activeStateMinMaxParameters["distanceChange"] = [null, null];
-		this.activeStateMinMaxParameters["rotationAngle"] = [null, null];
-
-	}
-
-	getMinMaxParameters (contact) {
-
-		var minMaxParameters = super.getMinMaxParameters(contact);
-
-		minMaxParameters.centerMovement = contact.multipointer.liveParameters.centerMovement;
-		// negative distance change: distance was decreased, positive: distance was increased.
-		minMaxParameters.distanceChange = Math.abs(contact.multipointer.liveParameters.distanceChange);
-
-		minMaxParameters.rotationAngle = Math.abs(contact.multipointer.liveParameters.rotationAngle);
-
-		return minMaxParameters;
-
-	}
-
-	getEventData (contact) {
-
-		// provide short-cuts to the values collected in the Contact object
-		// match this to the event used by hammer.js
-		var eventData = super.getEventData(contact);
-
-		var globalDuration = contact.currentPointerEvent.timeStamp - this.initialPointerEvent.timeStamp;
-		var globalParameters = contact.multipointer.globalParameters;
-		var liveParameters = contact.multipointer.liveParameters;
-
-		// global: global for this recognizer, not the Contact object
-		eventData["global"] = {
-			deltaX : globalParameters.centerMovementVector.x,
-			deltaY : globalParameters.centerMovementVector.y,
-			distance: globalParameters.centerMovement,
-			speedX : globalParameters.centerMovementVector.x / globalDuration,
-			speedY : globalParameters.centerMovementVector.y / globalDuration,
-			speed : globalParameters.centerMovementVector.vectorLength / globalDuration,
-			direction : globalParameters.centerMovementVector.direction,
-			scale : globalParameters.relativeDistanceChange,
-			rotation : globalParameters.rotationAngle,
-			srcEvent : contact.currentPointerEvent
-		};
-
-		eventData["live"] = {
-			deltaX : liveParameters.centerMovementVector.x,
-			deltaY : liveParameters.centerMovementVector.y,
-			distance: liveParameters.centerMovement,
-			speedX : liveParameters.centerMovementVector.x / globalDuration,
-			speedY : liveParameters.centerMovementVector.y / globalDuration,
-			speed : liveParameters.centerMovementVector.vectorLength / globalDuration,
-			direction : liveParameters.centerMovementVector.direction,
-			scale : liveParameters.relativeDistanceChange,
-			rotation : liveParameters.rotationAngle,
-			center : {
-				x : liveParameters.centerMovementVector.startPoint.x,
-				y : liveParameters.centerMovementVector.startPoint.y
-			},
-			srcEvent : contact.currentPointerEvent
-		};
-
-		return eventData;
-
-	}
-
-}
-
-/*
-* PINCH DEFINITION
-* - 2 fingers touch the surface
-* - those fongers are moved towards each other, or away from each other
-* - 2 fingers define a circle: center=middle between two touches, diameter = distance
-* - the center between the 2 fingers stays at the same coordinates
-* - the distance between the 2 start points and the two end points is reduces (diameter shrinks)
-*/
-class Pinch extends TwoPointerGesture {
-
-	constructor (domElement, options) {
-
-		options = options || {};
-
-		super(domElement, options);
-
-		this.initialMinMaxParameters["centerMovement"] = [0, 50]; //px
-		this.initialMinMaxParameters["distanceChange"] = [5, null]; // distance between 2 fingers
-		this.initialMinMaxParameters["rotationAngle"] = [null, 20]; // distance between 2 fingers
-
-	}
-
-}
-
-
-/*
-* ROTATE DEFINITION
-* - 2 fingers touch the surface
-* - 1 or 2 fingers are moved in a circular motion. the center is between the 2 fingers
-*/
-
-class Rotate extends TwoPointerGesture {
-
-	constructor (domElement, options) {
-
-		options = options || {};
-
-		super(domElement, options);
-
-		this.initialMinMaxParameters["centerMovement"] = [0, 50];
-		this.initialMinMaxParameters["distanceChange"] = [null, 50];
-		this.initialMinMaxParameters["rotationAngle"] = [5, null];
-
-	}
-
-}
-
-
-class TwoFingerPan extends TwoPointerGesture {
-
-	constructor (domElement, options) {
-
-		options = options || {};
-
-		super(domElement, options);
-
-		this.initialMinMaxParameters["centerMovement"] = [5, null];
-		this.initialMinMaxParameters["distanceChange"] = [null, 500];
-		this.initialMinMaxParameters["rotationAngle"] = [null, null];
-
-	}
-
-}
-
-/*
-* PointerListener class
-*	- implements the possibility to listen to gesture events performed on a specific DOM Element
-*	  expample: element.addEventListener("pan", function(event){});
-*	- creates and destroys Contact instances
-*	- updates the Contact instances
-*	- uses the Contact instances to determine which gesture(s) are performed by passing Contact instances to GestureRegonizers
-*
-*	- var listener = new PointerListener(domElement, {});
-*	- domElement.addEventListener("pan", function(){});
-*/
-
-var ALL_GESTURE_CLASSES = [Tap, Pan, Pinch, Rotate, TwoFingerPan];
-
-class PointerListener {
-
-	constructor (domElement, options){
-
-		this.DEBUG = false;
-
-		var self = this;
-
-		options = options || {};
-
-		var supportedGestures = ALL_GESTURE_CLASSES;
-
-		// default options
-		this.options = {
-			supportedGestures : [], // default managed below, adding all gestures
-			handleTouchEvents : true
-		};
-
-		// instantiate gesture classes on domElement and add them to this.options
-		var hasSupportedGestures = Object.prototype.hasOwnProperty.call(options, "supportedGestures");
-		if (hasSupportedGestures == true){
-			supportedGestures = options.supportedGestures;
-		}
-
-		for (let i=0; i<supportedGestures.length; i++){
-
-			let gesture;
-			let GestureClass = supportedGestures[i];
-
-			if (typeof GestureClass == "function"){
-				gesture = new GestureClass(domElement);
-			}
-			else if (typeof GestureClass == "object"){
-				gesture = GestureClass;
-			}
-			else {
-				throw new Error("unsupported gesture type: " + typeof GestureClass);
-			}
-			this.options.supportedGestures.push(gesture);
-		}
-
-		for (let key in options){
-			if (key == "supportedGestures"){
-				continue;
-			}
-
-			this.options[key] = options[key];
-		}
-
-		this.domElement = domElement;
-
-		// the Contact instance - only active during an active pointerdown
-		this.contact = null;
-
-		// disable context menu on long taps - this kills pointermove
-		/*domElement.addEventListener("contextmenu", function(event) {
-			event.preventDefault();
-			return false;
-		});*/
-
-		// javascript fires the events "pointerdown", "pointermove", "pointerup" and "pointercancel"
-		// on each of these events, the contact instance is updated and GestureRecognizers of this.supported_events are run
-		domElement.addEventListener("pointerdown", function(event){
-
-			// re-target all pointerevents to the current element
-			// see https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
-			domElement.setPointerCapture(event.pointerId);
-
-			if (self.contact == null || self.contact.isActive == false) {
-				self.contact = new Contact(event);
-			}
-			else {
-				// use existing contact instance if a second pointer becomes present
-				self.contact.addPointer(event);
-			}
-
-			var hasPointerDownHook = Object.prototype.hasOwnProperty.call(self.options, "pointerdown");
-			if (hasPointerDownHook == true){
-				self.options.pointerdown(event, self);
-			}
-
-		}, { "passive": true });
-
-		domElement.addEventListener("pointermove", function(event){
-
-			// pointermove is also firing if the mouse button is not pressed
-
-			if (self.contact != null && self.contact.isActive == true){
-
-				// this would disable vertical scrolling - which should only be disabled if a panup/down or swipeup/down listener has been triggered
-				// event.preventDefault();
-
-				self.contact.onPointerMove(event);
-				self.recognizeGestures();
-
-				var hasPointerMoveHook = Object.prototype.hasOwnProperty.call(self.options, "pointermove");
-				if (hasPointerMoveHook == true){
-					self.options.pointermove(event, self);
-				}
-			}
-
-		}, { "passive": true });
-
-		domElement.addEventListener("pointerup", function(event){
-
-			domElement.releasePointerCapture(event.pointerId);
-
-			if (self.contact != null && self.contact.isActive == true){
-
-				// use css: touch-action: none instead of js to disable scrolling
-				//self.domElement.classList.remove("disable-scrolling");
-
-				self.contact.onPointerUp(event);
-				self.recognizeGestures();
-
-				var hasPointerUpHook = Object.prototype.hasOwnProperty.call(self.options, "pointerup");
-				if (hasPointerUpHook == true){
-					self.options.pointerup(event, self);
-				}
-			}
-		});
-
-		/*
-		* case: user presses mouse button and moves element. while moving, the cursor leaves the element (fires pointerout)
-		*		while outside the element, the mouse button is released. pointerup is not fired.
-		*		during pan, pan should not end if the pointer leaves the element.
-		* MDN: Pointer capture allows events for a particular pointer event (PointerEvent) to be re-targeted to a particular element instead of the normal (or hit test) target at a pointer's location. This can be used to ensure that an element continues to receive pointer events even if the pointer device's contact moves off the element (such as by scrolling or panning).
-		*/
-
-		domElement.addEventListener("pointerleave", function(event){
-
-			if (self.contact != null && self.contact.isActive == true){
-				self.contact.onPointerLeave(event);
-				self.recognizeGestures();
-			}
-		});
-
-
-		domElement.addEventListener("pointercancel", function(event){
-
-			domElement.releasePointerCapture(event.pointerId);
-
-			if (this.DEBUG == true){
-				console.log("[PointerListener] pointercancel detected");
-			}
-
-			//self.domElement.classList.remove("disable-scrolling");
-
-			self.contact.onPointerCancel(event);
-			self.recognizeGestures();
-
-			var hasPointerCancelHook = Object.prototype.hasOwnProperty.call(self.options, "pointercancel");
-			if (hasPointerCancelHook == true){
-				self.options.pointercancel(event, self);
-			}
-
-
-		}, { "passive": true });
-
-
-		this.addTouchListeners();
-	}
-
-	// provide the ability to interact/prevent touch events
-	// scrolling (touchmove event) results in pointerCancel event, stopping horizontal panning if user scrolls vertically
-	// the better solution is using eg css: touch-action: pan-y;
-	addTouchListeners () {
-
-		var self = this;
-
-		if (self.options.handleTouchEvents == true){
-
-			/*this.domElement.addEventListener("touchstart", function(event){
-
-			});*/
-
-			this.domElement.addEventListener("touchmove", function(event){
-
-				// fire onTouchMove for all gestures
-				for (let g=0; g<self.options.supportedGestures.length; g++){
-
-					let gesture = self.options.supportedGestures[g];
-
-					gesture.onTouchMove(event);
-				}
-
-			});
-
-			/*this.domElement.addEventListener("touchend", function(event){
-			});
-
-			this.domElement.addEventListener("touchcancel", function(event){
-			});*/
-		}
-
-	}
-
-	// run all configured recognizers
-	recognizeGestures (){
-
-		for (let g=0; g<this.options.supportedGestures.length; g++){
-
-			let gesture = this.options.supportedGestures[g];
-
-			gesture.recognize(this.contact);
-
-		}
-
-	}
-
-}
 
 ;
 /****************************************************************************
@@ -33186,7 +31551,7 @@ src/_i18n-v0.1.1/src/i18n.js
 
     var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
     var maxValues = [24, 60, 60, 1000];
-
+    
     // Capitalize first letter
     key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
@@ -33233,19 +31598,19 @@ src/_i18n-v0.1.1/src/i18n.js
 ;
 /* @preserve
  * The MIT License (MIT)
- *
+ * 
  * Copyright (c) 2013-2018 Petka Antonov
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -33253,7 +31618,7 @@ src/_i18n-v0.1.1/src/i18n.js
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- *
+ * 
  */
 /**
  * bluebird build version 3.7.2
@@ -36845,28 +35210,28 @@ _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext,
 _dereq_('./any.js')(Promise);
 _dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./filter.js')(Promise, INTERNAL);
-
-    util.toFastProperties(Promise);
-    util.toFastProperties(Promise.prototype);
-    function fillTypes(value) {
-        var p = new Promise(INTERNAL);
-        p._fulfillmentHandler0 = value;
-        p._rejectionHandler0 = value;
-        p._promise0 = value;
-        p._receiver0 = value;
-    }
-    // Complete slack tracking, opt out of field-type tracking and
-    // stabilize map
-    fillTypes({a: 1});
-    fillTypes({b: 2});
-    fillTypes({c: 3});
-    fillTypes(1);
-    fillTypes(function(){});
-    fillTypes(undefined);
-    fillTypes(false);
-    fillTypes(new Promise(INTERNAL));
-    debug.setBounds(Async.firstLineError, util.lastLineError);
-    return Promise;
+                                                         
+    util.toFastProperties(Promise);                                          
+    util.toFastProperties(Promise.prototype);                                
+    function fillTypes(value) {                                              
+        var p = new Promise(INTERNAL);                                       
+        p._fulfillmentHandler0 = value;                                      
+        p._rejectionHandler0 = value;                                        
+        p._promise0 = value;                                                 
+        p._receiver0 = value;                                                
+    }                                                                        
+    // Complete slack tracking, opt out of field-type tracking and           
+    // stabilize map                                                         
+    fillTypes({a: 1});                                                       
+    fillTypes({b: 2});                                                       
+    fillTypes({c: 3});                                                       
+    fillTypes(1);                                                            
+    fillTypes(function(){});                                                 
+    fillTypes(undefined);                                                    
+    fillTypes(false);                                                        
+    fillTypes(new Promise(INTERNAL));                                        
+    debug.setBounds(Async.firstLineError, util.lastLineError);               
+    return Promise;                                                          
 
 };
 
@@ -40173,11 +38538,11 @@ module.exports = ret;
 	var minor = parseInt(splitVersion[1]);
 
 	var JQ_LT_17 = (major < 1) || (major == 1 && minor < 7);
-
+	
 	function eventsData($el) {
 		return JQ_LT_17 ? $el.data('events') : $._data($el[0]).events;
 	}
-
+	
 	function moveHandlerToTop($el, eventName, isDelegated) {
 		var data = eventsData($el);
 		var events = data[eventName];
@@ -40195,7 +38560,7 @@ module.exports = ret;
 			events.unshift(events.pop());
 		}
 	}
-
+	
 	function moveEventHandlers($elems, eventsString, isDelegate) {
 		var events = eventsString.split(/\s+/);
 		$elems.each(function() {
@@ -40205,7 +38570,7 @@ module.exports = ret;
 			}
 		});
 	}
-
+	
 	function makeMethod(methodName) {
 		$.fn[methodName + 'First'] = function() {
 			var args = $.makeArray(arguments);
@@ -40230,7 +38595,7 @@ module.exports = ret;
 	$.fn.delegateFirst = function() {
 		var args = $.makeArray(arguments);
 		var eventsString = args[1];
-
+		
 		if (eventsString) {
 			args.splice(0, 2);
 			$.fn.delegate.apply(this, arguments);
@@ -40250,7 +38615,7 @@ module.exports = ret;
 
 		return this;
 	};
-
+	
 	// on (jquery >= 1.7)
 	if (!JQ_LT_17) {
 		$.fn.onFirst = function(types, selector) {
@@ -49271,8 +47636,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -49366,8 +47731,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ],
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ], 
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, window, undefined) {
@@ -50880,7 +49245,7 @@ if (typeof define === 'function' && define.amd) {
             function seekPrevious(pos, newBlock) {
                 var position = pos, tests;
                 if (position <= 0) return 0;
-                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position),
+                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position), 
                 tests.length < 2 || tests.length === 2 && tests[1].match.def === ""))) {}
                 return position;
             }
@@ -52117,8 +50482,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($) {
@@ -52147,8 +50512,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -52399,8 +50764,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -52950,8 +51315,8 @@ if (typeof define === 'function' && define.amd) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ],
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ], 
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, Inputmask) {
@@ -61679,12 +60044,12 @@ options:
 /*! @websanova/url - v2.6.3 - 2020-01-25 */
 !function(){function t(t,r){var a,o={};if("tld?"!==t){if(r=r||window.location.toString(),!t)return r;if(t=t.toString(),a=r.match(/^mailto:([^\/].+)/))o.protocol="mailto",o.email=a[1];else{if((a=r.match(/(.*?)\/#\!(.*)/))&&(r=a[1]+a[2]),(a=r.match(/(.*?)#(.*)/))&&(o.hash=a[2],r=a[1]),o.hash&&t.match(/^#/))return h(t,o.hash);if((a=r.match(/(.*?)\?(.*)/))&&(o.query=a[2],r=a[1]),o.query&&t.match(/^\?/))return h(t,o.query);if((a=r.match(/(.*?)\:?\/\/(.*)/))&&(o.protocol=a[1].toLowerCase(),r=a[2]),(a=r.match(/(.*?)(\/.*)/))&&(o.path=a[2],r=a[1]),o.path=(o.path||"").replace(/^([^\/])/,"/$1"),t.match(/^[\-0-9]+$/)&&(t=t.replace(/^([^\/])/,"/$1")),t.match(/^\//))return e(t,o.path.substring(1));if((a=(a=e("/-1",o.path.substring(1)))&&a.match(/(.*?)\.([^.]+)$/))&&(o.file=a[0],o.filename=a[1],o.fileext=a[2]),(a=r.match(/(.*)\:([0-9]+)$/))&&(o.port=a[2],r=a[1]),(a=r.match(/(.*?)@(.*)/))&&(o.auth=a[1],r=a[2]),o.auth&&(a=o.auth.match(/(.*)\:(.*)/),o.user=a?a[1]:o.auth,o.pass=a?a[2]:void 0),o.hostname=r.toLowerCase(),"."===t.charAt(0))return e(t,o.hostname);o.port=o.port||("https"===o.protocol?"443":"80"),o.protocol=o.protocol||("443"===o.port?"https":"http")}return t in o?o[t]:"{}"===t?o:void 0}}function e(t,r){var a=t.charAt(0),o=r.split(a);return a===t?o:o[(t=parseInt(t.substring(1),10))<0?o.length+t:t-1]}function h(t,r){for(var a,o=t.charAt(0),e=r.split("&"),h=[],n={},c=[],i=t.substring(1),p=0,u=e.length;p<u;p++)if(""!==(h=(h=e[p].match(/(.*?)=(.*)/))||[e[p],e[p],""])[1].replace(/\s/g,"")){if(h[2]=(a=h[2]||"",decodeURIComponent(a.replace(/\+/g," "))),i===h[1])return h[2];(c=h[1].match(/(.*)\[([0-9]+)\]/))?(n[c[1]]=n[c[1]]||[],n[c[1]][c[2]]=h[2]):n[h[1]]=h[2]}return o===t?n:n[i]}window.url=t}();
 ;
-/*
-  @package NOTY - Dependency-free notification library
-  @version version: 3.1.4
-  @contributors https://github.com/needim/noty/graphs/contributors
-  @documentation Examples and Documentation - http://needim.github.com/noty
-  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
+/* 
+  @package NOTY - Dependency-free notification library 
+  @version version: 3.1.4 
+  @contributors https://github.com/needim/noty/graphs/contributors 
+  @documentation Examples and Documentation - http://needim.github.com/noty 
+  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php 
 */
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -63717,7 +62082,7 @@ Promise$2.prototype = {
     The primary way of interacting with a promise is through its `then` method,
     which registers callbacks to receive either a promise's eventual value or the
     reason why the promise cannot be fulfilled.
-
+  
     ```js
     findUser().then(function(user){
       // user is available
@@ -63725,14 +62090,14 @@ Promise$2.prototype = {
       // user is unavailable, and you are given the reason why
     });
     ```
-
+  
     Chaining
     --------
-
+  
     The return value of `then` is itself a promise.  This second, 'downstream'
     promise is resolved with the return value of the first promise's fulfillment
     or rejection handler, or rejected if the handler throws an exception.
-
+  
     ```js
     findUser().then(function (user) {
       return user.name;
@@ -63742,7 +62107,7 @@ Promise$2.prototype = {
       // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
       // will be `'default name'`
     });
-
+  
     findUser().then(function (user) {
       throw new Error('Found user, but still unhappy');
     }, function (reason) {
@@ -63755,7 +62120,7 @@ Promise$2.prototype = {
     });
     ```
     If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-
+  
     ```js
     findUser().then(function (user) {
       throw new PedagogicalException('Upstream error');
@@ -63767,15 +62132,15 @@ Promise$2.prototype = {
       // The `PedgagocialException` is propagated all the way down to here
     });
     ```
-
+  
     Assimilation
     ------------
-
+  
     Sometimes the value you want to propagate to a downstream promise can only be
     retrieved asynchronously. This can be achieved by returning a promise in the
     fulfillment or rejection handler. The downstream promise will then be pending
     until the returned promise is settled. This is called *assimilation*.
-
+  
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -63783,9 +62148,9 @@ Promise$2.prototype = {
       // The user's comments are now available
     });
     ```
-
+  
     If the assimliated promise rejects, then the downstream promise will also reject.
-
+  
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -63795,15 +62160,15 @@ Promise$2.prototype = {
       // If `findCommentsByAuthor` rejects, we'll have the reason here
     });
     ```
-
+  
     Simple Example
     --------------
-
+  
     Synchronous Example
-
+  
     ```javascript
     let result;
-
+  
     try {
       result = findResult();
       // success
@@ -63811,9 +62176,9 @@ Promise$2.prototype = {
       // failure
     }
     ```
-
+  
     Errback Example
-
+  
     ```js
     findResult(function(result, err){
       if (err) {
@@ -63823,9 +62188,9 @@ Promise$2.prototype = {
       }
     });
     ```
-
+  
     Promise Example;
-
+  
     ```javascript
     findResult().then(function(result){
       // success
@@ -63833,15 +62198,15 @@ Promise$2.prototype = {
       // failure
     });
     ```
-
+  
     Advanced Example
     --------------
-
+  
     Synchronous Example
-
+  
     ```javascript
     let author, books;
-
+  
     try {
       author = findAuthor();
       books  = findBooksByAuthor(author);
@@ -63850,19 +62215,19 @@ Promise$2.prototype = {
       // failure
     }
     ```
-
+  
     Errback Example
-
+  
     ```js
-
+  
     function foundBooks(books) {
-
+  
     }
-
+  
     function failure(reason) {
-
+  
     }
-
+  
     findAuthor(function(author, err){
       if (err) {
         failure(err);
@@ -63887,9 +62252,9 @@ Promise$2.prototype = {
       }
     });
     ```
-
+  
     Promise Example;
-
+  
     ```javascript
     findAuthor().
       then(findBooksByAuthor).
@@ -63899,7 +62264,7 @@ Promise$2.prototype = {
       // something went wrong
     });
     ```
-
+  
     @method then
     @param {Function} onFulfilled
     @param {Function} onRejected
@@ -63911,25 +62276,25 @@ Promise$2.prototype = {
   /**
     `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
     as the catch block of a try/catch statement.
-
+  
     ```js
     function findAuthor(){
       throw new Error('couldn't find that author');
     }
-
+  
     // synchronous
     try {
       findAuthor();
     } catch(reason) {
       // something went wrong
     }
-
+  
     // async with promises
     findAuthor().catch(function(reason){
       // something went wrong
     });
     ```
-
+  
     @method catch
     @param {Function} onRejection
     Useful for tooling.
@@ -64787,10 +63152,10 @@ module.exports = g;
     //Will choke on undefined navigator and window vars when run on server
     //Return boolean false and exit function when running server-side
 
-    if( typeof window === "undefined" ||
-        window.navigator === undefined ||
-        window.navigator.userAgent === undefined ||
-        window.navigator.mimeTypes === undefined){
+    if( typeof window === "undefined" || 
+        window.navigator === undefined || 
+        window.navigator.userAgent === undefined || 
+        window.navigator.mimeTypes === undefined){ 
             return false;
     }
 
@@ -64801,8 +63166,8 @@ module.exports = g;
     //Time to jump through hoops -- browser vendors do not make it easy to detect PDF support.
 
     /*
-        IE11 still uses ActiveX for Adobe Reader, but IE 11 doesn't expose window.ActiveXObject the same way
-        previous versions of IE did. window.ActiveXObject will evaluate to false in IE 11, but "ActiveXObject"
+        IE11 still uses ActiveX for Adobe Reader, but IE 11 doesn't expose window.ActiveXObject the same way 
+        previous versions of IE did. window.ActiveXObject will evaluate to false in IE 11, but "ActiveXObject" 
         in window evaluates to true.
 
         MS Edge does not support ActiveX so this test will evaluate false
@@ -64820,20 +63185,20 @@ module.exports = g;
     let supportsPdfMimeType = (nav.mimeTypes["application/pdf"] !== undefined);
 
     //Safari on iPadOS doesn't report as 'mobile' when requesting desktop site, yet still fails to embed PDFs
-    let isSafariIOSDesktopMode = (  nav.platform !== undefined &&
-                                    nav.platform === "MacIntel" &&
-                                    nav.maxTouchPoints !== undefined &&
+    let isSafariIOSDesktopMode = (  nav.platform !== undefined && 
+                                    nav.platform === "MacIntel" && 
+                                    nav.maxTouchPoints !== undefined && 
                                     nav.maxTouchPoints > 1 );
 
     //Quick test for mobile devices.
     let isMobileDevice = (isSafariIOSDesktopMode || /Mobi|Tablet|Android|iPad|iPhone/.test(ua));
 
-    //Safari desktop requires special handling
-    let isSafariDesktop = ( !isMobileDevice &&
-                            nav.vendor !== undefined &&
-                            /Apple/.test(nav.vendor) &&
+    //Safari desktop requires special handling 
+    let isSafariDesktop = ( !isMobileDevice && 
+                            nav.vendor !== undefined && 
+                            /Apple/.test(nav.vendor) && 
                             /Safari/.test(ua) );
-
+    
     //Firefox started shipping PDF.js in Firefox 19. If this is Firefox 19 or greater, assume PDF.js is available
     let isFirefoxWithPDFJS = (!isMobileDevice && /irefox/.test(ua) && ua.split("rv:").length > 1) ? (parseInt(ua.split("rv:")[1].split(".")[0], 10) > 18) : false;
 
@@ -64951,14 +63316,14 @@ module.exports = g;
         let fullURL = PDFJS_URL + "?file=" + encodeURIComponent(url) + pdfOpenFragment;
         let div = document.createElement("div");
         let iframe = document.createElement("iframe");
-
+        
         iframe.src = fullURL;
         iframe.className = "pdfobject";
         iframe.type = "application/pdf";
         iframe.frameborder = "0";
         iframe.allow = "fullscreen";
         iframe.title = title;
-
+        
         if(id){
             iframe.id = id;
         }
@@ -64967,13 +63332,13 @@ module.exports = g;
             div.style.cssText = "position: absolute; top: 0; right: 0; bottom: 0; left: 0;";
             iframe.style.cssText = "border: none; width: 100%; height: 100%;";
             targetNode.style.position = "relative";
-            targetNode.style.overflow = "auto";
+            targetNode.style.overflow = "auto";        
         }
 
         div.appendChild(iframe);
         targetNode.appendChild(div);
         targetNode.classList.add("pdfobject-container");
-
+        
         return targetNode.getElementsByTagName("iframe")[0];
 
     };
@@ -65007,7 +63372,7 @@ module.exports = g;
                 style += "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
             }
 
-            embed.style.cssText = style;
+            embed.style.cssText = style; 
 
         }
 
@@ -65065,32 +63430,32 @@ module.exports = g;
         if(forcePDFJS && PDFJS_URL){
             return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles);
         }
-
+ 
         // --== Embed attempt #2 ==--
 
         //Embed PDF if traditional support is provided, or if this developer is willing to roll with assumption
-        //that modern desktop (not mobile) browsers natively support PDFs
+        //that modern desktop (not mobile) browsers natively support PDFs 
         if(supportsPDFs || (assumptionMode && !isMobileDevice)){
-
-            //Should we use <embed> or <iframe>? In most cases <embed>.
+            
+            //Should we use <embed> or <iframe>? In most cases <embed>. 
             //Allow developer to force <iframe>, if desired
             //There is an edge case where Safari does not respect 302 redirect requests for PDF files when using <embed> element.
             //Redirect appears to work fine when using <iframe> instead of <embed> (Addresses issue #210)
             //Forcing Safari desktop to use iframe due to freezing bug in macOS 11 (Big Sur)
             let embedtype = (forceIframe || supportRedirect || isSafariDesktop) ? "iframe" : "embed";
-
+            
             return generatePDFObjectMarkup(embedtype, targetNode, targetSelector, url, pdfOpenFragment, width, height, id, title, omitInlineStyles);
 
         }
-
+        
         // --== Embed attempt #3 ==--
-
+        
         //If everything else has failed and a PDFJS fallback is provided, try to use it
         if(PDFJS_URL){
             return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles);
         }
-
-        // --== PDF embed not supported! Use fallback ==--
+        
+        // --== PDF embed not supported! Use fallback ==-- 
 
         //Display the fallback link if available
         if(fallbackLink){
@@ -79487,7 +77852,7 @@ ID:name, ID:abbr, ID:link, ID:email
         }
     });
 
-
+    
 
 (function() {
         numeral.register('format', 'bps', {
@@ -82263,7 +80628,7 @@ Greenland
 }(jQuery, window.moment, window.i18next, this, document));
 ;
 /****************************************************************************
-    kl.js,
+    kl.js, 
 
     Translation of Moment text to Kalaallisut/Greenlandic (language code = kl)
 
@@ -82271,7 +80636,7 @@ Greenland
 
 moment.defineLocale('kl', {
     parentLocale: 'da',
-
+  
     /* TODO */
 
 
@@ -90687,7 +89052,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error;
     }
     return results;
-  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{},
+  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{}, 
   defaultOptions = {
     checks:{
       xhr:{
@@ -90710,22 +89075,22 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     deDupBody:!1
   }, grab = function(obj, key) {
     var cur, i, j, len, part, parts;
-    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i],
+    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i], 
     "object" == typeof (cur = cur[part])); i = ++j) ;
     return i === parts.length - 1 ? cur :void 0;
   }, Offline.getOption = function(key) {
     var ref, val;
-    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key),
+    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key), 
     "function" == typeof val ? val() :val;
   }, "function" == typeof window.addEventListener && window.addEventListener("online", function() {
     return setTimeout(Offline.confirmUp, 100);
   }, !1), "function" == typeof window.addEventListener && window.addEventListener("offline", function() {
     return Offline.confirmDown();
   }, !1), Offline.state = "up", Offline.markUp = function() {
-    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up",
+    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up", 
     Offline.trigger("up");
   }, Offline.markDown = function() {
-    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down",
+    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down", 
     Offline.trigger("down");
   }, handlers = {}, Offline.on = function(event, handler, ctx) {
     var e, events, j, len, results;
@@ -90738,7 +89103,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     var _handler, i, ref, results;
     if (null != handlers[event]) {
       if (handler) {
-        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i],
+        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i], 
         ref[0], _handler = ref[1], _handler === handler ? results.push(handlers[event].splice(i, 1)) :results.push(i++);
         return results;
       }
@@ -90747,7 +89112,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, Offline.trigger = function(event) {
     var ctx, handler, j, len, ref, ref1, results;
     if (null != handlers[event]) {
-      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j],
+      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j], 
       ctx = ref1[0], handler = ref1[1], results.push(handler.call(ctx));
       return results;
     }
@@ -90766,8 +89131,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     });
   }, Offline.checks = {}, Offline.checks.xhr = function() {
     var xhr;
-    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0),
-    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")),
+    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0), 
+    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")), 
     checkXHR(xhr, Offline.markUp, Offline.markDown);
     try {
       xhr.send();
@@ -90777,7 +89142,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     return xhr;
   }, Offline.checks.image = function() {
     var img;
-    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp,
+    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp, 
     img.src = Offline.getOption("checks.image.url");
   }, Offline.checks.down = Offline.markDown, Offline.checks.up = Offline.markUp, Offline.check = function() {
     return Offline.trigger("checking"), Offline.checks[Offline.getOption("checks.active")]();
@@ -90798,13 +89163,13 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       };
     }, _XMLHttpRequest = window.XMLHttpRequest, window.XMLHttpRequest = function(flags) {
       var _overrideMimeType, _setRequestHeader, req;
-      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader,
+      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader, 
       req.headers = {}, req.setRequestHeader = function(name, value) {
         return req.headers[name] = value, _setRequestHeader.call(req, name, value);
       }, _overrideMimeType = req.overrideMimeType, req.overrideMimeType = function(type) {
         return req.mimeType = type, _overrideMimeType.call(req, type);
       }, req;
-    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest,
+    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest, 
     window.XDomainRequest = function() {
       var req;
       return req = new _XDomainRequest(), monitorXHR(req), req;
@@ -90820,37 +89185,37 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   if (!window.Offline) throw new Error("Offline Reconnect brought in without offline.js");
   rc = Offline.reconnect = {}, retryIntv = null, reset = function() {
     var ref;
-    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"),
+    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"), 
     rc.state = "inactive", rc.remaining = rc.delay = null != (ref = Offline.getOption("reconnect.initialDelay")) ? ref :3;
   }, next = function() {
     var delay, ref;
-    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600),
+    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600), 
     rc.remaining = rc.delay = delay;
   }, tick = function() {
-    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"),
+    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"), 
     0 === rc.remaining ? tryNow() :void 0;
   }, tryNow = function() {
-    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting",
+    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting", 
     Offline.check();
   }, down = function() {
-    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"),
+    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"), 
     retryIntv = setInterval(tick, 1e3);
   }, up = function() {
     return null != retryIntv && clearInterval(retryIntv), reset();
   }, nope = function() {
-    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"),
+    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"), 
     rc.state = "waiting", next()) :void 0;
-  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope),
+  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope), 
   Offline.on("up", up);
 }.call(this), function() {
   var clear, flush, held, holdRequest, makeRequest, waitingOnConfirm;
   if (!window.Offline) throw new Error("Requests module brought in without offline.js");
   held = [], waitingOnConfirm = !1, holdRequest = function(req) {
-    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"),
+    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"), 
     "down" !== Offline.state && (waitingOnConfirm = !0), held.push(req);
   }, makeRequest = function(arg) {
     var body, name, password, ref, type, url, user, val, xhr;
-    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password,
+    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password, 
     body = arg.body, !1 !== Offline.getOption("requests")) {
       xhr.abort(), xhr.open(type, url, !0, user, password), ref = xhr.headers;
       for (name in ref) val = ref[name], xhr.setRequestHeader(name, val);
@@ -90861,10 +89226,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, flush = function() {
     var body, i, key, len, request, requests, url;
     if (!1 !== Offline.getOption("requests")) {
-      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i],
+      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i], 
       url = request.url.replace(/(\?|&)_=[0-9]+/, function(match, chr) {
         return "?" === chr ? chr :"";
-      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(),
+      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(), 
       requests[request.type.toUpperCase() + " - " + url + " - " + body] = request) :requests[request.type.toUpperCase() + " - " + url] = request;
       for (key in requests) request = requests[key], makeRequest(request);
       return clear();
@@ -90880,10 +89245,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         return holdRequest(request);
       }, _send = xhr.send, xhr.send = function(body) {
         return request.body = body, _send.apply(xhr, arguments);
-      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1),
-      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange,
+      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1), 
+      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange, 
       xhr.onreadystatechange = function() {
-        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(),
+        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(), 
         "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
       });
     }), Offline.requests = {
@@ -90902,12 +89267,12 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error, simulate = !1;
     }
   }
-  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}),
+  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}), 
   Offline.options.checks.active = state);
 }.call(this), function() {
   var RETRY_TEMPLATE, TEMPLATE, _onreadystatechange, addClass, content, createFromHTML, el, flashClass, flashTimeouts, init, removeClass, render, roundTime;
   if (!window.Offline) throw new Error("Offline UI brought in without offline.js");
-  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>',
+  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>', 
   RETRY_TEMPLATE = '<a href class="offline-ui-retry"></a>', createFromHTML = function(html) {
     var el;
     return el = document.createElement("div"), el.innerHTML = html, el.children[0];
@@ -90916,7 +89281,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, removeClass = function(name) {
     return el.className = el.className.replace(new RegExp("(^| )" + name.split(" ").join("|") + "( |$)", "gi"), " ");
   }, flashTimeouts = {}, flashClass = function(name, time) {
-    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]),
+    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]), 
     flashTimeouts[name] = setTimeout(function() {
       return removeClass(name), delete flashTimeouts[name];
     }, 1e3 * time);
@@ -90928,39 +89293,39 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       minute:60,
       second:1
     };
-    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult),
+    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult), 
     [ val, unit ];
     return [ "now", "" ];
   }, render = function() {
     var button, handler;
-    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)),
+    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)), 
     button = el.querySelector(".offline-ui-retry"), handler = function(e) {
       return e.preventDefault(), Offline.reconnect.tryNow();
-    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)),
+    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)), 
     addClass("offline-ui-" + Offline.state), content = el.querySelector(".offline-ui-content");
   }, init = function() {
     return render(), Offline.on("up", function() {
-      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2),
+      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2), 
       flashClass("offline-ui-up-5s", 5);
     }), Offline.on("down", function() {
-      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2),
+      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2), 
       flashClass("offline-ui-down-5s", 5);
     }), Offline.on("reconnect:connecting", function() {
       return addClass("offline-ui-connecting"), removeClass("offline-ui-waiting");
     }), Offline.on("reconnect:tick", function() {
       var ref, time, unit;
-      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining),
-      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time),
+      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining), 
+      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time), 
       content.setAttribute("data-retry-in-unit", unit);
     }), Offline.on("reconnect:stopped", function() {
-      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null),
+      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null), 
       content.setAttribute("data-retry-in-unit", null);
     }), Offline.on("reconnect:failure", function() {
       return flashClass("offline-ui-reconnect-failed-2s", 2), flashClass("offline-ui-reconnect-failed-5s", 5);
     }), Offline.on("reconnect:success", function() {
       return flashClass("offline-ui-reconnect-succeeded-2s", 2), flashClass("offline-ui-reconnect-succeeded-5s", 5);
     });
-  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange,
+  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange, 
   document.onreadystatechange = function() {
     return "complete" === document.readyState && init(), "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
   });

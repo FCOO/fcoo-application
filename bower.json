@@ -56,8 +56,6 @@
         "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^2.0.0",
         "jquery-bootstrap-mmenu": "fcoo/jquery-bootstrap-mmenu#^1.0.0",
         "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",
-        "hammerjs": "^2.0.8",
-        "contactjs": "biodiv/contactjs#^1.1.0",
         "swiped-events": "john-doherty/swiped-events#^1.1.6"
     },
     "overrides": {
