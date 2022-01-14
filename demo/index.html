@@ -35,11 +35,6 @@
         <div class="version fcoo-app-color"></div>
         <div class="logo fcoo-app-color"></div>
     </div>
-    VERSION 8
-    <div id="contact_test" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top: 0%; left:20%"></div>
-
-    <div id="contact_log" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top: 50%; left:20%"></div>
-    
 
     <script>
         window.fcoo = window.fcoo || {};
@@ -63,83 +58,7 @@
     <script src="../src/fcoo-application-touch.js"></script>
     <script src="../src/fcoo-application-top-menu.js"></script>
 
-
-
 	<script>
-
-var count = 0;
-        var $elem = $("#contact_test"),
-            domElement = $elem.get(0);//document.getElementById("contact_test");
-
-        var $log = $("#contact_log");
-
-        var options = {
-
-            };
-//HER        var pointerListener = new PointerListener(domElement, options);
-
-/*
-        var panOptions = {
-	            supportedDirections : DIRECTION_HORIZONTAL
-            };
-
-        var panRecognizer = new Pan(domElement, panOptions);
-console.log(panRecognizer);
-panRecognizer.swipeFinalSpeed = 300;
-
-        var pointerListener = new PointerListener(domElement, {
-	            //supportedGestures  : [Pan],
-	            supportedGestures  : [panRecognizer],
-
-//HER                pointerDown     : function(event, pointerListener){ $log.html('down<br>' + $log.html()); },
-//HER            	pointerMove     : function(event, pointerListener){ $log.html('move<br>' + $log.html()); },
-//HER            	pointerUp       : function(event, pointerListener){ $log.html('up<br>' + $log.html()); },
-//HER            	pointerOut      : function(event, pointerListener){ $log.html('out<br>' + $log.html()); },
-//HER            	pointerCancel   : function(event, pointerListener){ $log.html('cancel<br>' + $log.html()); },
-            });        
-        
-        console.log(pointerListener);
-
-        
-        domElement.addEventListener("tap", function(event){
-            console.log('tap', event);
-        });
-
-        domElement.addEventListener('panstart', function(event){
-            $log.html('panstart<br>' + $log.html()); 
-        });
-        domElement.addEventListener('panend', function(event){
-            console.log('panend', event);
-            $log.html('panend '+Math.round(event.detail.live.speed)+'<br>' + $log.html()); 
-        });
-
-        domElement.addEventListener('swiperight', function(event){
-            console.log('onSwipeRight', event);
-            $log.html('onSwipeRight<br>' + $log.html()); 
-        });
-        domElement.addEventListener('swipeleft', function(event){
-            console.log('onSwipeLeft', event);
-            $log.html('onSwipeLeft<br>' + $log.html()); 
-        });
-*/
-        domElement.addEventListener('swiped-left', function(event){
-            console.log('swiped-left', event);
-            $log.html('swiped-left<br>' + $log.html()); 
-        });
-        domElement.addEventListener('swiped-right', function(event){
-            console.log('swiped-right', event);
-            $log.html('swiped-right<br>' + $log.html()); 
-        });
-
-
-
-
-
-
-
-
-
-
         window.bsIsTouch = false;
         window.bsIsTouch = (window.location.search =='?touch');
 
