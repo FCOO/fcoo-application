@@ -36,6 +36,10 @@
         <div class="logo fcoo-app-color"></div>
     </div>
 
+    <div id="contact_test" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top50%; left:20%">
+    </div>
+    
+
     <script>
         window.fcoo = window.fcoo || {};
         window.fcoo.DEMO_VERSION = true;
@@ -61,6 +65,36 @@
 
 
 	<script>
+
+
+        var $elem = $("#contact_test"),
+            domElement = $elem.get(0);//document.getElementById("contact_test");
+
+        var options = {
+
+            };
+        var pointerListener = new PointerListener(domElement, options);
+        domElement.addEventListener("tap", function(event){
+            console.log('tap', event);
+        });
+
+        domElement.addEventListener('swiperight', function(event){
+            console.log('onSwipeRight', event);
+            $elem.text('onSwipeRight');
+        });
+        domElement.addEventListener('swipeleft', function(event){
+            console.log('onSwipeLeft', event);
+            $elem.text('onSwipeLeft');
+        });
+
+
+
+
+
+
+
+
+
         window.bsIsTouch = false;
         window.bsIsTouch = (window.location.search =='?touch');
 
@@ -163,6 +197,8 @@
 
         var main;
         $(function() {
+
+return;
             var $rightMenu = $('<div/>');
             $rightMenu.append('Start');
             for (var i=0; i<100; i++){
