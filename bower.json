@@ -57,7 +57,8 @@
         "jquery-bootstrap-mmenu": "fcoo/jquery-bootstrap-mmenu#^1.0.0",
         "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",
         "hammerjs": "^2.0.8",
-        "contactjs": "biodiv/contactjs#^1.1.0"
+        "contactjs": "biodiv/contactjs#^1.1.0",
+        "swiped-events": "john-doherty/swiped-events#^1.1.6"
     },
     "overrides": {
         "modernizr-mouse-events": {
@@ -66,12 +67,13 @@
             }
         },
         "offline": {
-            "main": [
-                "offline.js"
-            ]
+            "main": "offline.js"
         },
         "contactjs": {
             "main": "dist/contact.js"
+        },
+        "swiped-events": {
+            "main": "src/swiped-events.js"
         }
     }
 }
