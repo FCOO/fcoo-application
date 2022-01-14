@@ -35,7 +35,7 @@
         <div class="version fcoo-app-color"></div>
         <div class="logo fcoo-app-color"></div>
     </div>
-    VERSION 6
+    VERSION 7
     <div id="contact_test" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top: 0%; left:20%"></div>
 
     <div id="contact_log" style="background-color: blue; color: white; width:200px; height:200px; position:absolute; top: 50%; left:20%"></div>
@@ -105,11 +105,11 @@ panRecognizer.swipeFinalSpeed = 300;
         });
 
         domElement.addEventListener('panstart', function(event){
-//HER            $log.html('panstart<br>' + $log.html()); 
+            $log.html('panstart<br>' + $log.html()); 
         });
         domElement.addEventListener('panend', function(event){
             console.log('panend', event);
-            $log.html('panend '+event.detail.live.speed+'<br>' + $log.html()); 
+            $log.html('panend '+Math.round(event.detail.live.speed)+'<br>' + $log.html()); 
         });
 
         domElement.addEventListener('swiperight', function(event){
