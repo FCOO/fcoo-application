@@ -9,10 +9,12 @@ This package is used to create a standard [FCOO] web applications with jquery, l
 
 ## Installation
 ### bower
-`bower install https://gitlab.com/FCOO/fcoo-application.git --save`
+`bower install https://github.com/FCOO/fcoo-application.git --save`
 
 ## Demo
-http://FCOO.gitlab.io/fcoo-application/demo/  **TODO: Link not working**
+http://FCOO.github.io/fcoo-application/demo/
+
+
 
 ## Usage
 
@@ -38,18 +40,18 @@ If `localStorage` isn't supported a fake version is installed
 At the moment no warning is given when `localStorage` isn't supported since some browser in private-mode allows the use of `window.localStorage` but don't save it when the session ends
 
 #### `window.fcoo.standalone` [Boolean]
-Determinate if the application is running in "*standalone mode*". The app operates in standalone mode when 
+Determinate if the application is running in "*standalone mode*". The app operates in standalone mode when
 - it has a query string parameter `standalone=true` (generic), or
-- the `navigator.standalone property` is set (iOS), or 
+- the `navigator.standalone property` is set (iOS), or
 - the `display-mode` is `standalone` (Android).
 For standalone apps we use localStorage for persisting state.
 
 #### `window.fcoo.globalSetting` [Object]
 Contains the data and methods to get and set settings for the user.
-See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details 
+See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details
 
 #### `window.fcoo.parseAll [function( validatorObj, defaultObj, options )]`
-Return an object with all parameter and hash-tags. 
+Return an object with all parameter and hash-tags.
 If `window.fcoo.standalone` is set the parameters are read from localStorage and a temporary copy is saved under id = `window.fcoo.localStorageTempKey`
 
 See [fcoo/url.js-extensions](https://github.com/FCOO/url.js-extensions) for description of `validatorObj`, `defaultObj`, and `options`
@@ -78,7 +80,7 @@ The following css classes are defined
 
     .fcoo-background     /* background-color as default color ("FCOO blue")  */
     .fcoo-app-background /* background-color as application background color (options.application.color)  */
- 
+
 The FCOO logo are provided as at SVG-font and can be applied using the css classes
 
     .icon-fcoo-logo      /* FCOO logo in default color (white) */
@@ -87,7 +89,7 @@ The FCOO logo are provided as at SVG-font and can be applied using the css class
 ### Namespace: `error`. File: `static/error-code-text/request.json.json`. Format: namespace-key-lang
 Translation of standard html errors and descriptions
 
-E.g. 
+E.g.
 
 - key = `error:400`, translation `da:"Forkert anmodning", en:"Bad Request"`
 - key = `error:409-desc`, translation `en:"The request could not be completed because of a conflict in the request"`
@@ -112,7 +114,7 @@ The position for the options must be marked with `{APPLICATION_ID` where `ID` is
 	var applicationId = "{APPLICATION_ID}",
 		applicationName = "{APPLICATION_NAME}",
 		myOptions = "{APPLICATION_MYOPTION}";
-	
+
 	//After >grunt build
 	var applicationId = "248",
 		applicationName = "The name of the application",
@@ -134,7 +136,7 @@ Four functions is provided to use default values during development:
 
 ----
 ## Default options and installed packages
-The following packages are included and installed automatic. 
+The following packages are included and installed automatic.
 The specific versions of the different packages are given in the current version of [bower.json](https://github.com/FCOO/fcoo-application/blob/master/bower.json)
 #### Version format
 | Format | Name | Range | Description/use |
@@ -146,7 +148,7 @@ The specific versions of the different packages are given in the current version
 ---
 ### [jQuery](http://jquery.com)
 
---- 
+---
 ### [fcoo-global-events](https://github.com/FCOO/fcoo-global-events)
 Creates `window.fcoo.events` as a `GlobalEvents`-object
 
@@ -191,7 +193,7 @@ Sets the breakpoints as:
 | mini | <b>0</b>-479px | Phone portrait |
 | small | <b>480</b>-767px | Phone landscape |
 | medium | <b>768</b>-959px | Tablet portrait |
-| large | <b>960</b>-1199px | Tablet landscape and desktop | 
+| large | <b>960</b>-1199px | Tablet landscape and desktop |
 | xlarge | <b>>=1200px</b> | Large desktop |
 
 See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-mediaquery-device) for a complete list of test included
@@ -202,19 +204,19 @@ See [fcoo-modernizr-mediaquery-device](http://github.com/fcoo/fcoo-modernizr-med
 
 *Offline.js is a library to automatically alert your users when they've lost internet connectivity, like Gmail. It captures AJAX requests which were made while the connection was down, and remakes them when it's back up, so your app reacts perfectly.*
 
-#### Modernizr 
-A Modernizr test named `"connected"` is added. 
+#### Modernizr
+A Modernizr test named `"connected"` is added.
 Classes `show-for-connected` `hide-for-connected` `show-for-no-connected` `hide-for-no-connected` are added
 
 #### [imagesLoaded](http://imagesloaded.desandro.com/)
 Used to test if any images was attended to be loaded during the disconnection
-If so try to reload the images by reloading it with a `dummy` parameter named '`_X_`'. 
+If so try to reload the images by reloading it with a `dummy` parameter named '`_X_`'.
 If this fails: reload it with the original src
 
 ---
 ### [raven-js](https://github.com/getsentry/raven-js)
 
-raven-js is the JavaScript client for [Sentry](https://sentry.io) used by FCOO to report all uncaught exceptions in the applications  
+raven-js is the JavaScript client for [Sentry](https://sentry.io) used by FCOO to report all uncaught exceptions in the applications
 Each application has a unique DSN used in `raven.config( dsn, options )`
 If a application need to report uncaught exceptions to [Sentry](https://sentry.io) the DSN must be added to the application-options in `gruntfile.js` as `sentryDSN`
 
@@ -233,7 +235,7 @@ The following options are set in Raven
 ## Development of packages or applications using fcoo-application
 When fcoo-application is included in a software-package or web-application the following global variables is available to control where setup-files etc. are located.
 
-All FCOO application is assumed to be in a sub-directory a la 
+All FCOO application is assumed to be in a sub-directory a la
 
 `https://the.path.to.root/applccation_name/index.html` (example 1)
 
@@ -241,7 +243,7 @@ or 'deeper'
 
 `https://the.path.to.root/applccation_name/some_sub_dir/index.html` (example 2)
 
-Calling methods `fcoo.promiseList_promiseAll()` will set the right path to the data-files. 
+Calling methods `fcoo.promiseList_promiseAll()` will set the right path to the data-files.
 E.q. static-data in sub-dir `"setup` = `https://the.path.to.root/static/setup/` (both example 1 and 2)
 
 When developing a package or application or in the demo version of a packages the following global variables can be set to direct the page to read data from the correct location.
@@ -265,7 +267,7 @@ The variables `window.fcoo.LOCAL_DATA`, `window.fcoo.DEMO_VERSION`, or `window.f
 
         ....
     </body>
-  
+
 
 ## Copyright and License
 This plugin is licensed under the [MIT license](https://choosealicense.com/licenses/mit/).
