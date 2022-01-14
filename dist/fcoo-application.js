@@ -2315,16 +2315,17 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .addClass(this.options.handleClassName)
                 .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
 
-.on('swiped-left', function(){ alert('left') })
+.on('swiped-left', $.proxy(this.open, this) )
+.on('click', $.proxy(this.open, this) )
 
                 .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
 
-            if (this.options.$handleContainer)
-                //Create individuel Hammer for handle outside the menu
-                this.handleHammer = this._createHammer(this.$handle, touchStartMenu, touchEndMenu);
+//HER            if (this.options.$handleContainer)
+//HER                //Create individuel Hammer for handle outside the menu
+//HER                this.handleHammer = this._createHammer(this.$handle, touchStartMenu, touchEndMenu);
 
-            if (this.options.toggleOnHandleClick)
-                this.$handle.on('click', $.proxy(this.toggle, this));
+//HER            if (this.options.toggleOnHandleClick)
+//HER                this.$handle.on('click', $.proxy(this.toggle, this));
         }
 
         //Update dimention and size of the menu and handle
