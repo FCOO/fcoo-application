@@ -22976,6 +22976,7 @@ Font-sizes for labels are same siae as header but incl a xxs-size
 CONTENT
 Unifies padding and font-size for content of modal, accordion, popup etc.
 Using same font-size and vertical/horizontal padding as buttons
+NOTE: For sm and xs y-padding = x-padding
 ************************************************************/
 /************************************************************
 MARGIN-BOTTOM
@@ -23783,7 +23784,7 @@ div.btn, div.list-group-item {
     -webkit-box-shadow: none !important;
     box-shadow: none !important; }
   .btn.btn-standard.transparent {
-    background: none;
+    background: none !important;
     color: #515961;
     background: rgba(0, 0, 0, 0) linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0)) repeat-x;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -23873,7 +23874,6 @@ div.btn, div.list-group-item {
       color: rgba(212, 212, 212, 0.65);
       background: rgba(0, 0, 0, 0) linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0)) repeat-x; }
   .btn.btn-standard.semi-transparent {
-    background: none !important;
     color: #515961;
     background: rgba(248, 249, 250, 0.5); }
     .mouse-hover .hover .btn.btn-standard.semi-transparent:not(:active):not(:disabled):not(.disabled),
@@ -24089,9 +24089,9 @@ BUTTON-GROUP
 .btn-group-vertical + .btn-group-vertical {
   margin-top: 0.25rem; }
   .btn-group-vertical + .btn-group-vertical.btn-group-sm {
-    margin-top: 0.1875rem; }
+    margin-top: 0.25rem; }
   .btn-group-vertical + .btn-group-vertical.btn-group-xs {
-    margin-top: 0.1875rem; }
+    margin-top: 0.25rem; }
 
 /************************************************************
 BLOCK BUTTONS (from Bootstrap)
@@ -24202,7 +24202,7 @@ POPOVER
   border-radius: inherit;
   color: #495057;
   background-color: #f2f2f2;
-  line-height: 1;
+  line-height: 1.25;
   border-top: 1px solid #9aa1a8;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important; }
@@ -24271,7 +24271,7 @@ POPOVER
   border-radius: inherit;
   color: #495057;
   background-color: #f2f2f2;
-  line-height: 1;
+  line-height: 1.25;
   border-top: 1px solid #9aa1a8;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important; }
@@ -24919,24 +24919,24 @@ body.modal-open .modal {
     padding: 0.25rem 0.3125rem;
     font-size: 1rem;
     border-radius: calc( 0.3125rem - 1px); }
-    .modal-dialog .modal-content .modal-body.modal-type-alert {
-      background-color: #cce5ff;
-      color: #004085; }
-    .modal-dialog .modal-content .modal-body.modal-type-success {
-      background-color: #d4edda;
-      color: #155724; }
-    .modal-dialog .modal-content .modal-body.modal-type-warning {
-      background-color: #fff3cd;
-      color: #856404; }
-    .modal-dialog .modal-content .modal-body.modal-type-error {
-      background-color: #f8d7da;
-      color: #721c24; }
-    .modal-dialog .modal-content .modal-body.modal-type-info {
-      background-color: #d1ecf1;
-      color: #0c5460; }
-    .modal-dialog .modal-content .modal-body.modal-type-help {
-      background-color: #fefefe;
-      color: #818182; }
+  .modal-dialog .modal-content .modal-body-fixed.modal-type-alert, .modal-dialog .modal-content .modal-body.modal-type-alert {
+    background-color: #cce5ff;
+    color: #004085; }
+  .modal-dialog .modal-content .modal-body-fixed.modal-type-success, .modal-dialog .modal-content .modal-body.modal-type-success {
+    background-color: #d4edda;
+    color: #155724; }
+  .modal-dialog .modal-content .modal-body-fixed.modal-type-warning, .modal-dialog .modal-content .modal-body.modal-type-warning {
+    background-color: #fff3cd;
+    color: #856404; }
+  .modal-dialog .modal-content .modal-body-fixed.modal-type-error, .modal-dialog .modal-content .modal-body.modal-type-error {
+    background-color: #f8d7da;
+    color: #721c24; }
+  .modal-dialog .modal-content .modal-body-fixed.modal-type-info, .modal-dialog .modal-content .modal-body.modal-type-info {
+    background-color: #d1ecf1;
+    color: #0c5460; }
+  .modal-dialog .modal-content .modal-body-fixed.modal-type-help, .modal-dialog .modal-content .modal-body.modal-type-help {
+    background-color: #fefefe;
+    color: #818182; }
   .modal-dialog .modal-content .modal-footer-header {
     flex-shrink: 0;
     flex-grow: 0;
@@ -24962,7 +24962,7 @@ body.modal-open .modal {
     border-radius: inherit;
     color: #495057;
     background-color: #f2f2f2;
-    line-height: 1;
+    line-height: 1.25;
     border-top: 1px solid #9aa1a8;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important; }
@@ -25036,7 +25036,7 @@ body.modal-open .modal {
       word-break: keep-all; }
   .modal-dialog.modal-dialog-sm .modal-content .modal-body,
   .modal-dialog.modal-dialog-sm .modal-content .modal-body-fixed {
-    padding: 0.1875rem 0.25rem;
+    padding: 0.25rem 0.25rem;
     font-size: 0.875rem; }
   .modal-dialog.modal-dialog-sm .modal-content .modal-footer-header {
     /*
@@ -25061,7 +25061,7 @@ body.modal-open .modal {
     border-radius: inherit;
     color: #495057;
     background-color: #f2f2f2;
-    line-height: 1;
+    line-height: 1.25;
     border-top: 1px solid #9aa1a8;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important; }
@@ -25109,7 +25109,7 @@ body.modal-open .modal {
       word-break: keep-all; }
   .modal-dialog.modal-dialog-xs .modal-content .modal-body,
   .modal-dialog.modal-dialog-xs .modal-content .modal-body-fixed {
-    padding: 0.125rem 0.1875rem;
+    padding: 0.1875rem 0.1875rem;
     font-size: 0.75rem; }
   .modal-dialog.modal-dialog-xs .modal-content .modal-footer-header {
     /*
@@ -25134,7 +25134,7 @@ body.modal-open .modal {
     border-radius: inherit;
     color: #495057;
     background-color: #f2f2f2;
-    line-height: 1;
+    line-height: 1.25;
     border-top: 1px solid #9aa1a8;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important; }
@@ -25150,10 +25150,11 @@ body.modal-open .modal {
   .modal-dialog.modal-dialog-xs .modal-content .modal-footer {
     padding: 0.125rem 0.1875rem; }
 
-.modal-dialog .modal-body-fixed.scrollbar-vertical,
-.modal-dialog .modal-body.scrollbar-vertical, .modal-dialog.modal-dialog-sm .modal-body-fixed.scrollbar-vertical,
-.modal-dialog.modal-dialog-sm .modal-body.scrollbar-vertical, .modal-dialog.modal-dialog-xs .modal-body-fixed.scrollbar-vertical,
-.modal-dialog.modal-dialog-xs .modal-body.scrollbar-vertical {
+.modal-dialog .modal-body-fixed.scrollbar-vertical, .modal-dialog.modal-dialog-sm .modal-body-fixed.scrollbar-vertical, .modal-dialog.modal-dialog-xs .modal-body-fixed.scrollbar-vertical {
+  padding-left: 8px;
+  padding-right: 8px; }
+
+.modal-dialog .modal-body.scrollbar-vertical, .modal-dialog.modal-dialog-sm .modal-body.scrollbar-vertical, .modal-dialog.modal-dialog-xs .modal-body.scrollbar-vertical {
   padding-left: 8px;
   padding-right: 0; }
 
@@ -25161,18 +25162,32 @@ body.modal-open .modal {
   padding-top: 0;
   padding-bottom: 0; }
 
-.modal-body-with-vertical-padding {
-  /*
-    sm and xs uses same top and bottom padding
-    .modal-dialog.modal-dialog-xs &,
-    .modal-dialog.modal-dialog-sm & {
-        @include content-padding-sm(true);
-    }
-*/ }
-  .modal-dialog .modal-body-with-vertical-padding {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem; }
+.modal-dialog .modal-body-with-vertical-padding {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem; }
+  .modal-dialog .modal-body-with-vertical-padding.modal-body-with-horizontal-padding {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem; }
 
+.modal-dialog.modal-dialog-sm .modal-body-with-vertical-padding {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem; }
+  .modal-dialog.modal-dialog-sm .modal-body-with-vertical-padding.modal-body-with-horizontal-padding {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem; }
+
+.modal-dialog.modal-dialog-xs .modal-body-with-vertical-padding {
+  padding-top: 0.1875rem;
+  padding-bottom: 0.1875rem; }
+  .modal-dialog.modal-dialog-xs .modal-body-with-vertical-padding.modal-body-with-horizontal-padding {
+    padding-left: 0.1875rem;
+    padding-right: 0.1875rem; }
+
+/*
+@include content-padding-horizontal();
+@include content-padding-horizontal-sm();
+@include content-padding-horizontal-xs();
+*/
 .modal-content .modal-body-fixed.no-vertical-padding,
 .modal-content .modal-body.no-vertical-padding {
   padding-top: 0 !important;
@@ -25227,7 +25242,7 @@ Style for elements used to display any file in a modal-window
     word-break: keep-all; }
 
 .file-view-content {
-  padding: 0.1875rem 0.25rem;
+  padding: 0.25rem 0.25rem;
   font-size: 0.875rem; }
 
 /************************************************************
@@ -25840,7 +25855,7 @@ Adjust header and cell size when table is sm/xs or inside a sm/xs modal
 
 .table.table-sm tbody tr td,
 .modal-dialog-sm .table tbody tr td {
-  padding: 0.1875rem 0.25rem;
+  padding: 0.25rem 0.25rem;
   font-size: 0.875rem; }
 
 .table.table-xs thead tr th,
@@ -25877,7 +25892,7 @@ Adjust header and cell size when table is sm/xs or inside a sm/xs modal
 
 .table.table-xs tbody tr td,
 .modal-dialog-xs .table tbody tr td {
-  padding: 0.125rem 0.1875rem;
+  padding: 0.1875rem 0.1875rem;
   font-size: 0.75rem; }
 
 /************************************************************
@@ -25966,7 +25981,7 @@ Using Bootstrap Collapse to create accordion
     .accordion .card-header.collapsed .chevrolet:before {
       content: "\f054"; }
   .accordion .card-block {
-    padding: 0.1875rem 0.25rem;
+    padding: 0.25rem 0.25rem;
     font-size: 0.875rem;
     border-radius: 0.25rem; }
   .accordion .card-footer {
@@ -25992,7 +26007,7 @@ Using Bootstrap Collapse to create accordion
     border-radius: inherit;
     color: #495057;
     background-color: #f2f2f2;
-    line-height: 1;
+    line-height: 1.25;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
     border-radius: 0.25rem; }
@@ -26054,7 +26069,7 @@ Using Bootstrap Collapse to create accordion
     word-break: keep-all; }
 
 .modal-dialog-sm .accordion .card-block, .accordion-sm .card-block {
-  padding: 0.1875rem 0.25rem;
+  padding: 0.25rem 0.25rem;
   font-size: 0.875rem; }
 
 .modal-dialog-sm .accordion .card-footer, .accordion-sm .card-footer {
@@ -26080,7 +26095,7 @@ Using Bootstrap Collapse to create accordion
   border-radius: inherit;
   color: #495057;
   background-color: #f2f2f2;
-  line-height: 1;
+  line-height: 1.25;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
   border-radius: 0.25rem; }
@@ -26124,7 +26139,7 @@ Using Bootstrap Collapse to create accordion
     word-break: keep-all; }
 
 .modal-dialog-xs .accordion .card-block, .accordion-xs .card-block {
-  padding: 0.125rem 0.1875rem;
+  padding: 0.1875rem 0.1875rem;
   font-size: 0.75rem; }
 
 .modal-dialog-xs .accordion .card-footer, .accordion-xs .card-footer {
@@ -26150,7 +26165,7 @@ Using Bootstrap Collapse to create accordion
   border-radius: inherit;
   color: #495057;
   background-color: #f2f2f2;
-  line-height: 1;
+  line-height: 1.25;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
   border-radius: 0.25rem; }
@@ -26372,7 +26387,7 @@ for noty is copyed and modified
     border-radius: inherit;
     color: #495057;
     background-color: #f2f2f2;
-    line-height: 1;
+    line-height: 1.25;
     border-top: 1px solid #9aa1a8;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important; }
@@ -26682,7 +26697,7 @@ Adjustment to Bootstrap tabs
     border-radius: inherit;
     color: #495057;
     background-color: #f2f2f2;
-    line-height: 1;
+    line-height: 1.25;
     border-top: 1px solid #9aa1a8;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important; }
