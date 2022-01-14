@@ -773,7 +773,6 @@ Two modes:
     height: auto !important; }
 
 .touch-menu-handle {
-  background-color: blue;
   position: absolute; }
   .touch-menu-handle.left {
     left: 0; }
