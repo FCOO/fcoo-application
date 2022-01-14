@@ -78,29 +78,47 @@ var count = 0;
             };
 //HER        var pointerListener = new PointerListener(domElement, options);
 
-//HER        var panOptions = {
-//HER	            supportedDirections : DIRECTION_HORIZONTAL
-//HER            };
-//HER
-//HER        var panRecognizer = new Pan(domElement, panOptions);
+        var panOptions = {
+	            supportedDirections : DIRECTION_HORIZONTAL
+            };
+
+        var panRecognizer = new Pan(domElement, panOptions);
+console.log(panRecognizer);
+panRecognizer.swipeFinalSpeed = 300;
 
         var pointerListener = new PointerListener(domElement, {
-//	            supportedGestures : [DIRECTION_HORIZONTAL]//[panRecognizer]
+	            //supportedGestures  : [Pan],
+	            supportedGestures  : [panRecognizer],
+
+//HER                pointerDown     : function(event, pointerListener){ $log.html('down<br>' + $log.html()); },
+//HER            	pointerMove     : function(event, pointerListener){ $log.html('move<br>' + $log.html()); },
+//HER            	pointerUp       : function(event, pointerListener){ $log.html('up<br>' + $log.html()); },
+//HER            	pointerOut      : function(event, pointerListener){ $log.html('out<br>' + $log.html()); },
+//HER            	pointerCancel   : function(event, pointerListener){ $log.html('cancel<br>' + $log.html()); },
             });        
         
-        
+        console.log(pointerListener);
+
         
         domElement.addEventListener("tap", function(event){
             console.log('tap', event);
         });
 
+        domElement.addEventListener('panstart', function(event){
+//HER            $log.html('panstart<br>' + $log.html()); 
+        });
+        domElement.addEventListener('panend', function(event){
+            console.log('panend', event);
+//HER            $log.html('panend<br>' + $log.html()); 
+        });
+
         domElement.addEventListener('swiperight', function(event){
             console.log('onSwipeRight', event);
-            $log.text('onSwipeRight '+count++);
+            $log.html('onSwipeRight<br>' + $log.html()); 
         });
         domElement.addEventListener('swipeleft', function(event){
             console.log('onSwipeLeft', event);
-            $log.text('onSwipeLeft ' + count++);
+            $log.html('onSwipeLeft<br>' + $log.html()); 
         });
 
 
