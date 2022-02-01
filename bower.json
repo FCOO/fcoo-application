@@ -1,7 +1,7 @@
 {
   "name": "fcoo-application",
   "version": "13.1.1",
-  "homepage": "https://gitlab.com/FCOO/fcoo-application",
+  "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
   ],
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@gitlab.com/fcoo/fcoo-application.git"
+    "url": "git://github.com/fcoo/fcoo-application.git"
   },
   "license": "MIT",
   "ignore": [
