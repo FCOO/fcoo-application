@@ -61,6 +61,12 @@ $sub-icon-font-size: 0.9em;
         //When inside a active (selected) button => use active-color
         color: $control-active-bg-color !important;
     }
+    .semi-selected &,
+    .active.semi-selected & {
+        //When inside a active and semi-selected button => use active-color
+        color: $semi-selected-bg-color !important;
+    }
+
     .card-header & {
         //When inside a accordion-headeractive (selected) button => use active-color
         color: $title-bg-color !important;

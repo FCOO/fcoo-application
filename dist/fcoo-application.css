@@ -37,7 +37,7 @@ $input-btn-padding-x-lg: $input-btn-padding-y-lg;
 
 Syntax and relations:
 In Bootstrap
-    $input-btn-padding(-x|-y)[-sm|-lg]
+    $input-btn-padding(-x|-y)[-sm|-lg] = A Value
     $btn-padding(-x|-y)[-sm|-lg] = $input-btn-padding(-x|-y)[-sm|-lg]
 
 
@@ -122,7 +122,7 @@ Dimentions for square buttons with only icons
 ************************************************************/
 /************************************************************
 LABEL
-Font-sizes for labels are same siae as header but incl a xxs-size
+Font-sizes for labels are same size as header but incl a xxs-size
 ************************************************************/
 /************************************************************
 CONTENT
@@ -864,6 +864,12 @@ Different versions of sub-icons can be created using different methods in namesp
   .active .fa-circle-small-right-bottom, .active
   .fa-square-small-right-bottom {
     color: #007bff !important; }
+  .semi-selected .fa-circle-small-right-bottom,
+  .active.semi-selected .fa-circle-small-right-bottom, .semi-selected
+  .fa-square-small-right-bottom,
+  .active.semi-selected
+  .fa-square-small-right-bottom {
+    color: #fd7e14 !important; }
   .card-header .fa-circle-small-right-bottom, .card-header
   .fa-square-small-right-bottom {
     color: #e9ecef !important; }
