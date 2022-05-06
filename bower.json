@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "13.1.5",
+  "version": "13.1.6",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -51,7 +51,7 @@
     "fcoo-polyfill": "fcoo/fcoo-polyfill#^4.0.0",
     "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^4.1.0",
     "offline": "HubSpot/offline#~0.7.18",
-    "imagesloaded": "desandro/imagesloaded#~4.1.1",
+    "imagesloaded": "desandro/imagesloaded#^3.0.0",
     "jquery-bootstrap": "fcoo/jquery-bootstrap#^2.3.0",
     "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^2.0.0",
     "jquery-bootstrap-mmenu": "fcoo/jquery-bootstrap-mmenu#^1.0.0",

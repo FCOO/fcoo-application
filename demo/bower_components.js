@@ -25488,7 +25488,7 @@ src/_i18n-v0.1.1/src/i18n.js
 
 ;
 //! moment.js
-//! version : 2.29.1
+//! version : 2.29.3
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -25565,8 +25565,9 @@ src/_i18n-v0.1.1/src/i18n.js
 
     function map(arr, fn) {
         var res = [],
-            i;
-        for (i = 0; i < arr.length; ++i) {
+            i,
+            arrLen = arr.length;
+        for (i = 0; i < arrLen; ++i) {
             res.push(fn(arr[i], i));
         }
         return res;
@@ -25695,7 +25696,10 @@ src/_i18n-v0.1.1/src/i18n.js
         updateInProgress = false;
 
     function copyConfig(to, from) {
-        var i, prop, val;
+        var i,
+            prop,
+            val,
+            momentPropertiesLen = momentProperties.length;
 
         if (!isUndefined(from._isAMomentObject)) {
             to._isAMomentObject = from._isAMomentObject;
@@ -25728,8 +25732,8 @@ src/_i18n-v0.1.1/src/i18n.js
             to._locale = from._locale;
         }
 
-        if (momentProperties.length > 0) {
-            for (i = 0; i < momentProperties.length; i++) {
+        if (momentPropertiesLen > 0) {
+            for (i = 0; i < momentPropertiesLen; i++) {
                 prop = momentProperties[i];
                 val = from[prop];
                 if (!isUndefined(val)) {
@@ -25784,8 +25788,9 @@ src/_i18n-v0.1.1/src/i18n.js
                 var args = [],
                     arg,
                     i,
-                    key;
-                for (i = 0; i < arguments.length; i++) {
+                    key,
+                    argLen = arguments.length;
+                for (i = 0; i < argLen; i++) {
                     arg = '';
                     if (typeof arguments[i] === 'object') {
                         arg += '\n[' + i + '] ';
@@ -25935,7 +25940,8 @@ src/_i18n-v0.1.1/src/i18n.js
         );
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
+    var formattingTokens =
+            /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
         localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,
         formatFunctions = {},
         formatTokenFunctions = {};
@@ -26239,8 +26245,9 @@ src/_i18n-v0.1.1/src/i18n.js
         if (typeof units === 'object') {
             units = normalizeObjectUnits(units);
             var prioritized = getPrioritizedUnits(units),
-                i;
-            for (i = 0; i < prioritized.length; i++) {
+                i,
+                prioritizedLen = prioritized.length;
+            for (i = 0; i < prioritizedLen; i++) {
                 this[prioritized[i].unit](units[prioritized[i].unit]);
             }
         } else {
@@ -26270,7 +26277,8 @@ src/_i18n-v0.1.1/src/i18n.js
         matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, // 123456789 123456789.123
         // any word (or two) characters or numbers including two/three word month in arabic.
         // includes scottish gaelic two word and hyphenated months
-        matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
+        matchWord =
+            /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
         regexes;
 
     regexes = {};
@@ -26296,15 +26304,12 @@ src/_i18n-v0.1.1/src/i18n.js
         return regexEscape(
             s
                 .replace('\\', '')
-                .replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (
-                    matched,
-                    p1,
-                    p2,
-                    p3,
-                    p4
-                ) {
-                    return p1 || p2 || p3 || p4;
-                })
+                .replace(
+                    /\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g,
+                    function (matched, p1, p2, p3, p4) {
+                        return p1 || p2 || p3 || p4;
+                    }
+                )
         );
     }
 
@@ -26316,7 +26321,8 @@ src/_i18n-v0.1.1/src/i18n.js
 
     function addParseToken(token, callback) {
         var i,
-            func = callback;
+            func = callback,
+            tokenLen;
         if (typeof token === 'string') {
             token = [token];
         }
@@ -26325,7 +26331,8 @@ src/_i18n-v0.1.1/src/i18n.js
                 array[callback] = toInt(input);
             };
         }
-        for (i = 0; i < token.length; i++) {
+        tokenLen = token.length;
+        for (i = 0; i < tokenLen; i++) {
             tokens[token[i]] = func;
         }
     }
@@ -26436,12 +26443,12 @@ src/_i18n-v0.1.1/src/i18n.js
 
     // LOCALES
 
-    var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split(
-            '_'
-        ),
-        defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split(
-            '_'
-        ),
+    var defaultLocaleMonths =
+            'January_February_March_April_May_June_July_August_September_October_November_December'.split(
+                '_'
+            ),
+        defaultLocaleMonthsShort =
+            'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
         MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/,
         defaultMonthsShortRegex = matchWord,
         defaultMonthsRegex = matchWord;
@@ -26883,14 +26890,12 @@ src/_i18n-v0.1.1/src/i18n.js
     addRegexToken('W', match1to2);
     addRegexToken('WW', match1to2, match2);
 
-    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (
-        input,
-        week,
-        config,
-        token
-    ) {
-        week[token.substr(0, 1)] = toInt(input);
-    });
+    addWeekParseToken(
+        ['w', 'ww', 'W', 'WW'],
+        function (input, week, config, token) {
+            week[token.substr(0, 1)] = toInt(input);
+        }
+    );
 
     // HELPERS
 
@@ -27015,9 +27020,8 @@ src/_i18n-v0.1.1/src/i18n.js
         return ws.slice(n, 7).concat(ws.slice(0, n));
     }
 
-    var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split(
-            '_'
-        ),
+    var defaultLocaleWeekdays =
+            'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
         defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
         defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_'),
         defaultWeekdaysRegex = matchWord,
@@ -27565,6 +27569,11 @@ src/_i18n-v0.1.1/src/i18n.js
         return globalLocale;
     }
 
+    function isLocaleNameSane(name) {
+        // Prevent names that look like filesystem paths, i.e contain '/' or '\'
+        return name.match('^[^/\\\\]*$') != null;
+    }
+
     function loadLocale(name) {
         var oldLocale = null,
             aliasedRequire;
@@ -27573,7 +27582,8 @@ src/_i18n-v0.1.1/src/i18n.js
             locales[name] === undefined &&
             typeof module !== 'undefined' &&
             module &&
-            module.exports
+            module.exports &&
+            isLocaleNameSane(name)
         ) {
             try {
                 oldLocale = globalLocale._abbr;
@@ -27790,8 +27800,10 @@ src/_i18n-v0.1.1/src/i18n.js
 
     // iso 8601 regex
     // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
-    var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
-        basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+    var extendedIsoRegex =
+            /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+        basicIsoRegex =
+            /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
         tzRegex = /Z|[+-]\d\d(?::?\d\d)?/,
         isoDates = [
             ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
@@ -27822,7 +27834,8 @@ src/_i18n-v0.1.1/src/i18n.js
         ],
         aspNetJsonRegex = /^\/?Date\((-?\d+)/i,
         // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
-        rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
+        rfc2822 =
+            /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
         obsOffsets = {
             UT: 0,
             GMT: 0,
@@ -27845,12 +27858,13 @@ src/_i18n-v0.1.1/src/i18n.js
             allowTime,
             dateFormat,
             timeFormat,
-            tzFormat;
+            tzFormat,
+            isoDatesLen = isoDates.length,
+            isoTimesLen = isoTimes.length;
 
         if (match) {
             getParsingFlags(config).iso = true;
-
-            for (i = 0, l = isoDates.length; i < l; i++) {
+            for (i = 0, l = isoDatesLen; i < l; i++) {
                 if (isoDates[i][1].exec(match[1])) {
                     dateFormat = isoDates[i][0];
                     allowTime = isoDates[i][2] !== false;
@@ -27862,7 +27876,7 @@ src/_i18n-v0.1.1/src/i18n.js
                 return;
             }
             if (match[3]) {
-                for (i = 0, l = isoTimes.length; i < l; i++) {
+                for (i = 0, l = isoTimesLen; i < l; i++) {
                     if (isoTimes[i][1].exec(match[3])) {
                         // match[2] should be 'T' or space
                         timeFormat = (match[2] || ' ') + isoTimes[i][0];
@@ -28242,12 +28256,13 @@ src/_i18n-v0.1.1/src/i18n.js
             skipped,
             stringLength = string.length,
             totalParsedInputLength = 0,
-            era;
+            era,
+            tokenLen;
 
         tokens =
             expandFormat(config._f, config._locale).match(formattingTokens) || [];
-
-        for (i = 0; i < tokens.length; i++) {
+        tokenLen = tokens.length;
+        for (i = 0; i < tokenLen; i++) {
             token = tokens[i];
             parsedInput = (string.match(getParseRegexForToken(token, config)) ||
                 [])[0];
@@ -28342,15 +28357,16 @@ src/_i18n-v0.1.1/src/i18n.js
             i,
             currentScore,
             validFormatFound,
-            bestFormatIsValid = false;
+            bestFormatIsValid = false,
+            configfLen = config._f.length;
 
-        if (config._f.length === 0) {
+        if (configfLen === 0) {
             getParsingFlags(config).invalidFormat = true;
             config._d = new Date(NaN);
             return;
         }
 
-        for (i = 0; i < config._f.length; i++) {
+        for (i = 0; i < configfLen; i++) {
             currentScore = 0;
             validFormatFound = false;
             tempConfig = copyConfig({}, config);
@@ -28591,7 +28607,8 @@ src/_i18n-v0.1.1/src/i18n.js
     function isDurationValid(m) {
         var key,
             unitHasDecimal = false,
-            i;
+            i,
+            orderLen = ordering.length;
         for (key in m) {
             if (
                 hasOwnProp(m, key) &&
@@ -28604,7 +28621,7 @@ src/_i18n-v0.1.1/src/i18n.js
             }
         }
 
-        for (i = 0; i < ordering.length; ++i) {
+        for (i = 0; i < orderLen; ++i) {
             if (m[ordering[i]]) {
                 if (unitHasDecimal) {
                     return false; // only allow non-integers for smallest unit
@@ -28929,7 +28946,8 @@ src/_i18n-v0.1.1/src/i18n.js
         // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
         // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
         // and further modified to allow for strings containing both week and day
-        isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
+        isoRegex =
+            /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
 
     function createDuration(input, key) {
         var duration = input,
@@ -29150,9 +29168,10 @@ src/_i18n-v0.1.1/src/i18n.js
                 'ms',
             ],
             i,
-            property;
+            property,
+            propertyLen = properties.length;
 
-        for (i = 0; i < properties.length; i += 1) {
+        for (i = 0; i < propertyLen; i += 1) {
             property = properties[i];
             propertyTest = propertyTest || hasOwnProp(input, property);
         }
@@ -29775,19 +29794,17 @@ src/_i18n-v0.1.1/src/i18n.js
     addRegexToken('NNNN', matchEraName);
     addRegexToken('NNNNN', matchEraNarrow);
 
-    addParseToken(['N', 'NN', 'NNN', 'NNNN', 'NNNNN'], function (
-        input,
-        array,
-        config,
-        token
-    ) {
-        var era = config._locale.erasParse(input, token, config._strict);
-        if (era) {
-            getParsingFlags(config).era = era;
-        } else {
-            getParsingFlags(config).invalidEra = input;
+    addParseToken(
+        ['N', 'NN', 'NNN', 'NNNN', 'NNNNN'],
+        function (input, array, config, token) {
+            var era = config._locale.erasParse(input, token, config._strict);
+            if (era) {
+                getParsingFlags(config).era = era;
+            } else {
+                getParsingFlags(config).invalidEra = input;
+            }
         }
-    });
+    );
 
     addRegexToken('y', matchUnsigned);
     addRegexToken('yy', matchUnsigned);
@@ -30079,14 +30096,12 @@ src/_i18n-v0.1.1/src/i18n.js
     addRegexToken('GGGGG', match1to6, match6);
     addRegexToken('ggggg', match1to6, match6);
 
-    addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (
-        input,
-        week,
-        config,
-        token
-    ) {
-        week[token.substr(0, 2)] = toInt(input);
-    });
+    addWeekParseToken(
+        ['gggg', 'ggggg', 'GGGG', 'GGGGG'],
+        function (input, week, config, token) {
+            week[token.substr(0, 2)] = toInt(input);
+        }
+    );
 
     addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
         week[token] = hooks.parseTwoDigitYear(input);
@@ -31109,7 +31124,7 @@ src/_i18n-v0.1.1/src/i18n.js
 
     //! moment.js
 
-    hooks.version = '2.29.1';
+    hooks.version = '2.29.3';
 
     setHookCallback(createLocal);
 
@@ -31259,13 +31274,13 @@ src/_i18n-v0.1.1/src/i18n.js
         months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split(
             '_'
         ),
-        monthsShort: 'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split(
-            '_'
-        ),
+        monthsShort:
+            'Jan._Feb._März_Apr._Mai_Juni_Juli_Aug._Sep._Okt._Nov._Dez.'.split('_'),
         monthsParseExact: true,
-        weekdays: 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
-            '_'
-        ),
+        weekdays:
+            'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split(
+                '_'
+            ),
         weekdaysShort: 'So._Mo._Di._Mi._Do._Fr._Sa.'.split('_'),
         weekdaysMin: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
         weekdaysParseExact: true,
@@ -31416,9 +31431,8 @@ src/_i18n-v0.1.1/src/i18n.js
         months: 'januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember'.split(
             '_'
         ),
-        monthsShort: 'jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.'.split(
-            '_'
-        ),
+        monthsShort:
+            'jan._feb._mars_apr._mai_juni_juli_aug._sep._okt._nov._des.'.split('_'),
         monthsParseExact: true,
         weekdays: 'søndag_mandag_tirsdag_onsdag_torsdag_fredag_lørdag'.split('_'),
         weekdaysShort: 'sø._ma._ti._on._to._fr._lø.'.split('_'),
@@ -31490,9 +31504,10 @@ src/_i18n-v0.1.1/src/i18n.js
             '_'
         ),
         monthsShort: 'jan_feb_mar_apr_mai_jun_jul_aug_sep_okt_nov_des'.split('_'),
-        weekdays: 'sunnudagur_mánadagur_týsdagur_mikudagur_hósdagur_fríggjadagur_leygardagur'.split(
-            '_'
-        ),
+        weekdays:
+            'sunnudagur_mánadagur_týsdagur_mikudagur_hósdagur_fríggjadagur_leygardagur'.split(
+                '_'
+            ),
         weekdaysShort: 'sun_mán_týs_mik_hós_frí_ley'.split('_'),
         weekdaysMin: 'su_má_tý_mi_hó_fr_le'.split('_'),
         longDateFormat: {
@@ -45591,7 +45606,7 @@ if (typeof define === 'function' && define.amd) {
         var _this3 = this;
 
         if (this.i18nFormat && this.i18nFormat.parse) {
-          res = this.i18nFormat.parse(res, options, resolved.usedLng, resolved.usedNS, resolved.usedKey, {
+          res = this.i18nFormat.parse(res, _objectSpread$2(_objectSpread$2({}, this.options.interpolation.defaultVariables), options), resolved.usedLng, resolved.usedNS, resolved.usedKey, {
             resolved: resolved
           });
         } else if (!options.skipInterpolation) {
@@ -47434,7 +47449,7 @@ if (typeof define === 'function' && define.amd) {
         }
 
         if (this.hasResourceBundle(lng, ns)) return true;
-        if (!this.services.backendConnector.backend) return true;
+        if (!this.services.backendConnector.backend || this.options.resources && !this.options.partialBundledLanguages) return true;
         if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
         return false;
       }
@@ -54446,6 +54461,7 @@ if (typeof define === 'function' && define.amd) {
                         id       : options.id || $this.prop('id') || 'checkbox_' + globalCheckboxId++,
                         prop     : '',
                         className: '',
+                        className_semi: '',
                         selector : null,
                         modernizr: false,
                         selected : false,
@@ -54491,7 +54507,7 @@ if (typeof define === 'function' && define.amd) {
             if (typeof semiSelected == 'boolean'){
                 this.toggleClass(options.className_semi, semiSelected);
                 options.semiSelected = semiSelected;
-                options.semiSelectedValue = semiSelectedValue || options.semiSelectedValue || 'SEMI-NILLER';
+                options.semiSelectedValue = semiSelectedValue || options.semiSelectedValue || 'semi';
             }
 
             this.data('cbx_options', options );
@@ -63150,10 +63166,10 @@ module.exports = g;
 //# sourceMappingURL=noty.js.map
 ;
 /**
- *  PDFObject v2.2.7
+ *  PDFObject v2.2.8
  *  https://github.com/pipwerks/PDFObject
  *  @license
- *  Copyright (c) 2008-2021 Philip Hutchison
+ *  Copyright (c) 2008-2022 Philip Hutchison
  *  MIT-style license: http://pipwerks.mit-license.org/
  *  UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
  */
@@ -63186,7 +63202,7 @@ module.exports = g;
             return false;
     }
 
-    let pdfobjectversion = "2.2.7";
+    let pdfobjectversion = "2.2.8";
     let nav = window.navigator;
     let ua = window.navigator.userAgent;
 
@@ -63335,78 +63351,56 @@ module.exports = g;
 
     };
 
-    let generatePDFJSMarkup = function (targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles){
+    let generatePDFObjectMarkup = function (embedType, targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, PDFJS_URL){
 
         //Ensure target element is empty first
         emptyNodeContents(targetNode);
 
-        let fullURL = PDFJS_URL + "?file=" + encodeURIComponent(url) + pdfOpenFragment;
-        let div = document.createElement("div");
-        let iframe = document.createElement("iframe");
-        
-        iframe.src = fullURL;
-        iframe.className = "pdfobject";
-        iframe.type = "application/pdf";
-        iframe.frameborder = "0";
-        iframe.allow = "fullscreen";
-        iframe.title = title;
-        
-        if(id){
-            iframe.id = id;
+        let source = url;
+
+        if(embedType === "pdfjs"){ 
+            //If PDFJS_URL already contains a ?, assume querystring is in place, and use an ampersand to append PDFJS's file parameter
+            let connector = (PDFJS_URL.indexOf("?") !== -1) ? "&" : "?"; 
+            source = PDFJS_URL + connector + "file=" + encodeURIComponent(url) + pdfOpenFragment;
         }
 
-        if(!omitInlineStyles){
-            div.style.cssText = "position: absolute; top: 0; right: 0; bottom: 0; left: 0;";
-            iframe.style.cssText = "border: none; width: 100%; height: 100%;";
-            targetNode.style.position = "relative";
-            targetNode.style.overflow = "auto";        
-        }
+        let el_type = (embedType === "pdfjs" || embedType === "iframe") ? "iframe" : "embed";
+        let el = document.createElement(el_type);
 
-        div.appendChild(iframe);
-        targetNode.appendChild(div);
-        targetNode.classList.add("pdfobject-container");
-        
-        return targetNode.getElementsByTagName("iframe")[0];
-
-    };
-
-    let generatePDFObjectMarkup = function (embedType, targetNode, targetSelector, url, pdfOpenFragment, width, height, id, title, omitInlineStyles){
-
-        //Ensure target element is empty first
-        emptyNodeContents(targetNode);
-
-        let embed = document.createElement(embedType);
-        embed.src = url + pdfOpenFragment;
-        embed.className = "pdfobject";
-        embed.type = "application/pdf";
-        embed.title = title;
+        el.className = "pdfobject";
+        el.type = "application/pdf";
+        el.title = title;
+        el.src = source;
 
         if(id){
-            embed.id = id;
+            el.id = id;
         }
 
-        if(embedType === "iframe"){
-            embed.allow = "fullscreen";
+        if(el_type === "iframe"){
+            el.allow = "fullscreen";
+            el.frameborder = "0";
         }
 
         if(!omitInlineStyles){
 
-            let style = (embedType === "embed") ? "overflow: auto;" : "border: none;";
+            let style = (el_type === "embed") ? "overflow: auto;" : "border: none;";
 
-            if(targetSelector && targetSelector !== document.body){
+            if(targetNode !== document.body){
+                //assign width and height to target node
                 style += "width: " + width + "; height: " + height + ";";
             } else {
+                //this is a full-page embed, use CSS to fill the viewport
                 style += "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
             }
 
-            embed.style.cssText = style; 
+            el.style.cssText = style; 
 
         }
 
         targetNode.classList.add("pdfobject-container");
-        targetNode.appendChild(embed);
+        targetNode.appendChild(el);
 
-        return targetNode.getElementsByTagName(embedType)[0];
+        return targetNode.getElementsByTagName(el_type)[0];
 
     };
 
@@ -63422,7 +63416,7 @@ module.exports = g;
         let id = (typeof opt.id === "string") ? opt.id : "";
         let page = opt.page || false;
         let pdfOpenParams = opt.pdfOpenParams || {};
-        let fallbackLink = opt.fallbackLink || true;
+        let fallbackLink = (typeof opt.fallbackLink === "string" || typeof opt.fallbackLink === "boolean") ? opt.fallbackLink : true;
         let width = opt.width || "100%";
         let height = opt.height || "100%";
         let title = opt.title || "Embedded PDF";
@@ -63455,7 +63449,7 @@ module.exports = g;
 
         //If the forcePDFJS option is invoked, skip everything else and embed as directed
         if(forcePDFJS && PDFJS_URL){
-            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles);
+            return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, PDFJS_URL);
         }
  
         // --== Embed attempt #2 ==--
@@ -63471,7 +63465,7 @@ module.exports = g;
             //Forcing Safari desktop to use iframe due to freezing bug in macOS 11 (Big Sur)
             let embedtype = (forceIframe || supportRedirect || isSafariDesktop) ? "iframe" : "embed";
             
-            return generatePDFObjectMarkup(embedtype, targetNode, targetSelector, url, pdfOpenFragment, width, height, id, title, omitInlineStyles);
+            return generatePDFObjectMarkup(embedtype, targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles);
 
         }
         
@@ -63479,7 +63473,7 @@ module.exports = g;
         
         //If everything else has failed and a PDFJS fallback is provided, try to use it
         if(PDFJS_URL){
-            return generatePDFJSMarkup(targetNode, url, pdfOpenFragment, PDFJS_URL, id, title, omitInlineStyles);
+            return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, PDFJS_URL);
         }
         
         // --== PDF embed not supported! Use fallback ==-- 
@@ -65002,6 +64996,9 @@ module.exports = g;
         buttons          : as bsButtonGroup
     **********************************************************/
     $.bsRadioButtonGroup = function( options ){
+        options.items = options.items || options.list;
+        options.list = options.list || options.items;
+
         //Set options for RadioGroup
         $.each( options.list, function(index, buttonOptions ){
             buttonOptions = $._bsAdjustOptions( buttonOptions );
@@ -65377,6 +65374,9 @@ module.exports = g;
 
     //BsModalinput = internal object representing an input-element in the form
     function BsModalInput( options, modalForm ){
+        options.items = options.items || options.list;
+        options.list = options.list || options.items;
+
         this.options = options;
         this.modalForm = modalForm;
         this.options.userId = this.options.id;
@@ -65483,7 +65483,7 @@ module.exports = g;
                 case 'iconcheckboxbutton'    : result = false; break;
 
                 case 'selectlist'       :
-                case 'radiobuttongroup' : result = this.getRadioGroup().options.items[0].id; break;
+                case 'radiobuttongroup' : result = this.getRadioGroup().options.list[0].id; break;
 
                 case 'slider'           :
                 case 'timeslider'       : result = this.getSlider().result.min; break;
@@ -68545,6 +68545,38 @@ jquery-bootstrap-modal-promise.js
         }, options));
     };
 
+    /********************************************************************
+    *********************************************************************
+    notyConfirm( text, onOk) or notyConfirm( options ) = Noty-variation of window.confirm = a Noty with OK and Cancel-buttons
+    options = {
+        type  : STRING, default = 'alert'
+        header: OBJECT, default = ícon and name from $.bsNotyIcon and $.bsNotyName
+        text  : The text shown
+        onOk  : FUNCTION - called when the Ok-button is clicked
+    }
+    *********************************************************************
+    *********************************************************************/
+    window.notyConfirm = $.bsConfirm = function(){
+        var options = arguments.length == 1 ? arguments[0] : {text: arguments[0], onOk: arguments[1]};
+
+        options = $.extend({
+            type         : 'info',
+            defaultHeader: true,
+            textAlign    : 'center',
+            layout       : 'center',
+            modal        : true,
+            closeWith    : ['button'],
+            buttons      : [
+                {icon:'fa-times', text: {da:'Annullér', en:'Cancel'},          onClick: options.onCancel },
+                {icon:'fa-check', text: {da:'Ok', en:'Ok'}, class:'min-width', onClick: options.onOk     }
+            ]
+        }, options);
+
+
+        return window.noty( options );
+    };
+
+
 }(jQuery, this.Noty, this, document));
 ;
 /****************************************************************************
@@ -68953,7 +68985,7 @@ jquery-bootstrap-modal-promise.js
                     var $child = $(elemList[index]).children().first();
                     if ($child.length){
                         $child.empty();
-                        $child._bsAddHtml(options.items[itemIndex]);
+                        $child._bsAddHtml(options.list[itemIndex]);
                     }
 
                     itemIndex++;
@@ -69025,6 +69057,10 @@ jquery-bootstrap-modal-promise.js
     **********************************************************/
     var selectboxId = 0;
     $.bsSelectBox = $.bsSelectbox = function( options ){
+
+        options.items = options.items || options.list;
+        options.list = options.list || options.items;
+
         //Add size-class to button-class
         var buttonSizeClass = $._bsGetSizeClass({
                 baseClass   : 'btn',
@@ -69065,12 +69101,12 @@ jquery-bootstrap-modal-promise.js
                 $('<div class="form-control-with-label"></div>')
                     .append( $select );
 
-        //Convert options.items to select-option
+        //Convert options.list to select-option
         var selectedId = null,
             $currentParent = $select,
             itemOptionsList = [{}]; //{} = dummy for the title
 
-        $.each( options.items, function( index, itemOptions ){
+        $.each( options.list, function( index, itemOptions ){
             if (itemOptions.id){
                 itemOptionsList.push(itemOptions);
 
@@ -72914,7 +72950,7 @@ module.exports = localforage_js;
 /*!
  * URI.js - Mutating URLs
  *
- * Version: 1.19.10
+ * Version: 1.19.11
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -72994,7 +73030,7 @@ module.exports = localforage_js;
     return /^[0-9]+$/.test(value);
   }
 
-  URI.version = '1.19.10';
+  URI.version = '1.19.11';
 
   var p = URI.prototype;
   var hasOwn = Object.prototype.hasOwnProperty;
@@ -73153,6 +73189,8 @@ module.exports = localforage_js;
     parens: /(\([^\)]*\)|\[[^\]]*\]|\{[^}]*\}|<[^>]*>)/g,
   };
   URI.leading_whitespace_expression = /^[\x00-\x20\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/
+  // https://infra.spec.whatwg.org/#ascii-tab-or-newline
+  URI.ascii_tab_whitespace = /[\u0009\u000A\u000D]+/g
   // http://www.iana.org/assignments/uri-schemes.html
   // http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers#Well-known_ports
   URI.defaultPorts = {
@@ -73410,6 +73448,8 @@ module.exports = localforage_js;
     }
 
     string = string.replace(URI.leading_whitespace_expression, '')
+    // https://infra.spec.whatwg.org/#ascii-tab-or-newline
+    string = string.replace(URI.ascii_tab_whitespace, '')
 
     // [protocol"://"[username[":"password]"@"]hostname[":"port]"/"?][path]["?"querystring]["#"fragment]
 
@@ -73431,6 +73471,8 @@ module.exports = localforage_js;
 
     // slashes and backslashes have lost all meaning for the web protocols (https, http, wss, ws)
     string = string.replace(/^(https?|ftp|wss?)?:+[/\\]*/i, '$1://');
+    // slashes and backslashes have lost all meaning for scheme relative URLs
+    string = string.replace(/^[/\\]{2,}/i, '//');
 
     // extract protocol
     if (string.substring(0, 2) === '//') {
@@ -78875,6 +78917,7 @@ Set methodes and options for format degrees, minutes, seconds
         format
         ************************************/
         format: function(value, options, latLngFormat){
+
             function trim(value, lgd, inclZero){
                 var result = ''+value;
                 if (options.truncate){
@@ -78931,7 +78974,6 @@ Set methodes and options for format degrees, minutes, seconds
                     else
                         i++;
             }
-
             return result;
         },
 
@@ -78940,10 +78982,10 @@ Set methodes and options for format degrees, minutes, seconds
         Using convertMask to convert the different part of the text. Any space is ignored
         ************************************/
         value: function(value, options/*, latLngFormat*/){
-            //toDecimal - Convert a integer value v to a decimal. Eq    toDecimal(89)    = 0.89, toDecimal(9) = 0.9, toDecimal(1234)    = 0.1234
-            function toDecimal(v) {
-                var l = v.toString().length;
-                return v / Math.pow(10, l);
+            //toDecimal - Convert a integer-string s to a decimal.
+            //Eq    toDecimal("89")    = 0.89, toDecimal("9") = 0.9, toDecimal("0001")    = 0.0001
+            function toDecimal(s) {
+                return parseFloat('0.'+s);
             }
 
             value = value.toUpperCase().trim();
@@ -78991,23 +79033,27 @@ Set methodes and options for format degrees, minutes, seconds
             var split = value.split(/\D/),
                 result = 0,
                 convertMaskIndex = 0,
-                i, nextValue;
-            for (i=0; i<split.length; i++ ){
-                nextValue = parseInt(split[i]);
-                if (!isNaN(nextValue)){
+                valueStr, valueInt;
+
+            for (var i=0; i<split.length; i++ ){
+                valueStr = split[i];
+                valueInt = parseInt(valueStr);
+
+                if (!isNaN(valueInt)){
                     switch (options.convertMask[convertMaskIndex]){
-                        case 'DDD' : result = result + nextValue;                 break;
-                        case 'MM'  : result = result + nextValue/60;              break;
-                        case 'mmm' : result = result + toDecimal(nextValue)/60;   break;
-                        case 's'   : result = result + toDecimal(nextValue)/3600; break;
-                        case 'SS'  : result = result + nextValue/3600;            break;
-                        case 'dddd': result = result + toDecimal(nextValue);      break;
+                        case 'DDD' : result = result + valueInt;                 break;
+                        case 'MM'  : result = result + valueInt/60;              break;
+                        case 'mmm' : result = result + toDecimal(valueStr)/60;   break;
+                        case 's'   : result = result + toDecimal(valueStr)/3600; break;
+                        case 'SS'  : result = result + valueInt/3600;            break;
+                        case 'dddd': result = result + toDecimal(valueStr);      break;
                     }
                     convertMaskIndex++;
                     if (convertMaskIndex >= options.convertMask.length)
                         break;
                 }
             }
+
             return sign*result;
         },
 
@@ -81745,122 +81791,568 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
 }(jQuery, this, document));
 
 ;
-/**
- * EvEmitter v1.1.0
- * Lil' event emitter
- * MIT License
+/*!
+ * EventEmitter v4.2.11 - git.io/ee
+ * Unlicense - http://unlicense.org/
+ * Oliver Caldwell - http://oli.me.uk/
+ * @preserve
  */
 
-/* jshint unused: true, undef: true, strict: true */
+;(function () {
+    'use strict';
 
-( function( global, factory ) {
-  // universal module definition
-  /* jshint strict: false */ /* globals define, module, window */
-  if ( typeof define == 'function' && define.amd ) {
-    // AMD - RequireJS
-    define( factory );
-  } else if ( typeof module == 'object' && module.exports ) {
-    // CommonJS - Browserify, Webpack
-    module.exports = factory();
-  } else {
-    // Browser globals
-    global.EvEmitter = factory();
-  }
+    /**
+     * Class for managing events.
+     * Can be extended to provide event functionality in other classes.
+     *
+     * @class EventEmitter Manages event registering and emitting.
+     */
+    function EventEmitter() {}
 
-}( typeof window != 'undefined' ? window : this, function() {
+    // Shortcuts to improve speed and size
+    var proto = EventEmitter.prototype;
+    var exports = this;
+    var originalGlobalValue = exports.EventEmitter;
 
-"use strict";
+    /**
+     * Finds the index of the listener for the event in its storage array.
+     *
+     * @param {Function[]} listeners Array of listeners to search through.
+     * @param {Function} listener Method to look for.
+     * @return {Number} Index of the specified listener, -1 if not found
+     * @api private
+     */
+    function indexOfListener(listeners, listener) {
+        var i = listeners.length;
+        while (i--) {
+            if (listeners[i].listener === listener) {
+                return i;
+            }
+        }
 
-function EvEmitter() {}
-
-var proto = EvEmitter.prototype;
-
-proto.on = function( eventName, listener ) {
-  if ( !eventName || !listener ) {
-    return;
-  }
-  // set events hash
-  var events = this._events = this._events || {};
-  // set listeners array
-  var listeners = events[ eventName ] = events[ eventName ] || [];
-  // only add once
-  if ( listeners.indexOf( listener ) == -1 ) {
-    listeners.push( listener );
-  }
-
-  return this;
-};
-
-proto.once = function( eventName, listener ) {
-  if ( !eventName || !listener ) {
-    return;
-  }
-  // add event
-  this.on( eventName, listener );
-  // set once flag
-  // set onceEvents hash
-  var onceEvents = this._onceEvents = this._onceEvents || {};
-  // set onceListeners object
-  var onceListeners = onceEvents[ eventName ] = onceEvents[ eventName ] || {};
-  // set flag
-  onceListeners[ listener ] = true;
-
-  return this;
-};
-
-proto.off = function( eventName, listener ) {
-  var listeners = this._events && this._events[ eventName ];
-  if ( !listeners || !listeners.length ) {
-    return;
-  }
-  var index = listeners.indexOf( listener );
-  if ( index != -1 ) {
-    listeners.splice( index, 1 );
-  }
-
-  return this;
-};
-
-proto.emitEvent = function( eventName, args ) {
-  var listeners = this._events && this._events[ eventName ];
-  if ( !listeners || !listeners.length ) {
-    return;
-  }
-  // copy over to avoid interference if .off() in listener
-  listeners = listeners.slice(0);
-  args = args || [];
-  // once stuff
-  var onceListeners = this._onceEvents && this._onceEvents[ eventName ];
-
-  for ( var i=0; i < listeners.length; i++ ) {
-    var listener = listeners[i]
-    var isOnce = onceListeners && onceListeners[ listener ];
-    if ( isOnce ) {
-      // remove listener
-      // remove before trigger to prevent recursion
-      this.off( eventName, listener );
-      // unset once flag
-      delete onceListeners[ listener ];
+        return -1;
     }
-    // trigger listener
-    listener.apply( this, args );
-  }
 
-  return this;
-};
+    /**
+     * Alias a method while keeping the context correct, to allow for overwriting of target method.
+     *
+     * @param {String} name The name of the target method.
+     * @return {Function} The aliased method
+     * @api private
+     */
+    function alias(name) {
+        return function aliasClosure() {
+            return this[name].apply(this, arguments);
+        };
+    }
 
-proto.allOff = function() {
-  delete this._events;
-  delete this._onceEvents;
-};
+    /**
+     * Returns the listener array for the specified event.
+     * Will initialise the event object and listener arrays if required.
+     * Will return an object if you use a regex search. The object contains keys for each matched event. So /ba[rz]/ might return an object containing bar and baz. But only if you have either defined them with defineEvent or added some listeners to them.
+     * Each property in the object response is an array of listener functions.
+     *
+     * @param {String|RegExp} evt Name of the event to return the listeners from.
+     * @return {Function[]|Object} All listener functions for the event.
+     */
+    proto.getListeners = function getListeners(evt) {
+        var events = this._getEvents();
+        var response;
+        var key;
 
-return EvEmitter;
+        // Return a concatenated array of all matching events if
+        // the selector is a regular expression.
+        if (evt instanceof RegExp) {
+            response = {};
+            for (key in events) {
+                if (events.hasOwnProperty(key) && evt.test(key)) {
+                    response[key] = events[key];
+                }
+            }
+        }
+        else {
+            response = events[evt] || (events[evt] = []);
+        }
 
-}));
+        return response;
+    };
+
+    /**
+     * Takes a list of listener objects and flattens it into a list of listener functions.
+     *
+     * @param {Object[]} listeners Raw listener objects.
+     * @return {Function[]} Just the listener functions.
+     */
+    proto.flattenListeners = function flattenListeners(listeners) {
+        var flatListeners = [];
+        var i;
+
+        for (i = 0; i < listeners.length; i += 1) {
+            flatListeners.push(listeners[i].listener);
+        }
+
+        return flatListeners;
+    };
+
+    /**
+     * Fetches the requested listeners via getListeners but will always return the results inside an object. This is mainly for internal use but others may find it useful.
+     *
+     * @param {String|RegExp} evt Name of the event to return the listeners from.
+     * @return {Object} All listener functions for an event in an object.
+     */
+    proto.getListenersAsObject = function getListenersAsObject(evt) {
+        var listeners = this.getListeners(evt);
+        var response;
+
+        if (listeners instanceof Array) {
+            response = {};
+            response[evt] = listeners;
+        }
+
+        return response || listeners;
+    };
+
+    /**
+     * Adds a listener function to the specified event.
+     * The listener will not be added if it is a duplicate.
+     * If the listener returns true then it will be removed after it is called.
+     * If you pass a regular expression as the event name then the listener will be added to all events that match it.
+     *
+     * @param {String|RegExp} evt Name of the event to attach the listener to.
+     * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.addListener = function addListener(evt, listener) {
+        var listeners = this.getListenersAsObject(evt);
+        var listenerIsWrapped = typeof listener === 'object';
+        var key;
+
+        for (key in listeners) {
+            if (listeners.hasOwnProperty(key) && indexOfListener(listeners[key], listener) === -1) {
+                listeners[key].push(listenerIsWrapped ? listener : {
+                    listener: listener,
+                    once: false
+                });
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * Alias of addListener
+     */
+    proto.on = alias('addListener');
+
+    /**
+     * Semi-alias of addListener. It will add a listener that will be
+     * automatically removed after its first execution.
+     *
+     * @param {String|RegExp} evt Name of the event to attach the listener to.
+     * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.addOnceListener = function addOnceListener(evt, listener) {
+        return this.addListener(evt, {
+            listener: listener,
+            once: true
+        });
+    };
+
+    /**
+     * Alias of addOnceListener.
+     */
+    proto.once = alias('addOnceListener');
+
+    /**
+     * Defines an event name. This is required if you want to use a regex to add a listener to multiple events at once. If you don't do this then how do you expect it to know what event to add to? Should it just add to every possible match for a regex? No. That is scary and bad.
+     * You need to tell it what event names should be matched by a regex.
+     *
+     * @param {String} evt Name of the event to create.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.defineEvent = function defineEvent(evt) {
+        this.getListeners(evt);
+        return this;
+    };
+
+    /**
+     * Uses defineEvent to define multiple events.
+     *
+     * @param {String[]} evts An array of event names to define.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.defineEvents = function defineEvents(evts) {
+        for (var i = 0; i < evts.length; i += 1) {
+            this.defineEvent(evts[i]);
+        }
+        return this;
+    };
+
+    /**
+     * Removes a listener function from the specified event.
+     * When passed a regular expression as the event name, it will remove the listener from all events that match it.
+     *
+     * @param {String|RegExp} evt Name of the event to remove the listener from.
+     * @param {Function} listener Method to remove from the event.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.removeListener = function removeListener(evt, listener) {
+        var listeners = this.getListenersAsObject(evt);
+        var index;
+        var key;
+
+        for (key in listeners) {
+            if (listeners.hasOwnProperty(key)) {
+                index = indexOfListener(listeners[key], listener);
+
+                if (index !== -1) {
+                    listeners[key].splice(index, 1);
+                }
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * Alias of removeListener
+     */
+    proto.off = alias('removeListener');
+
+    /**
+     * Adds listeners in bulk using the manipulateListeners method.
+     * If you pass an object as the second argument you can add to multiple events at once. The object should contain key value pairs of events and listeners or listener arrays. You can also pass it an event name and an array of listeners to be added.
+     * You can also pass it a regular expression to add the array of listeners to all events that match it.
+     * Yeah, this function does quite a bit. That's probably a bad thing.
+     *
+     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add to multiple events at once.
+     * @param {Function[]} [listeners] An optional array of listener functions to add.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.addListeners = function addListeners(evt, listeners) {
+        // Pass through to manipulateListeners
+        return this.manipulateListeners(false, evt, listeners);
+    };
+
+    /**
+     * Removes listeners in bulk using the manipulateListeners method.
+     * If you pass an object as the second argument you can remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
+     * You can also pass it an event name and an array of listeners to be removed.
+     * You can also pass it a regular expression to remove the listeners from all events that match it.
+     *
+     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to remove from multiple events at once.
+     * @param {Function[]} [listeners] An optional array of listener functions to remove.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.removeListeners = function removeListeners(evt, listeners) {
+        // Pass through to manipulateListeners
+        return this.manipulateListeners(true, evt, listeners);
+    };
+
+    /**
+     * Edits listeners in bulk. The addListeners and removeListeners methods both use this to do their job. You should really use those instead, this is a little lower level.
+     * The first argument will determine if the listeners are removed (true) or added (false).
+     * If you pass an object as the second argument you can add/remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
+     * You can also pass it an event name and an array of listeners to be added/removed.
+     * You can also pass it a regular expression to manipulate the listeners of all events that match it.
+     *
+     * @param {Boolean} remove True if you want to remove listeners, false if you want to add.
+     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add/remove from multiple events at once.
+     * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.manipulateListeners = function manipulateListeners(remove, evt, listeners) {
+        var i;
+        var value;
+        var single = remove ? this.removeListener : this.addListener;
+        var multiple = remove ? this.removeListeners : this.addListeners;
+
+        // If evt is an object then pass each of its properties to this method
+        if (typeof evt === 'object' && !(evt instanceof RegExp)) {
+            for (i in evt) {
+                if (evt.hasOwnProperty(i) && (value = evt[i])) {
+                    // Pass the single listener straight through to the singular method
+                    if (typeof value === 'function') {
+                        single.call(this, i, value);
+                    }
+                    else {
+                        // Otherwise pass back to the multiple function
+                        multiple.call(this, i, value);
+                    }
+                }
+            }
+        }
+        else {
+            // So evt must be a string
+            // And listeners must be an array of listeners
+            // Loop over it and pass each one to the multiple method
+            i = listeners.length;
+            while (i--) {
+                single.call(this, evt, listeners[i]);
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * Removes all listeners from a specified event.
+     * If you do not specify an event then all listeners will be removed.
+     * That means every event will be emptied.
+     * You can also pass a regex to remove all events that match it.
+     *
+     * @param {String|RegExp} [evt] Optional name of the event to remove all listeners for. Will remove from every event if not passed.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.removeEvent = function removeEvent(evt) {
+        var type = typeof evt;
+        var events = this._getEvents();
+        var key;
+
+        // Remove different things depending on the state of evt
+        if (type === 'string') {
+            // Remove all listeners for the specified event
+            delete events[evt];
+        }
+        else if (evt instanceof RegExp) {
+            // Remove all events matching the regex.
+            for (key in events) {
+                if (events.hasOwnProperty(key) && evt.test(key)) {
+                    delete events[key];
+                }
+            }
+        }
+        else {
+            // Remove all listeners in all events
+            delete this._events;
+        }
+
+        return this;
+    };
+
+    /**
+     * Alias of removeEvent.
+     *
+     * Added to mirror the node API.
+     */
+    proto.removeAllListeners = alias('removeEvent');
+
+    /**
+     * Emits an event of your choice.
+     * When emitted, every listener attached to that event will be executed.
+     * If you pass the optional argument array then those arguments will be passed to every listener upon execution.
+     * Because it uses `apply`, your array of arguments will be passed as if you wrote them out separately.
+     * So they will not arrive within the array on the other side, they will be separate.
+     * You can also pass a regular expression to emit to all events that match it.
+     *
+     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
+     * @param {Array} [args] Optional array of arguments to be passed to each listener.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.emitEvent = function emitEvent(evt, args) {
+        var listenersMap = this.getListenersAsObject(evt);
+        var listeners;
+        var listener;
+        var i;
+        var key;
+        var response;
+
+        for (key in listenersMap) {
+            if (listenersMap.hasOwnProperty(key)) {
+                listeners = listenersMap[key].slice(0);
+                i = listeners.length;
+
+                while (i--) {
+                    // If the listener returns true then it shall be removed from the event
+                    // The function is executed either with a basic call or an apply if there is an args array
+                    listener = listeners[i];
+
+                    if (listener.once === true) {
+                        this.removeListener(evt, listener.listener);
+                    }
+
+                    response = listener.listener.apply(this, args || []);
+
+                    if (response === this._getOnceReturnValue()) {
+                        this.removeListener(evt, listener.listener);
+                    }
+                }
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * Alias of emitEvent
+     */
+    proto.trigger = alias('emitEvent');
+
+    /**
+     * Subtly different from emitEvent in that it will pass its arguments on to the listeners, as opposed to taking a single array of arguments to pass on.
+     * As with emitEvent, you can pass a regex in place of the event name to emit to all events that match it.
+     *
+     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
+     * @param {...*} Optional additional arguments to be passed to each listener.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.emit = function emit(evt) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        return this.emitEvent(evt, args);
+    };
+
+    /**
+     * Sets the current value to check against when executing listeners. If a
+     * listeners return value matches the one set here then it will be removed
+     * after execution. This value defaults to true.
+     *
+     * @param {*} value The new value to check for when executing listeners.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.setOnceReturnValue = function setOnceReturnValue(value) {
+        this._onceReturnValue = value;
+        return this;
+    };
+
+    /**
+     * Fetches the current value to check against when executing listeners. If
+     * the listeners return value matches this one then it should be removed
+     * automatically. It will return true by default.
+     *
+     * @return {*|Boolean} The current value to check for or the default, true.
+     * @api private
+     */
+    proto._getOnceReturnValue = function _getOnceReturnValue() {
+        if (this.hasOwnProperty('_onceReturnValue')) {
+            return this._onceReturnValue;
+        }
+        else {
+            return true;
+        }
+    };
+
+    /**
+     * Fetches the events object and creates one if required.
+     *
+     * @return {Object} The events storage object.
+     * @api private
+     */
+    proto._getEvents = function _getEvents() {
+        return this._events || (this._events = {});
+    };
+
+    /**
+     * Reverts the global {@link EventEmitter} to its previous value and returns a reference to this version.
+     *
+     * @return {Function} Non conflicting EventEmitter class.
+     */
+    EventEmitter.noConflict = function noConflict() {
+        exports.EventEmitter = originalGlobalValue;
+        return EventEmitter;
+    };
+
+    // Expose the class either via AMD, CommonJS or the global object
+    if (typeof define === 'function' && define.amd) {
+        define(function () {
+            return EventEmitter;
+        });
+    }
+    else if (typeof module === 'object' && module.exports){
+        module.exports = EventEmitter;
+    }
+    else {
+        exports.EventEmitter = EventEmitter;
+    }
+}.call(this));
 
 ;
 /*!
- * imagesLoaded v4.1.4
+ * eventie v1.0.6
+ * event binding helper
+ *   eventie.bind( elem, 'click', myFn )
+ *   eventie.unbind( elem, 'click', myFn )
+ * MIT license
+ */
+
+/*jshint browser: true, undef: true, unused: true */
+/*global define: false, module: false */
+
+( function( window ) {
+
+'use strict';
+
+var docElem = document.documentElement;
+
+var bind = function() {};
+
+function getIEEvent( obj ) {
+  var event = window.event;
+  // add event.target
+  event.target = event.target || event.srcElement || obj;
+  return event;
+}
+
+if ( docElem.addEventListener ) {
+  bind = function( obj, type, fn ) {
+    obj.addEventListener( type, fn, false );
+  };
+} else if ( docElem.attachEvent ) {
+  bind = function( obj, type, fn ) {
+    obj[ type + fn ] = fn.handleEvent ?
+      function() {
+        var event = getIEEvent( obj );
+        fn.handleEvent.call( fn, event );
+      } :
+      function() {
+        var event = getIEEvent( obj );
+        fn.call( obj, event );
+      };
+    obj.attachEvent( "on" + type, obj[ type + fn ] );
+  };
+}
+
+var unbind = function() {};
+
+if ( docElem.removeEventListener ) {
+  unbind = function( obj, type, fn ) {
+    obj.removeEventListener( type, fn, false );
+  };
+} else if ( docElem.detachEvent ) {
+  unbind = function( obj, type, fn ) {
+    obj.detachEvent( "on" + type, obj[ type + fn ] );
+    try {
+      delete obj[ type + fn ];
+    } catch ( err ) {
+      // can't delete window object properties
+      obj[ type + fn ] = undefined;
+    }
+  };
+}
+
+var eventie = {
+  bind: bind,
+  unbind: unbind
+};
+
+// ----- module definition ----- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( eventie );
+} else if ( typeof exports === 'object' ) {
+  // CommonJS
+  module.exports = eventie;
+} else {
+  // browser global
+  window.eventie = eventie;
+}
+
+})( window );
+
+;
+/*!
+ * imagesLoaded v3.2.0
  * JavaScript is all like "You images are done yet or what?"
  * MIT License
  */
@@ -81873,29 +82365,32 @@ return EvEmitter;
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( [
-      'ev-emitter/ev-emitter'
-    ], function( EvEmitter ) {
-      return factory( window, EvEmitter );
+      'eventEmitter/EventEmitter',
+      'eventie/eventie'
+    ], function( EventEmitter, eventie ) {
+      return factory( window, EventEmitter, eventie );
     });
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
       window,
-      require('ev-emitter')
+      require('wolfy87-eventemitter'),
+      require('eventie')
     );
   } else {
     // browser global
     window.imagesLoaded = factory(
       window,
-      window.EvEmitter
+      window.EventEmitter,
+      window.eventie
     );
   }
 
-})( typeof window !== 'undefined' ? window : this,
+})( window,
 
 // --------------------------  factory -------------------------- //
 
-function factory( window, EvEmitter ) {
+function factory( window, EventEmitter, eventie ) {
 
 'use strict';
 
@@ -81912,333 +82407,337 @@ function extend( a, b ) {
   return a;
 }
 
-var arraySlice = Array.prototype.slice;
+var objToString = Object.prototype.toString;
+function isArray( obj ) {
+  return objToString.call( obj ) == '[object Array]';
+}
 
 // turn element or nodeList into an array
 function makeArray( obj ) {
-  if ( Array.isArray( obj ) ) {
+  var ary = [];
+  if ( isArray( obj ) ) {
     // use object if already an array
-    return obj;
-  }
-
-  var isArrayLike = typeof obj == 'object' && typeof obj.length == 'number';
-  if ( isArrayLike ) {
+    ary = obj;
+  } else if ( typeof obj.length == 'number' ) {
     // convert nodeList to array
-    return arraySlice.call( obj );
-  }
-
-  // array of single index
-  return [ obj ];
-}
-
-// -------------------------- imagesLoaded -------------------------- //
-
-/**
- * @param {Array, Element, NodeList, String} elem
- * @param {Object or Function} options - if function, use as callback
- * @param {Function} onAlways - callback function
- */
-function ImagesLoaded( elem, options, onAlways ) {
-  // coerce ImagesLoaded() without new, to be new ImagesLoaded()
-  if ( !( this instanceof ImagesLoaded ) ) {
-    return new ImagesLoaded( elem, options, onAlways );
-  }
-  // use elem as selector string
-  var queryElem = elem;
-  if ( typeof elem == 'string' ) {
-    queryElem = document.querySelectorAll( elem );
-  }
-  // bail if bad element
-  if ( !queryElem ) {
-    console.error( 'Bad element for imagesLoaded ' + ( queryElem || elem ) );
-    return;
-  }
-
-  this.elements = makeArray( queryElem );
-  this.options = extend( {}, this.options );
-  // shift arguments if no options set
-  if ( typeof options == 'function' ) {
-    onAlways = options;
+    for ( var i=0; i < obj.length; i++ ) {
+      ary.push( obj[i] );
+    }
   } else {
-    extend( this.options, options );
+    // array of single index
+    ary.push( obj );
   }
-
-  if ( onAlways ) {
-    this.on( 'always', onAlways );
-  }
-
-  this.getImages();
-
-  if ( $ ) {
-    // add jQuery Deferred object
-    this.jqDeferred = new $.Deferred();
-  }
-
-  // HACK check async to allow time to bind listeners
-  setTimeout( this.check.bind( this ) );
+  return ary;
 }
 
-ImagesLoaded.prototype = Object.create( EvEmitter.prototype );
+  // -------------------------- imagesLoaded -------------------------- //
 
-ImagesLoaded.prototype.options = {};
-
-ImagesLoaded.prototype.getImages = function() {
-  this.images = [];
-
-  // filter & find items if we have an item selector
-  this.elements.forEach( this.addElementImages, this );
-};
-
-/**
- * @param {Node} element
- */
-ImagesLoaded.prototype.addElementImages = function( elem ) {
-  // filter siblings
-  if ( elem.nodeName == 'IMG' ) {
-    this.addImage( elem );
-  }
-  // get background image on element
-  if ( this.options.background === true ) {
-    this.addElementBackgroundImages( elem );
-  }
-
-  // find children
-  // no non-element nodes, #143
-  var nodeType = elem.nodeType;
-  if ( !nodeType || !elementNodeTypes[ nodeType ] ) {
-    return;
-  }
-  var childImgs = elem.querySelectorAll('img');
-  // concat childElems to filterFound array
-  for ( var i=0; i < childImgs.length; i++ ) {
-    var img = childImgs[i];
-    this.addImage( img );
-  }
-
-  // get child background images
-  if ( typeof this.options.background == 'string' ) {
-    var children = elem.querySelectorAll( this.options.background );
-    for ( i=0; i < children.length; i++ ) {
-      var child = children[i];
-      this.addElementBackgroundImages( child );
+  /**
+   * @param {Array, Element, NodeList, String} elem
+   * @param {Object or Function} options - if function, use as callback
+   * @param {Function} onAlways - callback function
+   */
+  function ImagesLoaded( elem, options, onAlways ) {
+    // coerce ImagesLoaded() without new, to be new ImagesLoaded()
+    if ( !( this instanceof ImagesLoaded ) ) {
+      return new ImagesLoaded( elem, options, onAlways );
     }
-  }
-};
-
-var elementNodeTypes = {
-  1: true,
-  9: true,
-  11: true
-};
-
-ImagesLoaded.prototype.addElementBackgroundImages = function( elem ) {
-  var style = getComputedStyle( elem );
-  if ( !style ) {
-    // Firefox returns null if in a hidden iframe https://bugzil.la/548397
-    return;
-  }
-  // get url inside url("...")
-  var reURL = /url\((['"])?(.*?)\1\)/gi;
-  var matches = reURL.exec( style.backgroundImage );
-  while ( matches !== null ) {
-    var url = matches && matches[2];
-    if ( url ) {
-      this.addBackground( url, elem );
+    // use elem as selector string
+    if ( typeof elem == 'string' ) {
+      elem = document.querySelectorAll( elem );
     }
-    matches = reURL.exec( style.backgroundImage );
-  }
-};
 
-/**
- * @param {Image} img
- */
-ImagesLoaded.prototype.addImage = function( img ) {
-  var loadingImage = new LoadingImage( img );
-  this.images.push( loadingImage );
-};
+    this.elements = makeArray( elem );
+    this.options = extend( {}, this.options );
 
-ImagesLoaded.prototype.addBackground = function( url, elem ) {
-  var background = new Background( url, elem );
-  this.images.push( background );
-};
+    if ( typeof options == 'function' ) {
+      onAlways = options;
+    } else {
+      extend( this.options, options );
+    }
 
-ImagesLoaded.prototype.check = function() {
-  var _this = this;
-  this.progressedCount = 0;
-  this.hasAnyBroken = false;
-  // complete if no images
-  if ( !this.images.length ) {
-    this.complete();
-    return;
-  }
+    if ( onAlways ) {
+      this.on( 'always', onAlways );
+    }
 
-  function onProgress( image, elem, message ) {
-    // HACK - Chrome triggers event before object properties have changed. #83
+    this.getImages();
+
+    if ( $ ) {
+      // add jQuery Deferred object
+      this.jqDeferred = new $.Deferred();
+    }
+
+    // HACK check async to allow time to bind listeners
+    var _this = this;
     setTimeout( function() {
-      _this.progress( image, elem, message );
+      _this.check();
     });
   }
 
-  this.images.forEach( function( loadingImage ) {
-    loadingImage.once( 'progress', onProgress );
-    loadingImage.check();
-  });
-};
+  ImagesLoaded.prototype = new EventEmitter();
 
-ImagesLoaded.prototype.progress = function( image, elem, message ) {
-  this.progressedCount++;
-  this.hasAnyBroken = this.hasAnyBroken || !image.isLoaded;
-  // progress event
-  this.emitEvent( 'progress', [ this, image, elem ] );
-  if ( this.jqDeferred && this.jqDeferred.notify ) {
-    this.jqDeferred.notify( this, image );
-  }
-  // check if completed
-  if ( this.progressedCount == this.images.length ) {
-    this.complete();
-  }
+  ImagesLoaded.prototype.options = {};
 
-  if ( this.options.debug && console ) {
-    console.log( 'progress: ' + message, image, elem );
-  }
-};
+  ImagesLoaded.prototype.getImages = function() {
+    this.images = [];
 
-ImagesLoaded.prototype.complete = function() {
-  var eventName = this.hasAnyBroken ? 'fail' : 'done';
-  this.isComplete = true;
-  this.emitEvent( eventName, [ this ] );
-  this.emitEvent( 'always', [ this ] );
-  if ( this.jqDeferred ) {
-    var jqMethod = this.hasAnyBroken ? 'reject' : 'resolve';
-    this.jqDeferred[ jqMethod ]( this );
-  }
-};
-
-// --------------------------  -------------------------- //
-
-function LoadingImage( img ) {
-  this.img = img;
-}
-
-LoadingImage.prototype = Object.create( EvEmitter.prototype );
-
-LoadingImage.prototype.check = function() {
-  // If complete is true and browser supports natural sizes,
-  // try to check for image status manually.
-  var isComplete = this.getIsImageComplete();
-  if ( isComplete ) {
-    // report based on naturalWidth
-    this.confirm( this.img.naturalWidth !== 0, 'naturalWidth' );
-    return;
-  }
-
-  // If none of the checks above matched, simulate loading on detached element.
-  this.proxyImage = new Image();
-  this.proxyImage.addEventListener( 'load', this );
-  this.proxyImage.addEventListener( 'error', this );
-  // bind to image as well for Firefox. #191
-  this.img.addEventListener( 'load', this );
-  this.img.addEventListener( 'error', this );
-  this.proxyImage.src = this.img.src;
-};
-
-LoadingImage.prototype.getIsImageComplete = function() {
-  // check for non-zero, non-undefined naturalWidth
-  // fixes Safari+InfiniteScroll+Masonry bug infinite-scroll#671
-  return this.img.complete && this.img.naturalWidth;
-};
-
-LoadingImage.prototype.confirm = function( isLoaded, message ) {
-  this.isLoaded = isLoaded;
-  this.emitEvent( 'progress', [ this, this.img, message ] );
-};
-
-// ----- events ----- //
-
-// trigger specified handler for event type
-LoadingImage.prototype.handleEvent = function( event ) {
-  var method = 'on' + event.type;
-  if ( this[ method ] ) {
-    this[ method ]( event );
-  }
-};
-
-LoadingImage.prototype.onload = function() {
-  this.confirm( true, 'onload' );
-  this.unbindEvents();
-};
-
-LoadingImage.prototype.onerror = function() {
-  this.confirm( false, 'onerror' );
-  this.unbindEvents();
-};
-
-LoadingImage.prototype.unbindEvents = function() {
-  this.proxyImage.removeEventListener( 'load', this );
-  this.proxyImage.removeEventListener( 'error', this );
-  this.img.removeEventListener( 'load', this );
-  this.img.removeEventListener( 'error', this );
-};
-
-// -------------------------- Background -------------------------- //
-
-function Background( url, element ) {
-  this.url = url;
-  this.element = element;
-  this.img = new Image();
-}
-
-// inherit LoadingImage prototype
-Background.prototype = Object.create( LoadingImage.prototype );
-
-Background.prototype.check = function() {
-  this.img.addEventListener( 'load', this );
-  this.img.addEventListener( 'error', this );
-  this.img.src = this.url;
-  // check if image is already complete
-  var isComplete = this.getIsImageComplete();
-  if ( isComplete ) {
-    this.confirm( this.img.naturalWidth !== 0, 'naturalWidth' );
-    this.unbindEvents();
-  }
-};
-
-Background.prototype.unbindEvents = function() {
-  this.img.removeEventListener( 'load', this );
-  this.img.removeEventListener( 'error', this );
-};
-
-Background.prototype.confirm = function( isLoaded, message ) {
-  this.isLoaded = isLoaded;
-  this.emitEvent( 'progress', [ this, this.element, message ] );
-};
-
-// -------------------------- jQuery -------------------------- //
-
-ImagesLoaded.makeJQueryPlugin = function( jQuery ) {
-  jQuery = jQuery || window.jQuery;
-  if ( !jQuery ) {
-    return;
-  }
-  // set local variable
-  $ = jQuery;
-  // $().imagesLoaded()
-  $.fn.imagesLoaded = function( options, callback ) {
-    var instance = new ImagesLoaded( this, options, callback );
-    return instance.jqDeferred.promise( $(this) );
+    // filter & find items if we have an item selector
+    for ( var i=0; i < this.elements.length; i++ ) {
+      var elem = this.elements[i];
+      this.addElementImages( elem );
+    }
   };
-};
-// try making plugin
-ImagesLoaded.makeJQueryPlugin();
 
-// --------------------------  -------------------------- //
+  /**
+   * @param {Node} element
+   */
+  ImagesLoaded.prototype.addElementImages = function( elem ) {
+    // filter siblings
+    if ( elem.nodeName == 'IMG' ) {
+      this.addImage( elem );
+    }
+    // get background image on element
+    if ( this.options.background === true ) {
+      this.addElementBackgroundImages( elem );
+    }
 
-return ImagesLoaded;
+    // find children
+    // no non-element nodes, #143
+    var nodeType = elem.nodeType;
+    if ( !nodeType || !elementNodeTypes[ nodeType ] ) {
+      return;
+    }
+    var childImgs = elem.querySelectorAll('img');
+    // concat childElems to filterFound array
+    for ( var i=0; i < childImgs.length; i++ ) {
+      var img = childImgs[i];
+      this.addImage( img );
+    }
+
+    // get child background images
+    if ( typeof this.options.background == 'string' ) {
+      var children = elem.querySelectorAll( this.options.background );
+      for ( i=0; i < children.length; i++ ) {
+        var child = children[i];
+        this.addElementBackgroundImages( child );
+      }
+    }
+  };
+
+  var elementNodeTypes = {
+    1: true,
+    9: true,
+    11: true
+  };
+
+  ImagesLoaded.prototype.addElementBackgroundImages = function( elem ) {
+    var style = getStyle( elem );
+    // get url inside url("...")
+    var reURL = /url\(['"]*([^'"\)]+)['"]*\)/gi;
+    var matches = reURL.exec( style.backgroundImage );
+    while ( matches !== null ) {
+      var url = matches && matches[1];
+      if ( url ) {
+        this.addBackground( url, elem );
+      }
+      matches = reURL.exec( style.backgroundImage );
+    }
+  };
+
+  // IE8
+  var getStyle = window.getComputedStyle || function( elem ) {
+    return elem.currentStyle;
+  };
+
+  /**
+   * @param {Image} img
+   */
+  ImagesLoaded.prototype.addImage = function( img ) {
+    var loadingImage = new LoadingImage( img );
+    this.images.push( loadingImage );
+  };
+
+  ImagesLoaded.prototype.addBackground = function( url, elem ) {
+    var background = new Background( url, elem );
+    this.images.push( background );
+  };
+
+  ImagesLoaded.prototype.check = function() {
+    var _this = this;
+    this.progressedCount = 0;
+    this.hasAnyBroken = false;
+    // complete if no images
+    if ( !this.images.length ) {
+      this.complete();
+      return;
+    }
+
+    function onProgress( image, elem, message ) {
+      // HACK - Chrome triggers event before object properties have changed. #83
+      setTimeout( function() {
+        _this.progress( image, elem, message );
+      });
+    }
+
+    for ( var i=0; i < this.images.length; i++ ) {
+      var loadingImage = this.images[i];
+      loadingImage.once( 'progress', onProgress );
+      loadingImage.check();
+    }
+  };
+
+  ImagesLoaded.prototype.progress = function( image, elem, message ) {
+    this.progressedCount++;
+    this.hasAnyBroken = this.hasAnyBroken || !image.isLoaded;
+    // progress event
+    this.emit( 'progress', this, image, elem );
+    if ( this.jqDeferred && this.jqDeferred.notify ) {
+      this.jqDeferred.notify( this, image );
+    }
+    // check if completed
+    if ( this.progressedCount == this.images.length ) {
+      this.complete();
+    }
+
+    if ( this.options.debug && console ) {
+      console.log( 'progress: ' + message, image, elem );
+    }
+  };
+
+  ImagesLoaded.prototype.complete = function() {
+    var eventName = this.hasAnyBroken ? 'fail' : 'done';
+    this.isComplete = true;
+    this.emit( eventName, this );
+    this.emit( 'always', this );
+    if ( this.jqDeferred ) {
+      var jqMethod = this.hasAnyBroken ? 'reject' : 'resolve';
+      this.jqDeferred[ jqMethod ]( this );
+    }
+  };
+
+  // --------------------------  -------------------------- //
+
+  function LoadingImage( img ) {
+    this.img = img;
+  }
+
+  LoadingImage.prototype = new EventEmitter();
+
+  LoadingImage.prototype.check = function() {
+    // If complete is true and browser supports natural sizes,
+    // try to check for image status manually.
+    var isComplete = this.getIsImageComplete();
+    if ( isComplete ) {
+      // report based on naturalWidth
+      this.confirm( this.img.naturalWidth !== 0, 'naturalWidth' );
+      return;
+    }
+
+    // If none of the checks above matched, simulate loading on detached element.
+    this.proxyImage = new Image();
+    eventie.bind( this.proxyImage, 'load', this );
+    eventie.bind( this.proxyImage, 'error', this );
+    // bind to image as well for Firefox. #191
+    eventie.bind( this.img, 'load', this );
+    eventie.bind( this.img, 'error', this );
+    this.proxyImage.src = this.img.src;
+  };
+
+  LoadingImage.prototype.getIsImageComplete = function() {
+    return this.img.complete && this.img.naturalWidth !== undefined;
+  };
+
+  LoadingImage.prototype.confirm = function( isLoaded, message ) {
+    this.isLoaded = isLoaded;
+    this.emit( 'progress', this, this.img, message );
+  };
+
+  // ----- events ----- //
+
+  // trigger specified handler for event type
+  LoadingImage.prototype.handleEvent = function( event ) {
+    var method = 'on' + event.type;
+    if ( this[ method ] ) {
+      this[ method ]( event );
+    }
+  };
+
+  LoadingImage.prototype.onload = function() {
+    this.confirm( true, 'onload' );
+    this.unbindEvents();
+  };
+
+  LoadingImage.prototype.onerror = function() {
+    this.confirm( false, 'onerror' );
+    this.unbindEvents();
+  };
+
+  LoadingImage.prototype.unbindEvents = function() {
+    eventie.unbind( this.proxyImage, 'load', this );
+    eventie.unbind( this.proxyImage, 'error', this );
+    eventie.unbind( this.img, 'load', this );
+    eventie.unbind( this.img, 'error', this );
+  };
+
+  // -------------------------- Background -------------------------- //
+
+  function Background( url, element ) {
+    this.url = url;
+    this.element = element;
+    this.img = new Image();
+  }
+
+  // inherit LoadingImage prototype
+  Background.prototype = new LoadingImage();
+
+  Background.prototype.check = function() {
+    eventie.bind( this.img, 'load', this );
+    eventie.bind( this.img, 'error', this );
+    this.img.src = this.url;
+    // check if image is already complete
+    var isComplete = this.getIsImageComplete();
+    if ( isComplete ) {
+      this.confirm( this.img.naturalWidth !== 0, 'naturalWidth' );
+      this.unbindEvents();
+    }
+  };
+
+  Background.prototype.unbindEvents = function() {
+    eventie.unbind( this.img, 'load', this );
+    eventie.unbind( this.img, 'error', this );
+  };
+
+  Background.prototype.confirm = function( isLoaded, message ) {
+    this.isLoaded = isLoaded;
+    this.emit( 'progress', this, this.element, message );
+  };
+
+  // -------------------------- jQuery -------------------------- //
+
+  ImagesLoaded.makeJQueryPlugin = function( jQuery ) {
+    jQuery = jQuery || window.jQuery;
+    if ( !jQuery ) {
+      return;
+    }
+    // set local variable
+    $ = jQuery;
+    // $().imagesLoaded()
+    $.fn.imagesLoaded = function( options, callback ) {
+      var instance = new ImagesLoaded( this, options, callback );
+      return instance.jqDeferred.promise( $(this) );
+    };
+  };
+  // try making plugin
+  ImagesLoaded.makeJQueryPlugin();
+
+  // --------------------------  -------------------------- //
+
+  return ImagesLoaded;
 
 });
 
 ;
-;/*! showdown v 1.9.1 - 02-11-2019 */
+;/*! showdown v 2.1.0 - 21-04-2022 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -82340,72 +82839,77 @@ function getDefaultOpts (simple) {
     },
     smartIndentationFix: {
       defaultValue: false,
-      description: 'Tries to smartly fix indentation in es6 strings',
+      describe: 'Tries to smartly fix indentation in es6 strings',
       type: 'boolean'
     },
     disableForced4SpacesIndentedSublists: {
       defaultValue: false,
-      description: 'Disables the requirement of indenting nested sublists by 4 spaces',
+      describe: 'Disables the requirement of indenting nested sublists by 4 spaces',
       type: 'boolean'
     },
     simpleLineBreaks: {
       defaultValue: false,
-      description: 'Parses simple line breaks as <br> (GFM Style)',
+      describe: 'Parses simple line breaks as <br> (GFM Style)',
       type: 'boolean'
     },
     requireSpaceBeforeHeadingText: {
       defaultValue: false,
-      description: 'Makes adding a space between `#` and the header text mandatory (GFM Style)',
+      describe: 'Makes adding a space between `#` and the header text mandatory (GFM Style)',
       type: 'boolean'
     },
     ghMentions: {
       defaultValue: false,
-      description: 'Enables github @mentions',
+      describe: 'Enables github @mentions',
       type: 'boolean'
     },
     ghMentionsLink: {
       defaultValue: 'https://github.com/{u}',
-      description: 'Changes the link generated by @mentions. Only applies if ghMentions option is enabled.',
+      describe: 'Changes the link generated by @mentions. Only applies if ghMentions option is enabled.',
       type: 'string'
     },
     encodeEmails: {
       defaultValue: true,
-      description: 'Encode e-mail addresses through the use of Character Entities, transforming ASCII e-mail addresses into its equivalent decimal entities',
+      describe: 'Encode e-mail addresses through the use of Character Entities, transforming ASCII e-mail addresses into its equivalent decimal entities',
       type: 'boolean'
     },
     openLinksInNewWindow: {
       defaultValue: false,
-      description: 'Open all links in new windows',
+      describe: 'Open all links in new windows',
       type: 'boolean'
     },
     backslashEscapesHTMLTags: {
       defaultValue: false,
-      description: 'Support for HTML Tag escaping. ex: \<div>foo\</div>',
+      describe: 'Support for HTML Tag escaping. ex: \<div>foo\</div>',
       type: 'boolean'
     },
     emoji: {
       defaultValue: false,
-      description: 'Enable emoji support. Ex: `this is a :smile: emoji`',
+      describe: 'Enable emoji support. Ex: `this is a :smile: emoji`',
       type: 'boolean'
     },
     underline: {
       defaultValue: false,
-      description: 'Enable support for underline. Syntax is double or triple underscores: `__underline word__`. With this option enabled, underscores no longer parses into `<em>` and `<strong>`',
+      describe: 'Enable support for underline. Syntax is double or triple underscores: `__underline word__`. With this option enabled, underscores no longer parses into `<em>` and `<strong>`',
+      type: 'boolean'
+    },
+    ellipsis: {
+      defaultValue: true,
+      describe: 'Replaces three dots with the ellipsis unicode character',
       type: 'boolean'
     },
     completeHTMLDocument: {
       defaultValue: false,
-      description: 'Outputs a complete html document, including `<html>`, `<head>` and `<body>` tags',
+      describe: 'Outputs a complete html document, including `<html>`, `<head>` and `<body>` tags',
       type: 'boolean'
     },
     metadata: {
       defaultValue: false,
-      description: 'Enable support for document metadata (defined at the top of the document between `«««` and `»»»` or between `---` and `---`).',
+      describe: 'Enable support for document metadata (defined at the top of the document between `«««` and `»»»` or between `---` and `---`).',
       type: 'boolean'
     },
     splitAdjacentBlockquotes: {
       defaultValue: false,
-      description: 'Split adjacent blockquote blocks',
+      describe: 'Split adjacent blockquote blocks',
       type: 'boolean'
     }
   };
@@ -82623,7 +83127,7 @@ showdown.subParser = function (name, func) {
  * Gets or registers an extension
  * @static
  * @param {string} name
- * @param {object|function=} ext
+ * @param {object|object[]|function=} ext
  * @returns {*}
  */
 showdown.extension = function (name, ext) {
@@ -83210,7 +83714,7 @@ showdown.helper.padEnd = function padEnd (str, targetLength, padString) {
  * POLYFILLS
  */
 // use this instead of builtin is undefined for IE8 compatibility
-if (typeof console === 'undefined') {
+if (typeof (console) === 'undefined') {
   console = {
     warn: function (msg) {
       'use strict';
@@ -84813,7 +85317,7 @@ showdown.Converter = function (converterOptions) {
       for (var n = 0; n < node.childNodes.length; ++n) {
         var child = node.childNodes[n];
         if (child.nodeType === 3) {
-          if (!/\S/.test(child.nodeValue)) {
+          if (!/\S/.test(child.nodeValue) && !/^[ ]+$/.test(child.nodeValue)) {
             node.removeChild(child);
             --n;
           } else {
@@ -84952,12 +85456,12 @@ showdown.Converter = function (converterOptions) {
       var ext = extension[a];
       for (var i = 0; i < langExtensions.length; ++i) {
         if (langExtensions[i] === ext) {
-          langExtensions[i].splice(i, 1);
+          langExtensions.splice(i, 1);
         }
       }
-      for (var ii = 0; ii < outputModifiers.length; ++i) {
+      for (var ii = 0; ii < outputModifiers.length; ++ii) {
         if (outputModifiers[ii] === ext) {
-          outputModifiers[ii].splice(i, 1);
+          outputModifiers.splice(ii, 1);
         }
       }
     }
@@ -85345,7 +85849,7 @@ showdown.subParser('codeSpans', function (text, options, globals) {
 
   text = globals.converter._dispatch('codeSpans.before', text, options, globals);
 
-  if (typeof text === 'undefined') {
+  if (typeof (text) === 'undefined') {
     text = '';
   }
   text = text.replace(/(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/gm,
@@ -85464,6 +85968,10 @@ showdown.subParser('detab', function (text, options, globals) {
 showdown.subParser('ellipsis', function (text, options, globals) {
   'use strict';
 
+  if (!options.ellipsis) {
+    return text;
+  }
+
   text = globals.converter._dispatch('ellipsis.before', text, options, globals);
 
   text = text.replace(/\.\.\./g, '…');
@@ -85541,7 +86049,7 @@ showdown.subParser('encodeBackslashEscapes', function (text, options, globals) {
   text = globals.converter._dispatch('encodeBackslashEscapes.before', text, options, globals);
 
   text = text.replace(/\\(\\)/g, showdown.helper.escapeCharactersCallback);
-  text = text.replace(/\\([`*_{}\[\]()>#+.!~=|-])/g, showdown.helper.escapeCharactersCallback);
+  text = text.replace(/\\([`*_{}\[\]()>#+.!~=|:-])/g, showdown.helper.escapeCharactersCallback);
 
   text = globals.converter._dispatch('encodeBackslashEscapes.after', text, options, globals);
   return text;
@@ -86637,14 +87145,19 @@ showdown.subParser('strikethrough', function (text, options, globals) {
 showdown.subParser('stripLinkDefinitions', function (text, options, globals) {
   'use strict';
 
-  var regex       = /^ {0,3}\[(.+)]:[ \t]*\n?[ \t]*<?([^>\s]+)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n+|(?=¨0))/gm,
-      base64Regex = /^ {0,3}\[(.+)]:[ \t]*\n?[ \t]*<?(data:.+?\/.+?;base64,[A-Za-z0-9+/=\n]+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n\n|(?=¨0)|(?=\n\[))/gm;
+  var regex       = /^ {0,3}\[([^\]]+)]:[ \t]*\n?[ \t]*<?([^>\s]+)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n+|(?=¨0))/gm,
+      base64Regex = /^ {0,3}\[([^\]]+)]:[ \t]*\n?[ \t]*<?(data:.+?\/.+?;base64,[A-Za-z0-9+/=\n]+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n\n|(?=¨0)|(?=\n\[))/gm;
 
   // attacklab: sentinel workarounds for lack of \A and \Z, safari\khtml bug
   text += '¨0';
 
   var replaceFunc = function (wholeMatch, linkId, url, width, height, blankLines, title) {
+
+    // if there aren't two instances of linkId it must not be a reference link so back out
     linkId = linkId.toLowerCase();
+    if (text.toLowerCase().split(linkId).length - 1 < 2) {
+      return wholeMatch;
+    }
     if (url.match(/^data:.+?\/.+?;base64,/)) {
       // remove newlines
       globals.gUrls[linkId] = url.replace(/\s/g, '');
@@ -88551,10 +89064,39 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             this.$outer   = $('<span/>').appendTo(this.$li);
             this.$content = $('<div/>').appendTo(this.$outer);
 
+
+            var content = clone(this.options.content || this.options);
+
+            //Add buttons from this.options.buttonList (if any) to content (once)
+            var buttonList = this.options.buttonList || this.options.buttons;
+            if (buttonList){
+                //Adjust button-options
+                buttonList.forEach( function( options, index ){
+                    options.small = true;
+                    options.type = options.type || 'button';
+                    if (!index)
+                        options.class = (options.class || '') + ' ml-0 ms-0'; //Margin-left = 0 Bootstrap 4 / Bootstrap 5
+
+                });
+
+                //Add div with buttons
+                content = $.isArray(content) ? content : [content];
+                content.push(
+                    $('<div/>')
+                        .addClass('justify-content-start modal-footer')
+                        .css({
+                            'padding'   : 0,
+                            'border-top': 'none'
+                        })
+                        ._bsAppendContent( buttonList )
+                );
+            }
+
+
             if (this.first || !this.hasCheckbox){
                 this.$content
                     .toggleClass('mm-listitem-content', this.type == 'text')
-                    ._bsAddHtml(this.options.content || this.options);
+                    ._bsAddHtml(content);
             }
             else {
                 this.checkbox = $.bsCheckbox({
@@ -88563,7 +89105,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                     multiLines  : true,
                     icon        : this.options.icon,
                     text        : this.options.text,
-                    content     : this.options.content,
+                    content     : content,
                     onClick     : $.proxy(owner._onClick, owner)
                 })
                 .appendTo( this.$content );
@@ -88604,6 +89146,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                     this.$outer.addClass('padding-right-none');
                 }
             }
+
         },
 
         /***********************************
