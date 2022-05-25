@@ -250,6 +250,12 @@ Sections:
         //Find or create div with logo
         if (!$loadingDiv.find('div.logo').length)
             $loadingDiv.append('<div class="logo fcoo-app-color"></div>');
+
+
+        //Find or create div with flashing dots
+        if (!$loadingDiv.find('div.dots').length)
+            $loadingDiv.append('<div class="dots"><span>.</span><span>.</span><span>.</span></div>');
+
     });
 
     //Call Url.adjustUrl() to remove broken values in the url
