@@ -308,13 +308,21 @@ html.loading .hide-for-loading {
 html.no-loading .show-for-loading {
   display: none !important; }
 
+/* Not used
 @keyframes flashingLogo {
+    0%   {opacity: 1;  }
+    50%  {opacity:  .5;}
+    100% {opacity: 1;  }
+}
+*/
+/* Blinking dots from https://martinwolf.org/before-2018/blog/2015/01/pure-css-savingloading-dots-animation/ */
+@keyframes blink {
   0% {
+    opacity: .2; }
+  20% {
     opacity: 1; }
-  50% {
-    opacity: .5; }
   100% {
-    opacity: 1; } }
+    opacity: .2; } }
 
 div.loading {
   position: absolute;
@@ -333,7 +341,8 @@ div.loading {
   opacity: 1;
   cursor: progress; }
   div.loading > div {
-    flex: 0 0 auto;
+    position: absolute;
+    top: 0;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -349,17 +358,30 @@ div.loading {
       div.loading > div.version:empty {
         visibility: hidden; }
     div.loading > div.logo {
-      flex: 1 1 auto;
-      width: 95%;
-      max-width: 600px;
-      background-image: url("images/FCOO_logo_notext.png");
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position: center center;
-      animation-name: flashingLogo;
-      animation-duration: 2s;
-      animation-fill-mode: both;
-      animation-iteration-count: infinite; }
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+      div.loading > div.logo img {
+        width: 95%;
+        max-width: 600px; }
+    div.loading > div.dots {
+      height: 20%;
+      top: 80%;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      font-size: 6rem; }
+      div.loading > div.dots span {
+        color: white;
+        animation-name: blink;
+        animation-duration: 1.4s;
+        animation-iteration-count: infinite;
+        animation-fill-mode: both; }
+        div.loading > div.dots span:nth-child(2) {
+          animation-delay: .2s; }
+        div.loading > div.dots span:nth-child(3) {
+          animation-delay: .4s; }
   html.no-loading div.loading {
     width: 0;
     height: 0;
