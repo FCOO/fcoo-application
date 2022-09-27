@@ -22,9 +22,8 @@ Create and manage the top-menu for FCOO web applications
     **************************************************/
     function defaultTopMenuButton( $menu, options ){
         options = $.extend({}, options, {
-            transparentOnDark: true,
-            bigIcon          : true,
-            square           : true,
+            bigIcon: true,
+            square : true,
         });
         var $result = $.bsButton( options );
         if (options.title)
@@ -84,7 +83,7 @@ Create and manage the top-menu for FCOO web applications
             create: function( /*$menu, elementOptions, menuOptions, topMenu*/ ){
                 //FCOO logo with click to show "About FCOO"
                 return $('<a/>')
-                            .addClass( 'icon-fcoo-app-logo top-menu-item' )
+                            .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-menu-item' )
                             .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
                             .on('click', ns.aboutFCOO);
             },
@@ -324,7 +323,7 @@ Create and manage the top-menu for FCOO web applications
 
         //Create the menu-bar
         var $menu = result.$menu = $('<nav/>')
-                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu")
+                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu fcoo-app-bg-color fcoo-app-text-color btn-fcoo-app-color")
                 .prependTo( $container );
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList

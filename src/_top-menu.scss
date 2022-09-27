@@ -4,17 +4,12 @@ TOP-MENU
 Style for top menu and items (logo, buttons etc)
 *****************************************************/
 
-@mixin text-shadow( $color: black){
-    text-shadow: -1px 0 $color, 0 1px $color, 1px 0 $color, 0 -1px $color; //Black or white border around text to have contract
-}
-
 /***************************************************
 top-menu is like Bootstrap navbar but to avoid
 confussions another name is used
 ***************************************************/
 
 .top-menu-container {
-
     //All elements inside .top-menu-container get same position and opacity
     > * {
         position  : fixed;
@@ -29,17 +24,16 @@ confussions another name is used
 
     .top-menu {
         margin-top: 0px;
-        padding   : $content-padding-x-sm; //Same as .vertical-pre-menu in _touch-menu.scss
+        padding   : $jb-padding-x-sm; //Same as .vertical-pre-menu in _touch-menu.scss
 
-        font-size: $font-size-sm;
-        @include text-shadow();
-
-        .touchevents & {
-            font-size: $font-size-base;
+        font-size: $jb-font-size-sm;
+        .top-menu-header {
+            @include text-shadow();
         }
 
-        @extend .fcoo-app-background;
-        @extend .fcoo-app-color;
+        .touchevents & {
+            font-size: $jb-font-size;
+        }
 
         .top-menu-element-hide { display: none; }
 
@@ -49,9 +43,9 @@ confussions another name is used
         }
 
         > .top-menu-item:not(:first-child) {
-            margin-left: $content-padding-x-sm !important;
+            margin-left: $jb-padding-x-sm !important;
             .touchevents & {
-                margin-left: $content-padding-x !important;
+                margin-left: $jb-padding-x !important;
             }
         }
 
@@ -63,20 +57,17 @@ confussions another name is used
         }
 
         //FCOO-logo inside top menu get fixed size and hover effect
-        .icon-fcoo-app-logo {
-            padding    : 0;
-            margin     : 0;
-            line-height: .5;
+        .icon-fcoo-logo-contrast {
+            padding             : 0;
+            margin              : 0;
+            line-height         : .5;
+            cursor              : pointer;
+            font-size           : 4em;
+            text-decoration-line: none; //Overwrite default underline in Bootstrap 5
+            @include text-shadow();
+            --bs-btn-border-width: 0px;
 
-            opacity    : 0.8;
-            .touchevents & {
-                opacity: 1;
-            }
-            @include hover-focus {
-                opacity: 1;
-                text-decoration: none;
-            }
-            font-size: 4em;
+
         }
 
         //The header is the only element that shrink and grow on resize
@@ -84,6 +75,7 @@ confussions another name is used
             flex-shrink: 1;
             flex-grow  : 1;
             text-align : center;
+            font-family: "Verdana"; //Forsvarsministeriets koncernfælles Designmanual 2018
             font-size  : 1.5em;
             line-height: 1.5;
             @include text-truncate();

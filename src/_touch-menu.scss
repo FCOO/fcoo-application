@@ -13,7 +13,7 @@ Style for touch-menus at the left, right, top and bottom edge
 
 
 
-$border: $modal-content-border-width solid $modal-content-border-color;
+$border: $modal-content-border-width solid var(--fcoo-app-bg-color);
 
 /*
 Two modes:
@@ -147,9 +147,11 @@ Two modes:
 //Left and right menu preMenu
 .vertical-pre-menu {
     border-bottom   : $border;
-    background-color: $header-bg-color;
-    padding         : $content-padding-x-sm; //Same as .top-menu in _top-menu.scss
+    background-color: var(--bs-gray-200);
+    padding         : $jb-padding-x-sm; //Same as .top-menu in _top-menu.scss
 }
+
+
 
 //The container
 .neighbour-container {

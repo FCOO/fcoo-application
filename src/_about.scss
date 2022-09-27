@@ -8,12 +8,12 @@ Style for 'About FCOO' modal-content
 .about-fcoo {
     text-align: center;
     font-size : 0.8 * $font-size-base;
+    font-family: "Verdana"; //Forsvarsministeriets koncernfælles Designmanual 2018
 
-    > * { width: 100%; }
 
     .application-header {
         margin : 0;
-        padding: $content-padding-x-sm;
+        padding: $jb-padding-x-sm;
 
         text-align : center;
         font-size  : 1.5*$font-size-sm;
@@ -22,17 +22,8 @@ Style for 'About FCOO' modal-content
         @include text-truncate();
     }
 
-    .fcoo-logo {
-        $logo-width: 290px;
-        width : $logo-width;
-        height: 60px / 260px * $logo-width;
-        margin: 0.75em auto;
-
-        background-image   : url("images/FCOO_logo_260x60.jpg");
-        background-repeat  : no-repeat;
-        background-position: center center;
-        background-size    : contain;
-
+    img {
+        margin: 1rem auto;
     }
 }
 

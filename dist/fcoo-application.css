@@ -8,68 +8,144 @@
 
 
 ************************************************/
+@use "sass:color";
 /************************************************************
 INCLUDE-JQUERY-BOOTSTRAP-VARIABLES
 USED IN FOR OTHER PACKAGES TO INCLUDE ALL SCSS-FILES NEEDED
 TO HAVE ACCESS TO ALL BOOTSTRAP AND FCOO/JQUERY-BOOTSTRAP SCSS-VARIABLES
 ************************************************************/
-/***********************************************
-JQUERY-BOOTSTRAP: Set and adjust bootstrap default values
-************************************************/
 /************************************************************
-BOOTSTRAP-VARIABLES
+FUNCTIONS
 ************************************************************/
 /***********************************************
 FUNCTIONS TO CONVETRT FROM PX TO REM
 To make it easier to design and calculate dimensions
 the function rem defined
 ************************************************/
+/************************************************************
+HEADER, TITLE, AND FOOTER PADDING AND FONT-SIZE
+Padding are set to button y-padding (moving text to the left)
+************************************************************/
+/************************************************************
+BOOTSTRAP_COLORSTEXT
+
+A copy of the colorws defined in bootstrap/scss_variables.scss
+************************************************************/
+/************************************************************
+VARIABLES-BOOTSTRAP
+Adjust Bootstrap 5 variables default values
+
+Variables should follow the `$component-state-property-size` formula for
+consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+All non-Bootstrap variables are prefixed with $jb-
+
+
+************************************************************/
 /***********************************************
-ADJUST BOOTSTRAP DEFAULT VALUES
+Customize Bootstrap
+See https://getbootstrap.com/docs/5.2/customize/options/ for description
+/star star/ = Differnet from default
 ************************************************/
+/**/
+/**/
+/***********************************************
+OPACITY
+************************************************/
+/***********************************************
+TEXT-COLOR
+************************************************/
+/***********************************************
+BACKGROUND-COLOR
+************************************************/
+/***********************************************
+BORDER-COLOR
+************************************************/
+/***********************************************
+CHECKBOX, RADIO, AND SELECT
+text-color and bg-color for selected item in <select> varies for different browsers.
+text-color = rgb(255, 255, 255)   for all
+    Browser     bg-color
+    Chrome      rgb( 30, 144, 255)
+    Firefox     rgb(  0, 120, 215)
+    Safari      rgb( 30, 144, 255)
+    Edge        rgb(195, 195, 195)  = gray
+
+For checkbox and radio default Bootstrap uses:
+text-color  = $form-check-input-checked-color    = $component-active-color = $white   = rgb(255, 25, 255);
+bg-color    = $form-check-input-checked-bg-color = $component-active-bg    = $primary = rgb(13, 110, 253);
+
+** BUT JQUERY-BOOTSTRAP USES SAME COLORS AS <SELECT> IN CHROME AND SAFARI **
+************************************************/
+/*
+indeterminate colors = checkbox or checkbox-button with semi-selected state
+Use $orange as bg-color and same bg-image as selected and standard border-color
+*/
+/***********************************************
+PADDING AND FONT-SIZE
+Padding and font-size for different sizes of
+    buttons,
+    accordion-, modal-, popup-, and tooltip-header/footer
+************************************************/
+/************************************************************
+Modal and popover header and content
+Bootstrap default = normal size
+************************************************************/
+/***********************************************
+Accordion
+***********************************************/
+/***********************************************
+Card
+***********************************************/
+/***********************************************
+Toast
+***********************************************/
+/***********************************************
+Tables
+For some (unknown) reason the padding of table cells
+are done by scss-variables instead of var(...) ???
+***********************************************/
+/***********************************************
+Nav, Pills and Tabs
+***********************************************/
+/***********************************************
+BUTTONS
+************************************************
+SYNTAX AND RELATIONS IN BOOTSTRAP
+    $input-btn-padding-x[-sm|-lg] = A Value
+    $input-btn-padding-y[-sm|-lg] = A Value
+    $input-btn-font-size[-sm|-lg] = A Value
+    $border-radius[-sm|-lg]       = A Value
+
+Used for button:
+    $btn-padding-y[-sm|-lg]      : $input-btn-padding-y[-sm|-lg] !default;
+    $btn-padding-x[-sm|-lg]      : $input-btn-padding-x[-sm|-lg] !default;
+    $btn-font-size[-sm|-lg]      : $input-btn-font-size[-sm|-lg] !default;
+    $btn-border-radius[-sm|-lg]  : $border-radius[-sm|-lg]       !default;
+
+Used for input
+    $input-padding-y[-sm|-lg]    : $input-btn-padding-y[-sm|-lg] !default;
+    $input-padding-x[-sm|-lg]    : $input-btn-padding-x[-sm|-lg] !default;
+    $input-font-size[-sm|-lg]    : $input-btn-font-size[-sm|-lg] !default;
+    $input-border-radius[-sm|-lg]: $border-radius[-sm|-lg]       !default;
+
+BOOTSTRAP 5 DEFAULT
+    $input-btn-line-height  : 1.5
+*/
+/************************************************************
+Including "size" xs as in Bootstrap 5
+************************************************************/
 /***********************************************
 Adjust bootstrap-variables to only have dimensions
 in integer px from rem
 ************************************************/
-/*Not used. No lg-buttons
-$input-btn-padding-y-lg: .75rem;
-$input-btn-padding-x-lg: $input-btn-padding-y-lg;
-
-Syntax and relations:
-In Bootstrap
-    $input-btn-padding(-x|-y)[-sm|-lg] = A Value
-    $btn-padding(-x|-y)[-sm|-lg] = $input-btn-padding(-x|-y)[-sm|-lg]
-
-
-
-In jquery-bootstrap
-    $input-btn-padding-x-sm = 3px
-    $input-btn-padding-y-sm = 4px
-
-    xs-versions added
-    $input-btn-padding-x-xs = 2px
-    $input-btn-padding-y-xs = 3px
-
-*/
 /************************************************************
-Including "size" xs as in Bootstrap 4
-************************************************************/
-/************************************************************
-Add line-heights for xs
-************************************************************/
-/************************************************************
-Border-colors
+Other adjustments
 ************************************************************/
 /************************************************************
 Make all font-size and margin for header (<h1>, <h2>,...<h6>)
 releative to container (rem -> em)
-************************************************************/
-/* Defalut not changed:
-$font-size-base         : 1rem !default;
-$spacer                 : 1rem !default;
-*/
-/************************************************************
-Set margin for buttons in block
+Default (not changed): $font-size-base = $spacer = 1rem
 ************************************************************/
 /************************************************************
 Adjust dropdown-menu
@@ -78,128 +154,170 @@ Adjust dropdown-menu
 Adjust modal
 ************************************************************/
 /***********************************************
-BOOTSTRAP: scss variables
-************************************************/
-/***********************************************
-JQUERY-BOOTSTRAP: Background-color and text color and Variables
-************************************************/
-/************************************************************
-COLOR
 
-background-color and text-color for
-headers modal, popover, tables, buttons, list-items etc.
+jquery-scroll-container-variables.scss
 
-"$header-" is used for header to modal-windows and popover
-"$title-" is used for headers on content - table, accordion etc.
-"$control-" is used for buttons, list-items etc.
-************************************************************/
+************************************************/
 /************************************************************
 VARIABLES
+
+Defines scss-variables used in jquery-bootstrap
+Some of these variables are based on Bootstrap variables
 ************************************************************/
 /***********************************************
-DEFINE BOOTSTRAP BUTTON STYLE
-$btn-style-name MUST correspond with ns.bsButtonClass
-in src/jquery-bootstrap-button.js
+Checkbox
 ************************************************/
-/************************************************************
-Variables bassed on bootstrop variables
-************************************************************/
-/************************************************************
-HEADER
-Font-sizes for headers are one 'size' smaller than normal font
-$font-size-lg  : 1.25rem    20px
-$font-size-base: 1rem       16px
-$font-size-sm  : .875rem;   14px
-$font-size-xs  : .75rem     12px
-************************************************************/
-/************************************************************
-BUTTON AND MODAL
+/***********************************************
+Button
+************************************************/
+/***********************************************
+Modal
+************************************************/
+/***********************************************
+Button And Modal
 Opacity for semi-transparent and transparent content
-************************************************************/
-/************************************************************
-SQUARE BUTTONS
-Dimentions for square buttons with only icons
-************************************************************/
-/************************************************************
-LABEL
-Font-sizes for labels are same size as header but incl a xxs-size
-************************************************************/
-/************************************************************
-CONTENT
-Unifies padding and font-size for content of modal, accordion, popup etc.
-Using same font-size and vertical/horizontal padding as buttons
-NOTE: For sm and xs y-padding = x-padding
-************************************************************/
-/************************************************************
-MARGIN-BOTTOM
-All elements in modal-windows get same margin-bottom
-************************************************************/
+************************************************/
 /************************************************************
 MIXIN
 ************************************************************/
 /************************************************************
-RIGHT-SIDE-ICON
-Add style to <i> to place it to the right and vertical center
-NOTE: Parent element MUST have @include vertical-align-center();
+PROPERTY-VARIANT
+Varients of different properties
 ************************************************************/
 /************************************************************
-FOCUS
-All elements get same outline when they have focus:
-No outline
-border-color = light blue
+HEADER and FOOTER-VARIANT
+Adjust padding and font-size for header and footer
 ************************************************************/
 /************************************************************
-CONTENT
-Unifies padding for modal, accordion, popup etc.
+BUTTON-VARIANT
+button-text-color-variant
+button-border-color-variant
+button-background-color-variant
+Adjust text-, border-, and background-color for a button
 ************************************************************/
-/************************************************************
-CONTROL-CONTAINER
-Style for div with controls inside modal.
-Must have tabindex:"-1" to work with focus
-************************************************************/
-/************************************************************
-CONTROL BORDER-COLOR
-All control elements get same border-color when normal, hover, active and error
-************************************************************/
-/************************************************************
-CONTROL-COLORS
-Sets all color for text, background, border for normal, :hover, :focus,  :active and .active
-************************************************************/
-/************************************************************
-TYPE-COLOR
-Bg-color and color for different 'type' (warning, alert, info, error, success)
-Used in Noty and Modal
-************************************************************/
-/************************************************************
-HEADER AND TITLE BACKGROUND-COLOR AND COLOR
-Headers for modal, popover, popup etc.
-************************************************************/
-/************************************************************
-color-hover - Background-color and text-color for 'normal' and hover
-************************************************************/
-/************************************************************
-header-colors - Colors for headers
-************************************************************/
-/************************************************************
-title-color - create colors for headers for table and accordion etc.
-************************************************************/
-/************************************************************
-HEADER, TITLE, AND FOOTER PADDING AND FONT-SIZE
-Padding are set to button y-padding (moving text to the left)
-************************************************************/
-/************************************************************
-header-variant
-************************************************************/
-/************************************************************
-title-variant - as header but with same font-size as siblings
-************************************************************/
-/************************************************************
-footer-variant
-************************************************************/
-/************************************************************
-MARGIN-BOTTOM FOR ELEMENTS IN MODAL
-All elements in modal-windows get same margin-bottom
-************************************************************/
+/*****************************************************
+APPLICATION-COLOR-MIXIN
+Mixin for creating specific application-color
+instead of DALO standard dark-green
+
+Note:
+The application also needs to include mixins from jquery-bootstrap by
+
+@import "../bower_components/jquery-bootstrap/src/include-jquery-bootstrap-variables";
+
+
+Eq. To have application-color = red:
+
+@import "../bower_components/jquery-bootstrap/src/include-jquery-bootstrap-variables";
+@import "../bower_components/jquery-bootstrap/src/application-color-mixin";
+@include application-color( red );
+
+*****************************************************/
+/*****************************************************
+APPLICATION-COLOR
+
+Defines default application-color and adjust different jquery-bootstrap and fcoo-application element-styles
+
+See _application-color-mixin.scss for description of application colors
+*****************************************************/
+:root {
+  --_fcoo-default-app-bg-color-0: #3f5b58;
+  --_fcoo-default-app-text-color-0: #fff;
+  --_fcoo-default-app-shadow-color-0: #000;
+  --_fcoo-default-app-bg-color-25: #78a29d;
+  --_fcoo-default-app-text-color-25: #000;
+  --_fcoo-default-app-shadow-color-25: #fff;
+  --_fcoo-default-app-bg-color-50: #c3d6d4;
+  --_fcoo-default-app-text-color-50: #000;
+  --_fcoo-default-app-shadow-color-50: #fff; }
+
+.btn-fcoo-app-color .btn-jb.standard {
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: white;
+  --bs-btn-active-color: white;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-border-color: #fff;
+  --bs-btn-hover-border-color: white;
+  --bs-btn-active-border-color: white;
+  --bs-btn-bg: #3f5b58;
+  --bs-btn-hover-bg: #5c7471;
+  --bs-btn-active-bg: #657c79; }
+
+.btn-fcoo-app-color-25 .btn-jb.standard {
+  --bs-btn-color: #000;
+  --bs-btn-hover-color: #1a1a1a;
+  --bs-btn-active-color: #1a1a1a;
+  --bs-btn-disabled-color: #000;
+  --bs-btn-border-color: #000;
+  --bs-btn-hover-border-color: #1a1a1a;
+  --bs-btn-active-border-color: #1a1a1a;
+  --bs-btn-bg: #78a29d;
+  --bs-btn-hover-bg: #8cb0ac;
+  --bs-btn-active-bg: #93b4b1; }
+
+.btn-fcoo-app-color-50 .btn-jb.standard {
+  --bs-btn-color: #000;
+  --bs-btn-hover-color: #1a1a1a;
+  --bs-btn-active-color: #1a1a1a;
+  --bs-btn-disabled-color: #000;
+  --bs-btn-border-color: #000;
+  --bs-btn-hover-border-color: #1a1a1a;
+  --bs-btn-active-border-color: #1a1a1a;
+  --bs-btn-bg: #c3d6d4;
+  --bs-btn-hover-bg: #ccdcda;
+  --bs-btn-active-bg: #cfdedc; }
+
+:root {
+  --fcoo-app-bg-color: var(--_fcoo-app-bg-color-0, var(--_fcoo-default-app-bg-color-0));
+  --fcoo-app-text-color: var(--_fcoo-app-text-color-0, var(--_fcoo-default-app-text-color-0));
+  --fcoo-app-shadow-color: var(--_fcoo-app-shadow-color-0, var(--_fcoo-default-app-shadow-color-0));
+  --fcoo-default-app-bg-color: var(--_fcoo-default-app-bg-color-0);
+  --fcoo-default-app-text-color: var(--_fcoo-default-app-text-color-0);
+  --fcoo-default-app-shadow-color: var(--_fcoo-default-app-shadow-color-0);
+  --fcoo-app-bg-color-25: var(--_fcoo-app-bg-color-25, var(--_fcoo-default-app-bg-color-25));
+  --fcoo-app-text-color-25: var(--_fcoo-app-text-color-25, var(--_fcoo-default-app-text-color-25));
+  --fcoo-app-bg-color-50: var(--_fcoo-app-bg-color-50, var(--_fcoo-default-app-bg-color-50));
+  --fcoo-app-text-color-50: var(--_fcoo-app-text-color-50, var(--_fcoo-default-app-text-color-50)); }
+
+.fcoo-default-app-colors {
+  color: var(--fcoo-default-app-text-color) !important;
+  background-color: var(--fcoo-default-app-bg-color) !important; }
+
+.fcoo-app-text-color {
+  color: var(--fcoo-app-text-color) !important; }
+
+.fcoo-app-bg-color {
+  background-color: var(--fcoo-app-bg-color) !important; }
+
+.fcoo-app-text-color-25 {
+  color: var(--fcoo-app-text-color-25) !important; }
+
+.fcoo-app-bg-color-25 {
+  background-color: var(--fcoo-app-bg-color-25) !important; }
+
+.fcoo-app-text-color-50 {
+  color: var(--fcoo-app-text-color-50) !important; }
+
+.fcoo-app-bg-color-50 {
+  background-color: var(--fcoo-app-bg-color-50) !important; }
+
+/*****************************************************
+Adjust different parts in jquery-bootstrap and fcoo-application
+*****************************************************/
+:root {
+  --jb-header-color: var(--fcoo-app-text-color-25);
+  --jb-header-bg: var(--fcoo-app-bg-color-25);
+  --jb-inner-header-color: var(--fcoo-app-text-color-50);
+  --jb-inner-header-bg: var(--fcoo-app-bg-color-50); }
+
+.accordion {
+  --bs-accordion-active-color: var(--fcoo-app-text-color-50);
+  --bs-accordion-active-bg: var(--fcoo-app-bg-color-50); }
+
+.mm-menu {
+  --mm-item-opened-color: var(--fcoo-app-text-color-50);
+  --mm-item-opened-bg: var(--fcoo-app-bg-color-50); }
+
 .hide {
   display: none !important; }
 
@@ -233,10 +351,12 @@ Style for FCOO logo as font
 FCOO-LOGO
 
 Style for FCOO logo as font
-icon-fcoo-logo = Default FCOO logo (white)
-icon-fcoo-app-logo = Same as icon-fcoo-logo but in the application color
-fcoo-background = background-color = default blue
-fcoo-app-background = background-color = application background-color
+
+icon-fcoo-logo-default   = Default FCOO logo (white)
+icon-fcoo-logo-contrast  = Logo in contrast color to application color ($fcoo-app-bg-color) = white or black
+icon-fcoo-logo-app-color = Logo in the application color
+
+See src/_application-color.scss for description of application colors
 *****************************************************/
 @font-face {
   font-family: 'fcoo-logo';
@@ -244,7 +364,7 @@ fcoo-app-background = background-color = application background-color
   font-weight: normal;
   font-style: normal; }
 
-.icon-fcoo-logo, .icon-fcoo-app-logo {
+.icon-fcoo-logo-default, .icon-fcoo-logo-contrast, .icon-fcoo-logo-app-color {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'fcoo-logo' !important;
   speak: none;
@@ -256,25 +376,18 @@ fcoo-app-background = background-color = application background-color
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: white; }
-  .icon-fcoo-logo:before, .icon-fcoo-app-logo:before {
+  color: var(--fcoo-logo-color); }
+  .icon-fcoo-logo-default:before, .icon-fcoo-logo-contrast:before, .icon-fcoo-logo-app-color:before {
     content: "\e900"; }
 
-.icon-fcoo-app-logo {
-  color: {APPLICATION_FAVICONCOLOR} !important;
-  color: white  !important; }
+.icon-fcoo-logo-default {
+  --fcoo-logo-color: white; }
 
-.fcoo-color, .fcoo-app-color, .top-menu-container .top-menu {
-  color: white; }
+.icon-fcoo-logo-contrast {
+  --fcoo-logo-color: $fcoo-app-text-color; }
 
-.fcoo-app-color, .top-menu-container .top-menu {
-  color: {APPLICATION_FAVICONCOLOR} !important; }
-
-.fcoo-background, .fcoo-app-background, .top-menu-container .top-menu {
-  background-color: #214b87; }
-
-.fcoo-app-background, .top-menu-container .top-menu {
-  background-color: {APPLICATION_COLOR} !important; }
+.icon-fcoo-logo-app-color {
+  --fcoo-logo-color: $fcoo-app-bg-color; }
 
 /**********************************************************
 fcoo-name = the font used for the FCOO name in the logo - TODO
@@ -291,9 +404,6 @@ fcoo-name = the font used for the FCOO name in the logo - TODO
 
 .fcoo-name {
   font-family: fcoo-name; }
-
-.fcoo-name-color {
-  color: #214b87; }
 
 /*****************************************************
 Style for the <div> covering the page during loading
@@ -329,8 +439,6 @@ div.loading {
   left: 0;
   top: 0;
   z-index: 2147483645;
-  background-color: #214b87;
-  background-color: {APPLICATION_COLOR};
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -342,7 +450,6 @@ div.loading {
   cursor: progress; }
   div.loading > div {
     position: absolute;
-    top: 0;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -351,6 +458,7 @@ div.loading {
     div.loading > div.version {
       font-family: sans-serif;
       font-size: 2rem;
+      top: 0;
       height: 3rem;
       margin-bottom: -3rem;
       background-color: red;
@@ -362,22 +470,21 @@ div.loading {
       display: flex;
       align-items: center;
       justify-content: center; }
-      div.loading > div.logo img {
-        width: 95%;
-        max-width: 600px; }
+      div.loading > div.logo i[class^="icon-fcoo-logo"] {
+        font-size: 90vmin; }
     div.loading > div.dots {
-      height: 20%;
-      top: 80%;
+      height: 1em;
+      bottom: 0;
       display: flex;
       align-items: end;
       justify-content: center;
       font-size: 6rem; }
       div.loading > div.dots span {
-        color: white;
         animation-name: blink;
         animation-duration: 1.4s;
         animation-iteration-count: infinite;
-        animation-fill-mode: both; }
+        animation-fill-mode: both;
+        width: .25em; }
         div.loading > div.dots span:nth-child(2) {
           animation-delay: .2s; }
         div.loading > div.dots span:nth-child(3) {
@@ -476,8 +583,9 @@ confussions another name is used
 .top-menu-container .top-menu {
   margin-top: 0px;
   padding: 0.25rem;
-  font-size: 0.875rem;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+  font-size: 0.875rem; }
+  .top-menu-container .top-menu .top-menu-header {
+    text-shadow: -1px 0 var(--fcoo-app-shadow-color), 0 1px var(--fcoo-app-shadow-color), 1px 0 var(--fcoo-app-shadow-color), 0 -1px var(--fcoo-app-shadow-color); }
   .touchevents .top-menu-container .top-menu {
     font-size: 1rem; }
   .top-menu-container .top-menu .top-menu-element-hide {
@@ -488,26 +596,25 @@ confussions another name is used
   .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
     margin-left: 0.25rem !important; }
     .touchevents .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
-      margin-left: 0.3125rem !important; }
+      margin-left: 0.375rem !important; }
   .top-menu-container .top-menu .left-side {
     margin-right: auto !important; }
   .top-menu-container .top-menu .right-side {
     margin-left: auto !important; }
-  .top-menu-container .top-menu .icon-fcoo-app-logo {
+  .top-menu-container .top-menu .icon-fcoo-logo-contrast {
     padding: 0;
     margin: 0;
     line-height: .5;
-    opacity: 0.8;
-    font-size: 4em; }
-    .touchevents .top-menu-container .top-menu .icon-fcoo-app-logo {
-      opacity: 1; }
-    .top-menu-container .top-menu .icon-fcoo-app-logo:hover, .top-menu-container .top-menu .icon-fcoo-app-logo:focus {
-      opacity: 1;
-      text-decoration: none; }
+    cursor: pointer;
+    font-size: 4em;
+    text-decoration-line: none;
+    text-shadow: -1px 0 var(--fcoo-app-shadow-color), 0 1px var(--fcoo-app-shadow-color), 1px 0 var(--fcoo-app-shadow-color), 0 -1px var(--fcoo-app-shadow-color);
+    --bs-btn-border-width: 0px; }
   .top-menu-container .top-menu .top-menu-header {
     flex-shrink: 1;
     flex-grow: 1;
     text-align: center;
+    font-family: "Verdana";
     font-size: 1.5em;
     line-height: 1.5;
     overflow: hidden;
@@ -517,7 +624,7 @@ confussions another name is used
       display: block;
       visibility: hidden; }
   .top-menu-container .top-menu .form-inline .form-control {
-    padding: 0.1875rem 0.25rem;
+    padding: 0.25rem 0.25rem;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
     border-right: none;
@@ -718,27 +825,20 @@ Style for 'About FCOO' modal-content
 *****************************************************/
 .about-fcoo {
   text-align: center;
-  font-size: 0.8rem; }
-  .about-fcoo > * {
-    width: 100%; }
+  font-size: 0.8rem;
+  font-family: "Verdana"; }
   .about-fcoo .application-header {
     margin: 0;
     padding: 0.25rem;
     text-align: center;
     font-size: 1.3125rem;
     line-height: 1.3125rem;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    text-shadow: -1px 0 var(--fcoo-app-shadow-color), 0 1px var(--fcoo-app-shadow-color), 1px 0 var(--fcoo-app-shadow-color), 0 -1px var(--fcoo-app-shadow-color);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; }
-  .about-fcoo .fcoo-logo {
-    width: 290px;
-    height: 66.9230769231px;
-    margin: 0.75em auto;
-    background-image: url("images/FCOO_logo_260x60.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: contain; }
+  .about-fcoo img {
+    margin: 1rem auto; }
 
 /*****************************************************
 Style for touch menus
@@ -757,21 +857,19 @@ Two modes:
   position: absolute;
   background-color: #fff; }
   .touch-menu-container.left {
-    border-right: 1px solid #868e96; }
+    border-right: 1px solid var(--fcoo-app-bg-color); }
   .touch-menu-container.right {
-    border-left: 1px solid #868e96; }
+    border-left: 1px solid var(--fcoo-app-bg-color); }
   .touch-menu-container.top {
-    border-bottom: 1px solid #868e96; }
+    border-bottom: 1px solid var(--fcoo-app-bg-color); }
   .touch-menu-container.bottom {
-    border-top: 1px solid #868e96; }
+    border-top: 1px solid var(--fcoo-app-bg-color); }
   .touch-menu-container.mode-over {
-    z-index: 1044; }
+    z-index: 1054; }
     .touch-menu-container.mode-over.closed {
-      z-index: 1038; }
-    .touch-menu-container.mode-over:not(.closed) {
-      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5); }
+      z-index: 1048; }
   .touch-menu-container.mode-side {
-    z-index: 1038; }
+    z-index: 1048; }
   .touch-menu-container.opened {
     transition-property: transform !important;
     transition-duration: 0.3s !important;
@@ -819,7 +917,7 @@ Two modes:
   .touch-menu-mask.opened, .touch-menu-mask.closed {
     transition: opacity 0.3s ease-out; }
   .touch-menu-mask.visible {
-    z-index: 1043; }
+    z-index: 1053; }
 
 .horizontal-bar {
   font-size: 2rem;
@@ -830,8 +928,8 @@ Two modes:
   background-color: transparent; }
 
 .vertical-pre-menu {
-  border-bottom: 1px solid #868e96;
-  background-color: #f2f2f2;
+  border-bottom: 1px solid var(--fcoo-app-bg-color);
+  background-color: var(--bs-gray-200);
   padding: 0.25rem; }
 
 .neighbour-container {
@@ -881,27 +979,20 @@ Different versions of sub-icons can be created using different methods in namesp
   right: -0.3125em;
   bottom: -0.3125em;
   font-size: 0.9em;
-  color: #f8f9fa !important;
+  color: var(--bs-btn-bg) !important;
   text-shadow: none; }
-  .active .fa-circle-small-right-bottom, .active
+  .btn:hover .fa-circle-small-right-bottom, .btn:hover
   .fa-square-small-right-bottom {
-    color: #007bff !important; }
-  .semi-selected .fa-circle-small-right-bottom,
-  .active.semi-selected .fa-circle-small-right-bottom, .semi-selected
-  .fa-square-small-right-bottom,
-  .active.semi-selected
+    color: var(--bs-btn-hover-bg) !important; }
+  .accordion-button.collapsed .fa-circle-small-right-bottom, .accordion-button.collapsed
   .fa-square-small-right-bottom {
-    color: #fd7e14 !important; }
-  .card-header .fa-circle-small-right-bottom, .card-header
+    color: var(--bs-accordion-btn-bg) !important; }
+  .accordion-button:not(.collapsed) .fa-circle-small-right-bottom, .accordion-button:not(.collapsed)
   .fa-square-small-right-bottom {
-    color: #e9ecef !important; }
+    color: var(--bs-accordion-active-bg) !important; }
   .semi-transparent .fa-circle-small-right-bottom, .semi-transparent
   .fa-square-small-right-bottom {
     color: #e6e6e6 !important; }
-  .top-menu-container .top-menu .fa-circle-small-right-bottom, .top-menu-container .top-menu
-  .fa-square-small-right-bottom {
-    color: #214b87 !important;
-    color: {APPLICATION_COLOR} !important; }
   .btn .fa-circle-small-right-bottom, .btn
   .fa-square-small-right-bottom {
     right: -0.1875em;

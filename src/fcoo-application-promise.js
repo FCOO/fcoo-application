@@ -57,7 +57,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
                 $('<span/>').text( message ),
                 error.status ? ' (' + error.status  + ')' : null
             ],
-            $details = $('<div style="font-family: monospace" class="d-none error-details"><hr></div>'),
+            $details = $('<div class="d-none error-details font-monospace"><hr></div>'),
             hasDetails = false,
             descKey = error.status ? 'error:'+error.status+'-desc' : '',
             desc = descKey ? i18next.t( descKey ) : '';

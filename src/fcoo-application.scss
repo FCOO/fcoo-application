@@ -8,6 +8,8 @@
 
 
 ************************************************/
+@use "sass:color";
+
 //BOURBON - http://bourbon.io/ version 5
 @import "../bower_components/bourbon/core/bourbon";
 
@@ -20,10 +22,15 @@
 //MODERNIZR-SCSS - https://github.com/FCOO/modernizr-scss
 @import "../bower_components/modernizr-scss/dist/modernizr-scss";
 
-
-
 //JQUERY-BOOTSTRAP VARIABLES AND MIXINS
 @import "../bower_components/jquery-bootstrap/src/include-jquery-bootstrap-variables";
+
+//COLOR-HELPER
+@import "../bower_components/sass-color-helpers/stylesheets/color-helpers";
+
+//APPLICATION COLORS
+@import "application-color-mixin";
+@import "application-color";
 
 //Standard classes
 .hide      { display: none !important; }
@@ -39,6 +46,7 @@ $z-index-top-1: Background for page when not connected
 $z-index-top-2: Background when loading
 *****************************************************/
 @import "variables";
+
 
 /*****************************************************
 Style for FCOO logo as font

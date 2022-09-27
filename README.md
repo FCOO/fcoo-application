@@ -60,31 +60,47 @@ See [fcoo/url.js-extensions](https://github.com/FCOO/url.js-extensions) for desc
 Saves all temporary parameters in `localStorage[fcoo.localStorageTempKey]` to `localStorage[fcoo.localStorageKey]` => Will be reloaded next time
 
 
-### CSS Classes
+### Application colors, logos and CSS-Classes
 
-In `gruntfile.js` for each application (see below) two colors (`color` and `faviconColor`can be defined:
+#### Application-color
 
-    fcoo_grunt_plugin: {
-        options: {
-            "application": {
-	        "color"       : "...",
-	        "faviconColor": "...",
-            ...
-        }
-    }
+Any application using `fcoo-application` gets a default `Application-Color`
 
-The following css classes are defined
+The color is used as background-color in tree different versions:
 
-    .fcoo-color     /* text-color as default color (white) */
-    .fcoo-app-color /* text-color as application color (options.application.faviconColor) */
+- original - Used for main top menu
+- 25% lighten - used for modal headers
+- 50% lighten - used for open menu-items, open accordion and inner modal header     
+ 
+The different colors can be obtained by using the following class-names or css-var:
 
-    .fcoo-background     /* background-color as default color ("FCOO blue")  */
-    .fcoo-app-background /* background-color as application background color (options.application.color)  */
 
-The FCOO logo are provided as at SVG-font and can be applied using the css classes
+| Version  | Lighten | background-color | text-color |
+| :--: | :--: | :--: | :--: |
+| Original    |  | `fcoo-app-bg-color` / `var(--fcoo-app-bg-color)` | `fcoo-app-text-color` / `var(--fcoo-app-text-color)` |
+| 25% lighten | 25%  | `var(--fcoo-app-bg-color-25)` | `var(--fcoo-app-text-color-25)` |
+| 50% lighten | 50% | `var(--fcoo-app-bg-color-50)` | `var(--fcoo-app-text-color-50)` |
 
-    .icon-fcoo-logo      /* FCOO logo in default color (white) */
-    .icon-fcoo-app-logo  /* FCOO logo in the application color (options.application.faviconColor) */
+
+#### FCOO Logo
+
+The FCOO logo are provided as at SVG-font and can be applied using on of tree css classes
+
+- `icon-fcoo-logo-default`   = Default FCOO logo (white)
+- `icon-fcoo-logo-contrast`  = Logo in contrast color to application color = white or black
+- `icon-fcoo-logo-app-color` = Logo in the application color
+ 
+#### Changing the Application-Color 
+The `Application-Color` for a given application can be set using the included scss-mixins `application-color( $color )` in the applications own scss-file.
+
+Eq. To have application-color = red add the following to the scss-file
+
+    @import "../bower_components/jquery-bootstrap/src/include-jquery-bootstrap-variables";
+    @import "../bower_components/jquery-bootstrap/src/application-colors-mixin";
+    @include application-colors( red );
+
+        
+
 
 ### Namespace: `error`. File: `static/error-code-text/request.json.json`. Format: namespace-key-lang
 Translation of standard html errors and descriptions

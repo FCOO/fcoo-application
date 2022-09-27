@@ -20,17 +20,19 @@ Create and display "About FCOO" info and modal-box
                     .append(
                         //Bar with title of application
                         $('<div/>')
-                            .addClass('application-header fcoo-app-color fcoo-app-background')
+                            .addClass('w-100 application-header fcoo-app-bg-color fcoo-app-text-color')
                             .i18n( ns.applicationHeader ),
 
                         //FCOO logo
-                        $('<div/>').addClass('fcoo-logo')
+                        $('<img src="images/FCOO_logo_260x60.jpg"/>')
+
                     ),
 
                 //FCOO name and address and email and link
                 $contact = $('<div/>')
+                    .addClass('w-100')
                     .append(
-                        $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
+                        $('<div/>').addClass('fw-bold').i18n('name:fcoo'),
                         $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
                         $('<span/>').i18n({da:'', en:' - Denmark'})
                     )

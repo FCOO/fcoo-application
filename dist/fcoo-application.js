@@ -20,17 +20,19 @@ Create and display "About FCOO" info and modal-box
                     .append(
                         //Bar with title of application
                         $('<div/>')
-                            .addClass('application-header fcoo-app-color fcoo-app-background')
+                            .addClass('w-100 application-header fcoo-app-bg-color fcoo-app-text-color')
                             .i18n( ns.applicationHeader ),
 
                         //FCOO logo
-                        $('<div/>').addClass('fcoo-logo')
+                        $('<img src="images/FCOO_logo_260x60.jpg"/>')
+
                     ),
 
                 //FCOO name and address and email and link
                 $contact = $('<div/>')
+                    .addClass('w-100')
                     .append(
-                        $('<div/>').addClass('fcoo-name fcoo-name-color font-weight-bold').i18n('name:fcoo'),
+                        $('<div/>').addClass('fw-bold').i18n('name:fcoo'),
                         $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
                         $('<span/>').i18n({da:'', en:' - Denmark'})
                     )
@@ -299,11 +301,13 @@ Sections:
         //Find or create outer div displayed when loading
         var $loadingDiv = $body.find('div.loading');
         $loadingDiv = $loadingDiv.length ? $loadingDiv : $('<div class="loading"></div>' ).prependTo( $body );
-        $loadingDiv.addClass('loading fcoo-app-background');
+        $loadingDiv
+            .removeClass()  //Clean up
+            .empty()
+            .addClass('loading fcoo-default-app-colors');
 
         //Find or create div with version-text (ex. "DEMO")
-        var $versionDiv = $loadingDiv.find('.version');
-        $versionDiv = $versionDiv.length ? $versionDiv : $('<div class="version fcoo-app-color"></div>').appendTo( $loadingDiv );
+        var $versionDiv = $('<div/>').appendTo( $loadingDiv ).addClass('version');
 
         //Test if the path-name contains any of the words defining the version to be none-production
         var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
@@ -320,19 +324,17 @@ Sections:
             }
         });
 
-        //Find or create div with logo
-        if (!$loadingDiv.find('div.logo').length)
-            $loadingDiv.append('<div class="logo"></div>');
+        //Create div with logo
+        $('<div class="logo"></div>')
+            .append('<i class="icon-fcoo-logo-contrast"/>')
+            .appendTo($loadingDiv);
 
-        //Find or create img with logo
-        var $logoDiv = $loadingDiv.find('div.logo');
-        if (!$logoDiv.find('img').length)
-            $logoDiv.append('<img src="images/FCOO_logo_notext.png"/>');
 
         //Find or create div with flashing dots
-        if (!$loadingDiv.find('div.dots').length)
-            $loadingDiv.append('<div class="dots"><span>.</span><span>.</span><span>.</span></div>');
-
+        $('<div/>')
+            .addClass('dots')
+            .append('<span>.</span><span>.</span><span>.</span>')
+            .appendTo($loadingDiv);
     });
 
     //Call Url.adjustUrl() to remove broken values in the url
@@ -1498,7 +1500,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
                 $('<span/>').text( message ),
                 error.status ? ' (' + error.status  + ')' : null
             ],
-            $details = $('<div style="font-family: monospace" class="d-none error-details"><hr></div>'),
+            $details = $('<div class="d-none error-details font-monospace"><hr></div>'),
             hasDetails = false,
             descKey = error.status ? 'error:'+error.status+'-desc' : '',
             desc = descKey ? i18next.t( descKey ) : '';
@@ -1824,9 +1826,8 @@ Create and manage the top-menu for FCOO web applications
     **************************************************/
     function defaultTopMenuButton( $menu, options ){
         options = $.extend({}, options, {
-            transparentOnDark: true,
-            bigIcon          : true,
-            square           : true,
+            bigIcon: true,
+            square : true,
         });
         var $result = $.bsButton( options );
         if (options.title)
@@ -1886,7 +1887,7 @@ Create and manage the top-menu for FCOO web applications
             create: function( /*$menu, elementOptions, menuOptions, topMenu*/ ){
                 //FCOO logo with click to show "About FCOO"
                 return $('<a/>')
-                            .addClass( 'icon-fcoo-app-logo top-menu-item' )
+                            .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-menu-item' )
                             .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
                             .on('click', ns.aboutFCOO);
             },
@@ -2126,7 +2127,7 @@ Create and manage the top-menu for FCOO web applications
 
         //Create the menu-bar
         var $menu = result.$menu = $('<nav/>')
-                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu")
+                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu fcoo-app-bg-color fcoo-app-text-color btn-fcoo-app-color")
                 .prependTo( $container );
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList

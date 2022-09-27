@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "13.2.0",
+  "version": "14.0.0",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -30,6 +30,7 @@
     "modernizr-mixin": "latest",
     "mathsass": "latest",
     "modernizr-scss": "FCOO/modernizr-scss#latest",
+    "sass-color-helpers": "latest",
     "csshake": "^1.5.2"
   },
   "dependencies": {
@@ -52,7 +53,7 @@
     "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^4.1.0",
     "offline": "HubSpot/offline#~0.7.18",
     "imagesloaded": "desandro/imagesloaded#^5.0.0",
-    "jquery-bootstrap": "fcoo/jquery-bootstrap#^2.3.0",
+    "jquery-bootstrap": "fcoo/jquery-bootstrap#^3.0.0",
     "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^2.0.0",
     "jquery-bootstrap-mmenu": "fcoo/jquery-bootstrap-mmenu#^1.0.0",
     "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",

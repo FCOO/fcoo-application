@@ -55,33 +55,29 @@ $sub-icon-font-size: 0.9em;
     right    : $sub-position;
     bottom   : $sub-position;
     font-size: $sub-icon-font-size;
-    color    : $control-bg-color !important;
+    //color of the icon = background-color of the button. Also includes color for selected and semi-selected color
+    color    : var(--bs-btn-bg) !important;
     text-shadow: none;
-    .active & {
-        //When inside a active (selected) button => use active-color
-        color: $control-active-bg-color !important;
-    }
-    .semi-selected &,
-    .active.semi-selected & {
-        //When inside a active and semi-selected button => use active-color
-        color: $semi-selected-bg-color !important;
+
+    //Inside a hovered button => use hover background-color from the button
+    .btn:hover & {
+        color    : var(--bs-btn-hover-bg) !important;
     }
 
-    .card-header & {
-        //When inside a accordion-headeractive (selected) button => use active-color
-        color: $title-bg-color !important;
+
+    //Inside a accordion-header: Use accordion-button bg-colors
+    .accordion-button.collapsed & {
+        color: var(--bs-accordion-btn-bg) !important;
     }
+    .accordion-button:not(.collapsed) & {
+        color: var(--bs-accordion-active-bg) !important;
+    }
+
+
+    //When inside a semi-transparent button => use 'gray' color
     .semi-transparent & {
-        //When inside a semi-transparent button => use 'gray' color
         color: rgb(230,230,230) !important;
     }
-
-    .top-menu-container .top-menu & {
-        //When inside top-menu => color = application background color (or fallback)
-        color: $default-background-color !important;
-        color: #{$app-background-color} !important;
-    }
-
 
     //Adjust placment when inside a button
     .btn & {

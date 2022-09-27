@@ -1,0 +1,77 @@
+/*****************************************************
+APPLICATION-COLOR-MIXIN
+Mixin for creating specific application-color
+instead of DALO standard dark-green
+
+Note:
+The application also needs to include mixins from jquery-bootstrap by
+
+@import "../bower_components/jquery-bootstrap/src/include-jquery-bootstrap-variables";
+
+
+Eq. To have application-color = red:
+
+@import "../bower_components/jquery-bootstrap/src/include-jquery-bootstrap-variables";
+@import "../bower_components/jquery-bootstrap/src/application-color-mixin";
+@include application-color( red );
+
+*****************************************************/
+@mixin application-color($color){
+    @include _application-color($color, "", "div");
+}
+
+
+@function _best_contrast( $color ){
+    @return ch-best-color-contrast($base: $color, $colors: (#fff, #000), $tolerance: 0);
+}
+
+@mixin _application-color($color-0, $prefix: "", $type: ""){
+    $contrast-0: _best_contrast($color-0);
+
+    $color-25: lighten($color-0, 25%);
+    $contrast-25: _best_contrast($color-25);
+
+    $color-50: lighten($color-0, 50%);
+    $contrast-50: _best_contrast($color-50);
+
+    :root {
+        --_fcoo-#{$prefix}app-bg-color-0    : #{$color-0};
+        --_fcoo-#{$prefix}app-text-color-0  : #{$contrast-0};
+        --_fcoo-#{$prefix}app-shadow-color-0: #{_best_contrast($contrast-0)};
+
+        --_fcoo-#{$prefix}app-bg-color-25    : #{$color-25};
+        --_fcoo-#{$prefix}app-text-color-25  : #{_best_contrast($color-25)};
+        --_fcoo-#{$prefix}app-shadow-color-25: #{_best_contrast($contrast-25)};
+
+        --_fcoo-#{$prefix}app-bg-color-50    : #{$color-50};
+        --_fcoo-#{$prefix}app-text-color-50  : #{_best_contrast($color-50)};
+        --_fcoo-#{$prefix}app-shadow-color-50: #{_best_contrast($contrast-50)};
+    }
+
+    //Create css-var for buttons when inside a container with fcoo-application
+    #{$type}.btn-fcoo-app-color {
+        .btn-jb.standard {
+            @include button-text-color-variant( $contrast-0 );
+            @include button-border-color-variant( $contrast-0 );
+            @include button-background-color-variant( $color-0 );
+        }
+    }
+    #{$type}.btn-fcoo-app-color-25 {
+        .btn-jb.standard {
+            @include button-text-color-variant( $contrast-25 );
+            @include button-border-color-variant( $contrast-25 );
+            @include button-background-color-variant( $color-25 );
+        }
+    }
+    #{$type}.btn-fcoo-app-color-50 {
+        .btn-jb.standard {
+            @include button-text-color-variant( $contrast-50 );
+            @include button-border-color-variant( $contrast-50 );
+            @include button-background-color-variant( $color-50 );
+        }
+    }
+
+
+}
+
+

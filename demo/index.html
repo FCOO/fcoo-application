@@ -205,7 +205,7 @@
 
                     },
                     leftMenu  : {
-                        width: 321, 
+                        width: 360, 
                         menuOptions: {
                             onChange: function(id, state, item){
                                 console.log('GLOBAL onChange', id, state, item);
@@ -316,12 +316,31 @@
                     }
             });
 
-            $('<select id="theSelect" style="width:200px"></select><br>'+
-            '<button onClick="fcoo.globalSetting.set(\'language\', \'da\');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button>'+
+            $('<button onClick="fcoo.globalSetting.set(\'language\', \'da\');"><span class="fa fa-lang-da"></span>&nbsp;Dansk</button>'+
             '<button onClick="fcoo.globalSetting.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>'+
             '<button onClick="modalDemo();">Modal demo</button>'+
             '<button onClick="notyDemo();">Noty demo</button>'+
             '<div class="show-for-mouse">Vises kun, hvis der er en mus</div>').appendTo(main.$mainContainer);
+
+        var fileViewModal;
+        $('<button>4xFile-view</button>')
+            .appendTo( main.$mainContainer)
+            .on('click', function(e){
+                fileViewModal = fileViewModal ||
+                    $.bsModal({
+                        header: '4xfile-view',
+                        content: [
+                            { type: 'fileView', fileName:'https://www.soefartsstyrelsen.dk/Documents/Publikationer/DANSKFYRLISTE2018.pdf', header:{icon:'fa-home', text:'Header'}},
+                            { type: 'fileView', fileName:'http://nautiskinformation.soefartsstyrelsen.dk/index.html#/messages/details'},
+                            { type: 'fileView', fileName:'https://www.danskehavnelods.dk/'},
+                            { type: 'fileView', fileName:'https://niord.dma.dk/rest/repo/file/messages/5/55/555306e4-0b0d-4d62-9a55-36ec64539aa4/2/Inmarsat-C.jpg'},
+                            { type: 'fileView', fileName:'https://niord.dma.dk/rest/repo/file/messages/5/55/555306e4-0b0d-4d62-9a55-36ec64539aa4/2/Inmarsat-C.jpg', header:{icon:'fa-home', text:'Header'}}
+                        ],
+                        flexWidth: true,
+                        extraWidth: true,
+                    })
+                fileViewModal.show();
+            });
 
 
 /*
@@ -356,6 +375,8 @@
 
             $.bsButton({
                 icon  : fcoo.settingIcon('fa-map'),
+//                selected: true,
+                class: 'semi-selected',
                 square: true,
              }).appendTo(main.$mainContainer);
 
@@ -386,6 +407,7 @@ main.$mainContainer.append('<br>');
 
             $.bsButton({
                 icon  : fcoo.iconSub('fa-globe', 'fa-clock'),
+                selected: true,
                 square: true,
              }).appendTo(main.$mainContainer);
 

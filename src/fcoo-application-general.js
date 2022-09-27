@@ -226,11 +226,13 @@ Sections:
         //Find or create outer div displayed when loading
         var $loadingDiv = $body.find('div.loading');
         $loadingDiv = $loadingDiv.length ? $loadingDiv : $('<div class="loading"></div>' ).prependTo( $body );
-        $loadingDiv.addClass('loading fcoo-app-background');
+        $loadingDiv
+            .removeClass()  //Clean up
+            .empty()
+            .addClass('loading fcoo-default-app-colors');
 
         //Find or create div with version-text (ex. "DEMO")
-        var $versionDiv = $loadingDiv.find('.version');
-        $versionDiv = $versionDiv.length ? $versionDiv : $('<div class="version fcoo-app-color"></div>').appendTo( $loadingDiv );
+        var $versionDiv = $('<div/>').appendTo( $loadingDiv ).addClass('version');
 
         //Test if the path-name contains any of the words defining the version to be none-production
         var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
@@ -247,19 +249,17 @@ Sections:
             }
         });
 
-        //Find or create div with logo
-        if (!$loadingDiv.find('div.logo').length)
-            $loadingDiv.append('<div class="logo"></div>');
+        //Create div with logo
+        $('<div class="logo"></div>')
+            .append('<i class="icon-fcoo-logo-contrast"/>')
+            .appendTo($loadingDiv);
 
-        //Find or create img with logo
-        var $logoDiv = $loadingDiv.find('div.logo');
-        if (!$logoDiv.find('img').length)
-            $logoDiv.append('<img src="images/FCOO_logo_notext.png"/>');
 
         //Find or create div with flashing dots
-        if (!$loadingDiv.find('div.dots').length)
-            $loadingDiv.append('<div class="dots"><span>.</span><span>.</span><span>.</span></div>');
-
+        $('<div/>')
+            .addClass('dots')
+            .append('<span>.</span><span>.</span><span>.</span>')
+            .appendTo($loadingDiv);
     });
 
     //Call Url.adjustUrl() to remove broken values in the url
