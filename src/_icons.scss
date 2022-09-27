@@ -65,6 +65,11 @@ $sub-icon-font-size: 0.9em;
     }
 
 
+    //Inside a header: Use accordion-button bg-colors
+    .modal-header & {
+        color: var(--jb-header-bg) !important;
+    }
+
     //Inside a accordion-header: Use accordion-button bg-colors
     .accordion-button.collapsed & {
         color: var(--bs-accordion-btn-bg) !important;

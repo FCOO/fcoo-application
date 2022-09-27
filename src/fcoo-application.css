@@ -984,6 +984,9 @@ Different versions of sub-icons can be created using different methods in namesp
   .btn:hover .fa-circle-small-right-bottom, .btn:hover
   .fa-square-small-right-bottom {
     color: var(--bs-btn-hover-bg) !important; }
+  .modal-header .fa-circle-small-right-bottom, .modal-header
+  .fa-square-small-right-bottom {
+    color: var(--jb-header-bg) !important; }
   .accordion-button.collapsed .fa-circle-small-right-bottom, .accordion-button.collapsed
   .fa-square-small-right-bottom {
     color: var(--bs-accordion-btn-bg) !important; }
