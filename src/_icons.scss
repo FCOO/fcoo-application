@@ -55,19 +55,28 @@ $sub-icon-font-size: 0.9em;
     right    : $sub-position;
     bottom   : $sub-position;
     font-size: $sub-icon-font-size;
-    //color of the icon = background-color of the button. Also includes color for selected and semi-selected color
-    color    : var(--bs-btn-bg) !important;
+    //color of the icon = background-color of the button
+    //color    : var(--bs-btn-bg) !important;
+    color    : var(--bs-modal-bg) !important;
     text-shadow: none;
 
-    //Inside a hovered button => use hover background-color from the button
-    .btn:hover & {
-        color    : var(--bs-btn-hover-bg) !important;
+    //Inside button => use background and hover background-color from the button. Also includes color for selected and semi-selected color
+    .btn & {
+        color: var(--bs-btn-bg) !important;
     }
 
+    .btn:hover & {
+        color: var(--bs-btn-hover-bg) !important;
+    }
 
     //Inside a header: Use accordion-button bg-colors
-    .modal-header & {
+    .header-content & {
         color: var(--jb-header-bg) !important;
+    }
+
+    //Inside a footer
+    .footer-content & {
+        color: var(--jb-footer-bg) !important;
     }
 
     //Inside a accordion-header: Use accordion-button bg-colors

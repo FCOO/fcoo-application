@@ -100,6 +100,10 @@
                     icon: fcoo.settingIcon('fa-map'),
                     text: 'Davs'
                 },
+                footer: {
+                    icon: fcoo.settingIcon('fa-map'),
+                    text: 'Davs'
+                },
                 icons: {
                     back: { onClick: function(){} },
                     forward: { onClick: function(){} },
@@ -118,7 +122,13 @@
                 buttons: [
                     {text:'Test', onClick: function(){ alert('Test'); }},
                 ],
-                content: 'Content',
+                content: [
+// HER>                     'Content',
+                    {
+                        icon: fcoo.settingIcon('fa-map'),
+                        text: 'Davs'
+                    }
+                ],
                 //scroll: false,
                 show: true
             });
