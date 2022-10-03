@@ -1496,7 +1496,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
         }
 
         var content = [
-                $('<div class="font-weight-bold"/>').i18n({da:'Fejl', en:'Error'}),
+                $('<div class="fw-bold"/>').i18n({da:'Fejl', en:'Error'}),
                 $('<span/>').text( message ),
                 error.status ? ' (' + error.status  + ')' : null
             ],
