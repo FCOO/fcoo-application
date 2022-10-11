@@ -641,6 +641,12 @@ Create and manage the main structure for FCOO web applications
         function setHeightAndCreateCloseButton(side, className){
             var menu = result[side+'Menu'];
             if (menu){
+                var $div = $('<div/>')
+                            .addClass('flex-grow-1')
+                            .toggleClass('text-start1', side == 'left')
+                            .toggleClass('text-end',    side == 'right')
+                            .appendTo(menu.$preMenu);
+
                 $.bsButton({
                     bigIcon: true,
                     square : true,
@@ -649,7 +655,7 @@ Create and manage the main structure for FCOO web applications
                     context: menu
                 })
                     .addClass(className)
-                    .appendTo(menu.$preMenu);
+                    .appendTo($div);
 
                 menu.$preMenu.addClass('d-flex');
             }
@@ -740,8 +746,13 @@ Create and manage the main structure for FCOO web applications
             $.each(buttonGroups, function(index, buttonList){
                 var $div = $('<div/>')
                             .toggleClass('ml-auto', index == 0)
-                            .addClass('button-group')
-                            .appendTo($container);
+                            .addClass('button-group');
+
+                if (prefix == 'left')
+                    $div.appendTo($container);
+                else
+                    $div.prependTo($container);
+
                 $.each(buttonList, function(index2, buttonOptions){
                     buttonOptions = $.extend({bigIcon: true, square: true}, buttonOptions);
                     $.bsButton(buttonOptions).appendTo($div);

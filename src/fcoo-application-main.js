@@ -252,7 +252,7 @@ Create and manage the main structure for FCOO web applications
             $.each(buttonGroups, function(index, buttonList){
                 var $div = $('<div/>')
                             .toggleClass('ml-auto', index == 0)
-                            .addClass('button-group')
+                            .addClass('button-group');
 
                 if (prefix == 'left')
                     $div.appendTo($container);
