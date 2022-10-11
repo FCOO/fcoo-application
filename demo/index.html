@@ -303,7 +303,12 @@
 
                     rightMenu : {
                         width: 200,
-                        $menu: $rightMenu
+                        $menu: $rightMenu,
+                        buttons: {
+                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                            save    :   function(){ console.log('save') }, //Standard save-button
+                        }
+
                     },
                     _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
