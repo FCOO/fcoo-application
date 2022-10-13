@@ -148,7 +148,7 @@ Two modes:
 .vertical-pre-menu {
     border-bottom   : $border;
     background-color: var(--bs-gray-200);
-    padding         : $jb-padding-x-sm; //Same as .top-menu in _top-menu.scss
+    padding         : var(--fcoo-app-menu-padding);
 }
 
 

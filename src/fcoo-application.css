@@ -347,6 +347,17 @@ $z-index-top-2: Background when loading
 WARIABLES
 Global scss-variables for fcoo-application
 *****************************************************/
+:root {
+  --fcoo-app-menu-padding: 0.375rem; }
+
+.mm-menu {
+  --mm-iconbar-button-dim: 2.375rem;
+  --mm-iconbar-size: calc( 2 * var(--fcoo-app-menu-padding) + var(--mm-iconbar-button-dim) ); }
+
+.touch-menu-container-sm, top-menu-container-sm, .mm-menu-sm {
+  --mm-iconbar-button-dim: 1.9375rem;
+  --fcoo-app-menu-padding: 0.25rem; }
+
 /*
 z-index for different layers:
     $z-index-top  : Absolute top
@@ -591,7 +602,7 @@ confussions another name is used
 
 .top-menu-container .top-menu {
   margin-top: 0px;
-  padding: 0.25rem;
+  padding: var(--fcoo-app-menu-padding);
   font-size: 0.875rem; }
   .top-menu-container .top-menu .top-menu-header {
     text-shadow: -1px 0 var(--fcoo-app-shadow-color), 0 1px var(--fcoo-app-shadow-color), 1px 0 var(--fcoo-app-shadow-color), 0 -1px var(--fcoo-app-shadow-color); }
@@ -603,9 +614,7 @@ confussions another name is used
     flex-shrink: 0;
     flex-grow: 0; }
   .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
-    margin-left: 0.25rem !important; }
-    .touchevents .top-menu-container .top-menu > .top-menu-item:not(:first-child) {
-      margin-left: 0.375rem !important; }
+    margin-left: var(--fcoo-app-menu-padding) !important; }
   .top-menu-container .top-menu .left-side {
     margin-right: auto !important; }
   .top-menu-container .top-menu .right-side {
@@ -939,7 +948,7 @@ Two modes:
 .vertical-pre-menu {
   border-bottom: 1px solid var(--fcoo-app-bg-color);
   background-color: var(--bs-gray-200);
-  padding: 0.25rem; }
+  padding: var(--fcoo-app-menu-padding); }
 
 .neighbour-container {
   transition-property: margin-left, margin-right, margin-top, margin-bottom !important;

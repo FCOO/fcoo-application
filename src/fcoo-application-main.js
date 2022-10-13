@@ -103,7 +103,7 @@ Create and manage the main structure for FCOO web applications
 
             result.topMenu = ns.touchMenu({
                 position           : 'top',
-                height             : result.topMenuObject.$menu.outerHeight(),
+                height             : result.topMenuObject.$menu.outerHeight() + 1,  //+ 1 = bottom-border
                 $neighbourContainer: $mainContainer,
                 $container         : result.topMenuObject.$menu,
                 $menu              : false,

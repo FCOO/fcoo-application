@@ -24,7 +24,7 @@ confussions another name is used
 
     .top-menu {
         margin-top: 0px;
-        padding   : $jb-padding-x-sm; //Same as .vertical-pre-menu in _touch-menu.scss
+        padding   : var(--fcoo-app-menu-padding);
 
         font-size: $jb-font-size-sm;
         .top-menu-header {
@@ -43,10 +43,7 @@ confussions another name is used
         }
 
         > .top-menu-item:not(:first-child) {
-            margin-left: $jb-padding-x-sm !important;
-            .touchevents & {
-                margin-left: $jb-padding-x !important;
-            }
+            margin-left: var(--fcoo-app-menu-padding) !important;
         }
 
         .left-side {

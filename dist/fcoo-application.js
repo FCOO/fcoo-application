@@ -597,7 +597,7 @@ Create and manage the main structure for FCOO web applications
 
             result.topMenu = ns.touchMenu({
                 position           : 'top',
-                height             : result.topMenuObject.$menu.outerHeight(),
+                height             : result.topMenuObject.$menu.outerHeight() + 1,  //+ 1 = bottom-border
                 $neighbourContainer: $mainContainer,
                 $container         : result.topMenuObject.$menu,
                 $menu              : false,
@@ -1557,7 +1557,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
             else {
                 //Create a new noty
                 var toggleDetails = function(event){
-                        $(promiseErrorNotys[notyId].barDom).find('.noty-footer a, .error-details').toggleClass('d-none');
+                        $(promiseErrorNotys[notyId].barDom).find('.footer-content a, .error-details').toggleClass('d-none');
                         event.stopPropagation();
                     };
 
@@ -1929,10 +1929,11 @@ Create and manage the top-menu for FCOO web applications
                         .appendTo($menu),
                     $inputGroup =
                         $('<div/>')
-                            .addClass('input-group')
+                            .addClass('input-group p-0')
                             .appendTo($element);
 
                 topMenu.searchInput =
+
                     $('<input type="text" class="form-control"></div>')
                         .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
                         .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
@@ -2134,7 +2135,10 @@ Create and manage the top-menu for FCOO web applications
         var elementList = result.elementList = [];
 
         //Container for all elements used in top-menu
-        var $container = result.$container = $('<div/>').addClass("top-menu-container");
+        var $container = result.$container =
+                $('<div/>')
+                    .addClass("top-menu-container")
+                    .addClass( $._bsGetSizeClass({baseClass: 'top-menu-container', useTouchSize: true}) );
 
         //Create the menu-bar
         var $menu = result.$menu = $('<nav/>')
@@ -2236,6 +2240,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.$container = this.options.$container ? this.options.$container : $('<div/>');
         this.$container
             .addClass('touch-menu-container')
+            .addClass( $._bsGetSizeClass({baseClass: 'touch-menu-container', useTouchSize: true}) )
             .addClass(this.options.position)
             .addClass(this.options.menuClassName);
 

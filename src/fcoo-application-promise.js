@@ -103,7 +103,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
             else {
                 //Create a new noty
                 var toggleDetails = function(event){
-                        $(promiseErrorNotys[notyId].barDom).find('.noty-footer a, .error-details').toggleClass('d-none');
+                        $(promiseErrorNotys[notyId].barDom).find('.footer-content a, .error-details').toggleClass('d-none');
                         event.stopPropagation();
                     };
 

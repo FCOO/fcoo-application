@@ -62,6 +62,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.$container = this.options.$container ? this.options.$container : $('<div/>');
         this.$container
             .addClass('touch-menu-container')
+            .addClass( $._bsGetSizeClass({baseClass: 'touch-menu-container', useTouchSize: true}) )
             .addClass(this.options.position)
             .addClass(this.options.menuClassName);
 

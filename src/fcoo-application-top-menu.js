@@ -114,10 +114,11 @@ Create and manage the top-menu for FCOO web applications
                         .appendTo($menu),
                     $inputGroup =
                         $('<div/>')
-                            .addClass('input-group')
+                            .addClass('input-group p-0')
                             .appendTo($element);
 
                 topMenu.searchInput =
+
                     $('<input type="text" class="form-control"></div>')
                         .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
                         .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
@@ -319,7 +320,10 @@ Create and manage the top-menu for FCOO web applications
         var elementList = result.elementList = [];
 
         //Container for all elements used in top-menu
-        var $container = result.$container = $('<div/>').addClass("top-menu-container");
+        var $container = result.$container =
+                $('<div/>')
+                    .addClass("top-menu-container")
+                    .addClass( $._bsGetSizeClass({baseClass: 'top-menu-container', useTouchSize: true}) );
 
         //Create the menu-bar
         var $menu = result.$menu = $('<nav/>')
