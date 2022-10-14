@@ -79,15 +79,8 @@ Two modes:
     .touch-menu {
         position: relative;
     }
-    .touch-pre-menu {
-        .button-group {
-            &:not(:first-child) {
-                margin-left: .5em;
-            }
-        }
-    }
+    .touch-pre-menu {}
     .touch-post-menu {}
-
 
     //Set dimention = 'auto' if the content have width/height = 'auto'
     &.vertical-auto-width {

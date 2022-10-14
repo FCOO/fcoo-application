@@ -144,30 +144,6 @@ Create and manage the main structure for FCOO web applications
         var iconPrefix = 'fa-chevron-';
         //OR var iconPrefix = 'fa-chevron-circle-';
         //OR var iconPrefix = 'fa-arrow-';
-        function setHeightAndCreateCloseButton(side, className){
-            var menu = result[side+'Menu'];
-            if (menu){
-                var $div = $('<div/>')
-                            .addClass('flex-grow-1')
-                            .toggleClass('text-start1', side == 'left')
-                            .toggleClass('text-end',    side == 'right')
-                            .appendTo(menu.$preMenu);
-
-                $.bsButton({
-                    bigIcon: true,
-                    square : true,
-                    icon   : iconPrefix + side,
-                    onClick: menu.close,
-                    context: menu
-                })
-                    .addClass(className)
-                    .appendTo($div);
-
-                menu.$preMenu.addClass('d-flex');
-            }
-        }
-        setHeightAndCreateCloseButton('left', '');
-        setHeightAndCreateCloseButton('right', 'ml-auto');
 
         //Toggle left and right-menu on click
         if (result.options.leftMenu)
@@ -209,13 +185,30 @@ Create and manage the main structure for FCOO web applications
 
         //**************************************************
         //Add menu-buttons to left and right menu. button-options can be in options.[left/right]MenuButtons or options.[left/right]Menu.buttons
-        function createMenuButtons(prefix){
-            var menuOptions = result.options[prefix+'Menu'],
-                options     = menuOptions ? menuOptions.buttons || result.options[prefix+'MenuButtons'] || null : null,
-                menu        = result[prefix+'Menu'],
+        function createMenuButtons(side){
+            var menuOptions = result.options[side+'Menu'],
+                options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || null : null,
+                menu        = result[side+'Menu'],
                 $container  = menu ? menu.$preMenu : null;
 
             if (!options || !$container) return;
+
+            $container.addClass('d-flex');
+
+            //Create close button
+            var $closeButtonDiv = $('<div/>')
+                    .addClass('flex-grow-1')
+                    .toggleClass('text-start', side == 'left')
+                    .toggleClass('text-end',   side == 'right');
+
+            $.bsButton({
+                bigIcon: true,
+                square : true,
+                icon   : iconPrefix + side,
+                onClick: menu.close,
+                context: menu
+            }).appendTo($closeButtonDiv);
+
 
             var buttonGroups = [];
             if (options.preButtons)
@@ -250,20 +243,21 @@ Create and manage the main structure for FCOO web applications
 
             //Create the buttons
             $.each(buttonGroups, function(index, buttonList){
-                var $div = $('<div/>')
-                            .toggleClass('ml-auto', index == 0)
-                            .addClass('button-group');
-
-                if (prefix == 'left')
-                    $div.appendTo($container);
-                else
-                    $div.prependTo($container);
+                var $buttonGroup = $('<div/>')
+                        .addClass('btn-group')
+                        .toggleClass('space-after', index < (buttonGroups.length-1) )
+                        .appendTo($container);
 
                 $.each(buttonList, function(index2, buttonOptions){
                     buttonOptions = $.extend({bigIcon: true, square: true}, buttonOptions);
-                    $.bsButton(buttonOptions).appendTo($div);
+                    $.bsButton(buttonOptions).appendTo($buttonGroup);
                 });
             });
+
+            if (side == 'left')
+                $closeButtonDiv.prependTo($container);
+            else
+                $closeButtonDiv.appendTo($container);
 
 
         }
