@@ -11,7 +11,11 @@ load setup-files in fcoo.promiseList after checking for test-modes
     var ns = window.fcoo = window.fcoo || {};
 
 
-
+    //Adjust options for ns.promiseList
+    ['prePromiseAll', 'finally', 'finish'].forEach( function(optionsId){
+        var opt = ns.promiseList.options[optionsId];
+        ns.promiseList.options[optionsId] = opt ? ($.isArray(opt) ? opt : [opt]) : [];
+    });
 
     /***********************************************************************
     Set-up standard error-handler, message for promise and default Promise prefetch and finally
@@ -208,8 +212,26 @@ load setup-files in fcoo.promiseList after checking for test-modes
                 wait    : true
             });
 
-        ns.promiseList.promiseAll();
+        //If url parameter contains version=FILENAME[.json] OR ns.setupFileVersion (STRING or OBJECT)
+        var setupFileVersion = ns.parseAll()["version"] || ns.setupFileVersion;
 
+        if (setupFileVersion){
+            var fileName, data;
+            //If setupFileVersion is a string => it is a filename in static/setup/
+            if (typeof setupFileVersion == 'string')
+                fileName = {subDir:'setup', fileName: setupFileVersion + (setupFileVersion.indexOf('.json') == -1 ? '.json' : '')};
+            else
+                data = setupFileVersion;
+
+            ns.promiseList.prepend({
+                fileName: fileName,
+                data    : data,
+                resolve : resolveFileVersions,
+                wait    : true
+            });
+        }
+
+        ns.promiseList.promiseAll();
     };
 
     //*******************************************
@@ -219,7 +241,11 @@ load setup-files in fcoo.promiseList after checking for test-modes
         else
             return ns.dataFilePath(rec);
     }
-    //*******************************************
+
+
+    /********************************************
+    Methods regarding resolving test-versions of files in promiseList
+    ********************************************/
     function resolveTestMode(data, options, promiseList){
         promiseList.testModeList = [];
         $.each(data, function(from, to){
@@ -229,8 +255,8 @@ load setup-files in fcoo.promiseList after checking for test-modes
                 found: false
             });
         });
-        promiseList.options.prePromiseAll = adjustFileListWithTestMode;
-        promiseList.options.finish        = showTestModeInfo;
+        promiseList.options.prePromiseAll.push(adjustFileListWithTestMode);
+        promiseList.options.finish.push(showTestModeInfo);
     }
     //*******************************************
     function adjustFileListWithTestMode(allList, promiseList){
@@ -272,4 +298,62 @@ load setup-files in fcoo.promiseList after checking for test-modes
         window.notyInfo(info);
     }
 
+    /********************************************
+    Methods regarding resolving application-versions of files in promiseList
+    data = {FILENAME: {postfix: STRING, merge:BOOLEAN}}
+
+    ********************************************/
+    function resolveFileVersions(data, options, promiseList){
+        //Adjust all FILENAME to include file-type
+        $.each(data, function(fileName, options){
+            if (fileName.indexOf('.json') == -1){
+                data[fileName+'.json'] = options;
+                delete data[fileName];
+            }
+        });
+        promiseList.options.fileNameVersions = data;
+        promiseList.options.prePromiseAll.push(adjustFileListWithVersion);
+    }
+
+    function adjustFileListWithVersion(allList, promiseList){
+        //Check all files in allList and adjust the file(s) to load
+        var fileNameVersions = promiseList.options.fileNameVersions;
+        allList.forEach( function( promiseOptions ){
+            var onlyFileName = promiseOptions.fileName && !$.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
+                fileVersion = fileNameVersions[onlyFileName];
+
+            if (fileVersion){
+                //Adjust promiseOptions with new file(s) and resolve-function (if needed)
+                var newFileName = onlyFileName.replace('.json', '') + fileVersion.postfix + '.json';
+                if (fileVersion.merge){
+                    //Load both original and version file and merge the data before calling resolve
+                    var original_fileName = $.extend({}, promiseOptions.fileName);
+                    promiseOptions.fileName = [
+                        original_fileName,
+                        {fileName: newFileName, subDir: original_fileName.subDir}
+                    ];
+                    //Save original resole and use resolve that merge data before calling original resolve
+                    promiseOptions.original_resolve = promiseOptions.resolve;
+                    promiseOptions.resolve = version_resolve;
+                }
+                else
+                    //No merge => Just use new file
+                    promiseOptions.fileName.fileName = newFileName;
+            }
+        });
+    }
+
+    function version_resolve(data, promiseOptions, promiseList){
+        //Merge the two data-sets and call original resolve method
+        return promiseOptions.original_resolve(
+            $.mergeObjects(data[0], data[1]),
+            promiseOptions,
+            promiseList
+        );
+    }
+
+
 }(jQuery, this, this.i18next, this.Promise, document));
+
+
+

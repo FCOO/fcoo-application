@@ -161,6 +161,11 @@ Adjust modal
 jquery-scroll-container-variables.scss
 
 ************************************************/
+:root {
+  --jsc-scroll-size: 10px;
+  --jsc-scroll-padding: 10px;
+  --jsc-scroll-auto-padding: 10px; }
+
 /************************************************************
 VARIABLES
 
@@ -841,11 +846,11 @@ ABOUT
 
 Style for 'About FCOO' modal-content
 *****************************************************/
-.about-fcoo {
+.about-owner {
   text-align: center;
   font-size: 0.8rem;
   font-family: "Verdana"; }
-  .about-fcoo .application-header {
+  .about-owner .application-header {
     margin: 0;
     padding: 0.25rem;
     text-align: center;
@@ -855,7 +860,7 @@ Style for 'About FCOO' modal-content
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; }
-  .about-fcoo img {
+  .about-owner img {
     margin: 1rem auto; }
 
 /*****************************************************

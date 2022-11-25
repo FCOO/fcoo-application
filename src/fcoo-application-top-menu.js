@@ -21,10 +21,7 @@ Create and manage the top-menu for FCOO web applications
     Create standard button for the top-menu
     **************************************************/
     function defaultTopMenuButton( $menu, options ){
-        options = $.extend({}, options, {
-            bigIcon: true,
-            square : true,
-        });
+        options = $.extend({bigIcon: true, square: true}, options);
         var $result = $.bsButton( options );
         if (options.title)
             $result.i18n(options.title, 'title');
@@ -80,12 +77,21 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'logo',
-            create: function( /*$menu, elementOptions, menuOptions, topMenu*/ ){
-                //FCOO logo with click to show "About FCOO"
+            create: function( $menu/*, elementOptions, menuOptions, topMenu*/ ){
+                //Owners abbreviation with click to show "About OWNER"
+                return defaultTopMenuButton( $menu, {
+                        square : false,
+                        title  : 'about:owner',
+                        onClick: ns.aboutOwner
+                    }).i18n( 'abbr:owner', 'html');
+
+                /* With FCOO-logo
                 return $('<a/>')
                             .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-menu-item' )
-                            .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
-                            .on('click', ns.aboutFCOO);
+                            .i18n('about:owner', 'title')
+
+                            .on('click', ns.aboutOwner);
+                */
             },
             priority : 5,
             exclude: true

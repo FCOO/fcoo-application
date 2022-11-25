@@ -28,11 +28,27 @@ All global variables, methods, and options in the package is located in namespac
 ### Global variables, methods, and options
 
 #### `window.fcoo.promiseList` [PromiseList] (see [https://github.com/FCOO/promise-list](https://github.com/FCOO/promise-list))
+
 List of setup-files to be loaded. Call `fcoo.promiseList.getAll()` when all setup-files are added
 
 **NOTE** It is possible to call an application with parameter `&test-mode=FILENAME` where `FILENAME` is a json-file with a list of witch setup-files to be replaced by a test-version. See `src/fcoo-application-promise.js` for details.
 **NOTE** Only files added to `fcoo.promiseList` via `.append(...)` or `.prepend(...)` can be replaced using `&test-mode=FILENAME`
+ 
+#### `window.fcoo.setupFileVersion` [{FILENAME: {postfix:STRING, merge:BOOLEAN}}] (see `src/fcoo-application-promise.js`)
 
+Object with filenames and postfix for the filename to have different versions. `merge: true` will merge the new file with the original one
+
+##### Ex
+The setup-file `name-address-link_owner.json` contains info about the applicatiuon-owner. If 
+
+        fcoo.setupFileVersion = {
+            'name-address-link_owner': {
+                postfix: '-test', 
+                merge: true
+            }
+        }
+
+the content of `name-address-link_owner-test.json` (in the same directory as `name-address-link_owner.json`)is merged into the content of `name-address-link_owner.json` and the merged content is used instead.
 
 #### `window.fcoo.localStorageExists` [Boolean]
 Determinate if `localStorage` is supported and available. If the browser is in *Private* mode not all browser supports `localStorage`

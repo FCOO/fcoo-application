@@ -10,53 +10,58 @@ Create and display "About FCOO" info and modal-box
     var ns = window.fcoo = window.fcoo || {},
         aboutFCOOModal = null;
 
-
-    ns.aboutFCOO = function(){
+    ns.aboutOwner = ns.aboutFCOO = function(){
         if (!aboutFCOOModal){
-            //Create the modal-content
 
+            //Create the modal-content
             var $content = $('<div/>')
-                    .addClass("about-fcoo")
+                    .addClass("about-owner")
                     .append(
                         //Bar with title of application
                         $('<div/>')
                             .addClass('w-100 application-header fcoo-app-bg-color fcoo-app-text-color')
-                            .i18n( ns.applicationHeader ),
-
-                        //FCOO logo
-                        $('<img src="images/FCOO_logo_260x60.jpg"/>')
-
+                            .i18n( ns.applicationHeader )
                     ),
 
-                //FCOO name and address and email and link
-                $contact = $('<div/>')
-                    .addClass('w-100')
-                    .append(
-                        $('<div/>').addClass('fw-bold').i18n('name:fcoo'),
-                        $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
-                        $('<span/>').i18n({da:'', en:' - Denmark'})
-                    )
-                    .appendTo($content),
-                link = i18next.t('link:fcoo'),
-                email = i18next.t('email:fcoo');
+                logo    = i18next.t('logo:owner'),
+                name    = i18next.t('name:owner'),
+                address = i18next.t('address:owner'),
+                link    = i18next.t('link:owner'),
+                email   = i18next.t('email:owner');
 
-            if (link == 'fcoo') link = '';
+            if (logo != 'owner')
+                $(logo).appendTo($content);
+
+            if (name != 'owner')
+                $('<div/>')
+                    .addClass('fw-bold')
+                    .i18n('name:owner')
+                    .appendTo( $content );
+
+            if (address != 'owner')
+                $('<div/>')
+                    ._bsAddHtml({text:'address:owner'})
+                    .appendTo( $content );
+
+
+            if (link == 'owner') link = '';
             link = link.split('?')[0];
             link = link + '\\\\\\///////';
             var re = new RegExp('\\/', 'g');
             link = link.replace(re, '');
             link = link.replace(/\\/g, "");
 
-            if (email == 'fcoo') email = '';
+            if (email == 'owner') email = '';
 
-            if (link || email)
-                $contact.append('<br>');
+            if (logo || name || link || email)
+                $content.append('<br>');
+
             if (link)
-                $contact.append( $('<a target="_blank">'+link+'</a>').i18n('link:fcoo', 'href').i18n('name:fcoo', 'title') );
+                $content.append( $('<a target="_blank">'+link+'</a>').i18n('link:owner', 'href').i18n('name:owner', 'title') );
             if (link && email)
-                $contact.append(' - ');
+                $content.append(' - ');
             if (email)
-                $contact.append( $('<a href="mailto:'+email+'" target="_top">'+email+'</a>') );
+                $content.append( $('<a href="mailto:'+email+'" target="_top">'+email+'</a>') );
 
             aboutFCOOModal = $.bsModal({
                 noHeader   : true,
@@ -409,9 +414,9 @@ Sections:
     5: Load FCOO and default name,link,email and error-messages
     ************************************************************************
     ***********************************************************************/
-    ns.loadKeyPhraseFile('name-address-link.json',      'name-address-link');
-    ns.loadKeyPhraseFile('name-address-link_fcoo.json', 'name-address-link');
-    ns.loadPhraseFile   ('request.json',                'error-code-text'  );
+    ns.loadKeyPhraseFile('name-address-link.json',       'name-address-link');
+    ns.loadKeyPhraseFile('name-address-link_owner.json', 'name-address-link');
+    ns.loadPhraseFile   ('request.json',                 'error-code-text'  );
 
 
 }(jQuery, this.i18next, this, document));
@@ -1459,7 +1464,11 @@ load setup-files in fcoo.promiseList after checking for test-modes
     var ns = window.fcoo = window.fcoo || {};
 
 
-
+    //Adjust options for ns.promiseList
+    ['prePromiseAll', 'finally', 'finish'].forEach( function(optionsId){
+        var opt = ns.promiseList.options[optionsId];
+        ns.promiseList.options[optionsId] = opt ? ($.isArray(opt) ? opt : [opt]) : [];
+    });
 
     /***********************************************************************
     Set-up standard error-handler, message for promise and default Promise prefetch and finally
@@ -1656,8 +1665,26 @@ load setup-files in fcoo.promiseList after checking for test-modes
                 wait    : true
             });
 
-        ns.promiseList.promiseAll();
+        //If url parameter contains version=FILENAME[.json] OR ns.setupFileVersion (STRING or OBJECT)
+        var setupFileVersion = ns.parseAll()["version"] || ns.setupFileVersion;
 
+        if (setupFileVersion){
+            var fileName, data;
+            //If setupFileVersion is a string => it is a filename in static/setup/
+            if (typeof setupFileVersion == 'string')
+                fileName = {subDir:'setup', fileName: setupFileVersion + (setupFileVersion.indexOf('.json') == -1 ? '.json' : '')};
+            else
+                data = setupFileVersion;
+
+            ns.promiseList.prepend({
+                fileName: fileName,
+                data    : data,
+                resolve : resolveFileVersions,
+                wait    : true
+            });
+        }
+
+        ns.promiseList.promiseAll();
     };
 
     //*******************************************
@@ -1667,7 +1694,11 @@ load setup-files in fcoo.promiseList after checking for test-modes
         else
             return ns.dataFilePath(rec);
     }
-    //*******************************************
+
+
+    /********************************************
+    Methods regarding resolving test-versions of files in promiseList
+    ********************************************/
     function resolveTestMode(data, options, promiseList){
         promiseList.testModeList = [];
         $.each(data, function(from, to){
@@ -1677,8 +1708,8 @@ load setup-files in fcoo.promiseList after checking for test-modes
                 found: false
             });
         });
-        promiseList.options.prePromiseAll = adjustFileListWithTestMode;
-        promiseList.options.finish        = showTestModeInfo;
+        promiseList.options.prePromiseAll.push(adjustFileListWithTestMode);
+        promiseList.options.finish.push(showTestModeInfo);
     }
     //*******************************************
     function adjustFileListWithTestMode(allList, promiseList){
@@ -1720,7 +1751,65 @@ load setup-files in fcoo.promiseList after checking for test-modes
         window.notyInfo(info);
     }
 
+    /********************************************
+    Methods regarding resolving application-versions of files in promiseList
+    data = {FILENAME: {postfix: STRING, merge:BOOLEAN}}
+
+    ********************************************/
+    function resolveFileVersions(data, options, promiseList){
+        //Adjust all FILENAME to include file-type
+        $.each(data, function(fileName, options){
+            if (fileName.indexOf('.json') == -1){
+                data[fileName+'.json'] = options;
+                delete data[fileName];
+            }
+        });
+        promiseList.options.fileNameVersions = data;
+        promiseList.options.prePromiseAll.push(adjustFileListWithVersion);
+    }
+
+    function adjustFileListWithVersion(allList, promiseList){
+        //Check all files in allList and adjust the file(s) to load
+        var fileNameVersions = promiseList.options.fileNameVersions;
+        allList.forEach( function( promiseOptions ){
+            var onlyFileName = promiseOptions.fileName && !$.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
+                fileVersion = fileNameVersions[onlyFileName];
+
+            if (fileVersion){
+                //Adjust promiseOptions with new file(s) and resolve-function (if needed)
+                var newFileName = onlyFileName.replace('.json', '') + fileVersion.postfix + '.json';
+                if (fileVersion.merge){
+                    //Load both original and version file and merge the data before calling resolve
+                    var original_fileName = $.extend({}, promiseOptions.fileName);
+                    promiseOptions.fileName = [
+                        original_fileName,
+                        {fileName: newFileName, subDir: original_fileName.subDir}
+                    ];
+                    //Save original resole and use resolve that merge data before calling original resolve
+                    promiseOptions.original_resolve = promiseOptions.resolve;
+                    promiseOptions.resolve = version_resolve;
+                }
+                else
+                    //No merge => Just use new file
+                    promiseOptions.fileName.fileName = newFileName;
+            }
+        });
+    }
+
+    function version_resolve(data, promiseOptions, promiseList){
+        //Merge the two data-sets and call original resolve method
+        return promiseOptions.original_resolve(
+            $.mergeObjects(data[0], data[1]),
+            promiseOptions,
+            promiseList
+        );
+    }
+
+
 }(jQuery, this, this.i18next, this.Promise, document));
+
+
+
 
 ;
 /****************************************************************************
@@ -1830,10 +1919,7 @@ Create and manage the top-menu for FCOO web applications
     Create standard button for the top-menu
     **************************************************/
     function defaultTopMenuButton( $menu, options ){
-        options = $.extend({}, options, {
-            bigIcon: true,
-            square : true,
-        });
+        options = $.extend({bigIcon: true, square: true}, options);
         var $result = $.bsButton( options );
         if (options.title)
             $result.i18n(options.title, 'title');
@@ -1889,12 +1975,21 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'logo',
-            create: function( /*$menu, elementOptions, menuOptions, topMenu*/ ){
-                //FCOO logo with click to show "About FCOO"
+            create: function( $menu/*, elementOptions, menuOptions, topMenu*/ ){
+                //Owners abbreviation with click to show "About OWNER"
+                return defaultTopMenuButton( $menu, {
+                        square : false,
+                        title  : 'about:owner',
+                        onClick: ns.aboutOwner
+                    }).i18n( 'abbr:owner', 'html');
+
+                /* With FCOO-logo
                 return $('<a/>')
                             .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-menu-item' )
-                            .i18n({da:'Om FCOO...', en:'About FCOO...'}, 'title')
-                            .on('click', ns.aboutFCOO);
+                            .i18n('about:owner', 'title')
+
+                            .on('click', ns.aboutOwner);
+                */
             },
             priority : 5,
             exclude: true

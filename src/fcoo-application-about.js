@@ -10,53 +10,58 @@ Create and display "About FCOO" info and modal-box
     var ns = window.fcoo = window.fcoo || {},
         aboutFCOOModal = null;
 
-
-    ns.aboutFCOO = function(){
+    ns.aboutOwner = ns.aboutFCOO = function(){
         if (!aboutFCOOModal){
-            //Create the modal-content
 
+            //Create the modal-content
             var $content = $('<div/>')
-                    .addClass("about-fcoo")
+                    .addClass("about-owner")
                     .append(
                         //Bar with title of application
                         $('<div/>')
                             .addClass('w-100 application-header fcoo-app-bg-color fcoo-app-text-color')
-                            .i18n( ns.applicationHeader ),
-
-                        //FCOO logo
-                        $('<img src="images/FCOO_logo_260x60.jpg"/>')
-
+                            .i18n( ns.applicationHeader )
                     ),
 
-                //FCOO name and address and email and link
-                $contact = $('<div/>')
-                    .addClass('w-100')
-                    .append(
-                        $('<div/>').addClass('fw-bold').i18n('name:fcoo'),
-                        $('<span/>').html('Lautrupbjerg&nbsp;1-5 - 2750&nbsp;Ballerup'),
-                        $('<span/>').i18n({da:'', en:' - Denmark'})
-                    )
-                    .appendTo($content),
-                link = i18next.t('link:fcoo'),
-                email = i18next.t('email:fcoo');
+                logo    = i18next.t('logo:owner'),
+                name    = i18next.t('name:owner'),
+                address = i18next.t('address:owner'),
+                link    = i18next.t('link:owner'),
+                email   = i18next.t('email:owner');
 
-            if (link == 'fcoo') link = '';
+            if (logo != 'owner')
+                $(logo).appendTo($content);
+
+            if (name != 'owner')
+                $('<div/>')
+                    .addClass('fw-bold')
+                    .i18n('name:owner')
+                    .appendTo( $content );
+
+            if (address != 'owner')
+                $('<div/>')
+                    ._bsAddHtml({text:'address:owner'})
+                    .appendTo( $content );
+
+
+            if (link == 'owner') link = '';
             link = link.split('?')[0];
             link = link + '\\\\\\///////';
             var re = new RegExp('\\/', 'g');
             link = link.replace(re, '');
             link = link.replace(/\\/g, "");
 
-            if (email == 'fcoo') email = '';
+            if (email == 'owner') email = '';
 
-            if (link || email)
-                $contact.append('<br>');
+            if (logo || name || link || email)
+                $content.append('<br>');
+
             if (link)
-                $contact.append( $('<a target="_blank">'+link+'</a>').i18n('link:fcoo', 'href').i18n('name:fcoo', 'title') );
+                $content.append( $('<a target="_blank">'+link+'</a>').i18n('link:owner', 'href').i18n('name:owner', 'title') );
             if (link && email)
-                $contact.append(' - ');
+                $content.append(' - ');
             if (email)
-                $contact.append( $('<a href="mailto:'+email+'" target="_top">'+email+'</a>') );
+                $content.append( $('<a href="mailto:'+email+'" target="_top">'+email+'</a>') );
 
             aboutFCOOModal = $.bsModal({
                 noHeader   : true,

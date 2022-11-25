@@ -334,9 +334,9 @@ Sections:
     5: Load FCOO and default name,link,email and error-messages
     ************************************************************************
     ***********************************************************************/
-    ns.loadKeyPhraseFile('name-address-link.json',      'name-address-link');
-    ns.loadKeyPhraseFile('name-address-link_fcoo.json', 'name-address-link');
-    ns.loadPhraseFile   ('request.json',                'error-code-text'  );
+    ns.loadKeyPhraseFile('name-address-link.json',       'name-address-link');
+    ns.loadKeyPhraseFile('name-address-link_owner.json', 'name-address-link');
+    ns.loadPhraseFile   ('request.json',                 'error-code-text'  );
 
 
 }(jQuery, this.i18next, this, document));
