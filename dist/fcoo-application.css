@@ -49,6 +49,7 @@ See https://getbootstrap.com/docs/5.2/customize/options/ for description
 ************************************************/
 /**/
 /**/
+/**/
 /***********************************************
 OPACITY
 ************************************************/
@@ -237,7 +238,10 @@ See _application-color-mixin.scss for description of application colors
   --_fcoo-default-app-shadow-color-25: #fff;
   --_fcoo-default-app-bg-color-50: #c3d6d4;
   --_fcoo-default-app-text-color-50: #000;
-  --_fcoo-default-app-shadow-color-50: #fff; }
+  --_fcoo-default-app-shadow-color-50: #fff;
+  --_fcoo-default-app-bg-color-63: #eaf1f0;
+  --_fcoo-default-app-text-color-63: #000;
+  --_fcoo-default-app-shadow-color-63: #fff; }
 
 .btn-fcoo-app-color .btn-jb.standard {
   --bs-btn-color: #fff;
@@ -291,7 +295,9 @@ See _application-color-mixin.scss for description of application colors
   --fcoo-app-bg-color-25: var(--_fcoo-app-bg-color-25, var(--_fcoo-default-app-bg-color-25));
   --fcoo-app-text-color-25: var(--_fcoo-app-text-color-25, var(--_fcoo-default-app-text-color-25));
   --fcoo-app-bg-color-50: var(--_fcoo-app-bg-color-50, var(--_fcoo-default-app-bg-color-50));
-  --fcoo-app-text-color-50: var(--_fcoo-app-text-color-50, var(--_fcoo-default-app-text-color-50)); }
+  --fcoo-app-text-color-50: var(--_fcoo-app-text-color-50, var(--_fcoo-default-app-text-color-50));
+  --fcoo-app-bg-color-63: var(--_fcoo-app-bg-color-63, var(--_fcoo-default-app-bg-color-63));
+  --fcoo-app-text-color-63: var(--_fcoo-app-text-color-63, var(--_fcoo-default-app-text-color-63)); }
 
 .fcoo-default-app-colors {
   color: var(--fcoo-default-app-text-color) !important;
@@ -325,10 +331,14 @@ Adjust different parts in jquery-bootstrap and fcoo-application
   --jb-inner-header-bg: var(--fcoo-app-bg-color-50); }
 
 .accordion {
+  --bs-accordion-btn-color: var(--fcoo-app-text-color-63);
+  --bs-accordion-btn-bg: var(--fcoo-app-bg-color-63);
   --bs-accordion-active-color: var(--fcoo-app-text-color-50);
   --bs-accordion-active-bg: var(--fcoo-app-bg-color-50); }
 
 .mm-menu {
+  --mm-item-closed-color: var(--fcoo-app-text-color-63);
+  --mm-item-closed-bg: var(--fcoo-app-bg-color-63);
   --mm-item-opened-color: var(--fcoo-app-text-color-50);
   --mm-item-opened-bg: var(--fcoo-app-bg-color-50); }
 

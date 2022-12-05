@@ -61200,7 +61200,8 @@ jquery-bootstrap-modal-promise.js
                 $('<div/>')
                     .addClass('modal-body-fixed')
                     .addClass(className || '')
-                    .addClass(scrollbarClass )
+.toggleClass(scrollbarClass, !!options._fixedContentHasScrollClass )
+//.addClass(scrollbarClass )
                     .toggleClass('py-0',                        !!fixedOptions.noVerticalPadding)
                     .toggleClass('pt-0',                        !!fixedOptions.noTopPadding)
                     .toggleClass('pb-0',                        !!fixedOptions.noBottomPadding)
@@ -63216,7 +63217,8 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
                             flexWidth        : true,
                             noVerticalPadding: true,
                             content          : this,
-                            fixedContent     : this.$tableWithHeader
+                            fixedContent     : this.$tableWithHeader,
+                            _fixedContentHasScrollClass: true,      //Internal options to have scroll-bar-margin on fixed content
                         })
                       );
 

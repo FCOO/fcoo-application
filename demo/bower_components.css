@@ -15728,6 +15728,28 @@ Ex.
   .fa-shrink-90.fa-right {
     left: 2.5%; }
 
+/******************************************
+fa-move-x-MOVE, fa-move-y-MOVE
+Move the icon MOVE em in x or y direction
+******************************************/
+.fa-move-x-25 {
+  transform: translateX(0.25em); }
+
+.fa-move-y-25 {
+  transform: translateY(0.25em); }
+
+.fa-move-x-50 {
+  transform: translateX(0.5em); }
+
+.fa-move-y-50 {
+  transform: translateY(0.5em); }
+
+.fa-move-x-75 {
+  transform: translateX(0.75em); }
+
+.fa-move-y-75 {
+  transform: translateY(0.75em); }
+
 /***********************************************
 jquery-base-slider.scss, Description from README.md
 
@@ -16433,6 +16455,7 @@ Customize Bootstrap
 See https://getbootstrap.com/docs/5.2/customize/options/ for description
 /star star/ = Differnet from default
 ************************************************/
+/**/
 /**/
 /**/
 /***********************************************
@@ -26353,6 +26376,7 @@ Adjustmernt to Bootstrap table
   --bs-table-cell-padding-y: 0.375rem;
   --bs-table-cell-padding: 0.375rem;
   word-break: normal;
+  margin-bottom: 0;
   /*************************************
     Header
     *************************************/
@@ -28137,6 +28161,7 @@ See https://getbootstrap.com/docs/5.2/customize/options/ for description
 ************************************************/
 /**/
 /**/
+/**/
 /***********************************************
 OPACITY
 ************************************************/
@@ -28311,6 +28336,8 @@ COLORS AND STYLE
   --mm-color-background: var(--bs-modal-bg);
   --mm-item-opened-color: null;
   --mm-item-opened-bg: null;
+  --mm-item-closed-color: null;
+  --mm-item-closed-bg: null;
   --mm-panel-opened-bg: rgba(0,0,0, 0.05);
   --mm-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   --chevrolet-dim: 0.625rem; }
@@ -29435,6 +29462,10 @@ ADJUST MMENU AND JQUERY-BOOTSTRAP ELEMENTS
 .mm-menu .mm-listitem_opened > .mm-listitem__btn {
   color: var(--mm-item-opened-color);
   background: var(--mm-item-opened-bg); }
+
+.mm-menu .mm-listitem:not(.mm-listitem_opened) > .mm-listitem__btn {
+  color: var(--mm-item-closed-color);
+  background: var(--mm-item-closed-bg); }
 
 .mm-listitem {
   font-size: var(--mm-font-size);

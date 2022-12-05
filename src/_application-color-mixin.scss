@@ -34,6 +34,9 @@ Eq. To have application-color = red:
     $color-50: lighten($color-0, 50%);
     $contrast-50: _best_contrast($color-50);
 
+    $color-63: lighten($color-0, 63%);
+    $contrast-63: _best_contrast($color-63);
+
     :root {
         --_fcoo-#{$prefix}app-bg-color-0    : #{$color-0};
         --_fcoo-#{$prefix}app-text-color-0  : #{$contrast-0};
@@ -46,6 +49,11 @@ Eq. To have application-color = red:
         --_fcoo-#{$prefix}app-bg-color-50    : #{$color-50};
         --_fcoo-#{$prefix}app-text-color-50  : #{_best_contrast($color-50)};
         --_fcoo-#{$prefix}app-shadow-color-50: #{_best_contrast($contrast-50)};
+
+
+        --_fcoo-#{$prefix}app-bg-color-63    : #{$color-63};
+        --_fcoo-#{$prefix}app-text-color-63  : #{_best_contrast($color-63)};
+        --_fcoo-#{$prefix}app-shadow-color-63: #{_best_contrast($contrast-63)};
     }
 
     //Create css-var for buttons when inside a container with fcoo-application

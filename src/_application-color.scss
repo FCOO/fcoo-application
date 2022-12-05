@@ -31,6 +31,11 @@ See _application-color-mixin.scss for description of application colors
 
     --fcoo-app-bg-color-50  : #{get-var( $type:'bg',   $percent:'50' )};
     --fcoo-app-text-color-50: #{get-var( $type:'text', $percent:'50' )};
+
+
+    --fcoo-app-bg-color-63  : #{get-var( $type:'bg',   $percent:'63' )};
+    --fcoo-app-text-color-63: #{get-var( $type:'text', $percent:'63' )};
+
 }
 
 
@@ -81,12 +86,19 @@ Adjust different parts in jquery-bootstrap and fcoo-application
 
 //Bootstrap: Aaccordion header when open = 50%-color
 .accordion {
+    --bs-accordion-btn-color: var(--fcoo-app-text-color-63);
+    --bs-accordion-btn-bg   : var(--fcoo-app-bg-color-63);
+
+
     --bs-accordion-active-color: var(--fcoo-app-text-color-50);
     --bs-accordion-active-bg   : var(--fcoo-app-bg-color-50);
 }
 
 //mmenu: Open item = 50%-color
 .mm-menu {
+    --mm-item-closed-color: var(--fcoo-app-text-color-63);
+    --mm-item-closed-bg   : var(--fcoo-app-bg-color-63);
+
     --mm-item-opened-color: var(--fcoo-app-text-color-50);
     --mm-item-opened-bg   : var(--fcoo-app-bg-color-50);
 }
