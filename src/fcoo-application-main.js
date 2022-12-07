@@ -43,7 +43,49 @@ Create and manage the main structure for FCOO web applications
             onResizeFinish      : null,  //function(main) to be called when the main-container is finish resizing
             onResize            : null,  //Alternative to onResizeFinish
             onResizeDelay       :  100,  //mS before onResize is fired to avoid many calls if the size is changed rapidly
+
+            /* Disabling transition, transform, or animation.
+            Value = BOOLEAN OR STRING = name(s) of boolean property in ns.modernizrDevice OR []BOOLEAN/STRING
+            Properties = "isAndroid", "isDesktop", "isIos", "isMobile", "isPhone", "isTablet", "isWindows", or name of browser (lowercase) "chrome", "safari", "firefox", "edge" etc.
+            STRING with multi names works as AND. Array works as OR
+            Eg.
+                noTransition: "isPhone chrome" => no Transition on Chrome browser on phone-device
+                noTransition: ["isPhone", "isTablet chrome"] => no Transition on all phones and chrome on tablets
+            */
+            noTransition        : "isPhone",
+            noTransform         : false,
+            noAnimation         : false,
         }, options );
+
+
+        //Disabling transition, transform, or animation.
+        ['noTransition', 'noTransform', 'noAnimation'].forEach( function(id, index){
+            var value     = options[id],
+                browserVersion = ns.modernizrDevice.browser_version.toLowerCase(),
+                className = ['no-transition', 'no-transform', 'no-animation'][index];
+
+            if (value){
+                var addClass = (value === true);
+
+                if (!addClass){
+                    var valueList = $.isArray(value) ? value : [value],
+                        add = true;
+                    valueList.forEach( function(modernizrDeviceProperties){
+                        modernizrDeviceProperties.split(' ').forEach( function( property ){
+                            if (property)
+                                add = add && ( ns.modernizrDevice[property] || browserVersion.includes(property) );
+                        });
+                    });
+                    addClass = addClass || add;
+                }
+                if (addClass)
+                    $('html').addClass(className);
+            }
+        });
+
+
+
+
 
         /*
         leftMenuButtons or leftMenu.buttons, and rightMenuButtons rightMenu.buttons = {

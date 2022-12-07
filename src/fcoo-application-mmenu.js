@@ -52,6 +52,7 @@ Objects and methods to set up Mmenu via $.bsMmenu
         options = $.extend(true, {}, {
             inclBar    : true,
             barCloseAll: true,
+
             favorites: {
                 get   : function(id){ return favorite_get(menuId, id); },
                 add   : function(id){ favorite_set(menuId, id, true);  },
@@ -59,7 +60,13 @@ Objects and methods to set up Mmenu via $.bsMmenu
             }
         }, options);
 
-        var bsMenu = $.bsMmenu(options, {offCanvas: false}).create( $container );
+        var bsMenu =
+                $.bsMmenu(
+                    options, {
+                        offCanvas      : false,
+                        slidingSubmenus: ns.modernizrDevice.isPhone
+                    }).create( $container );
+
         bsMenu.id = bsMenu.options.id || menuId;
         bsMenus[bsMenu.id] = bsMenu;
         setFavorites(bsMenu);

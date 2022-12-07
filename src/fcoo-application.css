@@ -849,7 +849,7 @@ animations and to apply to button even when no-hover
 }
 */
 /*****************************************************
-Style for 'About FCOO'
+Style for 'About OWNER'
 *****************************************************/
 /*****************************************************
 ABOUT
@@ -904,15 +904,15 @@ Two modes:
   .touch-menu-container.mode-side {
     z-index: 1048; }
   .touch-menu-container.opened {
-    transition-property: transform !important;
-    transition-duration: 0.3s !important;
-    transition-timing-function: ease-out !important; }
+    transition-property: transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out; }
     .touch-menu-container.opened.no-animation {
       transition: none !important; }
   .touch-menu-container.closed {
-    transition-property: transform, z-index !important;
-    transition-duration: 0.3s !important;
-    transition-timing-function: ease-out !important;
+    transition-property: transform, z-index;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
     transform: none !important; }
     .touch-menu-container.closed.no-animation {
       transition: none !important; }
@@ -968,7 +968,7 @@ Two modes:
   transition-duration: 0.3s !important;
   transition-timing-function: ease-out !important; }
   .neighbour-container.no-animation {
-    transition-duration: 0s !important; }
+    transition-duration: 0s 4; }
 
 /*****************************************************
 Style for icons
@@ -1055,6 +1055,36 @@ Different versions of sub-icons can be created using different methods in namesp
     font-size: 0.765em;
     right: -0.1875em;
     bottom: -0.09375em; }
+
+/*****************************************************
+Classes to disable transition, transform, or animation
+*****************************************************/
+/***********************************************
+transition-transform-animation.scss,
+Classes to disable transition, transform, or animation
+
+From https://onezeronull.com/2016/10/06/disable-css-transitions-and-animations-temporarily-or-permanently/
+************************************************/
+html.no-transition * {
+  -o-transition-property: none !important;
+  -moz-transition-property: none !important;
+  -ms-transition-property: none !important;
+  -webkit-transition-property: none !important;
+  transition-property: none !important; }
+
+html.no-transform * {
+  -o-transform: none !important;
+  -moz-transform: none !important;
+  -ms-transform: none !important;
+  -webkit-transform: none !important;
+  transform: none !important; }
+
+html.no-animation * {
+  -webkit-animation: none !important;
+  -moz-animation: none !important;
+  -o-animation: none !important;
+  -ms-animation: none !important;
+  animation: none !important; }
 
 /*****************************************************
 Create classes invisible-for-XX a la hide-for-XX using

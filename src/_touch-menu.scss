@@ -57,9 +57,9 @@ Two modes:
     }
 
     &.opened {
-        transition-property       : $transition-property-menu   !important;
-        transition-duration       : $transition-duration        !important;
-        transition-timing-function: $transition-timing-function !important;
+        transition-property       : $transition-property-menu;
+        transition-duration       : $transition-duration;
+        transition-timing-function: $transition-timing-function;
 
         &.no-animation {
             transition: none !important;;
@@ -67,9 +67,9 @@ Two modes:
     }
 
     &.closed {
-        transition-property       : $transition-property-menu-closed !important;
-        transition-duration       : $transition-duration             !important;
-        transition-timing-function: $transition-timing-function      !important;
+        transition-property       : $transition-property-menu-closed;
+        transition-duration       : $transition-duration;
+        transition-timing-function: $transition-timing-function;
         &.no-animation {
             transition: none !important;;
         }
@@ -153,6 +153,6 @@ Two modes:
     transition-timing-function: $transition-timing-function !important;
 
     &.no-animation {
-        transition-duration: 0s !important;;
+        transition-duration: 0s 4;;
     }
 }
