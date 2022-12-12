@@ -51135,7 +51135,7 @@ return index;
 
 ;
 //! moment-timezone.js
-//! version : 0.5.39
+//! version : 0.5.40
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -51165,7 +51165,7 @@ return index;
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.39",
+	var VERSION = "0.5.40",
 		zones = {},
 		links = {},
 		countries = {},
@@ -51827,7 +51827,7 @@ return index;
 	}
 
 	loadData({
-		"version": "2022f",
+		"version": "2022g",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
 			"Africa/Nairobi|EAT|-30|0||47e5",
@@ -51856,19 +51856,20 @@ return index;
 			"America/Campo_Grande|-03 -04|30 40|010101|1SKr0 1zd0 On0 1HB0 FX0|77e4",
 			"America/Chicago|CST CDT|60 50|01010101010101010101010|1SSU0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|92e5",
 			"America/Chihuahua|MST MDT CST|70 60 60|0101010101012|1T3l0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|81e4",
+			"America/Ciudad_Juarez|MST MDT CST|70 60 60|010101010101201010101010|1SSV0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 cm0 EP0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|",
 			"America/Phoenix|MST|70|0||42e5",
 			"America/Whitehorse|PST PDT MST|80 70 70|010101012|1SSW0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1z90|23e3",
 			"America/New_York|EST EDT|50 40|01010101010101010101010|1SST0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|21e6",
 			"America/Los_Angeles|PST PDT|80 70|01010101010101010101010|1SSW0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|15e6",
 			"America/Halifax|AST ADT|40 30|01010101010101010101010|1SSS0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|39e4",
-			"America/Godthab|-03 -02|30 20|01010101010101010101010|1T0p0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0|17e3",
+			"America/Godthab|-03 -02|30 20|01010101010101|1T0p0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0|17e3",
 			"America/Grand_Turk|AST EDT EST|40 40 50|012121212121212121212|1Vkv0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|37e2",
 			"America/Havana|CST CDT|50 40|01010101010101010101010|1SSR0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0|21e5",
 			"America/Mazatlan|MST MDT|70 60|0101010101010|1T3l0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|44e4",
 			"America/Metlakatla|AKST AKDT PST|90 80 80|010120101010101010101010|1SSX0 1zb0 Op0 1zb0 uM0 jB0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|14e2",
 			"America/Miquelon|-03 -02|30 20|01010101010101010101010|1SSR0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|61e2",
 			"America/Noronha|-02|20|0||30e2",
-			"America/Ojinaga|MST MDT CST|70 60 60|0101010101012|1SSV0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0|23e3",
+			"America/Ojinaga|MST MDT CST CDT|70 60 60 50|01010101010123232323232|1SSV0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 Rc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0|23e3",
 			"America/Santiago|-03 -04|30 40|01010101010101010101010|1Tk30 Ap0 1Nb0 Ap0 1zb0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0|62e5",
 			"America/Sao_Paulo|-02 -03|20 30|010101|1SKq0 1zd0 On0 1HB0 FX0|20e6",
 			"Atlantic/Azores|-01 +00|10 0|01010101010101010101010|1T0p0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0|25e4",
@@ -52464,7 +52465,7 @@ return index;
 			"BW|Africa/Maputo Africa/Gaborone",
 			"BY|Europe/Minsk",
 			"BZ|America/Belize",
-			"CA|America/St_Johns America/Halifax America/Glace_Bay America/Moncton America/Goose_Bay America/Toronto America/Iqaluit America/Pangnirtung America/Winnipeg America/Resolute America/Rankin_Inlet America/Regina America/Swift_Current America/Edmonton America/Cambridge_Bay America/Yellowknife America/Inuvik America/Dawson_Creek America/Fort_Nelson America/Whitehorse America/Dawson America/Vancouver America/Panama America/Puerto_Rico America/Phoenix America/Blanc-Sablon America/Atikokan America/Creston",
+			"CA|America/St_Johns America/Halifax America/Glace_Bay America/Moncton America/Goose_Bay America/Toronto America/Iqaluit America/Winnipeg America/Resolute America/Rankin_Inlet America/Regina America/Swift_Current America/Edmonton America/Cambridge_Bay America/Yellowknife America/Inuvik America/Dawson_Creek America/Fort_Nelson America/Whitehorse America/Dawson America/Vancouver America/Panama America/Puerto_Rico America/Phoenix America/Blanc-Sablon America/Atikokan America/Creston",
 			"CC|Asia/Yangon Indian/Cocos",
 			"CD|Africa/Maputo Africa/Lagos Africa/Kinshasa Africa/Lubumbashi",
 			"CF|Africa/Lagos Africa/Bangui",
@@ -52582,7 +52583,7 @@ return index;
 			"MU|Indian/Mauritius",
 			"MV|Indian/Maldives",
 			"MW|Africa/Maputo Africa/Blantyre",
-			"MX|America/Mexico_City America/Cancun America/Merida America/Monterrey America/Matamoros America/Mazatlan America/Chihuahua America/Ojinaga America/Hermosillo America/Tijuana America/Bahia_Banderas",
+			"MX|America/Mexico_City America/Cancun America/Merida America/Monterrey America/Matamoros America/Chihuahua America/Ciudad_Juarez America/Ojinaga America/Mazatlan America/Bahia_Banderas America/Hermosillo America/Tijuana",
 			"MY|Asia/Kuching Asia/Singapore Asia/Kuala_Lumpur",
 			"MZ|Africa/Maputo",
 			"NA|Africa/Windhoek",
@@ -61200,8 +61201,7 @@ jquery-bootstrap-modal-promise.js
                 $('<div/>')
                     .addClass('modal-body-fixed')
                     .addClass(className || '')
-.toggleClass(scrollbarClass, !!options._fixedContentHasScrollClass )
-//.addClass(scrollbarClass )
+                    .toggleClass(scrollbarClass, !!options._fixedContentHasScrollClass )
                     .toggleClass('py-0',                        !!fixedOptions.noVerticalPadding)
                     .toggleClass('pt-0',                        !!fixedOptions.noTopPadding)
                     .toggleClass('pb-0',                        !!fixedOptions.noBottomPadding)
@@ -69689,6 +69689,12 @@ window.location.hash
         onChanging: function(newData, originalData) - called when the data are changed during editing
         onSubmit  : function(newData, originalData) - called after the data was edited. newData = all changed data, originalData = the original version of the data
 
+        reset : NULL, true, false or {
+            icon   : STRING
+            text   : STRING
+            promise: FUNCTION( resolve: function(clossAll:BOOLEAN) ) functions that calls resolve() if all options are to be reset
+        }
+
 *****************************************************************************************/
 
 (function ($, window, document, undefined) {
@@ -69696,6 +69702,15 @@ window.location.hash
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {};
+
+    //Global class-names for icons
+    ns.icons = ns.icons || {};
+    ns.icons.reset = 'fa fa-arrow-rotate-left';
+
+    //Global texts
+    ns.texts = ns.texts || {};
+    ns.texts.reset = {da:'Nulstil', en:'Reset'};
+
 
     /***********************************************
     SettingGroup( options )
@@ -69851,6 +69866,21 @@ window.location.hash
         },
 
         /***********************************************
+        reset()
+        ***********************************************/
+        reset: function(){
+            var _this = this;
+            if (this.options.simpleMode)
+                return;
+
+            $.each( this.settings, function( id, setting ){
+                if (setting.options.defaultValue !== undefined)
+                    _this.set(id, setting.options.defaultValue);
+            });
+
+        },
+
+        /***********************************************
         get( id )
         id [String]
         ***********************************************/
@@ -69861,6 +69891,38 @@ window.location.hash
                 var setting = this.settings[id];
                 return setting ? setting.getValue() : undefined;
             }
+        },
+
+
+        /***********************************************
+        getDefault( id )
+        id [String]
+        ***********************************************/
+        getDefault: function( id ){
+            if (this.options.simpleMode)
+                //Simple mode => No default data gioven
+                return this.data[id];
+            else {
+                var setting = this.settings[id];
+                return setting ? setting._adjustValue(setting.options.defaultValue) : undefined;
+            }
+        },
+
+        /***********************************************
+        getDefaultData()
+        ***********************************************/
+        getDefaultData: function(){
+            var _this = this,
+                result = {};
+            if (this.options.simpleMode)
+                //Simple mode => No default data given
+                result = $.extend(true, {}, this.data);
+            else
+                $.each( this.settings, function(id){
+                    result[id] = _this.getDefault(id);
+                });
+
+            return result;
         },
 
         /***********************************************
@@ -69913,6 +69975,14 @@ window.location.hash
                         });
                 });
 
+
+                //Adjust reset-options
+                if (this.options.reset)
+                    this.options.reset = $.extend({
+                        icon      : ns.icons.reset,
+                        text      : ns.texts.reset,
+                    }, this.options.reset === true ? {} : this.options.reset);
+
                 this.modalForm = $.bsModalForm(
                     $.extend(
                         this.options.modalOptions || {},
@@ -69923,10 +69993,18 @@ window.location.hash
                             flexWidth : this.options.flexWidth,
 
                             content   : {type: 'accordion', list: list },
+
+                            buttons   : this.options.reset && !this.options.simpleMode ? [{
+                                            icon: this.options.reset.icon,
+                                            text: this.options.reset.text,
+                                            onClick: $.proxy(this._resetInForm, this)
+                                        }] : undefined,
+
                             onChanging: $.proxy(this.onChanging, this),
                             onSubmit  : $.proxy(this.onSubmit,   this),
                             onCancel  : $.proxy(this.onCancel,   this),
-                            onClose   : $.proxy(this.onClose,    this)
+                            onClose   : $.proxy(this.onClose,    this),
+
                         }
                     )
                 );
@@ -69950,6 +70028,11 @@ window.location.hash
         /*****************************************************/
         editData: function(data, preEdit){
             this.edit(null, data, preEdit);
+        },
+
+        _resetInForm: function(){
+            this.reset();
+            this.edit();
         },
 
         /*****************************************************
@@ -70121,8 +70204,13 @@ window.location.hash
                 ns.events.fire( this.options.globalEvents, id, this.getValue() );
         },
 
+
+        _adjustValue: function( value ){
+            return this.options.getValue ? this.options.getValue(value, this) : value;
+        },
+
         getValue: function(){
-            return this.options.getValue ? this.options.getValue(this.value, this) : this.value;
+            return this._adjustValue( this.value );
         }
     };
 
@@ -70134,6 +70222,7 @@ window.location.hash
         new SettingGroup({
             storeId        : 'GLOBAL',
             autoSave       : true,
+            reset          : true,
             flexWidth      : true,
             modernizrPrefix: 'global-setting-',
 
@@ -81992,7 +82081,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
 ****************************************************************************/
 
-(function ($, Mmenu/*, i18next, window, document, undefined*/) {
+(function ($, Mmenu, i18next, window, document, undefined) {
     "use strict";
 
     //clone( elem ) return a cloned copy of elem
@@ -82356,6 +82445,29 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
 
         /***********************************
+        _reset
+        Reset/unselect self and all sub-menus
+        ***********************************/
+        _reset: function(){
+            if (this.hasCheckbox && this.state){
+                //Use special reset-state if given
+                var resetState = this.menu.options.reset.resetState;
+                if (resetState !== undefined)
+                    this.state = resetState;
+                this._onClick();
+            }
+
+            var menuItem = this.first;
+            while (menuItem){
+                menuItem._reset();
+                menuItem = menuItem.next;
+            }
+        },
+
+
+
+
+        /***********************************
         _createUl
         ***********************************/
         _createUl: function(){
@@ -82380,6 +82492,22 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                 item = item.next;
             }
             return nextIndex;
+        },
+
+        /***********************************
+        _getParentIndex
+        Get the index of the item in its parents list
+        ***********************************/
+        _getParentIndex: function(){
+            var result = -1;
+            if (this.parent){
+                var nextItem = this.parent.first;
+                while (nextItem){
+                    result++;
+                    nextItem = nextItem === this ? null : nextItem.next;
+                }
+            }
+            return result;
         },
 
         /***********************************
@@ -82631,10 +82759,19 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             add   : function(id) - called when menu-item with id is added to favorites
             remove: function(id) - called when menu-item with id is removed from favorites
         }
-        inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true)
+        inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true) and reset (if options.reset is given)
         barCloseAll: BOOLEAN, if true a top-bar button is added that closes all open submenus
 
         adjustIcon  : function(icon): retur icon (optional). Adjust the icon of each menu-items
+
+        reset : NULL, true, false or {
+            position  : STRING "top" or "bottom". Default = "top"
+            icon      : STRING
+            title     : STRING
+            promise   : FUNCTION( resolve: function(clossAll:BOOLEAN) ) functions tha calls resolve(true/false) if all selected menu-items are to be unselected
+            resetState: Object to be used when resetting an item with options.onChange instead of options.onClick
+            finally   : FUNCTION( bsMenu ) (optional). Called after all menu-items are unselected
+        }
 
     ************************************************/
     $.BsMmenu = function(options = {}, mmenuOptions = {}, configuration = {}){
@@ -82680,6 +82817,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
         this.menu = this;
 
+        this.favoriteId = '____FAVORITES___';
+
         //Craete ul to hold the menu
         this._createUl();
 
@@ -82696,7 +82835,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
             //Add menu-item with favorites
             this.favoritesItem = $.bsMmenuItem({
-                id      : '____FAVORITES___',
+                id      : this.favoriteId,
                 icon    : [['fas text-checked fa-star fa-fw', $.FONTAWESOME_PREFIX_STANDARD + ' fa-star fa-fw']],
                 text    : {da: 'Favoritter', en: 'Favorites'},
                 addToBar: true,
@@ -82756,13 +82895,14 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         create
         **********************************/
         create: function($elem){
+            var buttonList;
             this._createUl();
             this.$ul.appendTo($elem);
 
             $elem.addClass( $._bsGetSizeClass({baseClass: 'mm-menu', useTouchSize: true}) );
 
             if (this.options.inclBar){
-                var buttonList = [];
+                buttonList = [];
                 if (this.options.barCloseAll)
                     buttonList.push( $.bsButton({
                         icon   : 'fa-home',
@@ -82793,6 +82933,32 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                         top: buttonList,
                         //bottom: []ELEMENT
                     };
+            }
+
+
+            //Add button to reset all selected menu-items (if any)
+            if (this.options.reset){
+                var resetOptions = this.options.reset = $.extend({
+                        position  : "top",
+                        icon      : 'fa fa-rotate-left',
+                        title     : {da:'Nulstil', en:'Reset'},
+                        promise   : function( resolve ){ resolve(); },
+//                        resetState: false,
+                        finally   : function(){}
+                    }, this.options.reset === true ? {} : this.options.reset),
+
+                    iconbar = this.mmenuOptions.iconbar = this.mmenuOptions.iconbar || {use: true};
+
+                buttonList = iconbar[resetOptions.position] = iconbar[resetOptions.position] || [];
+                buttonList.push(
+                    $.bsButton({
+                        icon    : resetOptions.icon,
+                        title   : resetOptions.title,
+                        square  : true,
+                        tagName : 'div',
+                        onClick : $.proxy(this.reset, this)
+                    }).get(0)
+                );
             }
 
             this.configuration.bsMenu = this;
@@ -82842,6 +83008,27 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             if (item)
                 item.remove();
             return item;
+        },
+
+        /**********************************
+        reset
+        **********************************/
+        reset: function(){
+            if (this.options.reset.promise)
+                this.options.reset.promise( $.proxy(this._reset_resolve, this) );
+        },
+
+        _reset_resolve: function( closeAll ){
+            var menuItem = this.first;
+            while (menuItem){
+                if (menuItem.id != this.favoriteId)
+                    menuItem._reset();
+                menuItem = menuItem.next;
+            }
+            if (closeAll)
+                this.closeAll();
+
+            this.options.reset.finally(this);
         },
 
         /**********************************
