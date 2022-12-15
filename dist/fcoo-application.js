@@ -489,7 +489,7 @@ Objects and methods to create icons for buttons etc.
     ns.icons = ns.icons || {};
     ns.texts = ns.texts || {};
 
-    //New reset-icon
+    //Adjust reset-icon
     ns.icons.reset = $.FONTAWESOME_PREFIX_STANDARD + ' fa-arrow-rotate-left';
 
     //Working icon
@@ -631,6 +631,7 @@ Create and manage the main structure for FCOO web applications
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
+resetListPrepend: true,
             }));
             $body.append( result.leftMenu.$container );
             result.menus.push(result.leftMenu);
@@ -735,11 +736,11 @@ Create and manage the main structure for FCOO web applications
         //Add menu-buttons to left and right menu. button-options can be in options.[left/right]MenuButtons or options.[left/right]Menu.buttons
         function createMenuButtons(side){
             var menuOptions = result.options[side+'Menu'],
-                options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || null : null,
+                options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || {} : {},
                 menu        = result[side+'Menu'],
                 $container  = menu ? menu.$preMenu : null;
 
-            if (!options || !$container) return;
+            if (!$container) return;
 
             $container.addClass('d-flex');
 
@@ -1272,6 +1273,17 @@ Objects and methods to set up Mmenu via $.bsMmenu
             }
         }, options);
 
+
+        //If menu-options has reset=true => use default and add menu-reset to resetList (see fcoo-application-reset.js)
+        var addToResetList = false;
+        if (options.reset === true){
+            addToResetList = true;
+            options.reset = {
+                icon: ns.icons.reset,
+            };
+        }
+
+        //Create the menu
         var bsMenu =
                 $.bsMmenu(
                     options, {
@@ -1282,6 +1294,29 @@ Objects and methods to set up Mmenu via $.bsMmenu
         bsMenu.id = bsMenu.options.id || menuId;
         bsMenus[bsMenu.id] = bsMenu;
         setFavorites(bsMenu);
+
+        if (addToResetList){
+            //Append or Prepend the reset on resetList
+            var resetOptions = {
+                id  : bsMenu.id,
+                icon: options.resetIcon || 'fa',
+                text: options.resetText || 'Menu',
+                reset       : bsMenu._reset_resolve,
+                resetContext: bsMenu
+            };
+
+            if (options.resetListPrepend)
+                ns.resetList.unshift(resetOptions);
+            else
+                ns.resetList.push(resetOptions);
+
+            //Overwrite onClick on reset-button in menu to call global reset-modal
+            bsMenu.options.reset.promise = function(){
+                var data = {};
+                data[bsMenu.id] = true;
+                ns.reset(data, true);
+            };
+        }
 
         return bsMenu;
     };
@@ -1863,6 +1898,123 @@ load setup-files in fcoo.promiseList after checking for test-modes
 
 
 }(jQuery, this, this.i18next, this.Promise, document));
+
+
+
+
+;
+/****************************************************************************
+fcoo-application-reset.js
+
+Form etc for resetting application options/settings and general/global options etc.
+
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+    "use strict";
+
+    var ns = window.fcoo = window.fcoo || {};
+
+    //ns.resetList = []{id:ID, icon, text, reset: FUNCTION}
+    ns.resetList = ns.resetList || [];
+
+    /******************************************************************
+    Reset bsMmenu
+    ******************************************************************/
+
+    /******************************************************************
+    Reset ns.globalSetting
+    Overwrite globalSetting._resetinForm to display all reset options
+    ******************************************************************/
+    ns.globalSetting._original_resetInForm = ns.globalSetting._resetInForm;
+    ns.globalSetting._resetInForm = function(){
+        ns.reset({globalSetting: true}, {editGlobalSetting: true} );
+    };
+
+
+    /******************************************************************
+    reset
+    resetData = {
+        layer     : BOOLEAN,
+        maps      : BOOLEAN,
+        mapOptions: BOOLEAN
+        options   : BOOLEAN
+    }
+    ******************************************************************/
+    var $resetForm,
+        currentResetArgument;
+
+    ns.reset = function(resetData, resetArgument){
+        currentResetArgument = resetArgument || {};
+        if (!$resetForm){
+            var content = [];
+
+            /* TEST
+            content = [
+                {id: 'layer',       icon: 'fa-home', text:'Her kommer id1 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
+                {id: 'maps',        icon: 'fa-home', text:'Her kommer id2 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
+                {id: 'mapOptions',  icon: 'fa-home', text:'Her kommer id3 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
+                {id: 'options',     icon: 'fa-home', text:'Her kommer id3 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
+            ];
+            */
+
+
+            //Global settings
+            ns.resetList.push({
+                id  : 'globalSetting',
+                icon: 'fa-cog',
+                text: {
+                    da: 'Generelle indstillinger<br>Sprog, tidszone, dato og tid, enheder mv.',
+                    en: 'Generel Settings<br>Language, timezone, date and time, units etc.'
+                },
+                reset: function(options){
+                    this.reset();
+                    if (options.editGlobalSetting)
+                        this.edit();
+                },
+                resetContext: ns.globalSetting
+            });
+
+            ns.resetList.forEach( function(resetOptions){
+                content.push({
+                    id       : resetOptions.id,
+                    type     : 'checkboxbutton',
+                    icon     : resetOptions.icon,
+                    text     : resetOptions.text,
+                    fullWidth: true
+                });
+            });
+
+            $resetForm = $.bsModalForm({
+                header: {
+                    icon: ns.icons.reset,
+                    text: {da: 'Nulstil indstillinger', en: 'Reset settings'}
+                },
+                content: content,
+                show    : false,
+                onSubmit: reset_submit,
+                closeWithoutWarning: true,
+
+            });
+        }
+
+        if (ns.resetList.length > 1)
+           $resetForm.edit(resetData);
+        else
+            reset_submit(true);
+    };
+
+    function reset_submit(data){
+        //Call the reste-function for all selected resets
+        var restAll = (data === true);
+        ns.resetList.forEach( function( resetOptions ){
+            if (restAll || data[resetOptions.id]){
+                resetOptions.reset.call(resetOptions.resetContext, currentResetArgument);
+            }
+        });
+    }
+
+
+}(jQuery, this, document));
 
 
 
@@ -2501,8 +2653,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 
         //Create the $.bsMenu if menuOptions are given
-        if (this.options.menuOptions)
+
+        if (this.options.menuOptions){
+            this.options.menuOptions.resetListPrepend = this.options.resetListPrepend || this.options.menuOptions.resetListPrepend;
             this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
+        }
 
 
         if (this.options.isOpen)

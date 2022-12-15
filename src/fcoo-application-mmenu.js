@@ -60,6 +60,17 @@ Objects and methods to set up Mmenu via $.bsMmenu
             }
         }, options);
 
+
+        //If menu-options has reset=true => use default and add menu-reset to resetList (see fcoo-application-reset.js)
+        var addToResetList = false;
+        if (options.reset === true){
+            addToResetList = true;
+            options.reset = {
+                icon: ns.icons.reset,
+            };
+        }
+
+        //Create the menu
         var bsMenu =
                 $.bsMmenu(
                     options, {
@@ -70,6 +81,29 @@ Objects and methods to set up Mmenu via $.bsMmenu
         bsMenu.id = bsMenu.options.id || menuId;
         bsMenus[bsMenu.id] = bsMenu;
         setFavorites(bsMenu);
+
+        if (addToResetList){
+            //Append or Prepend the reset on resetList
+            var resetOptions = {
+                id  : bsMenu.id,
+                icon: options.resetIcon || 'fa',
+                text: options.resetText || 'Menu',
+                reset       : bsMenu._reset_resolve,
+                resetContext: bsMenu
+            };
+
+            if (options.resetListPrepend)
+                ns.resetList.unshift(resetOptions);
+            else
+                ns.resetList.push(resetOptions);
+
+            //Overwrite onClick on reset-button in menu to call global reset-modal
+            bsMenu.options.reset.promise = function(){
+                var data = {};
+                data[bsMenu.id] = true;
+                ns.reset(data, true);
+            };
+        }
 
         return bsMenu;
     };

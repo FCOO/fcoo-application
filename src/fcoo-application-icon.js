@@ -24,7 +24,7 @@ Objects and methods to create icons for buttons etc.
     ns.icons = ns.icons || {};
     ns.texts = ns.texts || {};
 
-    //New reset-icon
+    //Adjust reset-icon
     ns.icons.reset = $.FONTAWESOME_PREFIX_STANDARD + ' fa-arrow-rotate-left';
 
     //Working icon

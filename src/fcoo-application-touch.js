@@ -178,8 +178,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 
         //Create the $.bsMenu if menuOptions are given
-        if (this.options.menuOptions)
+
+        if (this.options.menuOptions){
+            this.options.menuOptions.resetListPrepend = this.options.resetListPrepend || this.options.menuOptions.resetListPrepend;
             this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
+        }
 
 
         if (this.options.isOpen)

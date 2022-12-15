@@ -125,6 +125,7 @@ Create and manage the main structure for FCOO web applications
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
+resetListPrepend: true,
             }));
             $body.append( result.leftMenu.$container );
             result.menus.push(result.leftMenu);
@@ -229,11 +230,11 @@ Create and manage the main structure for FCOO web applications
         //Add menu-buttons to left and right menu. button-options can be in options.[left/right]MenuButtons or options.[left/right]Menu.buttons
         function createMenuButtons(side){
             var menuOptions = result.options[side+'Menu'],
-                options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || null : null,
+                options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || {} : {},
                 menu        = result[side+'Menu'],
                 $container  = menu ? menu.$preMenu : null;
 
-            if (!options || !$container) return;
+            if (!$container) return;
 
             $container.addClass('d-flex');
 
