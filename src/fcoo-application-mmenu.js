@@ -61,14 +61,12 @@ Objects and methods to set up Mmenu via $.bsMmenu
         }, options);
 
 
-        //If menu-options has reset=true => use default and add menu-reset to resetList (see fcoo-application-reset.js)
-        var addToResetList = false;
-        if (options.reset === true){
-            addToResetList = true;
-            options.reset = {
-                icon: ns.icons.reset,
-            };
-        }
+        //If menu-options has reset => use default and add menu-reset to resetList (see fcoo-application-reset.js)
+        if (options.reset === true)
+            options.reset = {};
+
+        if (options.reset)
+            options.reset.icon = options.reset.icon || ns.icons.reset;
 
         //Create the menu
         var bsMenu =
@@ -82,15 +80,15 @@ Objects and methods to set up Mmenu via $.bsMmenu
         bsMenus[bsMenu.id] = bsMenu;
         setFavorites(bsMenu);
 
-        if (addToResetList){
+        if (options.reset){
             //Append or Prepend the reset on resetList
-            var resetOptions = {
+            var resetOptions = $.extend({}, options.reset, {
                 id  : bsMenu.id,
                 icon: options.resetIcon || 'fa',
                 text: options.resetText || 'Menu',
                 reset       : bsMenu._reset_resolve,
                 resetContext: bsMenu
-            };
+            });
 
             if (options.resetListPrepend)
                 ns.resetList.unshift(resetOptions);
