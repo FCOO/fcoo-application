@@ -1961,8 +1961,8 @@ Form etc for resetting application options/settings and general/global options e
                 id  : 'globalSetting',
                 icon: 'fa-cog',
                 text: {
-                    da: 'Generelle indstillinger<br>Sprog, tidszone, dato og tid, enheder mv.',
-                    en: 'Generel Settings<br>Language, timezone, date and time, units etc.'
+                    da: 'Generelle indstillinger<br>Sprog, tidszone, dato, enheder mv.',
+                    en: 'Generel Settings<br>Language, timezone, date, units etc.'
                 },
                 reset: function(options){
                     this.reset();
