@@ -1961,7 +1961,7 @@ Form etc for resetting application options/settings and general/global options e
                 id  : 'globalSetting',
                 icon: 'fa-cog',
                 text: {
-                    da: ['Nulstil Indstillinger', 'Sprog, tidszone, dato, enheder mv.'],
+                    da: ['Gendan Indstillinger', 'Sprog, tidszone, dato, enheder mv.'],
                     en: ['Reset Settings', 'Language, timezone, date, units etc.']
                 },
                 reset: function(options){
@@ -2001,7 +2001,7 @@ Form etc for resetting application options/settings and general/global options e
             $resetForm = $.bsModalForm({
                 header: {
                     icon: ns.icons.reset,
-                    text: {da: 'Nulstil', en: 'Reset'}
+                    text: {da: 'Gendan', en: 'Reset'}
                 },
                 content : content,
                 show    : false,
