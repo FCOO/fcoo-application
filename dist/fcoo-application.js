@@ -1961,8 +1961,8 @@ Form etc for resetting application options/settings and general/global options e
                 id  : 'globalSetting',
                 icon: 'fa-cog',
                 text: {
-                    da: 'Generelle indstillinger<br>Sprog, tidszone, dato, enheder mv.',
-                    en: 'Generel Settings<br>Language, timezone, date, units etc.'
+                    da: ['Nulstil Indstillinger', 'Sprog, tidszone, dato, enheder mv.'],
+                    en: ['Reset Settings', 'Language, timezone, date, units etc.']
                 },
                 reset: function(options){
                     this.reset();
@@ -1973,9 +1973,25 @@ Form etc for resetting application options/settings and general/global options e
             });
 
             ns.resetList.forEach( function(resetOptions){
+                var multiLines = false;
+
+                //Convert text.LANG: []STRING => text.LANG: STRING<br>STRING
+                if ($.isPlainObject(resetOptions.text))
+                    $.each(resetOptions.text, function(lang, text){
+                        var textArray = $.isArray(text) ? text : [text],
+                            newText   = '';
+                        if (textArray.length > 1)
+                            multiLines = true;
+                        textArray.forEach( function(str, index){
+                            newText += (index ? '<br><span style="font-size: smaller">' : '') + str + (index ? '</span>' : '');
+                        });
+                        resetOptions.text[lang] = newText;
+                    });
+
                 content.push({
                     id       : resetOptions.id,
                     type     : 'checkboxbutton',
+                    class    : 'btn-reset' + (multiLines ? ' multi-lines' : ''),
                     icon     : resetOptions.icon,
                     text     : resetOptions.text,
                     fullWidth: true
@@ -1985,11 +2001,12 @@ Form etc for resetting application options/settings and general/global options e
             $resetForm = $.bsModalForm({
                 header: {
                     icon: ns.icons.reset,
-                    text: {da: 'Nulstil indstillinger', en: 'Reset settings'}
+                    text: {da: 'Nulstil', en: 'Reset'}
                 },
-                content: content,
+                content : content,
                 show    : false,
                 onSubmit: reset_submit,
+
                 closeWithoutWarning: true,
 
             });

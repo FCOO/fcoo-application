@@ -111,6 +111,18 @@ the break-points defined in fcoo-modernizr-mediaquery-device
 }
 
 /*****************************************************
+Special claa for buttons in reset-list
+*****************************************************/
+.btn-reset {
+    min-height : 4em;
+    line-height: 3;
+    &.multi-lines {
+        line-height: var(--bs-btn-line-height);
+    }
+}
+
+
+/*****************************************************
 Special adjustments and bug fix
 *****************************************************/
 

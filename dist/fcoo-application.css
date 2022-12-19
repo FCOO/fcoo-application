@@ -1121,6 +1121,15 @@ html.xlarge-down .invisible-for-xlarge-down {
   visibility: hidden; }
 
 /*****************************************************
+Special claa for buttons in reset-list
+*****************************************************/
+.btn-reset {
+  min-height: 4em;
+  line-height: 3; }
+  .btn-reset.multi-lines {
+    line-height: var(--bs-btn-line-height); }
+
+/*****************************************************
 Special adjustments and bug fix
 *****************************************************/
 /* Both jquery-bootstrap and fcoo-fontawesome has
