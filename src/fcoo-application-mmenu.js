@@ -65,9 +65,11 @@ Objects and methods to set up Mmenu via $.bsMmenu
         if (options.reset === true)
             options.reset = {};
 
-        if (options.reset)
+        if (options.reset){
             options.reset.icon = options.reset.icon || ns.icons.reset;
+            options.reset.title = ns.texts.reset;
 
+        }
         //Create the menu
         var bsMenu =
                 $.bsMmenu(

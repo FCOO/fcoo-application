@@ -27,13 +27,7 @@ Form etc for resetting application options/settings and general/global options e
 
 
     /******************************************************************
-    reset
-    resetData = {
-        layer     : BOOLEAN,
-        maps      : BOOLEAN,
-        mapOptions: BOOLEAN
-        options   : BOOLEAN
-    }
+    reset(resetData = {ID: BOOLEAN}, resetArgument)
     ******************************************************************/
     var $resetForm,
         currentResetArgument;
@@ -42,16 +36,6 @@ Form etc for resetting application options/settings and general/global options e
         currentResetArgument = resetArgument || {};
         if (!$resetForm){
             var content = [];
-
-            /* TEST
-            content = [
-                {id: 'layer',       icon: 'fa-home', text:'Her kommer id1 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
-                {id: 'maps',        icon: 'fa-home', text:'Her kommer id2 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
-                {id: 'mapOptions',  icon: 'fa-home', text:'Her kommer id3 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
-                {id: 'options',     icon: 'fa-home', text:'Her kommer id3 beskrivelse<br>dk kjads gfkas hkfahkadg hksd gk k kdsfg hk ksdfk dkghkadgf hksdfgk k kdaffjhg kdh gk '},
-            ];
-            */
-
 
             //Global settings
             ns.resetList.push({
@@ -98,7 +82,7 @@ Form etc for resetting application options/settings and general/global options e
             $resetForm = $.bsModalForm({
                 header: {
                     icon: ns.icons.reset,
-                    text: {da: 'Gendan', en: 'Reset'}
+                    text: ns.texts.reset
                 },
                 content : content,
                 show    : false,
