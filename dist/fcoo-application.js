@@ -1914,7 +1914,7 @@ Form etc for resetting application options/settings and general/global options e
 
     var ns = window.fcoo = window.fcoo || {};
 
-    //ns.resetList = []{id:ID, icon, text, reset: FUNCTION}
+    //ns.resetList = []{id:ID, icon, text, subtext, reset: FUNCTION}
     ns.resetList = ns.resetList || [];
 
     /******************************************************************
@@ -1947,8 +1947,12 @@ Form etc for resetting application options/settings and general/global options e
                 id  : 'globalSetting',
                 icon: 'fa-cog',
                 text: {
-                    da: ['Gendan Indstillinger', 'Sprog, tidszone, dato, enheder mv.'],
-                    en: ['Reset Settings', 'Language, timezone, date, units etc.']
+                    da: 'Gendan Indstillinger',
+                    en: 'Reset Settings'
+                },
+                subtext: {
+                    da: 'Sprog, tidszone, dato, enheder mv.',
+                    en: 'Language, timezone, date, units etc.'
                 },
                 reset: function(options){
                     this.reset();
@@ -1959,27 +1963,18 @@ Form etc for resetting application options/settings and general/global options e
             });
 
             ns.resetList.forEach( function(resetOptions){
-                var multiLines = false;
-
-                //Convert text.LANG: []STRING => text.LANG: STRING<br>STRING
-                if ($.isPlainObject(resetOptions.text))
-                    $.each(resetOptions.text, function(lang, text){
-                        var textArray = $.isArray(text) ? text : [text],
-                            newText   = '';
-                        if (textArray.length > 1)
-                            multiLines = true;
-                        textArray.forEach( function(str, index){
-                            newText += (index ? '<br><span style="font-size: smaller">' : '') + str + (index ? '</span>' : '');
-                        });
-                        resetOptions.text[lang] = newText;
-                    });
-
                 content.push({
-                    id       : resetOptions.id,
-                    type     : 'checkboxbutton',
-                    class    : 'btn-reset' + (multiLines ? ' multi-lines' : ''),
-                    icon     : resetOptions.icon,
-                    text     : resetOptions.text,
+                    id     : resetOptions.id,
+                    type   : 'checkboxbutton',
+                    class  : 'w-100 d-flex',
+                    content: $._bsBigIconButtonContent({
+                        icon            : resetOptions.icon,
+                        text            : resetOptions.text,
+                        subtext         : resetOptions.subtext,
+                        subtextSeparator: resetOptions.subtextSeparator,
+                        small           : true
+                    }),
+                    allowContent: true,
                     fullWidth: true
                 });
             });
