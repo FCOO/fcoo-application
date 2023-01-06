@@ -1990,6 +1990,7 @@ Form etc for resetting application options/settings and general/global options e
                 buttons: [{
                     icon: 'fa-bars',
                     text: {da: 'Alle', en:'All'},
+                    class: 'min-width',
                     onClick: function(){
                         $resetForm.edit(resetAllData);
                     }
