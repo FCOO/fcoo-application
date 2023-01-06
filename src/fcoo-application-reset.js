@@ -12,6 +12,8 @@ Form etc for resetting application options/settings and general/global options e
     //ns.resetList = []{id:ID, icon, text, subtext, reset: FUNCTION}
     ns.resetList = ns.resetList || [];
 
+    ns.resetButtonMinHeight = null;
+
     /******************************************************************
     Reset bsMmenu
     ******************************************************************/
@@ -68,7 +70,8 @@ Form etc for resetting application options/settings and general/global options e
                         icon            : resetOptions.icon,
                         text            : resetOptions.text,
                         subtext         : resetOptions.subtext,
-                        subtextSeparator: resetOptions.subtextSeparator
+                        subtextSeparator: resetOptions.subtextSeparator,
+                        minHeight       : resetOptions.minHeight || ns.resetButtonMinHeight
                     }),
                     allowContent: true,
                     fullWidth: true
