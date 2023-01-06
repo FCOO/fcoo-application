@@ -1935,6 +1935,7 @@ Form etc for resetting application options/settings and general/global options e
     reset(resetData = {ID: BOOLEAN}, resetArgument)
     ******************************************************************/
     var $resetForm,
+        resetAllData = {},
         currentResetArgument;
 
     ns.reset = function(resetData, resetArgument){
@@ -1963,6 +1964,7 @@ Form etc for resetting application options/settings and general/global options e
             });
 
             ns.resetList.forEach( function(resetOptions){
+                resetAllData[resetOptions.id] = true;
                 content.push({
                     id     : resetOptions.id,
                     type   : 'checkboxbutton',
@@ -1971,8 +1973,7 @@ Form etc for resetting application options/settings and general/global options e
                         icon            : resetOptions.icon,
                         text            : resetOptions.text,
                         subtext         : resetOptions.subtext,
-                        subtextSeparator: resetOptions.subtextSeparator,
-                        small           : true
+                        subtextSeparator: resetOptions.subtextSeparator
                     }),
                     allowContent: true,
                     fullWidth: true
@@ -1986,8 +1987,15 @@ Form etc for resetting application options/settings and general/global options e
                 },
                 content : content,
                 show    : false,
-                onSubmit: reset_submit,
+                buttons: [{
+                    icon: 'fa-bars',
+                    text: {da: 'Alle', en:'All'},
+                    onClick: function(){
+                        $resetForm.edit(resetAllData);
+                    }
+                }],
 
+                onSubmit: reset_submit,
                 closeWithoutWarning: true,
 
             });
