@@ -1943,7 +1943,8 @@ Form etc for resetting application options/settings and general/global options e
     reset(resetData = {ID: BOOLEAN}, resetArgument)
     ******************************************************************/
     var $resetForm,
-        resetAllData = {},
+        resetAllSelected = {},
+        resetAllUnselected = {},
         currentResetArgument;
 
     ns.reset = function(resetData, resetArgument){
@@ -1977,7 +1978,8 @@ Form etc for resetting application options/settings and general/global options e
                     include = typeof resetOptions.include === 'function' ? resetOptions.include(resetOptions) : !!resetOptions.include;
 
                 if (include){
-                    resetAllData[resetOptions.id] = true;
+                    resetAllSelected[resetOptions.id] = true;
+                    resetAllUnselected[resetOptions.id] = false;
                     content.push({
                         id     : resetOptions.id,
                         type   : 'checkboxbutton',
@@ -1995,6 +1997,7 @@ Form etc for resetting application options/settings and general/global options e
                 }
             });
 
+
             $resetForm = $.bsModalForm({
                 header: {
                     icon: ns.icons.reset,
@@ -2008,10 +2011,15 @@ Form etc for resetting application options/settings and general/global options e
                     text: {da: 'Alle', en:'All'},
                     class: 'min-width',
                     onClick: function(){
-                        $resetForm.edit(resetAllData);
+                        var data = resetAllUnselected;
+                        //If all is selected => unselect all, elle select all
+                        $.each( $resetForm.getValues(), function(id, selected){
+                            if (!selected)
+                                data = resetAllSelected;
+                        });
+                        $resetForm.edit(data);
                     }
                 }],
-
                 onSubmit: reset_submit,
                 closeWithoutWarning: true,
 
