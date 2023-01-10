@@ -246,6 +246,33 @@ fcoo.promiseList.append({
                     },
                     leftMenu  : {
                         width: 360, 
+                        buttons: {
+                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                            save    :   true, //Standard save-button
+                            load    :   true, //Standard load-button
+                            bookmark:   true, //Standard bootmark-button
+                            share   :   function(){
+                                            if (navigator.share) {
+                                                navigator.share({
+                                                    title: 'WebShare API Demo',
+                                                    url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+                                                })
+                                                .then(function(){
+                                                    console.log('Thanks for sharing!');
+                                                })
+                                                .catch(console.error);
+                                            }
+                                            else {
+                                                // fallback
+                                                console.log('no share')
+                                            }
+                                        },
+                            user   : true,
+                            reset  : true,
+                            setting: true,
+                            //postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
+                        },
+
                         menuOptions: {
                             reset: true,
                             resetText: 'Fravælg alle menuer',
@@ -366,31 +393,6 @@ fcoo.promiseList.append({
                         },
 
                         keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
-                        buttons: {
-                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-                            save    :   function(){ console.log('save') }, //Standard save-button
-                            load    :   function(){ console.log('load') }, //Standard load-button
-                            bookmark:   function(){ console.log('bookmark') }, //Standard bootmark-button
-                            share   :   function(){
-                                            if (navigator.share) {
-                                                navigator.share({
-                                                    title: 'WebShare API Demo',
-                                                    url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-                                                })
-                                                .then(function(){
-                                                    console.log('Thanks for sharing!');
-                                                })
-                                                .catch(console.error);
-                                            }
-                                            else {
-                                                // fallback
-                                                console.log('no share')
-                                            }
-                                        },
-                            user   : function(){ console.log('user') },
-                            setting: function(){ console.log('setting') },
-                            postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
-                        }
                     },
 
 

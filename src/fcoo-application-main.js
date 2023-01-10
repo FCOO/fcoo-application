@@ -260,13 +260,15 @@ resetListPrepend: true,
             //Add standard buttons
             var shareIcon = 'fa-share-alt'; //TODO check os for different icons
             var buttonList = [];
+
             $.each([
-                {id:'save',     icon: 'fa-save',        title: {da: 'Gem',             en: 'Save'        }, newGroup: true},
-                {id:'load',     icon: 'fa-folder-open', title: {da: 'Hent',            en: 'Load'        } },
-                {id:'bookmark', icon: 'fa-star',        title: {da: 'Tilføj bogmærke', en: 'Add bookmark'}, newGroup: true},
-                {id:'share',    icon: shareIcon,        title: {da: 'Del',             en: 'Share'       } },
-                {id:'user',     icon: 'fa-user',        title: {da: 'Bruger',          en: 'User'        }, newGroup: true},
-                {id:'setting',  icon: 'fa-cog',         title: {da: 'Indstillinger',   en: 'Settings'    } }
+                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'          }, newGroup: true, onClick: function(){ alert('Save not implemented'); } },
+                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'          },                 onClick: function(){ alert('Load not implemented'); } },
+                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark'  }, newGroup: true, onClick: function(){ alert('Bookmark not implemented'); } },
+                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'         },                 onClick: function(){ alert('Share not implemented'); } },
+                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'          }, newGroup: true, onClick: function(){ alert('User not implemented'); } },
+                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil/Gendan',  en: 'Reset/Restore' }, newGroup: true, onClick: ns.reset               },
+                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'      },                 onClick: function(){ ns.globalSetting.edit(); }}
             ],
             function(index, defaultButtonOptions){
                 var nextButtonOptions = options[defaultButtonOptions.id];
@@ -275,7 +277,10 @@ resetListPrepend: true,
                         buttonGroups.push(buttonList);
                         buttonList = [];
                     }
-                    buttonList.push( $.extend(defaultButtonOptions, $.isFunction(nextButtonOptions) ? {onClick:nextButtonOptions} : nextButtonOptions) );
+                    buttonList.push( $.extend(
+                        defaultButtonOptions,
+                        nextButtonOptions === true ? {} : $.isFunction(nextButtonOptions) ? {onClick:nextButtonOptions} : nextButtonOptions
+                    ) );
                 }
             });
             if (buttonList.length)
