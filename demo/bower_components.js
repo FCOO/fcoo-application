@@ -69862,7 +69862,7 @@ window.location.hash
 
     //Global texts
     ns.texts = ns.texts || {};
-    ns.texts.reset = {da:'Gendan', en:'Reset'};
+    ns.texts.reset = {da:'Nulstil', en:'Reset'};
 
 
     /***********************************************
@@ -69908,8 +69908,11 @@ window.location.hash
         defaultValue
         ***********************************************/
         add: function( options ){
-            var _this = this;
-            options = $.isArray(options) ? options : [options];
+            var _this = this,
+                optionsIsArray = $.isArray(options),
+                result = optionsIsArray ? [] : null;
+
+            options = optionsIsArray ? options : [options];
             $.each(options, function(index, settingOptions){
                 settingOptions = $.extend( {}, { callApply: true }, settingOptions );
                 var setting = new ns.Setting( settingOptions );
@@ -69917,7 +69920,13 @@ window.location.hash
                 _this.settings[settingOptions.id] = setting;
                 setting.apply( _this.data[setting.options.id], !options.callApply );
                 _this.data[setting.options.id] = setting.getValue();
+
+                if (optionsIsArray)
+                    result.push(setting);
+                else
+                    result = setting;
             });
+            return result;
         },
 
         /***********************************************

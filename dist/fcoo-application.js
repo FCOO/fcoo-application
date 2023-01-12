@@ -768,13 +768,13 @@ resetListPrepend: true,
             var buttonList = [];
 
             $.each([
-                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'          }, newGroup: true, onClick: function(){ alert('Save not implemented'); } },
-                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'          },                 onClick: function(){ alert('Load not implemented'); } },
-                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark'  }, newGroup: true, onClick: function(){ alert('Bookmark not implemented'); } },
-                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'         },                 onClick: function(){ alert('Share not implemented'); } },
-                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'          }, newGroup: true, onClick: function(){ alert('User not implemented'); } },
-                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil/Gendan',  en: 'Reset/Restore' }, newGroup: true, onClick: ns.reset               },
-                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'      },                 onClick: function(){ ns.globalSetting.edit(); }}
+                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true, onClick: function(){ alert('Save not implemented'); } },
+                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                 onClick: function(){ alert('Load not implemented'); } },
+                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true, onClick: function(){ alert('Bookmark not implemented'); } },
+                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                 onClick: function(){ alert('Share not implemented'); } },
+                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true, onClick: function(){ alert('User not implemented'); } },
+                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true, onClick: ns.reset               },
+                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                 onClick: function(){ ns.globalSetting.edit(); }}
             ],
             function(index, defaultButtonOptions){
                 var nextButtonOptions = options[defaultButtonOptions.id];
@@ -1957,7 +1957,7 @@ Form etc for resetting application options/settings and general/global options e
                 id  : 'globalSetting',
                 icon: 'fa-cog',
                 text: {
-                    da: 'Gendan Indstillinger',
+                    da: 'Nulstil Indstillinger',
                     en: 'Reset Settings'
                 },
                 subtext: {

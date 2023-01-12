@@ -47,7 +47,7 @@ Form etc for resetting application options/settings and general/global options e
                 id  : 'globalSetting',
                 icon: 'fa-cog',
                 text: {
-                    da: 'Gendan Indstillinger',
+                    da: 'Nulstil Indstillinger',
                     en: 'Reset Settings'
                 },
                 subtext: {
