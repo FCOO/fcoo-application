@@ -25794,7 +25794,6 @@ div.checkbox, div.radio {
   --bs-check-input-padding-y: 0.375rem;
   padding: var(--bs-check-input-padding-y) 0; }
   div.checkbox .form-check-input, div.radio .form-check-input {
-    margin-top: var(--bs-check-input-padding-y);
     flex-shrink: 0; }
   div.checkbox input.semi-selected, div.radio input.semi-selected {
     background-color: #fd7e14; }
@@ -29543,6 +29542,9 @@ ADJUST MMENU AND JQUERY-BOOTSTRAP ELEMENTS
   flex-wrap: wrap; }
   .mm-listitem__text > *:first-child {
     flex: 1; }
+
+a.btn.mm-favorite-icons {
+  height: var(--mm-line-height); }
 
 .button-bar-container {
   padding: 0;

@@ -1301,19 +1301,18 @@ Objects and methods to set up Mmenu via $.bsMmenu
         setFavorites(bsMenu);
 
         if (options.reset){
-            //Append or Prepend the reset on resetList
-            var resetOptions = $.extend({}, options.reset, {
-                id  : bsMenu.id,
-                icon: options.resetIcon || 'fa',
-                text: options.resetText || 'Menu',
-                reset       : bsMenu._reset_resolve,
-                resetContext: bsMenu
-            });
+            var resetOptionsList = [];
 
-            if (options.resetListPrepend)
-                ns.resetList.unshift(resetOptions);
-            else
-                ns.resetList.push(resetOptions);
+            //Append or Prepend the reset on resetList
+            resetOptionsList.push(
+                $.extend({}, options.reset, {
+                    id  : bsMenu.id,
+                    icon: options.resetIcon || 'fa',
+                    text: options.resetText || 'Menu',
+                    reset       : bsMenu._reset_resolve,
+                    resetContext: bsMenu
+                })
+            );
 
             //Overwrite onClick on reset-button in menu to call global reset-modal
             bsMenu.options.reset.promise = function(){
@@ -1321,8 +1320,20 @@ Objects and methods to set up Mmenu via $.bsMmenu
                 data[bsMenu.id] = true;
                 ns.reset(data, true);
             };
-        }
 
+            //Add reset of Favorites
+            if (options.favorites){
+                resetOptionsList.push({
+                    id   : bsMenu.id+'fav',
+                    icon : bsMenu.removeFavoriteIcon,
+                    text : options.resetFavoritesText || {da:'Nulstil Favoritter', en:'Reset Favorites'},
+                    reset: bsMenu.favoriteRemoveAll.bind(bsMenu)
+                });
+            }
+
+            [][options.resetListPrepend ? 'unshift' : 'push'].apply(ns.resetList, resetOptionsList);
+
+        }
         return bsMenu;
     };
 
