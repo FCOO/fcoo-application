@@ -1116,7 +1116,7 @@ Objects and methods to create message-groups
                 showStatus     : true,
                 showTypeHeader : true,
                 showTypeColor  : true,
-                vfFormat       : 'time_local',
+                vfFormat       : 'datetime_local', //'time_local',
                 hideOnError    : true,
                 shakeWhenUnread: true,
 
