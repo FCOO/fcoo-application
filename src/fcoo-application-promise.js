@@ -182,6 +182,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
                             }),
             buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
             scroll  : false,
+            remove  : true,
             show    : true
         });
         return false;

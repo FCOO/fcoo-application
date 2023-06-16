@@ -32,89 +32,87 @@ Form etc for resetting application options/settings and general/global options e
     /******************************************************************
     reset(resetData = {ID: BOOLEAN}, resetArgument)
     ******************************************************************/
-    var $resetForm,
-        resetAllSelected = {},
+    var resetAllSelected = {},
         resetAllUnselected = {},
         currentResetArgument;
 
     ns.reset = function(resetData, resetArgument){
+        var $resetForm,
+            content = [];
+
         currentResetArgument = resetArgument || {};
-        if (!$resetForm){
-            var content = [];
 
-            //Global settings
-            ns.resetList.push({
-                id  : 'globalSetting',
-                icon: 'fa-cog',
-                text: {
-                    da: 'Nulstil Indstillinger',
-                    en: 'Reset Settings'
-                },
-                subtext: {
-                    da: 'Sprog, tidszone, dato, enheder mv.',
-                    en: 'Language, timezone, date, units etc.'
-                },
-                reset: function(options){
-                    this.reset();
-                    if (options.editGlobalSetting)
-                        this.edit();
-                },
-                resetContext: ns.globalSetting
-            });
+        //Global settings
+        ns.resetList.push({
+            id  : 'globalSetting',
+            icon: 'fa-cog',
+            text: {
+                da: 'Nulstil Indstillinger',
+                en: 'Reset Settings'
+            },
+            subtext: {
+                da: 'Sprog, tidszone, dato, enheder mv.',
+                en: 'Language, timezone, date, units etc.'
+            },
+            reset: function(options){
+                this.reset();
+                if (options.editGlobalSetting)
+                    this.edit();
+            },
+            resetContext: ns.globalSetting
+        });
 
-            ns.resetList.forEach( function(resetOptions){
-                var include = true;
-                if (resetOptions.include !== undefined)
-                    include = typeof resetOptions.include === 'function' ? resetOptions.include(resetOptions) : !!resetOptions.include;
+        ns.resetList.forEach( function(resetOptions){
+            var include = true;
+            if (resetOptions.include !== undefined)
+                include = typeof resetOptions.include === 'function' ? resetOptions.include(resetOptions) : !!resetOptions.include;
 
-                if (include){
-                    resetAllSelected[resetOptions.id] = true;
-                    resetAllUnselected[resetOptions.id] = false;
-                    content.push({
-                        id     : resetOptions.id,
-                        type   : 'checkboxbutton',
-                        class  : 'w-100 d-flex',
-                        content: $._bsBigIconButtonContent({
-                            icon            : resetOptions.icon,
-                            text            : resetOptions.text,
-                            subtext         : resetOptions.subtext,
-                            subtextSeparator: resetOptions.subtextSeparator,
-                            minHeight       : resetOptions.minHeight || ns.resetButtonMinHeight
-                        }),
-                        allowContent: true,
-                        fullWidth: true
+            if (include){
+                resetAllSelected[resetOptions.id] = true;
+                resetAllUnselected[resetOptions.id] = false;
+                content.push({
+                    id     : resetOptions.id,
+                    type   : 'checkboxbutton',
+                    class  : 'w-100 d-flex',
+                    content: $._bsBigIconButtonContent({
+                        icon            : resetOptions.icon,
+                        text            : resetOptions.text,
+                        subtext         : resetOptions.subtext,
+                        subtextSeparator: resetOptions.subtextSeparator,
+                        minHeight       : resetOptions.minHeight || ns.resetButtonMinHeight
+                    }),
+                    allowContent: true,
+                    fullWidth: true
+                });
+            }
+        });
+
+        $resetForm = $.bsModalForm({
+            header: {
+                icon: ns.icons.reset,
+                text: ns.texts.reset
+            },
+            width   : ns.resetFormWidth,
+            content : content,
+            show    : false,
+            buttons: [{
+                icon: 'fa-bars',
+                text: {da: 'Alle', en:'All'},
+                class: 'min-width',
+                onClick: function(){
+                    var data = resetAllUnselected;
+                    //If all is selected => unselect all, elle select all
+                    $.each( $resetForm.getValues(), function(id, selected){
+                        if (!selected)
+                            data = resetAllSelected;
                     });
+                    $resetForm.edit(data);
                 }
-            });
-
-
-            $resetForm = $.bsModalForm({
-                header: {
-                    icon: ns.icons.reset,
-                    text: ns.texts.reset
-                },
-                width   : ns.resetFormWidth,
-                content : content,
-                show    : false,
-                buttons: [{
-                    icon: 'fa-bars',
-                    text: {da: 'Alle', en:'All'},
-                    class: 'min-width',
-                    onClick: function(){
-                        var data = resetAllUnselected;
-                        //If all is selected => unselect all, elle select all
-                        $.each( $resetForm.getValues(), function(id, selected){
-                            if (!selected)
-                                data = resetAllSelected;
-                        });
-                        $resetForm.edit(data);
-                    }
-                }],
-                onSubmit: reset_submit,
-                closeWithoutWarning: true,
-
-            });
-        }
+            }],
+            onSubmit: reset_submit,
+            closeWithoutWarning: true,
+            remove: true
+        });
 
         if (ns.resetList.length > 1)
            $resetForm.edit(resetData);
