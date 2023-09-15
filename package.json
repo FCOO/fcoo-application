@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "14.9.2",
+  "version": "14.9.3",
   "homepage": "https://gitlab.com/fcoo/fcoo-application",
   "author": "NielsHolt nho@fcoo.dk",
   "description": "package.json is only use for building the package. see bower.json for more info",
@@ -10,7 +10,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "grunt-fcoo-grunt-plugin": "^6.3.0"
+    "grunt-fcoo-grunt-plugin": "^6.4.0"
   },
   "license": "MIT"
 }

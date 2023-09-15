@@ -34,7 +34,9 @@ Form etc for resetting application options/settings and general/global options e
     ******************************************************************/
     var resetAllSelected = {},
         resetAllUnselected = {},
-        currentResetArgument;
+        currentResetArgument,
+        firstReset = true;
+
 
     ns.reset = function(resetData, resetArgument){
         var $resetForm,
@@ -42,25 +44,28 @@ Form etc for resetting application options/settings and general/global options e
 
         currentResetArgument = resetArgument || {};
 
-        //Global settings
-        ns.resetList.push({
-            id  : 'globalSetting',
-            icon: 'fa-cog',
-            text: {
-                da: 'Nulstil Indstillinger',
-                en: 'Reset Settings'
-            },
-            subtext: {
-                da: 'Sprog, tidszone, dato, enheder mv.',
-                en: 'Language, timezone, date, units etc.'
-            },
-            reset: function(options){
-                this.reset();
-                if (options.editGlobalSetting)
-                    this.edit();
-            },
-            resetContext: ns.globalSetting
-        });
+        if (firstReset){
+            //Add Global settings
+            ns.resetList.push({
+                id  : 'globalSetting',
+                icon: 'fa-cog',
+                text: {
+                    da: 'Nulstil Indstillinger',
+                    en: 'Reset Settings'
+                },
+                subtext: {
+                    da: 'Sprog, tidszone, dato, enheder mv.',
+                    en: 'Language, timezone, date, units etc.'
+                },
+                reset: function(options){
+                    this.reset();
+                    if (options.editGlobalSetting)
+                        this.edit();
+                },
+                resetContext: ns.globalSetting
+            });
+            firstReset = false;
+        }
 
         ns.resetList.forEach( function(resetOptions){
             var include = true;
