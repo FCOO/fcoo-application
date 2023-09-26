@@ -125,7 +125,7 @@ Create and manage the main structure for FCOO web applications
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
-resetListPrepend: true,
+                resetListPrepend   : true,
             }));
             $body.append( result.leftMenu.$container );
             result.menus.push(result.leftMenu);
@@ -429,7 +429,6 @@ resetListPrepend: true,
         else {
             this.resizeStarted = false;
             this.checkForResizeEnd = false;
-
             if (this.options.onResizeEnd)
                 this.options.onResizeEnd(this);
         }

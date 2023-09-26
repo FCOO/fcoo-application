@@ -115,9 +115,10 @@ Sections:
     };
 
 
-    //Getting the application-id
+    //Getting the application-id, version and build
     ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
     ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null);
+    ns.applicationBuild   = ns.getApplicationOption( '{APPLICATION_BUILD}', null);
 
     /*
     Get the application name from grunt.js
@@ -130,8 +131,8 @@ Sections:
         da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', '' ),
         en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', '' )
     };
-
-    var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
+    var fallbackHeader = 'FCOO.dk';
+    var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', fallbackHeader );
     ns.applicationHeader = {
         da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
         en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
@@ -139,7 +140,7 @@ Sections:
 
     //Change the title of the document when the language is changed
     ns.events.on( ns.events.LANGUAGECHANGED, function(){
-        document.title = 'fcoo.dk - ' + i18next.sentence(ns.applicationHeader);
+        document.title = 'FCOO.dk - ' + i18next.sentence(ns.applicationHeader);
     });
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
@@ -147,7 +148,26 @@ Sections:
     ns.localStorageKey     = 'fcoo_' + ns.applicationId;
     ns.localStorageTempKey = ns.localStorageKey + '_temp';
 
+    /* eslint-disable no-console, no-constant-condition*/
+    window.fcoo.events.on('load', function(){
+        //Console application names, version and build using ns.centerConsole if it exsist.
+        //it is created in app.fcoo.dk/favicon/fcoo-head.js
+        if (ns.centerConsole){
+            if (ns.applicationHeader.da !=  fallbackHeader)
+                ns.centerConsole(ns.applicationHeader.da);
+            if ((ns.applicationHeader.en != fallbackHeader) && (ns.applicationHeader.en != ns.applicationHeader.da))
+                ns.centerConsole(ns.applicationHeader.en);
 
+            var version_build = '';
+            if (ns.applicationVersion)
+                version_build = 'Version '+ns.applicationVersion;
+            if (ns.applicationBuild)
+                version_build = version_build + (version_build ? ' / ':'') + ns.applicationBuild;
+            if (version_build)
+                ns.centerConsole(version_build);
+        }
+    });
+    /* eslint-enable no-console, no-constant-condition */
 
     /*********************************************************************
     Add 'load'-event to fcoo.events - will be fired on window-load
