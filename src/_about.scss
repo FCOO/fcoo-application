@@ -17,9 +17,11 @@ Style for 'About FCOO' modal-content
 
         text-align : center;
         font-size  : 1.5*$font-size-sm;
-        line-height: 1.5*$font-size-sm;
+        line-height: 1;
         @include text-shadow();
         @include text-truncate();
+
+        min-height: calc(1em  + 2 * #{$jb-padding-x-sm});
     }
 
     img {

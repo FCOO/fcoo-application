@@ -22,6 +22,7 @@ Create and display "About FCOO" info and modal-box
 
             logo    = i18next.t('logo:owner'),
             name    = i18next.t('name:owner'),
+            desc    = i18next.t('desc:owner'),
             address = i18next.t('address:owner'),
             link    = i18next.t('link:owner'),
             email   = i18next.t('email:owner');
@@ -40,6 +41,13 @@ Create and display "About FCOO" info and modal-box
                 ._bsAddHtml({text:'address:owner'})
                 .appendTo( $content );
 
+        if (desc != 'owner'){
+            $('<hr/>').addClass('mt-1 mb-1').appendTo( $content );
+            $('<div/>')
+                ._bsAddHtml({text:'desc:owner'})
+                .appendTo( $content );
+        }
+
         if (link == 'owner') link = '';
         link = link.split('?')[0];
         link = link + '\\\\\\///////';
@@ -49,8 +57,9 @@ Create and display "About FCOO" info and modal-box
 
         if (email == 'owner') email = '';
 
-        if (logo || name || link || email)
-            $content.append('<br>');
+        if (logo || name || desc || link || email)
+// HER>             $content.append('<br>');
+            $('<hr/>').addClass('mt-1 mb-1').appendTo( $content );
 
         if (link)
             $content.append( $('<a target="_blank">'+link+'</a>').i18n('link:owner', 'href').i18n('name:owner', 'title') );
@@ -85,7 +94,8 @@ Sections:
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
 4: Set up and initialize jquery-bootstrap
-5: Load FCOO and default name,link,email and error-messages
+5: Load name, abbrivation, contact etc. for the owner of the application
+6: Load default name,link,email and error-messages
 ****************************************************************************/
 
 (function ($, i18next, window/*, document, undefined*/) {
@@ -189,31 +199,35 @@ Sections:
 
 
     //Getting the application-id, version and build
-    ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
+    ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}'     ,  '0');
     ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null);
-    ns.applicationBuild   = ns.getApplicationOption( '{APPLICATION_BUILD}', null);
+    ns.applicationBuild   = ns.getApplicationOption( '{APPLICATION_BUILD}'  , null);
 
-    /*
-    Get the application name from grunt.js
-    Support both
-      { application: {name:"..."}} and
-      { application: {name_da:"...", name_en:"..."}}
-    in the applications gruntfile.js
-    */
-    ns.applicationName = {
-        da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', '' ),
-        en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', '' )
-    };
-    var fallbackHeader = 'FCOO.dk';
-    var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', fallbackHeader );
-    ns.applicationHeader = {
-        da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
-        en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
-    };
+    //Application header - is set in ns.createMain(options). see src/fcoo-application-main.js
+    ns.applicationHeader = {};
+
+    //ns.applicationBranch = '' for production, 'DEMO'/'BETA' etc for no-production versions
+    ns.applicationBranch = '';
+    //Test if the path-name contains any of the words defining the version to be none-production
+    var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
+    $.each( ['DEVEL01', 'DEVEL02', 'DEVEL03', 'ALPHA', 'BETA', 'DEMO', 'TEST', 'LOCALHOST'], function( index, branch ){
+        if (urlStr.indexOf(branch) > -1){
+            ns.applicationBranch = branch;
+            return false;
+        }
+    });
 
     //Change the title of the document when the language is changed
     ns.events.on( ns.events.LANGUAGECHANGED, function(){
-        document.title = 'FCOO.dk - ' + i18next.sentence(ns.applicationHeader);
+        var titleArray = [],
+            applicationOwner = i18next.t('abbr:owner');
+
+        if (applicationOwner != 'abbr:owner')
+            titleArray.push(applicationOwner);
+        if (ns.applicationBranch)
+            titleArray.push( ns.applicationBranch );
+        titleArray.push( i18next.sentence(ns.applicationHeader) );
+        document.title = titleArray.join(' - ');
     });
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
@@ -226,9 +240,9 @@ Sections:
         //Console application names, version and build using ns.centerConsole if it exsist.
         //it is created in app.fcoo.dk/favicon/fcoo-head.js
         if (ns.centerConsole){
-            if (ns.applicationHeader.da !=  fallbackHeader)
+            if (ns.applicationHeader.da)
                 ns.centerConsole(ns.applicationHeader.da);
-            if ((ns.applicationHeader.en != fallbackHeader) && (ns.applicationHeader.en != ns.applicationHeader.da))
+            if ((ns.applicationHeader.en) && (ns.applicationHeader.en != ns.applicationHeader.da))
                 ns.centerConsole(ns.applicationHeader.en);
 
             var version_build = '';
@@ -324,23 +338,12 @@ Sections:
             .empty()
             .addClass('loading fcoo-default-app-colors');
 
-        //Find or create div with version-text (ex. "DEMO")
-        var $versionDiv = $('<div/>').appendTo( $loadingDiv ).addClass('version');
-
-        //Test if the path-name contains any of the words defining the version to be none-production
-        var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
-
-        $.each( ['DEVEL01', 'DEVEL02', 'DEVEL03', 'ALPHA', 'BETA', 'DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
-            if (urlStr.indexOf(name) > -1){
-                $versionDiv.text( name + (ns.applicationVersion ? ' - ' + ns.applicationVersion : ''));
-
-                ns.applicationHeader.da = name +' - ' + ns.applicationHeader.da;
-                ns.applicationHeader.en = name +' - ' + ns.applicationHeader.en;
-
-                window.document.title = name +' - ' + window.document.title;
-                return false;
-            }
-        });
+        //Find or create div with branch and version-text (ex. "DEMO 6.2.0")
+        if (ns.applicationBranch)
+            $('<div/>')
+                .addClass('version')
+                .text( ns.applicationBranch + (ns.applicationVersion ? ' - '+ns.applicationVersion : ''))
+                .appendTo( $loadingDiv );
 
         //Create div with logo
         $('<div class="logo"></div>')
@@ -421,15 +424,48 @@ Sections:
     //Icon for external link
     $.bsExternalLinkIcon = 'fa-external-link';
 
+    /***********************************************************************
+    ************************************************************************
+    5: Load name, abbrivation, contact etc. for the owner of the application
+
+    Try to find <meta name='owner' content='OWNER_ID'> and use OWNER_ID to load
+    a different setup-file with name, logo, email etc for the owner of the application
+    Default is FCOO in  name-address-link_owner.json
+    ************************************************************************
+    ***********************************************************************/
+    var ownerFile   = 'name-address-link-owner',
+        subDir      = 'name-address-link',
+        owner       = '';
+
+    $('html').find('meta').each((index, elem) => {
+        var $elem = $(elem),
+            name = $elem.attr('name');
+        if (name && (name.toLowerCase() == 'owner'))
+            owner = $elem.attr('content');
+    });
+    owner = owner.toLowerCase();
+    //Default owner (FCOO) are in default setup-file name-address-link_owner.json
+    if (['fcoo', 'fcoo.dk'].indexOf(owner) > -1)
+        owner = '';
+
+
+    ns.promiseList.append({
+        fileName        : {fileName: ownerFile  + (owner ? '_'+owner : '') + '.json', subDir: subDir},
+        resolve         : i18next.addBundleKeyPhrases.bind(i18next),
+        promiseOptions  : {
+            useDefaultErrorHandler: false,
+            reject                : function(){ ns.loadKeyPhraseFile(ownerFile + '.json', subDir); }
+        }
+    });
+
 
     /***********************************************************************
     ************************************************************************
-    5: Load FCOO and default name,link,email and error-messages
+    6: Load default name,link,email and error-messages
     ************************************************************************
     ***********************************************************************/
-    ns.loadKeyPhraseFile('name-address-link.json',       'name-address-link');
-    ns.loadKeyPhraseFile('name-address-link_owner.json', 'name-address-link');
-    ns.loadPhraseFile   ('request.json',                 'error-code-text'  );
+    ns.loadKeyPhraseFile('name-address-link.json', subDir            );
+    ns.loadPhraseFile   ('request.json',           'error-code-text' );
 
 
 }(jQuery, this.i18next, this, document));
@@ -548,6 +584,12 @@ Create and manage the main structure for FCOO web applications
             minMainWidth        : 0,   //Min width of main-container when menu(s) are open
             globalModeOver      : false,
 
+            /*
+            applicationName     //Any of option applicationName, applicationHeader, or header can be used as heaser for the application
+            applicationHeader
+            header
+            */
+
             topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
             leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
             leftMenuButtons     : null,  //Options for buttons in the header of the left-menu. See format below
@@ -576,6 +618,8 @@ Create and manage the main structure for FCOO web applications
             noAnimation         : false,
         }, options );
 
+        //Sets ns.applicationHeader
+        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
 
         //Disabling transition, transform, or animation.
         ['noTransition', 'noTransform', 'noAnimation'].forEach( function(id, index){
@@ -601,9 +645,6 @@ Create and manage the main structure for FCOO web applications
                     $('html').addClass(className);
             }
         });
-
-
-
 
 
         /*
@@ -2480,7 +2521,7 @@ Create and manage the top-menu for FCOO web applications
         options = $.extend({}, {
             leftMenu   : true,
             logo       : true,
-            header     : ns.applicationHeader,
+            header     : $.extend({}, ns.applicationHeader),
             messages   : null,
             warning    : null,
             search     : true,
@@ -2490,6 +2531,12 @@ Create and manage the top-menu for FCOO web applications
             help       : null,
             rightMenu  : true
         }, options );
+
+        //Extend header with ns.applicationBranch (if any)
+        if (ns.applicationBranch)
+            $.each(options.header, (lang, text) => {
+                options.header[lang] = ns.applicationBranch + (text ? ' - ' + text : '');
+        });
 
         var result = {
                 elementsWidthFound: false

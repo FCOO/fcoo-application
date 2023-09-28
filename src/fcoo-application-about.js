@@ -22,6 +22,7 @@ Create and display "About FCOO" info and modal-box
 
             logo    = i18next.t('logo:owner'),
             name    = i18next.t('name:owner'),
+            desc    = i18next.t('desc:owner'),
             address = i18next.t('address:owner'),
             link    = i18next.t('link:owner'),
             email   = i18next.t('email:owner');
@@ -40,6 +41,13 @@ Create and display "About FCOO" info and modal-box
                 ._bsAddHtml({text:'address:owner'})
                 .appendTo( $content );
 
+        if (desc != 'owner'){
+            $('<hr/>').addClass('mt-1 mb-1').appendTo( $content );
+            $('<div/>')
+                ._bsAddHtml({text:'desc:owner'})
+                .appendTo( $content );
+        }
+
         if (link == 'owner') link = '';
         link = link.split('?')[0];
         link = link + '\\\\\\///////';
@@ -49,8 +57,9 @@ Create and display "About FCOO" info and modal-box
 
         if (email == 'owner') email = '';
 
-        if (logo || name || link || email)
-            $content.append('<br>');
+        if (logo || name || desc || link || email)
+// HER>             $content.append('<br>');
+            $('<hr/>').addClass('mt-1 mb-1').appendTo( $content );
 
         if (link)
             $content.append( $('<a target="_blank">'+link+'</a>').i18n('link:owner', 'href').i18n('name:owner', 'title') );

@@ -4218,7 +4218,7 @@ grunt-css-url-embed@^1.6.1:
   optionalDependencies:
     mmmagic "~0.5.0"
 
-grunt-curl@fcoo/grunt-curl#^2.6.0:
+"grunt-curl@github:fcoo/grunt-curl#^2.6.0":
   version "2.6.0"
   resolved "https://codeload.github.com/fcoo/grunt-curl/tar.gz/30664557ed8c16c026832ebbb374f021d5a8f272"
   dependencies:
@@ -4235,10 +4235,10 @@ grunt-eslint@^22.0.0:
     chalk "^2.1.0"
     eslint "^6.0.1"
 
-grunt-fcoo-grunt-plugin@^6.4.0:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/grunt-fcoo-grunt-plugin/-/grunt-fcoo-grunt-plugin-6.4.2.tgz#841f61eb71b9a544fc24906e528066ddf3d089ce"
-  integrity sha512-t5apX6Q+vbVRUVep92K716pg72TfVVs1uDj+sNrO7tdkMBXCi2oktPynweaIZzbjgeS8mBxGQ4Dcw7wFLuWcig==
+grunt-fcoo-grunt-plugin@^6.6.0:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/grunt-fcoo-grunt-plugin/-/grunt-fcoo-grunt-plugin-6.6.0.tgz#15c92ad8a22fcd588dc2eb4c2c71c08931744562"
+  integrity sha512-Weh5hf4fXcrAr6evoP+TENu6ema9aROSDOx7tXGKyxlsU2RGg+IuU4D8ie0NmAUmJDSkqkbi2OYwE8BgBC0MYw==
   dependencies:
     "@babel/core" "^7.11.6"
     "@babel/preset-env" "^7.11.5"
@@ -4363,7 +4363,7 @@ grunt-legacy-util@~2.0.1:
     underscore.string "~3.3.5"
     which "~2.0.2"
 
-grunt-postcss@fcoo/grunt-postcss#^1.0.0:
+"grunt-postcss@github:fcoo/grunt-postcss#^1.0.0":
   version "0.9.0"
   resolved "https://codeload.github.com/fcoo/grunt-postcss/tar.gz/d9e44402f76ea098602188e22409fcc1d1f89e18"
   dependencies:
