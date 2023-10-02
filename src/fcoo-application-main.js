@@ -370,7 +370,7 @@ Create and manage the main structure for FCOO web applications
             maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
             newModeIsOver = this.maxSingleMenuWidth >=  maxTotalMenuWidthAllowed,
             //Find last opened menu if there are two oen menus
-            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? this.lastOpenedMenu.theOtherMenu : null;
+            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
 
         this.isResizing = true;
         this.options.globalModeOver = newModeIsOver;

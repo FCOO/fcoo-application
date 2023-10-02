@@ -925,7 +925,7 @@ Create and manage the main structure for FCOO web applications
             maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
             newModeIsOver = this.maxSingleMenuWidth >=  maxTotalMenuWidthAllowed,
             //Find last opened menu if there are two oen menus
-            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? this.lastOpenedMenu.theOtherMenu : null;
+            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
 
         this.isResizing = true;
         this.options.globalModeOver = newModeIsOver;
@@ -2137,7 +2137,7 @@ Form etc for resetting application options/settings and general/global options e
 /****************************************************************************
 fcoo-application-setting.js
 
-Methods for content  releted to fcoo-setting
+Methods for content releted to fcoo-setting
 ****************************************************************************/
 (function ($, window/*, document, undefined*/) {
 	"use strict";
@@ -2773,12 +2773,19 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 
         //Create the $.bsMenu if menuOptions are given
-
         if (this.options.menuOptions){
             this.options.menuOptions.resetListPrepend = this.options.resetListPrepend || this.options.menuOptions.resetListPrepend;
             this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
         }
 
+        //Add the open/close status to appSetting
+        this.settingId = this.options.position + '-menu-open';
+        ns.appSetting.add({
+            id          : this.settingId,
+            applyFunc   : this._setOpenCloseFromSetting.bind(this),
+            callApply   : true,
+            defaultValue: 'NOT',
+        });
 
         if (this.options.isOpen)
             this.open(true);
@@ -2959,7 +2966,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
+            window.modernizrOn(this.options.position +'-menu-open');
+
             this._invoke(this.options.onOpen);
+
+            ns.appSetting.set(this.settingId, true);
+
         },
 
         _onClose: [],
@@ -2978,7 +2990,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
+            window.modernizrOff(this.options.position +'-menu-open');
+
             this._invoke(this.options.onClose);
+
+            ns.appSetting.set(this.settingId, false);
+
         },
 
         toggle: function () {
@@ -2988,6 +3005,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 this.open();
         },
 
+        _setOpenCloseFromSetting: function( newIsOpen ){
+            if (typeof newIsOpen != 'boolean')
+                return;
+            if (this.isOpen != newIsOpen)
+                this.toggle();
+        }
     };
 
     ns.touchMenu = function(options){

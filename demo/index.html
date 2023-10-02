@@ -276,6 +276,7 @@
 
                     rightMenu  : {
                         width: 360, 
+                        isOpen: true,                        
                         menuOptions: {
                             reset: true,
                             resetText: 'Fravælg alle HØJRE menuer',
@@ -353,7 +354,7 @@
                     _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
                     bottomMenu: {
-                        height : 'auto',
+                        height : 100,//'auto',
                         standardHandler: true,
 
 
@@ -376,6 +377,11 @@
             '<button onClick="fcoo.globalSetting.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>'+
             '<button onClick="modalDemo();">Modal demo</button>'+
             '<button onClick="notyDemo();">Noty demo</button>'+
+            '<div class="show-for-left-menu-open">Vises når left-menu er åben</div>' +
+            '<div class="hide-for-left-menu-open">Vises når left-menu er lukket</div>' +
+            '<div class="show-for-bottom-menu-open">Vises når bottom-menu er åben</div>' +
+            '<div class="hide-for-bottom-menu-open">Vises når bottom-menu er lukket</div>' +
+            
             '<div class="show-for-mouse">Vises kun, hvis der er en mus</div>').appendTo(main.$mainContainer);
 
         var fileViewModal;
