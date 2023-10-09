@@ -32,7 +32,7 @@ Create and display "About FCOO" info and modal-box
 
         if (name != 'owner')
             $('<div/>')
-                .addClass('fw-bold')
+                .addClass('application-owner')
                 .i18n('name:owner')
                 .appendTo( $content );
 

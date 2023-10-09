@@ -62075,9 +62075,11 @@ module.exports = g;
                 $._bsCreateIcon( opt, $icon, null, 'stacked-icon' );
             });
 
-            //If any of the stacked icons have class fa-no-margin => set if on the container
-            if ($icon.find('.fa-no-margin').length)
-                $icon.addClass('fa-no-margin');
+            //If any of the stacked icons have class fa-no-margin, width-1-Xem => set if on the container
+            ['fa-no-margin', 'width-1-1em', 'width-1-2em', 'width-1-3em', 'width-1-4em', 'width-1-5em'].forEach( (className) => {
+                if ($icon.find('.'+className).length)
+                    $icon.addClass(className);
+            });
         }
         else {
             var allClassNames = options.icon || options.class || '';
