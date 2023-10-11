@@ -68,14 +68,12 @@ div.loading {
         }
 
         &.logo {
-            height          : 100%;
-            display        : flex;
-            align-items    : center;
-            justify-content: center;
-
-            i[class^="icon-fcoo-logo"] {
-                font-size: 90vmin;
-            }
+            height  : 100%;
+            width   : 90vmin;
+            background-image    : url(/assets/logos/FCOO_white.svg);
+            background-repeat   : no-repeat;
+            background-size     : contain;
+            background-position : center;
         }
 
         &.dots {

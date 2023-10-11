@@ -346,9 +346,7 @@ Sections:
                 .appendTo( $loadingDiv );
 
         //Create div with logo
-        $('<div class="logo"></div>')
-            .append('<i class="icon-fcoo-logo-contrast"/>')
-            .appendTo($loadingDiv);
+        $('<div class="logo"></div>').appendTo($loadingDiv);
 
 
         //Find or create div with flashing dots
