@@ -301,6 +301,165 @@ html.no-mouse-hover .hide-for-no-mouse-hover {
 
 @charset "UTF-8";
 /***********************************************
+fcoo-application-logo-and-color.scss,
+
+Defines default application-color
+************************************************/
+/*****************************************************
+LOADING
+Style for the <div> covering the page during loading
+*****************************************************/
+html.loading .hide-for-loading {
+  display: none !important;
+}
+
+html.no-loading .show-for-loading {
+  display: none !important;
+}
+
+/* Blinking dots from https://martinwolf.org/before-2018/blog/2015/01/pure-css-savingloading-dots-animation/ */
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+div.loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2147483647;
+  background-color: var(--fcoo-app-base-color);
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: progress;
+}
+div.loading > div {
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: inherit;
+  text-align: center;
+}
+div.loading > div.version {
+  font-family: sans-serif;
+  font-size: 2rem;
+  top: 0;
+  height: 3rem;
+  line-height: 3rem;
+  margin-bottom: -3rem;
+  background-color: red;
+  color: white;
+}
+div.loading > div.version:empty {
+  visibility: hidden;
+}
+div.loading > div.logo {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+html.logo-portrait div.loading > div.logo {
+  height: 80vmin;
+  width: 100%;
+}
+html.no-logo-portrait div.loading > div.logo {
+  height: 100%;
+  width: 80vmin;
+}
+html.fab-text-color-is-white div.loading > div.logo {
+  background-image: var(--fcoo-app-logo_black-url) !important;
+  background-image: var(--fcoo-app-logo_white-url);
+}
+html.no-fab-text-color-is-white div.loading > div.logo {
+  background-image: var(--fcoo-app-logo_white-url) !important;
+  background-image: var(--fcoo-app-logo_black-url);
+}
+div.loading > div.dots {
+  height: 1em;
+  bottom: 0;
+  font-size: 6rem;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}
+div.loading > div.dots span {
+  color: var(--fcoo-app-base-text-color);
+  width: 0.25em;
+  animation-name: blink;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+div.loading > div.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+div.loading > div.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+html.no-loading div.loading {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease-out 0s, width 0s ease-in-out 0.4s, height 0s ease-in-out 0.4s;
+}
+html.no-loading div.loading:before, html.no-loading div.loading > div {
+  display: none !important;
+}
+
+/*****************************************************
+
+*****************************************************/
+:root {
+  --fcoo-app-logo-wh-ratio: var(--_fcoo-app-logo-wh-ratio, 1);
+}
+
+.fcoo-app-standard-logo {
+  width: 200px;
+  height: 160px;
+  background-image: var(--fcoo-app-logo-url);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+html.logo-portrait .fcoo-app-standard-logo {
+  width: calc(160px * var(--fcoo-app-logo-wh-ratio));
+  height: 160px;
+}
+html.no-logo-portrait .fcoo-app-standard-logo {
+  width: 200px;
+  height: calc(200px / var(--fcoo-app-logo-wh-ratio));
+}
+
+/*****************************************************
+Defines --fcoo-app-base-color and --fcoo-app-base-text-color
+Defaults is = DALO color in "Forsvarsministeriets koncernfælles Designmanual 2018"
+Can be changed by mixin application-base-color( new-color ) in src/_fcoo-application-base-color-mixin.scss
+*****************************************************/
+/***********************************************
+fcoo-application-base-color-mixin
+
+Defines application-base-color = Background color for loading etc.
+************************************************/
+:root {
+  --_fcoo-default-app-base-color: #3f5b58;
+  --fcoo-app-base-color: var(--_fcoo-app-base-color, var(--_fcoo-default-app-base-color));
+  --_fcoo-default-app-base-text-color: #ffffff;
+  --fcoo-app-base-text-color: var(--_fcoo-app-base-text-color, var(--_fcoo-default-app-base-text-color));
+}
+@charset "UTF-8";
+/***********************************************
     fcoo-fontawesome.scss,
 
     (c) 2016, FCOO

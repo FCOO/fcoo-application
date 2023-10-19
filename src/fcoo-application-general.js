@@ -241,38 +241,10 @@ Sections:
     3: Set up 'loading...'
     ************************************************************************
     ***********************************************************************/
-    var $html = $('html'),
-        $body = $('body');
+// HER>     //Set default lofo = 'fcoo'
+// HER>     ns.setApplicationLogo('fcoo');
 
-    //Set <html> class = 'loading' and adds logo and spinner
-    $html.modernizrOn('loading');
-
-    $(function() {
-        //Find or create outer div displayed when loading
-        var $loadingDiv = $body.find('div.loading');
-        $loadingDiv = $loadingDiv.length ? $loadingDiv : $('<div class="loading"></div>' ).prependTo( $body );
-        $loadingDiv
-            .removeClass()  //Clean up
-            .empty()
-            .addClass('loading fcoo-default-app-colors');
-
-        //Find or create div with branch and version-text (ex. "DEMO 6.2.0")
-        if (ns.applicationBranch)
-            $('<div/>')
-                .addClass('version')
-                .text( ns.applicationBranch + (ns.applicationVersion ? ' - '+ns.applicationVersion : ''))
-                .appendTo( $loadingDiv );
-
-        //Create div with logo
-        $('<div class="logo"></div>').appendTo($loadingDiv);
-
-
-        //Find or create div with flashing dots
-        $('<div/>')
-            .addClass('dots')
-            .append('<span>.</span><span>.</span><span>.</span>')
-            .appendTo($loadingDiv);
-    });
+    ns.createLoading( ns.applicationBranch ? ns.applicationBranch + (ns.applicationVersion ? ' - '+ns.applicationVersion : '') : '' );
 
     //Call Url.adjustUrl() to remove broken values in the url
     window.Url.adjustUrl();
@@ -351,7 +323,8 @@ Sections:
     ***********************************************************************/
     var ownerFile   = 'name-address-link-owner',
         subDir      = 'name-address-link',
-        owner       = '';
+        owner       = '',
+        logoFound   = false;
 
     $('html').find('meta').each((index, elem) => {
         var $elem = $(elem),
@@ -361,13 +334,29 @@ Sections:
     });
     owner = owner.toLowerCase();
     //Default owner (FCOO) are in default setup-file name-address-link_owner.json
-    if (['fcoo', 'fcoo.dk'].indexOf(owner) > -1)
+    if (['fcoo', 'fcoo.dk'].indexOf(owner) > -1){
         owner = '';
+        ns.setApplicationLogo( 'fcoo' );
+        logoFound = true;
+    }
 
 
     ns.promiseList.append({
-        fileName        : {fileName: ownerFile  + (owner ? '_'+owner : '') + '.json', subDir: subDir},
-        resolve         : i18next.addBundleKeyPhrases.bind(i18next),
+        fileName: {fileName: ownerFile  + (owner ? '_'+owner : '') + '.json', subDir: subDir},
+        resolve : function( data ){
+            //If no logo is loaded and owner.logo is given and is a string => use it as logo else use default
+            if (!logoFound)
+                ns.setApplicationLogo( data.owner && data.owner.logo && (typeof data.owner.logo == 'string') ? data.owner.logo : 'fcoo');
+
+            //Convert all entry to {da:..., en:...}
+            $.each( data.owner, (id, content) => {
+                data.owner[id] = $._bsAdjustText(content);
+            });
+
+            //Add all data.owner to i18next
+            i18next.addBundleKeyPhrases(data);
+        },
+
         promiseOptions  : {
             useDefaultErrorHandler: false,
             reject                : function(){ ns.loadKeyPhraseFile(ownerFile + '.json', subDir); }

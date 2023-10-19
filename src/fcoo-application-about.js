@@ -27,8 +27,13 @@ Create and display "About FCOO" info and modal-box
             link    = i18next.t('link:owner'),
             email   = i18next.t('email:owner');
 
+
         if (logo != 'owner')
-            $(logo).appendTo($content);
+            $('<div/>')
+                .addClass('application-logo-container')
+                .append( $('<div/>').addClass('fcoo-app-standard-logo m-auto') )
+                .appendTo( $content );
+
 
         if (name != 'owner')
             $('<div/>')

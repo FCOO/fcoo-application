@@ -19413,6 +19413,331 @@ else {
 
 ;
 /****************************************************************************
+	fcoo-data-files.js,
+
+	(c) 2018, FCOO
+
+	https://github.com/FCOO/fcoo-data-files
+	https://github.com/FCOO
+
+    fcoo.LOCAL_DATA: {boolean}
+    fcoo.dataFilePath:
+        function([mainDir:STRING|BOOLEAN], subDir:STRING, fileName:STRING) OR
+        function(pathAndFileName:STRING) OR
+        function(subAndFileName:{mainDirNa<me:STRING|BOOLEAN, subDirName;STRING, fileName:STRING})
+
+    mainDir = STRING or BOOLEAN. if true => "dynamic", if false => "static"
+
+    if fcoo.LOCAL_DATA == false:
+    fcoo.dataFilePath("theSubDir", "fileName.json") returns "https://app.fcoo.dk/static/theSubDir/fileName.json"
+    fcoo.dataFilePath(false, "theSubDir", "fileName.json") returns "https://app.fcoo.dk/static/theSubDir/fileName.json"
+    fcoo.dataFilePath(true, "theSubDir", "fileName.json") returns "https://app.fcoo.dk/dynamic/theSubDir/fileName.json"
+
+    if fcoo.LOCAL_DATA == false and fcoo.path.relative == true
+    fcoo.dataFilePath("theSubDir", "fileName.json") returns "/static/theSubDir/fileName.json"
+    fcoo.dataFilePath(false, "theSubDir", "fileName.json") returns "/static/theSubDir/fileName.json"
+    fcoo.dataFilePath(true, "theSubDir", "fileName.json") returns "/dynamic/theSubDir/fileName.json"
+
+
+    if fcoo.LOCAL_DATA == true:
+    fcoo.dataFilePath("theSubDir", "fileName.json") returns "/src/data/_fileName.json"
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+	//Create fcoo-namespace
+    var ns     = window.fcoo = window.fcoo || {},
+        nsPath = ns.path = ns.path || {};
+
+    ns.LOCAL_DATA = false;
+
+
+    //Set default protocol and host
+    nsPath.protocol    = nsPath.protocol || 'https:';
+    nsPath.defaultHost = 'app.fcoo.dk';
+    nsPath.host        = nsPath.host     || nsPath.defaultHost;
+    nsPath.relative    = nsPath.relative || {};    //nsPath.relative = BOOLEAN or {static/dymanic: BOOLEAN}. If true dataFileName return a relative
+    nsPath.mainDirHost = nsPath.mainDirHost || {}; //{dynamic/static: STRING} Makes it possible to have different host for the two main-dir
+
+    function getTrueMainDir( mainDir ){
+        return mainDir ? (mainDir === true ? 'dynamic' : mainDir) : 'static';
+    }
+
+    /*********************************************************
+    nsPath.dataFileName()
+    *********************************************************/
+    nsPath.dataFileName = function(){
+        // Detect mode
+        var host, mainDir, subDir, relative, fileName;
+
+        if (arguments.length == 3){
+            //(mainDir: STRING|BOOLEAN, subDir:STRING, fileName:STRING)
+            mainDir  = arguments[0];
+            subDir   = arguments[1];
+            fileName = arguments[2];
+        }
+        else
+        if (arguments.length == 2){
+            //(subDir:STRING, fileName:STRING)
+            mainDir  = false,   //=> default 'static'
+            subDir   = arguments[0];
+            fileName = arguments[1];
+        }
+        else
+        if (arguments.length == 1){
+            if (typeof arguments[0] == 'string')
+                //(pathAndFileName:STRING)
+                return arguments[0];
+            else {
+                //({mainDir:STRING|BOOLEAN, subDirName:STRING, fileName:STRING})
+                mainDir  = arguments[0].mainDir || arguments[0].main || false;
+                subDir   = arguments[0].subDir  || arguments[0].sub;
+                fileName = arguments[0].fileName;
+            }
+        }
+
+        if (ns.LOCAL_DATA === true)
+            return '/src/data/_' + fileName;
+
+        //Find mainDir, host, and relative
+        mainDir  = getTrueMainDir(mainDir);
+        host     = typeof nsPath.host == 'string' ? nsPath.host : nsPath.host[mainDir] || nsPath.defaultHost;
+        relative = nsPath.relative ? (nsPath.relative === true ? true : !!nsPath.relative[mainDir]) : false;
+
+        return  (relative ? '' : nsPath.protocol + '//') +
+                (relative ? '' : host) +
+                '/' +
+                mainDir  + '/' +
+                (subDir ? subDir + '/' : '') +
+                fileName;
+    };
+
+    //Backward compability
+    ns.dataFilePath = nsPath.dataFileName;
+
+
+    /*********************************************************
+    nsPath.staticDataFileName (subDir, fileName)
+    nsPath.dynamicDataFileName(subDir, fileName)
+    nsPath.assetsDataFileName (subDir, fileName)
+    *********************************************************/
+    nsPath.staticDataFileName = function(subDir, fileName){
+        return this.dataFileName(false, subDir, fileName);
+    };
+
+    nsPath.dynamicDataFileName = function(subDir, fileName){
+        return this.dataFileName(true, subDir, fileName);
+    };
+
+    nsPath.assetsDataFileName = function(subDir, fileName){
+        return this.dataFileName('assets', subDir, fileName);
+    };
+
+
+    /*********************************************************
+    **********************************************************
+    nsPath.setCssVar(varName, mainDir, subDir, fileName)
+    Create/update css-variabel varName in :root with url( path to fileName )
+    **********************************************************
+    *********************************************************/
+    var dataFileNameAsCssVar = [];
+    nsPath.setDataFileNameAsCssVar = function(varName, mainDir, subDir, fileName){
+        mainDir = getTrueMainDir( mainDir );
+        var root = document.querySelector(':root');
+
+        root.style.setProperty('--'+varName, 'url(' + nsPath.dataFileName(mainDir, subDir, fileName) +')');
+
+        //If new => Add to dataFileNameAsCssVar
+        var found = false;
+        dataFileNameAsCssVar.forEach( (dataFile) => {
+            if ((dataFile.varName == varName) && (dataFile.mainDir == mainDir) && (dataFile.subDir == subDir) && (dataFile.fileName == fileName))
+                found = true;
+        });
+        if (!found)
+            dataFileNameAsCssVar.push({'varName': varName, 'mainDir': mainDir, 'subDir': subDir, 'fileName': fileName});
+    };
+
+    /*********************************************************
+    nsPath.setStaticDataFileNameAsCssVar (varName, subDir, fileName)
+    nsPath.setDynamicDataFileNameAsCssVar(varName, subDir, fileName)
+    nsPath.setAssetsDataFileNameAsCssVar (varName, subDir, fileName)
+    *********************************************************/
+    nsPath.setStaticDataFileNameAsCssVar = function(varName, subDir, fileName){
+        return this.setDataFileNameAsCssVar(varName, false, subDir, fileName);
+    };
+
+    nsPath.setDynamicDataFileNameAsCssVar = function(varName, subDir, fileName){
+        return this.setDataFileNameAsCssVar(varName, true, subDir, fileName);
+    };
+
+    nsPath.setAssetsDataFileNameAsCssVar = function(varName, subDir, fileName){
+        return this.setDataFileNameAsCssVar(varName, 'assets', subDir, fileName);
+    };
+
+    /*********************************************************
+
+    *********************************************************/
+    nsPath.getCssVar = function(varName){
+        var root      = document.querySelector(':root'),
+            rootStyle = getComputedStyle(root);
+        return rootStyle.getPropertyValue('--'+varName);
+    };
+
+
+    /*********************************************************
+    **********************************************************
+    nsPath.setPath(path)
+    **********************************************************
+    *********************************************************/
+    nsPath.setPath = function(path){
+        $.extend(true, this, path);
+
+        //Update all css-var
+        dataFileNameAsCssVar.forEach( (dataFile) => {
+            this.setDataFileNameAsCssVar(dataFile.varName, dataFile.mainDir, dataFile.subDir, dataFile.fileName);
+        });
+        return this;
+    };
+
+
+}(jQuery, this, document));
+
+
+;
+/****************************************************************************
+fcoo-application-loading.js
+
+Create and display loading page
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+    var ns = window.fcoo = window.fcoo || {};
+
+    //Set modernizr-test 'loading' off
+    $('html').modernizrOff('loading');
+
+    var loadingCreated = false;
+
+    ns.createLoading = function( versionText ){
+        loadingCreated = true;
+
+        var $body = $('body');
+
+        //Backward compability: Remove <dic class="loading">...</div>
+        $body.find('div.loading').remove();
+
+        var $loadingDiv = $('<div/>')
+                .addClass('loading')
+                .prependTo( $body );
+
+        //Find or create div with branch and version-text (ex. "DEMO 6.2.0")
+        if (versionText)
+            $('<div/>')
+                .addClass('version')
+                .text( versionText )
+                .appendTo( $loadingDiv );
+
+        //Create div with logo
+        $('<div class="logo"></div>').appendTo($loadingDiv);
+
+        //Create div with flashing dots
+        $('<div/>')
+            .addClass('dots')
+            .append('<span>.</span><span>.</span><span>.</span>')
+            .appendTo($loadingDiv);
+
+        $('html').modernizrOn('loading');
+
+    };
+
+    //On document.ready: Create loading if html has class loading
+    $(function() {
+        if ($('html').hasClass('loading') && !loadingCreated)
+            ns.createLoading();
+    });
+
+}(jQuery, this, document));
+
+;
+/****************************************************************************
+	fcoo-application-logo-and-color.js,
+
+	(c) 2023, FCOO
+
+	https://github.com/FCOO/fcoo-application-logo-and-color
+	https://github.com/FCOO
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+	//Create fcoo-namespace
+	window.fcoo = window.fcoo || {};
+
+
+
+
+
+	/******************************************
+	Initialize/ready
+	*******************************************/
+	$(function() {
+
+
+	});
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+fcoo-application-logo.js
+
+Load logos and sets css-var
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+    var ns = window.fcoo = window.fcoo || {};
+
+    //Set modernizr-test 'logo-portrait' off
+    $('html').modernizrOff('logo-portrait');
+
+    function logoExists( img, fileName, fileNamePostfix){
+        ns.path.setAssetsDataFileNameAsCssVar('fcoo-app-logo' + fileNamePostfix + '-url', 'logos', fileName);
+        $('html').modernizrToggle('logo-portrait', img.height > img.width);
+
+        //Set internal css-var _fcoo-app-logo-wh-ratio
+        var root = document.querySelector(':root');
+        root.style.setProperty('--_fcoo-app-logo-wh-ratio', img.width / img.height);
+    }
+
+    ns.setApplicationLogo = function( fileNamePrefix ){
+        //First set fab-text-color-is-white (=fcoo-app-base-text-color-is-white)
+        var fcooAppBaseTextColor = ns.path.getCssVar('fcoo-app-base-text-color') || '#ffffff',
+            textColorIsWhite = fcooAppBaseTextColor.includes("000");
+        $('html').modernizrToggle('fab-text-color-is-white', !!textColorIsWhite);
+
+        //Check existens of the three versions of the logo
+        var img = [];
+        ['', '_white', '_black'].forEach((fileNamePostfix, index) => {
+            var fileName = fileNamePrefix + fileNamePostfix + '.svg';
+            img[index] = new Image();
+            img[index].src = ns.path.assetsDataFileName('logos', fileName);
+            if (img[index].complete)
+                logoExists.call( null, img[index], fileName, fileNamePostfix  );
+            else
+                img[index].onload = () => {logoExists.call( null, img[index], fileName, fileNamePostfix  ); };
+        });
+    };
+}(jQuery, this, document));
+
+;
+/****************************************************************************
 	fcoo-global-events.js,
 
 	(c) 2016, FCOO
@@ -19436,96 +19761,6 @@ else {
     });
 
 }(this, document));
-;
-/****************************************************************************
-	fcoo-data-files.js,
-
-	(c) 2018, FCOO
-
-	https://github.com/FCOO/fcoo-data-files
-	https://github.com/FCOO
-
-    fcoo.LOCAL_DATA: {boolean}
-    fcoo.dataFilePath:
-        function([mainDir:STRING|BOOLEAN], subDir:STRING, fileName:STRING) OR
-        function(pathAndFileName:STRING) OR
-        function(subAndFileName:{mainDirNa<me:STRING|BOOLEAN, subDirName;STRING, fileName:STRING})
-
-    mainDir = STRING or BOOLEAN. if true => "dynamic", if false => "static"
-
-    if fcoo.LOCAL_DATA == false:
-    fcoo.dataFilePath("theSubDir", "fileName.json") returns "https://app.fcoo.dk/static/theSubDir/fileName.json"
-    fcoo.dataFilePath(false, "theSubDir", "fileName.json") returns "https://app.fcoo.dk/static/theSubDir/fileName.json"
-    fcoo.dataFilePath(true, "theSubDir", "fileName.json") returns "https://app.fcoo.dk/dynamic/theSubDir/fileName.json"
-
-    if fcoo.LOCAL_DATA == true:
-    fcoo.dataFilePath("theSubDir", "fileName.json") returns "/src/data/_fileName.json"
-
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-	"use strict";
-
-	//Create fcoo-namespace
-    var ns     = window.fcoo = window.fcoo || {},
-        nsPath = ns.path = ns.path || {};
-
-    ns.LOCAL_DATA = false;
-
-
-    //Set default protocol and host
-    nsPath.protocol = nsPath.protocol || 'https:';
-    nsPath.host     = nsPath.host     || 'app.fcoo.dk';
-
-    function dataFileName(){
-        // Detect mode
-        var mainDir, subDir, fileName;
-
-        if (arguments.length == 3){
-            //(mainDir: STRING|BOOLEAN, subDir:STRING, fileName:STRING)
-            mainDir  = arguments[0];
-            subDir   = arguments[1];
-            fileName = arguments[2];
-        }
-        else
-        if (arguments.length == 2){
-            //(subDir:STRING, fileName:STRING)
-            mainDir  = false,   //=> default 'static'
-            subDir   = arguments[0];
-            fileName = arguments[1];
-        }
-        else
-        if (arguments.length == 1){
-            if (typeof arguments[0] == 'string')
-                //(pathAndFileName:STRING)
-                return arguments[0];
-            else {
-                //({mainDir:STRING|BOOLEAN, subDirName:STRING, fileName:STRING})
-                mainDir  = arguments[0].mainDir || false;
-                subDir   = arguments[0].subDir;
-                fileName = arguments[0].fileName;
-            }
-        }
-
-        if (ns.LOCAL_DATA === true)
-            return '/src/data/_' + fileName;
-        else
-            return  nsPath.protocol + '//' +
-                    nsPath.host + '/' +
-                    (mainDir ? (mainDir === true ? 'dynamic' : mainDir) : 'static') + '/' +
-                    (subDir ? subDir + '/' : '') +
-                    fileName;
-    }
-
-    //Export method
-    nsPath.dataFileName = dataFileName;
-
-    //Backward compability
-    ns.dataFilePath = dataFileName;
-
-}(this, document));
-
-
 ;
 //! moment.js
 //! version : 2.29.4

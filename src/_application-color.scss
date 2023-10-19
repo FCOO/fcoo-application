@@ -64,6 +64,7 @@ $fcoo-icon-shadow-50    : var(--fcoo-app-shadow-color-50);
 .fcoo-app-text-color-50 { color           : #{$fcoo-app-text-color-50} !important; }
 .fcoo-app-bg-color-50   { background-color: #{$fcoo-app-bg-color-50}   !important; }
 
+
 @mixin text-shadow( $color: $fcoo-icon-shadow, $size: 1px){
     text-shadow: -#{$size} 0 #{$color}, 0 #{$size} #{$color}, #{$size} 0 #{$color}, 0 -#{$size} #{$color}; //Black or white border around text to have contract
 }

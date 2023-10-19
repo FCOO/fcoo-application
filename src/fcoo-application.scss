@@ -29,8 +29,14 @@
 @import "../bower_components/sass-color-helpers/stylesheets/color-helpers";
 
 //APPLICATION COLORS
+@import "../bower_components/fcoo-application-logo-and-color/src/fcoo-application-base-color-mixin";
 @import "application-color-mixin";
 @import "application-color";
+
+
+//DEMO: @include application-color(darkred);
+
+
 
 //Standard classes
 .hide      { display: none !important; }
@@ -46,17 +52,6 @@ $z-index-top-1: Background for page when not connected
 $z-index-top-2: Background when loading
 *****************************************************/
 @import "variables";
-
-
-/*****************************************************
-Style for FCOO logo as font
-*****************************************************/
-//REMOVED @import "fcoo-logo";
-
-/*****************************************************
-Style for the <div> covering the page during loading
-*****************************************************/
-@import "loading";
 
 /*****************************************************
 Style for offline.js
