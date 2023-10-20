@@ -150,29 +150,8 @@ Sections:
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
-    ns.localStorageKey     = 'fcoo_' + ns.applicationId;
+    ns.localStorageKey     = 'fcoo_' + ns.applicationId;    //MANGLER skal det være owner eller altid "fcoo"
     ns.localStorageTempKey = ns.localStorageKey + '_temp';
-
-    /* eslint-disable no-console, no-constant-condition*/
-    window.fcoo.events.on('load', function(){
-        //Console application names, version and build using ns.centerConsole if it exsist.
-        //it is created in app.fcoo.dk/favicon/fcoo-head.js
-        if (ns.centerConsole){
-            if (ns.applicationHeader.da)
-                ns.centerConsole(ns.applicationHeader.da);
-            if ((ns.applicationHeader.en) && (ns.applicationHeader.en != ns.applicationHeader.da))
-                ns.centerConsole(ns.applicationHeader.en);
-
-            var version_build = '';
-            if (ns.applicationVersion)
-                version_build = 'Version '+ns.applicationVersion;
-            if (ns.applicationBuild)
-                version_build = version_build + (version_build ? ' / ':'') + ns.applicationBuild;
-            if (version_build)
-                ns.centerConsole(version_build);
-        }
-    });
-    /* eslint-enable no-console, no-constant-condition */
 
     /*********************************************************************
     Add 'load'-event to fcoo.events - will be fired on window-load
@@ -241,9 +220,6 @@ Sections:
     3: Set up 'loading...'
     ************************************************************************
     ***********************************************************************/
-// HER>     //Set default lofo = 'fcoo'
-// HER>     ns.setApplicationLogo('fcoo');
-
     ns.createLoading( ns.applicationBranch ? ns.applicationBranch + (ns.applicationVersion ? ' - '+ns.applicationVersion : '') : '' );
 
     //Call Url.adjustUrl() to remove broken values in the url
@@ -324,6 +300,7 @@ Sections:
     var ownerFile   = 'name-address-link-owner',
         subDir      = 'name-address-link',
         owner       = '',
+        logo        = '',
         logoFound   = false;
 
     $('html').find('meta').each((index, elem) => {
@@ -334,9 +311,10 @@ Sections:
     });
     owner = owner.toLowerCase();
     //Default owner (FCOO) are in default setup-file name-address-link_owner.json
-    if (['fcoo', 'fcoo.dk'].indexOf(owner) > -1){
+    if (!owner || (['fcoo', 'fcoo.dk'].indexOf(owner) > -1)){
         owner = '';
-        ns.setApplicationLogo( 'fcoo' );
+        logo = 'fcoo';
+        ns.setApplicationLogo( logo );
         logoFound = true;
     }
 
@@ -345,8 +323,60 @@ Sections:
         fileName: {fileName: ownerFile  + (owner ? '_'+owner : '') + '.json', subDir: subDir},
         resolve : function( data ){
             //If no logo is loaded and owner.logo is given and is a string => use it as logo else use default
-            if (!logoFound)
-                ns.setApplicationLogo( data.owner && data.owner.logo && (typeof data.owner.logo == 'string') ? data.owner.logo : 'fcoo');
+            if (!logoFound){
+                logo = data.owner && data.owner.logo && (typeof data.owner.logo == 'string') ? data.owner.logo : 'fcoo';
+                ns.setApplicationLogo( logo );
+            }
+
+            //Create info in console
+            var textList = ['-'];
+            var lang = 'da';
+            function addText(){
+                var result = '';
+                for (var i=0; i<arguments.length; i++){
+                    var text = arguments[i];
+                    text = $._bsAdjustText( text );
+                    result = result + (text[lang] || '');
+                }
+                result = result.replaceAll('&nbsp;', ' ');
+                result = result.replaceAll('/', '');
+                if (result)
+                    textList.push(result);
+            }
+
+            function addLangText( text ){
+                if (typeof text == 'string')
+                    textList.push(text);
+                else {
+                    if (text.da)
+                        textList.push(text.da);
+                    if ((text.en) && (text.en != text.da))
+                        textList.push(text.en);
+                }
+            }
+
+            //Console owner (logo, name, mail, homepage)
+            owner = owner || 'fcoo';
+            addLangText( data.owner.name );
+            addText( data.owner.email, data.owner.email && data.owner.link ? ' - ' : '', data.owner.link );
+            textList.push('-');
+
+            //Console application names, version and build
+            addLangText( ns.applicationHeader );
+            var version_build = '';
+            if (ns.applicationVersion)
+                version_build = 'Version '+ns.applicationVersion;
+            if (ns.applicationBuild)
+                version_build = version_build + (version_build ? ' / ':'') + ns.applicationBuild;
+            if (version_build)
+                textList.push(version_build);
+
+            ns.consoleApplicationLogo(owner, textList);
+
+            //Add meta-tags and favicons
+            ns.addApplicationMetaAndFavicon(owner, logo);
+
+
 
             //Convert all entry to {da:..., en:...}
             $.each( data.owner, (id, content) => {
