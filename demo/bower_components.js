@@ -19741,15 +19741,53 @@ Load logos, sets css-var, and write logo etc. in console
 
 
     /********************************************************
-    ns.consoleApplicationLogo(ownerId,  textList = [] )
+    ns.consoleApplicationLogo(logoText,  textList = [] )
     Write the logo and strings in textList in console
     ********************************************************/
     /* eslint-disable no-console, no-constant-condition*/
-    ns.consoleApplicationLogo = function(ownerId, textList = [] ){
-        var i, ownerLogoAndText = ownerLogos[ownerId || 'dummy'] || [''];
+    ns.consoleApplicationLogo = function(logoText, textList = [] ){
+        const allLetters = [
+                '   ###    ########   ######   ########  ########  ########   ######   ##     ## ####            ##  ##    ##  ##        ##     ## ##    ##   #######  ########   #######  ########   ######   ########  ##     ## ##     ## ##      ####     ## ##    ##  ########    ##       #######   #######  ##        ########   #######  ########   #######   #######    #####           ',
+                '  ## ##   ##     ## ##    ##  ##     ## ##        ##        ##    ##  ##     ##  ##             ##  ##   ##   ##        ###   ### ###   ##  ##     ## ##     ## ##     ## ##     ## ##    ##     ##     ##     ## ##     ## ##  ##  ## ##   ##   ##  ##        ##   ####      ##     ## ##     ## ##    ##  ##        ##     ## ##    ##  ##     ## ##     ##  ##   ##          ',
+                ' ##   ##  ##     ## ##        ##     ## ##        ##        ##        ##     ##  ##             ##  ##  ##    ##        #### #### ####  ##  ##     ## ##     ## ##     ## ##     ## ##           ##     ##     ## ##     ## ##  ##  ##  ## ##     ####        ##      ##             ##        ## ##    ##  ##        ##            ##    ##     ## ##     ## ##     ##         ',
+                '##     ## ########  ##        ##     ## ######    ######    ##   #### #########  ##             ##  #####     ##        ## ### ## ## ## ##  ##     ## ########  ##     ## ########   ######      ##     ##     ## ##     ## ##  ##  ##   ###       ##        ##       ##       #######   #######  ##    ##  #######   ########     ##      #######   ######## ##     ## ####### ',
+                '######### ##     ## ##        ##     ## ##        ##        ##    ##  ##     ##  ##       ##    ##  ##  ##    ##        ##     ## ##  ####  ##     ## ##        ##  ## ## ##   ##         ##     ##     ##     ##  ##   ##  ##  ##  ##  ## ##      ##       ##        ##      ##               ## #########       ##  ##     ##   ##      ##     ##        ## ##     ##         ',
+                '##     ## ##     ## ##    ##  ##     ## ##        ##        ##    ##  ##     ##  ##       ##    ##  ##   ##   ##        ##     ## ##   ###  ##     ## ##        ##    ##  ##    ##  ##    ##     ##     ##     ##   ## ##   ##  ##  ## ##   ##     ##      ##         ##      ##        ##     ##       ##  ##    ##  ##     ##   ##      ##     ## ##     ##  ##   ##          ',
+                '##     ## ########   ######   ########  ########  ##         ######   ##     ## ####       ######   ##    ##  ########  ##     ## ##    ##   #######  ##         ##### ## ##     ##  ######      ##      #######     ###     ###  ### ##     ##    ##     ########  ######    #########  #######        ##   ######    #######    ##       #######   #######    #####           '
+            ];
+        const allLettersStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-';
 
-        for (i=0; i<ownerLogoAndText.length; i++)
-            ownerLogoAndText[i] = ownerLogoAndText[i].replaceAll('#', '█');
+        var letters = {};
+        for (var i=0; i<allLettersStr.length; i++){
+            let letter = allLettersStr[i],
+                letterArray = letters[letter] = [];
+            for (var j=0; j<allLetters.length; j++)
+                letterArray.push(allLetters[j].substring(i*10, i*10+10).trimEnd());
+
+            let width = 0;
+            for (j=0; j<allLetters.length; j++)
+                width = Math.max(width, letterArray[j].length);
+            for (j=0; j<allLetters.length; j++)
+                letterArray[j] = letterArray[j].padEnd(width, ' ').replaceAll('#', '█') + '  ';
+        }
+
+        let space = letters['SPACE'] = [];
+        for (i=0; i<allLetters.length; i++)
+            space.push('      ');
+
+        let text = logoText.toUpperCase();//'NR-2024';
+
+        let ownerLogoAndText = [];
+        let firstChar = true;
+        for (i=0; i<text.length; i++){
+            let letterArray = letters[text[i]] || letters['SPACE'];
+            for (j=0; j<letterArray.length; j++){
+             if (firstChar)
+                    ownerLogoAndText.push('');
+                ownerLogoAndText[j] = ownerLogoAndText[j] + letterArray[j];
+            }
+            firstChar = false;
+        }
 
         ownerLogoAndText = ownerLogoAndText.concat(textList);
         var maxTextWidth = 0;
@@ -19767,43 +19805,18 @@ Load logos, sets css-var, and write logo etc. in console
     };
     /* eslint-enable no-console, no-constant-condition */
 
-    //Created on https://www.messletters.com/en/big-text/ using style = banner3 and addded an extra space between the letters
-    var ownerLogos = {
-        fcoo: [
-            '########   ######    #######    ####### ',
-            '##        ##    ##  ##     ##  ##     ##',
-            '##        ##        ##     ##  ##     ##',
-            '######    ##        ##     ##  ##     ##',
-            '##        ##        ##     ##  ##     ##',
-            '##        ##    ##  ##     ##  ##     ##',
-            '##         ######    #######    ####### '         ],
-
-
-        geometoc: [
-            ' ######    ########   #######   ##     ##  ########  ########   #######    ###### ',
-            '##    ##   ##        ##     ##  ###   ###  ##           ##     ##     ##  ##    ##',
-            '##         ##        ##     ##  #### ####  ##           ##     ##     ##  ##      ',
-            '##   ####  ######    ##     ##  ## ### ##  ######       ##     ##     ##  ##      ',
-            '##    ##   ##        ##     ##  ##     ##  ##           ##     ##     ##  ##      ',
-            '##    ##   ##        ##     ##  ##     ##  ##           ##     ##     ##  ##    ##',
-            ' ######    ########   #######   ##     ##  ########     ##      #######    ###### '
-        ],
-
-        nordefco: [
-            '##    ##   #######   ########   ########   ########  ########   ######    ####### ',
-            '###   ##  ##     ##  ##     ##  ##     ##  ##        ##        ##    ##  ##     ##',
-            '####  ##  ##     ##  ##     ##  ##     ##  ##        ##        ##        ##     ##',
-            '## ## ##  ##     ##  ########   ##     ##  ######    ######    ##        ##     ##',
-            '##  ####  ##     ##  ##   ##    ##     ##  ##        ##        ##        ##     ##',
-            '##   ###  ##     ##  ##    ##   ##     ##  ##        ##        ##    ##  ##     ##',
-            '##    ##   #######   ##     ##  ########   ########  ##         ######    ####### '
-        ]
-    };
-
-
-
 }(jQuery, this, document));
 
+
+/*
+   ###    ########   ######   ########  ########  ########   ######   ##     ## ####            ##  ##    ##  ##        ##     ## ##    ##   #######  ########   #######  ########   ######   ########  ##     ## ##     ## ##      ####     ## ##    ##  ########    ##       #######   #######  ##        ########   #######  ########   #######   #######    #####
+  ## ##   ##     ## ##    ##  ##     ## ##        ##        ##    ##  ##     ##  ##             ##  ##   ##   ##        ###   ### ###   ##  ##     ## ##     ## ##     ## ##     ## ##    ##     ##     ##     ## ##     ## ##  ##  ## ##   ##   ##  ##        ##   ####      ##     ## ##     ## ##    ##  ##        ##     ## ##    ##  ##     ## ##     ##  ##   ##
+ ##   ##  ##     ## ##        ##     ## ##        ##        ##        ##     ##  ##             ##  ##  ##    ##        #### #### ####  ##  ##     ## ##     ## ##     ## ##     ## ##           ##     ##     ## ##     ## ##  ##  ##  ## ##     ####        ##      ##             ##        ## ##    ##  ##        ##            ##    ##     ## ##     ## ##     ##
+##     ## ########  ##        ##     ## ######    ######    ##   #### #########  ##             ##  #####     ##        ## ### ## ## ## ##  ##     ## ########  ##     ## ########   ######      ##     ##     ## ##     ## ##  ##  ##   ###       ##        ##       ##       #######   #######  ##    ##  #######   ########     ##      #######   ######## ##     ## #######
+######### ##     ## ##        ##     ## ##        ##        ##    ##  ##     ##  ##       ##    ##  ##  ##    ##        ##     ## ##  ####  ##     ## ##        ##  ## ## ##   ##         ##     ##     ##     ##  ##   ##  ##  ##  ##  ## ##      ##       ##        ##      ##               ## #########       ##  ##     ##   ##      ##     ##        ## ##     ##
+##     ## ##     ## ##    ##  ##     ## ##        ##        ##    ##  ##     ##  ##       ##    ##  ##   ##   ##        ##     ## ##   ###  ##     ## ##        ##    ##  ##    ##  ##    ##     ##     ##     ##   ## ##   ##  ##  ## ##   ##     ##      ##         ##      ##        ##     ##       ##  ##    ##  ##     ##   ##      ##     ## ##     ##  ##   ##
+##     ## ########   ######   ########  ########  ##         ######   ##     ## ####       ######   ##    ##  ########  ##     ## ##    ##   #######  ##         ##### ## ##     ##  ######      ##      #######     ###     ###  ### ##     ##    ##     ########  ######    #########  #######        ##   ######    #######    ##       #######   #######    #####
+*/
 ;
 /****************************************************************************
 fcoo-application-meta-and-favicon.js
@@ -19817,11 +19830,18 @@ Methods for creating <meta> in <head> and adding favicons
 	//Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {};
 
+
+    //fcoo.viewport_no_scalable: BOOLEAN; If true the viewpoint gets no scalable. Must be set prio to addApplicationMetaAndFavicon is called
+    ns.viewport_no_scalable = ns.viewport_no_scalable || false;
+
     ns.addApplicationMetaAndFavicon = function(owner = "fcoo", logo = 'fcoo'){
         var tagList = [
                 {'tag': 'meta', 'charset': "utf-8"},
                 {'tag': 'meta', 'http-equiv': 'x-dns-prefetch-control',     'content': 'on'},
-                {'tag': 'meta', 'name'      : 'viewport',                   'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'},
+
+                ns.viewport_no_scalable ?
+                    {'tag': 'meta', 'name': 'viewport', 'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'} :
+                    {'tag': 'meta', 'name': 'viewport', 'content': 'width=device-width, initial-scale=1.0'},
                 {'tag': 'meta', 'name'      : 'copyright',                  'content': '{OWNER}'},
                 {'tag': 'meta', 'name'      : 'google',                     'content': 'notranslate'},
 
@@ -50706,6 +50726,9 @@ if (typeof define === 'function' && define.amd) {
         impactLineColors      : {green: "green", yellow: "yellow", red: "red"}, //The line colors used when showImpactLineColor: true
         reverseImpactLineColor: false, // The line on a double slider is colored as red-[handle]-yellow-[handle]-green. Must have showImpactLineColor: true
 
+        //Extention of line-color and/or grid-color when the handle is fixed (handleFixed: true)
+        extendLine          : true,     //If true and showLine: true => show light gray line before and after the line
+        extendGridColors    : true,     //If true and grid-colors are given => show light gray line before and after the grid
 
         //Size
         sizeFactor: 1, //Factor to re-size default sizes
@@ -50713,7 +50736,10 @@ if (typeof define === 'function' && define.amd) {
             borderWidth: 1,
         },
         size: {
-            fontSize        : 10,
+            fontSize  : 10,
+            fontFamily: 'Arial',
+            fontWeight: '',
+
             majorTickLength : 9,
             minorTickLength : 6,
 
@@ -50721,9 +50747,8 @@ if (typeof define === 'function' && define.amd) {
 
 
             lineBorderRadius: 2,
-            textPadding     : 2,
+            textPadding     : 2
 
-            labelInnerHeight: 10,
         },
 
         //Grid (ticks and label)
@@ -51240,12 +51265,12 @@ if (typeof define === 'function' && define.amd) {
         build: function () {
             var _this = this;
             //**************************************
-            function $span( className, $parent ){
+            function $span( className, $parent, prepend ){
                 var result = $('<span/>');
                 if (className)
                     result.addClass( className );
                 if ($parent)
-                  result.appendTo( $parent );
+                  prepend ? result.prependTo( $parent ) : result.appendTo( $parent );
                 return result;
             }
             //**************************************
@@ -51268,6 +51293,7 @@ if (typeof define === 'function' && define.amd) {
             //this.cache.$leftColorLine, this.cache.$centerColorLine, this.cache.$rightColorLine
             function appendLineColor( left, center, right ){
                 var result;
+
                 if (left)   result = _this.cache.$leftLineColor   = $span('line-color', _this.cache.$line);
                 if (center) result = _this.cache.$centerLineColor = $span('line-color', _this.cache.$line);
                 if (right)  result = _this.cache.$rightLineColor  = $span('line-color', _this.cache.$line);
@@ -51306,6 +51332,12 @@ if (typeof define === 'function' && define.amd) {
                         if (this.options.showLineColor)
                             appendLineColor( this.options.isSingle, this.options.isDouble, false )
                                 .css('background-color', this.options.lineColor);
+
+                //For fixed slider: Add dim line before and after to have line in hole container
+                if (this.options.handleFixed && this.options.extendLine){
+                    $span('line-color pre' , _this.cache.$line, true);
+                    $span('line-color post', _this.cache.$line);
+                }
             }
             else
                 this.cache.$line.css("visibility", "hidden");
@@ -51540,7 +51572,7 @@ if (typeof define === 'function' && define.amd) {
             ctx.textBaseline = "top";       //"bottom" or "middle" or "alphabetic" or "hanging"
 
             ctx.strokeStyle = this.options.majorColor;
-            ctx.font = size.fontSize + 'px Arial';
+            ctx.font = size.fontWeight + (size.fontWeight ? ' ' : '') + size.fontSize+'px ' + size.fontFamily;
 
             if (this.options.labelClickable && !this.options.disable && !this.options.readOnly){
                 this.canvasId = this.canvasId || 0;
@@ -51708,6 +51740,9 @@ if (typeof define === 'function' && define.amd) {
         },
 
         postAppendGrid: function(){
+            if (this.options.handleFixed && this.options.gridColors && this.options.extendGridColors)
+                this.appendPreAndPostGridColors();
+
             //Update the height of the slider
             this.cache.$container.css('height', (this.nextGridTop + this.$currentGrid.height())+'px' );
         },
@@ -51865,6 +51900,20 @@ if (typeof define === 'function' && define.amd) {
                 }
             }
         },
+
+        appendPreAndPostGridColors: function(){
+            $('<span/>')
+                .addClass( 'grid-color pre')
+                .prependTo( this.$currentGrid );
+            $('<span/>')
+                .addClass( 'grid-color post')
+                .appendTo( this.$currentGrid );
+        }
+
+
+
+
+
     }; //end of BaseSlider.prototype
 
 
@@ -58067,32 +58116,48 @@ options:
 
     noDateLabels    : BOOLEAN; If true no labels with the date are shown;
     dateAtMidnight  : BOOLEAN; If true the time-LABEL for midnight is replaced with a short date-label. Normally used together noDateLabels: true
+
+    minMoment,
+    maxMoment,
+    fromMoment
+    toMoment        : MOMENT; Same as min, max, from, to in jquery-base-slider but as moment-object
+
     format:
-        showRelative        : BOOLEAN; If true the grid etc show the relative time ('Now + 2h') Default = false
-        showUTC             : BOOLEAN; When true a scale for utc is also shown, but only if the time-zone isn't utc or forceUTC is set. Default = false. Only if showRelative == false
-        forceUTC            : BOOLEAN; If true and showUTC: true the utc-scale is included
-        noGridColorsOnUTC   : BOOLEAN; If true the UTC-grid will not get any grid colors
-        noLabelColorsOnUTC  : BOOLEAN; If true the UTC-grid will not get any labels with colors
-        UTCGridClassName    : STRING; Class-name(s) for the grids use for UTC time-lime
+        date        : STRING;   Date format. "DMY" or "MDY" or "YMD" If none is given the format is set by [moment-simple-format](https://github.com/FCOO/moment-simple-format)
+        showYear    : BOOLEAN;  If true the date-time info in handler includes the year
+        time        : STRING;   Time format. "12" or "24"
+        timezone    : STRING;   "local"` or `"utc"` or abbreviation of time zone. Only if showRelative: false
+        text        : {hourAbbr:"h", minAbbr:"m", now:"now", to:"to"}; Text used to format the date
 
-        showExtraRelative           : BOOLEAN; If true and showRelative = false => A relative scale is included
-        noGridColorsOnExtraRelative : BOOLEAN; If true the extra relative-grid will not get any grid colors
-        noLabelColorsOnExtraRelative: BOOLEAN; If true the extra relative-grid will not get any labels with colors
+        showRelative: BOOLEAN; If true the grid etc show the relative time ('Now + 2h') Default = false
 
-        ExtraRelativeGridClassName : STRING; Class-name(s) for the grids use for the extra relative grid
+        showUTC                  : BOOLEAN; When true a scale for utc is also shown, but only if the time-zone isn't utc or forceUTC is set. Default = false. Only if showRelative == false
+        forceUTC                 : BOOLEAN; If true and showUTC: true the utc-scale is included
+        noGridColorsOnUTC        : BOOLEAN; If true the UTC-grid will not get any grid colors
+        noExtendedGridColorsOnUTC: BOOLEAN; If true the UTC-grid will not get any extended grid colors
+        noLabelColorsOnUTC       : BOOLEAN; If true the UTC-grid will not get any labels with colors
+        UTCGridClassName         : STRING; Class-name(s) for the grids use for UTC time-lime
+
+        showExtraRelative                  : BOOLEAN; If true and showRelative = false => A relative scale is included
+        noGridColorsOnExtraRelative        : BOOLEAN; If true the extra relative-grid will not get any grid colors
+        noExtendedGridColorsOnExtraRelative: BOOLEAN; If true the extra relative-grid will not get any extended grid colors
+        noLabelColorsOnExtraRelative       : BOOLEAN; If true the extra relative-grid will not get any labels with colors
+        extraRelativeGridClassName         : STRING; Class-name(s) for the grids use for the extra relative grid
 
 
     showRelative        : as format.showRelative
     showUTC             : as format.showUTC
     forceUTC            : as format.forceUTC
-    noGridColorsOnUTC   : as format.noGridColorsOnUTC
-    noLabelColorsOnUTC  : as format.noLabelColorsOnUTC
-    UTCGridClassName    : as format.UTCGridClassName
+    noGridColorsOnUTC           : as format.noGridColorsOnUTC
+    noExtendedGridColorsOnUTC   : as format.noExtendedGridColorsOnUTC
+    noLabelColorsOnUTC          : as format.noLabelColorsOnUTC
+    UTCGridClassName            : as format.UTCGridClassName
 
-    showExtraRelative           : as format.showExtraRelative
-    noGridColorsOnExtraRelative : as format.noGridColorsOnExtraRelative
-    noLabelColorsOnExtraRelative: as format.noLabelColorsOnExtraRelative
-    ExtraRelativeGridClassName  : as format.ExtraRelativeGridClassName
+    showExtraRelative                   : as format.showExtraRelative
+    noGridColorsOnExtraRelative         : as format.noGridColorsOnExtraRelative
+    noExtendedGridColorsOnExtraRelative : as format.noExtendedGridColorsOnExtraRelative
+    noLabelColorsOnExtraRelative        : as format.noLabelColorsOnExtraRelative
+    extraRelativeGridClassName          : as format.extraRelativeGridClassName
 
 
     NB: Using moment-simple-format to set and get text and format for date and time
@@ -58150,7 +58215,7 @@ options:
         };
 
     window.TimeSlider = function (input, options, pluginCount) {
-        this.VERSION = "7.6.2";
+        this.VERSION = "7.7.2";
 
         //Setting default options
         this.options = $.extend( true, {}, defaultOptions, options );
@@ -58401,7 +58466,11 @@ options:
                 o.labelColorRec  = labelColorRec;
             }
 
+            //date grid never has extendedGridColors
+            var save = o.extendGridColors;
+            o.extendGridColors = false;
             this.postAppendGrid();
+            o.extendGridColors = save;
         },
 
         /**************************************************************
@@ -58417,11 +58486,12 @@ options:
 
 
             //*****************************************************
-            function appendSpecialGrid( noGridColorId, noLabelColorsId, gridClassNameId, newLabels ){
-                var noGridColors  = opt.format[noGridColorId] || opt[noGridColorId],
-                    noLabelColors = opt.format[noGridColorId] || opt[noGridColorId],
+            function appendSpecialGrid( gridOpt ){
+                var noGridColors       = opt.format[gridOpt.noGridColorId]        || opt[gridOpt.noGridColorId],
+                    noLabelColors      = opt.format[gridOpt.noLabelColorsId]      || opt[gridOpt.noLabelColorsId],
+                    gridClassName      = opt.format[gridOpt.gridClassNameId]      || opt[gridOpt.gridClassNameId] || '',
+                    noExtendGridColors = opt.format[gridOpt.noExtendGridColorsId] || opt[gridOpt.noExtendGridColorsId],
 
-                    gridClassName = opt.format[gridClassNameId] || opt[gridClassNameId] || '',
                     saveOptions   = $.extend(true, {}, _this.options);
 
                     opt.size.majorTickLength = 3; //Normal = 9
@@ -58431,12 +58501,15 @@ options:
                 //If noGridColors is set => remove grid-colors
                 if (noGridColors)
                     opt.gridColors = null;
+                else
+                    if (noExtendGridColors)
+                        opt.extendGridColors = false;
 
                 //If noLabelColors is set => remove label-colors
                 if (noLabelColors)
                     opt.labelColors = null;
 
-                if (newLabels)
+                if (gridOpt.newLabels)
                     opt.maxLabelWidth = null;   //Force recalculating label-space
 
                 _this._appendStandardGrid(textOptions, tickOptions);
@@ -58480,7 +58553,13 @@ options:
                     var saveMajorTicksOffset = opt.majorTicksOffset;
                     opt.majorTicksOffset = 0;
 
-                    appendSpecialGrid( 'noGridColorsOnExtraRelative', 'noLabelColorsOnExtraRelative', 'ExtraRelativeGridClassName', true );
+                    appendSpecialGrid({
+                        noGridColorId       : 'noGridColorsOnExtraRelative',
+                        noLabelColorsId     : 'noLabelColorsOnExtraRelative',
+                        gridClassNameId     : 'extraRelativeGridClassName',
+                        noExtendGridColorsId: 'noExtendedGridColorsOnExtraRelative',
+                        newLabels           : true
+                    });
 
                     opt.majorTicksOffset = saveMajorTicksOffset;
                 }
@@ -58497,7 +58576,13 @@ options:
                     this._prettify = this._prettifyAbsolute;
                     this._prettifyLabel = this._prettifyLabelAbsolute;
 
-                    appendSpecialGrid( 'noGridColorsOnUTC', 'noLabelColorsOnUTC', 'UTCGridClassName');
+                    appendSpecialGrid({
+                        noGridColorId       : 'noGridColorsOnUTC',
+                        noLabelColorsId     : 'noLabelColorsOnUTC',
+                        gridClassNameId     : 'UTCGridClassName',
+                        noExtendGridColorsId: 'noExtendedGridColorsOnUTC',
+                        newLabels           : false
+                    });
 
                     this.appendDateGrid( textOptions, tickOptions );
                     this.$currentGrid.addClass(opt.format.UTCGridClassName || opt.UTCGridClassName || '');
@@ -63374,6 +63459,7 @@ module.exports = g;
                 bigIcon             : 'big-icon',
                 extraLargeIcon      : 'extra-large-icon',
                 selected            : 'selected',
+                checkboxAtLeft      : 'checkbox-at-left',
                 noBorder            : 'no-border',
                 focus               : 'init_focus',
                 truncate            : 'text-truncate',
@@ -63436,6 +63522,11 @@ module.exports = g;
         result._bsAddBaseClassAndSize( options );
         if (!options.radioGroup)
             result._bsAddIdAndName( options );
+
+        if (options._width)
+            result.width( options._width );
+        if (options.buttonWidth)
+            result.width( options.buttonWidth );
 
         if (options.attr)
             result.attr( options.attr );

@@ -395,6 +395,7 @@ div.loading > div.dots {
   justify-content: center;
 }
 div.loading > div.dots span {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
   color: var(--fcoo-app-base-text-color);
   width: 0.25em;
   animation-name: blink;
@@ -15940,6 +15941,18 @@ The scss is divided in two parts: First the common part equal for all types and 
 /***************************************************************
 COMMON STYLE
 ***************************************************************/
+.pre-line, .grid .grid-color.pre, .base-slider-container .line .line-color.pre {
+  left: -50%;
+  width: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.post-line, .grid .grid-color.post, .base-slider-container .line .line-color.post {
+  left: 100%;
+  width: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 .base-slider-container {
   position: relative;
   display: block;
@@ -15951,6 +15964,9 @@ COMMON STYLE
   display: block;
   width: 100%;
   top: 0;
+}
+.base-slider-container.fixed .line {
+  overflow: visible;
 }
 .base-slider-container .line {
   position: relative;
@@ -15972,6 +15988,14 @@ COMMON STYLE
   position: absolute;
   display: block;
   height: 100%;
+}
+.base-slider-container .line .line-color.pre {
+  top: -1px;
+  border: 1px solid rgb(175, 179, 187);
+}
+.base-slider-container .line .line-color.post {
+  top: -1px;
+  border: 1px solid rgb(175, 179, 187);
 }
 .base-slider-container .line .line-color:first-child {
   border-bottom-left-radius: 2px;
@@ -16105,7 +16129,6 @@ COMMON STYLE
   border-bottom-width: 4.5px;
   border-right: 9px solid black;
 }
-
 .disabled {
   opacity: 0.4;
 }
@@ -29552,6 +29575,9 @@ Also overwrite default bootstrap behaviour
 
 */
 .btn-jb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   --bs-btn-border-color: #adb5bd;
   --bs-btn-hover-border-color: #b5bcc4;
   --bs-btn-active-border-color: #b5bcc4;
@@ -29596,6 +29622,13 @@ Also overwrite default bootstrap behaviour
 }
 .btn-jb.standard-checkbox .standard-checkbox-checked-color {
   color: rgb(30, 144, 255);
+}
+.btn-jb.standard-checkbox.checkbox-at-left {
+  position: relative;
+}
+.btn-jb.standard-checkbox.checkbox-at-left > .container-stacked-icons:first-child {
+  position: absolute;
+  left: var(--bs-btn-padding-x);
 }
 .btn-jb.standard-checkbox.semi-selected .standard-checkbox-checked-color {
   color: #fd7e14;
@@ -29654,9 +29687,6 @@ Also overwrite default bootstrap behaviour
   vertical-align: top;
 }
 .btn-jb.square {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   --bs-btn-padding-y: 0;
   --bs-btn-padding-x: 0;
   height: var(--bs-btn-square-dimention);

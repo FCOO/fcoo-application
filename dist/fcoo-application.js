@@ -388,6 +388,7 @@ Sections:
         subDir      = 'name-address-link',
         owner       = '',
         logo        = '',
+        logoText    = '',
         logoFound   = false;
 
     $('html').find('meta').each((index, elem) => {
@@ -401,6 +402,7 @@ Sections:
     if (!owner || (['fcoo', 'fcoo.dk'].indexOf(owner) > -1)){
         owner = '';
         logo = 'fcoo';
+        logoText = 'fcoo';
         ns.setApplicationLogo( logo );
         logoFound = true;
     }
@@ -412,6 +414,7 @@ Sections:
             //If no logo is loaded and owner.logo is given and is a string => use it as logo else use default
             if (!logoFound){
                 logo = data.owner && data.owner.logo && (typeof data.owner.logo == 'string') ? data.owner.logo : 'fcoo';
+                logoText = data.owner.logoText || owner;
                 ns.setApplicationLogo( logo );
             }
 
@@ -458,12 +461,10 @@ Sections:
             if (version_build)
                 textList.push(version_build);
 
-            ns.consoleApplicationLogo(owner, textList);
+            ns.consoleApplicationLogo(logoText, textList);
 
             //Add meta-tags and favicons
             ns.addApplicationMetaAndFavicon(owner, logo);
-
-
 
             //Convert all entry to {da:..., en:...}
             $.each( data.owner, (id, content) => {
