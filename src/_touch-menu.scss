@@ -156,3 +156,23 @@ Two modes:
         transition-duration: 0s 4;;
     }
 }
+
+
+
+//monernizr-classes for menu open/close
+$menu-positions: top, bottom, left, right;
+@each $menu-position in $menu-positions {
+    @include show-and-hide-for-modernizr-test(
+        $modernizr-test      : #{$menu-position}-menu-open,
+        $parent-element-type : 'html',
+        $incl-no-selector    : false, //true,
+        $display-value       : '',
+        $incl-table-display  : false, //true,
+        $only-direct-children: false,
+        $postfix             : '',
+        $no-display-value    : 'none',
+        $display-attr        : 'display',
+        $class-postfix       : ''
+    );
+
+}

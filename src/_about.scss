@@ -17,13 +17,26 @@ Style for 'About FCOO' modal-content
 
         text-align : center;
         font-size  : 1.5*$font-size-sm;
-        line-height: 1.5*$font-size-sm;
+        line-height: 1;
         @include text-shadow();
         @include text-truncate();
+
+        min-height: calc(1em  + 2 * #{$jb-padding-x-sm});
     }
 
-    img {
-        margin: 1rem auto;
+    .application-logo-container {
+        width : 100%;
+        margin: 20px auto;
+    }
+
+    .application-owner {
+        //Hard copy from fmi.dk
+        color           : rgb(33, 37, 41);
+        font-family     : Verdana, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size       : 15.0589px;
+        font-weight     : 600;
+        letter-spacing  : -0.4px;
+        line-height     : 1.5;
     }
 }
 

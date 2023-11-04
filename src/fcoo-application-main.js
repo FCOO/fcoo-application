@@ -29,6 +29,12 @@ Create and manage the main structure for FCOO web applications
             minMainWidth        : 0,   //Min width of main-container when menu(s) are open
             globalModeOver      : false,
 
+            /*
+            applicationName     //Any of option applicationName, applicationHeader, or header can be used as heaser for the application
+            applicationHeader
+            header
+            */
+
             topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
             leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
             leftMenuButtons     : null,  //Options for buttons in the header of the left-menu. See format below
@@ -57,6 +63,8 @@ Create and manage the main structure for FCOO web applications
             noAnimation         : false,
         }, options );
 
+        //Sets ns.applicationHeader
+        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
 
         //Disabling transition, transform, or animation.
         ['noTransition', 'noTransform', 'noAnimation'].forEach( function(id, index){
@@ -82,9 +90,6 @@ Create and manage the main structure for FCOO web applications
                     $('html').addClass(className);
             }
         });
-
-
-
 
 
         /*
@@ -125,7 +130,7 @@ Create and manage the main structure for FCOO web applications
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
-resetListPrepend: true,
+                resetListPrepend   : true,
             }));
             $body.append( result.leftMenu.$container );
             result.menus.push(result.leftMenu);
@@ -365,7 +370,7 @@ resetListPrepend: true,
             maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
             newModeIsOver = this.maxSingleMenuWidth >=  maxTotalMenuWidthAllowed,
             //Find last opened menu if there are two oen menus
-            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? this.lastOpenedMenu.theOtherMenu : null;
+            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
 
         this.isResizing = true;
         this.options.globalModeOver = newModeIsOver;
@@ -429,7 +434,6 @@ resetListPrepend: true,
         else {
             this.resizeStarted = false;
             this.checkForResizeEnd = false;
-
             if (this.options.onResizeEnd)
                 this.options.onResizeEnd(this);
         }

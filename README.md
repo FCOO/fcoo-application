@@ -33,17 +33,17 @@ List of setup-files to be loaded. Call `fcoo.promiseList.getAll()` when all setu
 
 **NOTE** It is possible to call an application with parameter `&test-mode=FILENAME` where `FILENAME` is a json-file with a list of witch setup-files to be replaced by a test-version. See `src/fcoo-application-promise.js` for details.
 **NOTE** Only files added to `fcoo.promiseList` via `.append(...)` or `.prepend(...)` can be replaced using `&test-mode=FILENAME`
- 
+
 #### `window.fcoo.setupFileVersion` [{FILENAME: {postfix:STRING, merge:BOOLEAN}}] (see `src/fcoo-application-promise.js`)
 
 Object with filenames and postfix for the filename to have different versions. `merge: true` will merge the new file with the original one
 
 ##### Ex
-The setup-file `name-address-link_owner.json` contains info about the applicatiuon-owner. If 
+The setup-file `name-address-link_owner.json` contains info about the applicatiuon-owner. If
 
         fcoo.setupFileVersion = {
-            'name-address-link_owner': {
-                postfix: '-test', 
+            'name-address-link-owner': {
+                postfix: '-test',
                 merge: true
             }
         }
@@ -86,8 +86,8 @@ The color is used as background-color in tree different versions:
 
 - original - Used for main top menu
 - 25% lighten - used for modal headers
-- 50% lighten - used for open menu-items, open accordion and inner modal header     
- 
+- 50% lighten - used for open menu-items, open accordion and inner modal header
+
 The different colors can be obtained by using the following class-names or css-var:
 
 
@@ -105,8 +105,8 @@ The FCOO logo are provided as at SVG-font and can be applied using on of tree cs
 - `icon-fcoo-logo-default`   = Default FCOO logo (white)
 - `icon-fcoo-logo-contrast`  = Logo in contrast color to application color = white or black
 - `icon-fcoo-logo-app-color` = Logo in the application color
- 
-#### Changing the Application-Color 
+
+#### Changing the Application-Color
 The `Application-Color` for a given application can be set using the included scss-mixins `application-color( $color )` in the applications own scss-file.
 
 Eq. To have application-color = red add the following to the scss-file
@@ -115,7 +115,7 @@ Eq. To have application-color = red add the following to the scss-file
     @import "../bower_components/jquery-bootstrap/src/application-colors-mixin";
     @include application-colors( red );
 
-        
+
 
 
 ### Namespace: `error`. File: `static/error-code-text/request.json.json`. Format: namespace-key-lang
@@ -137,19 +137,16 @@ The position for the options must be marked with `{APPLICATION_ID` where `ID` is
 	options: {
 	    application: {
 	         "id"      : 248,
-             "name"    : "The name of the application",
 	         "myOption": true
 	    }
 	}
 
 	//In a js-file
 	var applicationId = "{APPLICATION_ID}",
-		applicationName = "{APPLICATION_NAME}",
 		myOptions = "{APPLICATION_MYOPTION}";
 
 	//After >grunt build
 	var applicationId = "248",
-		applicationName = "The name of the application",
 		myOptions = "true";
 
 NOTE that all embedded options will be as strings.
@@ -162,7 +159,6 @@ Four functions is provided to use default values during development:
 	function getApplicationNumberOption( fullEmbedString, developmentValue )
 
 	var applicationId = fcoo.getApplicationNumberOption( "{APPLICATION_ID}", 0 ),
-		applicationName = fcoo.getApplicationOption( "{APPLICATION_NAME}", "The Name" ),
 		myOptions = fcoo.getApplicationBooleanOption( "{APPLICATION_MYOPTION}", false );
 
 

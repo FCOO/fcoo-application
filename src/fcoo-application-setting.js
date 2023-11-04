@@ -1,7 +1,7 @@
 /****************************************************************************
 fcoo-application-setting.js
 
-Methods for content  releted to fcoo-setting
+Methods for content releted to fcoo-setting
 ****************************************************************************/
 (function ($, window/*, document, undefined*/) {
 	"use strict";

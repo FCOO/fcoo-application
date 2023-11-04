@@ -7,73 +7,80 @@ Create and display "About FCOO" info and modal-box
 	"use strict";
 
     //Create fcoo-namespace
-    var ns = window.fcoo = window.fcoo || {},
-        aboutFCOOModal = null;
+    var ns = window.fcoo = window.fcoo || {};
 
     ns.aboutOwner = ns.aboutFCOO = function(){
-        if (!aboutFCOOModal){
+        //Create the modal-content
+        var $content = $('<div/>')
+                .addClass("about-owner")
+                .append(
+                    //Bar with title of application
+                    $('<div/>')
+                        .addClass('w-100 application-header fcoo-app-bg-color fcoo-app-text-color')
+                        .i18n( ns.applicationHeader )
+                ),
 
-            //Create the modal-content
-            var $content = $('<div/>')
-                    .addClass("about-owner")
-                    .append(
-                        //Bar with title of application
-                        $('<div/>')
-                            .addClass('w-100 application-header fcoo-app-bg-color fcoo-app-text-color')
-                            .i18n( ns.applicationHeader )
-                    ),
-
-                logo    = i18next.t('logo:owner'),
-                name    = i18next.t('name:owner'),
-                address = i18next.t('address:owner'),
-                link    = i18next.t('link:owner'),
-                email   = i18next.t('email:owner');
-
-            if (logo != 'owner')
-                $(logo).appendTo($content);
-
-            if (name != 'owner')
-                $('<div/>')
-                    .addClass('fw-bold')
-                    .i18n('name:owner')
-                    .appendTo( $content );
-
-            if (address != 'owner')
-                $('<div/>')
-                    ._bsAddHtml({text:'address:owner'})
-                    .appendTo( $content );
+            logo    = i18next.t('logo:owner'),
+            name    = i18next.t('name:owner'),
+            desc    = i18next.t('desc:owner'),
+            address = i18next.t('address:owner'),
+            link    = i18next.t('link:owner'),
+            email   = i18next.t('email:owner');
 
 
-            if (link == 'owner') link = '';
-            link = link.split('?')[0];
-            link = link + '\\\\\\///////';
-            var re = new RegExp('\\/', 'g');
-            link = link.replace(re, '');
-            link = link.replace(/\\/g, "");
+        if (logo != 'owner')
+            $('<div/>')
+                .addClass('application-logo-container')
+                .append( $('<div/>').addClass('fcoo-app-standard-logo m-auto') )
+                .appendTo( $content );
 
-            if (email == 'owner') email = '';
 
-            if (logo || name || link || email)
-                $content.append('<br>');
+        if (name != 'owner')
+            $('<div/>')
+                .addClass('application-owner')
+                .i18n('name:owner')
+                .appendTo( $content );
 
-            if (link)
-                $content.append( $('<a target="_blank">'+link+'</a>').i18n('link:owner', 'href').i18n('name:owner', 'title') );
-            if (link && email)
-                $content.append(' - ');
-            if (email)
-                $content.append( $('<a href="mailto:'+email+'" target="_top">'+email+'</a>') );
+        if (address != 'owner')
+            $('<div/>')
+                ._bsAddHtml({text:'address:owner'})
+                .appendTo( $content );
 
-            aboutFCOOModal = $.bsModal({
-                noHeader   : true,
-                flexWidth  : true,
-                scroll     : false,
-                content    : $content,
-                closeButton: false,
-                show       : false
-            });
+        if (desc != 'owner'){
+            $('<hr/>').addClass('mt-1 mb-1').appendTo( $content );
+            $('<div/>')
+                ._bsAddHtml({text:'desc:owner'})
+                .appendTo( $content );
         }
 
-        aboutFCOOModal.show();
+        if (link == 'owner') link = '';
+        link = link.split('?')[0];
+        link = link + '\\\\\\///////';
+        var re = new RegExp('\\/', 'g');
+        link = link.replace(re, '');
+        link = link.replace(/\\/g, "");
+
+        if (email == 'owner') email = '';
+
+        if (logo || name || desc || link || email)
+// HER>             $content.append('<br>');
+            $('<hr/>').addClass('mt-1 mb-1').appendTo( $content );
+
+        if (link)
+            $content.append( $('<a target="_blank">'+link+'</a>').i18n('link:owner', 'href').i18n('name:owner', 'title') );
+        if (link && email)
+            $content.append(' - ');
+        if (email)
+            $content.append( $('<a href="mailto:'+email+'" target="_top">'+email+'</a>') );
+
+        $.bsModal({
+            noHeader   : true,
+            flexWidth  : true,
+            scroll     : false,
+            content    : $content,
+            closeButton: false,
+            remove     : true,
+        });
     };
 }(jQuery, this.i18next, this, document));
 
@@ -92,7 +99,8 @@ Sections:
 2: Methods to load and save all hash and parameters
 3: Set up 'loading...'
 4: Set up and initialize jquery-bootstrap
-5: Load FCOO and default name,link,email and error-messages
+5: Load name, abbrivation, contact etc. for the owner of the application
+6: Load default name,link,email and error-messages
 ****************************************************************************/
 
 (function ($, i18next, window/*, document, undefined*/) {
@@ -195,39 +203,42 @@ Sections:
     };
 
 
-    //Getting the application-id
-    ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}', '0');
+    //Getting the application-id, version and build
+    ns.applicationId      = ns.getApplicationOption( '{APPLICATION_ID}'     ,  '0');
     ns.applicationVersion = ns.getApplicationOption( '{APPLICATION_VERSION}', null);
+    ns.applicationBuild   = ns.getApplicationOption( '{APPLICATION_BUILD}'  , null);
 
-    /*
-    Get the application name from grunt.js
-    Support both
-      { application: {name:"..."}} and
-      { application: {name_da:"...", name_en:"..."}}
-    in the applications gruntfile.js
-    */
-    ns.applicationName = {
-        da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', '' ),
-        en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', '' )
-    };
+    //Application header - is set in ns.createMain(options). see src/fcoo-application-main.js
+    ns.applicationHeader = {};
 
-    var defaultHeader = ns.getApplicationOption( '{APPLICATION_NAME}', 'fcoo.dk' );
-    ns.applicationHeader = {
-        da: ns.getApplicationOption( '{APPLICATION_NAME_DA}', defaultHeader ),
-        en: ns.getApplicationOption( '{APPLICATION_NAME_EN}', defaultHeader )
-    };
+    //ns.applicationBranch = '' for production, 'DEMO'/'BETA' etc for no-production versions
+    ns.applicationBranch = '';
+    //Test if the path-name contains any of the words defining the version to be none-production
+    var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
+    $.each( ['DEVEL01', 'DEVEL02', 'DEVEL03', 'ALPHA', 'BETA', 'DEMO', 'TEST', 'LOCALHOST'], function( index, branch ){
+        if (urlStr.indexOf(branch) > -1){
+            ns.applicationBranch = branch;
+            return false;
+        }
+    });
 
     //Change the title of the document when the language is changed
     ns.events.on( ns.events.LANGUAGECHANGED, function(){
-        document.title = 'fcoo.dk - ' + i18next.sentence(ns.applicationHeader);
+        var titleArray = [],
+            applicationOwner = i18next.t('abbr:owner');
+
+        if (applicationOwner != 'abbr:owner')
+            titleArray.push(applicationOwner);
+        if (ns.applicationBranch)
+            titleArray.push( ns.applicationBranch );
+        titleArray.push( i18next.sentence(ns.applicationHeader) );
+        document.title = titleArray.join(' - ');
     });
 
     //ns.localStorageKey     = the key used to save/load parameter to/from localStorage when ns.standalone == true
     //ns.localStorageTempKey = the key used to save/load temporary parameter to/from localStorage when ns.standalone == true
-    ns.localStorageKey     = 'fcoo_' + ns.applicationId;
+    ns.localStorageKey     = 'fcoo_' + ns.applicationId;    //MANGLER skal det være owner eller altid "fcoo"
     ns.localStorageTempKey = ns.localStorageKey + '_temp';
-
-
 
     /*********************************************************************
     Add 'load'-event to fcoo.events - will be fired on window-load
@@ -296,51 +307,7 @@ Sections:
     3: Set up 'loading...'
     ************************************************************************
     ***********************************************************************/
-    var $html = $('html'),
-        $body = $('body');
-
-    //Set <html> class = 'loading' and adds logo and spinner
-    $html.modernizrOn('loading');
-
-    $(function() {
-        //Find or create outer div displayed when loading
-        var $loadingDiv = $body.find('div.loading');
-        $loadingDiv = $loadingDiv.length ? $loadingDiv : $('<div class="loading"></div>' ).prependTo( $body );
-        $loadingDiv
-            .removeClass()  //Clean up
-            .empty()
-            .addClass('loading fcoo-default-app-colors');
-
-        //Find or create div with version-text (ex. "DEMO")
-        var $versionDiv = $('<div/>').appendTo( $loadingDiv ).addClass('version');
-
-        //Test if the path-name contains any of the words defining the version to be none-production
-        var urlStr = new String(window.location.host+' '+window.location.pathname).toUpperCase();
-
-        $.each( ['DEVEL01', 'DEVEL02', 'DEVEL03', 'ALPHA', 'BETA', 'DEMO', 'TEST', 'LOCALHOST'], function( index, name ){
-            if (urlStr.indexOf(name) > -1){
-                $versionDiv.text( name + (ns.applicationVersion ? ' - ' + ns.applicationVersion : ''));
-
-                ns.applicationHeader.da = name +' - ' + ns.applicationHeader.da;
-                ns.applicationHeader.en = name +' - ' + ns.applicationHeader.en;
-
-                window.document.title = name +' - ' + window.document.title;
-                return false;
-            }
-        });
-
-        //Create div with logo
-        $('<div class="logo"></div>')
-            .append('<i class="icon-fcoo-logo-contrast"/>')
-            .appendTo($loadingDiv);
-
-
-        //Find or create div with flashing dots
-        $('<div/>')
-            .addClass('dots')
-            .append('<span>.</span><span>.</span><span>.</span>')
-            .appendTo($loadingDiv);
-    });
+    ns.createLoading( ns.applicationBranch ? ns.applicationBranch + (ns.applicationVersion ? ' - '+ns.applicationVersion : '') : '' );
 
     //Call Url.adjustUrl() to remove broken values in the url
     window.Url.adjustUrl();
@@ -408,15 +375,120 @@ Sections:
     //Icon for external link
     $.bsExternalLinkIcon = 'fa-external-link';
 
+    /***********************************************************************
+    ************************************************************************
+    5: Load name, abbrivation, contact etc. for the owner of the application
+
+    Try to find <meta name='owner' content='OWNER_ID'> and use OWNER_ID to load
+    a different setup-file with name, logo, email etc for the owner of the application
+    Default is FCOO in  name-address-link_owner.json
+    ************************************************************************
+    ***********************************************************************/
+    var ownerFile   = 'name-address-link-owner',
+        subDir      = 'name-address-link',
+        owner       = '',
+        logo        = '',
+        logoText    = '',
+        logoFound   = false;
+
+    $('html').find('meta').each((index, elem) => {
+        var $elem = $(elem),
+            name = $elem.attr('name');
+        if (name && (name.toLowerCase() == 'owner'))
+            owner = $elem.attr('content');
+    });
+    owner = owner.toLowerCase();
+    //Default owner (FCOO) are in default setup-file name-address-link_owner.json
+    if (!owner || (['fcoo', 'fcoo.dk'].indexOf(owner) > -1)){
+        owner = '';
+        logo = 'fcoo';
+        logoText = 'fcoo';
+        ns.setApplicationLogo( logo );
+        logoFound = true;
+    }
+
+
+    ns.promiseList.append({
+        fileName: {fileName: ownerFile  + (owner ? '_'+owner : '') + '.json', subDir: subDir},
+        resolve : function( data ){
+            //If no logo is loaded and owner.logo is given and is a string => use it as logo else use default
+            if (!logoFound){
+                logo = data.owner && data.owner.logo && (typeof data.owner.logo == 'string') ? data.owner.logo : 'fcoo';
+                logoText = data.owner.logoText || owner;
+                ns.setApplicationLogo( logo );
+            }
+
+            //Create info in console
+            var textList = ['-'];
+            var lang = 'da';
+            function addText(){
+                var result = '';
+                for (var i=0; i<arguments.length; i++){
+                    var text = arguments[i];
+                    text = $._bsAdjustText( text );
+                    result = result + (text[lang] || '');
+                }
+                result = result.replaceAll('&nbsp;', ' ');
+                result = result.replaceAll('/', '');
+                if (result)
+                    textList.push(result);
+            }
+
+            function addLangText( text ){
+                if (typeof text == 'string')
+                    textList.push(text);
+                else {
+                    if (text.da)
+                        textList.push(text.da);
+                    if ((text.en) && (text.en != text.da))
+                        textList.push(text.en);
+                }
+            }
+
+            //Console owner (logo, name, mail, homepage)
+            owner = owner || 'fcoo';
+            addLangText( data.owner.name );
+            addText( data.owner.email, data.owner.email && data.owner.link ? ' - ' : '', data.owner.link );
+            textList.push('-');
+
+            //Console application names, version and build
+            addLangText( ns.applicationHeader );
+            var version_build = '';
+            if (ns.applicationVersion)
+                version_build = 'Version '+ns.applicationVersion;
+            if (ns.applicationBuild)
+                version_build = version_build + (version_build ? ' / ':'') + ns.applicationBuild;
+            if (version_build)
+                textList.push(version_build);
+
+            ns.consoleApplicationLogo(logoText, textList);
+
+            //Add meta-tags and favicons
+            ns.addApplicationMetaAndFavicon(owner, logo);
+
+            //Convert all entry to {da:..., en:...}
+            $.each( data.owner, (id, content) => {
+                data.owner[id] = $._bsAdjustText(content);
+            });
+
+            //Add all data.owner to i18next
+            i18next.addBundleKeyPhrases(data);
+        },
+
+        promiseOptions  : {
+            useDefaultErrorHandler: false,
+            reject                : function(){ ns.loadKeyPhraseFile(ownerFile + '.json', subDir); }
+        }
+    });
+
 
     /***********************************************************************
     ************************************************************************
-    5: Load FCOO and default name,link,email and error-messages
+    6: Load default name,link,email and error-messages
     ************************************************************************
     ***********************************************************************/
-    ns.loadKeyPhraseFile('name-address-link.json',       'name-address-link');
-    ns.loadKeyPhraseFile('name-address-link_owner.json', 'name-address-link');
-    ns.loadPhraseFile   ('request.json',                 'error-code-text'  );
+    ns.loadKeyPhraseFile('name-address-link.json', subDir            );
+    ns.loadPhraseFile   ('request.json',           'error-code-text' );
 
 
 }(jQuery, this.i18next, this, document));
@@ -535,6 +607,12 @@ Create and manage the main structure for FCOO web applications
             minMainWidth        : 0,   //Min width of main-container when menu(s) are open
             globalModeOver      : false,
 
+            /*
+            applicationName     //Any of option applicationName, applicationHeader, or header can be used as heaser for the application
+            applicationHeader
+            header
+            */
+
             topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
             leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
             leftMenuButtons     : null,  //Options for buttons in the header of the left-menu. See format below
@@ -563,6 +641,8 @@ Create and manage the main structure for FCOO web applications
             noAnimation         : false,
         }, options );
 
+        //Sets ns.applicationHeader
+        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
 
         //Disabling transition, transform, or animation.
         ['noTransition', 'noTransform', 'noAnimation'].forEach( function(id, index){
@@ -588,9 +668,6 @@ Create and manage the main structure for FCOO web applications
                     $('html').addClass(className);
             }
         });
-
-
-
 
 
         /*
@@ -631,7 +708,7 @@ Create and manage the main structure for FCOO web applications
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
-resetListPrepend: true,
+                resetListPrepend   : true,
             }));
             $body.append( result.leftMenu.$container );
             result.menus.push(result.leftMenu);
@@ -871,7 +948,7 @@ resetListPrepend: true,
             maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
             newModeIsOver = this.maxSingleMenuWidth >=  maxTotalMenuWidthAllowed,
             //Find last opened menu if there are two oen menus
-            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? this.lastOpenedMenu.theOtherMenu : null;
+            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
 
         this.isResizing = true;
         this.options.globalModeOver = newModeIsOver;
@@ -935,7 +1012,6 @@ resetListPrepend: true,
         else {
             this.resizeStarted = false;
             this.checkForResizeEnd = false;
-
             if (this.options.onResizeEnd)
                 this.options.onResizeEnd(this);
         }
@@ -1116,7 +1192,7 @@ Objects and methods to create message-groups
                 showStatus     : true,
                 showTypeHeader : true,
                 showTypeColor  : true,
-                vfFormat       : 'time_local',
+                vfFormat       : 'datetime_local', //'time_local',
                 hideOnError    : true,
                 shakeWhenUnread: true,
 
@@ -1742,6 +1818,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
                             }),
             buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
             scroll  : false,
+            remove  : true,
             show    : true
         });
         return false;
@@ -1953,17 +2030,20 @@ Form etc for resetting application options/settings and general/global options e
     /******************************************************************
     reset(resetData = {ID: BOOLEAN}, resetArgument)
     ******************************************************************/
-    var $resetForm,
-        resetAllSelected = {},
+    var resetAllSelected = {},
         resetAllUnselected = {},
-        currentResetArgument;
+        currentResetArgument,
+        firstReset = true;
+
 
     ns.reset = function(resetData, resetArgument){
-        currentResetArgument = resetArgument || {};
-        if (!$resetForm){
-            var content = [];
+        var $resetForm,
+            content = [];
 
-            //Global settings
+        currentResetArgument = resetArgument || {};
+
+        if (firstReset){
+            //Add Global settings
             ns.resetList.push({
                 id  : 'globalSetting',
                 icon: 'fa-cog',
@@ -1982,60 +2062,60 @@ Form etc for resetting application options/settings and general/global options e
                 },
                 resetContext: ns.globalSetting
             });
-
-            ns.resetList.forEach( function(resetOptions){
-                var include = true;
-                if (resetOptions.include !== undefined)
-                    include = typeof resetOptions.include === 'function' ? resetOptions.include(resetOptions) : !!resetOptions.include;
-
-                if (include){
-                    resetAllSelected[resetOptions.id] = true;
-                    resetAllUnselected[resetOptions.id] = false;
-                    content.push({
-                        id     : resetOptions.id,
-                        type   : 'checkboxbutton',
-                        class  : 'w-100 d-flex',
-                        content: $._bsBigIconButtonContent({
-                            icon            : resetOptions.icon,
-                            text            : resetOptions.text,
-                            subtext         : resetOptions.subtext,
-                            subtextSeparator: resetOptions.subtextSeparator,
-                            minHeight       : resetOptions.minHeight || ns.resetButtonMinHeight
-                        }),
-                        allowContent: true,
-                        fullWidth: true
-                    });
-                }
-            });
-
-
-            $resetForm = $.bsModalForm({
-                header: {
-                    icon: ns.icons.reset,
-                    text: ns.texts.reset
-                },
-                width   : ns.resetFormWidth,
-                content : content,
-                show    : false,
-                buttons: [{
-                    icon: 'fa-bars',
-                    text: {da: 'Alle', en:'All'},
-                    class: 'min-width',
-                    onClick: function(){
-                        var data = resetAllUnselected;
-                        //If all is selected => unselect all, elle select all
-                        $.each( $resetForm.getValues(), function(id, selected){
-                            if (!selected)
-                                data = resetAllSelected;
-                        });
-                        $resetForm.edit(data);
-                    }
-                }],
-                onSubmit: reset_submit,
-                closeWithoutWarning: true,
-
-            });
+            firstReset = false;
         }
+
+        ns.resetList.forEach( function(resetOptions){
+            var include = true;
+            if (resetOptions.include !== undefined)
+                include = typeof resetOptions.include === 'function' ? resetOptions.include(resetOptions) : !!resetOptions.include;
+
+            if (include){
+                resetAllSelected[resetOptions.id] = true;
+                resetAllUnselected[resetOptions.id] = false;
+                content.push({
+                    id     : resetOptions.id,
+                    type   : 'checkboxbutton',
+                    class  : 'w-100 d-flex',
+                    content: $._bsBigIconButtonContent({
+                        icon            : resetOptions.icon,
+                        text            : resetOptions.text,
+                        subtext         : resetOptions.subtext,
+                        subtextSeparator: resetOptions.subtextSeparator,
+                        minHeight       : resetOptions.minHeight || ns.resetButtonMinHeight
+                    }),
+                    allowContent: true,
+                    fullWidth: true
+                });
+            }
+        });
+
+        $resetForm = $.bsModalForm({
+            header: {
+                icon: ns.icons.reset,
+                text: ns.texts.reset
+            },
+            width   : ns.resetFormWidth,
+            content : content,
+            show    : false,
+            buttons: [{
+                icon: 'fa-bars',
+                text: {da: 'Alle', en:'All'},
+                class: 'min-width',
+                onClick: function(){
+                    var data = resetAllUnselected;
+                    //If all is selected => unselect all, elle select all
+                    $.each( $resetForm.getValues(), function(id, selected){
+                        if (!selected)
+                            data = resetAllSelected;
+                    });
+                    $resetForm.edit(data);
+                }
+            }],
+            onSubmit: reset_submit,
+            closeWithoutWarning: true,
+            remove: true
+        });
 
         if (ns.resetList.length > 1)
            $resetForm.edit(resetData);
@@ -2080,7 +2160,7 @@ Form etc for resetting application options/settings and general/global options e
 /****************************************************************************
 fcoo-application-setting.js
 
-Methods for content  releted to fcoo-setting
+Methods for content releted to fcoo-setting
 ****************************************************************************/
 (function ($, window/*, document, undefined*/) {
 	"use strict";
@@ -2464,7 +2544,7 @@ Create and manage the top-menu for FCOO web applications
         options = $.extend({}, {
             leftMenu   : true,
             logo       : true,
-            header     : ns.applicationHeader,
+            header     : $.extend({}, ns.applicationHeader),
             messages   : null,
             warning    : null,
             search     : true,
@@ -2474,6 +2554,12 @@ Create and manage the top-menu for FCOO web applications
             help       : null,
             rightMenu  : true
         }, options );
+
+        //Extend header with ns.applicationBranch (if any)
+        if (ns.applicationBranch)
+            $.each(options.header, (lang, text) => {
+                options.header[lang] = ns.applicationBranch + (text ? ' - ' + text : '');
+        });
 
         var result = {
                 elementsWidthFound: false
@@ -2710,12 +2796,19 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 
         //Create the $.bsMenu if menuOptions are given
-
         if (this.options.menuOptions){
             this.options.menuOptions.resetListPrepend = this.options.resetListPrepend || this.options.menuOptions.resetListPrepend;
             this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
         }
 
+        //Add the open/close status to appSetting
+        this.settingId = this.options.position + '-menu-open';
+        ns.appSetting.add({
+            id          : this.settingId,
+            applyFunc   : this._setOpenCloseFromSetting.bind(this),
+            callApply   : true,
+            defaultValue: 'NOT',
+        });
 
         if (this.options.isOpen)
             this.open(true);
@@ -2896,7 +2989,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
+            window.modernizrOn(this.options.position +'-menu-open');
+
             this._invoke(this.options.onOpen);
+
+            ns.appSetting.set(this.settingId, true);
+
         },
 
         _onClose: [],
@@ -2915,7 +3013,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
+            window.modernizrOff(this.options.position +'-menu-open');
+
             this._invoke(this.options.onClose);
+
+            ns.appSetting.set(this.settingId, false);
+
         },
 
         toggle: function () {
@@ -2925,6 +3028,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 this.open();
         },
 
+        _setOpenCloseFromSetting: function( newIsOpen ){
+            if (typeof newIsOpen != 'boolean')
+                return;
+            if (this.isOpen != newIsOpen)
+                this.toggle();
+        }
     };
 
     ns.touchMenu = function(options){
