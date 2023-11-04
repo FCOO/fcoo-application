@@ -4,13 +4,16 @@ fcoo-application-reset.js
 Form etc for resetting application options/settings and general/global options etc.
 
 ****************************************************************************/
-(function ($, window/*, document, undefined*/) {
+(function ($, window, document, undefined) {
     "use strict";
 
     var ns = window.fcoo = window.fcoo || {};
 
     //ns.resetList = []{id:ID, icon, text, subtext, reset: FUNCTION}
     ns.resetList = ns.resetList || [];
+
+    ns.resetButtonMinHeight = null;
+    ns.resetFormWidth = null;
 
     /******************************************************************
     Reset bsMmenu
@@ -29,20 +32,25 @@ Form etc for resetting application options/settings and general/global options e
     /******************************************************************
     reset(resetData = {ID: BOOLEAN}, resetArgument)
     ******************************************************************/
-    var $resetForm,
-        currentResetArgument;
+    var resetAllSelected = {},
+        resetAllUnselected = {},
+        currentResetArgument,
+        firstReset = true;
+
 
     ns.reset = function(resetData, resetArgument){
-        currentResetArgument = resetArgument || {};
-        if (!$resetForm){
-            var content = [];
+        var $resetForm,
+            content = [];
 
-            //Global settings
+        currentResetArgument = resetArgument || {};
+
+        if (firstReset){
+            //Add Global settings
             ns.resetList.push({
                 id  : 'globalSetting',
                 icon: 'fa-cog',
                 text: {
-                    da: 'Gendan Indstillinger',
+                    da: 'Nulstil Indstillinger',
                     en: 'Reset Settings'
                 },
                 subtext: {
@@ -56,8 +64,17 @@ Form etc for resetting application options/settings and general/global options e
                 },
                 resetContext: ns.globalSetting
             });
+            firstReset = false;
+        }
 
-            ns.resetList.forEach( function(resetOptions){
+        ns.resetList.forEach( function(resetOptions){
+            var include = true;
+            if (resetOptions.include !== undefined)
+                include = typeof resetOptions.include === 'function' ? resetOptions.include(resetOptions) : !!resetOptions.include;
+
+            if (include){
+                resetAllSelected[resetOptions.id] = true;
+                resetAllUnselected[resetOptions.id] = false;
                 content.push({
                     id     : resetOptions.id,
                     type   : 'checkboxbutton',
@@ -67,26 +84,40 @@ Form etc for resetting application options/settings and general/global options e
                         text            : resetOptions.text,
                         subtext         : resetOptions.subtext,
                         subtextSeparator: resetOptions.subtextSeparator,
-                        small           : true
+                        minHeight       : resetOptions.minHeight || ns.resetButtonMinHeight
                     }),
                     allowContent: true,
                     fullWidth: true
                 });
-            });
+            }
+        });
 
-            $resetForm = $.bsModalForm({
-                header: {
-                    icon: ns.icons.reset,
-                    text: ns.texts.reset
-                },
-                content : content,
-                show    : false,
-                onSubmit: reset_submit,
-
-                closeWithoutWarning: true,
-
-            });
-        }
+        $resetForm = $.bsModalForm({
+            header: {
+                icon: ns.icons.reset,
+                text: ns.texts.reset
+            },
+            width   : ns.resetFormWidth,
+            content : content,
+            show    : false,
+            buttons: [{
+                icon: 'fa-bars',
+                text: {da: 'Alle', en:'All'},
+                class: 'min-width',
+                onClick: function(){
+                    var data = resetAllUnselected;
+                    //If all is selected => unselect all, elle select all
+                    $.each( $resetForm.getValues(), function(id, selected){
+                        if (!selected)
+                            data = resetAllSelected;
+                    });
+                    $resetForm.edit(data);
+                }
+            }],
+            onSubmit: reset_submit,
+            closeWithoutWarning: true,
+            remove: true
+        });
 
         if (ns.resetList.length > 1)
            $resetForm.edit(resetData);
@@ -99,10 +130,27 @@ Form etc for resetting application options/settings and general/global options e
         var restAll = (data === true);
         ns.resetList.forEach( function( resetOptions ){
             if (restAll || data[resetOptions.id]){
-                resetOptions.reset.call(resetOptions.resetContext, currentResetArgument);
+                if (resetOptions.reset)
+                    resetOptions.reset.call(resetOptions.resetContext, currentResetArgument);
+                else
+                    if (resetOptions.setting){
+                        //Simple reset setting using its own defaultValue
+                        var setting = resetOptions.setting,
+                            settingGroup = setting.group,
+                            defaultValue = setting.options ? setting.options.defaultValue : undefined;
+                        if (settingGroup && (defaultValue !== undefined))
+                            settingGroup.set(setting.options.id, defaultValue);
+                    }
+            }
+            //Close closeForm if it is given
+            if (resetOptions.closeForm){
+                var form = typeof resetOptions.closeForm === "function" ? resetOptions.closeForm() : resetOptions.closeForm;
+                if (form && form.$bsModal && form.$bsModal.close)
+                    form.$bsModal.close();
             }
         });
     }
+
 
 
 }(jQuery, this, document));

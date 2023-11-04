@@ -301,7 +301,7 @@ Create and manage the top-menu for FCOO web applications
         options = $.extend({}, {
             leftMenu   : true,
             logo       : true,
-            header     : ns.applicationHeader,
+            header     : $.extend({}, ns.applicationHeader),
             messages   : null,
             warning    : null,
             search     : true,
@@ -311,6 +311,12 @@ Create and manage the top-menu for FCOO web applications
             help       : null,
             rightMenu  : true
         }, options );
+
+        //Extend header with ns.applicationBranch (if any)
+        if (ns.applicationBranch)
+            $.each(options.header, (lang, text) => {
+                options.header[lang] = ns.applicationBranch + (text ? ' - ' + text : '');
+        });
 
         var result = {
                 elementsWidthFound: false

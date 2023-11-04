@@ -3,11 +3,7 @@
 <head>
 	<title>fcoo.dk - fcoo-application</title>
 	<meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv='x-dns-prefetch-control' content='on'>
-
-	<meta name='copyright' content='FCOO'>
-	<meta name='owner' content='FCOO'>
+	<meta name='owner' content='pwa'>
 
     <link  href="bower_components.css" rel="stylesheet">
     <link  href="../src/fcoo-application.css" rel="stylesheet">
@@ -40,10 +36,14 @@
     <script>
         window.fcoo = window.fcoo || {};
         window.fcoo.DEMO_VERSION = true;
+// HER>         window.fcoo.centerConsole = function(text){ console.log('****', text, '****'); }
+        
     </script>
 
 
     <script src="bower_components.js"></script>
+
+    <!-- <script src="../src/fcoo-application-loading.js"></script> -->
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
     <script src="../src/fcoo-application-about.js"></script>
@@ -66,62 +66,7 @@
 
         i18next.init();
         i18next.changeLanguage('en');
-
-
-        //* Test setupFileVersion
-        fcoo.setupFileVersion = {
-            '_name-address-link_owner': {
-                postfix: '-fiin', 
-                merge: true
-            }
-        }
-        //*/
-        
-/*
-fcoo.promiseList.append({
-    fileName: [
-        {fileName: 'name-address-link.json', subDir: 'name-address-link'},
-        {fileName: 'name-address-link_fcoo.json', subDir: 'name-address-link'}
-    ],
-    resolve: function(){
-// HER>         console.log('DAVS', arguments);
-    }
-});
-
-
-*/
-
-
-
-
-
-        var colors = ['#214A87', '#CDBE23', '#CD2B23', '#CD8E23'], colorIndex = 0;
-
-/*
-        var $select = $('#theSelect');
-        var optionList = [
-            { da: 'Dette er nummer ET', en:'This is number ONE'},
-            { da: 'Dette er nummer TO', en:'This is number TWO'},
-            { da: 'Dette er nummer TRE', en:'This is number THREE'},
-            { da: 'Dette er nummer FIRE', en:'This is number FOUR'}
-        ];
-
-        i18next.addPhrase( 'test', 'title', {
-            da:'Dette er title for nummer {{count}}',
-            en:'This is the title for #{{count}}'
-        });
-
-        for (var i=0; i<optionList.length; i++ ){
-            var option = optionList[i];
-            i18next.addPhrase( 'test', 'item'+i, option );
-
-            var $option = $('<option/>')
-                            .i18n('test:item'+i )
-                            .i18n('test:title', 'title', {count: i+1} )
-                            .appendTo($select);
-
-        }
-*/
+       
 
         function modalDemo(){
             $.bsModal({
@@ -151,14 +96,12 @@ fcoo.promiseList.append({
                 buttons: [
                     {text:'Test', onClick: function(){ alert('Test'); }},
                 ],
-                content: [
-// HER>                     'Content',
-                    {
-                        icon: fcoo.settingIcon('fa-map'),
-                        text: 'Davs'
-                    }
-                ],
+                content: [{
+                    icon: fcoo.settingIcon('fa-map'),
+                    text: 'Davs'
+                }],
                 //scroll: false,
+                remove: true,
                 show: true
             });
 
@@ -190,19 +133,15 @@ fcoo.promiseList.append({
         }
 
         function setModeOver(menu){
-//HER            menu.close(true);
             menu.setMode(true);
         };
         function setModeSide(menu){
-//HER            menu.close(true);
             menu.setMode(false);
 
         };
 
         var main;
         $(function() {
-
-//return;
             var $rightMenu = $('<div/>');
             $rightMenu.append('Start');
             for (var i=0; i<100; i++){
@@ -217,6 +156,7 @@ fcoo.promiseList.append({
             $rightMenu.append('SLUT');
 
             main = window.fcoo.createMain({
+                    header: {da: 'DA: fcoo-application', en: 'EN: fcoo-application'},
                     mainContainerAsHandleContainer: true,
                     minMainWidth: 456,
                     topMenu: {
@@ -234,7 +174,7 @@ fcoo.promiseList.append({
 //HER                            url: 'data/info.json data/show_on_load.json'
                             url: 'data/show_on_load.json'
                         },
-                        MANGLERwarning: {
+                        warning: {
                             url: 'data/oceanforecast_warning.json data/oceanforecast_warning2.json',
                             //reloadPeriod: 'PT5S',
                         },
@@ -246,9 +186,36 @@ fcoo.promiseList.append({
                     },
                     leftMenu  : {
                         width: 360, 
+                        buttons: {
+                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                            save    :   true, //Standard save-button
+                            load    :   true, //Standard load-button
+                            bookmark:   true, //Standard bootmark-button
+                            share   :   function(){
+                                            if (navigator.share) {
+                                                navigator.share({
+                                                    title: 'WebShare API Demo',
+                                                    url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+                                                })
+                                                .then(function(){
+                                                    console.log('Thanks for sharing!');
+                                                })
+                                                .catch(console.error);
+                                            }
+                                            else {
+                                                // fallback
+                                                console.log('no share')
+                                            }
+                                        },
+                            user   : true,
+                            reset  : true,
+                            setting: true,
+                            //postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
+                        },
+
                         menuOptions: {
                             reset: true,
-                            resetText: 'Fravælg alle menuer',
+                            resetText: 'Fravælg alle VENSTRE menuer',
                             onChange: function(id, state, item){
                                 console.log('GLOBAL onChange', id, state, item);
                             },
@@ -307,9 +274,11 @@ fcoo.promiseList.append({
 
                     rightMenu  : {
                         width: 360, 
+                        isOpen: true,                        
                         menuOptions: {
                             reset: true,
-                            resetText: 'Fravælg alle menuer',
+                            resetText: 'Fravælg alle HØJRE menuer',
+                            _favorites: false,
                             onChange: function(id, state, item){
                                 console.log('GLOBAL onChange', id, state, item);
                             },
@@ -366,31 +335,6 @@ fcoo.promiseList.append({
                         },
 
                         keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
-                        buttons: {
-                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-                            save    :   function(){ console.log('save') }, //Standard save-button
-                            load    :   function(){ console.log('load') }, //Standard load-button
-                            bookmark:   function(){ console.log('bookmark') }, //Standard bootmark-button
-                            share   :   function(){
-                                            if (navigator.share) {
-                                                navigator.share({
-                                                    title: 'WebShare API Demo',
-                                                    url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-                                                })
-                                                .then(function(){
-                                                    console.log('Thanks for sharing!');
-                                                })
-                                                .catch(console.error);
-                                            }
-                                            else {
-                                                // fallback
-                                                console.log('no share')
-                                            }
-                                        },
-                            user   : function(){ console.log('user') },
-                            setting: function(){ console.log('setting') },
-                            postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
-                        }
                     },
 
 
@@ -408,7 +352,7 @@ fcoo.promiseList.append({
                     _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
                     bottomMenu: {
-                        height : 'auto',
+                        height : 100,//'auto',
                         standardHandler: true,
 
 
@@ -431,6 +375,11 @@ fcoo.promiseList.append({
             '<button onClick="fcoo.globalSetting.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>'+
             '<button onClick="modalDemo();">Modal demo</button>'+
             '<button onClick="notyDemo();">Noty demo</button>'+
+            '<div class="show-for-left-menu-open">Vises når left-menu er åben</div>' +
+            '<div class="hide-for-left-menu-open">Vises når left-menu er lukket</div>' +
+            '<div class="show-for-bottom-menu-open">Vises når bottom-menu er åben</div>' +
+            '<div class="hide-for-bottom-menu-open">Vises når bottom-menu er lukket</div>' +
+            
             '<div class="show-for-mouse">Vises kun, hvis der er en mus</div>').appendTo(main.$mainContainer);
 
         var fileViewModal;

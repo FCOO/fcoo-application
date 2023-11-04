@@ -17,6 +17,7 @@ Eq. To have application-color = red:
 
 *****************************************************/
 @mixin application-color($color){
+    @include application-base-color($color);
     @include _application-color($color, "", "div");
 }
 

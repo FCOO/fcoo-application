@@ -178,12 +178,19 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
 
         //Create the $.bsMenu if menuOptions are given
-
         if (this.options.menuOptions){
             this.options.menuOptions.resetListPrepend = this.options.resetListPrepend || this.options.menuOptions.resetListPrepend;
             this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
         }
 
+        //Add the open/close status to appSetting
+        this.settingId = this.options.position + '-menu-open';
+        ns.appSetting.add({
+            id          : this.settingId,
+            applyFunc   : this._setOpenCloseFromSetting.bind(this),
+            callApply   : true,
+            defaultValue: 'NOT',
+        });
 
         if (this.options.isOpen)
             this.open(true);
@@ -364,7 +371,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
+            window.modernizrOn(this.options.position +'-menu-open');
+
             this._invoke(this.options.onOpen);
+
+            ns.appSetting.set(this.settingId, true);
+
         },
 
         _onClose: [],
@@ -383,7 +395,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
+            window.modernizrOff(this.options.position +'-menu-open');
+
             this._invoke(this.options.onClose);
+
+            ns.appSetting.set(this.settingId, false);
+
         },
 
         toggle: function () {
@@ -393,6 +410,12 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 this.open();
         },
 
+        _setOpenCloseFromSetting: function( newIsOpen ){
+            if (typeof newIsOpen != 'boolean')
+                return;
+            if (this.isOpen != newIsOpen)
+                this.toggle();
+        }
     };
 
     ns.touchMenu = function(options){
