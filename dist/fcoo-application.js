@@ -2839,6 +2839,16 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             defaultValue: 'NOT',
         });
 
+        //Add the size state to appSetting
+        this.sizeId = this.options.position + '-menu-size';
+        ns.appSetting.add({
+            id          : this.sizeId,
+            applyFunc   : this._setSizeIndexFromSetting.bind(this),
+            callApply   : true,
+            defaultValue: 0,
+        });
+
+
         if (this.options.isOpen)
             this.open(true);
         else
@@ -3031,10 +3041,17 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .prop('disabled', atMaxSize);
         },
 
-        _setSizeIndex( sizeIndex ){
+        _setSizeIndexFromSetting: function( sizeIndex ){
+            this._setSizeIndex( sizeIndex, true );
+        },
+
+        _setSizeIndex( sizeIndex, dontSaveInSetting ){
             const _this = this;
             if ((sizeIndex >= 0) && (sizeIndex < this.options.sizeList.length)){
                 this.options.sizeIndex = sizeIndex;
+                if (!dontSaveInSetting)
+                    ns.appSetting.set(this.sizeId, sizeIndex);
+
                 this.options.sizeList.forEach( function(modernizrTest, index){
                     if (modernizrTest)
                         window.modernizrToggle(modernizrTest, index == _this.options.sizeIndex);
@@ -3071,7 +3088,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this._setSizeIndex(this.options.sizeIndex);
 
             ns.appSetting.set(this.settingId, true);
-
         },
 
         _onClose: [],
