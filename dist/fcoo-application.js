@@ -836,13 +836,29 @@ Create and manage the main structure for FCOO web applications
                     .toggleClass('text-start', side == 'left')
                     .toggleClass('text-end',   side == 'right');
 
-            $.bsButton({
-                bigIcon: true,
-                square : true,
-                icon   : iconPrefix + side,
-                onClick: menu.close,
-                context: menu
-            }).appendTo($closeButtonDiv);
+            menu.btnDecSize =
+                $.bsButton({
+                    bigIcon: true,
+                    square : true,
+                    icon   : iconPrefix + side,
+                    onClick: menu.decSize,
+                    context: menu
+                }).appendTo($closeButtonDiv);
+
+            if (menu.options.sizeList.length > 1){
+                menu.btnIncSize =
+                    $.bsButton({
+                        bigIcon: true,
+                        square : true,
+                        icon   : iconPrefix + (side == 'left' ? 'right' : 'left'),
+                        onClick: menu.incSize,
+                        context: menu
+                    });
+                if (side == 'left')
+                    $closeButtonDiv.append( menu.btnIncSize );
+                else
+                    $closeButtonDiv.prepend( menu.btnIncSize );
+            }
 
 
             var buttonGroups = [];
@@ -2653,7 +2669,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             modeOver     : false,
             multiMode    : false,
             menuClassName: '',
+
             isOpen       : false,
+            sizeList     : [''], //List of different size' of content = []STRING STRING = name of a monernizr-test to be set when the size is set. NOTE: Only works if width/height = 'auto'
+            sizeIndex    : 0,
+            onSetSize    : function( /* sizeIndex, menu */ ){},
 
             //$menu        : $-element with content (must be inside a <div>), or
             //content      : object with options to create content using $.fn._bsAddHtml
@@ -2788,7 +2808,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         //Update dimention and size of the menu and handle
         this.updateDimentionAndSize();
 
-        //Craete the mask
+        //Create the mask
         if (this.options.modeOver || this.options.multiMode) {
             this.$mask =
                 $('<div/>')
@@ -2830,11 +2850,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     ******************************************/
     ns.TouchMenu.prototype = {
         _add_swiped: function($element){
-            this._this_open  = this._this_open  || $.proxy(this.open,  this);
-            this._this_close = this._this_close || $.proxy(this.close, this);
+            this._this_incSize = this._this_incSize || $.proxy(this.incSize,  this);
+            this._this_decSize = this._this_decSize || $.proxy(this.decSize, this);
             $element
-                .on('swiped-' + this.options.openDirection,  this._this_open  )
-                .on('swiped-' + this.options.closeDirection, this._this_close );
+                .on('swiped-' + this.options.openDirection,  this._this_incSize)
+                .on('swiped-' + this.options.closeDirection, this._this_decSize);
 
             return $element;
         },
@@ -2980,6 +3000,52 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 fn.apply(this);
         },
 
+        incSize: function(){
+            if (!this.isOpen)
+                this.open();
+            else
+                this._setSizeIndex( this.options.sizeIndex + 1 );
+        },
+
+        decSize: function(){
+            if (this.isOpen && (this.options.sizeIndex == 0))
+                this.close();
+            else
+                this._setSizeIndex( this.options.sizeIndex - 1 );
+        },
+
+        setMinSize: function(){
+            return this._setSizeIndex(0);
+        },
+
+        setMaxSize: function(){
+            return this._setSizeIndex(this.options.sizeList.length-1);
+        },
+
+        _onSetSize: function(){
+            if (!this.btnIncSize) return;
+
+            const atMaxSize = this.options.sizeIndex == (this.options.sizeList.length-1);
+            this.btnIncSize
+                .toggleClass('disabled', atMaxSize)
+                .prop('disabled', atMaxSize);
+        },
+
+        _setSizeIndex( sizeIndex ){
+            const _this = this;
+            if ((sizeIndex >= 0) && (sizeIndex < this.options.sizeList.length)){
+                this.options.sizeIndex = sizeIndex;
+                this.options.sizeList.forEach( function(modernizrTest, index){
+                    if (modernizrTest)
+                        window.modernizrToggle(modernizrTest, index == _this.options.sizeIndex);
+                });
+                this._onSetSize();
+                this.options.onSetSize( this.options.sizeIndex, this );
+            }
+            return this;
+        },
+
+
         _onOpen: [],
 
         open: function (noAnimation) {
@@ -3001,6 +3067,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             window.modernizrOn(this.options.position +'-menu-open');
 
             this._invoke(this.options.onOpen);
+
+            this._setSizeIndex(this.options.sizeIndex);
 
             ns.appSetting.set(this.settingId, true);
 

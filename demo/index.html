@@ -23,6 +23,18 @@
         .touch-menu-handle {
 //            background-color: green;
         }
+        
+        .show-for-rm-size-0,
+        .show-for-rm-size-1,
+        .show-for-rm-size-2,
+        .show-for-bm-size-1 {
+            display: none;
+        }
+        html.rm-size-0 .show-for-rm-size-0 { display: block; }
+        html.rm-size-1 .show-for-rm-size-1 { display: block; }
+        html.rm-size-2 .show-for-rm-size-2 { display: block; }
+
+        html.bm-size-1 .show-for-bm-size-1 { display: block; }
     </style>
 
 </head>
@@ -273,9 +285,17 @@
                     },
 
                     rightMenu  : {
-                        width: 360, 
-                        isOpen: true,                        
-                        menuOptions: {
+                        //width: 360, 
+                        width: 'auto', 
+                        sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
+                        isOpen: true,
+                        
+                        $menu: $('<div style="background-color: green"/>')
+                                .append( $('<div style="width:200px; background-color:red;"    class="show-for-rm-size-0">show-for-bm-size-0<br>2<br>3<br>4<br>5</div>') )
+                                .append( $('<div style="width:400px; background-color:yellow;" class="show-for-rm-size-1">show-for-bm-size-1<br>2<br>3<br>4<br>5</div>') )
+                                .append( $('<div style="width:600px; background-color:green;"  class="show-for-rm-size-2">show-for-bm-size-2<br>2<br>3<br>4<br>5</div>') ),
+                        
+                        _menuOptions: {
                             reset: true,
                             resetText: 'Fravælg alle HØJRE menuer',
                             _favorites: false,
@@ -352,13 +372,16 @@
                     _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
                     bottomMenu: {
-                        height : 100,//'auto',
+                        //height : 100,
+                        height : 'auto',
                         standardHandler: true,
 
-
+                        sizeList: ['aaa', 'bm-size-1'],
+                        
                         $menu: $('<div style="background-color: green"/>')
                                 .append( $('<div style="width:50%; border-bottom: 10px solid blue" class="show-for-landscape">LANDSCAPE 1<br>2<br>3</div>') )
                                 .append( $('<div style="width:50%; border-bottom: 10px solid brown" class="show-for-portrait">PORTRAIT 1<br>2<br>3<br>4<br>5</div>') )
+                                .append( $('<div style="width:100%; border-bottom: 10px solid red" class="show-for-bm-size-1">show-for-bm-size-1<br>2<br>3<br>4<br>5</div>') )
 //HER                        content: function($container){
 //HER                            $container.text('Davs'); 
 //HER                        }

@@ -249,13 +249,29 @@ Create and manage the main structure for FCOO web applications
                     .toggleClass('text-start', side == 'left')
                     .toggleClass('text-end',   side == 'right');
 
-            $.bsButton({
-                bigIcon: true,
-                square : true,
-                icon   : iconPrefix + side,
-                onClick: menu.close,
-                context: menu
-            }).appendTo($closeButtonDiv);
+            menu.btnDecSize =
+                $.bsButton({
+                    bigIcon: true,
+                    square : true,
+                    icon   : iconPrefix + side,
+                    onClick: menu.decSize,
+                    context: menu
+                }).appendTo($closeButtonDiv);
+
+            if (menu.options.sizeList.length > 1){
+                menu.btnIncSize =
+                    $.bsButton({
+                        bigIcon: true,
+                        square : true,
+                        icon   : iconPrefix + (side == 'left' ? 'right' : 'left'),
+                        onClick: menu.incSize,
+                        context: menu
+                    });
+                if (side == 'left')
+                    $closeButtonDiv.append( menu.btnIncSize );
+                else
+                    $closeButtonDiv.prepend( menu.btnIncSize );
+            }
 
 
             var buttonGroups = [];
