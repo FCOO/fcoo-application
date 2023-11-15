@@ -30,7 +30,7 @@ Create and manage the main structure for FCOO web applications
             globalModeOver      : false,
 
             /*
-            applicationName     //Any of option applicationName, applicationHeader, or header can be used as heaser for the application
+            applicationName     //Any of option applicationName, applicationHeader, or header can be used as header for the application
             applicationHeader
             header
             */
@@ -95,12 +95,20 @@ Create and manage the main structure for FCOO web applications
         /*
         leftMenuButtons or leftMenu.buttons, and rightMenuButtons rightMenu.buttons = {
             preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-            save        = onClick or buttonOptions, //Standard save-button
-            load        = onClick or buttonOptions, //Standard load-button
-            bookmark    = onClick or buttonOptions, //Standard bootmark-button
-            share       = onClick or buttonOptions, //Standard share-button
-            user        = onClick or buttonOptions, //Standard user-button
-            setting     = onClick or buttonOptions, //Standard setting-button
+
+            //Standard buttons = onClick or buttonOptions or true for default onClick
+            new
+            edit
+            save
+            load
+            bookmark
+            share
+            user
+            save2       //Alternative button in seperat button-group
+            reset2      //Alternative button in seperat button-group
+            reset
+            setting
+
             postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
         */
 
@@ -237,17 +245,22 @@ Create and manage the main structure for FCOO web applications
             var menuOptions = result.options[side+'Menu'],
                 options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || {} : {},
                 menu        = result[side+'Menu'],
+                sideIsLeft  = side == 'left',
+                sideIsRight = side == 'right',
+                multiSize   = menu.options.sizeList.length > 1,
                 $container  = menu ? menu.$preMenu : null;
 
             if (!$container) return;
 
-            $container.addClass('d-flex');
+            $container
+                .addClass('d-flex')
+                .toggleClass('justify-content-end', sideIsRight)
+
 
             //Create close button
             var $closeButtonDiv = $('<div/>')
-                    .addClass('flex-grow-1')
-                    .toggleClass('text-start', side == 'left')
-                    .toggleClass('text-end',   side == 'right');
+                    .toggleClass('flex-grow-1', sideIsLeft)
+                    .toggleClass('btn-group', multiSize)
 
             menu.btnDecSize =
                 $.bsButton({
@@ -258,16 +271,16 @@ Create and manage the main structure for FCOO web applications
                     context: menu
                 }).appendTo($closeButtonDiv);
 
-            if (menu.options.sizeList.length > 1){
+            if (multiSize){
                 menu.btnIncSize =
                     $.bsButton({
                         bigIcon: true,
                         square : true,
-                        icon   : iconPrefix + (side == 'left' ? 'right' : 'left'),
+                        icon   : iconPrefix + (sideIsLeft ? 'right' : 'left'),
                         onClick: menu.incSize,
                         context: menu
                     });
-                if (side == 'left')
+                if (sideIsLeft)
                     $closeButtonDiv.append( menu.btnIncSize );
                 else
                     $closeButtonDiv.prepend( menu.btnIncSize );
@@ -282,16 +295,19 @@ Create and manage the main structure for FCOO web applications
             var shareIcon = 'fa-share-alt'; //TODO check os for different icons
             var buttonList = [];
 
-            $.each([
-                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true, onClick: function(){ alert('Save not implemented'); } },
-                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                 onClick: function(){ alert('Load not implemented'); } },
-                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true, onClick: function(){ alert('Bookmark not implemented'); } },
-                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                 onClick: function(){ alert('Share not implemented'); } },
-                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true, onClick: function(){ alert('User not implemented'); } },
-                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true, onClick: ns.reset               },
-                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                 onClick: function(){ ns.globalSetting.edit(); }}
-            ],
-            function(index, defaultButtonOptions){
+            [
+                {id:'new',      icon: 'fa-square-plus',       title: {da: 'Ny',              en: 'New'          }, newGroup: true,  onClick: function(){ alert('New not implemented');      } },
+                {id:'edit',     icon: 'fa-pen-to-square',     title: {da: 'Rediger',         en: 'Edit'         }, newGroup: true,  onClick: function(){ alert('Edit not implemented');     } },
+                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: function(){ alert('Save not implemented');     } },
+                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                  onClick: function(){ alert('Load not implemented');     } },
+                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true,  onClick: function(){ alert('Bookmark not implemented'); } },
+                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                  onClick: function(){ alert('Share not implemented');    } },
+                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true,  onClick: function(){ alert('User not implemented');     } },
+                {id:'save2',    icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: function(){ alert('Save not implemented');     } },
+                {id:'reset2',   icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        },                  onClick: function(){ alert('Reset2 not implemented');   } },
+                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true,  onClick: ns.reset                                         },
+                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                  onClick: function(){ ns.globalSetting.edit();           } }
+            ].forEach( (defaultButtonOptions) => {
                 var nextButtonOptions = options[defaultButtonOptions.id];
                 if (nextButtonOptions){
                     if (buttonList.length && defaultButtonOptions.newGroup){
@@ -314,21 +330,23 @@ Create and manage the main structure for FCOO web applications
             $.each(buttonGroups, function(index, buttonList){
                 var $buttonGroup = $('<div/>')
                         .addClass('btn-group')
-                        .toggleClass('space-after', index < (buttonGroups.length-1) )
+                        .toggleClass('space-after', index < (buttonGroups.length-1) || sideIsRight)
                         .appendTo($container);
 
                 $.each(buttonList, function(index2, buttonOptions){
                     buttonOptions = $.extend({bigIcon: true, square: true}, buttonOptions);
+
+                    if (buttonOptions.groupClassName || buttonOptions.groupClass)
+                        $buttonGroup.addClass(buttonOptions.groupClassName || buttonOptions.groupClass);
+
                     $.bsButton(buttonOptions).appendTo($buttonGroup);
                 });
             });
 
-            if (side == 'left')
+            if (sideIsLeft)
                 $closeButtonDiv.prependTo($container);
             else
                 $closeButtonDiv.appendTo($container);
-
-
         }
         //****************************************************
         createMenuButtons('left');

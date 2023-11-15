@@ -289,7 +289,12 @@
                         width: 'auto', 
                         sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
                         isOpen: true,
-                        
+                        buttons: {
+                            new   : true,                
+                            edit  : true,
+                            save2 : {groupClass:'class-save2-reset2',   onClick: () => {console.log('SAVE2')  }},
+                            reset2: {                                   onClick: () => {console.log('RESET2') }},
+                        },                            
                         $menu: $('<div style="background-color: green"/>')
                                 .append( $('<div style="width:200px; background-color:red;"    class="show-for-rm-size-0">show-for-rm-size-0<br>2<br>3<br>4<br>5</div>') )
                                 .append( $('<div style="width:400px; background-color:yellow;" class="show-for-rm-size-1">show-for-rm-size-1<br>2<br>3<br>4<br>5</div>') )
