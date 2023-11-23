@@ -3,7 +3,7 @@
 <head>
 	<title>fcoo.dk - fcoo-application</title>
 	<meta charset="utf-8" />
-	<meta name='owner' content='pwa'>
+	<meta name='owner' content='fcoo'>
 
     <link  href="bower_components.css" rel="stylesheet">
     <link  href="../src/fcoo-application.css" rel="stylesheet">
@@ -16,7 +16,7 @@
 
         .main-container {
             background-color: yellow;//gray;
-            border-bottom: 10px solid red;
+            border: 10px solid blue;
             padding: 4px;
         }
 
@@ -24,17 +24,32 @@
 //            background-color: green;
         }
         
+        .show-for-tm-size-0,
+        .show-for-tm-size-1,
+
         .show-for-rm-size-0,
         .show-for-rm-size-1,
         .show-for-rm-size-2,
-        .show-for-bm-size-1 {
+
+        .show-for-bm-size-0,
+        .show-for-bm-size-1,
+        .show-for-bm-size-2 {
             display: none;
         }
+        html.tm-size-0 .show-for-tm-size-0 { display: block; }
+        html.tm-size-1 .show-for-tm-size-1 { display: block; }
+
         html.rm-size-0 .show-for-rm-size-0 { display: block; }
         html.rm-size-1 .show-for-rm-size-1 { display: block; }
         html.rm-size-2 .show-for-rm-size-2 { display: block; }
 
+        html.bm-size-0 .show-for-bm-size-0 { display: block; }
         html.bm-size-1 .show-for-bm-size-1 { display: block; }
+        html.bm-size-2 .show-for-bm-size-2 { display: block; }
+        
+// HER>         :root {
+// HER>             --fcoo-app-text-color-63: red;
+// HER>         }            
     </style>
 
 </head>
@@ -49,6 +64,15 @@
         window.fcoo = window.fcoo || {};
         window.fcoo.DEMO_VERSION = true;
 // HER>         window.fcoo.centerConsole = function(text){ console.log('****', text, '****'); }
+        
+        function toggleH( elem) {
+            const $elem = $(elem);
+            $elem.height( $elem.height() == 100 ? 150 : 100);
+        }            
+        function toggleW(elem) {
+            const $elem = $(elem);
+            $elem.width( $elem.width() == 100 ? 150 : 100);
+        }            
         
     </script>
 
@@ -171,6 +195,7 @@
                     header: {da: 'DA: fcoo-application', en: 'EN: fcoo-application'},
                     mainContainerAsHandleContainer: true,
                     minMainWidth: 456,
+                    
                     topMenu: {
                         //search: false,
                         preSetting: {
@@ -197,7 +222,7 @@
 
                     },
                     leftMenu  : {
-                        width: 360, 
+                        width: 400, 
                         buttons: {
                             //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
                             save    :   true, //Standard save-button
@@ -284,20 +309,22 @@
                         },
                     },
 
-                    rightMenu  : {
-                        //width: 360, 
-                        width: 'auto', 
-                        sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
+                    __rightMenu  : {
+                        sizeList: [
+                            {width: 300, modernizr: 'rm-size-0'}, 
+                            {width: 400, modernizr: 'rm-size-1'}, 
+                            {width: 600, modernizr: 'rm-size-2'}
+                        ],
                         isOpen: true,
                         buttons: {
                             new   : true,                
                             edit  : true,
-                            save2 : {groupClass:'class-save2-reset2',   onClick: () => {console.log('SAVE2')  }},
-                            reset2: {                                   onClick: () => {console.log('RESET2') }},
+                            cancel: {groupClass:'class-save2-reset2', onClick: () => {console.log('CANCEL')  }},
+                            ok    : {                                 onClick: () => {console.log('OK') }},
                         },                            
                         $menu: $('<div style="background-color: green"/>')
                                 .append( $('<div style="width:200px; background-color:red;"    class="show-for-rm-size-0">show-for-rm-size-0<br>2<br>3<br>4<br>5</div>') )
-                                .append( $('<div style="width:400px; background-color:yellow;" class="show-for-rm-size-1">show-for-rm-size-1<br>2<br>3<br>4<br>5</div>') )
+                                .append( $('<div style="width:100%; background-color:yellow;" class="show-for-rm-size-1">show-for-rm-size-1<br>2<br>3<br>4<br>5</div>') )
                                 .append( $('<div style="width:600px; background-color:green;"  class="show-for-rm-size-2">show-for-rm-size-2<br>2<br>3<br>4<br>5</div>') ),
                         
                         _menuOptions: {
@@ -362,6 +389,19 @@
                         keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
                     },
 
+                    rightMenu: {
+                        sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
+                        
+                        //standardHandler: true,
+
+                        
+                        $menu: $('<div style="background-color: green"/>')
+                                .append( $('<div style="width: 100px; height:  50%; background-color: green;"  class="show-for-rm-size-0" onClick="javascript:toggleW(this)">100 show-for-rm-size-0</div>') )
+                                .append( $('<div style="width: 200px; height:  75%; background-color: orange;" class="show-for-rm-size-1">200 show-for-rm-size-1</div>') )
+                                .append( $('<div style="width: 350px; height: 100%; background-color: red;"    class="show-for-rm-size-2">350 show-for-rm-size-2</div>') )
+                    },
+
+
 
                     
                     _rightMenu : {
@@ -377,20 +417,17 @@
                     _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
                     bottomMenu: {
-                        //height : 100,
-                        height : 'auto',
+                        sizeList: ['bm-size-0', 'bm-size-1', 'bm-size-2'],
+                        
                         standardHandler: true,
 
-                        sizeList: ['aaa', 'bm-size-1'],
                         
                         $menu: $('<div style="background-color: green"/>')
-                                .append( $('<div style="width:50%; border-bottom: 10px solid blue" class="show-for-landscape">LANDSCAPE 1<br>2<br>3</div>') )
-                                .append( $('<div style="width:50%; border-bottom: 10px solid brown" class="show-for-portrait">PORTRAIT 1<br>2<br>3<br>4<br>5</div>') )
-                                .append( $('<div style="width:100%; border-bottom: 10px solid red" class="show-for-bm-size-1">show-for-bm-size-1<br>2<br>3<br>4<br>5</div>') )
-//HER                        content: function($container){
-//HER                            $container.text('Davs'); 
-//HER                        }
+                                .append( $('<div style="height:100px; width:100%; background-color: green;"  class="show-for-bm-size-0" onClick="javascript:toggleH(this)">100 show-for-bm-size-0</div>') )
+                                .append( $('<div style="height:200px; width:100%; background-color: orange;" class="show-for-bm-size-1">200 show-for-bm-size-1</div>') )
+                                .append( $('<div style="height:350px; width:100%; background-color: red;"    class="show-for-bm-size-2">350 show-for-bm-size-2</div>') )
                     },
+
                     onResizeStart: function(main){
                         //console.log('>>resize START', main.$mainContainer.width());
                     },

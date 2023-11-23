@@ -28,8 +28,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             menuClassName: '',
 
             isOpen       : false,
-            sizeList     : [''], //List of different size' of content = []STRING STRING = name of a monernizr-test to be set when the size is set. NOTE: Only works if width/height = 'auto'
-            sizeIndex    : 0,
+            sizeList     : [], //List of different size' of content = []SIZEOPTIONS SIZEOPTIONS = {width:NUMBER, modernizr: STRING} modernizr = name of a monernizr-test to be set when the size is set. OR []NUMBER (height/width) OR []STRING (modernizr-test)
+            sizeIndex    : -1,
             onSetSize    : function( /* sizeIndex, menu */ ){},
 
             //$menu        : $-element with content (must be inside a <div>), or
@@ -45,6 +45,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             $neighbourContainer: null,  //$-container that gets resized when the touch-menu is opened/closed
 
         }, options || {} );
+
+        this.main = this.options.main;
 
         this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
         this.options.scroll          = this.options.scroll || (this.options.verticalMenu && !this.options.menuOptions);
@@ -70,18 +72,30 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             .addClass(this.options.position)
             .addClass(this.options.menuClassName);
 
+        //Adjust sizeList (if any)
+        if (this.options.sizeList.length){
+            let defaultSize = 0;
+            this.options.sizeList.forEach( (sizeOptions, index) => {
+                if (typeof sizeOptions == 'number')
+                    sizeOptions = this.options.sizeList[index] = {dimention: sizeOptions};
+                else
+                    if (typeof sizeOptions == 'string'){
+                        sizeOptions = this.options.sizeList[index] = {dimention:'auto', modernizr: sizeOptions};
+                        defaultSize = 'auto';
+                    }
+                sizeOptions.dimention = sizeOptions.dimention || sizeOptions.width || sizeOptions.height || ' ';
+            });
+            this.options[ this.options.verticalMenu ? 'width' : 'height' ] = defaultSize;
+        }
 
         //If the dimention is 'auto' add on-resize event to update width/height
         if (this.options[ this.options.verticalMenu ? 'width' : 'height' ] == 'auto'){
             this.$container
-                .addClass(this.options.verticalMenu ? 'vertical-auto-width' : 'vertical-auto-height')
+                .addClass(this.options.verticalMenu ? 'vertical-auto-width' : 'horizontal-auto-height')
                 .resize( $.proxy( this.onResize, this) );
         }
 
         this.setMode( this.options.modeOver );
-
-        this.isPanning = false;
-        this.onlyScroll = false;
 
         //Create container for the contents
         if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName || this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
@@ -227,8 +241,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         onResize: function(){
-            var dim = this.options.verticalMenu ? this.$container.outerWidth() : this.$container.outerHeight();
 
+            if (this.doNotCallOnResize) return;
+
+            var dim = this.options.verticalMenu ? this.$container.outerWidth() : this.$container.outerHeight();
             this.options[this.options.verticalMenu ? 'width' : 'height'] = dim;
 
             this.updateDimentionAndSize();
@@ -261,7 +277,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                         size     : height || defaultSize
                     };
                 result.halfDimension = result.dimension/2;
-                result.halfSize = result.size/2;
                 return result;
             }
             //*********************************************************************
@@ -287,6 +302,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             //Update the menu-element
             this.$container.css(this.options.position, -1*this.options.menuDimAndSize.size + 'px');
+
             //Set width (top/bottom) or height (left/right) of menu and center if not 100%
             setElementDimensionAndSize(this.$container, this.options.menuDimAndSize);
 
@@ -375,7 +391,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         decSize: function(){
-            if (this.isOpen && (this.options.sizeIndex == 0))
+            if (this.isOpen && (this.options.sizeIndex <= 0))
                 this.close();
             else
                 this._setSizeIndex( this.options.sizeIndex - 1 );
@@ -390,32 +406,90 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         _onSetSize: function(){
-            if (!this.btnIncSize) return;
-
-            const atMaxSize = this.options.sizeIndex == (this.options.sizeList.length-1);
-            this.btnIncSize
-                .toggleClass('disabled', atMaxSize)
-                .prop('disabled', atMaxSize);
+            if (this.btnIncSize){
+                const atMaxSize = this.options.sizeIndex == (this.options.sizeList.length-1);
+                this.btnIncSize
+                    .toggleClass('disabled', atMaxSize)
+                    .prop('disabled', atMaxSize);
+            }
         },
 
         _setSizeIndexFromSetting: function( sizeIndex ){
-            this._setSizeIndex( sizeIndex, true );
+            if (this.sizeIsSetFromSettings) return;
+            this.sizeIsSetFromSettings = true;
+            this._setSizeIndex( sizeIndex );
         },
 
-        _setSizeIndex( sizeIndex, dontSaveInSetting ){
-            const _this = this;
-            if ((sizeIndex >= 0) && (sizeIndex < this.options.sizeList.length)){
-                this.options.sizeIndex = sizeIndex;
-                if (!dontSaveInSetting)
-                    ns.appSetting.set(this.sizeId, sizeIndex);
+        _setSizeModernizrTest: function(){
+            this.options.sizeList.forEach( function(sizeOptions, index){
+                if (sizeOptions.modernizr)
+                    window.modernizrToggle(sizeOptions.modernizr, index == this.options.sizeIndex);
+            }, this);
+            return this;
+        },
 
-                this.options.sizeList.forEach( function(modernizrTest, index){
-                    if (modernizrTest)
-                        window.modernizrToggle(modernizrTest, index == _this.options.sizeIndex);
-                });
-                this._onSetSize();
-                this.options.onSetSize( this.options.sizeIndex, this );
+        _setSizeIndex( sizeIndex ){
+            /****
+            NOTE: animateByJS and the associated code is at attempt to aminate change in size when width/height = 'auto'. But it is not working :-(
+            ****/
+            if ((sizeIndex < 0) || (sizeIndex >= this.options.sizeList.length))
+                return this;
+
+            const vertical = this.options.verticalMenu;
+            let originalDim,
+                sizeOptions = this.options.sizeList[sizeIndex],
+                //animateByJS = true if the different sizes of the menu is given by the content instead of direct dimention
+                animateByJS = (sizeIndex != this.options.sizeIndex) && (sizeOptions.dimention == 'auto') && this.isOpen && false;
+
+            this.options.sizeIndex = sizeIndex;
+
+            if (animateByJS){
+                /*
+                The method to animate the change in contents is as follow:
+                1: Fix the max width/height of the container ($container)
+                2: Change all the modernizr-tests
+                3: Get the new dimention and save it
+                4: Set the dimention back to its originial size
+                    3-3: remove max-width/height and animate the change in size
+                */
+
+                //1:
+                originalDim = vertical ? this.$container.width() : this.$container.height();
+                this.$container.css(vertical ? 'max-width' : 'max-height', originalDim );
+                this.$container.css(vertical ? 'min-width' : 'min-height', originalDim );
+
+                //2:
+                this._setSizeModernizrTest();
+
+                //3:
+                this.doNotCallOnResize = true;
+                const newDim = this.$container.prop(vertical ? 'scrollWidth' : 'scrollHeight');
+
+                //4:
+                this.$container[vertical ? 'width' : 'height']( originalDim );
+                this.$container.css(vertical ? 'max-width' : 'max-height', '');
+                this.$container.css(vertical ? 'min-width' : 'min-height', '');
+                this.$container.removeClass(vertical ? 'vertical-auto-width' : 'horizontal-auto-height');
+                this.$container.removeClass('no-animation');
+
+                this.animateToPosition(newDim, true);
+
+                requestAnimationFrame(function(){
+                    this.$container.addClass(vertical ? 'vertical-auto-width' : 'horizontal-auto-height');
+                    this.doNotCallOnResize = false;
+                }.bind(this) );
             }
+
+            else {
+                if (this.isOpen)
+                    this.animateToPosition(sizeOptions.dimention, true);
+                this._setSizeModernizrTest();
+            }
+
+            ns.appSetting.set(this.sizeId, sizeIndex);
+
+            this._onSetSize();
+            this.options.onSetSize( this.options.sizeIndex, this );
             return this;
         },
 
@@ -450,7 +524,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         _onClose: [],
 
         close: function (noAnimation) {
-            var _this = this;
             this.$container.addClass('closed').removeClass('opening closing opened');
             this._copyClassName();
 
@@ -459,9 +532,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.isOpen = false;
             this.hideMask();
 
-            $.each(this._onClose, function(index, func){
-                func(_this);
-            });
+            this._onClose.forEach((func) =>{
+                func(this);
+            }, this);
 
             window.modernizrOff(this.options.position +'-menu-open');
 

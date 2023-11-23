@@ -25,11 +25,10 @@ Two modes:
     $zindex-touch-menu-mode-over: $zindex-modal-backdrop + 4;
     $zindex-mask-mode-over      : $zindex-touch-menu-mode-over - 1;
 
-    $transition-property-menu       : transform;
-    $transition-property-menu-closed: $transition-property-menu, z-index;
-    $transition-property-main       : margin-left, margin-right, margin-top, margin-bottom;
-    $transition-duration            : .3s;
-    $transition-timing-function     : ease-out;
+    $transition-property-menu   : all;
+    $transition-property-main   : all;
+    $transition-duration        : 2s; //.3s;
+    $transition-timing-function : ease-out;
 
 .touch-menu-container {
     position        : absolute;
@@ -61,15 +60,20 @@ Two modes:
         transition-duration       : $transition-duration;
         transition-timing-function: $transition-timing-function;
 
+        //No animation while the page is loading
+        html.loading &,
         &.no-animation {
             transition: none !important;;
         }
     }
 
     &.closed {
-        transition-property       : $transition-property-menu-closed;
+        transition-property       : $transition-property-menu;
         transition-duration       : $transition-duration;
         transition-timing-function: $transition-timing-function;
+
+        //No animation while the page is loading
+        html.loading &,
         &.no-animation {
             transition: none !important;;
         }
@@ -86,7 +90,7 @@ Two modes:
     &.vertical-auto-width {
         width: auto !important;
     }
-    &.vertical-auto-height {
+    &.horizontal-auto-height {
         height: auto !important;
     }
 }
@@ -152,8 +156,10 @@ Two modes:
     transition-duration       : $transition-duration        !important;
     transition-timing-function: $transition-timing-function !important;
 
+    //No animation while the page is loading
+    html.loading &,
     &.no-animation {
-        transition-duration: 0s 4;;
+        transition-duration: 0s !important;
     }
 }
 

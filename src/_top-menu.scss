@@ -1,4 +1,4 @@
-    /*****************************************************
+/*****************************************************
 TOP-MENU
 
 Style for top menu and items (logo, buttons etc)
@@ -72,7 +72,7 @@ confussions another name is used
             flex-shrink: 1;
             flex-grow  : 1;
             text-align : center;
-            font-family: "Verdana"; //Forsvarsministeriets koncernfælles Designmanual 2018
+            font-family: var(--fmn-font-family);
             font-size  : 1.5em;
             line-height: 1.5;
             @include text-truncate();

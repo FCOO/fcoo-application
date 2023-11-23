@@ -160,6 +160,25 @@ Sections:
         window.fcoo.events.fire('load');
     });
 
+
+//TEST Reading setup-file for application
+/*
+ns.promiseList.prependFirst({
+    fileName: 'findesikke.json',
+    resolve : function(data){
+
+    },
+    promiseOptions: {
+        reject  : function(){
+            console.log('Findes ikke => Brug default');
+        },
+
+        useDefaultErrorHandler: false
+    }
+});
+*/
+
+
     /***********************************************************************
     ************************************************************************
     2: Methods to load and save all hash and parameters

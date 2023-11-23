@@ -256,6 +256,25 @@ Sections:
         window.fcoo.events.fire('load');
     });
 
+
+//TEST Reading setup-file for application
+/*
+ns.promiseList.prependFirst({
+    fileName: 'findesikke.json',
+    resolve : function(data){
+
+    },
+    promiseOptions: {
+        reject  : function(){
+            console.log('Findes ikke => Brug default');
+        },
+
+        useDefaultErrorHandler: false
+    }
+});
+*/
+
+
     /***********************************************************************
     ************************************************************************
     2: Methods to load and save all hash and parameters
@@ -617,7 +636,7 @@ Create and manage the main structure for FCOO web applications
             globalModeOver      : false,
 
             /*
-            applicationName     //Any of option applicationName, applicationHeader, or header can be used as heaser for the application
+            applicationName     //Any of option applicationName, applicationHeader, or header can be used as header for the application
             applicationHeader
             header
             */
@@ -682,12 +701,20 @@ Create and manage the main structure for FCOO web applications
         /*
         leftMenuButtons or leftMenu.buttons, and rightMenuButtons rightMenu.buttons = {
             preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-            save        = onClick or buttonOptions, //Standard save-button
-            load        = onClick or buttonOptions, //Standard load-button
-            bookmark    = onClick or buttonOptions, //Standard bootmark-button
-            share       = onClick or buttonOptions, //Standard share-button
-            user        = onClick or buttonOptions, //Standard user-button
-            setting     = onClick or buttonOptions, //Standard setting-button
+
+            //Standard buttons = onClick or buttonOptions or true for default onClick
+            new
+            edit
+            save
+            load
+            bookmark
+            share
+            user
+            save2       //Alternative button in seperat button-group
+            reset2      //Alternative button in seperat button-group
+            reset
+            setting
+
             postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
         */
 
@@ -706,6 +733,8 @@ Create and manage the main structure for FCOO web applications
                 result.options.mainContainerAsHandleContainer ? $mainContainer :
                 null;
 
+        $.extend(result, main_prototype );
+
         $mainContainer.addClass("main-container");
 
         //Append left-menu (if any)
@@ -718,6 +747,7 @@ Create and manage the main structure for FCOO web applications
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
                 resetListPrepend   : true,
+                main: result
             }));
             $body.append( result.leftMenu.$container );
             result.menus.push(result.leftMenu);
@@ -736,14 +766,17 @@ Create and manage the main structure for FCOO web applications
             result.topMenuObject = ns.createTopMenu( topMenuOptions );
             $outerContainer.append( result.topMenuObject.$container );
 
+
             result.topMenu = ns.touchMenu({
                 position           : 'top',
                 height             : result.topMenuObject.$menu.outerHeight() + 1,  //+ 1 = bottom-border
                 $neighbourContainer: $mainContainer,
                 $container         : result.topMenuObject.$menu,
                 $menu              : false,
+
                 isOpen             : true,
-                standardHandler    : true
+                standardHandler    : true,
+                main: result
             });
             result.menus.push(result.topMenu);
         }
@@ -755,7 +788,8 @@ Create and manage the main structure for FCOO web applications
         if (result.options.bottomMenu){
             result.bottomMenu = ns.touchMenu( $.extend({}, result.options.bottomMenu, {
                 position           : 'bottom',
-                $neighbourContainer: $mainContainer
+                $neighbourContainer: $mainContainer,
+                main: result
             }));
             $outerContainer.append( result.bottomMenu.$container );
             result.menus.push(result.bottomMenu);
@@ -770,6 +804,7 @@ Create and manage the main structure for FCOO web applications
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
+                main: result
             }));
             $body.append( result.rightMenu.$container );
             result.menus.push(result.rightMenu);
@@ -787,23 +822,13 @@ Create and manage the main structure for FCOO web applications
         if (result.options.rightMenu)
             result.topMenuObject.rightMenu.on('click', $.proxy(result.rightMenu.toggle, result.rightMenu));
 
+
         //If application has left-menu and/or right-menu: Set up event to change between mode=side and mode=over
         if (result.options.leftMenu || result.options.rightMenu){
-            result.totalOpenMenuWidth = 0;
-            result.maxSingleMenuWidth = 0;
-
-            if (result.options.leftMenu)
-                result.maxSingleMenuWidth = Math.max(result.maxSingleMenuWidth, result.leftMenu.options.menuDimAndSize.size);
-
-            if (result.options.rightMenu)
-                result.maxSingleMenuWidth = Math.max(result.maxSingleMenuWidth, result.rightMenu.options.menuDimAndSize.size);
-
             //Left and right points to each other
             if (result.options.leftMenu && result.options.rightMenu){
-                result.totalMenuWidth = result.leftMenu.options.menuDimAndSize.size + result.rightMenu.options.menuDimAndSize.size;
-
-                var _onOpen  = $.proxy(_left_right_menu_onOpen, result),
-                    _onClose = $.proxy(_left_right_menu_onClose, result);
+                var _onOpen  = result._left_right_menu_onOpen.bind(result),
+                    _onClose = result._left_right_menu_onClose.bind(result);
                 result.leftMenu._onOpen.push(_onOpen);
                 result.leftMenu._onClose.push(_onClose);
                 result.leftMenu.theOtherMenu = result.rightMenu;
@@ -813,8 +838,7 @@ Create and manage the main structure for FCOO web applications
                 result.rightMenu.theOtherMenu = result.leftMenu;
             }
 
-            result._onBodyResize = _onBodyResize;
-            $body.resize( $.proxy(_onBodyResize, result) );
+            $body.resize( result._onBodyResize.bind(result) );
             result._onBodyResize();
         }
 
@@ -824,17 +848,21 @@ Create and manage the main structure for FCOO web applications
             var menuOptions = result.options[side+'Menu'],
                 options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || {} : {},
                 menu        = result[side+'Menu'],
+                sideIsLeft  = side == 'left',
+                sideIsRight = side == 'right',
+                multiSize   = menu ? menu.options.sizeList.length > 1 : false,
                 $container  = menu ? menu.$preMenu : null;
 
             if (!$container) return;
 
-            $container.addClass('d-flex');
+            $container
+                .addClass('d-flex')
+                .toggleClass('justify-content-end', sideIsRight);
 
             //Create close button
             var $closeButtonDiv = $('<div/>')
-                    .addClass('flex-grow-1')
-                    .toggleClass('text-start', side == 'left')
-                    .toggleClass('text-end',   side == 'right');
+                    .toggleClass('flex-grow-1', sideIsLeft)
+                    .toggleClass('btn-group', multiSize);
 
             menu.btnDecSize =
                 $.bsButton({
@@ -845,16 +873,16 @@ Create and manage the main structure for FCOO web applications
                     context: menu
                 }).appendTo($closeButtonDiv);
 
-            if (menu.options.sizeList.length > 1){
+            if (multiSize){
                 menu.btnIncSize =
                     $.bsButton({
                         bigIcon: true,
                         square : true,
-                        icon   : iconPrefix + (side == 'left' ? 'right' : 'left'),
+                        icon   : iconPrefix + (sideIsLeft ? 'right' : 'left'),
                         onClick: menu.incSize,
                         context: menu
                     });
-                if (side == 'left')
+                if (sideIsLeft)
                     $closeButtonDiv.append( menu.btnIncSize );
                 else
                     $closeButtonDiv.prepend( menu.btnIncSize );
@@ -869,16 +897,24 @@ Create and manage the main structure for FCOO web applications
             var shareIcon = 'fa-share-alt'; //TODO check os for different icons
             var buttonList = [];
 
-            $.each([
-                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true, onClick: function(){ alert('Save not implemented'); } },
-                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                 onClick: function(){ alert('Load not implemented'); } },
-                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true, onClick: function(){ alert('Bookmark not implemented'); } },
-                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                 onClick: function(){ alert('Share not implemented'); } },
-                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true, onClick: function(){ alert('User not implemented'); } },
-                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true, onClick: ns.reset               },
-                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                 onClick: function(){ ns.globalSetting.edit(); }}
-            ],
-            function(index, defaultButtonOptions){
+            [
+                {id:'new',      icon: 'fa-square-plus',       title: {da: 'Ny',              en: 'New'          }, newGroup: true,  onClick: function(){ alert('New not implemented');      } },
+                {id:'edit',     icon: 'fa-pen-to-square',     title: {da: 'Rediger',         en: 'Edit'         }, newGroup: true,  onClick: function(){ alert('Edit not implemented');     } },
+                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: function(){ alert('Save not implemented');     } },
+                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                  onClick: function(){ alert('Load not implemented');     } },
+                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true,  onClick: function(){ alert('Bookmark not implemented'); } },
+                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                  onClick: function(){ alert('Share not implemented');    } },
+                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true,  onClick: function(){ alert('User not implemented');     } },
+
+                {id:'cancel',   icon: 'fa-times',             title: {da: 'Annullér',        en: 'Cancel'       }, newGroup: true,  onClick: function(){ alert('Cancel not implemented');   } },
+                {id:'ok',       icon: 'fa-check',             title: {da: 'Ok',              en: 'Ok'           },                  onClick: function(){ alert('Ok not implemented');       } },
+
+                {id:'save2',    icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: function(){ alert('Save not implemented');     } },
+                {id:'reset2',   icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        },                  onClick: function(){ alert('Reset2 not implemented');   } },
+
+                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true,  onClick: ns.reset                                         },
+                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                  onClick: function(){ ns.globalSetting.edit();           } }
+            ].forEach( (defaultButtonOptions) => {
                 var nextButtonOptions = options[defaultButtonOptions.id];
                 if (nextButtonOptions){
                     if (buttonList.length && defaultButtonOptions.newGroup){
@@ -901,21 +937,23 @@ Create and manage the main structure for FCOO web applications
             $.each(buttonGroups, function(index, buttonList){
                 var $buttonGroup = $('<div/>')
                         .addClass('btn-group')
-                        .toggleClass('space-after', index < (buttonGroups.length-1) )
+                        .toggleClass('space-after', index < (buttonGroups.length-1) || sideIsRight)
                         .appendTo($container);
 
                 $.each(buttonList, function(index2, buttonOptions){
                     buttonOptions = $.extend({bigIcon: true, square: true}, buttonOptions);
+
+                    if (buttonOptions.groupClassName || buttonOptions.groupClass)
+                        $buttonGroup.addClass(buttonOptions.groupClassName || buttonOptions.groupClass);
+
                     $.bsButton(buttonOptions).appendTo($buttonGroup);
                 });
             });
 
-            if (side == 'left')
+            if (sideIsLeft)
                 $closeButtonDiv.prependTo($container);
             else
                 $closeButtonDiv.appendTo($container);
-
-
         }
         //****************************************************
         createMenuButtons('left');
@@ -927,22 +965,18 @@ Create and manage the main structure for FCOO web applications
         */
 
         //Detect when any of the touch-menus are opened/closed using touch
-        var mainResize_onTouchStart  = $.proxy(_mainResize_onTouchStart, result),
-            mainResize_onTouchEnd    = $.proxy(_mainResize_onTouchEnd, result),
-            mainResize_onOpenOrClose = $.proxy(_mainResize_onOpenOrClose, result);
-
         result.options.onResizeStart = result.options.onResizeStart || result.options.onResize;
 
-        $mainContainer.resize( $.proxy(main_onResize, result) );
+        $mainContainer.resize( result._main_onResize.bind(result) );
 
         $.each(['leftMenu', 'rightMenu', 'topMenu', 'bottomMenu'], function(index, menuId){
             var menu = result[menuId];
             if (menu){
-                menu.onTouchStart = mainResize_onTouchStart;
-                menu.onTouchEnd   = mainResize_onTouchEnd;
+                menu.onTouchStart = result._mainResize_onTouchStart.bind(result);
+                menu.onTouchEnd   = result._mainResize_onTouchEnd.bind(result);
 
-                menu._onOpen.push(mainResize_onOpenOrClose);
-                menu._onClose.push(mainResize_onOpenOrClose);
+                menu._onOpen.push( result._mainResize_onOpenOrClose.bind(result) );
+                menu._onClose.push( result._mainResize_onOpenOrClose.bind(result) );
             }
         });
 
@@ -951,96 +985,130 @@ Create and manage the main structure for FCOO web applications
 
 
     /******************************************************
-    Functions to manage the automatic closing of the menu
-    on the other side when a left or right menu is opened
+    Prototype for createMain
     ******************************************************/
-    var wasForcedToClose = null;
-    function _left_right_menu_onOpen(menu){
-        this.lastOpenedMenu = menu;
-        this._onBodyResize();
-    }
+    var main_prototype = {
+            wasForcedToClose: null,
 
-    function _left_right_menu_onClose(menu){
-        if (wasForcedToClose && (wasForcedToClose !== menu))
-            wasForcedToClose.open();
-        wasForcedToClose = null;
-    }
+            _maxSingleMenuWidth: function(){
+                var result = 0;
 
-    function _onBodyResize(){
-        if (this.isResizing) return;
-        wasForcedToClose = null;
-        var bodyWidth = $body.width(),
-            maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
-            newModeIsOver = this.maxSingleMenuWidth >=  maxTotalMenuWidthAllowed,
-            //Find last opened menu if there are two oen menus
-            firstOpenedMenu = this.totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
+                if (this.leftMenu)
+                    result = Math.max(result, this.leftMenu.options.menuDimAndSize.size);
 
-        this.isResizing = true;
-        this.options.globalModeOver = newModeIsOver;
-        if (this.leftMenu)  this.leftMenu.setMode ( newModeIsOver );
-        if (this.rightMenu) this.rightMenu.setMode( newModeIsOver );
-        this.isResizing = false;
+                if (this.rightMenu)
+                    result = Math.max(result, this.rightMenu.options.menuDimAndSize.size);
 
-        //If both menus are open and mode == over or not space for both => close the menu first opened
-        if (firstOpenedMenu && (newModeIsOver || (this.totalMenuWidth > maxTotalMenuWidthAllowed))){
-            firstOpenedMenu.close();
-            if (!newModeIsOver)
-                wasForcedToClose = firstOpenedMenu;
-        }
-    }
+                return result;
+            },
 
-    /******************************************************
-    Functions to detect resize of main-container
-    ******************************************************/
-    function _mainResize_onTouchStart(){
-        this.resizeWait = true;
-        main_onResize.call(this);
-    }
 
-    function _mainResize_onTouchEnd(){
-        this.resizeWait = false;
-        main_onResize.call(this);
-    }
+            _totalMenuWidth: function(){
+                var result = 0;
+                if (this.options.leftMenu && this.options.rightMenu){
+                    [this.leftMenu, this.rightMenu].forEach((menu) => {
+                        const width = menu.options.menuDimAndSize.size;
+                        result = result + (typeof width == 'number' ? width : menu.$container.width());
+                    });
+                }
+                return result;
+            },
 
-    function _mainResize_onOpenOrClose(){
-        if (!this.checkForResizeEnd){
-            this.checkForResizeEnd = true;
-            this.resizeWait = false;
-            main_onResize.call(this);
-        }
-    }
 
-    var mainResizeTimeoutId,
-        mainResizingTimeoutId;
-    function main_onResize(){
 
-        if (!this.resizeStarted){
-            this.resizeStarted = true;
-            if (this.options.onResizeStart)
-                this.options.onResizeStart(this);
-        }
-        window.clearTimeout(mainResizeTimeoutId);
-        mainResizeTimeoutId = window.setTimeout($.proxy(main_onResizeEnd, this), 400);
+            /******************************************************
+            Functions to manage the automatic closing of the menu
+            on the other side when a left or right menu is opened
+            ******************************************************/
+            _left_right_menu_onOpen: function(menu){
+                this.lastOpenedMenu = menu;
+                this._onBodyResize();
+            },
 
-        window.clearTimeout(mainResizingTimeoutId);
-        mainResizingTimeoutId = window.setTimeout($.proxy(main_onResizing, this), 20);
-    }
+            _left_right_menu_onClose: function(menu){
+                if (this.wasForcedToClose && (this.wasForcedToClose !== menu))
+                    this.wasForcedToClose.open();
+                this.wasForcedToClose = null;
+            },
 
-    function main_onResizing(){
-        if (this.options.onResizing)
-            this.options.onResizing(this);
-    }
+            _onBodyResize: function(){
+                if (this.isResizing) return;
+                this.wasForcedToClose = null;
 
-    function main_onResizeEnd(){
-        if (this.resizeWait)
-            main_onResize.call(this);
-        else {
-            this.resizeStarted = false;
-            this.checkForResizeEnd = false;
-            if (this.options.onResizeEnd)
-                this.options.onResizeEnd(this);
-        }
-    }
+                var bodyWidth = $body.width(),
+                    maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
+                    newModeIsOver = this._maxSingleMenuWidth() >=  maxTotalMenuWidthAllowed,
+                    totalMenuWidth = this._totalMenuWidth(),
+                    //Find last opened menu if there are two oen menus
+                    firstOpenedMenu = totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
+
+                this.isResizing = true;
+                this.options.globalModeOver = newModeIsOver;
+                if (this.leftMenu)  this.leftMenu.setMode ( newModeIsOver );
+                if (this.rightMenu) this.rightMenu.setMode( newModeIsOver );
+                this.isResizing = false;
+
+                //If both menus are open and mode == over or not space for both => close the menu first opened
+                if (firstOpenedMenu && (newModeIsOver || (totalMenuWidth > maxTotalMenuWidthAllowed))){
+                    firstOpenedMenu.close();
+                    if (!newModeIsOver)
+                        this.wasForcedToClose = firstOpenedMenu;
+                }
+            },
+
+            /******************************************************
+            Functions to detect resize of main-container
+            ******************************************************/
+            _mainResize_onTouchStart: function(){
+                this.resizeWait = true;
+                this._main_onResize();
+            },
+
+            _mainResize_onTouchEnd: function(){
+                this.resizeWait = false;
+                this._main_onResize();
+            },
+
+            _mainResize_onOpenOrClose: function(){
+                if (!this.checkForResizeEnd){
+                    this.checkForResizeEnd = true;
+                    this.resizeWait = false;
+                    this._main_onResize();
+                }
+            },
+
+            mainResizeTimeoutId: null,
+            mainResizingTimeoutId: null,
+            _main_onResize: function(){
+                if (!this.resizeStarted){
+                    this.resizeStarted = true;
+                    if (this.options.onResizeStart)
+                        this.options.onResizeStart(this);
+                }
+                window.clearTimeout(this.mainResizeTimeoutId);
+                this.mainResizeTimeoutId = window.setTimeout(this._main_onResizeEnd.bind(this), 400);
+
+                window.clearTimeout(this.mainResizingTimeoutId);
+                this.mainResizingTimeoutId = window.setTimeout(this._main_onResizing.bind(this), 20);
+            },
+
+            _main_onResizing: function(){
+                if (this.options.onResizing)
+                    this.options.onResizing(this);
+            },
+
+            _main_onResizeEnd: function(){
+                if (this.resizeWait)
+                    this._main_onResize();
+                else {
+                    this.resizeStarted = false;
+                    this.checkForResizeEnd = false;
+                    if (this.options.onResizeEnd)
+                        this.options.onResizeEnd(this);
+                }
+            }
+        };  //End of main_prototype
+
 }(jQuery, this, document));
 ;
 /****************************************************************************
@@ -2671,8 +2739,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             menuClassName: '',
 
             isOpen       : false,
-            sizeList     : [''], //List of different size' of content = []STRING STRING = name of a monernizr-test to be set when the size is set. NOTE: Only works if width/height = 'auto'
-            sizeIndex    : 0,
+            sizeList     : [], //List of different size' of content = []SIZEOPTIONS SIZEOPTIONS = {width:NUMBER, modernizr: STRING} modernizr = name of a monernizr-test to be set when the size is set. OR []NUMBER (height/width) OR []STRING (modernizr-test)
+            sizeIndex    : -1,
             onSetSize    : function( /* sizeIndex, menu */ ){},
 
             //$menu        : $-element with content (must be inside a <div>), or
@@ -2688,6 +2756,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             $neighbourContainer: null,  //$-container that gets resized when the touch-menu is opened/closed
 
         }, options || {} );
+
+        this.main = this.options.main;
 
         this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
         this.options.scroll          = this.options.scroll || (this.options.verticalMenu && !this.options.menuOptions);
@@ -2713,18 +2783,30 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             .addClass(this.options.position)
             .addClass(this.options.menuClassName);
 
+        //Adjust sizeList (if any)
+        if (this.options.sizeList.length){
+            let defaultSize = 0;
+            this.options.sizeList.forEach( (sizeOptions, index) => {
+                if (typeof sizeOptions == 'number')
+                    sizeOptions = this.options.sizeList[index] = {dimention: sizeOptions};
+                else
+                    if (typeof sizeOptions == 'string'){
+                        sizeOptions = this.options.sizeList[index] = {dimention:'auto', modernizr: sizeOptions};
+                        defaultSize = 'auto';
+                    }
+                sizeOptions.dimention = sizeOptions.dimention || sizeOptions.width || sizeOptions.height || ' ';
+            });
+            this.options[ this.options.verticalMenu ? 'width' : 'height' ] = defaultSize;
+        }
 
         //If the dimention is 'auto' add on-resize event to update width/height
         if (this.options[ this.options.verticalMenu ? 'width' : 'height' ] == 'auto'){
             this.$container
-                .addClass(this.options.verticalMenu ? 'vertical-auto-width' : 'vertical-auto-height')
+                .addClass(this.options.verticalMenu ? 'vertical-auto-width' : 'horizontal-auto-height')
                 .resize( $.proxy( this.onResize, this) );
         }
 
         this.setMode( this.options.modeOver );
-
-        this.isPanning = false;
-        this.onlyScroll = false;
 
         //Create container for the contents
         if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName || this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
@@ -2870,8 +2952,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         onResize: function(){
-            var dim = this.options.verticalMenu ? this.$container.outerWidth() : this.$container.outerHeight();
 
+            if (this.doNotCallOnResize) return;
+
+            var dim = this.options.verticalMenu ? this.$container.outerWidth() : this.$container.outerHeight();
             this.options[this.options.verticalMenu ? 'width' : 'height'] = dim;
 
             this.updateDimentionAndSize();
@@ -2904,7 +2988,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                         size     : height || defaultSize
                     };
                 result.halfDimension = result.dimension/2;
-                result.halfSize = result.size/2;
                 return result;
             }
             //*********************************************************************
@@ -2930,6 +3013,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             //Update the menu-element
             this.$container.css(this.options.position, -1*this.options.menuDimAndSize.size + 'px');
+
             //Set width (top/bottom) or height (left/right) of menu and center if not 100%
             setElementDimensionAndSize(this.$container, this.options.menuDimAndSize);
 
@@ -3018,7 +3102,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         decSize: function(){
-            if (this.isOpen && (this.options.sizeIndex == 0))
+            if (this.isOpen && (this.options.sizeIndex <= 0))
                 this.close();
             else
                 this._setSizeIndex( this.options.sizeIndex - 1 );
@@ -3033,32 +3117,90 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         _onSetSize: function(){
-            if (!this.btnIncSize) return;
-
-            const atMaxSize = this.options.sizeIndex == (this.options.sizeList.length-1);
-            this.btnIncSize
-                .toggleClass('disabled', atMaxSize)
-                .prop('disabled', atMaxSize);
+            if (this.btnIncSize){
+                const atMaxSize = this.options.sizeIndex == (this.options.sizeList.length-1);
+                this.btnIncSize
+                    .toggleClass('disabled', atMaxSize)
+                    .prop('disabled', atMaxSize);
+            }
         },
 
         _setSizeIndexFromSetting: function( sizeIndex ){
-            this._setSizeIndex( sizeIndex, true );
+            if (this.sizeIsSetFromSettings) return;
+            this.sizeIsSetFromSettings = true;
+            this._setSizeIndex( sizeIndex );
         },
 
-        _setSizeIndex( sizeIndex, dontSaveInSetting ){
-            const _this = this;
-            if ((sizeIndex >= 0) && (sizeIndex < this.options.sizeList.length)){
-                this.options.sizeIndex = sizeIndex;
-                if (!dontSaveInSetting)
-                    ns.appSetting.set(this.sizeId, sizeIndex);
+        _setSizeModernizrTest: function(){
+            this.options.sizeList.forEach( function(sizeOptions, index){
+                if (sizeOptions.modernizr)
+                    window.modernizrToggle(sizeOptions.modernizr, index == this.options.sizeIndex);
+            }, this);
+            return this;
+        },
 
-                this.options.sizeList.forEach( function(modernizrTest, index){
-                    if (modernizrTest)
-                        window.modernizrToggle(modernizrTest, index == _this.options.sizeIndex);
-                });
-                this._onSetSize();
-                this.options.onSetSize( this.options.sizeIndex, this );
+        _setSizeIndex( sizeIndex ){
+            /****
+            NOTE: animateByJS and the associated code is at attempt to aminate change in size when width/height = 'auto'. But it is not working :-(
+            ****/
+            if ((sizeIndex < 0) || (sizeIndex >= this.options.sizeList.length))
+                return this;
+
+            const vertical = this.options.verticalMenu;
+            let originalDim,
+                sizeOptions = this.options.sizeList[sizeIndex],
+                //animateByJS = true if the different sizes of the menu is given by the content instead of direct dimention
+                animateByJS = (sizeIndex != this.options.sizeIndex) && (sizeOptions.dimention == 'auto') && this.isOpen && false;
+
+            this.options.sizeIndex = sizeIndex;
+
+            if (animateByJS){
+                /*
+                The method to animate the change in contents is as follow:
+                1: Fix the max width/height of the container ($container)
+                2: Change all the modernizr-tests
+                3: Get the new dimention and save it
+                4: Set the dimention back to its originial size
+                    3-3: remove max-width/height and animate the change in size
+                */
+
+                //1:
+                originalDim = vertical ? this.$container.width() : this.$container.height();
+                this.$container.css(vertical ? 'max-width' : 'max-height', originalDim );
+                this.$container.css(vertical ? 'min-width' : 'min-height', originalDim );
+
+                //2:
+                this._setSizeModernizrTest();
+
+                //3:
+                this.doNotCallOnResize = true;
+                const newDim = this.$container.prop(vertical ? 'scrollWidth' : 'scrollHeight');
+
+                //4:
+                this.$container[vertical ? 'width' : 'height']( originalDim );
+                this.$container.css(vertical ? 'max-width' : 'max-height', '');
+                this.$container.css(vertical ? 'min-width' : 'min-height', '');
+                this.$container.removeClass(vertical ? 'vertical-auto-width' : 'horizontal-auto-height');
+                this.$container.removeClass('no-animation');
+
+                this.animateToPosition(newDim, true);
+
+                requestAnimationFrame(function(){
+                    this.$container.addClass(vertical ? 'vertical-auto-width' : 'horizontal-auto-height');
+                    this.doNotCallOnResize = false;
+                }.bind(this) );
             }
+
+            else {
+                if (this.isOpen)
+                    this.animateToPosition(sizeOptions.dimention, true);
+                this._setSizeModernizrTest();
+            }
+
+            ns.appSetting.set(this.sizeId, sizeIndex);
+
+            this._onSetSize();
+            this.options.onSetSize( this.options.sizeIndex, this );
             return this;
         },
 
@@ -3093,7 +3235,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         _onClose: [],
 
         close: function (noAnimation) {
-            var _this = this;
             this.$container.addClass('closed').removeClass('opening closing opened');
             this._copyClassName();
 
@@ -3102,9 +3243,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.isOpen = false;
             this.hideMask();
 
-            $.each(this._onClose, function(index, func){
-                func(_this);
-            });
+            this._onClose.forEach((func) =>{
+                func(this);
+            }, this);
 
             window.modernizrOff(this.options.position +'-menu-open');
 

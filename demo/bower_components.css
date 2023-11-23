@@ -306,6 +306,14 @@ fcoo-application-logo-and-color.scss,
 Defines default application-color
 ************************************************/
 /*****************************************************
+FONT-FAMILY
+Standard font-family from fmi.dk and Forsvarsministeriets koncernfælles Designmanual 2018
+*****************************************************/
+:root {
+  --fmn-font-family: Verdana, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+}
+
+/*****************************************************
 LOADING
 Style for the <div> covering the page during loading
 *****************************************************/
@@ -353,7 +361,7 @@ div.loading > div {
   text-align: center;
 }
 div.loading > div.version {
-  font-family: sans-serif;
+  font-family: var(--fmn-font-family);
   font-size: 2rem;
   top: 0;
   height: 3rem;
