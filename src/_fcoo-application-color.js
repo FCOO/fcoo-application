@@ -68,11 +68,14 @@ var NewColor = LightenDarkenColor("#F06D06", 20);
 var NewColor = LightenDarkenColor("#F06D06", -20);
 
 
+var fmnColor = '#3f5b58';
+
+console.log( LightenDarkenColor(fmnColor, 25), LightenDarkenColor(fmnColor, -25) );
 
 
-
-
-
+//#587471
+//#26423f
+//#78a29d
 
 
 }(jQuery, this.i18next, this, document));

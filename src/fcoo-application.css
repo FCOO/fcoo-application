@@ -876,7 +876,7 @@ Two modes:
 }
 .touch-menu-container.opened {
   transition-property: all;
-  transition-duration: 2s;
+  transition-duration: 0.3s;
   transition-timing-function: ease-out;
 }
 html.loading .touch-menu-container.opened, .touch-menu-container.opened.no-animation {
@@ -884,7 +884,7 @@ html.loading .touch-menu-container.opened, .touch-menu-container.opened.no-anima
 }
 .touch-menu-container.closed {
   transition-property: all;
-  transition-duration: 2s;
+  transition-duration: 0.3s;
   transition-timing-function: ease-out;
   transform: none !important;
 }
@@ -931,7 +931,7 @@ html.loading .touch-menu-container.closed, .touch-menu-container.closed.no-anima
   background-color: #000;
 }
 .touch-menu-mask.opened, .touch-menu-mask.closed {
-  transition: opacity 2s ease-out;
+  transition: opacity 0.3s ease-out;
 }
 .touch-menu-mask.visible {
   z-index: 1053;
@@ -954,7 +954,7 @@ html.loading .touch-menu-container.closed, .touch-menu-container.closed.no-anima
 
 .neighbour-container {
   transition-property: all !important;
-  transition-duration: 2s !important;
+  transition-duration: 0.3s !important;
   transition-timing-function: ease-out !important;
 }
 html.loading .neighbour-container, .neighbour-container.no-animation {
