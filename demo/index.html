@@ -50,6 +50,18 @@
 // HER>         :root {
 // HER>             --fcoo-app-text-color-63: red;
 // HER>         }            
+
+        .bgColor   { background-color: #3f5b58; }
+        .bgColor25 { background-color: #78a29d; }
+        .bgColor63 { background-color: #eaf1f0; }
+
+.break {
+  flex-basis: 100%;
+  width: 0;
+  height: 0;
+}
+    
+    
     </style>
 
 </head>
@@ -83,7 +95,7 @@
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
     <script src="../src/fcoo-application-about.js"></script>
-    <script src="../src/_fcoo-application-color.js"></script>
+    <script src="../src/fcoo-application-color.js"></script>
     <script src="../src/fcoo-application-general.js"></script>
     <script src="../src/fcoo-application-help.js"></script>
     <script src="../src/fcoo-application-icon.js"></script>
@@ -143,7 +155,11 @@
             });
 
         }
-
+        function setNewAppColor(select){
+            var newColor = select.value == 'random' ? chroma.random().hex() : select.value;
+            console.log(newColor, '=>', fcoo.setApplicationColors(newColor) );
+        }
+        
         function notyDemo(){
             var layout = ['topLeft', 'topCenter', 'topRight', 'centerRight', 'bottomCenter', 'center'];
             var type   = ['alert',   'success',   'warning',  'error',        'info',        'help' ];
@@ -253,7 +269,7 @@
 
                         menuOptions: {
                             reset: true,
-                            resetText: 'Fravælg alle VENSTRE menuer',
+                            resetText: {da:'Fravælg alle VENSTRE menuer', en:'Reset all LEFT menus'},
                             onChange: function(id, state, item){
                                 console.log('GLOBAL onChange', id, state, item);
                             },
@@ -441,17 +457,18 @@
             '<button onClick="fcoo.globalSetting.set(\'language\', \'en\');"><i class="fa fa-lang-en"></i>&nbsp;English</button><br>'+
             '<button onClick="modalDemo();">Modal demo</button>'+
             '<button onClick="notyDemo();">Noty demo</button>'+
+            '<select onChange="setNewAppColor(this)">'+
+                '<option value="#3f5b58">Defaults</option>'+
+                '<option value="black">Black</option>'+
+                '<option value="darkred">Dark Red</option>'+
+                '<option value="#ffff00">Brøndby</option>'+
+                '<option value="random">Random</option>'+
+            '</select>'+
             '<div class="show-for-left-menu-open">Vises når left-menu er åben</div>' +
             '<div class="hide-for-left-menu-open">Vises når left-menu er lukket</div>' +
             '<div class="show-for-bottom-menu-open">Vises når bottom-menu er åben</div>' +
             '<div class="hide-for-bottom-menu-open">Vises når bottom-menu er lukket</div>' +
-'<div style="width:100px; height:100px; background-color: #587471;">#587471</div>' +
-'<div style="width:100px; height:100px; background-color: #26423f;">#26423f</div>' +
-'<div style="width:100px; height:100px; background-color: #78a29d;">#78a29d</div>' +
 
-
-            
-            
             '<div class="show-for-mouse">Vises kun, hvis der er en mus</div>').appendTo(main.$mainContainer);
 
         var fileViewModal;

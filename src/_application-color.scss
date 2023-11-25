@@ -3,104 +3,155 @@ APPLICATION-COLOR
 
 Defines default application-color and adjust different jquery-bootstrap and fcoo-application element-styles
 
-See _application-color-mixin.scss for description of application colors
+A number of css-variable are defined.
+The are all named
+--fcoo-app-TYPE-color[-PERCENT]
+and have the value
+var(--_fcoo-app-TYPE-color-PERCENT, var(--_fcoo-default-app-TYPE-color-PERCENT) ); (Note the "_" at the beginning of the var-names)
+
+All the default values --_fcoo-default-app... are defined using DALO standard dark-green
+
+To change the default colors the css-variables --_fcoo-app-TYPE-color-PERCENT must be assigned a value
+This can be done in two ways:
+1: In scss by including src/_application-color-mixin.scss in the applications scss-file and adding @include application-color( NEW_APPLICATION_COLOR );
+2: Dynamically via javascript by calling window.fcoo.setApplicationColors( NEW_APPLICATION_COLOR ); (see src/fcoo-application-color.js)
 *****************************************************/
+
 //Default = DALO color in "Forsvarsministeriets koncernfælles Designmanual 2018"
 @include _application-color(#3f5b58, "default-");
 
-//Define tree set of bg- and text-colors
-@function get-var( $type:'bg', $percent:'0' ){
+@function get-var-id( $type:'bg', $percent:'0' ){
+    @if $percent == '0' {
+        $percent: "";
+    }
+    @else {
+        $percent: "-" + $percent;
+    }
+    @return --fcoo-app-#{$type}-color#{$percent};
+}
+
+@function get-var-value( $type:'bg', $percent:'0' ){
     @return var(--_fcoo-app-#{$type}-color-#{$percent}, var(--_fcoo-default-app-#{$type}-color-#{$percent}) );
 }
-@function get-default-var( $type:'bg', $percent:'0' ){
-    @return var( --_fcoo-default-app-#{$type}-color-#{$percent} );
+
+@function get-var( $type:'bg', $percent:'0' ){
+    @return var(get-var-id( $type, $percent));
 }
+
+
+//Define four set of bg-, text-, shadow-, hover, and active-colors. Only shadow for base-color
+//The functions create css-var a la
+//--fcoo-app-bg-color-25: var(--_fcoo-app-bg-color-25, var(--_fcoo-default-app-bg-color-25));
 
 :root {
-    --fcoo-app-bg-color     : #{get-var( $type:'bg'  )};
-    --fcoo-app-text-color   : #{get-var( $type:'text')};
-    --fcoo-app-shadow-color : #{get-var( $type:'shadow')};
+    #{get-var-id('bg')}         : #{get-var-value('bg')};
+    #{get-var-id('hover-bg')}   : #{get-var-value('hover-bg')};
+    #{get-var-id('active-bg')}  : #{get-var-value('active-bg')};
 
-    --fcoo-default-app-bg-color     : #{get-default-var( $type:'bg'  )};
-    --fcoo-default-app-text-color   : #{get-default-var( $type:'text')};
-    --fcoo-default-app-shadow-color : #{get-default-var( $type:'shadow')};
-
-
-    --fcoo-app-bg-color-25  : #{get-var( $type:'bg',   $percent:'25' )};
-    --fcoo-app-text-color-25: #{get-var( $type:'text', $percent:'25' )};
-
-    --fcoo-app-bg-color-50  : #{get-var( $type:'bg',   $percent:'50' )};
-    --fcoo-app-text-color-50: #{get-var( $type:'text', $percent:'50' )};
+    #{get-var-id('text')}       : #{get-var-value('text')};
+    #{get-var-id('hover-text')} : #{get-var-value('hover-text')};
+    #{get-var-id('active-text')}: #{get-var-value('active-text')};
+    #{get-var-id('shadow')}     : #{get-var-value('shadow')};
 
 
-    --fcoo-app-bg-color-63  : #{get-var( $type:'bg',   $percent:'63' )};
-    --fcoo-app-text-color-63: #{get-var( $type:'text', $percent:'63' )};
+    #{get-var-id('bg',          25)}: #{get-var-value('bg',           25)};
+    #{get-var-id('hover-bg',    25)}: #{get-var-value('hover-bg',     25)};
+    #{get-var-id('active-bg',   25)}: #{get-var-value('active-bg',    25)};
+    #{get-var-id('text',        25)}: #{get-var-value('text',         25)};
+    #{get-var-id('hover-text',  25)}: #{get-var-value('hover-text',   25)};
+    #{get-var-id('active-text', 25)}: #{get-var-value('active-text',  25)};
 
+    #{get-var-id('bg',          50)}: #{get-var-value('bg',           50)};
+    #{get-var-id('hover-bg',    50)}: #{get-var-value('hover-bg',     50)};
+    #{get-var-id('active-bg',   50)}: #{get-var-value('active-bg',    50)};
+    #{get-var-id('text',        50)}: #{get-var-value('text',         50)};
+    #{get-var-id('hover-text',  50)}: #{get-var-value('hover-text',   50)};
+    #{get-var-id('active-text', 50)}: #{get-var-value('active-text',  50)};
+
+    #{get-var-id('bg',          63)}: #{get-var-value('bg',           63)};
+    #{get-var-id('hover-bg',    63)}: #{get-var-value('hover-bg',     63)};
+    #{get-var-id('active-bg',   63)}: #{get-var-value('active-bg',    63)};
+    #{get-var-id('text',        63)}: #{get-var-value('text',         63)};
+    #{get-var-id('hover-text',  63)}: #{get-var-value('hover-text',   63)};
+    #{get-var-id('active-text', 63)}: #{get-var-value('active-text',  63)};
 }
 
+.fcoo-app-bg-color      { background-color: get-var('bg')   !important; }
+.fcoo-app-text-color    { color           : get-var('text') !important; }
 
-.fcoo-default-app-colors {
-    color           : var(--fcoo-default-app-text-color) !important;
-    background-color: var(--fcoo-default-app-bg-color) !important;
-}
+.fcoo-app-bg-color-25   { background-color: get-var('bg',   25) !important; }
+.fcoo-app-text-color-25 { color           : get-var('text', 25) !important; }
 
+.fcoo-app-bg-color-50   { background-color: get-var('bg',   50) !important; }
+.fcoo-app-text-color-50 { color           : get-var('text', 50) !important; }
 
+.fcoo-app-bg-color-63   { background-color: get-var('bg',   63) !important; }
+.fcoo-app-text-color-63 { color           : get-var('text', 63) !important; }
 
-$fcoo-app-text-color    : var(--fcoo-app-text-color);
-$fcoo-app-bg-color      : var(--fcoo-app-bg-color);
-$fcoo-icon-shadow       : var(--fcoo-app-shadow-color);
-.fcoo-app-text-color    { color           : #{$fcoo-app-text-color} !important; }
-.fcoo-app-bg-color      { background-color: #{$fcoo-app-bg-color}   !important; }
-
-$fcoo-app-text-color-25 : var(--fcoo-app-text-color-25);
-$fcoo-app-bg-color-25   : var(--fcoo-app-bg-color-25);
-$fcoo-icon-shadow-25    : var(--fcoo-app-shadow-color-25);
-.fcoo-app-text-color-25 { color           : #{$fcoo-app-text-color-25} !important; }
-.fcoo-app-bg-color-25   { background-color: #{$fcoo-app-bg-color-25}   !important; }
-
-$fcoo-app-text-color-50 : var(--fcoo-app-text-color-50);
-$fcoo-app-bg-color-50   : var(--fcoo-app-bg-color-50);
-$fcoo-icon-shadow-50    : var(--fcoo-app-shadow-color-50);
-.fcoo-app-text-color-50 { color           : #{$fcoo-app-text-color-50} !important; }
-.fcoo-app-bg-color-50   { background-color: #{$fcoo-app-bg-color-50}   !important; }
-
-
-@mixin text-shadow( $color: $fcoo-icon-shadow, $size: 1px){
+@mixin text-shadow( $color: get-var('shadow'), $size: 1px){
     text-shadow: -#{$size} 0 #{$color}, 0 #{$size} #{$color}, #{$size} 0 #{$color}, 0 -#{$size} #{$color}; //Black or white border around text to have contract
 }
 
+/*****************************************************
+Create css-var for buttons when inside a container with fcoo-application
+Text and border color are the same
+*****************************************************/
+
+.btn-fcoo-app-color .btn-jb.standard {
+    @include button-background-color-variant( get-var('bg'),   get-var('hover-bg'),   get-var('active-bg')   );
+    @include button-text-color-variant      ( get-var('text'), get-var('hover-text'), get-var('active-text') );
+    @include button-border-color-variant    ( get-var('text'), get-var('hover-text'), get-var('active-text') );
+}
+
+.btn-fcoo-app-color-25 .btn-jb.standard {
+    @include button-background-color-variant( get-var('bg',   25), get-var('hover-bg',   25), get-var('active-bg',   25) );
+    @include button-text-color-variant      ( get-var('text', 25), get-var('hover-text', 25), get-var('active-text', 25) );
+    @include button-border-color-variant    ( get-var('text', 25), get-var('hover-text', 25), get-var('active-text', 25) );
+}
+
+.btn-fcoo-app-color-50 .btn-jb.standard {
+    @include button-background-color-variant( get-var('bg',   50), get-var('hover-bg',   50), get-var('active-bg',   50) );
+    @include button-text-color-variant      ( get-var('text', 50), get-var('hover-text', 50), get-var('active-text', 50) );
+    @include button-border-color-variant    ( get-var('text', 50), get-var('hover-text', 50), get-var('active-text', 50) );
+}
+
+//Adjust disabled buttons
+[class*="btn-fcoo-app-color"] .btn-jb.standard {
+    --bs-btn-disabled-color       : var(--bs-btn-color);
+    --bs-btn-disabled-bg          : var(--bs-btn-bg);
+    --bs-btn-disabled-border-color: var(--bs-btn-border-color);
+    --bs-btn-disabled-opacity     : 0.4;
+}
 
 
 /*****************************************************
 Adjust different parts in jquery-bootstrap and fcoo-application
 *****************************************************/
-
 //Bootstrap: Modal-header
 :root {
-    --jb-header-color       : var(--fcoo-app-text-color-25);
-    --jb-header-bg          : var(--fcoo-app-bg-color-25);
+    --jb-header-color       : #{get-var('text', 25)};
+    --jb-header-bg          : #{get-var('bg',   25)};
 
-    --jb-inner-header-color : var(--fcoo-app-text-color-50);
-    --jb-inner-header-bg    : var(--fcoo-app-bg-color-50);
+    --jb-inner-header-color : #{get-var('text', 50)};
+    --jb-inner-header-bg    : #{get-var('bg',   50)};
 }
-
 
 //Bootstrap: Aaccordion header when open = 50%-color
 .accordion {
-    --bs-accordion-btn-color: var(--fcoo-app-text-color-63);
-    --bs-accordion-btn-bg   : var(--fcoo-app-bg-color-63);
+    --bs-accordion-btn-color: #{get-var('text', 63)};
+    --bs-accordion-btn-bg   : #{get-var('bg',   63)};
 
 
-    --bs-accordion-active-color: var(--fcoo-app-text-color-50);
-    --bs-accordion-active-bg   : var(--fcoo-app-bg-color-50);
+    --bs-accordion-active-color: #{get-var('text', 50)};
+    --bs-accordion-active-bg   : #{get-var('bg',   50)};
 }
 
 //mmenu: Open item = 50%-color
 .mm-menu {
-    --mm-item-closed-color: var(--fcoo-app-text-color-63);
-    --mm-item-closed-bg   : var(--fcoo-app-bg-color-63);
+    --mm-item-closed-color: #{get-var('text', 63)};
+    --mm-item-closed-bg   : #{get-var('bg',   63)};
 
-    --mm-item-opened-color: var(--fcoo-app-text-color-50);
-    --mm-item-opened-bg   : var(--fcoo-app-bg-color-50);
+    --mm-item-opened-color: #{get-var('text', 50)};
+    --mm-item-opened-bg   : #{get-var('bg',   50)};
 }
 

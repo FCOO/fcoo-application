@@ -204,6 +204,7 @@ button-border-color-variant
 button-background-color-variant
 Adjust text-, border-, and background-color for a button
 ************************************************************/
+/********** START **************/
 /***********************************************
 fcoo-application-base-color-mixin
 
@@ -232,60 +233,148 @@ APPLICATION-COLOR
 
 Defines default application-color and adjust different jquery-bootstrap and fcoo-application element-styles
 
-See _application-color-mixin.scss for description of application colors
+A number of css-variable are defined.
+The are all named
+--fcoo-app-TYPE-color[-PERCENT]
+and have the value
+var(--_fcoo-app-TYPE-color-PERCENT, var(--_fcoo-default-app-TYPE-color-PERCENT) ); (Note the "_" at the beginning of the var-names)
+
+All the default values --_fcoo-default-app... are defined using DALO standard dark-green
+
+To change the default colors the css-variables --_fcoo-app-TYPE-color-PERCENT must be assigned a value
+This can be done in two ways:
+1: In scss by including src/_application-color-mixin.scss in the applications scss-file and adding @include application-color( NEW_APPLICATION_COLOR );
+2: Dynamically via javascript by calling window.fcoo.setApplicationColors( NEW_APPLICATION_COLOR ); (see src/fcoo-application-color.js)
 *****************************************************/
 :root {
   --_fcoo-default-app-bg-color-0: #3f5b58;
+  --_fcoo-default-app-hover-bg-color-0: #5c7471;
+  --_fcoo-default-app-active-bg-color-0: #657c79;
   --_fcoo-default-app-text-color-0: #fff;
+  --_fcoo-default-app-hover-text-color-0: white;
+  --_fcoo-default-app-active-text-color-0: white;
   --_fcoo-default-app-shadow-color-0: #000;
   --_fcoo-default-app-bg-color-25: #78a29d;
+  --_fcoo-default-app-hover-bg-color-25: #8cb0ac;
+  --_fcoo-default-app-active-bg-color-25: #93b5b1;
   --_fcoo-default-app-text-color-25: #000;
-  --_fcoo-default-app-shadow-color-25: #fff;
+  --_fcoo-default-app-hover-text-color-25: #1a1a1a;
+  --_fcoo-default-app-active-text-color-25: #1a1a1a;
   --_fcoo-default-app-bg-color-50: #c3d6d4;
+  --_fcoo-default-app-hover-bg-color-50: #ccdcda;
+  --_fcoo-default-app-active-bg-color-50: #cfdedd;
   --_fcoo-default-app-text-color-50: #000;
-  --_fcoo-default-app-shadow-color-50: #fff;
+  --_fcoo-default-app-hover-text-color-50: #1a1a1a;
+  --_fcoo-default-app-active-text-color-50: #1a1a1a;
   --_fcoo-default-app-bg-color-63: #eaf1f0;
+  --_fcoo-default-app-hover-bg-color-63: #edf3f2;
+  --_fcoo-default-app-active-bg-color-63: #eef4f3;
   --_fcoo-default-app-text-color-63: #000;
-  --_fcoo-default-app-shadow-color-63: #fff;
+  --_fcoo-default-app-hover-text-color-63: #1a1a1a;
+  --_fcoo-default-app-active-text-color-63: #1a1a1a;
 }
 
+:root {
+  --fcoo-app-bg-color: var(--_fcoo-app-bg-color-0, var(--_fcoo-default-app-bg-color-0));
+  --fcoo-app-hover-bg-color: var(--_fcoo-app-hover-bg-color-0, var(--_fcoo-default-app-hover-bg-color-0));
+  --fcoo-app-active-bg-color: var(--_fcoo-app-active-bg-color-0, var(--_fcoo-default-app-active-bg-color-0));
+  --fcoo-app-text-color: var(--_fcoo-app-text-color-0, var(--_fcoo-default-app-text-color-0));
+  --fcoo-app-hover-text-color: var(--_fcoo-app-hover-text-color-0, var(--_fcoo-default-app-hover-text-color-0));
+  --fcoo-app-active-text-color: var(--_fcoo-app-active-text-color-0, var(--_fcoo-default-app-active-text-color-0));
+  --fcoo-app-shadow-color: var(--_fcoo-app-shadow-color-0, var(--_fcoo-default-app-shadow-color-0));
+  --fcoo-app-bg-color-25: var(--_fcoo-app-bg-color-25, var(--_fcoo-default-app-bg-color-25));
+  --fcoo-app-hover-bg-color-25: var(--_fcoo-app-hover-bg-color-25, var(--_fcoo-default-app-hover-bg-color-25));
+  --fcoo-app-active-bg-color-25: var(--_fcoo-app-active-bg-color-25, var(--_fcoo-default-app-active-bg-color-25));
+  --fcoo-app-text-color-25: var(--_fcoo-app-text-color-25, var(--_fcoo-default-app-text-color-25));
+  --fcoo-app-hover-text-color-25: var(--_fcoo-app-hover-text-color-25, var(--_fcoo-default-app-hover-text-color-25));
+  --fcoo-app-active-text-color-25: var(--_fcoo-app-active-text-color-25, var(--_fcoo-default-app-active-text-color-25));
+  --fcoo-app-bg-color-50: var(--_fcoo-app-bg-color-50, var(--_fcoo-default-app-bg-color-50));
+  --fcoo-app-hover-bg-color-50: var(--_fcoo-app-hover-bg-color-50, var(--_fcoo-default-app-hover-bg-color-50));
+  --fcoo-app-active-bg-color-50: var(--_fcoo-app-active-bg-color-50, var(--_fcoo-default-app-active-bg-color-50));
+  --fcoo-app-text-color-50: var(--_fcoo-app-text-color-50, var(--_fcoo-default-app-text-color-50));
+  --fcoo-app-hover-text-color-50: var(--_fcoo-app-hover-text-color-50, var(--_fcoo-default-app-hover-text-color-50));
+  --fcoo-app-active-text-color-50: var(--_fcoo-app-active-text-color-50, var(--_fcoo-default-app-active-text-color-50));
+  --fcoo-app-bg-color-63: var(--_fcoo-app-bg-color-63, var(--_fcoo-default-app-bg-color-63));
+  --fcoo-app-hover-bg-color-63: var(--_fcoo-app-hover-bg-color-63, var(--_fcoo-default-app-hover-bg-color-63));
+  --fcoo-app-active-bg-color-63: var(--_fcoo-app-active-bg-color-63, var(--_fcoo-default-app-active-bg-color-63));
+  --fcoo-app-text-color-63: var(--_fcoo-app-text-color-63, var(--_fcoo-default-app-text-color-63));
+  --fcoo-app-hover-text-color-63: var(--_fcoo-app-hover-text-color-63, var(--_fcoo-default-app-hover-text-color-63));
+  --fcoo-app-active-text-color-63: var(--_fcoo-app-active-text-color-63, var(--_fcoo-default-app-active-text-color-63));
+}
+
+.fcoo-app-bg-color {
+  background-color: var(--fcoo-app-bg-color) !important;
+}
+
+.fcoo-app-text-color {
+  color: var(--fcoo-app-text-color) !important;
+}
+
+.fcoo-app-bg-color-25 {
+  background-color: var(--fcoo-app-bg-color-25) !important;
+}
+
+.fcoo-app-text-color-25 {
+  color: var(--fcoo-app-text-color-25) !important;
+}
+
+.fcoo-app-bg-color-50 {
+  background-color: var(--fcoo-app-bg-color-50) !important;
+}
+
+.fcoo-app-text-color-50 {
+  color: var(--fcoo-app-text-color-50) !important;
+}
+
+.fcoo-app-bg-color-63 {
+  background-color: var(--fcoo-app-bg-color-63) !important;
+}
+
+.fcoo-app-text-color-63 {
+  color: var(--fcoo-app-text-color-63) !important;
+}
+
+/*****************************************************
+Create css-var for buttons when inside a container with fcoo-application
+Text and border color are the same
+*****************************************************/
 .btn-fcoo-app-color .btn-jb.standard {
-  --bs-btn-color: #fff;
-  --bs-btn-hover-color: white;
-  --bs-btn-active-color: white;
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-border-color: #fff;
-  --bs-btn-hover-border-color: white;
-  --bs-btn-active-border-color: white;
-  --bs-btn-bg: #3f5b58;
-  --bs-btn-hover-bg: #5c7471;
-  --bs-btn-active-bg: #657c79;
+  --bs-btn-bg: var(--fcoo-app-bg-color);
+  --bs-btn-hover-bg: var(--fcoo-app-hover-bg-color);
+  --bs-btn-active-bg: var(--fcoo-app-active-bg-color);
+  --bs-btn-color: var(--fcoo-app-text-color);
+  --bs-btn-hover-color: var(--fcoo-app-hover-text-color);
+  --bs-btn-active-color: var(--fcoo-app-active-text-color);
+  --bs-btn-disabled-color: var(--fcoo-app-text-color);
+  --bs-btn-border-color: var(--fcoo-app-text-color);
+  --bs-btn-hover-border-color: var(--fcoo-app-hover-text-color);
+  --bs-btn-active-border-color: var(--fcoo-app-active-text-color);
 }
 
 .btn-fcoo-app-color-25 .btn-jb.standard {
-  --bs-btn-color: #000;
-  --bs-btn-hover-color: #1a1a1a;
-  --bs-btn-active-color: #1a1a1a;
-  --bs-btn-disabled-color: #000;
-  --bs-btn-border-color: #000;
-  --bs-btn-hover-border-color: #1a1a1a;
-  --bs-btn-active-border-color: #1a1a1a;
-  --bs-btn-bg: #78a29d;
-  --bs-btn-hover-bg: #8cb0ac;
-  --bs-btn-active-bg: #93b5b1;
+  --bs-btn-bg: var(--fcoo-app-bg-color-25);
+  --bs-btn-hover-bg: var(--fcoo-app-hover-bg-color-25);
+  --bs-btn-active-bg: var(--fcoo-app-active-bg-color-25);
+  --bs-btn-color: var(--fcoo-app-text-color-25);
+  --bs-btn-hover-color: var(--fcoo-app-hover-text-color-25);
+  --bs-btn-active-color: var(--fcoo-app-active-text-color-25);
+  --bs-btn-disabled-color: var(--fcoo-app-text-color-25);
+  --bs-btn-border-color: var(--fcoo-app-text-color-25);
+  --bs-btn-hover-border-color: var(--fcoo-app-hover-text-color-25);
+  --bs-btn-active-border-color: var(--fcoo-app-active-text-color-25);
 }
 
 .btn-fcoo-app-color-50 .btn-jb.standard {
-  --bs-btn-color: #000;
-  --bs-btn-hover-color: #1a1a1a;
-  --bs-btn-active-color: #1a1a1a;
-  --bs-btn-disabled-color: #000;
-  --bs-btn-border-color: #000;
-  --bs-btn-hover-border-color: #1a1a1a;
-  --bs-btn-active-border-color: #1a1a1a;
-  --bs-btn-bg: #c3d6d4;
-  --bs-btn-hover-bg: #ccdcda;
-  --bs-btn-active-bg: #cfdedd;
+  --bs-btn-bg: var(--fcoo-app-bg-color-50);
+  --bs-btn-hover-bg: var(--fcoo-app-hover-bg-color-50);
+  --bs-btn-active-bg: var(--fcoo-app-active-bg-color-50);
+  --bs-btn-color: var(--fcoo-app-text-color-50);
+  --bs-btn-hover-color: var(--fcoo-app-hover-text-color-50);
+  --bs-btn-active-color: var(--fcoo-app-active-text-color-50);
+  --bs-btn-disabled-color: var(--fcoo-app-text-color-50);
+  --bs-btn-border-color: var(--fcoo-app-text-color-50);
+  --bs-btn-hover-border-color: var(--fcoo-app-hover-text-color-50);
+  --bs-btn-active-border-color: var(--fcoo-app-active-text-color-50);
 }
 
 [class*=btn-fcoo-app-color] .btn-jb.standard {
@@ -293,50 +382,6 @@ See _application-color-mixin.scss for description of application colors
   --bs-btn-disabled-bg: var(--bs-btn-bg);
   --bs-btn-disabled-border-color: var(--bs-btn-border-color);
   --bs-btn-disabled-opacity: 0.4;
-}
-
-:root {
-  --fcoo-app-bg-color: var(--_fcoo-app-bg-color-0, var(--_fcoo-default-app-bg-color-0));
-  --fcoo-app-text-color: var(--_fcoo-app-text-color-0, var(--_fcoo-default-app-text-color-0));
-  --fcoo-app-shadow-color: var(--_fcoo-app-shadow-color-0, var(--_fcoo-default-app-shadow-color-0));
-  --fcoo-default-app-bg-color: var(--_fcoo-default-app-bg-color-0);
-  --fcoo-default-app-text-color: var(--_fcoo-default-app-text-color-0);
-  --fcoo-default-app-shadow-color: var(--_fcoo-default-app-shadow-color-0);
-  --fcoo-app-bg-color-25: var(--_fcoo-app-bg-color-25, var(--_fcoo-default-app-bg-color-25));
-  --fcoo-app-text-color-25: var(--_fcoo-app-text-color-25, var(--_fcoo-default-app-text-color-25));
-  --fcoo-app-bg-color-50: var(--_fcoo-app-bg-color-50, var(--_fcoo-default-app-bg-color-50));
-  --fcoo-app-text-color-50: var(--_fcoo-app-text-color-50, var(--_fcoo-default-app-text-color-50));
-  --fcoo-app-bg-color-63: var(--_fcoo-app-bg-color-63, var(--_fcoo-default-app-bg-color-63));
-  --fcoo-app-text-color-63: var(--_fcoo-app-text-color-63, var(--_fcoo-default-app-text-color-63));
-}
-
-.fcoo-default-app-colors {
-  color: var(--fcoo-default-app-text-color) !important;
-  background-color: var(--fcoo-default-app-bg-color) !important;
-}
-
-.fcoo-app-text-color {
-  color: var(--fcoo-app-text-color) !important;
-}
-
-.fcoo-app-bg-color {
-  background-color: var(--fcoo-app-bg-color) !important;
-}
-
-.fcoo-app-text-color-25 {
-  color: var(--fcoo-app-text-color-25) !important;
-}
-
-.fcoo-app-bg-color-25 {
-  background-color: var(--fcoo-app-bg-color-25) !important;
-}
-
-.fcoo-app-text-color-50 {
-  color: var(--fcoo-app-text-color-50) !important;
-}
-
-.fcoo-app-bg-color-50 {
-  background-color: var(--fcoo-app-bg-color-50) !important;
 }
 
 /*****************************************************
@@ -363,6 +408,9 @@ Adjust different parts in jquery-bootstrap and fcoo-application
   --mm-item-opened-bg: var(--fcoo-app-bg-color-50);
 }
 
+/********** DEMO ******************
+@include application-color(darkred);
+//*********************************/
 .hide {
   display: none !important;
 }
@@ -1169,7 +1217,7 @@ html.xlarge-down .invisible-for-xlarge-down {
 }
 
 /*****************************************************
-Special claa for buttons in reset-list
+Special class for buttons in reset-list
 *****************************************************/
 .btn-reset {
   min-height: 4em;

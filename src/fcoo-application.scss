@@ -29,13 +29,16 @@
 @import "../bower_components/sass-color-helpers/stylesheets/color-helpers";
 
 //APPLICATION COLORS
+/********** START **************/
+
 @import "../bower_components/fcoo-application-logo-and-color/src/fcoo-application-base-color-mixin";
 @import "application-color-mixin";
 @import "application-color";
 
 
-//DEMO: @include application-color(darkred);
-
+/********** DEMO ******************
+@include application-color(darkred);
+//*********************************/
 
 
 //Standard classes
@@ -106,7 +109,7 @@ the break-points defined in fcoo-modernizr-mediaquery-device
 }
 
 /*****************************************************
-Special claa for buttons in reset-list
+Special class for buttons in reset-list
 *****************************************************/
 .btn-reset {
     min-height : 4em;

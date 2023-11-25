@@ -21,75 +21,74 @@ Eq. To have application-color = red:
     @include _application-color($color, "", "div");
 }
 
-
 @function _best_contrast( $color ){
     @return ch-best-color-contrast($base: $color, $colors: (#fff, #000), $tolerance: 0);
 }
 
-@mixin _application-color($color-0, $prefix: "", $type: ""){
-    $contrast-0: _best_contrast($color-0);
+@function get-root-var-id( $type:'bg', $prefix: '', $percent:'0' ){
+    @return --_fcoo-#{$prefix}app-#{$type}-color-#{$percent}
+}
 
-    $color-25: lighten($color-0, 25%);
-    $contrast-25: _best_contrast($color-25);
+@mixin _application-color($application-color, $prefix: "", $type: ""){
+    $bg-color-0          : $application-color;
+    $hover-bg-color-0    : tint-color($bg-color-0, $btn-hover-bg-tint-amount);
+    $active-bg-color-0   : tint-color($bg-color-0, $btn-active-bg-tint-amount);
+    $text-color-0        : _best_contrast($bg-color-0);
+    $hover-text-color-0  : tint-color($text-color-0, $btn-hover-border-tint-amount);
+    $active-text-color-0 : tint-color($text-color-0, $btn-active-border-tint-amount);
+    $shadow-color-0      : _best_contrast($text-color-0);
 
-    $color-50: lighten($color-0, 50%);
-    $contrast-50: _best_contrast($color-50);
+    $bg-color-25         : lighten($bg-color-0, 25%);
+    $hover-bg-color-25   : tint-color($bg-color-25, $btn-hover-bg-tint-amount);
+    $active-bg-color-25  : tint-color($bg-color-25, $btn-active-bg-tint-amount);
+    $text-color-25       : _best_contrast($bg-color-25);
+    $hover-text-color-25 : tint-color($text-color-25, $btn-hover-border-tint-amount);
+    $active-text-color-25: tint-color($text-color-25, $btn-active-border-tint-amount);
 
-    $color-63: lighten($color-0, 63%);
-    $contrast-63: _best_contrast($color-63);
+    $bg-color-50         : lighten($bg-color-0, 50%);
+    $hover-bg-color-50   : tint-color($bg-color-50, $btn-hover-bg-tint-amount);
+    $active-bg-color-50  : tint-color($bg-color-50, $btn-active-bg-tint-amount);
+    $text-color-50       : _best_contrast($bg-color-50);
+    $hover-text-color-50 : tint-color($text-color-50, $btn-hover-border-tint-amount);
+    $active-text-color-50: tint-color($text-color-50, $btn-active-border-tint-amount);
+
+    $bg-color-63         : lighten($bg-color-0, 63%);
+    $hover-bg-color-63   : tint-color($bg-color-63, $btn-hover-bg-tint-amount);
+    $active-bg-color-63  : tint-color($bg-color-63, $btn-active-bg-tint-amount);
+    $text-color-63       : _best_contrast($bg-color-63);
+    $hover-text-color-63 : tint-color($text-color-63, $btn-hover-border-tint-amount);
+    $active-text-color-63: tint-color($text-color-63, $btn-active-border-tint-amount);
 
     :root {
-        --_fcoo-#{$prefix}app-bg-color-0    : #{$color-0};
-        --_fcoo-#{$prefix}app-text-color-0  : #{$contrast-0};
-        --_fcoo-#{$prefix}app-shadow-color-0: #{_best_contrast($contrast-0)};
+        #{get-root-var-id('bg',          $prefix,  0)}:    #{$bg-color-0};
+        #{get-root-var-id('hover-bg',    $prefix,  0)}:    #{$hover-bg-color-0};
+        #{get-root-var-id('active-bg',   $prefix,  0)}:    #{$active-bg-color-0};
+        #{get-root-var-id('text',        $prefix,  0)}:    #{$text-color-0};
+        #{get-root-var-id('hover-text',  $prefix,  0)}:    #{$hover-text-color-0};
+        #{get-root-var-id('active-text', $prefix,  0)}:    #{$active-text-color-0};
+        #{get-root-var-id('shadow',      $prefix,  0)}:    #{$shadow-color-0};
 
-        --_fcoo-#{$prefix}app-bg-color-25    : #{$color-25};
-        --_fcoo-#{$prefix}app-text-color-25  : #{_best_contrast($color-25)};
-        --_fcoo-#{$prefix}app-shadow-color-25: #{_best_contrast($contrast-25)};
+        #{get-root-var-id('bg',          $prefix, 25)}:    #{$bg-color-25};
+        #{get-root-var-id('hover-bg',    $prefix, 25)}:    #{$hover-bg-color-25};
+        #{get-root-var-id('active-bg',   $prefix, 25)}:    #{$active-bg-color-25};
+        #{get-root-var-id('text',        $prefix, 25)}:    #{$text-color-25};
+        #{get-root-var-id('hover-text',  $prefix, 25)}:    #{$hover-text-color-25};
+        #{get-root-var-id('active-text', $prefix, 25)}:    #{$active-text-color-25};
 
-        --_fcoo-#{$prefix}app-bg-color-50    : #{$color-50};
-        --_fcoo-#{$prefix}app-text-color-50  : #{_best_contrast($color-50)};
-        --_fcoo-#{$prefix}app-shadow-color-50: #{_best_contrast($contrast-50)};
+        #{get-root-var-id('bg',          $prefix, 50)}:    #{$bg-color-50};
+        #{get-root-var-id('hover-bg',    $prefix, 50)}:    #{$hover-bg-color-50};
+        #{get-root-var-id('active-bg',   $prefix, 50)}:    #{$active-bg-color-50};
+        #{get-root-var-id('text',        $prefix, 50)}:    #{$text-color-50};
+        #{get-root-var-id('hover-text',  $prefix, 50)}:    #{$hover-text-color-50};
+        #{get-root-var-id('active-text', $prefix, 50)}:    #{$active-text-color-50};
 
-
-        --_fcoo-#{$prefix}app-bg-color-63    : #{$color-63};
-        --_fcoo-#{$prefix}app-text-color-63  : #{_best_contrast($color-63)};
-        --_fcoo-#{$prefix}app-shadow-color-63: #{_best_contrast($contrast-63)};
+        #{get-root-var-id('bg',          $prefix, 63)}:    #{$bg-color-63};
+        #{get-root-var-id('hover-bg',    $prefix, 63)}:    #{$hover-bg-color-63};
+        #{get-root-var-id('active-bg',   $prefix, 63)}:    #{$active-bg-color-63};
+        #{get-root-var-id('text',        $prefix, 63)}:    #{$text-color-63};
+        #{get-root-var-id('hover-text',  $prefix, 63)}:    #{$hover-text-color-63};
+        #{get-root-var-id('active-text', $prefix, 63)}:    #{$active-text-color-63};
     }
-
-    //Create css-var for buttons when inside a container with fcoo-application
-    #{$type}.btn-fcoo-app-color {
-        .btn-jb.standard {
-            @include button-text-color-variant( $contrast-0 );
-            @include button-border-color-variant( $contrast-0 );
-            @include button-background-color-variant( $color-0 );
-        }
-    }
-    #{$type}.btn-fcoo-app-color-25 {
-        .btn-jb.standard {
-            @include button-text-color-variant( $contrast-25 );
-            @include button-border-color-variant( $contrast-25 );
-            @include button-background-color-variant( $color-25 );
-        }
-    }
-    #{$type}.btn-fcoo-app-color-50 {
-        .btn-jb.standard {
-            @include button-text-color-variant( $contrast-50 );
-            @include button-border-color-variant( $contrast-50 );
-            @include button-background-color-variant( $color-50 );
-        }
-    }
-
-    //Adjust disabled buttons
-    #{$type}[class*="btn-fcoo-app-color"]{
-        .btn-jb.standard {
-            --bs-btn-disabled-color       : var(--bs-btn-color);
-            --bs-btn-disabled-bg          : var(--bs-btn-bg);
-            --bs-btn-disabled-border-color: var(--bs-btn-border-color);
-            --bs-btn-disabled-opacity     : 0.4;
-        }
-    }
-
 }
 
 

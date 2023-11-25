@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "17.3.1",
+  "version": "17.4.0",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -56,7 +56,8 @@
     "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^2.0.0",
     "jquery-bootstrap-mmenu": "fcoo/jquery-bootstrap-mmenu#^1.0.0",
     "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",
-    "swiped-events": "john-doherty/swiped-events#^1.1.6"
+    "swiped-events": "john-doherty/swiped-events#^1.1.6",
+    "chroma.js": "gka/chroma.js#^2.4.0"
   },
   "overrides": {
     "modernizr-mouse-events": {
