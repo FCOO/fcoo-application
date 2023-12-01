@@ -214,7 +214,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         this.sizeId = this.options.position + '-menu-size';
         ns.appSetting.add({
             id          : this.sizeId,
-            applyFunc   : this._setSizeIndexFromSetting.bind(this),
+            applyFunc   : this._setSizeIndex.bind(this),
             callApply   : true,
             defaultValue: 0,
         });
@@ -414,12 +414,6 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             }
         },
 
-        _setSizeIndexFromSetting: function( sizeIndex ){
-            if (this.sizeIsSetFromSettings) return;
-            this.sizeIsSetFromSettings = true;
-            this._setSizeIndex( sizeIndex );
-        },
-
         _setSizeModernizrTest: function(){
             this.options.sizeList.forEach( function(sizeOptions, index){
                 if (sizeOptions.modernizr)
@@ -429,6 +423,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         _setSizeIndex( sizeIndex ){
+
             /****
             NOTE: animateByJS and the associated code is at attempt to aminate change in size when width/height = 'auto'. But it is not working :-(
             ****/
@@ -486,7 +481,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 this._setSizeModernizrTest();
             }
 
-            ns.appSetting.set(this.sizeId, sizeIndex);
+            ns.appSetting.settings[this.sizeId].apply(sizeIndex, true);
 
             this._onSetSize();
             this.options.onSetSize( this.options.sizeIndex, this );
