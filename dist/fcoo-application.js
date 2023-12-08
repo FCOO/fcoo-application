@@ -130,29 +130,34 @@ fcoo-application-color.js
     window.sassTintColor  = (color, weight) => mix( color, 'white', weight );
     window.sassShadeColor = (color, weight) => mix( color, 'black', weight );
 
+
+
+    //window.chromaBestContrast( color, contrastColors = ['#000000', '#ffffff']
+    window.chromaBestContrast = ( color, contrastColors = ['#000000', '#ffffff']) => {
+        contrastColors = $.isArray( contrastColors ) ? contrastColors : [contrastColors];
+        let bestContrast = 0, result;
+        contrastColors.forEach( (textColor) => {
+            const contrast = window.chroma.contrast(color, textColor);
+            if (contrast > bestContrast){
+                bestContrast = contrast;
+                result = textColor;
+            }
+        });
+        return window.chroma(result);
+    };
+
+
+
     /***********************************************************************
     setApplicationColors( applicationColor, applicationTextColor = [#000000, #ffffff])
     Set applicationColor as standard color and updates css-variable in :root
     applicationTextColor is optional
     ***********************************************************************/
     ns.setApplicationColors = ( applicationColor, applicationTextColor = ['#000000', '#ffffff'] ) => {
-        applicationTextColor = $.isArray( applicationTextColor ) ? applicationTextColor : [applicationTextColor];
-        const getTextColor = ( color ) => {
-            let bestContrast = 0, result;
-            applicationTextColor.forEach( (textColor) => {
-                const contrast = window.chroma.contrast(color, textColor);
-                if (contrast > bestContrast){
-                    bestContrast = contrast;
-                    result = textColor;
-                }
-            });
-            return window.chroma(result);
-        };
-
+        const getTextColor = ( color ) => window.chromaBestContrast( color, applicationTextColor );
         let result = {};
 
         [0, 25, 50, 63].forEach( (percent) => {
-
             result[percent] = {};
             const setColor = ( varIdPostfix, value ) => {
                 const hex = window.chroma(value).hex();
