@@ -10742,7 +10742,7 @@ return jQuery;
 
 ;(function(window, document, undefined){
   var tests = [];
-  
+
 
   /**
    *
@@ -10791,7 +10791,7 @@ return jQuery;
     }
   };
 
-  
+
 
   // Fake some of Object.create so we can force non test results to be non "own" properties.
   var Modernizr = function() {};
@@ -10801,10 +10801,10 @@ return jQuery;
   // Overwrite name so constructor name is nicer :D
   Modernizr = new Modernizr();
 
-  
+
 
   var classes = [];
-  
+
 
   /**
    * is returns a boolean if the typeof an obj is exactly type.
@@ -10900,7 +10900,7 @@ return jQuery;
    */
 
   var docElement = document.documentElement;
-  
+
 
   /**
    * A convenience helper to check if the document we are running in is an SVG document
@@ -10910,7 +10910,7 @@ return jQuery;
    */
 
   var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-  
+
 
   /**
    * setClasses takes an array of class names and adds them to the root element
@@ -10978,7 +10978,7 @@ return jQuery;
     }
   })();
 
-  
+
 
 
    // _l tracks listeners for async tests, as well as tests that execute after the initial run
@@ -11188,7 +11188,7 @@ return jQuery;
     ModernizrProto.addTest = addTest;
   });
 
-  
+
 
 
   /**
@@ -11208,11 +11208,11 @@ return jQuery;
    */
 
   var omPrefixes = 'Moz O ms Webkit';
-  
+
 
   var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
   ModernizrProto._cssomPrefixes = cssomPrefixes;
-  
+
 
   /**
    * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
@@ -11279,7 +11279,7 @@ return jQuery;
 
   ModernizrProto.atRule = atRule;
 
-  
+
 
   /**
    * createElement is a convenience wrapper around document.createElement. Since we
@@ -11380,7 +11380,7 @@ return jQuery;
 
 
   ModernizrProto.hasEvent = hasEvent;
-  
+
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -11553,7 +11553,7 @@ return jQuery;
 
   ModernizrProto.mq = mq;
 
-  
+
 
 
   /**
@@ -11587,7 +11587,7 @@ return jQuery;
     delete modElem.elem;
   });
 
-  
+
 
   var mStyle = {
     style: modElem.elem.style
@@ -11599,7 +11599,7 @@ return jQuery;
     delete mStyle.style;
   });
 
-  
+
 
   /**
    * domToCSS takes a camelCase string and converts it to kebab-case
@@ -11789,7 +11789,7 @@ return jQuery;
 
   var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
   ModernizrProto._domPrefixes = domPrefixes;
-  
+
 
   /**
    * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
@@ -11884,7 +11884,7 @@ return jQuery;
   // Modernizr.testAllProps('boxSizing')
   ModernizrProto.testAllProps = testPropsAll;
 
-  
+
 
   /**
    * prefixed returns the prefixed or nonprefixed property name variant of your input
@@ -11968,7 +11968,7 @@ return jQuery;
     }
   };
 
-  
+
 /*!
 {
   "name": "Fullscreen API",
@@ -12027,7 +12027,7 @@ Detects support for the ability to make the current website take over the user's
   // expose these for the plugin API. Look in the source for how to join() them against your input
   ModernizrProto._prefixes = prefixes;
 
-  
+
 
   /**
    * testStyles injects an element with style element and some CSS rules
@@ -12087,7 +12087,7 @@ Detects support for the ability to make the current website take over the user's
    */
 
   var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
+
 /*!
 {
   "name": "Touch Events",
@@ -12207,7 +12207,7 @@ This test will also return `true` for Firefox 4 Multitouch support.
     return testPropsAll(prop, undefined, undefined, value, skipValueTest);
   }
   ModernizrProto.testAllProps = testAllProps;
-  
+
 /*!
 {
   "name": "Flexbox",
@@ -12559,7 +12559,7 @@ else {
 
 ;
 /****************************************************************************
-	modernizr-javascript.js, 
+	modernizr-javascript.js,
 
 	(c) 2016, FCOO
 
@@ -12570,20 +12570,20 @@ else {
 
 (function ($, window, document, undefined) {
 	"use strict";
-	
+
 	var ns = window;
 
     //Extend the jQuery prototype
     $.fn.extend({
-        modernizrOn : function( test ){ 
-            return this.modernizrToggle( test, true ); 
+        modernizrOn : function( test ){
+            return this.modernizrToggle( test, true );
         },
 
-        modernizrOff: function( test ){ 
-            return this.modernizrToggle( test, false ); 
+        modernizrOff: function( test ){
+            return this.modernizrToggle( test, false );
         },
-        
-        modernizrToggle: function( test, on ){ 
+
+        modernizrToggle: function( test, on ){
 		if ( on === undefined )
             return this.modernizrToggle( test, !this.hasClass( test ) );
 
@@ -12624,13 +12624,13 @@ else {
             for (j=0; j<eventNames.length; j++ ){
                 eventName = eventNames[j];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     var i, lgd = this.events[eventName].length;
                     if (reverse){
                         for (i=lgd-1; i>=0; i-- )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
                                 break;
-                    } 
+                    }
                     else {
                         for (i=0; i<lgd; i++ )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
@@ -12646,11 +12646,11 @@ else {
             for (i=0; i<eventNames.length; i++ ){
                 eventName = eventNames[i];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     this.events[eventName].push( {
                         callback: callback,
                         context : context || null,
-                        options : $.extend( {once:false, first:false, last:false}, options ) 
+                        options : $.extend( {once:false, first:false, last:false}, options )
                     });
                 }
             }
@@ -12667,7 +12667,7 @@ else {
             eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
             _loop_func = function( eventObj, index, list ){
                 if ( (callback == eventObj.callback) &&
-                    (!context || (context == eventObj.context)) ){ 
+                    (!context || (context == eventObj.context)) ){
                     list.splice(index, 1);
                     return true;
                 }
@@ -12682,32 +12682,32 @@ else {
         };
 
 
-        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){ 
+        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){
             var newArguments = [];
             for (var i=1; i < arguments.length; i++) {
                 newArguments.push(arguments[i]);
             }
 
             //Fire the functions marked 'first'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.first)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions not marked 'first' or 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (!eventObj.options.first && !eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions marked 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
-            
+
             //Remove all functions marked 'once'
-            this._loop( eventName, function( eventObj, index, list ){ 
+            this._loop( eventName, function( eventObj, index, list ){
                 if (eventObj.options.once)
                     list.splice(index, 1);
             }, true);
@@ -12718,7 +12718,7 @@ else {
         this.oneFirst = function(){ this.onceFirst( arguments ); };
         this.oneLast  = function(){ this.onceLast( arguments  ); };
     }
-  
+
     // expose access to the constructor
     window.GlobalEvents = GlobalEvents;
 
@@ -22783,7 +22783,7 @@ else {
         deltaHp = abs(deltaHp) <= 180 ? deltaHp : h2p <= h1p ? deltaHp + 360 : deltaHp - 360;
         deltaHp = 2*sqrt(C1p*C2p)*sin(deg2rad(deltaHp)/2);
         var deltaL = L2 - L1;
-        var deltaCp = C2p - C1p;    
+        var deltaCp = C2p - C1p;
         var sl = 1 + (0.015*pow(avgL - 50, 2))/sqrt(20 + pow(avgL - 50, 2));
         var sc = 1 + 0.045*avgCp;
         var sh = 1 + 0.015*avgCp*T;
@@ -22987,6 +22987,447 @@ else {
 
 }));
 
+;
+/****************************************************************************
+    color.js,
+    Functions to caluclate the brightness of a color
+    Taken from http://codepen.io/lunelson/pen/jENxwB
+
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+    "use strict";
+
+    //Create fcoo-namespace
+    var nsColor = window;
+
+
+    function lin2log(n) {
+        if (n <= 0.0031308)
+            return n * 12.92;
+        else
+            return 1.055 * Math.pow(n,1/2.4) - 0.055;
+    }
+
+    function log2lin(n) {
+        if (n <= 0.04045)
+            return n / 12.92;
+        else
+            return Math.pow(((n + 0.055)/1.055),2.4);
+    }
+
+    /********************************************
+    brightness
+    ********************************************/
+    nsColor.brightness = function brightness(r, g, b) {
+        r = log2lin(r/255);
+        g = log2lin(g/255);
+        b = log2lin(b/255);
+        return lin2log(0.2126 * r + 0.7152 * g + 0.0722 * b) * 100;
+    };
+
+    /********************************************
+    colorContrastHEX
+    ********************************************/
+    nsColor.colorContrastHEX = function colorContrastHEX( color ) {
+        if (color.length === 3)
+            color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
+        var rgb = [];
+        for (var i = 0; i <= 2; i++)
+            rgb[i] = parseInt(color.substr(1+i*2, 2), 16);
+        return nsColor.colorContrastRGB(rgb[0], rgb[1], rgb[2]);
+    };
+
+    /********************************************
+    colorContrastRGB
+    ********************************************/
+    nsColor.colorContrastRGB = function colorContrastRGB(r, g, b) {
+        var colorBrightness = nsColor.brightness(r, g, b),
+                whiteBrightness = nsColor.brightness(255, 255, 255),
+                blackBrightness = nsColor.brightness(0, 0, 0);
+        return Math.abs(colorBrightness - whiteBrightness) > Math.abs(colorBrightness - blackBrightness) ? '#ffffff' : '#000000';
+    };
+
+    /********************************************
+    rgbHex
+    Convert RGB color to HEX
+    From https://github.com/sindresorhus/rgb-hex
+    ********************************************/
+    nsColor.rgbHex = function(red, green, blue, alpha){
+        var isPercent = (red + (alpha || '')).toString().includes('%');
+
+        if (typeof red === 'string') {
+            var res = red.match(/(0?\.?\d{1,3})%?\b/g).map(Number);
+            red = res[0];
+            green = res[1];
+            blue = res[2];
+            alpha = res[3];
+        }
+        else
+            if (alpha !== undefined) {
+                alpha = parseFloat(alpha);
+            }
+
+        if (typeof red !== 'number' ||
+            typeof green !== 'number' ||
+            typeof blue !== 'number' ||
+            red > 255 ||
+            green > 255 ||
+            blue > 255) {
+                throw new TypeError('Expected three numbers below 256');
+        }
+
+        if (typeof alpha === 'number') {
+            if (!isPercent && alpha >= 0 && alpha <= 1) {
+                alpha = Math.round(255 * alpha);
+            }
+            else
+                if (isPercent && alpha >= 0 && alpha <= 100) {
+                    alpha = Math.round(255 * alpha / 100);
+                }
+                else {
+                    throw new TypeError('Expected alpha value (${alpha}) as a fraction or percentage');
+                }
+            alpha = (alpha | 1 << 8).toString(16).slice(1);
+        }
+        else {
+            alpha = '';
+        }
+
+        return ((blue | green << 8 | red << 16) | 1 << 24).toString(16).slice(1) + alpha;
+    };
+
+    /********************************************
+    hexRgb
+    Convert HEX color to RGB
+    From https://github.com/sindresorhus/hex-rgb
+    ********************************************/
+    var hexChars = 'a-f\\d',
+        match3or4Hex = '#?[' + hexChars + ']{3}[' + hexChars + ']?',
+        match6or8Hex = '#?[' + hexChars + ']{6}([' + hexChars + ']{2})?',
+        nonHexChars = new RegExp('[^#' + hexChars + ']', 'gi'),
+        validHexSize = new RegExp('^' + match3or4Hex + '$|^' + match6or8Hex + '$', 'i');
+
+    nsColor.hexRgb = function(hex, options) {
+        options = options || {};
+        if (typeof hex !== 'string' || nonHexChars.test(hex) || !validHexSize.test(hex)) {
+            throw new TypeError('Expected a valid hex string');
+        }
+
+        hex = hex.replace(/^#/, '');
+        var alpha = 255;
+
+        if (hex.length === 8) {
+            alpha = parseInt(hex.slice(6, 8), 16) / 255;
+            hex = hex.substring(0, 6);
+        }
+
+        if (hex.length === 4) {
+            alpha = parseInt(hex.slice(3, 4).repeat(2), 16) / 255;
+            hex = hex.substring(0, 3);
+        }
+
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+
+        var num = parseInt(hex, 16),
+            red = num >> 16,
+            green = (num >> 8) & 255,
+            blue = num & 255;
+
+        return options.format === 'array' ? [red, green, blue, alpha] : { red: red, green: green, blue: blue, alpha: alpha };
+    };
+
+    /********************************************
+    hexSetAlpha
+    Set the alpha-value in a hex-color
+    ********************************************/
+    nsColor.hexSetAlpha = function(hex, alpha){
+        var rgba = nsColor.hexRgb(hex, {format: 'array'});
+        rgba[3] = alpha;
+        return nsColor.rgbHex.apply(this, rgba);
+    };
+
+}(this, document));
+;
+/****************************************************************************
+    json.js,
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+    "use strict";
+
+    //Create fcoo-namespace
+    var nsJSON = window;
+
+    /******************************************
+    serializeJSON
+    Converts a json-object a la {id1:'value1', id2:'value2'}
+    to [ { name: "id1", value: "value1" }, { name: "id2", value: "value2" } ]
+    *******************************************/
+    nsJSON.serializeJSON = function( jsonObj ){
+        var result = [];
+        for (var id in jsonObj)
+            if (jsonObj.hasOwnProperty(id))
+                result.push( {name: id, value: jsonObj[id] });
+        return result;
+    };
+
+
+}(this, document));
+;
+/****************************************************************************
+    math.js,
+
+****************************************************************************/
+
+(function (window/*, document, undefined*/) {
+    "use strict";
+
+    var nsMath = window;
+
+    /*******************************************
+    significant - return n rounded to significant sf
+    *******************************************/
+    nsMath.significant = function significant(n, sf) {
+        sf = sf - Math.floor(Math.log(n) / Math.LN10) - 1;
+        sf = Math.pow(10, sf);
+        n = Math.round(n * sf);
+        n = n / sf;
+        return n;
+    };
+
+    /*******************************************
+    precision
+    *******************************************/
+    nsMath.precision = function precision(n, dp) {
+        dp = Math.pow(10, dp);
+        n = n * dp;
+        n = Math.round(n);
+        n = n / dp;
+        return n;
+    };
+
+    /*******************************************
+    nearest
+    *******************************************/
+    nsMath.nearest = function nearest(n, v) {
+        v = v ? v : 1;
+        n = n / v;
+        n = Math.round(n) * v;
+        return n;
+    };
+
+    /*******************************************
+    roundDownTo
+    *******************************************/
+    nsMath.roundDownTo = function roundDownTo(n, v) {
+        v = v ? v : 1;
+        n = n / v;
+        n = Math.floor(n) * v;
+        return n;
+    };
+
+    /*******************************************
+    roundToRange
+    *******************************************/
+    nsMath.roundToRange = function roundToRange(v, min, max) {
+        return Math.max( Math.min(v, max), min);
+    };
+
+    /*******************************************
+    toDecimal
+    Convert a integer value v to a decimal
+    Eq    toDecimal(89)        = 0.89
+            toDecimal(9)        = 0.9
+            toDecimal(1234)    = 0.1234
+    *******************************************/
+    nsMath.toDecimal = function toDecimal(v) {
+        var l = v.toString().length;
+        return v / Math.pow(10, l);
+    };
+
+}(this, document));
+;
+/****************************************************************************
+	fcoo-colors.js,
+
+	(c) 2021, FCOO
+
+	https://github.com/FCOO/fcoo-colors
+	https://github.com/FCOO
+
+    Constants and methods to name, get and modify different colors used by FCOO Web Applications
+
+****************************************************************************/
+
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+	//Create fcoo-namespace
+    var ns = window.fcoo = window.fcoo || {},
+        nsColor = ns.color = ns.color || {};
+
+    //nsColor.colorNames = {id}{da:STRING, en:STRING}
+    nsColor.colorNames = {
+        blue    : {da: 'blå',    en: 'blue'     },
+        purple  : {da: 'lilla',  en: 'purple'   },
+        red     : {da: 'rød',    en: 'red'      },
+        orange  : {da: 'orange', en: 'orange'   },
+        cyan    : {da: 'cyan',   en: 'cyan'     },
+        yellow  : {da: 'Gul',    en: 'yellow'   },
+        pink    : {da: 'pink',   en: 'pink'     },
+        green   : {da: 'grøn',   en: 'green'    },
+        gray    : {da: 'grå',    en: 'gray'     }
+        };
+
+    //nsColor.colorList  = []{id, name: {da:STRING, en:STRING}} ordred by nsColor.defaultOrder
+    nsColor.colorList  = [];
+
+    $.each(nsColor.defaultOrder, function(index, colorId){
+        nsColor.colorList.push({
+            id  : colorId,
+            name: nsColor.colorNames[colorId]
+        });
+    });
+
+
+    //The color scheme is from LinkedIn and shown in linkedin-palette-screen.pdf
+    //nsColor.colorArray = The colors defined in linkedin-palette-screen.pdf = [gradiant][color]. Eg. colorArray[3, 4] = gradiant 3 of orange
+    nsColor.colorArray = [
+        //0:Blue    1:Purple    2:Red      3:Orange   4:Cyan     5:Yellow   6:Pink     7:Green    8:Gray
+        ['#CFEDFB', '#EBE4FF', '#FFE0DA', '#FFE7BB', '#D2ECEB', '#FFF2B6', '#FFDFF2', '#E0F4BE', '#E6E9EC'],
+        ['#9BDAF3', '#D8CCF4', '#FAC2BB', '#F8CD94', '#9EDDDD', '#FBE491', '#FFC4E4', '#C7E59A', '#D0D3D6'],
+        ['#68C7EC', '#BFABE6', '#F59890', '#F7B26A', '#69CDCF', '#F7D56B', '#F99ACA', '#AED677', '#B6B9BC'],
+        ['#34B3E4', '#A589D9', '#F16D64', '#F59640', '#35BEC1', '#F3C746', '#F371AF', '#95C753', '#A0A3A6'],
+        ['#00A0DC', '#8C68CB', '#EC4339', '#F47B16', '#00AEB3', '#EFB920', '#ED4795', '#7CB82F', '#86898C'],
+        ['#008CC9', '#7C5BBB', '#DD2E1F', '#EC640C', '#009EA5', '#E6A700', '#E2247F', '#60AA14', '#737679'],
+        ['#0077B5', '#6A4BA7', '#C11F1D', '#CD5308', '#008891', '#CA9400', '#C9186E', '#4E8F13', '#595C5F'],
+        ['#005E93', '#573B93', '#A40F1C', '#AF4104', '#00727D', '#AA7D00', '#B10C5C', '#3B7511', '#434649'],
+        ['#004471', '#452B7F', '#88001A', '#903000', '#005C69', '#8B6700', '#870044', '#295A10', '#303336']
+    ];
+
+    var colorName2Index = ['blue', 'purple', 'red', 'orange', 'cyan', 'yellow', 'pink', 'green', 'gray'];
+
+    nsColor.defaultGradient = 4;
+    nsColor.defaultOrder    = ["blue", "red", "green", "yellow", "gray", "purple", "pink", "cyan", "orange"];
+
+
+    //Methods to get the value of different color-names and gradiants.
+    nsColor.getColor = function(color, gradient, fromSortedList){
+        var colorIndex = typeof color == 'string' ? colorName2Index.indexOf(color) : color;
+        return nsColor.getColorList(fromSortedList, gradient)[colorIndex];
+    };
+
+
+    nsColor.getColorRGB =  function(/*color, gradient, fromSortedList*/){
+        return window.hexRgb( nsColor.getColor.apply(null, arguments) );
+    };
+
+    nsColor.getColorRGBArray =  function(/*color, gradient, fromSortedList*/){
+        return window.hexRgb( nsColor.getColor.apply(null, arguments), {format: 'array'} );
+    };
+
+
+    nsColor.getDeltaColor = function(color, deltaGradient = 0, fromSortedList){
+        return nsColor.getColor(color, nsColor.defaultGradient + deltaGradient, fromSortedList);
+    };
+
+
+    nsColor.getDeltaColorRGB = function(/*color, deltaGradient = 0, fromSortedList*/){
+        return window.hexRgb( nsColor.getDeltaColor.apply(null, arguments) );
+    };
+
+    nsColor.getDeltaColorRGBArray =  function(/*color, deltaGradient = 0, fromSortedList*/){
+        return window.hexRgb( nsColor.getDeltaColor.apply(null, arguments), {format: 'array'} );
+    };
+
+
+    nsColor.getColorList = function( sorted, gradient = 'DEFAULT' ){
+        gradient = gradient == 'DEFAULT' ? nsColor.defaultGradient : gradient;
+        var result = [];
+        if (sorted){
+            $.each(nsColor.defaultOrder, function(dummy, color){
+                result.push( nsColor.getColor( color, gradient ) );
+            });
+        }
+        else
+            result = nsColor.colorArray[gradient];
+        return result;
+    };
+
+
+    /****************************************************************************
+    Using chroma.js (https://github.com/gka/chroma.js)
+    Create js-versions of sass functions darken, lighten, tint and shade
+
+    chromaBestContrast( color, contrastColors = ['#000000', '#ffffff'] )
+    returns the color from contrastColors with the best contrast
+    ****************************************************************************/
+
+    //HSL manipulators - from https://github.com/gka/chroma.js/issues/217
+    const lighten = (color, hslPercent) => color.set("hsl.l", color.get("hsl.l") + hslPercent);
+    const darken = (color, hslPercent) => lighten(color, -hslPercent);
+    const sassLightenDarken = (color, percent, dark) => {
+        let  hslPercent = window.numeral(percent).value();
+        if (hslPercent === null)
+            hslPercent = 1;
+        color = window.chroma(color);
+        return dark ? darken(color, hslPercent).hex() : lighten(color, hslPercent).hex();
+    };
+
+    nsColor.sassLighten = ( color, percent ) => sassLightenDarken( color, percent );
+    nsColor.sassDarken  = ( color, percent ) => sassLightenDarken( color, percent, true );
+
+    const mix = (color1, color2, percent) => {
+        let ratio = window.numeral(percent).value();
+        if (ratio === null)
+            ratio = 1;
+        return window.chroma.mix(color1, color2, ratio);
+    };
+
+    nsColor.sassTintColor  = (color, weight) => mix( color, 'white', weight );
+    nsColor.sassShadeColor = (color, weight) => mix( color, 'black', weight );
+
+    //chromaBestContrast( color, contrastColors = ['#000000', '#ffffff']
+    nsColor.chromaBestContrast = ( color, contrastColors = ['#000000', '#ffffff']) => {
+        contrastColors = $.isArray( contrastColors ) ? contrastColors : [contrastColors];
+        let bestContrast = 0, result;
+        contrastColors.forEach( (textColor) => {
+            const contrast = window.chroma.contrast(color, textColor);
+            if (contrast > bestContrast){
+                bestContrast = contrast;
+                result = textColor;
+            }
+        });
+        return window.chroma(result);
+    };
+
+    /****************************************************************************
+    setRootVar(id, value)
+    getRootVar(id)
+    setApplicationBaseColor(baseColor)
+    ****************************************************************************/
+    const adjustId = (id) => id.slice(0, 2) == '--' ? id : '--'+id;
+    const root = document.querySelector(':root');
+
+    ns.setRootVar = (id, value) => {
+        root.style.setProperty(adjustId(id), value);
+    };
+
+    ns.getRootVar = (id) => {
+        return getComputedStyle(root).getPropertyValue( adjustId(id) );
+    };
+
+    nsColor.setApplicationBaseColor = (baseColor) => {
+        baseColor = window.chroma(baseColor);
+        ns.setRootVar('--_fcoo-app-base-color', baseColor.hex() );
+        ns.setRootVar('--_fcoo-app-base-text-color', nsColor.chromaBestContrast(baseColor).hex() );
+    };
+
+
+}(jQuery, this, document));
 ;
 /****************************************************************************
 	fcoo-data-files.js,
@@ -23278,7 +23719,8 @@ Load logos, sets css-var, and write logo etc. in console
 	"use strict";
 
     //Create fcoo-namespace
-    var ns = window.fcoo = window.fcoo || {};
+    var ns = window.fcoo = window.fcoo || {}/*,
+        nsColor = ns.color = ns.color || {}*/;
 
     //Set modernizr-test 'logo-portrait' off
     $('html').modernizrOff('logo-portrait');
@@ -23288,8 +23730,7 @@ Load logos, sets css-var, and write logo etc. in console
         $('html').modernizrToggle('logo-portrait', img.height > img.width);
 
         //Set internal css-var _fcoo-app-logo-wh-ratio
-        var root = document.querySelector(':root');
-        root.style.setProperty('--_fcoo-app-logo-wh-ratio', img.width / img.height);
+        ns.setRootVar('--_fcoo-app-logo-wh-ratio', img.width / img.height);
     }
 
     /********************************************************
@@ -23297,7 +23738,7 @@ Load logos, sets css-var, and write logo etc. in console
     ********************************************************/
     ns.setApplicationLogo = function( fileNamePrefix ){
         //First set fab-text-color-is-white (=fcoo-app-base-text-color-is-white)
-        var fcooAppBaseTextColor = ns.path.getCssVar('fcoo-app-base-text-color') || '#ffffff',
+        var fcooAppBaseTextColor = ns.getRootVar('fcoo-app-base-text-color') || '#ffffff',
             textColorIsWhite = fcooAppBaseTextColor.includes("000");
         $('html').modernizrToggle('fab-text-color-is-white', !!textColorIsWhite);
 
@@ -23351,7 +23792,7 @@ Load logos, sets css-var, and write logo etc. in console
         for (i=0; i<allLetters.length; i++)
             space.push('      ');
 
-        let text = logoText.toUpperCase();//'NR-2024';
+        let text = logoText.toUpperCase();
 
         let ownerLogoAndText = [];
         let firstChar = true;
@@ -23447,8 +23888,7 @@ Methods for creating <meta> in <head> and adding favicons
             yyymmdd = pad(date.getFullYear()) + pad(date.getMonth()) + pad(date.getDate()),
 
             //Get color = value of css-var --fcoo-app-base-color
-            root = document.querySelector(':root'),
-            color = window.getComputedStyle(root).getPropertyValue('--fcoo-app-base-color');
+            color = ns.getRootVar('--fcoo-app-base-color');
 
         //values = {id:value} replacing id with value in meta and favicon
         var values = {
@@ -29588,7 +30028,7 @@ Methods for creating <meta> in <head> and adding favicons
 
     var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
     var maxValues = [24, 60, 60, 1000];
-    
+
     // Capitalize first letter
     key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
@@ -29635,19 +30075,19 @@ Methods for creating <meta> in <head> and adding favicons
 ;
 /* @preserve
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2013-2018 Petka Antonov
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -29655,7 +30095,7 @@ Methods for creating <meta> in <head> and adding favicons
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
+ *
  */
 /**
  * bluebird build version 3.7.2
@@ -33247,28 +33687,28 @@ _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext,
 _dereq_('./any.js')(Promise);
 _dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./filter.js')(Promise, INTERNAL);
-                                                         
-    util.toFastProperties(Promise);                                          
-    util.toFastProperties(Promise.prototype);                                
-    function fillTypes(value) {                                              
-        var p = new Promise(INTERNAL);                                       
-        p._fulfillmentHandler0 = value;                                      
-        p._rejectionHandler0 = value;                                        
-        p._promise0 = value;                                                 
-        p._receiver0 = value;                                                
-    }                                                                        
-    // Complete slack tracking, opt out of field-type tracking and           
-    // stabilize map                                                         
-    fillTypes({a: 1});                                                       
-    fillTypes({b: 2});                                                       
-    fillTypes({c: 3});                                                       
-    fillTypes(1);                                                            
-    fillTypes(function(){});                                                 
-    fillTypes(undefined);                                                    
-    fillTypes(false);                                                        
-    fillTypes(new Promise(INTERNAL));                                        
-    debug.setBounds(Async.firstLineError, util.lastLineError);               
-    return Promise;                                                          
+
+    util.toFastProperties(Promise);
+    util.toFastProperties(Promise.prototype);
+    function fillTypes(value) {
+        var p = new Promise(INTERNAL);
+        p._fulfillmentHandler0 = value;
+        p._rejectionHandler0 = value;
+        p._promise0 = value;
+        p._receiver0 = value;
+    }
+    // Complete slack tracking, opt out of field-type tracking and
+    // stabilize map
+    fillTypes({a: 1});
+    fillTypes({b: 2});
+    fillTypes({c: 3});
+    fillTypes(1);
+    fillTypes(function(){});
+    fillTypes(undefined);
+    fillTypes(false);
+    fillTypes(new Promise(INTERNAL));
+    debug.setBounds(Async.firstLineError, util.lastLineError);
+    return Promise;
 
 };
 
@@ -38406,11 +38846,11 @@ module.exports = Yaml;
 	var minor = parseInt(splitVersion[1]);
 
 	var JQ_LT_17 = (major < 1) || (major == 1 && minor < 7);
-	
+
 	function eventsData($el) {
 		return JQ_LT_17 ? $el.data('events') : $._data($el[0]).events;
 	}
-	
+
 	function moveHandlerToTop($el, eventName, isDelegated) {
 		var data = eventsData($el);
 		var events = data[eventName];
@@ -38428,7 +38868,7 @@ module.exports = Yaml;
 			events.unshift(events.pop());
 		}
 	}
-	
+
 	function moveEventHandlers($elems, eventsString, isDelegate) {
 		var events = eventsString.split(/\s+/);
 		$elems.each(function() {
@@ -38438,7 +38878,7 @@ module.exports = Yaml;
 			}
 		});
 	}
-	
+
 	function makeMethod(methodName) {
 		$.fn[methodName + 'First'] = function() {
 			var args = $.makeArray(arguments);
@@ -38463,7 +38903,7 @@ module.exports = Yaml;
 	$.fn.delegateFirst = function() {
 		var args = $.makeArray(arguments);
 		var eventsString = args[1];
-		
+
 		if (eventsString) {
 			args.splice(0, 2);
 			$.fn.delegate.apply(this, arguments);
@@ -38483,7 +38923,7 @@ module.exports = Yaml;
 
 		return this;
 	};
-	
+
 	// on (jquery >= 1.7)
 	if (!JQ_LT_17) {
 		$.fn.onFirst = function(types, selector) {
@@ -38530,12 +38970,12 @@ module.exports = Yaml;
   }
 
   /*!
-   * GSAP 3.12.2
-   * https://greensock.com
+   * GSAP 3.12.4
+   * https://gsap.com
    *
    * @license Copyright 2008-2023, GreenSock. All rights reserved.
-   * Subject to the terms at https://greensock.com/standard-license or for
-   * Club GreenSock members, the agreement issued with that membership.
+   * Subject to the terms at https://gsap.com/standard-license or for
+   * Club GSAP members, the agreement issued with that membership.
    * @author: Jack Doyle, jack@greensock.com
   */
   var _config = {
@@ -39212,7 +39652,7 @@ module.exports = Yaml;
 
           while (max < (max = a[wrapAt++].getBoundingClientRect().left) && wrapAt < l) {}
 
-          wrapAt--;
+          wrapAt < l && wrapAt--;
         }
 
         distances = cache[l] = [];
@@ -40138,11 +40578,11 @@ module.exports = Yaml;
     };
 
     _proto.totalProgress = function totalProgress(value, suppressEvents) {
-      return arguments.length ? this.totalTime(this.totalDuration() * value, suppressEvents) : this.totalDuration() ? Math.min(1, this._tTime / this._tDur) : this.ratio;
+      return arguments.length ? this.totalTime(this.totalDuration() * value, suppressEvents) : this.totalDuration() ? Math.min(1, this._tTime / this._tDur) : this.rawTime() > 0 ? 1 : 0;
     };
 
     _proto.progress = function progress(value, suppressEvents) {
-      return arguments.length ? this.totalTime(this.duration() * (this._yoyo && !(this.iteration() & 1) ? 1 - value : value) + _elapsedCycleDuration(this), suppressEvents) : this.duration() ? Math.min(1, this._time / this._dur) : this.ratio;
+      return arguments.length ? this.totalTime(this.duration() * (this._yoyo && !(this.iteration() & 1) ? 1 - value : value) + _elapsedCycleDuration(this), suppressEvents) : this.duration() ? Math.min(1, this._time / this._dur) : this.rawTime() > 0 ? 1 : 0;
     };
 
     _proto.iteration = function iteration(value, suppressEvents) {
@@ -40151,7 +40591,7 @@ module.exports = Yaml;
       return arguments.length ? this.totalTime(this._time + (value - 1) * cycleDuration, suppressEvents) : this._repeat ? _animationCycle(this._tTime, cycleDuration) + 1 : 1;
     };
 
-    _proto.timeScale = function timeScale(value) {
+    _proto.timeScale = function timeScale(value, suppressEvents) {
       if (!arguments.length) {
         return this._rts === -_tinyNum ? 0 : this._rts;
       }
@@ -40163,7 +40603,7 @@ module.exports = Yaml;
       var tTime = this.parent && this._ts ? _parentToChildTotalTime(this.parent._time, this) : this._tTime;
       this._rts = +value || 0;
       this._ts = this._ps || value === -_tinyNum ? 0 : this._rts;
-      this.totalTime(_clamp(-Math.abs(this._delay), this._tDur, tTime), true);
+      this.totalTime(_clamp(-Math.abs(this._delay), this._tDur, tTime), suppressEvents !== false);
 
       _setEnd(this);
 
@@ -40235,11 +40675,11 @@ module.exports = Yaml;
           time = arguments.length ? rawTime : animation.rawTime();
 
       while (animation) {
-        time = animation._start + time / (animation._ts || 1);
+        time = animation._start + time / (Math.abs(animation._ts) || 1);
         animation = animation._dp;
       }
 
-      return !this.parent && this._sat ? this._sat.vars.immediateRender ? -Infinity : this._sat.globalTime(rawTime) : time;
+      return !this.parent && this._sat ? this._sat.globalTime(rawTime) : time;
     };
 
     _proto.repeat = function repeat(value) {
@@ -41189,8 +41629,6 @@ module.exports = Yaml;
         immediateRender = vars.immediateRender,
         lazy = vars.lazy,
         onUpdate = vars.onUpdate,
-        onUpdateParams = vars.onUpdateParams,
-        callbackScope = vars.callbackScope,
         runBackwards = vars.runBackwards,
         yoyoEase = vars.yoyoEase,
         keyframes = vars.keyframes,
@@ -41247,9 +41685,9 @@ module.exports = Yaml;
           lazy: !prevStartAt && _isNotFalse(lazy),
           startAt: null,
           delay: 0,
-          onUpdate: onUpdate,
-          onUpdateParams: onUpdateParams,
-          callbackScope: callbackScope,
+          onUpdate: onUpdate && function () {
+            return _callback(tween, "onUpdate");
+          },
           stagger: 0
         }, startAt)));
 
@@ -41343,7 +41781,7 @@ module.exports = Yaml;
     tween._initted = (!tween._op || tween._pt) && !overwritten;
     keyframes && time <= 0 && tl.render(_bigNum, true, true);
   },
-      _updatePropTweens = function _updatePropTweens(tween, property, value, start, startIsRelative, ratio, time) {
+      _updatePropTweens = function _updatePropTweens(tween, property, value, start, startIsRelative, ratio, time, skipRecursion) {
     var ptCache = (tween._pt && tween._ptCache || (tween._ptCache = {}))[property],
         pt,
         rootPT,
@@ -41373,7 +41811,7 @@ module.exports = Yaml;
           _initTween(tween, time);
 
           _forceAllPropTweens = 0;
-          return 1;
+          return skipRecursion ? _warn(property + " not eligible for reset") : 1;
         }
 
         ptCache.push(pt);
@@ -41486,7 +41924,7 @@ module.exports = Yaml;
           curTarget,
           staggerFunc,
           staggerVarsToMerge;
-      _this3._targets = parsedTargets.length ? _harness(parsedTargets) : _warn("GSAP target " + targets + " not found. https://greensock.com", !_config.nullTargetWarn) || [];
+      _this3._targets = parsedTargets.length ? _harness(parsedTargets) : _warn("GSAP target " + targets + " not found. https://gsap.com", !_config.nullTargetWarn) || [];
       _this3._ptLookup = [];
       _this3._overwrite = overwrite;
 
@@ -41648,7 +42086,7 @@ module.exports = Yaml;
           } else {
             iteration = ~~(tTime / cycleDuration);
 
-            if (iteration && iteration === tTime / cycleDuration) {
+            if (iteration && iteration === _roundPrecise(tTime / cycleDuration)) {
               time = dur;
               iteration--;
             }
@@ -41665,7 +42103,7 @@ module.exports = Yaml;
 
           prevIteration = _animationCycle(this._tTime, cycleDuration);
 
-          if (time === prevTime && !force && this._initted) {
+          if (time === prevTime && !force && this._initted && iteration === prevIteration) {
             this._tTime = tTime;
             return this;
           }
@@ -41673,7 +42111,7 @@ module.exports = Yaml;
           if (iteration !== prevIteration) {
             timeline && this._yEase && _propagateYoyoEase(timeline, isYoyo);
 
-            if (this.vars.repeatRefresh && !isYoyo && !this._lock) {
+            if (this.vars.repeatRefresh && !isYoyo && !this._lock && this._time !== dur && this._initted) {
               this._lock = force = 1;
               this.render(_roundPrecise(cycleDuration * iteration), true).invalidate()._lock = 0;
             }
@@ -41686,7 +42124,7 @@ module.exports = Yaml;
             return this;
           }
 
-          if (prevTime !== this._time) {
+          if (prevTime !== this._time && !(force && this.vars.repeatRefresh && iteration !== prevIteration)) {
             return this;
           }
 
@@ -41761,7 +42199,7 @@ module.exports = Yaml;
       return _Animation2.prototype.invalidate.call(this, soft);
     };
 
-    _proto3.resetTo = function resetTo(property, value, start, startIsRelative) {
+    _proto3.resetTo = function resetTo(property, value, start, startIsRelative, skipRecursion) {
       _tickerActive || _ticker.wake();
       this._ts || this.play();
       var time = Math.min(this._dur, (this._dp._time - this._start) * this._ts),
@@ -41769,8 +42207,8 @@ module.exports = Yaml;
       this._initted || _initTween(this, time);
       ratio = this._ease(time / this._dur);
 
-      if (_updatePropTweens(this, property, value, start, startIsRelative, ratio, time)) {
-        return this.resetTo(property, value, start, startIsRelative);
+      if (_updatePropTweens(this, property, value, start, startIsRelative, ratio, time, skipRecursion)) {
+        return this.resetTo(property, value, start, startIsRelative, 1);
       }
 
       _alignPlayhead(this, 0);
@@ -42125,7 +42563,9 @@ module.exports = Yaml;
       _dispatch("matchMediaRevert");
 
       matches.forEach(function (c) {
-        return c.onMatch(c);
+        return c.onMatch(c, function (func) {
+          return c.add(null, func);
+        });
       });
       _lastMediaTime = time;
 
@@ -42169,7 +42609,9 @@ module.exports = Yaml;
       };
 
       self.last = f;
-      return name === _isFunction ? f(self) : name ? self[name] = f : f;
+      return name === _isFunction ? f(self, function (func) {
+        return self.add(null, func);
+      }) : name ? self[name] = f : f;
     };
 
     _proto5.ignore = function ignore(func) {
@@ -42195,34 +42637,53 @@ module.exports = Yaml;
       var _this4 = this;
 
       if (revert) {
-        var tweens = this.getTweens();
-        this.data.forEach(function (t) {
-          if (t.data === "isFlip") {
-            t.revert();
-            t.getChildren(true, true, false).forEach(function (tween) {
-              return tweens.splice(tweens.indexOf(tween), 1);
-            });
+        (function () {
+          var tweens = _this4.getTweens(),
+              i = _this4.data.length,
+              t;
+
+          while (i--) {
+            t = _this4.data[i];
+
+            if (t.data === "isFlip") {
+              t.revert();
+              t.getChildren(true, true, false).forEach(function (tween) {
+                return tweens.splice(tweens.indexOf(tween), 1);
+              });
+            }
           }
-        });
-        tweens.map(function (t) {
-          return {
-            g: t.globalTime(0),
-            t: t
-          };
-        }).sort(function (a, b) {
-          return b.g - a.g || -Infinity;
-        }).forEach(function (o) {
-          return o.t.revert(revert);
-        });
-        this.data.forEach(function (e) {
-          return !(e instanceof Tween) && e.revert && e.revert(revert);
-        });
 
-        this._r.forEach(function (f) {
-          return f(revert, _this4);
-        });
+          tweens.map(function (t) {
+            return {
+              g: t._dur || t._delay || t._sat && !t._sat.vars.immediateRender ? t.globalTime(0) : -Infinity,
+              t: t
+            };
+          }).sort(function (a, b) {
+            return b.g - a.g || -Infinity;
+          }).forEach(function (o) {
+            return o.t.revert(revert);
+          });
+          i = _this4.data.length;
 
-        this.isReverted = true;
+          while (i--) {
+            t = _this4.data[i];
+
+            if (t instanceof Timeline) {
+              if (t.data !== "nested") {
+                t.scrollTrigger && t.scrollTrigger.revert();
+                t.kill();
+              }
+            } else {
+              !(t instanceof Tween) && t.revert && t.revert(revert);
+            }
+          }
+
+          _this4._r.forEach(function (f) {
+            return f(revert, _this4);
+          });
+
+          _this4.isReverted = true;
+        })();
       } else {
         this.data.forEach(function (e) {
           return e.kill && e.kill();
@@ -42283,7 +42744,9 @@ module.exports = Yaml;
         }
       }
 
-      active && func(context);
+      active && func(context, function (f) {
+        return context.add(null, f);
+      });
       return this;
     };
 
@@ -42630,7 +43093,7 @@ module.exports = Yaml;
       }
     }
   }, _buildModifierPlugin("roundProps", _roundModifier), _buildModifierPlugin("modifiers"), _buildModifierPlugin("snap", snap)) || _gsap;
-  Tween.version = Timeline.version = gsap.version = "3.12.2";
+  Tween.version = Timeline.version = gsap.version = "3.12.4";
   _coreReady = 1;
   _windowExists() && _wake();
   var Power0 = _easeMap.Power0,
@@ -42723,7 +43186,8 @@ module.exports = Yaml;
     var _this = this;
 
     var target = this.target,
-        style = target.style;
+        style = target.style,
+        cache = target._gsap;
 
     if (property in _transformProps && style) {
       this.tfm = this.tfm || {};
@@ -42732,7 +43196,8 @@ module.exports = Yaml;
         property = _propertyAliases[property] || property;
         ~property.indexOf(",") ? property.split(",").forEach(function (a) {
           return _this.tfm[a] = _get(target, a);
-        }) : this.tfm[property] = target._gsap.x ? target._gsap[property] : _get(target, property);
+        }) : this.tfm[property] = cache.x ? cache[property] : _get(target, property);
+        property === _transformOriginProp && (this.tfm.zOrigin = cache.zOrigin);
       } else {
         return _propertyAliases.transform.split(",").forEach(function (p) {
           return _saveStyle.call(_this, p, isNotCSS);
@@ -42743,7 +43208,7 @@ module.exports = Yaml;
         return;
       }
 
-      if (target._gsap.svg) {
+      if (cache.svg) {
         this.svgo = target.getAttribute("data-svg-origin");
         this.props.push(_transformOriginProp, isNotCSS, "");
       }
@@ -42787,6 +43252,12 @@ module.exports = Yaml;
       if ((!i || !i.isStart) && !style[_transformProp]) {
         _removeIndependentTransforms(style);
 
+        if (cache.zOrigin && style[_transformOriginProp]) {
+          style[_transformOriginProp] += " " + cache.zOrigin + "px";
+          cache.zOrigin = 0;
+          cache.renderTransform();
+        }
+
         cache.uncache = 1;
       }
     }
@@ -42807,7 +43278,7 @@ module.exports = Yaml;
       _supports3D,
       _createElement = function _createElement(type, ns) {
     var e = _doc$1.createElementNS ? _doc$1.createElementNS((ns || "http://www.w3.org/1999/xhtml").replace(/^https/, "http"), type) : _doc$1.createElement(type);
-    return e.style ? e : _doc$1.createElement(type);
+    return e && e.style ? e : _doc$1.createElement(type);
   },
       _getComputedProperty = function _getComputedProperty(target, property, skipPrefixFallback) {
     var cs = getComputedStyle(target);
@@ -42912,18 +43383,21 @@ module.exports = Yaml;
   },
       _removeProperty = function _removeProperty(target, property) {
     if (property) {
-      var style = target.style;
+      var style = target.style,
+          first2Chars;
 
       if (property in _transformProps && property !== _transformOriginProp) {
         property = _transformProp;
       }
 
       if (style.removeProperty) {
-        if (property.substr(0, 2) === "ms" || property.substr(0, 6) === "webkit") {
+        first2Chars = property.substr(0, 2);
+
+        if (first2Chars === "ms" || property.substr(0, 6) === "webkit") {
           property = "-" + property;
         }
 
-        style.removeProperty(property.replace(_capsExp, "-$1").toLowerCase());
+        style.removeProperty(first2Chars === "--" ? property : property.replace(_capsExp, "-$1").toLowerCase());
       } else {
         style.removeAttribute(property);
       }
@@ -42991,12 +43465,19 @@ module.exports = Yaml;
     if (cache && toPercent && cache.width && horizontal && cache.time === _ticker.time && !cache.uncache) {
       return _round(curValue / cache.width * amount);
     } else {
-      (toPercent || curUnit === "%") && !_nonStandardLayouts[_getComputedProperty(parent, "display")] && (style.position = _getComputedProperty(target, "position"));
-      parent === target && (style.position = "static");
-      parent.appendChild(_tempDiv);
-      px = _tempDiv[measureProperty];
-      parent.removeChild(_tempDiv);
-      style.position = "absolute";
+      if (toPercent && (property === "height" || property === "width")) {
+        var v = target.style[property];
+        target.style[property] = amount + unit;
+        px = target[measureProperty];
+        v ? target.style[property] = v : _removeProperty(target, property);
+      } else {
+        (toPercent || curUnit === "%") && !_nonStandardLayouts[_getComputedProperty(parent, "display")] && (style.position = _getComputedProperty(target, "position"));
+        parent === target && (style.position = "static");
+        parent.appendChild(_tempDiv);
+        px = _tempDiv[measureProperty];
+        parent.removeChild(_tempDiv);
+        style.position = "absolute";
+      }
 
       if (horizontal && toPercent) {
         cache = _getCache(parent);
@@ -43066,9 +43547,10 @@ module.exports = Yaml;
     end += "";
 
     if (end === "auto") {
+      startValue = target.style[prop];
       target.style[prop] = end;
       end = _getComputedProperty(target, prop) || end;
-      target.style[prop] = start;
+      startValue ? target.style[prop] = startValue : _removeProperty(target, prop);
     }
 
     a = [start, end];
@@ -43509,7 +43991,7 @@ module.exports = Yaml;
     cache.skewY = skewY + deg;
     cache.transformPerspective = perspective + px;
 
-    if (cache.zOrigin = parseFloat(origin.split(" ")[2]) || 0) {
+    if (cache.zOrigin = parseFloat(origin.split(" ")[2]) || !uncache && cache.zOrigin || 0) {
       style[_transformOriginProp] = _firstTwoOnly(origin);
     }
 
@@ -43885,7 +44367,7 @@ module.exports = Yaml;
           if (startAt && p in startAt) {
             startValue = typeof startAt[p] === "function" ? startAt[p].call(tween, index, target, targets) : startAt[p];
             _isString(startValue) && ~startValue.indexOf("random(") && (startValue = _replaceRandom(startValue));
-            getUnit(startValue + "") || (startValue += _config.units[p] || getUnit(_get(target, p)) || "");
+            getUnit(startValue + "") || startValue === "auto" || (startValue += _config.units[p] || getUnit(_get(target, p)) || "");
             (startValue + "").charAt(1) === "=" && (startValue = _get(target, p));
           } else {
             startValue = _get(target, p);
@@ -46978,8 +47460,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -47073,8 +47555,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, window, undefined) {
@@ -48587,7 +49069,7 @@ module.exports = Yaml;
             function seekPrevious(pos, newBlock) {
                 var position = pos, tests;
                 if (position <= 0) return 0;
-                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position), 
+                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position),
                 tests.length < 2 || tests.length === 2 && tests[1].match.def === ""))) {}
                 return position;
             }
@@ -49824,8 +50306,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($) {
@@ -49854,8 +50336,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -50106,8 +50588,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -50657,8 +51139,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, Inputmask) {
@@ -50743,268 +51225,6 @@ module.exports = Yaml;
         return $.fn.inputmask;
     });
 } ]);
-;
-/****************************************************************************
-    color.js,
-    Functions to caluclate the brightness of a color
-    Taken from http://codepen.io/lunelson/pen/jENxwB
-
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-    "use strict";
-
-    //Create fcoo-namespace
-    var nsColor = window;
-
-
-    function lin2log(n) {
-        if (n <= 0.0031308)
-            return n * 12.92;
-        else
-            return 1.055 * Math.pow(n,1/2.4) - 0.055;
-    }
-
-    function log2lin(n) {
-        if (n <= 0.04045)
-            return n / 12.92;
-        else
-            return Math.pow(((n + 0.055)/1.055),2.4);
-    }
-
-    /********************************************
-    brightness
-    ********************************************/
-    nsColor.brightness = function brightness(r, g, b) {
-        r = log2lin(r/255);
-        g = log2lin(g/255);
-        b = log2lin(b/255);
-        return lin2log(0.2126 * r + 0.7152 * g + 0.0722 * b) * 100;
-    };
-
-    /********************************************
-    colorContrastHEX
-    ********************************************/
-    nsColor.colorContrastHEX = function colorContrastHEX( color ) {
-        if (color.length === 3)
-            color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
-        var rgb = [];
-        for (var i = 0; i <= 2; i++)
-            rgb[i] = parseInt(color.substr(1+i*2, 2), 16);
-        return nsColor.colorContrastRGB(rgb[0], rgb[1], rgb[2]);
-    };
-
-    /********************************************
-    colorContrastRGB
-    ********************************************/
-    nsColor.colorContrastRGB = function colorContrastRGB(r, g, b) {
-        var colorBrightness = nsColor.brightness(r, g, b),
-                whiteBrightness = nsColor.brightness(255, 255, 255),
-                blackBrightness = nsColor.brightness(0, 0, 0);
-        return Math.abs(colorBrightness - whiteBrightness) > Math.abs(colorBrightness - blackBrightness) ? '#ffffff' : '#000000';
-    };
-
-    /********************************************
-    rgbHex
-    Convert RGB color to HEX
-    From https://github.com/sindresorhus/rgb-hex
-    ********************************************/
-    nsColor.rgbHex = function(red, green, blue, alpha){
-        var isPercent = (red + (alpha || '')).toString().includes('%');
-
-        if (typeof red === 'string') {
-            var res = red.match(/(0?\.?\d{1,3})%?\b/g).map(Number);
-            red = res[0];
-            green = res[1];
-            blue = res[2];
-            alpha = res[3];
-        }
-        else
-            if (alpha !== undefined) {
-                alpha = parseFloat(alpha);
-            }
-
-        if (typeof red !== 'number' ||
-            typeof green !== 'number' ||
-            typeof blue !== 'number' ||
-            red > 255 ||
-            green > 255 ||
-            blue > 255) {
-                throw new TypeError('Expected three numbers below 256');
-        }
-
-        if (typeof alpha === 'number') {
-            if (!isPercent && alpha >= 0 && alpha <= 1) {
-                alpha = Math.round(255 * alpha);
-            }
-            else
-                if (isPercent && alpha >= 0 && alpha <= 100) {
-                    alpha = Math.round(255 * alpha / 100);
-                }
-                else {
-                    throw new TypeError('Expected alpha value (${alpha}) as a fraction or percentage');
-                }
-            alpha = (alpha | 1 << 8).toString(16).slice(1);
-        }
-        else {
-            alpha = '';
-        }
-
-        return ((blue | green << 8 | red << 16) | 1 << 24).toString(16).slice(1) + alpha;
-    };
-
-    /********************************************
-    hexRgb
-    Convert HEX color to RGB
-    From https://github.com/sindresorhus/hex-rgb
-    ********************************************/
-    var hexChars = 'a-f\\d',
-        match3or4Hex = '#?[' + hexChars + ']{3}[' + hexChars + ']?',
-        match6or8Hex = '#?[' + hexChars + ']{6}([' + hexChars + ']{2})?',
-        nonHexChars = new RegExp('[^#' + hexChars + ']', 'gi'),
-        validHexSize = new RegExp('^' + match3or4Hex + '$|^' + match6or8Hex + '$', 'i');
-
-    nsColor.hexRgb = function(hex, options) {
-        options = options || {};
-        if (typeof hex !== 'string' || nonHexChars.test(hex) || !validHexSize.test(hex)) {
-            throw new TypeError('Expected a valid hex string');
-        }
-
-        hex = hex.replace(/^#/, '');
-        var alpha = 255;
-
-        if (hex.length === 8) {
-            alpha = parseInt(hex.slice(6, 8), 16) / 255;
-            hex = hex.substring(0, 6);
-        }
-
-        if (hex.length === 4) {
-            alpha = parseInt(hex.slice(3, 4).repeat(2), 16) / 255;
-            hex = hex.substring(0, 3);
-        }
-
-        if (hex.length === 3) {
-            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-        }
-
-        var num = parseInt(hex, 16),
-            red = num >> 16,
-            green = (num >> 8) & 255,
-            blue = num & 255;
-
-        return options.format === 'array' ? [red, green, blue, alpha] : { red: red, green: green, blue: blue, alpha: alpha };
-    };
-
-    /********************************************
-    hexSetAlpha
-    Set the alpha-value in a hex-color
-    ********************************************/
-    nsColor.hexSetAlpha = function(hex, alpha){
-        var rgba = nsColor.hexRgb(hex, {format: 'array'});
-        rgba[3] = alpha;
-        return nsColor.rgbHex.apply(this, rgba);
-    };
-
-}(this, document));
-;
-/****************************************************************************
-    json.js,
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-    "use strict";
-
-    //Create fcoo-namespace
-    var nsJSON = window;
-
-    /******************************************
-    serializeJSON
-    Converts a json-object a la {id1:'value1', id2:'value2'}
-    to [ { name: "id1", value: "value1" }, { name: "id2", value: "value2" } ]
-    *******************************************/
-    nsJSON.serializeJSON = function( jsonObj ){
-        var result = [];
-        for (var id in jsonObj)
-            if (jsonObj.hasOwnProperty(id))
-                result.push( {name: id, value: jsonObj[id] });
-        return result;
-    };
-
-
-}(this, document));
-;
-/****************************************************************************
-    math.js,
-
-****************************************************************************/
-
-(function (window/*, document, undefined*/) {
-    "use strict";
-
-    var nsMath = window;
-
-    /*******************************************
-    significant - return n rounded to significant sf
-    *******************************************/
-    nsMath.significant = function significant(n, sf) {
-        sf = sf - Math.floor(Math.log(n) / Math.LN10) - 1;
-        sf = Math.pow(10, sf);
-        n = Math.round(n * sf);
-        n = n / sf;
-        return n;
-    };
-
-    /*******************************************
-    precision
-    *******************************************/
-    nsMath.precision = function precision(n, dp) {
-        dp = Math.pow(10, dp);
-        n = n * dp;
-        n = Math.round(n);
-        n = n / dp;
-        return n;
-    };
-
-    /*******************************************
-    nearest
-    *******************************************/
-    nsMath.nearest = function nearest(n, v) {
-        v = v ? v : 1;
-        n = n / v;
-        n = Math.round(n) * v;
-        return n;
-    };
-
-    /*******************************************
-    roundDownTo
-    *******************************************/
-    nsMath.roundDownTo = function roundDownTo(n, v) {
-        v = v ? v : 1;
-        n = n / v;
-        n = Math.floor(n) * v;
-        return n;
-    };
-
-    /*******************************************
-    roundToRange
-    *******************************************/
-    nsMath.roundToRange = function roundToRange(v, min, max) {
-        return Math.max( Math.min(v, max), min);
-    };
-
-    /*******************************************
-    toDecimal
-    Convert a integer value v to a decimal
-    Eq    toDecimal(89)        = 0.89
-            toDecimal(9)        = 0.9
-            toDecimal(1234)    = 0.1234
-    *******************************************/
-    nsMath.toDecimal = function toDecimal(v) {
-        var l = v.toString().length;
-        return v / Math.pow(10, l);
-    };
-
-}(this, document));
 ;
 /*
    Copyright 2013 Silviu Bogan
@@ -55183,7 +55403,7 @@ if (typeof define === 'function' && define.amd) {
         appendTick: function( leftPercent, options ){
             if (!this.$currentGrid || this.options.noTicks) return;
 
-            options = $.extend( {minor: false, color: ''}, options );
+            options = $.extend( {minor: false/*, color: ''*/}, options );
 
             var left = this.cache.canvasMargin + (this.dimentions.containerWidth * leftPercent / 100),
                 ctx  = this.cache.ctx,
@@ -61791,7 +62011,7 @@ options:
         };
 
     window.TimeSlider = function (input, options, pluginCount) {
-        this.VERSION = "7.7.2";
+        this.VERSION = "7.7.3";
 
         //Setting default options
         this.options = $.extend( true, {}, defaultOptions, options );
@@ -62053,13 +62273,9 @@ options:
         appendStandardGrid
         ***************************************************************/
         appendStandardGrid: function(){
-            var _this = this,
-                opt = this.options,
-
-                //text and tick options for secondary grids (relative and utc for absolute scale
-                textOptions = {italic:true, minor:true},
-                tickOptions = {color:'#555555'};
-
+            var _this       = this,
+                opt         = this.options,
+                textOptions = {italic:true, minor:true};  //Text and tick options for secondary grids (relative and utc for absolute scale)
 
             //*****************************************************
             function appendSpecialGrid( gridOpt ){
@@ -62088,7 +62304,7 @@ options:
                 if (gridOpt.newLabels)
                     opt.maxLabelWidth = null;   //Force recalculating label-space
 
-                _this._appendStandardGrid(textOptions, tickOptions);
+                _this._appendStandardGrid(textOptions);
 
                 _this.$currentGrid.addClass(gridClassName);
 
@@ -62160,7 +62376,7 @@ options:
                         newLabels           : false
                     });
 
-                    this.appendDateGrid( textOptions, tickOptions );
+                    this.appendDateGrid( textOptions);
                     this.$currentGrid.addClass(opt.format.UTCGridClassName || opt.UTCGridClassName || '');
 
                     opt.format.timezone = saveTimezone;
@@ -62403,12 +62619,12 @@ options:
 /*! @websanova/url - v2.6.3 - 2020-01-25 */
 !function(){function t(t,r){var a,o={};if("tld?"!==t){if(r=r||window.location.toString(),!t)return r;if(t=t.toString(),a=r.match(/^mailto:([^\/].+)/))o.protocol="mailto",o.email=a[1];else{if((a=r.match(/(.*?)\/#\!(.*)/))&&(r=a[1]+a[2]),(a=r.match(/(.*?)#(.*)/))&&(o.hash=a[2],r=a[1]),o.hash&&t.match(/^#/))return h(t,o.hash);if((a=r.match(/(.*?)\?(.*)/))&&(o.query=a[2],r=a[1]),o.query&&t.match(/^\?/))return h(t,o.query);if((a=r.match(/(.*?)\:?\/\/(.*)/))&&(o.protocol=a[1].toLowerCase(),r=a[2]),(a=r.match(/(.*?)(\/.*)/))&&(o.path=a[2],r=a[1]),o.path=(o.path||"").replace(/^([^\/])/,"/$1"),t.match(/^[\-0-9]+$/)&&(t=t.replace(/^([^\/])/,"/$1")),t.match(/^\//))return e(t,o.path.substring(1));if((a=(a=e("/-1",o.path.substring(1)))&&a.match(/(.*?)\.([^.]+)$/))&&(o.file=a[0],o.filename=a[1],o.fileext=a[2]),(a=r.match(/(.*)\:([0-9]+)$/))&&(o.port=a[2],r=a[1]),(a=r.match(/(.*?)@(.*)/))&&(o.auth=a[1],r=a[2]),o.auth&&(a=o.auth.match(/(.*)\:(.*)/),o.user=a?a[1]:o.auth,o.pass=a?a[2]:void 0),o.hostname=r.toLowerCase(),"."===t.charAt(0))return e(t,o.hostname);o.port=o.port||("https"===o.protocol?"443":"80"),o.protocol=o.protocol||("443"===o.port?"https":"http")}return t in o?o[t]:"{}"===t?o:void 0}}function e(t,r){var a=t.charAt(0),o=r.split(a);return a===t?o:o[(t=parseInt(t.substring(1),10))<0?o.length+t:t-1]}function h(t,r){for(var a,o=t.charAt(0),e=r.split("&"),h=[],n={},c=[],i=t.substring(1),p=0,u=e.length;p<u;p++)if(""!==(h=(h=e[p].match(/(.*?)=(.*)/))||[e[p],e[p],""])[1].replace(/\s/g,"")){if(h[2]=(a=h[2]||"",decodeURIComponent(a.replace(/\+/g," "))),i===h[1])return h[2];(c=h[1].match(/(.*)\[([0-9]+)\]/))?(n[c[1]]=n[c[1]]||[],n[c[1]][c[2]]=h[2]):n[h[1]]=h[2]}return o===t?n:n[i]}window.url=t}();
 ;
-/* 
-  @package NOTY - Dependency-free notification library 
-  @version version: 3.2.0-beta 
-  @contributors https://github.com/needim/noty/graphs/contributors 
-  @documentation Examples and Documentation - https://ned.im/noty 
-  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php 
+/*
+  @package NOTY - Dependency-free notification library
+  @version version: 3.2.0-beta
+  @contributors https://github.com/needim/noty/graphs/contributors
+  @documentation Examples and Documentation - https://ned.im/noty
+  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
 */
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -64441,7 +64657,7 @@ Promise$2.prototype = {
     The primary way of interacting with a promise is through its `then` method,
     which registers callbacks to receive either a promise's eventual value or the
     reason why the promise cannot be fulfilled.
-  
+
     ```js
     findUser().then(function(user){
       // user is available
@@ -64449,14 +64665,14 @@ Promise$2.prototype = {
       // user is unavailable, and you are given the reason why
     });
     ```
-  
+
     Chaining
     --------
-  
+
     The return value of `then` is itself a promise.  This second, 'downstream'
     promise is resolved with the return value of the first promise's fulfillment
     or rejection handler, or rejected if the handler throws an exception.
-  
+
     ```js
     findUser().then(function (user) {
       return user.name;
@@ -64466,7 +64682,7 @@ Promise$2.prototype = {
       // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
       // will be `'default name'`
     });
-  
+
     findUser().then(function (user) {
       throw new Error('Found user, but still unhappy');
     }, function (reason) {
@@ -64479,7 +64695,7 @@ Promise$2.prototype = {
     });
     ```
     If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-  
+
     ```js
     findUser().then(function (user) {
       throw new PedagogicalException('Upstream error');
@@ -64491,15 +64707,15 @@ Promise$2.prototype = {
       // The `PedgagocialException` is propagated all the way down to here
     });
     ```
-  
+
     Assimilation
     ------------
-  
+
     Sometimes the value you want to propagate to a downstream promise can only be
     retrieved asynchronously. This can be achieved by returning a promise in the
     fulfillment or rejection handler. The downstream promise will then be pending
     until the returned promise is settled. This is called *assimilation*.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -64507,9 +64723,9 @@ Promise$2.prototype = {
       // The user's comments are now available
     });
     ```
-  
+
     If the assimliated promise rejects, then the downstream promise will also reject.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -64519,15 +64735,15 @@ Promise$2.prototype = {
       // If `findCommentsByAuthor` rejects, we'll have the reason here
     });
     ```
-  
+
     Simple Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let result;
-  
+
     try {
       result = findResult();
       // success
@@ -64535,9 +64751,9 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
     findResult(function(result, err){
       if (err) {
@@ -64547,9 +64763,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findResult().then(function(result){
       // success
@@ -64557,15 +64773,15 @@ Promise$2.prototype = {
       // failure
     });
     ```
-  
+
     Advanced Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let author, books;
-  
+
     try {
       author = findAuthor();
       books  = findBooksByAuthor(author);
@@ -64574,19 +64790,19 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
-  
+
     function foundBooks(books) {
-  
+
     }
-  
+
     function failure(reason) {
-  
+
     }
-  
+
     findAuthor(function(author, err){
       if (err) {
         failure(err);
@@ -64611,9 +64827,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findAuthor().
       then(findBooksByAuthor).
@@ -64623,7 +64839,7 @@ Promise$2.prototype = {
       // something went wrong
     });
     ```
-  
+
     @method then
     @param {Function} onFulfilled
     @param {Function} onRejected
@@ -64635,25 +64851,25 @@ Promise$2.prototype = {
   /**
     `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
     as the catch block of a try/catch statement.
-  
+
     ```js
     function findAuthor(){
       throw new Error('couldn't find that author');
     }
-  
+
     // synchronous
     try {
       findAuthor();
     } catch(reason) {
       // something went wrong
     }
-  
+
     // async with promises
     findAuthor().catch(function(reason){
       // something went wrong
     });
     ```
-  
+
     @method catch
     @param {Function} onRejection
     Useful for tooling.
@@ -65558,10 +65774,10 @@ module.exports = g;
     //Will choke on undefined navigator and window vars when run on server
     //Return boolean false and exit function when running server-side
 
-    if( typeof window === "undefined" || 
-        window.navigator === undefined || 
-        window.navigator.userAgent === undefined || 
-        window.navigator.mimeTypes === undefined){ 
+    if( typeof window === "undefined" ||
+        window.navigator === undefined ||
+        window.navigator.userAgent === undefined ||
+        window.navigator.mimeTypes === undefined){
             return false;
     }
 
@@ -65572,8 +65788,8 @@ module.exports = g;
     //Time to jump through hoops -- browser vendors do not make it easy to detect PDF support.
 
     /*
-        IE11 still uses ActiveX for Adobe Reader, but IE 11 doesn't expose window.ActiveXObject the same way 
-        previous versions of IE did. window.ActiveXObject will evaluate to false in IE 11, but "ActiveXObject" 
+        IE11 still uses ActiveX for Adobe Reader, but IE 11 doesn't expose window.ActiveXObject the same way
+        previous versions of IE did. window.ActiveXObject will evaluate to false in IE 11, but "ActiveXObject"
         in window evaluates to true.
 
         MS Edge does not support ActiveX so this test will evaluate false
@@ -65591,20 +65807,20 @@ module.exports = g;
     let supportsPdfMimeType = (nav.mimeTypes["application/pdf"] !== undefined);
 
     //Safari on iPadOS doesn't report as 'mobile' when requesting desktop site, yet still fails to embed PDFs
-    let isSafariIOSDesktopMode = (  nav.platform !== undefined && 
-                                    nav.platform === "MacIntel" && 
-                                    nav.maxTouchPoints !== undefined && 
+    let isSafariIOSDesktopMode = (  nav.platform !== undefined &&
+                                    nav.platform === "MacIntel" &&
+                                    nav.maxTouchPoints !== undefined &&
                                     nav.maxTouchPoints > 1 );
 
     //Quick test for mobile devices.
     let isMobileDevice = (isSafariIOSDesktopMode || /Mobi|Tablet|Android|iPad|iPhone/.test(ua));
 
-    //Safari desktop requires special handling 
-    let isSafariDesktop = ( !isMobileDevice && 
-                            nav.vendor !== undefined && 
-                            /Apple/.test(nav.vendor) && 
+    //Safari desktop requires special handling
+    let isSafariDesktop = ( !isMobileDevice &&
+                            nav.vendor !== undefined &&
+                            /Apple/.test(nav.vendor) &&
                             /Safari/.test(ua) );
-    
+
     //Firefox started shipping PDF.js in Firefox 19. If this is Firefox 19 or greater, assume PDF.js is available
     let isFirefoxWithPDFJS = (!isMobileDevice && /irefox/.test(ua) && ua.split("rv:").length > 1) ? (parseInt(ua.split("rv:")[1].split(".")[0], 10) > 18) : false;
 
@@ -65721,9 +65937,9 @@ module.exports = g;
 
         let source = url;
 
-        if(embedType === "pdfjs"){ 
+        if(embedType === "pdfjs"){
             //If PDFJS_URL already contains a ?, assume querystring is in place, and use an ampersand to append PDFJS's file parameter
-            let connector = (PDFJS_URL.indexOf("?") !== -1) ? "&" : "?"; 
+            let connector = (PDFJS_URL.indexOf("?") !== -1) ? "&" : "?";
             source = PDFJS_URL + connector + "file=" + encodeURIComponent(url) + pdfOpenFragment;
         } else {
             source += pdfOpenFragment;
@@ -65758,7 +65974,7 @@ module.exports = g;
                 style += "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
             }
 
-            el.style.cssText = style; 
+            el.style.cssText = style;
 
         }
 
@@ -65823,32 +66039,32 @@ module.exports = g;
         if(forcePDFJS && PDFJS_URL){
             return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute, PDFJS_URL);
         }
- 
+
         // --== Embed attempt #2 ==--
 
         //Embed PDF if traditional support is provided, or if this developer is willing to roll with assumption
-        //that modern desktop (not mobile) browsers natively support PDFs 
+        //that modern desktop (not mobile) browsers natively support PDFs
         if(supportsPDFs || (assumptionMode && !isMobileDevice)){
-            
-            //Should we use <embed> or <iframe>? In most cases <embed>. 
+
+            //Should we use <embed> or <iframe>? In most cases <embed>.
             //Allow developer to force <iframe>, if desired
             //There is an edge case where Safari does not respect 302 redirect requests for PDF files when using <embed> element.
             //Redirect appears to work fine when using <iframe> instead of <embed> (Addresses issue #210)
             //Forcing Safari desktop to use iframe due to freezing bug in macOS 11 (Big Sur)
             let embedtype = (forceIframe || supportRedirect || isSafariDesktop) ? "iframe" : "embed";
-            
+
             return generatePDFObjectMarkup(embedtype, targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute);
 
         }
-        
+
         // --== Embed attempt #3 ==--
-        
+
         //If everything else has failed and a PDFJS fallback is provided, try to use it
         if(PDFJS_URL){
             return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute, PDFJS_URL);
         }
-        
-        // --== PDF embed not supported! Use fallback ==-- 
+
+        // --== PDF embed not supported! Use fallback ==--
 
         //Display the fallback link if available
         if(fallbackLink){
@@ -81114,7 +81330,7 @@ ID:name, ID:abbr, ID:link, ID:email
         }
     });
 
-    
+
 
 (function() {
         numeral.register('format', 'bps', {
@@ -83601,7 +83817,7 @@ Greenland
 }(jQuery, window.moment, window.i18next, this, document));
 ;
 /****************************************************************************
-    kl.js, 
+    kl.js,
 
     Translation of Moment text to Kalaallisut/Greenlandic (language code = kl)
 
@@ -83609,7 +83825,7 @@ Greenland
 
 moment.defineLocale('kl', {
     parentLocale: 'da',
-  
+
     /* TODO */
 
 
@@ -92214,7 +92430,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error;
     }
     return results;
-  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{}, 
+  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{},
   defaultOptions = {
     checks:{
       xhr:{
@@ -92237,22 +92453,22 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     deDupBody:!1
   }, grab = function(obj, key) {
     var cur, i, j, len, part, parts;
-    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i], 
+    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i],
     "object" == typeof (cur = cur[part])); i = ++j) ;
     return i === parts.length - 1 ? cur :void 0;
   }, Offline.getOption = function(key) {
     var ref, val;
-    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key), 
+    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key),
     "function" == typeof val ? val() :val;
   }, "function" == typeof window.addEventListener && window.addEventListener("online", function() {
     return setTimeout(Offline.confirmUp, 100);
   }, !1), "function" == typeof window.addEventListener && window.addEventListener("offline", function() {
     return Offline.confirmDown();
   }, !1), Offline.state = "up", Offline.markUp = function() {
-    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up", 
+    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up",
     Offline.trigger("up");
   }, Offline.markDown = function() {
-    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down", 
+    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down",
     Offline.trigger("down");
   }, handlers = {}, Offline.on = function(event, handler, ctx) {
     var e, events, j, len, results;
@@ -92265,7 +92481,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     var _handler, i, ref, results;
     if (null != handlers[event]) {
       if (handler) {
-        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i], 
+        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i],
         ref[0], _handler = ref[1], _handler === handler ? results.push(handlers[event].splice(i, 1)) :results.push(i++);
         return results;
       }
@@ -92274,7 +92490,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, Offline.trigger = function(event) {
     var ctx, handler, j, len, ref, ref1, results;
     if (null != handlers[event]) {
-      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j], 
+      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j],
       ctx = ref1[0], handler = ref1[1], results.push(handler.call(ctx));
       return results;
     }
@@ -92293,8 +92509,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     });
   }, Offline.checks = {}, Offline.checks.xhr = function() {
     var xhr;
-    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0), 
-    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")), 
+    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0),
+    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")),
     checkXHR(xhr, Offline.markUp, Offline.markDown);
     try {
       xhr.send();
@@ -92304,7 +92520,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     return xhr;
   }, Offline.checks.image = function() {
     var img;
-    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp, 
+    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp,
     img.src = Offline.getOption("checks.image.url");
   }, Offline.checks.down = Offline.markDown, Offline.checks.up = Offline.markUp, Offline.check = function() {
     return Offline.trigger("checking"), Offline.checks[Offline.getOption("checks.active")]();
@@ -92325,13 +92541,13 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       };
     }, _XMLHttpRequest = window.XMLHttpRequest, window.XMLHttpRequest = function(flags) {
       var _overrideMimeType, _setRequestHeader, req;
-      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader, 
+      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader,
       req.headers = {}, req.setRequestHeader = function(name, value) {
         return req.headers[name] = value, _setRequestHeader.call(req, name, value);
       }, _overrideMimeType = req.overrideMimeType, req.overrideMimeType = function(type) {
         return req.mimeType = type, _overrideMimeType.call(req, type);
       }, req;
-    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest, 
+    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest,
     window.XDomainRequest = function() {
       var req;
       return req = new _XDomainRequest(), monitorXHR(req), req;
@@ -92347,37 +92563,37 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   if (!window.Offline) throw new Error("Offline Reconnect brought in without offline.js");
   rc = Offline.reconnect = {}, retryIntv = null, reset = function() {
     var ref;
-    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"), 
+    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"),
     rc.state = "inactive", rc.remaining = rc.delay = null != (ref = Offline.getOption("reconnect.initialDelay")) ? ref :3;
   }, next = function() {
     var delay, ref;
-    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600), 
+    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600),
     rc.remaining = rc.delay = delay;
   }, tick = function() {
-    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"), 
+    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"),
     0 === rc.remaining ? tryNow() :void 0;
   }, tryNow = function() {
-    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting", 
+    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting",
     Offline.check();
   }, down = function() {
-    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"), 
+    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"),
     retryIntv = setInterval(tick, 1e3);
   }, up = function() {
     return null != retryIntv && clearInterval(retryIntv), reset();
   }, nope = function() {
-    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"), 
+    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"),
     rc.state = "waiting", next()) :void 0;
-  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope), 
+  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope),
   Offline.on("up", up);
 }.call(this), function() {
   var clear, flush, held, holdRequest, makeRequest, waitingOnConfirm;
   if (!window.Offline) throw new Error("Requests module brought in without offline.js");
   held = [], waitingOnConfirm = !1, holdRequest = function(req) {
-    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"), 
+    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"),
     "down" !== Offline.state && (waitingOnConfirm = !0), held.push(req);
   }, makeRequest = function(arg) {
     var body, name, password, ref, type, url, user, val, xhr;
-    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password, 
+    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password,
     body = arg.body, !1 !== Offline.getOption("requests")) {
       xhr.abort(), xhr.open(type, url, !0, user, password), ref = xhr.headers;
       for (name in ref) val = ref[name], xhr.setRequestHeader(name, val);
@@ -92388,10 +92604,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, flush = function() {
     var body, i, key, len, request, requests, url;
     if (!1 !== Offline.getOption("requests")) {
-      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i], 
+      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i],
       url = request.url.replace(/(\?|&)_=[0-9]+/, function(match, chr) {
         return "?" === chr ? chr :"";
-      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(), 
+      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(),
       requests[request.type.toUpperCase() + " - " + url + " - " + body] = request) :requests[request.type.toUpperCase() + " - " + url] = request;
       for (key in requests) request = requests[key], makeRequest(request);
       return clear();
@@ -92407,10 +92623,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         return holdRequest(request);
       }, _send = xhr.send, xhr.send = function(body) {
         return request.body = body, _send.apply(xhr, arguments);
-      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1), 
-      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange, 
+      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1),
+      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange,
       xhr.onreadystatechange = function() {
-        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(), 
+        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(),
         "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
       });
     }), Offline.requests = {
@@ -92429,12 +92645,12 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error, simulate = !1;
     }
   }
-  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}), 
+  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}),
   Offline.options.checks.active = state);
 }.call(this), function() {
   var RETRY_TEMPLATE, TEMPLATE, _onreadystatechange, addClass, content, createFromHTML, el, flashClass, flashTimeouts, init, removeClass, render, roundTime;
   if (!window.Offline) throw new Error("Offline UI brought in without offline.js");
-  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>', 
+  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>',
   RETRY_TEMPLATE = '<a href class="offline-ui-retry"></a>', createFromHTML = function(html) {
     var el;
     return el = document.createElement("div"), el.innerHTML = html, el.children[0];
@@ -92443,7 +92659,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, removeClass = function(name) {
     return el.className = el.className.replace(new RegExp("(^| )" + name.split(" ").join("|") + "( |$)", "gi"), " ");
   }, flashTimeouts = {}, flashClass = function(name, time) {
-    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]), 
+    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]),
     flashTimeouts[name] = setTimeout(function() {
       return removeClass(name), delete flashTimeouts[name];
     }, 1e3 * time);
@@ -92455,39 +92671,39 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       minute:60,
       second:1
     };
-    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult), 
+    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult),
     [ val, unit ];
     return [ "now", "" ];
   }, render = function() {
     var button, handler;
-    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)), 
+    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)),
     button = el.querySelector(".offline-ui-retry"), handler = function(e) {
       return e.preventDefault(), Offline.reconnect.tryNow();
-    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)), 
+    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)),
     addClass("offline-ui-" + Offline.state), content = el.querySelector(".offline-ui-content");
   }, init = function() {
     return render(), Offline.on("up", function() {
-      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2), 
+      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2),
       flashClass("offline-ui-up-5s", 5);
     }), Offline.on("down", function() {
-      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2), 
+      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2),
       flashClass("offline-ui-down-5s", 5);
     }), Offline.on("reconnect:connecting", function() {
       return addClass("offline-ui-connecting"), removeClass("offline-ui-waiting");
     }), Offline.on("reconnect:tick", function() {
       var ref, time, unit;
-      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining), 
-      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time), 
+      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining),
+      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time),
       content.setAttribute("data-retry-in-unit", unit);
     }), Offline.on("reconnect:stopped", function() {
-      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null), 
+      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null),
       content.setAttribute("data-retry-in-unit", null);
     }), Offline.on("reconnect:failure", function() {
       return flashClass("offline-ui-reconnect-failed-2s", 2), flashClass("offline-ui-reconnect-failed-5s", 5);
     }), Offline.on("reconnect:success", function() {
       return flashClass("offline-ui-reconnect-succeeded-2s", 2), flashClass("offline-ui-reconnect-succeeded-5s", 5);
     });
-  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange, 
+  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange,
   document.onreadystatechange = function() {
     return "complete" === document.readyState && init(), "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
   });

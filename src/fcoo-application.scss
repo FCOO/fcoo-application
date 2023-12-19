@@ -28,10 +28,10 @@
 //COLOR-HELPER
 @import "../bower_components/sass-color-helpers/stylesheets/color-helpers";
 
-//APPLICATION COLORS
-/********** START **************/
+//FCOO-COLORS
+@import "../bower_components/fcoo-colors/src/fcoo-colors-include";
 
-@import "../bower_components/fcoo-application-logo-and-color/src/fcoo-application-base-color-mixin";
+//APPLICATION COLORS
 @import "application-color-mixin";
 @import "application-color";
 

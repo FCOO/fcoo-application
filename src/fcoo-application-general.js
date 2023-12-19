@@ -162,21 +162,42 @@ Sections:
 
 
 //TEST Reading setup-file for application
-/*
-ns.promiseList.prependFirst({
-    fileName: 'findesikke.json',
-    resolve : function(data){
+if (ns.DEMO_VERSION)
+    ns.promiseList.prependFirst({
+        fileName: 'findesikke.json',
+        resolve : function(/*data*/){
+            /*
+            TODO: How to load meta-data: From <meta> or set-up-file
+            Need to get
+                application-color
+                owner
+                logo (via owner?)
 
-    },
-    promiseOptions: {
-        reject  : function(){
-            console.log('Findes ikke => Brug default');
+                menu-file (if any)
+
+                ...and more
+
+            */
+
+
         },
+        promiseOptions: {
+            reject  : function(){
+                //console.log('Findes ikke => Brug default');
+
+
+
+            //
+                ['red','green','blue','pink','orange'].forEach( (color, index) => {
+                    if (window.location.href.includes('color='+index))
+                        ns.setApplicationColors(color);
+                });
+            },
 
         useDefaultErrorHandler: false
     }
 });
-*/
+
 
 
     /***********************************************************************
