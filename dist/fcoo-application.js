@@ -727,13 +727,17 @@ Create and manage the main structure for FCOO web applications
             */
 
             topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
-            leftMenu            : null,  //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
-            leftMenuButtons     : null,  //Options for buttons in the header of the left-menu. See format below
-            keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
-            rightMenu           : null,  //Options for right-menu. See src/fcoo-application-touch.js
-            keepRightMenuButton : false, //Keeps the right menu-button even if rightMenu is null
-            rightMenuButtons    : null,  //Options for buttons in the header of the right-menu. See format below
-            bottomMenu          : null,  //Options for bottom-menu. See src/fcoo-application-touch.js
+
+            leftMenu            : null,      //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
+            leftMenuIcon        : 'fa-bars', //Icon for button that opens left-menu
+            leftMenuButtons     : null,      //Options for buttons in the header of the left-menu. See format below
+            keepLeftMenuButton  : false,     //Keeps the left menu-button even if leftMenu is null
+
+            rightMenu           : null,      //Options for right-menu. See src/fcoo-application-touch.js
+            rightMenuIcon       : 'fa-list', //Icon for button that opens right-menu
+            keepRightMenuButton : false,     //Keeps the right menu-button even if rightMenu is null
+            rightMenuButtons    : null,      //Options for buttons in the header of the right-menu. See format below
+            bottomMenu          : null,      //Options for bottom-menu. See src/fcoo-application-touch.js
 
             onResizeStart       : null,  //function(main) to be called when the main-container starts resizing
             onResizing          : null,  //function(main) to be called when the main-container is being resized
@@ -832,7 +836,7 @@ Create and manage the main structure for FCOO web applications
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
                 resetListPrepend   : true,
-                main: result
+                main               : result
             }));
             $body.append( result.leftMenu.$container );
             result.menus.push(result.leftMenu);
@@ -841,11 +845,12 @@ Create and manage the main structure for FCOO web applications
         //Append the outer container
         $outerContainer.appendTo( $body );
 
-        //Create and append top-menu (if any)
+        //Create and append top-menu (if any).
+        //Add left-menu if leftMenu: true or keepLeftMenuButton = true. Use leftMenuicon as icon. Same for right-menu
         if (result.options.topMenu){
             var topMenuOptions = $.extend({}, result.options.topMenu, {
-                    leftMenu : !!result.options.leftMenu  || result.options.keepLeftMenuButton,
-                    rightMenu: !!result.options.rightMenu || result.options.keepRightMenuButton
+                    leftMenu : result.options.leftMenu  || result.options.keepLeftMenuButton  ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' + result.options.leftMenuIcon} : false,
+                    rightMenu: result.options.rightMenu || result.options.keepRightMenuButton ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' +result.options.rightMenuIcon} : false
                 });
 
             result.topMenuObject = ns.createTopMenu( topMenuOptions );
@@ -2450,6 +2455,10 @@ Create and manage the top-menu for FCOO web applications
         return $result;
     }
 
+    function createOpenMenuButton( $menu, elementOptions, menuOptions/*, topMenu */){
+        return defaultTopMenuButton($menu, menuOptions);
+    }
+
     function defaultAddToElementList( $element, elementList, priority, minWidth ){
         elementList.push({
             $element: $element,
@@ -2491,8 +2500,8 @@ Create and manage the top-menu for FCOO web applications
     var topMenuElementList = [
         {
             id      : 'leftMenu',
-            icon    : $.FONTAWESOME_PREFIX_STANDARD + ' fa-bars',
-            priority: 0
+            priority: 0,
+            create  : createOpenMenuButton
         },
 
         //***************************************************************
@@ -2641,9 +2650,9 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id       : 'rightMenu',
-            icon     : $.FONTAWESOME_PREFIX_STANDARD + ' fa-list',
             priority : 0,
-            rightSide: true
+            rightSide: true,
+            create   : createOpenMenuButton
         }
 
     ].map( function( options ){

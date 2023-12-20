@@ -29,6 +29,10 @@ Create and manage the top-menu for FCOO web applications
         return $result;
     }
 
+    function createOpenMenuButton( $menu, elementOptions, menuOptions/*, topMenu */){
+        return defaultTopMenuButton($menu, menuOptions);
+    }
+
     function defaultAddToElementList( $element, elementList, priority, minWidth ){
         elementList.push({
             $element: $element,
@@ -70,8 +74,8 @@ Create and manage the top-menu for FCOO web applications
     var topMenuElementList = [
         {
             id      : 'leftMenu',
-            icon    : $.FONTAWESOME_PREFIX_STANDARD + ' fa-bars',
-            priority: 0
+            priority: 0,
+            create  : createOpenMenuButton
         },
 
         //***************************************************************
@@ -220,9 +224,9 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id       : 'rightMenu',
-            icon     : $.FONTAWESOME_PREFIX_STANDARD + ' fa-list',
             priority : 0,
-            rightSide: true
+            rightSide: true,
+            create   : createOpenMenuButton
         }
 
     ].map( function( options ){

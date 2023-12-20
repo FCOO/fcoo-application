@@ -113,6 +113,9 @@
         window.bsIsTouch = false;
         window.bsIsTouch = (window.location.search =='?touch');
 
+        //TEMP: No access to data-files on AWS. Read from old location instead 
+        window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
+
         i18next.init();
         i18next.changeLanguage('en');
        

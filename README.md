@@ -116,7 +116,10 @@ Eq. To have application-color = red add the following to the scss-file
     @include application-colors( red );
 
 
+It can also be done via Javascript
 
+    fcoo.setApplicationColors( '#123456' );
+ 
 
 ### Namespace: `error`. File: `static/error-code-text/request.json.json`. Format: namespace-key-lang
 Translation of standard html errors and descriptions
