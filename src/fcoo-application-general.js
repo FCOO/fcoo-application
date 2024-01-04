@@ -328,6 +328,61 @@ if (ns.DEMO_VERSION)
     //Icon for external link
     $.bsExternalLinkIcon = 'fa-external-link';
 
+    /*
+    Adjust the width of all modal if it is a (small) mobil-device
+
+    From jquery-bootstrap:
+    options.flexWidth           : If true the width of the modal will adjust to the width of the browser up to 500px
+    options.extraWidth          : Only when flexWidth is set: If true the width of the modal will adjust to the width of the browser up to 800px
+    options.megaWidth           : Only when flexWidth is set: If true the width of the modal will adjust to the width of the browser up to 1200px
+    options.maxWidth            : If true the width of the modal will always be 100% minus some margin
+    options.fullWidth           : If true the width of the modal will always be 100%
+    options.fullScreen          : If true the modal will fill the hole screen without border. width = height = 100%
+    options.fullScreenWithBorder: As fullScreen but with borders
+
+    */
+
+    if (ns.modernizrDevice.isPhone){
+        const screenDim = Math.max(ns.modernizrMediaquery.screen_height, ns.modernizrMediaquery.screen_width);
+
+        $.MODEL_ADJUST_OPTIONS = function(modalOptions/*, modal*/){
+
+            //fullWidth, fullScreen or fullScreenWithBorder => No change
+            if (modalOptions.fullWidth || modalOptions.fullScreen || modalOptions.fullScreenWithBorder)
+                return modalOptions;
+
+            //MaxWidth change to fullWidth (remove small margin)
+            if (modalOptions.maxWidth){
+                modalOptions.maxWidth = false;
+                modalOptions.fullWidth = true;
+                return modalOptions;
+            }
+
+            //If flex-width: Get max width of modal and compare if with screen-dimention to see if the modal should be full-width
+            if (modalOptions.flexWidth){
+
+                let modalWidth = 500;
+                if (modalOptions.extraWidth)
+                    modalWidth = 800;
+                else
+                    if (modalOptions.megaWidth)
+                        modalWidth = 1200;
+
+                //Typical screen width are from 640 up to 930. To prevent the modal from beings to width a factor of 1.4 sets the limit
+                if (screenDim / modalWidth <= 1.4){
+                    modalOptions.flexWidth  = false;
+                    modalOptions.extraWidth = false;
+                    modalOptions.megaWidth  = false;
+                    modalOptions.maxWidth   = false;
+                    modalOptions.fullWidth  = true;
+                }
+            }
+
+            return modalOptions;
+        }
+    }
+
+
     /***********************************************************************
     ************************************************************************
     5: Load name, abbrivation, contact etc. for the owner of the application

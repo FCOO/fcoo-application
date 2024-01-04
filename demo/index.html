@@ -473,6 +473,43 @@
             });
 
 
+
+        var modals = [];
+        [{
+                header: 'Flex-width (500px)', flexWidth: true, extraWidth: false
+            }, {
+                header: 'Extra-width (800px)', flexWidth: true, extraWidth: true
+            }, {
+                header: 'Mega-width (1200px)', flexWidth: true, megaWidth: true
+            }, {
+                header: 'Max-width (100% - margin)', maxWidth: true
+            }, {
+                header: 'Full-width (100%)', fullWidth: true
+            }, {
+                header: 'Full Screen w. border (100%)', fullScreenWithBorder: true
+            }, {
+                header: 'Full Screen (100%)', fullScreen: true
+        }].forEach( (options, index) => {
+            $('<button>'+options.header+'</button>')
+                .appendTo( main.$mainContainer)
+                .on('click', function(e){
+                    var modal = modals[index] = modals[index] ||
+                        $.bsModal({
+                            header: options.header,
+                            content: 'Dette er '+options.header + '<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22',
+                            flexWidth: options.flexWidth,
+                            extraWidth: options.extraWidth,
+                            megaWidth: options.megaWidth,
+                            fullWidth: options.fullWidth,
+                            maxWidth: options.maxWidth,
+                            fullScreen: options.fullScreen,
+                            fullScreenWithBorder: options.fullScreenWithBorder
+                        })
+                    modal.show();
+                });
+        });
+
+
 /*
     <div id="touchMenuLeft">LEFT MENU</div>
     <div class="outer-container">
@@ -490,7 +527,7 @@
     </div>
     <div id="touchMenuRight">RIGHT MENU</div>
 
-*/
+//*/
 /*
             $.each(['languagechanged', 'datetimeformatchanged', 'numberformatchanged', 'latlngformatchanged', 'unitchanged', 'timezonechanged'], function(index, id){
                 $.bsModal({
@@ -560,5 +597,6 @@ main.$mainContainer.append('<br>');
     });
 
     </script>
+    
 </body>
 </html>
