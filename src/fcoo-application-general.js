@@ -345,12 +345,12 @@ if (ns.DEMO_VERSION)
     if (ns.modernizrDevice.isPhone){
         const screenDim = Math.max(ns.modernizrMediaquery.screen_height, ns.modernizrMediaquery.screen_width);
 
-        $.MODEL_NO_VERTICAL_MARGIN = true;
+        $.MODAL_NO_VERTICAL_MARGIN = true;
 
-        $.MODEL_ADJUST_OPTIONS = function(modalOptions/*, modal*/){
+        $.MODAL_ADJUST_OPTIONS = function(modalOptions/*, modal*/){
 
             if (modalOptions.extended)
-                modalOptions.extended = $.MODEL_ADJUST_OPTIONS(modalOptions.extended/*, modal*/);
+                modalOptions.extended = $.MODAL_ADJUST_OPTIONS(modalOptions.extended/*, modal*/);
 
 
             //fullWidth, fullScreen or fullScreenWithBorder => No change
