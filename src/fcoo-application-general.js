@@ -345,7 +345,13 @@ if (ns.DEMO_VERSION)
     if (ns.modernizrDevice.isPhone){
         const screenDim = Math.max(ns.modernizrMediaquery.screen_height, ns.modernizrMediaquery.screen_width);
 
+        $.MODEL_NO_VERTICAL_MARGIN = true;
+
         $.MODEL_ADJUST_OPTIONS = function(modalOptions/*, modal*/){
+
+            if (modalOptions.extended)
+                modalOptions.extended = $.MODEL_ADJUST_OPTIONS(modalOptions.extended/*, modal*/);
+
 
             //fullWidth, fullScreen or fullScreenWithBorder => No change
             if (modalOptions.fullWidth || modalOptions.fullScreen || modalOptions.fullScreenWithBorder)
@@ -370,7 +376,7 @@ if (ns.DEMO_VERSION)
 
                 //Typical screen width are from 640 up to 930. To prevent the modal from beings to width a factor of 1.4 sets the limit
                 if (screenDim / modalWidth <= 1.4){
-                    modalOptions.flexWidth  = false;
+                    //modalOptions.flexWidth  = true;
                     modalOptions.extraWidth = false;
                     modalOptions.megaWidth  = false;
                     modalOptions.maxWidth   = false;
@@ -379,7 +385,7 @@ if (ns.DEMO_VERSION)
             }
 
             return modalOptions;
-        }
+        };
     }
 
 
