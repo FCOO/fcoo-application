@@ -282,7 +282,7 @@ Sections:
     ns.applicationBuild   = ns.getApplicationOption( '{APPLICATION_BUILD}'  , null);
 
     //Application header - is set in ns.createMain(options). see src/fcoo-application-main.js
-    ns.applicationHeader = {};
+    ns.applicationHeader = {da:'', en:''};
 
     //ns.applicationBranch = '' for production, 'DEMO'/'BETA' etc for no-production versions
     ns.applicationBranch = '';
@@ -304,7 +304,10 @@ Sections:
             titleArray.push(applicationOwner);
         if (ns.applicationBranch)
             titleArray.push( ns.applicationBranch );
-        titleArray.push( i18next.sentence(ns.applicationHeader) );
+
+        var applicationHeaderSentence = i18next.sentence(ns.applicationHeader);
+        if (applicationHeaderSentence)
+            titleArray.push( applicationHeaderSentence );
         document.title = titleArray.join(' - ');
     });
 
@@ -322,7 +325,7 @@ Sections:
 
 
 //TEST Reading setup-file for application
-if (ns.DEMO_VERSION)
+if (ns.DEV_VERSION)
     ns.promiseList.prependFirst({
         fileName: 'findesikke.json',
         resolve : function(/*data*/){
