@@ -439,6 +439,11 @@ if (ns.DEV_VERSION)
     if (window.Modernizr && (typeof window.Modernizr.touchevents == 'boolean')){
         window.bsIsTouch = window.Modernizr.touchevents;
     }
+
+    //Bug fix: In Chrome dev-mode touchevents isn't always detected
+    if (ns.modernizrDevice && !window.bsIsTouch)
+        window.bsIsTouch = ns.modernizrDevice.isMobile;
+
     window.JqueryScrollContainer.update(window.bsIsTouch);
 
     //Set default fontawesome prefix to 'regular'/'light'
