@@ -3027,6 +3027,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.options = $.extend(this.options, {
                 handleWidth        : 3*16,
                 handleClassName    : 'horizontal-bar fas fa-minus',
+                handleOffsetFactor : 0.8,
                 toggleOnHandleClick: true,
                 hideHandleWhenOpen : true
             });
@@ -3179,10 +3180,9 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             //Set width (top/bottom) or height (left/right) of menu and center if not 100%
             setElementDimensionAndSize(this.$container, this.options.menuDimAndSize);
-
             if (this.$handle){
                 if (!this.options.$handleContainer)
-                    this.$handle.css(cssPositionId, -1*this.options.handleDimAndSize.size + 'px');
+                    this.$handle.css(cssPositionId, -1 * (this.options.handleOffsetFactor || 1) * this.options.handleDimAndSize.size + 'px');
 
                 //Set width (top/bottom) or height (left/right) of menu and center if not 100%
                 setElementDimensionAndSize(this.$handle, this.options.handleDimAndSize);
