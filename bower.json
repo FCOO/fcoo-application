@@ -1,77 +1,77 @@
 {
-  "name": "fcoo-application",
-  "version": "17.8.6",
-  "homepage": "https://github.com/FCOO/fcoo-application",
-  "authors": [
-    "Niels Holt"
-  ],
-  "description": "",
-  "main": [
-    "dist/fcoo-application.js",
-    "dist/fcoo-application.css"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/fcoo/fcoo-application.git"
-  },
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "moduleType": [
-    "es6"
-  ],
-  "devDependencies": {
-    "bourbon": "latest",
-    "modernizr-mixin": "latest",
-    "mathsass": "latest",
-    "modernizr-scss": "FCOO/modernizr-scss#latest",
-    "sass-color-helpers": "latest",
-    "csshake": "^1.5.2"
-  },
-  "dependencies": {
-    "jquery": "latest",
-    "fcoo-application-logo-and-color": "fcoo/fcoo-application-logo-and-color#latest",
-    "fcoo-global-events": "fcoo/fcoo-global-events#^1.0.0",
-    "fcoo-settings": "fcoo/fcoo-settings#^3.7.1",
-    "fcoo-promise-list": "fcoo/fcoo-promise-list#^1.0.0",
-    "fcoo-language": "fcoo/fcoo-language#^7.0.0",
-    "fcoo-number": "fcoo/fcoo-number#^1.3.2",
-    "fcoo-moment": "fcoo/fcoo-moment#^1.3.0",
-    "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^2.1.2",
-    "fcoo-unit": "fcoo/fcoo-unit#^1.1.1",
-    "fcoo-value-format": "fcoo/fcoo-value-format#^3.1.0",
-    "fcoo-fontawesome": "fcoo/fcoo-fontawesome#^6.0.0",
-    "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
-    "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
-    "fcoo-polyfill": "fcoo/fcoo-polyfill#^4.0.0",
-    "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^4.1.0",
-    "offline": "HubSpot/offline#~0.7.18",
-    "imagesloaded": "desandro/imagesloaded#^5.0.0",
-    "jquery-bootstrap": "fcoo/jquery-bootstrap#^3.20.0",
-    "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^2.0.0",
-    "jquery-bootstrap-mmenu": "fcoo/jquery-bootstrap-mmenu#^1.0.0",
-    "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",
-    "swiped-events": "john-doherty/swiped-events#^1.1.6"
-  },
-  "overrides": {
-    "modernizr-mouse-events": {
-      "dependencies": {
-        "fcoo-modernizr-mediaquery-device": "latest"
-      }
+    "name": "fcoo-application",
+    "version": "17.8.6",
+    "homepage": "https://github.com/FCOO/fcoo-application",
+    "authors": [
+        "Niels Holt"
+    ],
+    "description": "",
+    "main": [
+        "dist/fcoo-application.js",
+        "dist/fcoo-application.css"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/fcoo/fcoo-application.git"
     },
-    "offline": {
-      "main": "offline.js"
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "moduleType": [
+        "es6"
+    ],
+    "devDependencies": {
+        "bourbon": "latest",
+        "modernizr-mixin": "latest",
+        "mathsass": "latest",
+        "modernizr-scss": "FCOO/modernizr-scss#latest",
+        "sass-color-helpers": "latest",
+        "csshake": "^1.5.2"
     },
-    "contactjs": {
-      "main": "dist/contact.js"
+    "dependencies": {
+        "jquery": "latest",
+        "fcoo-application-logo-and-color": "fcoo/fcoo-application-logo-and-color#latest",
+        "fcoo-global-events": "fcoo/fcoo-global-events#^1.0.0",
+        "fcoo-settings": "fcoo/fcoo-settings#^3.7.1",
+        "fcoo-promise-list": "fcoo/fcoo-promise-list#^1.0.0",
+        "fcoo-language": "fcoo/fcoo-language#^7.0.0",
+        "fcoo-number": "fcoo/fcoo-number#^1.3.2",
+        "fcoo-moment": "fcoo/fcoo-moment#^1.3.0",
+        "fcoo-latlng-format": "fcoo/fcoo-latlng-format#^2.1.2",
+        "fcoo-unit": "fcoo/fcoo-unit#^1.1.1",
+        "fcoo-value-format": "fcoo/fcoo-value-format#^3.1.0",
+        "fcoo-fontawesome": "fcoo/fcoo-fontawesome#^6.0.0",
+        "url.js-extensions": "fcoo/url.js-extensions#^2.0.0",
+        "javascript-utilities": "fcoo/javascript-utilities#^1.0.0",
+        "fcoo-polyfill": "fcoo/fcoo-polyfill#^4.0.0",
+        "fcoo-modernizr-mediaquery-device": "fcoo/fcoo-modernizr-mediaquery-device#^4.1.0",
+        "offline": "HubSpot/offline#~0.7.18",
+        "imagesloaded": "desandro/imagesloaded#^5.0.0",
+        "jquery-bootstrap": "fcoo/jquery-bootstrap#^3.20.0",
+        "jquery-bootstrap-message": "fcoo/jquery-bootstrap-message#^2.0.0",
+        "jquery-bootstrap-mmenu": "fcoo/jquery-bootstrap-mmenu#^1.0.0",
+        "modernizr-mouse-events": "fcoo/modernizr-mouse-events#latest",
+        "swiped-events": "john-doherty/swiped-events#^1.1.6"
     },
-    "swiped-events": {
-      "main": "src/swiped-events.js"
+    "overrides": {
+        "modernizr-mouse-events": {
+            "dependencies": {
+                "fcoo-modernizr-mediaquery-device": "latest"
+            }
+        },
+        "offline": {
+            "main": "offline.js"
+        },
+        "contactjs": {
+            "main": "dist/contact.js"
+        },
+        "swiped-events": {
+            "main": "src/swiped-events.js"
+        }
     }
-  }
 }

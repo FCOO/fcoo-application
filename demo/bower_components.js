@@ -13097,8 +13097,8 @@ else {
 }(jQuery, this, document));
 ;
 /*!
-  * Bootstrap v5.3.2 (https://getbootstrap.com/)
-  * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap v5.3.3 (https://getbootstrap.com/)
+  * Copyright 2011-2024 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 (function (global, factory) {
@@ -13308,7 +13308,6 @@ else {
   const reflow = element => {
     element.offsetHeight; // eslint-disable-line no-unused-expressions
   };
-
   const getjQuery = () => {
     if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery')) {
       return window.jQuery;
@@ -13746,7 +13745,7 @@ else {
    * Constants
    */
 
-  const VERSION = '5.3.2';
+  const VERSION = '5.3.3';
 
   /**
    * Class definition
@@ -13827,9 +13826,9 @@ else {
       if (hrefAttribute.includes('#') && !hrefAttribute.startsWith('#')) {
         hrefAttribute = `#${hrefAttribute.split('#')[1]}`;
       }
-      selector = hrefAttribute && hrefAttribute !== '#' ? parseSelector(hrefAttribute.trim()) : null;
+      selector = hrefAttribute && hrefAttribute !== '#' ? hrefAttribute.trim() : null;
     }
-    return selector;
+    return selector ? selector.split(',').map(sel => parseSelector(sel)).join(',') : null;
   };
   const SelectorEngine = {
     find(selector, element = document.documentElement) {
@@ -17014,7 +17013,6 @@ else {
     // if false, we use the backdrop helper without adding any element to the dom
     rootElement: 'body' // give the choice to place backdrop under different elements
   };
-
   const DefaultType$8 = {
     className: 'string',
     clickCallback: '(function|null)',
@@ -17139,7 +17137,6 @@ else {
     autofocus: true,
     trapElement: null // The element to trap focus inside of
   };
-
   const DefaultType$7 = {
     autofocus: 'boolean',
     trapElement: 'element'
@@ -17866,7 +17863,10 @@ else {
     br: [],
     col: [],
     code: [],
+    dd: [],
     div: [],
+    dl: [],
+    dt: [],
     em: [],
     hr: [],
     h1: [],
@@ -23282,6 +23282,10 @@ else {
         gray    : {da: 'grå',    en: 'gray'     }
         };
 
+    var colorName2Index = ['blue', 'purple', 'red', 'orange', 'cyan', 'yellow', 'pink', 'green', 'gray'];
+    nsColor.defaultGradient = 4;
+    nsColor.defaultOrder    = ["blue", "red", "green", "yellow", "gray", "purple", "pink", "cyan", "orange"];
+
     //nsColor.colorList  = []{id, name: {da:STRING, en:STRING}} ordred by nsColor.defaultOrder
     nsColor.colorList  = [];
 
@@ -23307,11 +23311,6 @@ else {
         ['#005E93', '#573B93', '#A40F1C', '#AF4104', '#00727D', '#AA7D00', '#B10C5C', '#3B7511', '#434649'],
         ['#004471', '#452B7F', '#88001A', '#903000', '#005C69', '#8B6700', '#870044', '#295A10', '#303336']
     ];
-
-    var colorName2Index = ['blue', 'purple', 'red', 'orange', 'cyan', 'yellow', 'pink', 'green', 'gray'];
-
-    nsColor.defaultGradient = 4;
-    nsColor.defaultOrder    = ["blue", "red", "green", "yellow", "gray", "purple", "pink", "cyan", "orange"];
 
 
     //Methods to get the value of different color-names and gradiants.
@@ -23676,6 +23675,39 @@ Create and display loading page
         if ($('html').hasClass('loading') && !loadingCreated)
             ns.createLoading();
     });
+
+    /******************************************************
+    workingOn /workingOff
+    Show / hide rotating icon when 'working...'
+    Delay of 1s to prevent flicing when working in short period
+    ******************************************************/
+    var workingCreated = false,
+        workingTimeoutId;
+    ns.workingOn = function(){
+        $('html').modernizrOff('working');
+
+        if (!workingCreated){
+            $('<div/>')
+                .addClass('working show-for-working')
+                .append($(
+                    '<span class="fa-stack fa-3x">'+
+                        '<i class="far fa-circle fa-stack-1x" style="color:gray"></i>' +
+                        '<i class="far fa-spinner-third fa-spin fa-stack-1x"></i>' +
+                    '</span>')
+                )
+                .prependTo( $('body') );
+            workingCreated = true;
+        }
+
+        workingTimeoutId = window.setTimeout(() => { $('html').modernizrOn('working') }, 1000);
+
+    }
+
+
+    ns.workingOff = function(){
+        window.clearTimeout(workingTimeoutId);
+        $('html').modernizrOff('working');
+    }
 
 }(jQuery, this, document));
 
@@ -38973,10 +39005,10 @@ module.exports = Yaml;
   }
 
   /*!
-   * GSAP 3.12.4
+   * GSAP 3.12.5
    * https://gsap.com
    *
-   * @license Copyright 2008-2023, GreenSock. All rights reserved.
+   * @license Copyright 2008-2024, GreenSock. All rights reserved.
    * Subject to the terms at https://gsap.com/standard-license or for
    * Club GSAP members, the agreement issued with that membership.
    * @author: Jack Doyle, jack@greensock.com
@@ -39918,9 +39950,10 @@ module.exports = Yaml;
       _quickTween,
       _registerPluginQueue = [],
       _createPlugin = function _createPlugin(config) {
-    if (_windowExists() && config) {
-      config = !config.name && config["default"] || config;
+    if (!config) return;
+    config = !config.name && config["default"] || config;
 
+    if (_windowExists() || config.headless) {
       var name = config.name,
           isFunc = _isFunction(config),
           Plugin = name && !isFunc && config.init ? function () {
@@ -39968,7 +40001,7 @@ module.exports = Yaml;
 
       config.register && config.register(gsap, Plugin, PropTween);
     } else {
-      config && _registerPluginQueue.push(config);
+      _registerPluginQueue.push(config);
     }
   },
       _255 = 255,
@@ -40184,7 +40217,7 @@ module.exports = Yaml;
           time,
           frame;
 
-      elapsed > _lagThreshold && (_startTime += elapsed - _adjustedLag);
+      (elapsed > _lagThreshold || elapsed < 0) && (_startTime += elapsed - _adjustedLag);
       _lastUpdate += elapsed;
       time = _lastUpdate - _startTime;
       overlap = time - _nextTime;
@@ -40225,11 +40258,10 @@ module.exports = Yaml;
 
             _install(_installScope || _win.GreenSockGlobals || !_win.gsap && _win || {});
 
-            _raf = _win.requestAnimationFrame;
-
             _registerPluginQueue.forEach(_createPlugin);
           }
 
+          _raf = typeof requestAnimationFrame !== "undefined" && requestAnimationFrame;
           _id && _self.sleep();
 
           _req = _raf || function (f) {
@@ -40242,7 +40274,7 @@ module.exports = Yaml;
         }
       },
       sleep: function sleep() {
-        (_raf ? _win.cancelAnimationFrame : clearTimeout)(_id);
+        (_raf ? cancelAnimationFrame : clearTimeout)(_id);
         _tickerActive = 0;
         _req = _emptyFunc;
       },
@@ -42114,7 +42146,7 @@ module.exports = Yaml;
           if (iteration !== prevIteration) {
             timeline && this._yEase && _propagateYoyoEase(timeline, isYoyo);
 
-            if (this.vars.repeatRefresh && !isYoyo && !this._lock && this._time !== dur && this._initted) {
+            if (this.vars.repeatRefresh && !isYoyo && !this._lock && this._time !== cycleDuration && this._initted) {
               this._lock = force = 1;
               this.render(_roundPrecise(cycleDuration * iteration), true).invalidate()._lock = 0;
             }
@@ -42165,7 +42197,7 @@ module.exports = Yaml;
           pt = pt._next;
         }
 
-        timeline && timeline.render(totalTime < 0 ? totalTime : !time && isYoyo ? -_tinyNum : timeline._dur * timeline._ease(time / this._dur), suppressEvents, force) || this._startAt && (this._zTime = totalTime);
+        timeline && timeline.render(totalTime < 0 ? totalTime : timeline._dur * timeline._ease(time / this._dur), suppressEvents, force) || this._startAt && (this._zTime = totalTime);
 
         if (this._onUpdate && !suppressEvents) {
           isNegative && _rewindStartAt(this, totalTime, suppressEvents, force);
@@ -42715,6 +42747,7 @@ module.exports = Yaml;
     function MatchMedia(scope) {
       this.contexts = [];
       this.scope = scope;
+      _context && _context.data.push(this);
     }
 
     var _proto6 = MatchMedia.prototype;
@@ -43096,7 +43129,7 @@ module.exports = Yaml;
       }
     }
   }, _buildModifierPlugin("roundProps", _roundModifier), _buildModifierPlugin("modifiers"), _buildModifierPlugin("snap", snap)) || _gsap;
-  Tween.version = Timeline.version = gsap.version = "3.12.4";
+  Tween.version = Timeline.version = gsap.version = "3.12.5";
   _coreReady = 1;
   _windowExists() && _wake();
   var Power0 = _easeMap.Power0,
@@ -59940,7 +59973,7 @@ return index;
 
 ;
 //! moment-timezone.js
-//! version : 0.5.44
+//! version : 0.5.45
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -59970,7 +60003,7 @@ return index;
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.44",
+	var VERSION = "0.5.45",
 		zones = {},
 		links = {},
 		countries = {},
@@ -60100,10 +60133,10 @@ return index;
 		} else if (num >= arr[len - 1]) {
 			return -1;
 		}
-	
+
 		var mid;
 		var lo = 0;
-		var hi = len - 1;  
+		var hi = len - 1;
 		while (hi - lo > 1) {
 			mid = Math.floor((lo + hi) / 2);
 			if (arr[mid] <= num) {
@@ -60114,7 +60147,7 @@ return index;
 		}
 		return hi;
 	}
-	
+
 	Zone.prototype = {
 		_set : function (unpacked) {
 			this.name       = unpacked.name;
@@ -60665,101 +60698,99 @@ return index;
 	}
 
 	loadData({
-		"version": "2023d",
+		"version": "2024a",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
 			"Africa/Nairobi|EAT|-30|0||47e5",
 			"Africa/Algiers|CET|-10|0||26e5",
 			"Africa/Lagos|WAT|-10|0||17e6",
 			"Africa/Khartoum|CAT|-20|0||51e5",
-			"Africa/Cairo|EET EEST|-20 -30|0101010101010|29NW0 1cL0 1cN0 1fz0 1a10 1fz0 1a10 1fz0 1cN0 1cL0 1cN0 1cL0|15e6",
-			"Africa/Casablanca|+00 +01|0 -10|010101010101010101010101|1Vq20 jA0 e00 28M0 e00 2600 gM0 2600 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0|32e5",
-			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|11e6",
+			"Africa/Cairo|EET EEST|-20 -30|010101010101010|29NW0 1cL0 1cN0 1fz0 1a10 1fz0 1a10 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0|15e6",
+			"Africa/Casablanca|+01 +00|-10 0|010101010101010101010101|208q0 e00 2600 gM0 2600 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0 2600 e00 2600|32e5",
+			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|11e6",
 			"Africa/Johannesburg|SAST|-20|0||84e5",
 			"Africa/Juba|EAT CAT|-30 -20|01|24nx0|",
-			"Africa/Sao_Tome|GMT WAT|0 -10|010|1UQN0 2q00|",
+			"Africa/Sao_Tome|WAT GMT|-10 0|01|1XiN0|",
 			"Africa/Tripoli|EET|-20|0||11e5",
-			"America/Adak|HST HDT|a0 90|01010101010101010101010|1VkA0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|326",
-			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1Vkz0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|30e4",
+			"America/Adak|HST HDT|a0 90|01010101010101010101010|1XKc0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|326",
+			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1XKb0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|30e4",
 			"America/Santo_Domingo|AST|40|0||29e5",
 			"America/Fortaleza|-03|30|0||34e5",
-			"America/Asuncion|-03 -04|30 40|01010101010101010101010|1Vq30 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1fB0 19X0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0|28e5",
+			"America/Asuncion|-03 -04|30 40|01010101010101010101010|1XPD0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1fB0 19X0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1ip0|28e5",
 			"America/Panama|EST|50|0||15e5",
-			"America/Mexico_City|CST CDT|60 50|01010101010|1VsU0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|20e6",
+			"America/Mexico_City|CST CDT|60 50|010101010|1XVk0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|20e6",
 			"America/Managua|CST|60|0||22e5",
 			"America/Caracas|-04|40|0||29e5",
 			"America/Lima|-05|50|0||11e6",
-			"America/Denver|MST MDT|70 60|01010101010101010101010|1Vkx0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|26e5",
-			"America/Campo_Grande|-03 -04|30 40|0101|1Vc30 1HB0 FX0|77e4",
-			"America/Chicago|CST CDT|60 50|01010101010101010101010|1Vkw0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|92e5",
-			"America/Chihuahua|MST MDT CST|70 60 60|01010101012|1VsV0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|81e4",
-			"America/Ciudad_Juarez|MST MDT CST|70 60 60|010101010120101010101010|1Vkx0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 cm0 EP0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|",
+			"America/Denver|MST MDT|70 60|01010101010101010101010|1XK90 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|26e5",
+			"America/Campo_Grande|-03 -04|30 40|01|1XBD0|77e4",
+			"America/Chicago|CST CDT|60 50|01010101010101010101010|1XK80 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|92e5",
+			"America/Chihuahua|MST MDT CST|70 60 60|010101012|1XVl0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|81e4",
+			"America/Ciudad_Juarez|MST MDT CST|70 60 60|010101012010101010101010|1XK90 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 cm0 EP0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|",
 			"America/Phoenix|MST|70|0||42e5",
-			"America/Whitehorse|PST PDT MST|80 70 70|0101012|1Vky0 1zb0 Op0 1zb0 Op0 1z90|23e3",
-			"America/New_York|EST EDT|50 40|01010101010101010101010|1Vkv0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|21e6",
-			"America/Los_Angeles|PST PDT|80 70|01010101010101010101010|1Vky0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|15e6",
-			"America/Halifax|AST ADT|40 30|01010101010101010101010|1Vku0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|39e4",
-			"America/Godthab|-03 -02 -01|30 20 10|0101010101012121212121|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 2so0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|17e3",
-			"America/Grand_Turk|AST EDT EST|40 40 50|01212121212121212121212|1Vkv0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|37e2",
-			"America/Havana|CST CDT|50 40|01010101010101010101010|1Vkt0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0|21e5",
-			"America/Mazatlan|MST MDT|70 60|01010101010|1VsV0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|44e4",
-			"America/Metlakatla|AKST AKDT PST|90 80 80|012010101010101010101010|1Vkz0 1zb0 uM0 jB0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|14e2",
-			"America/Miquelon|-03 -02|30 20|01010101010101010101010|1Vkt0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|61e2",
+			"America/Whitehorse|PST PDT MST|80 70 70|01012|1XKa0 1zb0 Op0 1z90|23e3",
+			"America/New_York|EST EDT|50 40|01010101010101010101010|1XK70 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|21e6",
+			"America/Los_Angeles|PST PDT|80 70|01010101010101010101010|1XKa0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|15e6",
+			"America/Halifax|AST ADT|40 30|01010101010101010101010|1XK60 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|39e4",
+			"America/Godthab|-03 -02 -01|30 20 10|0101010101212121212121|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 2so0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|17e3",
+			"America/Havana|CST CDT|50 40|01010101010101010101010|1XK50 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0|21e5",
+			"America/Mazatlan|MST MDT|70 60|010101010|1XVl0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|44e4",
+			"America/Metlakatla|PST AKST AKDT|80 90 80|012121212121212121212121|1Xqy0 jB0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|14e2",
+			"America/Miquelon|-03 -02|30 20|01010101010101010101010|1XK50 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|61e2",
 			"America/Noronha|-02|20|0||30e2",
-			"America/Ojinaga|MST MDT CST CDT|70 60 60 50|01010101012323232323232|1Vkx0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 Rc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|23e3",
-			"America/Santiago|-03 -04|30 40|01010101010101010101010|1VJD0 Ap0 1zb0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0|62e5",
-			"America/Sao_Paulo|-02 -03|20 30|0101|1Vc20 1HB0 FX0|20e6",
-			"America/Scoresbysund|-01 +00 -02|10 0 20|0101010101010202020202|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 2pA0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|452",
-			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1Vktu 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0|11e4",
-			"Antarctica/Casey|+11 +08|-b0 -80|010101010101|1Vkh0 1o30 14k0 1kr0 12l0 1o01 14kX 1lf1 14kX 1lf1 13bX|10",
+			"America/Ojinaga|MST MDT CST CDT|70 60 60 50|01010101232323232323232|1XK90 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 Rc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|23e3",
+			"America/Santiago|-03 -04|30 40|01010101010101010101010|1XVf0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0|62e5",
+			"America/Sao_Paulo|-02 -03|20 30|01|1XBC0|20e6",
+			"America/Scoresbysund|-01 +00 -02|10 0 20|0101010101020202020202|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 2pA0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|452",
+			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1XK5u 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|11e4",
+			"Antarctica/Casey|+11 +08|-b0 -80|0101010101|1XME0 1kr0 12l0 1o01 14kX 1lf1 14kX 1lf1 13bX|10",
 			"Asia/Bangkok|+07|-70|0||15e6",
 			"Asia/Vladivostok|+10|-a0|0||60e4",
-			"Australia/Sydney|AEDT AEST|-b0 -a0|01010101010101010101010|1VsE0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0|40e5",
+			"Australia/Sydney|AEDT AEST|-b0 -a0|01010101010101010101010|1XV40 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0|40e5",
 			"Asia/Tashkent|+05|-50|0||23e5",
-			"Pacific/Auckland|NZDT NZST|-d0 -c0|01010101010101010101010|1VsC0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00|14e5",
+			"Pacific/Auckland|NZDT NZST|-d0 -c0|01010101010101010101010|1XV20 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0|14e5",
 			"Europe/Istanbul|+03|-30|0||13e6",
-			"Antarctica/Troll|+00 +02|0 -20|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|40",
+			"Antarctica/Troll|+00 +02|0 -20|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|40",
 			"Antarctica/Vostok|+07 +05|-70 -50|01|2bnv0|25",
-			"Asia/Dhaka|+06|-60|0||16e6",
-			"Asia/Amman|EET EEST +03|-20 -30 -30|01010101012|1VrW0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 LA0 1C00|25e5",
+			"Asia/Almaty|+06 +05|-60 -50|01|2bR60|15e5",
+			"Asia/Amman|EET EEST +03|-20 -30 -30|010101012|1XRy0 1o00 11A0 1qM0 WM0 1qM0 LA0 1C00|25e5",
 			"Asia/Kamchatka|+12|-c0|0||18e4",
 			"Asia/Dubai|+04|-40|0||39e5",
-			"Asia/Beirut|EET EEST|-20 -30|01010101010101010101010|1VpW0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0|22e5",
+			"Asia/Beirut|EET EEST|-20 -30|01010101010101010101010|1XSm0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|22e5",
+			"Asia/Dhaka|+06|-60|0||16e6",
 			"Asia/Kuala_Lumpur|+08|-80|0||71e5",
 			"Asia/Kolkata|IST|-5u|0||15e6",
 			"Asia/Chita|+09|-90|0||33e4",
 			"Asia/Shanghai|CST|-80|0||23e6",
 			"Asia/Colombo|+0530|-5u|0||22e5",
-			"Asia/Damascus|EET EEST +03|-20 -30 -30|01010101012|1VrW0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|26e5",
-			"Europe/Athens|EET EEST|-20 -30|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|35e5",
-			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1Vpz0 1qL0 11c0 1on0 11B0 1o00 11A0 1qo0 XA0 1qp0 1cN0 1cL0 17d0 1in0 14p0 1lb0 11B0 1nX0 11B0 1qL0 WN0 1qL0|18e5",
+			"Asia/Damascus|EET EEST +03|-20 -30 -30|010101012|1XRy0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|26e5",
+			"Europe/Athens|EET EEST|-20 -30|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|35e5",
+			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1XRy0 1on0 11B0 1o00 11A0 1qo0 XA0 1qp0 1cN0 1cL0 1a10 1fz0 17d0 1in0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|18e5",
 			"Asia/Hong_Kong|HKT|-80|0||73e5",
 			"Asia/Jakarta|WIB|-70|0||31e6",
 			"Asia/Jayapura|WIT|-90|0||26e4",
-			"Asia/Jerusalem|IST IDT|-20 -30|01010101010101010101010|1Vpc0 1rz0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0|81e4",
+			"Asia/Jerusalem|IST IDT|-20 -30|01010101010101010101010|1XRA0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0|81e4",
 			"Asia/Kabul|+0430|-4u|0||46e5",
 			"Asia/Karachi|PKT|-50|0||24e6",
 			"Asia/Kathmandu|+0545|-5J|0||12e5",
 			"Asia/Sakhalin|+11|-b0|0||58e4",
 			"Asia/Makassar|WITA|-80|0||15e5",
 			"Asia/Manila|PST|-80|0||24e6",
-			"Asia/Pyongyang|KST KST|-8u -90|01|1VGf0|29e5",
-			"Asia/Qyzylorda|+06 +05|-60 -50|01|1Xei0|73e4",
-			"Asia/Rangoon|+0630|-6u|0||48e5",
 			"Asia/Seoul|KST|-90|0||23e6",
-			"Asia/Tehran|+0330 +0430|-3u -4u|01010101010|1VoIu 1dz0 1cp0 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0|14e6",
+			"Asia/Rangoon|+0630|-6u|0||48e5",
+			"Asia/Tehran|+0330 +0430|-3u -4u|010101010|1XOIu 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0|14e6",
 			"Asia/Tokyo|JST|-90|0||38e6",
-			"Atlantic/Azores|-01 +00|10 0|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|25e4",
-			"Europe/Lisbon|WET WEST|0 -10|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|27e5",
+			"Atlantic/Azores|-01 +00|10 0|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|25e4",
+			"Europe/Lisbon|WET WEST|0 -10|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|27e5",
 			"Atlantic/Cape_Verde|-01|10|0||50e4",
-			"Australia/Adelaide|ACDT ACST|-au -9u|01010101010101010101010|1VsEu 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0|11e5",
+			"Australia/Adelaide|ACDT ACST|-au -9u|01010101010101010101010|1XV4u 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0|11e5",
 			"Australia/Brisbane|AEST|-a0|0||20e5",
 			"Australia/Darwin|ACST|-9u|0||12e4",
 			"Australia/Eucla|+0845|-8J|0||368",
-			"Australia/Lord_Howe|+11 +1030|-b0 -au|01010101010101010101010|1VsD0 1fAu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1fzu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu|347",
+			"Australia/Lord_Howe|+11 +1030|-b0 -au|01010101010101010101010|1XV30 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1fzu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1fAu|347",
 			"Australia/Perth|AWST|-80|0||18e5",
-			"Pacific/Easter|-05 -06|50 60|01010101010101010101010|1VJD0 Ap0 1zb0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0|30e2",
-			"Europe/Dublin|GMT IST|0 -10|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|12e5",
+			"Pacific/Easter|-05 -06|50 60|01010101010101010101010|1XVf0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0|30e2",
+			"Europe/Dublin|GMT IST|0 -10|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|12e5",
 			"Etc/GMT-1|+01|-10|0||",
 			"Pacific/Tongatapu|+13|-d0|0||75e3",
 			"Pacific/Kiritimati|+14|-e0|0||51e2",
@@ -60772,19 +60803,19 @@ return index;
 			"Pacific/Pitcairn|-08|80|0||56",
 			"Pacific/Gambier|-09|90|0||125",
 			"Etc/UTC|UTC|0|0||",
-			"Europe/London|GMT BST|0 -10|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|10e6",
-			"Europe/Chisinau|EET EEST|-20 -30|01010101010101010101010|1Vq00 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|67e4",
+			"Europe/London|GMT BST|0 -10|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|10e6",
+			"Europe/Chisinau|EET EEST|-20 -30|01010101010101010101010|1XSo0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|67e4",
 			"Europe/Moscow|MSK|-30|0||16e6",
-			"Europe/Volgograd|MSK +04|-30 -40|010|1WQL0 5gn0|10e5",
+			"Europe/Volgograd|+04 MSK|-40 -30|01|249a0|10e5",
 			"Pacific/Honolulu|HST|a0|0||37e4",
-			"MET|MET MEST|-10 -20|01010101010101010101010|1Vq10 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0|",
-			"Pacific/Chatham|+1345 +1245|-dJ -cJ|01010101010101010101010|1VsC0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00|600",
-			"Pacific/Apia|+14 +13|-e0 -d0|01010101|1VsC0 1cM0 1fA0 1a00 1fA0 1a00 1fA0|37e3",
-			"Pacific/Fiji|+13 +12|-d0 -c0|01010101|1UVO0 1VA0 s00 20o0 pc0 2hc0 bc0|88e4",
+			"MET|MET MEST|-10 -20|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|",
+			"Pacific/Chatham|+1345 +1245|-dJ -cJ|01010101010101010101010|1XV20 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0|600",
+			"Pacific/Apia|+14 +13|-e0 -d0|010101|1XV20 1a00 1fA0 1a00 1fA0|37e3",
+			"Pacific/Fiji|+13 +12|-d0 -c0|010101|1Xnq0 20o0 pc0 2hc0 bc0|88e4",
 			"Pacific/Guam|ChST|-a0|0||17e4",
 			"Pacific/Marquesas|-0930|9u|0||86e2",
 			"Pacific/Pago_Pago|SST|b0|0||37e2",
-			"Pacific/Norfolk|+11 +12|-b0 -c0|01010101010101010101|219P0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0|25e4"
+			"Pacific/Norfolk|+11 +12|-b0 -c0|0101010101010101010101|219P0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0|25e4"
 		],
 		"links": [
 			"Africa/Abidjan|Africa/Accra",
@@ -60961,6 +60992,7 @@ return index;
 			"America/Mexico_City|Mexico/General",
 			"America/New_York|America/Detroit",
 			"America/New_York|America/Fort_Wayne",
+			"America/New_York|America/Grand_Turk",
 			"America/New_York|America/Indiana/Indianapolis",
 			"America/New_York|America/Indiana/Marengo",
 			"America/New_York|America/Indiana/Petersburg",
@@ -61028,6 +61060,7 @@ return index;
 			"America/St_Johns|Canada/Newfoundland",
 			"America/Whitehorse|America/Dawson",
 			"America/Whitehorse|Canada/Yukon",
+			"Asia/Almaty|Asia/Qostanay",
 			"Asia/Bangkok|Antarctica/Davis",
 			"Asia/Bangkok|Asia/Barnaul",
 			"Asia/Bangkok|Asia/Ho_Chi_Minh",
@@ -61046,12 +61079,10 @@ return index;
 			"Asia/Chita|Asia/Yakutsk",
 			"Asia/Chita|Etc/GMT-9",
 			"Asia/Chita|Pacific/Palau",
-			"Asia/Dhaka|Asia/Almaty",
 			"Asia/Dhaka|Asia/Bishkek",
 			"Asia/Dhaka|Asia/Dacca",
 			"Asia/Dhaka|Asia/Kashgar",
 			"Asia/Dhaka|Asia/Omsk",
-			"Asia/Dhaka|Asia/Qostanay",
 			"Asia/Dhaka|Asia/Thimbu",
 			"Asia/Dhaka|Asia/Thimphu",
 			"Asia/Dhaka|Asia/Urumqi",
@@ -61108,6 +61139,7 @@ return index;
 			"Asia/Sakhalin|Pacific/Noumea",
 			"Asia/Sakhalin|Pacific/Pohnpei",
 			"Asia/Sakhalin|Pacific/Ponape",
+			"Asia/Seoul|Asia/Pyongyang",
 			"Asia/Seoul|ROK",
 			"Asia/Shanghai|Asia/Chongqing",
 			"Asia/Shanghai|Asia/Chungking",
@@ -61125,6 +61157,7 @@ return index;
 			"Asia/Tashkent|Asia/Atyrau",
 			"Asia/Tashkent|Asia/Dushanbe",
 			"Asia/Tashkent|Asia/Oral",
+			"Asia/Tashkent|Asia/Qyzylorda",
 			"Asia/Tashkent|Asia/Samarkand",
 			"Asia/Tashkent|Asia/Yekaterinburg",
 			"Asia/Tashkent|Etc/GMT-5",
@@ -65781,10 +65814,10 @@ module.exports = g;
 //# sourceMappingURL=noty.js.map
 ;
 /**
- *  PDFObject v2.2.12
+ *  PDFObject v2.3.0
  *  https://github.com/pipwerks/PDFObject
  *  @license
- *  Copyright (c) 2008-2023 Philip Hutchison
+ *  Copyright (c) 2008-2024 Philip Hutchison
  *  MIT-style license: http://pipwerks.mit-license.org/
  *  UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
  */
@@ -65810,112 +65843,142 @@ module.exports = g;
     //Will choke on undefined navigator and window vars when run on server
     //Return boolean false and exit function when running server-side
 
-    if( typeof window === "undefined" || 
-        window.navigator === undefined || 
-        window.navigator.userAgent === undefined || 
-        window.navigator.mimeTypes === undefined){ 
-            return false;
-    }
+    if(typeof window === "undefined" || window.navigator === undefined || window.navigator.userAgent === undefined){ return false; }
 
-    let pdfobjectversion = "2.2.12";
-    let nav = window.navigator;
-    let ua = window.navigator.userAgent;
+    let pdfobjectversion = "2.3.0";
+    let win = window;
+    let nav = win.navigator;
+    let ua = nav.userAgent;
+    let suppressConsole = false;
 
-    //Time to jump through hoops -- browser vendors do not make it easy to detect PDF support.
+    //Fallback validation when navigator.pdfViewerEnabled is not supported
+    let isModernBrowser = function (){
+
+        /*
+           userAgent sniffing is not the ideal path, but most browsers revoked the ability to check navigator.mimeTypes 
+           for security purposes. As of 2023, browsers have begun implementing navigator.pdfViewerEnabled, but older versions
+           do not have navigator.pdfViewerEnabled or the ability to check navigator.mimeTypes. We're left with basic browser 
+           sniffing and assumptions of PDF support based on browser vendor.
+        */
+
+        //Chromium has provided native PDF support since 2011.
+        //Most modern browsers use Chromium under the hood: Google Chrome, Microsoft Edge, Opera, Brave, Vivaldi, Arc, and more.
+        //Chromium uses the PDFium rendering engine, which is based on Foxit's PDF rendering engine.
+        //Note that MS Edge opts to use a different PDF rendering engine. As of 2024, Edge uses a version of Adobe's Reader
+        let isChromium = (win.chrome !== undefined);
+
+        //Safari on macOS has provided native PDF support since 2009. 
+        //This code snippet also detects the DuckDuckGo browser, which uses Safari/Webkit under the hood.
+        let isSafari = (win.safari !== undefined || (nav.vendor !== undefined && /Apple/.test(nav.vendor) && /Safari/.test(ua)));
+
+        //Firefox has provided PDF support via PDFJS since 2013.
+        let isFirefox = (win.Mozilla !== undefined || /irefox/.test(ua));
+
+        return isChromium || isSafari || isFirefox;  
+
+    };
 
     /*
-        IE11 still uses ActiveX for Adobe Reader, but IE 11 doesn't expose window.ActiveXObject the same way 
-        previous versions of IE did. window.ActiveXObject will evaluate to false in IE 11, but "ActiveXObject" 
-        in window evaluates to true.
-
-        MS Edge does not support ActiveX so this test will evaluate false
+       Special handling for Internet Explorer 11.
+       Check for ActiveX support, then whether "AcroPDF.PDF" or "PDF.PdfCtrl" are valid.
+       IE11 uses ActiveX for Adobe Reader and other PDF plugins, but window.ActiveXObject will evaluate to false. 
+       ("ActiveXObject" in window) evaluates to true.
+       MS Edge does not support ActiveX so this test will evaluate false for MS Edge.
     */
-    let isIE = ("ActiveXObject" in window);
-
-    /*
-        There is a coincidental correlation between implementation of window.promises and native PDF support in desktop browsers
-        We use this to assume if the browser supports promises it supports embedded PDFs
-        Is this fragile? Sort of. But browser vendors removed mimetype detection, so we're left to improvise
-    */
-    let isModernBrowser = (window.Promise !== undefined);
-
-    //Older browsers still expose the mimeType
-    let supportsPdfMimeType = (nav.mimeTypes["application/pdf"] !== undefined);
-
-    //Safari on iPadOS doesn't report as 'mobile' when requesting desktop site, yet still fails to embed PDFs
-    let isSafariIOSDesktopMode = (  nav.platform !== undefined && 
-                                    nav.platform === "MacIntel" && 
-                                    nav.maxTouchPoints !== undefined && 
-                                    nav.maxTouchPoints > 1 );
-
-    //Quick test for mobile devices.
-    let isMobileDevice = (isSafariIOSDesktopMode || /Mobi|Tablet|Android|iPad|iPhone/.test(ua));
-
-    //Safari desktop requires special handling 
-    let isSafariDesktop = ( !isMobileDevice && 
-                            nav.vendor !== undefined && 
-                            /Apple/.test(nav.vendor) && 
-                            /Safari/.test(ua) );
-    
-    //Firefox started shipping PDF.js in Firefox 19. If this is Firefox 19 or greater, assume PDF.js is available
-    let isFirefoxWithPDFJS = (!isMobileDevice && /irefox/.test(ua) && ua.split("rv:").length > 1) ? (parseInt(ua.split("rv:")[1].split(".")[0], 10) > 18) : false;
-
-
-    /* ----------------------------------------------------
-       Supporting functions
-       ---------------------------------------------------- */
-
-    let createAXO = function (type){
-        var ax;
+    let validateAX = function (type){
+        var ax = null;
         try {
             ax = new ActiveXObject(type);
         } catch (e) {
-            ax = null; //ensure ax remains null
+            //ensure ax remains null when ActiveXObject attempt fails
+            ax = null;
         }
-        return ax;
+        return !!ax; //convert resulting object to boolean
     };
 
-    //If either ActiveX support for "AcroPDF.PDF" or "PDF.PdfCtrl" are found, return true
-    //Constructed as a method (not a prop) to avoid unneccesarry overhead -- will only be evaluated if needed
-    let supportsPdfActiveX = function (){ return !!(createAXO("AcroPDF.PDF") || createAXO("PDF.PdfCtrl")); };
+    let hasActiveXPDFPlugin = function (){ return ("ActiveXObject" in win) && (validateAX("AcroPDF.PDF") || validateAX("PDF.PdfCtrl")) };
+
+    let checkSupport = function (){
+
+        //Safari on iPadOS doesn't report as 'mobile' when requesting desktop site, yet still fails to embed PDFs
+        let isSafariIOSDesktopMode = (nav.platform !== undefined && nav.platform === "MacIntel" && nav.maxTouchPoints !== undefined && nav.maxTouchPoints > 1);
+
+        let isMobileDevice = (isSafariIOSDesktopMode || /Mobi|Tablet|Android|iPad|iPhone/.test(ua));
+
+        //As of June 2023, no mobile browsers properly support inline PDFs. If mobile, just say no.
+        if(isMobileDevice){ return false; }
+        
+        //Modern browsers began supporting navigator.pdfViewerEnabled in late 2022 and early 2023.
+        let supportsPDFVE = (typeof nav.pdfViewerEnabled === "boolean");
+
+        //If browser supports nav.pdfViewerEnabled and is explicitly saying PDFs are NOT supported (e.g. PDFJS disabled by user in Firefox), respect it.
+        if(supportsPDFVE && !nav.pdfViewerEnabled){ return false; }
+
+        return (supportsPDFVE && nav.pdfViewerEnabled) || isModernBrowser() || hasActiveXPDFPlugin();
+
+    };
 
     //Determines whether PDF support is available
-    let supportsPDFs = (
-        //As of Sept 2020 no mobile browsers properly support PDF embeds
-        !isMobileDevice && (
-            //We're moving into the age of MIME-less browsers. They mostly all support PDF rendering without plugins.
-            isModernBrowser ||
-            //Modern versions of Firefox come bundled with PDFJS
-            isFirefoxWithPDFJS ||
-            //Browsers that still support the original MIME type check
-            supportsPdfMimeType ||
-            //Pity the poor souls still using IE
-            (isIE && supportsPdfActiveX())
-        )
-    );
+    let supportsPDFs = checkSupport();
 
     //Create a fragment identifier for using PDF Open parameters when embedding PDF
     let buildURLFragmentString = function(pdfParams){
 
         let string = "";
         let prop;
+        let paramArray = [];
+        let fdf = "";
+        
+        //The comment, viewrect, and highlight parameters require page to be set first. 
 
+        //Check to ensure page is used if comment, viewrect, or highlight are specified
+        if(pdfParams.comment || pdfParams.viewrect || pdfParams.highlight){
+
+            if(!pdfParams.page){
+                
+                //If page is not set, use the first page
+                pdfParams.page = 1;
+                
+                //Inform user that page needs to be set properly
+                embedError("The comment, viewrect, and highlight parameters require a page parameter, but none was specified. Defaulting to page 1.");
+            
+            }
+
+        }
+
+        //Let's go ahead and ensure page is always the first parameter.
+        if(pdfParams.page){
+            paramArray.push("page=" + encodeURIComponent(pdfParams.page));
+            delete pdfParams.page;
+        }
+
+        //FDF needs to be the last parameter in the string
+        if(pdfParams.fdf){
+            fdf = pdfParams.fdf;
+            delete pdfParams.fdf;
+        }
+        
+        //Add all other parameters, as needed
         if(pdfParams){
 
             for (prop in pdfParams) {
                 if (pdfParams.hasOwnProperty(prop)) {
-                    string += encodeURIComponent(prop) + "=" + encodeURIComponent(pdfParams[prop]) + "&";
+                    paramArray.push(encodeURIComponent(prop) + "=" + encodeURIComponent(pdfParams[prop]));
                 }
             }
 
-            //The string will be empty if no PDF Params found
+            //Add fdf as the last parameter, if needed
+            if(fdf){
+                paramArray.push("fdf=" + encodeURIComponent(fdf));
+            }
+
+            //Join all parameters in the array into a string
+            string = paramArray.join("&");
+
+            //The string will be empty if no PDF Parameters were provided
+            //Only prepend the hash if the string is not empty
             if(string){
-
                 string = "#" + string;
-
-                //Remove last ampersand
-                string = string.slice(0, string.length - 1);
-
             }
 
         }
@@ -65924,9 +65987,9 @@ module.exports = g;
 
     };
 
-    let embedError = function (msg, suppressConsole){
+    let embedError = function (msg){
         if(!suppressConsole){
-            console.log("[PDFObject] " + msg);
+            console.log("[PDFObject]", msg);
         }
         return false;
     };
@@ -65950,7 +66013,7 @@ module.exports = g;
             //Is CSS selector
             targetNode = document.querySelector(targetSelector);
 
-        } else if (window.jQuery !== undefined && targetSelector instanceof jQuery && targetSelector.length) {
+        } else if (win.jQuery !== undefined && targetSelector instanceof jQuery && targetSelector.length) {
 
             //Is jQuery element. Extract HTML node
             targetNode = targetSelector.get(0);
@@ -65965,6 +66028,36 @@ module.exports = g;
         return targetNode;
 
     };
+
+    let convertBase64ToDownloadableLink = function (b64, filename, targetNode, fallbackHTML) {
+
+        //IE-11 safe version. More verbose than modern fetch()
+        if (window.Blob && window.URL && window.URL.createObjectURL) {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', b64, true);
+            xhr.responseType = 'blob';
+            xhr.onload = function() {
+
+                if (xhr.status === 200) {
+ 
+                    var blob = xhr.response;
+                    var link = document.createElement('a');
+                    link.innerText = "Download PDF";
+                    link.href = URL.createObjectURL(blob);
+                    link.setAttribute('download', filename);
+                    targetNode.innerHTML = fallbackHTML.replace(/\[pdflink\]/g, link.outerHTML);
+
+                }
+
+            };
+
+            xhr.send();
+            
+        }
+
+    };
+
 
     let generatePDFObjectMarkup = function (embedType, targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute, PDFJS_URL){
 
@@ -65981,26 +66074,18 @@ module.exports = g;
             source += pdfOpenFragment;
         }
 
-        let el_type = (embedType === "pdfjs" || embedType === "iframe") ? "iframe" : "embed";
-        let el = document.createElement(el_type);
-
+        let el = document.createElement("iframe");
         el.className = "pdfobject";
         el.type = "application/pdf";
         el.title = title;
         el.src = source;
-
-        if(id){
-            el.id = id;
-        }
-
-        if(el_type === "iframe"){
-            el.allow = "fullscreen";
-            el.frameborder = "0";
-        }
+        el.allow = "fullscreen";
+        el.frameborder = "0";
+        if(id){ el.id = id; }
 
         if(!omitInlineStyles){
 
-            let style = (el_type === "embed") ? "overflow: auto;" : "border: none;";
+            let style = "border: none;";
 
             if(targetNode !== document.body){
                 //assign width and height to target node
@@ -66014,7 +66099,7 @@ module.exports = g;
 
         }
 
-        //Allow developer to insert custom attribute on embed/iframe element, but ensure it does not conflict with attributes used by PDFObject
+        //Allow developer to insert custom attribute on iframe element, but ensure it does not conflict with attributes used by PDFObject
         let reservedTokens = ["className", "type", "title", "src", "style", "id", "allow", "frameborder"];
         if(customAttribute && customAttribute.key && reservedTokens.indexOf(customAttribute.key) === -1){
             el.setAttribute(customAttribute.key, (typeof customAttribute.value !== "undefined") ? customAttribute.value : "");
@@ -66023,7 +66108,7 @@ module.exports = g;
         targetNode.classList.add("pdfobject-container");
         targetNode.appendChild(el);
 
-        return targetNode.getElementsByTagName(el_type)[0];
+        return targetNode.getElementsByTagName("iframe")[0];
 
     };
 
@@ -66036,6 +66121,7 @@ module.exports = g;
         let opt = options || {};
 
         //Get passed options, or set reasonable defaults
+        suppressConsole = (typeof opt.suppressConsole === "boolean") ? opt.suppressConsole : false;
         let id = (typeof opt.id === "string") ? opt.id : "";
         let page = opt.page || false;
         let pdfOpenParams = opt.pdfOpenParams || {};
@@ -66043,24 +66129,19 @@ module.exports = g;
         let width = opt.width || "100%";
         let height = opt.height || "100%";
         let title = opt.title || "Embedded PDF";
-        let assumptionMode = (typeof opt.assumptionMode === "boolean") ? opt.assumptionMode : true;
         let forcePDFJS = (typeof opt.forcePDFJS === "boolean") ? opt.forcePDFJS : false;
-        let supportRedirect = (typeof opt.supportRedirect === "boolean") ? opt.supportRedirect : false;
         let omitInlineStyles = (typeof opt.omitInlineStyles === "boolean") ? opt.omitInlineStyles : false;
-        let suppressConsole = (typeof opt.suppressConsole === "boolean") ? opt.suppressConsole : false;
-        let forceIframe = (typeof opt.forceIframe === "boolean") ? opt.forceIframe : false;
         let PDFJS_URL = opt.PDFJS_URL || false;
         let targetNode = getTargetElement(selector);
-        let fallbackHTML = "";
         let pdfOpenFragment = "";
         let customAttribute = opt.customAttribute || {};
-        let fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>";
+        let fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: [pdflink]</p>";
 
         //Ensure URL is available. If not, exit now.
-        if(typeof url !== "string"){ return embedError("URL is not valid", suppressConsole); }
+        if(typeof url !== "string"){ return embedError("URL is not valid"); }
 
         //If target element is specified but is not valid, exit without doing anything
-        if(!targetNode){ return embedError("Target element cannot be determined", suppressConsole); }
+        if(!targetNode){ return embedError("Target element cannot be determined"); }
 
         //page option overrides pdfOpenParams, if found
         if(page){ pdfOpenParams.page = page; }
@@ -66078,19 +66159,9 @@ module.exports = g;
  
         // --== Embed attempt #2 ==--
 
-        //Embed PDF if traditional support is provided, or if this developer is willing to roll with assumption
-        //that modern desktop (not mobile) browsers natively support PDFs 
-        if(supportsPDFs || (assumptionMode && !isMobileDevice)){
-            
-            //Should we use <embed> or <iframe>? In most cases <embed>. 
-            //Allow developer to force <iframe>, if desired
-            //There is an edge case where Safari does not respect 302 redirect requests for PDF files when using <embed> element.
-            //Redirect appears to work fine when using <iframe> instead of <embed> (Addresses issue #210)
-            //Forcing Safari desktop to use iframe due to freezing bug in macOS 11 (Big Sur)
-            let embedtype = (forceIframe || supportRedirect || isSafariDesktop) ? "iframe" : "embed";
-            
-            return generatePDFObjectMarkup(embedtype, targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute);
-
+        //Embed PDF if support is detected, or if this is a relatively modern browser 
+        if(supportsPDFs){
+            return generatePDFObjectMarkup("iframe", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute);
         }
         
         // --== Embed attempt #3 ==--
@@ -66105,12 +66176,33 @@ module.exports = g;
         //Display the fallback link if available
         if(fallbackLink){
 
-            fallbackHTML = (typeof fallbackLink === "string") ? fallbackLink : fallbackHTML_default;
-            targetNode.innerHTML = fallbackHTML.replace(/\[url\]/g, url);
+            //If a custom fallback has been provided, handle it now
+            if(typeof fallbackLink === "string"){
+
+                //Ensure [url] is set in custom fallback
+                targetNode.innerHTML = fallbackLink.replace(/\[url\]/g, url);
+
+            } else {
+
+                //If the PDF is a base64 string, convert it to a downloadable link
+                if(url.indexOf("data:application/pdf;base64") !== -1){
+
+                    //Asynchronously append the link to the targetNode
+                    convertBase64ToDownloadableLink(url, "file.pdf", targetNode, fallbackHTML_default);
+                
+                } else {
+
+                    //Use default fallback link
+                    let link = "<a href='" + url + "'>Download PDF</a>";
+                    targetNode.innerHTML = fallbackHTML_default.replace(/\[pdflink\]/g, link);
+
+                }
+
+            }
 
         }
 
-        return embedError("This browser does not support embedded PDFs", suppressConsole);
+        return embedError("This browser does not support embedded PDFs");
 
     };
 
@@ -66121,7 +66213,6 @@ module.exports = g;
     };
 
 }));
-
 ;
 /****************************************************************************
     jquery-bootstrap.js,
@@ -67104,7 +67195,6 @@ module.exports = g;
             $._bsAdjustOptions( options, {}, {
                 baseClass   : 'accordion',
                 styleClass  : '',
-                class       : '',
                 content     : ''
             });
 
@@ -67191,6 +67281,8 @@ module.exports = g;
                         .addClass('accordion-body')
                         .toggleClass('no-vertical-padding', !!opt.noVerticalPadding)
                         .toggleClass('no-horizontal-padding', !!opt.noHorizontalPadding)
+                        .addClass(opt.class || '')
+                        .addClass(opt.className || '')
                         .appendTo( $outer );
 
             //Add footer
@@ -67291,7 +67383,8 @@ module.exports = g;
                 noBorder            : 'no-border',
                 focus               : 'init_focus',
                 truncate            : 'text-truncate',
-                fullWidth           : 'w-100'
+                fullWidth           : 'w-100',
+                fullHeight          : 'h-100',
             };
 
         //Use standard color if not primary or transparent (any kind)
@@ -67361,6 +67454,9 @@ module.exports = g;
 
         if (options.prop)
             result.prop( options.prop );
+
+        if (options.css)
+            result.css( options.css );
 
         result.data('bsButton_options', options );
 
@@ -67739,7 +67835,8 @@ module.exports = g;
                 center      : true,
                 useTouchSize: true,
                 buttonOptions: {
-                    _class: 'flex-shrink-1 text-truncate'
+                    css: {'flex': options.buttonFullWidth ? '1 1 0' : '0 1 auto'},
+                    _class: 'text-truncate'
                 }
             } );
 
@@ -70306,16 +70403,16 @@ jquery-bootstrap-modal-promise.js
     To allow this a global function and variable are defined and called/checked to
     allow modifications of the modal-options
 
-    $.MODEL_ADJUST_OPTIONS = function(modalOptions, modal) return modal-options
+    $.MODAL_ADJUST_OPTIONS = function(modalOptions, modal) return modal-options
 
-    $.MODEL_NO_VERTICAL_MARGIN = false  If true all modal have vertical margin = 0
+    $.MODAL_NO_VERTICAL_MARGIN = false  If true all modal have vertical margin = 0
 
     By default it return the original options but they can be overwriten by applications/packages
     **********************************************************/
-    $.MODEL_ADJUST_OPTIONS = function(modalOptions/*, modal*/){
+    $.MODAL_ADJUST_OPTIONS = function(modalOptions/*, modal*/){
         return modalOptions;
     };
-    $.MODEL_NO_VERTICAL_MARGIN = false;
+    $.MODAL_NO_VERTICAL_MARGIN = false;
 
     /**********************************************************
     MAX-HEIGHT ISSUES ON SAFARI (AND OTHER BROWSER ON IOS)
@@ -71278,7 +71375,7 @@ jquery-bootstrap-modal-promise.js
             });
 
         //Adjust options by MODEL_ADJUST_OPTIONS
-        options = $.MODEL_ADJUST_OPTIONS(options, this);
+        options = $.MODAL_ADJUST_OPTIONS(options, this);
 
         //Set default removeOnClose
         if ( (options.defaultRemoveOnClose || options.defaultRemove) &&
@@ -71297,9 +71394,13 @@ jquery-bootstrap-modal-promise.js
             options.relativeHeightOffset = 0;
         }
 
-        //Check $.MODEL_NO_VERTICAL_MARGIN
-        if ($.MODEL_NO_VERTICAL_MARGIN)
+        //Check $.MODAL_NO_VERTICAL_MARGIN
+        if ($.MODAL_NO_VERTICAL_MARGIN){
             options.relativeHeightOffset = 0;
+            if (options.extended)
+                options.extended.relativeHeightOffset = 0;
+        }
+
 
         //Create the modal
         $result =
@@ -72737,13 +72838,15 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         },
 
         defaultColunmOptions = {
-            align        : 'left',
-            verticalAlign: 'middle',
-            noWrap       : false,
-            truncate     : false,
-            fixedWidth   : false,
-            sortBy       : 'string',
-            sortable     : false
+            align               : 'left',
+            verticalAlign       : 'middle',
+            noWrap              : false,
+            truncate            : false,
+            fixedWidth          : false,
+            sortBy              : 'string',
+            sortable            : false,
+            noHorizontalPadding : false,
+            noVerticalPadding   : false
         },
 
         dataTableId = 'bsTable_options';
@@ -72756,7 +72859,8 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             ._bsAddStyleClasses( columnOptions.align )
             .toggleClass('text-nowrap', !!columnOptions.noWrap )
 //TODO            .toggleClass('text-truncate', !!columnOptions.truncate )
-            .toggleClass('px-0', !!columnOptions.noHorizontalPadding );
+            .toggleClass('px-0', !!columnOptions.noHorizontalPadding )
+            .toggleClass('py-0', !!columnOptions.noVerticalPadding );
 
         if (addWidth && columnOptions.width)
             $element.css({
@@ -84497,7 +84601,12 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
         }
     });
 
-    //direction
+       //direction
+    function adjustDirection(direction, options = {}){
+        direction = parseFloat( direction+'');
+        return (direction + 360 + (options.directionFrom || options.from ? 180 : 0)) % 360;
+    }
+
     addFormat({
         id    : 'direction',
         format: function( value, options ){
@@ -84507,7 +84616,7 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
                 case ns.unit.DEGREE : unitStr = '<sup>o</sup>'; break;
                 case ns.unit.GRADIAN: unitStr = '<sup>g</sup>'; break; //or <sup>c</sup> or <sup>R</sup>
             }
-
+            value = adjustDirection(value, options);
             return formatNumber(ns.unit.getDirection( value ), options ) +  unitWithLink(unitStr, options.withUnitLink);
         }
     });
@@ -84524,7 +84633,7 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
     var sectionDeg = 360/(ns.directionText.length-1);
 
     ns.directionAsText = function(direction, directionFrom){
-        direction = (direction + 360 + (directionFrom ? 180 : 0)) % 360;
+        direction = adjustDirection(direction, {directionFrom: directionFrom});
         return ns.directionText[Math.round(direction / sectionDeg)];
     };
 
@@ -84533,10 +84642,10 @@ ns.unit.METRIC  : 'METRIC',    //m, m2, m/s
     addFormat({
         id    : 'direction_text',
         format: function( value, options ){
-                    return ns.directionAsText(value, options && (options.directionFrom || options.from));
+                    value = adjustDirection(value, options);
+                    return ns.directionText[Math.round(value / sectionDeg)];
                 }
     });
-
 
     //speed and direction unit - also updated on language changed
     setGlobalEvent( ns.events.UNITCHANGED + ' ' + ns.events.LANGUAGECHANGED );
@@ -91511,7 +91620,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     MENUITEMOPTIONS = {
         id: STRING
 
-        type: STRING    = none, "text", "checkbox", or "radio". "text" is only for no-child items
+        type: STRING    = none, "text", "button", "checkbox", or "radio". "text" is only for no-child items
         state: true, false or STRING/NUMBER/OBJECT: true: selected, false:unselected, other:semi-selected
 
         addToBar: BOOLEAN, if true a squire button is added to the bar that closes all other menus and open this one
@@ -91530,6 +91639,11 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         this.type = (options.type || '').toLowerCase();
         this.type = this.type == 'check' ? 'checkbox' : this.type;
         this.hasCheckbox = (this.type == 'checkbox') || (this.type == 'radio');
+
+        this.type = ['button', 'buttons', 'buttonlist'].includes(this.type) ? 'buttons' : this.type;
+        this.isButtons = this.type == 'buttons';
+        this.buttonPaddingLeft  = this.isButtons && options.buttonPaddingLeft;
+        this.buttonPaddingRight = this.isButtons && options.buttonPaddingRight;
 
         this.prev = null;
         this.next = null;
@@ -91584,100 +91698,106 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         createLi
         ***********************************/
         createLi: function(owner){
+            var content;
             owner = owner || this;
 
-            this.$li = $('<li/>');
-            this.$li.attr('id', this.liId);
+            this.$li = $('<li/>')
+                .attr('id', this.liId)
+                .toggleClass('only-buttons', !!this.isButtons)
+                .toggleClass('no-padding-right', !!this.isButtons && !!this.buttonPaddingRight);
+
 
             this.liElem   = this.$li.get(0);
             var $outer    = this.$outer = $('<span/>').appendTo(this.$li);
-            this.$content = $('<div/>')
-                                .addClass('d-flex align-items-center')
-                                .appendTo(this.$outer);
 
+            if (!this.isButtons){
+                this.$content = $('<div/>')
+                                    .addClass('d-flex align-items-center')
+                                    .appendTo(this.$outer);
 
-            var originalContent = this.options.content || this.options,
-                adjustIcon = this.menu.options.adjustIcon;
+                var originalContent = this.options.content || this.options,
+                    adjustIcon = this.menu.options.adjustIcon;
 
-            if (originalContent && originalContent.icon && adjustIcon)
-                originalContent.icon = adjustIcon(originalContent.icon);
+                if (originalContent && originalContent.icon && adjustIcon)
+                    originalContent.icon = adjustIcon(originalContent.icon);
 
-            var content = clone(originalContent);
-            content = $.isArray(content) ? content : [content];
+                content = clone(originalContent);
+                content = $.isArray(content) ? content : [content];
 
-            //If first content-item is the text => make it full-width inside a div. Adjust the icon if menu.options.adjustIcon = function(icon) is given
-            var firstContent = content[0];
+                //If first content-item is the text => make it full-width inside a div. Adjust the icon if menu.options.adjustIcon = function(icon) is given
+                var firstContent = content[0];
 
-            if ( $.isPlainObject(firstContent) && (!firstContent.type || (firstContent.type == 'text')) )
-                content[0] = $('<div/>')._bsAddHtml(firstContent);
+                if ( $.isPlainObject(firstContent) && (!firstContent.type || (firstContent.type == 'text')) )
+                    content[0] = $('<div/>')._bsAddHtml(firstContent);
 
-            //To prevent empty menu-items to open the sub-menu of its 'nearest' sibling (Bug in mmenu?) an empty click is added
-            var list = this.options.list || this.options.items || this.options.itemList || [];
-            if (!list.length)
-                this.$li.on('click', emptyFunction);
+                //To prevent empty menu-items to open the sub-menu of its 'nearest' sibling (Bug in mmenu?) an empty click is added
+                var list = this.options.list || this.options.items || this.options.itemList || [];
+                if (!list.length)
+                    this.$li.on('click', emptyFunction);
 
+                if (this.first || !this.hasCheckbox){
+                    this.$content
+                        .toggleClass('mm-listitem-content', this.type == 'text')
+                        ._bsAddHtml(content);
+                }
+                else {
+                    this.checkbox = $.bsCheckbox({
+                        id          : this.id,
+                        type        : this.type,
+                        multiLines  : true,
+                        icon        : this.options.icon,
+                        text        : this.options.text,
+                        content     : content,
+                        onClick     : $.proxy(owner._onClick, owner)
+                    })
+                    .appendTo( this.$content );
 
-            if (this.first || !this.hasCheckbox)
-                this.$content
-                    .toggleClass('mm-listitem-content', this.type == 'text')
-                    ._bsAddHtml(content);
-            else {
-                this.checkbox = $.bsCheckbox({
-                    id          : this.id,
-                    type        : this.type,
-                    multiLines  : true,
-                    icon        : this.options.icon,
-                    text        : this.options.text,
-                    content     : content,
-                    onClick     : $.proxy(owner._onClick, owner)
-                })
-                .appendTo( this.$content );
+                    //Set flex shrink to 0 for input-element
+                    this.checkbox.find('input').addClass('flex-shrink-0');
 
-                //Set flex shrink to 0 for input-element
-                this.checkbox.find('input').addClass('flex-shrink-0');
+                    //width = 100% for container label
+                    this.checkbox.find('label').addClass('w-100');
 
-                //widrh = 100% for container label
-                this.checkbox.find('label').addClass('w-100');
+                    this.setState(this.state);
 
-                this.setState(this.state);
+                    //Add button to toggle favorites
+                    if (this.menu.options.favorites && !this.options.noFavoriteButton){
+                        var inFavorites = this.menu.options.favorites.get(this.id);
+                        this.$favoriteButton =
+                           $.bsIconCheckboxButton({
+                                id          : this.id,
+                                icon        : this.menu.favoriteIcon,
+                                title       : {da:'Tilføj til/fjern fra Favoritter', en:'Add to/Remove from Favorites'},
+                                transparent : true,
+                                square      : true,
+                                noBorder    : true,
+                                class       :'flex-shrink-0 mm-favorite-icons',
+                                selected    : inFavorites,
+                                onChange    : $.proxy(this._toggleFavorite, this)
+                            }).appendTo(this.$outer);
 
-                //Add button to toggle favorites
-                if (this.menu.options.favorites && !this.options.noFavoriteButton){
-                    var inFavorites = this.menu.options.favorites.get(this.id);
-                    this.$favoriteButton =
-                       $.bsIconCheckboxButton({
+                        this.$outer.addClass('pe-0');
+
+                        if (inFavorites)
+                            this.toggleFavorite(inFavorites);
+                    }
+
+                    //Add button to remove from Favorites
+                    if (this.options.removeFavoriteButton){
+                        $.bsButton({
                             id          : this.id,
-                            icon        : this.menu.favoriteIcon,
-                            title       : {da:'Tilføj til/fjern fra Favoritter', en:'Add to/Remove from Favorites'},
+                            icon        : this.menu.removeFavoriteIcon,
+                            title       : {da:'Fjern fra Favoritter', en:'Remove from Favorites'},
                             transparent : true,
-                            square      : true,
+                        square      : true,
                             noBorder    : true,
                             class       :'flex-shrink-0 mm-favorite-icons',
-                            selected    : inFavorites,
-                            onChange    : $.proxy(this._toggleFavorite, this)
+                            onClick     : $.proxy(owner._toggleFavorite, owner)
                         }).appendTo(this.$outer);
-
-                    this.$outer.addClass('pe-0');
-
-                    if (inFavorites)
-                        this.toggleFavorite(inFavorites);
+                        this.$outer.addClass('pe-0');
+                    }
                 }
-
-                //Add button to remove from Favorites
-                if (this.options.removeFavoriteButton){
-                    $.bsButton({
-                        id          : this.id,
-                        icon        : this.menu.removeFavoriteIcon,
-                        title       : {da:'Fjern fra Favoritter', en:'Remove from Favorites'},
-                        transparent : true,
-                        square      : true,
-                        noBorder    : true,
-                        class       :'flex-shrink-0 mm-favorite-icons',
-                        onClick     : $.proxy(owner._toggleFavorite, owner)
-                    }).appendTo(this.$outer);
-                    this.$outer.addClass('pe-0');
-                }
-            }
+            }   //end of if (!this.isButtons){
 
             //Add buttons from this.options.buttonList (if any)
             var buttonList = this.options.buttonList || this.options.buttons,
@@ -91685,9 +91805,9 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                 buttonBarJustify = this.options.buttonJustify || this.parent.options.buttonJustify || 'center',
                 paddingClass = '';
 
-            if (this.hasCheckbox)
+            if (this.hasCheckbox || this.buttonPaddingLeft)
                 paddingClass = paddingClass + ' padding-left';
-            if (this.$favoriteButton)
+            if (this.$favoriteButton || this.buttonPaddingRight)
                 paddingClass = paddingClass + ' padding-right';
 
 
@@ -91713,9 +91833,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
                 groupList.forEach( function( list ){
                     $.bsButtonBar({
-                        small   : true,
-                        buttons : list,
-                        class   : 'button-bar-container ' + paddingClass + ' d-flex flex-row flex-nowrap justify-content-'+buttonBarJustify
+                        small          : true,
+                        buttons        : list,
+                        class          : 'button-bar-container ' + paddingClass + ' d-flex flex-row flex-nowrap justify-content-'+buttonBarJustify,
+                        buttonFullWidth: true,
                     }).appendTo($outer);
                 });
 
