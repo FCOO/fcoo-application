@@ -455,9 +455,23 @@ if (ns.DEV_VERSION)
     $.ICONFONT_PREFIXES = ['fa.?', 'wi'];
 
     //Set icon for the different icons on the header of modal windows etc.
+    $.BSMODAL_USE_SQUARE_ICONS = true;
+    let icon_fa_prefix = 'far fa-';
     $._set_bsHeaderIcons({
         pin     : ['far fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
         unpin   : ['fas fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
+    }, {
+        back    : icon_fa_prefix + 'arrow-left',
+        forward : icon_fa_prefix + 'arrow-right',
+        pin     : icon_fa_prefix + 'thumbtack',
+        unpin   : icon_fa_prefix + 'thumbtack',
+        extend  : icon_fa_prefix + 'square-plus',
+        diminish: icon_fa_prefix + 'square-minus',
+        new     : icon_fa_prefix + 'window-maximize',
+        warning : icon_fa_prefix + 'exclamation',
+        info    : icon_fa_prefix + 'info',
+        help    : icon_fa_prefix + 'question',
+        close   : icon_fa_prefix + 'xmark'
     });
 
     //Set icon and name for different message type

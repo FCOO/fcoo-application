@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "17.8.7",
+  "version": "17.9.0",
   "homepage": "https://gitlab.com/fcoo/fcoo-application",
   "author": "NielsHolt nho@fcoo.dk",
   "description": "package.json is only use for building the package. see bower.json for more info",
