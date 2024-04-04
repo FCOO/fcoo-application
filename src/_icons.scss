@@ -125,3 +125,22 @@ $sub-icon-font-size: 0.9em;
     }
 }
 
+
+//
+// sizing icons - Copy method from
+// -------------------------
+@function fa-divide($dividend, $divisor, $precision: 10) {
+    @return round(math.div($dividend, $divisor) * 1000) / 1000;
+}
+// sets relative font-sizing and alignment (in _sizing)
+@mixin fa-size ($font-size) {
+    font-size: fa-divide($font-size, 16) * 1em; // converts step in sizing scale into an em-based value that's relative to the scale's base
+    line-height: fa-divide(1, $font-size) * 1em; // sets the line-height of the icon back to that of it's parent
+    vertical-align: (fa-divide(6, $font-size) - fa-divide(3, 8)) * 1em; // vertically centers the icon taking into account the surrounding text's descender
+}
+
+
+.fa-size-15 { @include fa-size(15); }
+.fa-size-14 { @include fa-size(14); }
+.fa-size-13 { @include fa-size(13); }
+

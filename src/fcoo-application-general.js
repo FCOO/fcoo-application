@@ -303,14 +303,14 @@ if (ns.DEV_VERSION)
     }, {
         back    : icon_fa_prefix + 'arrow-left',
         forward : icon_fa_prefix + 'arrow-right',
-        pin     : icon_fa_prefix + 'thumbtack',
-        unpin   : icon_fa_prefix + 'thumbtack',
+        pin     : icon_fa_prefix + 'thumbtack fa-sm',
+        unpin   : icon_fa_prefix + 'thumbtack fa-sm',
         extend  : icon_fa_prefix + 'square-plus',
         diminish: icon_fa_prefix + 'square-minus',
         new     : icon_fa_prefix + 'window-maximize',
-        warning : icon_fa_prefix + 'exclamation',
-        info    : icon_fa_prefix + 'info',
-        help    : icon_fa_prefix + 'question',
+        warning : icon_fa_prefix + 'exclamation fa-size-15',
+        info    : icon_fa_prefix + 'info fa-sm',
+        help    : icon_fa_prefix + 'question fa-sm',
         close   : icon_fa_prefix + 'xmark'
     });
 

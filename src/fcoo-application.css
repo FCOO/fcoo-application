@@ -1201,6 +1201,24 @@ Different versions of sub-icons can be created using different methods in namesp
   bottom: -0.09375em;
 }
 
+.fa-size-15 {
+  font-size: 0.938em;
+  line-height: 0.067em;
+  vertical-align: 0.025em;
+}
+
+.fa-size-14 {
+  font-size: 0.875em;
+  line-height: 0.071em;
+  vertical-align: 0.054em;
+}
+
+.fa-size-13 {
+  font-size: 0.813em;
+  line-height: 0.077em;
+  vertical-align: 0.087em;
+}
+
 /*****************************************************
 Classes to disable transition, transform, or animation
 *****************************************************/
