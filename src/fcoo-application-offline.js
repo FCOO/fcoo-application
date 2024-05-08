@@ -36,7 +36,7 @@ Initialize offline.js - http://github.hubspot.com/offline/
         },
         */
 
-        requests: true, //Should we store and attempt to remake requests which fail while the connection is down. Default = true
+        requests: false, //Should we store and attempt to remake requests which fail while the connection is down. Default = true. Set to false since it do not seem to work as expected.
 
         //Adding own checks
         checks: {
@@ -99,6 +99,32 @@ Initialize offline.js - http://github.hubspot.com/offline/
         load(e);
         img.src = src;
     }
+
+    /*********************************************************************
+    Setting up events to reload any files from window.intervals that should have been read during offline
+    *********************************************************************/
+    window.Offline.on('down', function(){
+
+        $.each(window.intervals.durationList, (duration, durationRec) => {
+            //Save current timeoutId
+            if (durationRec)
+                durationRec.save_timeoutId = durationRec.timeoutId || -1;
+        });
+    });
+
+    window.Offline.on('up', function(){
+        $.each(window.intervals.durationList, (duration, durationRec) => {
+            //If the Interval has tried to reload during offline and thereby sat a new timeout => reload the file
+            if (durationRec && (durationRec.save_timeoutId != durationRec.timeoutId)){
+                durationRec.save_timeoutId = durationRec.timeoutId; //Prevent double reload
+                $.each(durationRec.list, (id, interval) => {
+                    interval.exec();
+                });
+            }
+        });
+    });
+
+
 
     /*********************************************************************
     Setting up events to use bsNoty instead of default dialog-box

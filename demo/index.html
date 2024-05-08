@@ -119,15 +119,28 @@
 
         i18next.init();
         i18next.changeLanguage('en');
-       
+/*       
 window.intervals.options.durationUnit = 'seconds';
 window.intervals.addInterval({
     fileName: 'https://bal.fcoo.dk/static/name-address-link/name-address-link-owner.json',
-    resolve: function( data ){ console.log('Resolve', data); },
-    reject: function( error ){ console.log('Reject', error); },
+    resolve: function( data ){ console.log('Resolve 10-1', data); },
+    reject: function( error ){ console.log('Reject 10-1', error); },
     duration: 10
 });    
-    
+window.intervals.addInterval({
+    fileName: 'https://bal.fcoo.dk/static/name-address-link/name-address-link-owner.json',
+    resolve: function( data ){ console.log('Resolve 10-2', data); },
+    reject: function( error ){ console.log('Reject 10-2', error); },
+    duration: 10
+});
+
+window.intervals.addInterval({
+    fileName: 'https://bal.fcoo.dk/static/name-address-link/name-address-link-owner.json',
+    resolve: function( data ){ console.log('Resolve 60', data); },
+    reject: function( error ){ console.log('Reject 60', error); },
+    duration: 60
+});    
+*/    
 
         function modalDemo(){
             $.bsModal({
