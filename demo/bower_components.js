@@ -38186,10 +38186,6 @@ module.exports = Yaml;
         Promise.defaultErrorHandler( createErrorObject( e, url ) );
     };
 
-    function callDefaultErrorHandle(reason, url){
-        return Promise.defaultErrorHandler( createErrorObject( reason, url ) );
-    }
-
     //Promise.defaultPrefetch = function(url, options): To be called before ALL fetch
     Promise.defaultPrefetch = null;
 
@@ -38200,7 +38196,36 @@ module.exports = Yaml;
     Promise.fetch( url, options )
     Fetch the url.
     Retries up to options.retries times with delay between of options.retryDeday ms
+    Princip taken from https://medium.com/@yshen4/javascript-fetch-with-retry-fb7e2e8f8cad
+
+    Original code from https://medium.com/@yshen4/javascript-fetch-with-retry-fb7e2e8f8cad:
+
+    const wait = (delay) => (new Promise((resolve) => setTimeout(resolve, delay)));
+    Promise.fetchWithRetry = function(url, tries=2){
+        fetch(url)
+            .then( (response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    // 1. throw a new exception
+                    if (res.status === 401) throw new 4xxError('Not authorized', response)
+                    if (res.status === 404) throw new 4xxError(`Resource doesn't exist`, response)
+                    // 2. reject instead of throw, peferred
+                    return Promise.reject(response);
+                }
+            })
+            .catch( (error) => {
+                if (error instanceof 4xxError || tries < 1) {
+                    throw error;
+                } else {
+                    //Retry network error or 5xx errors
+                    const delay = Math.floor(Math.random() * 1000);
+                    wait(delay).then(()=> Promise.fetchWithRetry(url, tries - 1));
+                }
+            })
+    }
     **************************************************************/
+    const wait = (delay) => (new Promise((resolve) => setTimeout(resolve, delay)));
     Promise.fetch = function(url, options) {
         options = $.extend( {}, {
             retries   : 3,
@@ -38218,27 +38243,35 @@ module.exports = Yaml;
         if (options.noCache)
             url = url + (url.indexOf('?') > 0 ? '&' : '?') + 'dummy='+Math.random().toString(36).substr(2, 9);
 
-        if (Promise.defaultPrefetch)
+        if (Promise.defaultPrefetch && !options.noDefaultPrefetch)
             Promise.defaultPrefetch(url, options);
 
         return new Promise(function(resolve, reject) {
-            var wrappedFetch = function(n) {
-                fetch(url, options)
-                    .then(function(response) {
+            fetch(url, options)
+                .then((response) => {
+                    if (response.ok)
                         resolve(response);
-                    })
-                    .catch(function(error) {
-                        if (n > 0) {
-                            setTimeout(function() {
-                                wrappedFetch(--n);
-                            }, options.retryDelay);
-                        }
-                        else {
+                    else
+                        return Promise.reject(response);
+                })
+                .catch((/*error*/reason) => {
+                    if (options.retries > 0){
+                        options.retries--;
+                        options.noCache = false;
+                        options.noDefaultPrefetch = true;
+                        wait(options.retryDelay)
+                            .then(()=> Promise.fetch(url, options) );
+                    }
+                    else {
+
+                        //console.log('HER', error, reject, options);
+                        let error =  createErrorObject(reason, options.url);
+                        if (options.reject)
+                            options.reject(error);
+                        if (options.useDefaultErrorHandler)
                             reject(error);
-                        }
-                    });
-            };
-            wrappedFetch(options.retries);
+                    }
+                });
         });
     };
 
@@ -38356,29 +38389,6 @@ module.exports = Yaml;
 
         if (resolve)
             result = result.then( resolve );
-
-        //Adding error/reject promise
-        var defaultReject = function(reason){
-                return callDefaultErrorHandle(reason, options.url);
-            };
-
-        if (reject){
-            //If options.useDefaultErrorHandler => also needs to call => Promise.defaultErrorHandler
-            if (options.useDefaultErrorHandler)
-                result = result.catch( function( reason ){
-                    reject( createErrorObject( reason, options.url ) );
-                    return defaultReject.call( null, reason );
-                });
-            else
-                //Just use reject as catch
-                result = result.catch( function( reason ){
-                    return reject( createErrorObject( reason, options.url ) );
-                });
-        }
-        else
-            if (!options.useDefaultErrorHandler)
-                //Prevent the use of Promise.defaultErrorHandler
-                result = result.catch( function(){} );
 
         //Adding finally (if any)
         if (fin || Promise.defaultFinally){
@@ -38596,6 +38606,10 @@ module.exports = Yaml;
                 //File-name is given => load file
                 var promiseOptions =
                         $.extend({
+                            retries                 : this.options.retries,
+                            retriesDelay            : this.options.retriesDelay,
+                            useDefaultErrorHandler  : this.options.useDefaultErrorHandler,
+
                             resolve: this.options.resolve ? $.proxy(this._resolve, this) : null,
                             reject : this.options.reject  ? function(error){ _this.options.reject (error, _this); } : null
                         }, this.options.promiseOptions);
@@ -38715,7 +38729,6 @@ module.exports = Yaml;
             this._createAllList();
 
             if (this.options.prePromiseAll){
-//                this.allList = this.options.prePromiseAll(this.allList, this) || this.allList;
                 var prePromiseAllList = $.isArray(this.options.prePromiseAll) ? this.options.prePromiseAll : [this.options.prePromiseAll];
                 prePromiseAllList.forEach( function( prePromise ){
                     _this.allList = prePromise(_this.allList, _this) || _this.allList;
@@ -38740,6 +38753,14 @@ module.exports = Yaml;
                         case 'XML'  : get = window.Promise.getXML; break;
                         default     : get = window.Promise.getText; break;
                     }
+
+                    //Extend promiseOptions with options from this
+                    options.promiseOptions = $.extend({}, {
+                            useDefaultErrorHandler  : options.useDefaultErrorHandler,
+                            retries                 : options.retries,
+                            retryDelay              : options.retryDelay
+                        },
+                        options.promiseOptions || {});
 
                     if ($.isArray(options.fileName))
                         promise = Promise.all(
@@ -38788,16 +38809,24 @@ module.exports = Yaml;
                 opt.isResolved = true;
 
                 //If the file/data needs to reload with some interval => adds the resolve to windows.intervals.addInterval after the first load
-                if (opt.reload)
+                if (opt.reload){
                     window.intervals.addInterval({
                         duration        : opt.reload === true ? 60 : opt.reload,
                         fileName        : opt.fileName,
                         data            : opt.data,
                         resolve         : opt.resolve,
                         resolveArguments: [opt, _this],
-                        reject          : null,
+
+                        reject                : opt.reject,
+                        useDefaultErrorHandler: opt.useDefaultErrorHandler,
+                        retries               : opt.retries,
+                        retryDelay            : opt.retryDelay || 1000,
+
+                        promiseOptions  : opt.promiseOptions,
+
                         wait            : true
                     });
+                }
             });
             return true;
         },

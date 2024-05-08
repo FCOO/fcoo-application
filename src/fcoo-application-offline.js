@@ -145,10 +145,13 @@ Initialize offline.js - http://github.hubspot.com/offline/
 
     //Create i18n-phrases for second(s) and minute(s) and reconnecti
     i18next.addPhrases({
-        'offline_sec'         : {da: 'Genopretter om {{count}} sekund...',   en: 'Reconnecting in {{count}} second...'  },
-        'offline_sec_plural'  : {da: 'Genopretter om {{count}} sekunder...', en: 'Reconnecting in {{count}} seconds...' },
-        'offline_min'         : {da: 'Genopretter om {{count}} minut...',    en: 'Reconnecting in {{count}} minute...'  },
-        'offline_min_plural'  : {da: 'Genopretter om {{count}} minutter...', en: 'Reconnecting in {{count}} minutes...' },
+        'offline_sec_one'  : {da: 'Genopretter om {{count}} sekund...',   en: 'Reconnecting in {{count}} second...'  },
+        'offline_sec_other': {da: 'Genopretter om {{count}} sekunder...', en: 'Reconnecting in {{count}} seconds...' },
+        'offline_min_one'  : {da: 'Genopretter om {{count}} minut...',    en: 'Reconnecting in {{count}} minute...'  },
+        'offline_min_other': {da: 'Genopretter om {{count}} minutter...', en: 'Reconnecting in {{count}} minutes...' },
+
+
+
         'offline_reconnecting': {da: 'Genopretter forbindelse...', en: 'Reconnecting...'}
     });
 
