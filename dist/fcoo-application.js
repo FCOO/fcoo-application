@@ -325,11 +325,11 @@ Sections:
 
 
 //TEST Reading setup-file for application
+/*
 if (ns.DEV_VERSION)
     ns.promiseList.prependFirst({
         fileName: 'findesikke.json',
-        resolve : function(/*data*/){
-            /*
+        resolve : function(data){
             TODO: How to load meta-data: From <meta> or set-up-file
             Need to get
                 application-color
@@ -339,9 +339,6 @@ if (ns.DEV_VERSION)
                 menu-file (if any)
 
                 ...and more
-
-            */
-
 
         },
         promiseOptions: {
@@ -360,7 +357,7 @@ if (ns.DEV_VERSION)
         useDefaultErrorHandler: false
     }
 });
-
+*/
 
 
     /***********************************************************************
