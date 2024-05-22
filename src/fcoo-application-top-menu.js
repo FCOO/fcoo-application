@@ -52,9 +52,7 @@ Create and manage the top-menu for FCOO web applications
         var iconList = [];
         function addIcon( icon, className ){
             icon = $.isArray(icon) ? icon : [icon];
-            icon.forEach( function( iconClass ){
-                iconList.push(iconClass + ' ' + className );
-            });
+            icon.forEach( iconClass => iconList.push(iconClass + ' ' + className ) );
         }
         addIcon(allReadIcon,     'show-for-all-read');
         addIcon(notAllReadIcon , 'hide-for-all-read');
@@ -348,8 +346,8 @@ Create and manage the top-menu for FCOO web applications
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
         var firstRightSideFound = false;
-        $.each( topMenuElementList, function( index, elementOptions ){
-            var menuOptions = options[elementOptions.id];
+        topMenuElementList.forEach( elementOptions => {
+            let menuOptions = options[elementOptions.id];
             if (!menuOptions)
                 return true;
 

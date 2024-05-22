@@ -97,6 +97,10 @@
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
     <script src="../src/fcoo-application-about.js"></script>
     <script src="../src/fcoo-application-color.js"></script>
+    
+<script src="../src/fcoo-application-create.js"></script>
+<script src="../src/fcoo-application-default-options.js"></script>
+
     <script src="../src/fcoo-application-general.js"></script>
     <script src="../src/fcoo-application-help.js"></script>
     <script src="../src/fcoo-application-icon.js"></script>
@@ -106,6 +110,9 @@
     <script src="../src/fcoo-application-offline.js"></script>
     <script src="../src/fcoo-application-promise.js"></script>
     <script src="../src/fcoo-application-reset.js"></script>
+    
+<script src="../src/fcoo-application-standard-menu.js"></script>
+    
     <script src="../src/fcoo-application-setting.js"></script>
     <script src="../src/fcoo-application-touch.js"></script>
     <script src="../src/fcoo-application-top-menu.js"></script>
@@ -119,6 +126,251 @@
 
         i18next.init();
         i18next.changeLanguage('en');
+        
+        //****************************************************
+        let $rightMenu = $('<div/>');
+        $rightMenu.append('Start');
+        for (var i=0; i<100; i++){
+            $('<div/>')
+                .css({width: '100%', border:'1px solid red'})
+                .text(i)
+                .on('click', function(){
+                    //alert( $(this).text());
+                })
+                .appendTo($rightMenu);
+        }
+        $rightMenu.append('SLUT');
+        
+        let applicationOptions = {
+                header: {da: 'DA: fcoo-application', en: 'EN: fcoo-application'},
+                mainContainerAsHandleContainer: true,
+                minMainWidth: 456,
+                    
+                topMenu: {
+                    //search: false,
+                    preSetting: {
+                        icon: 'far fa-map',
+                        onClick: function(){alert('godt');  }
+                    },
+                    help: {
+                        //url: ['data/help.json', 'data/about_fcoo.json', {fileName: "fcoo-maps-help_NY.json", subDir: "help"}]
+                        url: {fileName: "fcoo-maps-help.json", subDir: "help"}
+                    },
+                    MANGLERmessages: {
+                        url: 'data/show_on_load.json'
+                    },
+                    warning: {
+                        url: 'data/oceanforecast_warning.json data/oceanforecast_warning2.json',
+                        //reloadPeriod: 'PT5S',
+                   },
+                   preSetting: {
+                       icon   : window.fcoo.settingIcon('fa-map'),
+                       onClick: function(){ console.log('Click on preSetting'); }
+                    },
+                },
+                leftMenu  : {
+                    width: 400, 
+                    buttons: {
+                        //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                        save    :   true, //Standard save-button
+                        load    :   true, //Standard load-button
+                        bookmark:   true, //Standard bootmark-button
+                        share   :   function(){
+                                        if (navigator.share) {
+                                            navigator.share({
+                                                title: 'WebShare API Demo',
+                                                url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+                                            })
+                                            .then(function(){
+                                                console.log('Thanks for sharing!');
+                                            })
+                                            .catch(console.error);
+                                        }
+                                        else {
+                                            // fallback
+                                            console.log('no share')
+                                        }
+                                    },
+                        user   : true,
+                        reset  : true,
+                        setting: true,
+                        //postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
+                    },
+
+                    menuOptions: {
+                        reset: true,
+                        resetText: {da:'Fravælg alle VENSTRE menuer', en:'Reset all LEFT menus'},
+                        onChange: function(id, state, item){
+                            console.log('GLOBAL onChange', id, state, item);
+                        },
+                        list: [{
+                            icon: 'fa-map',
+                            text: {da:'Første', en:'First'},
+                            addToBar: true,
+                            list: [{
+                                text: 'Item 1-1'
+                            }, {
+                                type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier', 
+                            }]
+                        }, {
+                            text: {da:'Overflade', en:'Surface'},
+                            list: [{
+                                id: 'HER', text: 'HER Item 2-1', icon:'fa-home',
+                                list: [{
+                                    text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', type:'checkbox', state: true
+                                }, {
+                                    text: 'Item 2-1-2', type: 'checkbox'
+                                }, {
+                                    text: 'Item 2-1-3', type: 'radio', state:123, icon:['fa-home', 'fa-map'],
+                                }, {
+                                    text: 'Item 2-1-4', type: 'radio', state: true
+                                }]
+                            }, {
+                                id:'SEALVL', text: {da: 'Vandstand', en:'Sea Level'},
+                                list: [{
+                                    id: 'sealvl1',
+                                    type:'radio', 
+                                    content: [
+                                        {text: {da: '1: Indre Danske Farvande', en:'1: Inner Danish Waters'}},
+                                        $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>'),
+                                        //$('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
+                                    ]
+                                    }, {
+                                        id: 'sealvl2',
+                                        type:'radio', 
+                                        content: [
+                                            {text: {da: '2: Navigation', en:'2: Navigation'}},
+                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
+                                        ]
+                                    }, {
+                                        id: 'sealvl3',
+                                        type:'radio', 
+                                        content: [
+                                            {text: {da: '3: Noget andet', en:'3: Something else'}},
+                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
+                                        ],
+                                }]
+                            }]
+                        }]
+                    },
+                },
+
+                __rightMenu  : {
+                    sizeList: [
+                        {width: 300, modernizr: 'rm-size-0'}, 
+                        {width: 400, modernizr: 'rm-size-1'}, 
+                        {width: 600, modernizr: 'rm-size-2'}
+                    ],
+                    isOpen: true,
+                    buttons: {
+                        new   : true,                
+                        edit  : true,
+                        cancel: {groupClass:'class-save2-reset2', onClick: () => {console.log('CANCEL')  }},
+                        ok    : {                                 onClick: () => {console.log('OK') }},
+                    },                            
+                    $menu: $('<div style="background-color: green"/>')
+                        .append( $('<div style="width:200px; background-color:red;"    class="show-for-rm-size-0">show-for-rm-size-0<br>2<br>3<br>4<br>5</div>') )
+                        .append( $('<div style="width:100%; background-color:yellow;" class="show-for-rm-size-1">show-for-rm-size-1<br>2<br>3<br>4<br>5</div>') )
+                        .append( $('<div style="width:600px; background-color:green;"  class="show-for-rm-size-2">show-for-rm-size-2<br>2<br>3<br>4<br>5</div>') ),
+                    _menuOptions: {
+                        reset: true,
+                        resetText: 'Fravælg alle HØJRE menuer',
+                        _favorites: false,
+                        onChange: function(id, state, item){
+                            console.log('GLOBAL onChange', id, state, item);
+                        },
+                        list: [{
+                            icon: 'fa-map',
+                            text: {da:'Første', en:'First'},
+                            addToBar: true,
+                            list: [{
+                                text: 'Item 1-1'
+                            }, {
+                                type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier', 
+                            }]
+                        }, {
+                            text: {da:'Overflade', en:'Surface'},
+                            list: [{
+                                id: 'HER', text: 'HER Item 2-1', icon:'fa-home',
+                                list: [{
+                                    text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', type:'checkbox', state: true
+                                }, {
+                                    text: 'Item 2-1-2', type: 'checkbox'
+                                }, {
+                                    text: 'Item 2-1-3', type: 'radio', state:123, icon:['fa-home', 'fa-map'],
+                                }, {
+                                    text: 'Item 2-1-4', type: 'radio', state: true
+                                }]
+                            }, {
+                                id:'SEALVL', text: {da: 'Vandstand', en:'Sea Level'},
+                                list: [{
+                                    id: 'sealvl1',
+                                        type:'radio', 
+                                        content: [
+                                            {text: {da: '1: Indre Danske Farvande', en:'1: Inner Danish Waters'}},
+                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>'),
+                                            //$('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
+                                        ]
+                                    }, {
+                                        id: 'sealvl2',
+                                        type:'radio', 
+                                        content: [
+                                            {text: {da: '2: Navigation', en:'2: Navigation'}},
+                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
+                                        ]
+                                    }, {
+                                        id: 'sealvl3',
+                                        type:'radio', 
+                                        content: [
+                                            {text: {da: '3: Noget andet', en:'3: Something else'}},
+                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
+                                       ],
+                                }]
+                            }]
+                        }]
+                    },
+                    keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
+                },
+
+                rightMenu: {
+                    sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
+                    //standardHandler: true,
+                    $menu: $('<div style="background-color: green"/>')
+                            .append( $('<div style="width: 100px; height:  50%; background-color: green;"  class="show-for-rm-size-0" onClick="javascript:toggleW(this)">100 show-for-rm-size-0</div>') )
+                            .append( $('<div style="width: 200px; height:  75%; background-color: orange;" class="show-for-rm-size-1">200 show-for-rm-size-1</div>') )
+                            .append( $('<div style="width: 350px; height: 100%; background-color: red;"    class="show-for-rm-size-2">350 show-for-rm-size-2</div>') )
+                },
+                _rightMenu : {
+                    width: 200,
+                    $menu: $rightMenu,
+                    buttons: {
+                        //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                        save    :   function(){ console.log('save') }, //Standard save-button
+                        bookmark:   function(){ console.log('bookmark') }, //Standard bootmark-button
+                    }
+                },
+                _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
+
+                bottomMenu: {
+                    sizeList: ['bm-size-0', 'bm-size-1', 'bm-size-2'],
+                    standardHandler: true,
+                    $menu: $('<div style="background-color: green"/>')
+                        .append( $('<div style="height:100px; width:100%; background-color: green;"  class="show-for-bm-size-0" onClick="javascript:toggleH(this)">100 show-for-bm-size-0</div>') )
+                        .append( $('<div style="height:200px; width:100%; background-color: orange;" class="show-for-bm-size-1">200 show-for-bm-size-1</div>') )
+                        .append( $('<div style="height:350px; width:100%; background-color: red;"    class="show-for-bm-size-2">350 show-for-bm-size-2</div>') )
+                },
+
+                onResizeStart: function(main){
+                    //console.log('>>resize START', $mainContainer.width());
+                },
+                onResizeEnd: function(main){
+                    //console.log('>>resize END', $mainContainer.width());
+                }
+            }
+            
+                    
+        
+        
 /*       
 window.intervals.options.durationUnit = 'seconds';
 window.intervals.addInterval({
@@ -211,305 +463,47 @@ window.intervals.addInterval({
         };
         function setModeSide(menu){
             menu.setMode(false);
-
         };
 
-        var main;
-        $(function() {
-            var $rightMenu = $('<div/>');
-            $rightMenu.append('Start');
-            for (var i=0; i<100; i++){
-                $('<div/>')
-                    .css({width: '100%', border:'1px solid red'})
-                    .text(i)
-                    .on('click', function(){
-                        //alert( $(this).text());
-                    })
-                    .appendTo($rightMenu);
-            }
-            $rightMenu.append('SLUT');
-
-            main = window.fcoo.createMain({
-                    header: {da: 'DA: fcoo-application', en: 'EN: fcoo-application'},
-                    mainContainerAsHandleContainer: true,
-                    minMainWidth: 456,
-                    
-                    topMenu: {
-                        //search: false,
-                        preSetting: {
-                            icon: 'far fa-map',
-                            onClick: function(){alert('godt');  }
-                        },
-                        help: {
-                            //url: ['data/help.json', 'data/about_fcoo.json', {fileName: "fcoo-maps-help_NY.json", subDir: "help"}]
-                            url: {fileName: "fcoo-maps-help.json", subDir: "help"}
-
-                        },
-                        MANGLERmessages: {
-//HER                            url: 'data/info.json data/show_on_load.json'
-                            url: 'data/show_on_load.json'
-                        },
-                        warning: {
-                            url: 'data/oceanforecast_warning.json data/oceanforecast_warning2.json',
-                            //reloadPeriod: 'PT5S',
-                        },
-                        preSetting: {
-                            icon   : window.fcoo.settingIcon('fa-map'),
-                            onClick: function(){ console.log('Click on preSetting'); }
-                        },
-
-                    },
-                    leftMenu  : {
-                        width: 400, 
-                        buttons: {
-                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-                            save    :   true, //Standard save-button
-                            load    :   true, //Standard load-button
-                            bookmark:   true, //Standard bootmark-button
-                            share   :   function(){
-                                            if (navigator.share) {
-                                                navigator.share({
-                                                    title: 'WebShare API Demo',
-                                                    url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-                                                })
-                                                .then(function(){
-                                                    console.log('Thanks for sharing!');
-                                                })
-                                                .catch(console.error);
-                                            }
-                                            else {
-                                                // fallback
-                                                console.log('no share')
-                                            }
-                                        },
-                            user   : true,
-                            reset  : true,
-                            setting: true,
-                            //postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
-                        },
-
-                        menuOptions: {
-                            reset: true,
-                            resetText: {da:'Fravælg alle VENSTRE menuer', en:'Reset all LEFT menus'},
-                            onChange: function(id, state, item){
-                                console.log('GLOBAL onChange', id, state, item);
-                            },
-                            list: [{
-                                icon: 'fa-map',
-                                text: {da:'Første', en:'First'},
-                                addToBar: true,
-                                list: [{
-                                    text: 'Item 1-1'
-                                }, {
-                                    type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier', 
-                                }]
-                            }, {
-                                        text: {da:'Overflade', en:'Surface'},
-                                list: [{
-                                    id: 'HER', text: 'HER Item 2-1', icon:'fa-home',
-                                    list: [{
-                                        text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', type:'checkbox', state: true
-                                    }, {
-                                        text: 'Item 2-1-2', type: 'checkbox'
-                                    }, {
-                                        text: 'Item 2-1-3', type: 'radio', state:123, icon:['fa-home', 'fa-map'],
-                                    }, {
-                                        text: 'Item 2-1-4', type: 'radio', state: true
-                                    }]
-                                }, {
-                                    id:'SEALVL', text: {da: 'Vandstand', en:'Sea Level'},
-                                    list: [
-                                        {
-                                            id: 'sealvl1',
-                                            type:'radio', 
-                                            content: [
-                                                {text: {da: '1: Indre Danske Farvande', en:'1: Inner Danish Waters'}},
-                                                $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>'),
-                                                //$('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                            ]
-                                        }, {
-                                            id: 'sealvl2',
-                                            type:'radio', 
-                                            content: [
-                                                {text: {da: '2: Navigation', en:'2: Navigation'}},
-                                                $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                            ]
-                                        }, {
-                                            id: 'sealvl3',
-                                            type:'radio', 
-                                            content: [
-                                                {text: {da: '3: Noget andet', en:'3: Something else'}},
-                                                $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                            ],
-                                    }]
-                                }]
-                            }]
-                        },
-                    },
-
-                    __rightMenu  : {
-                        sizeList: [
-                            {width: 300, modernizr: 'rm-size-0'}, 
-                            {width: 400, modernizr: 'rm-size-1'}, 
-                            {width: 600, modernizr: 'rm-size-2'}
-                        ],
-                        isOpen: true,
-                        buttons: {
-                            new   : true,                
-                            edit  : true,
-                            cancel: {groupClass:'class-save2-reset2', onClick: () => {console.log('CANCEL')  }},
-                            ok    : {                                 onClick: () => {console.log('OK') }},
-                        },                            
-                        $menu: $('<div style="background-color: green"/>')
-                                .append( $('<div style="width:200px; background-color:red;"    class="show-for-rm-size-0">show-for-rm-size-0<br>2<br>3<br>4<br>5</div>') )
-                                .append( $('<div style="width:100%; background-color:yellow;" class="show-for-rm-size-1">show-for-rm-size-1<br>2<br>3<br>4<br>5</div>') )
-                                .append( $('<div style="width:600px; background-color:green;"  class="show-for-rm-size-2">show-for-rm-size-2<br>2<br>3<br>4<br>5</div>') ),
-                        
-                        _menuOptions: {
-                            reset: true,
-                            resetText: 'Fravælg alle HØJRE menuer',
-                            _favorites: false,
-                            onChange: function(id, state, item){
-                                console.log('GLOBAL onChange', id, state, item);
-                            },
-                            list: [{
-                                icon: 'fa-map',
-                                text: {da:'Første', en:'First'},
-                                addToBar: true,
-                                list: [{
-                                    text: 'Item 1-1'
-                                }, {
-                                    type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier', 
-                                }]
-                            }, {
-                                        text: {da:'Overflade', en:'Surface'},
-                                list: [{
-                                    id: 'HER', text: 'HER Item 2-1', icon:'fa-home',
-                                    list: [{
-                                        text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', type:'checkbox', state: true
-                                    }, {
-                                        text: 'Item 2-1-2', type: 'checkbox'
-                                    }, {
-                                        text: 'Item 2-1-3', type: 'radio', state:123, icon:['fa-home', 'fa-map'],
-                                    }, {
-                                        text: 'Item 2-1-4', type: 'radio', state: true
-                                    }]
-                                }, {
-                                    id:'SEALVL', text: {da: 'Vandstand', en:'Sea Level'},
-                                    list: [
-                                        {
-                                            id: 'sealvl1',
-                                            type:'radio', 
-                                            content: [
-                                                {text: {da: '1: Indre Danske Farvande', en:'1: Inner Danish Waters'}},
-                                                $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>'),
-                                                //$('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                            ]
-                                        }, {
-                                            id: 'sealvl2',
-                                            type:'radio', 
-                                            content: [
-                                                {text: {da: '2: Navigation', en:'2: Navigation'}},
-                                                $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                            ]
-                                        }, {
-                                            id: 'sealvl3',
-                                            type:'radio', 
-                                            content: [
-                                                {text: {da: '3: Noget andet', en:'3: Something else'}},
-                                                $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                            ],
-                                    }]
-                                }]
-                            }]
-                        },
-
-                        keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
-                    },
-
-                    rightMenu: {
-                        sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
-                        
-                        //standardHandler: true,
-
-                        
-                        $menu: $('<div style="background-color: green"/>')
-                                .append( $('<div style="width: 100px; height:  50%; background-color: green;"  class="show-for-rm-size-0" onClick="javascript:toggleW(this)">100 show-for-rm-size-0</div>') )
-                                .append( $('<div style="width: 200px; height:  75%; background-color: orange;" class="show-for-rm-size-1">200 show-for-rm-size-1</div>') )
-                                .append( $('<div style="width: 350px; height: 100%; background-color: red;"    class="show-for-rm-size-2">350 show-for-rm-size-2</div>') )
-                    },
-
-
-
-                    
-                    _rightMenu : {
-                        width: 200,
-                        $menu: $rightMenu,
-                        buttons: {
-                            //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-                            save    :   function(){ console.log('save') }, //Standard save-button
-                            bookmark:   function(){ console.log('bookmark') }, //Standard bootmark-button
-                        }
-
-                    },
-                    _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
-
-                    bottomMenu: {
-                        sizeList: ['bm-size-0', 'bm-size-1', 'bm-size-2'],
-                        
-                        standardHandler: true,
-
-                        
-                        $menu: $('<div style="background-color: green"/>')
-                                .append( $('<div style="height:100px; width:100%; background-color: green;"  class="show-for-bm-size-0" onClick="javascript:toggleH(this)">100 show-for-bm-size-0</div>') )
-                                .append( $('<div style="height:200px; width:100%; background-color: orange;" class="show-for-bm-size-1">200 show-for-bm-size-1</div>') )
-                                .append( $('<div style="height:350px; width:100%; background-color: red;"    class="show-for-bm-size-2">350 show-for-bm-size-2</div>') )
-                    },
-
-                    onResizeStart: function(main){
-                        //console.log('>>resize START', main.$mainContainer.width());
-                    },
-                    onResizeEnd: function(main){
-                        //console.log('>>resize END', main.$mainContainer.width());
-                    }
+        function modalWithAllIcons(){
+            $.bsModal({
+                header: {text: 'Alle ikoner'},
+                onNew    : function(){ console.log('NEW:  DONT close header'); return false},
+                onPin    : function(){ console.log('PIN: Close header'); return true},
+                onInfo   : function(){ console.log('INFO: DONT Close header'); return false},
+                onWarning: function(){ console.log('WARNING: DONT Close header'); return false},
+                onHelp   : function(){ console.log('HELP: DONT Close header'); return false},
+                icons: {
+                    back    : {onClick: function(){ console.log('BACK: DONT close header'); return false}},
+                    forward : {onClick: function(){ console.log('FORWARD: DONT close header'); return false}}
+                },
+                content: 'Dette er indhold',
+                scroll: false,
+                minimized: {
+                    content: 'Minimeret',
+                    scroll : false
+                },
+                extended: {
+                    content: 'Maksimeret<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30',                    
+                    footer: false,
+                    scroll : true
+                },
+                closeButton: false,
+                footer: 'Footer',
+                show: true,
+                remove: true
             });
+        }                
 
-            function modalWithAllIcons(){
-                $.bsModal({
-                    header: {text: 'Alle ikoner'},
-                    onNew    : function(){ console.log('NEW:  DONT close header'); return false},
-                    onPin    : function(){ console.log('PIN: Close header'); return true},
-                    onInfo   : function(){ console.log('INFO: DONT Close header'); return false},
-                    onWarning: function(){ console.log('WARNING: DONT Close header'); return false},
-                    onHelp   : function(){ console.log('HELP: DONT Close header'); return false},
-                    icons: {
-                        back    : {onClick: function(){ console.log('BACK: DONT close header'); return false}},
-                        forward : {onClick: function(){ console.log('FORWARD: DONT close header'); return false}}
-                    },
-                    content: 'Dette er indhold',
-                    scroll: false,
-                    minimized: {
-                        content: 'Minimeret',
-                        scroll : false
-                    },
-                    extended: {
-                        content: 'Maksimeret<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30',                    
-                        footer: false,
-                        scroll : true
-                    },
-                    closeButton: false,
-                    footer: 'Footer',
-                    show: true,
-                    remove: true
-                });
-            }                
-
+        
+    //**************************************************
+    function create_main_content($mainContainer){
         $('<button>Alle ikoner</button>')
-            .appendTo( main.$mainContainer)
+            .appendTo($mainContainer)
             .on('click', modalWithAllIcons );
             
         $('<button>Alle ikoner (old)</button>')
-            .appendTo( main.$mainContainer)
+            .appendTo( $mainContainer)
             .on('click', function(){
                 $.BSMODAL_USE_SQUARE_ICONS = false;
                 modalWithAllIcons();
@@ -517,11 +511,9 @@ window.intervals.addInterval({
                 
             });
 
-
-
         var fileViewModal;
         $('<button>4xFile-view</button>')
-            .appendTo( main.$mainContainer)
+            .appendTo( $mainContainer)
             .on('click', function(e){
                 fileViewModal = fileViewModal ||
                     $.bsModal({
@@ -538,7 +530,6 @@ window.intervals.addInterval({
                     })
                 fileViewModal.show();
             });
-
 
 
         var modals = [];
@@ -558,7 +549,7 @@ window.intervals.addInterval({
                 header: 'Full Screen (100%)', fullScreen: true
         }].forEach( (options, index) => {
             $('<button>'+options.header+'</button>')
-                .appendTo( main.$mainContainer)
+                .appendTo( $mainContainer)
                 .on('click', function(e){
                     var modal = modals[index] = modals[index] ||
                         $.bsModal({
@@ -605,65 +596,65 @@ window.intervals.addInterval({
                 });
             });
 */
-            $('<br>').appendTo(main.$mainContainer);
+
+
+            $('<br>').appendTo($mainContainer);
 
             $.bsButton({
                 icon  : fcoo.settingIcon('fa-map'),
 //                selected: true,
                 class: 'semi-selected',
                 square: true,
-             }).appendTo(main.$mainContainer);
+             }).appendTo($mainContainer);
 
             $.bsButton({
                 icon  : fcoo.settingIcon('fa-map'),
                 square: true,
                 bigIcon: true,
-             }).appendTo(main.$mainContainer);
-main.$mainContainer.append('<br>');
+             }).appendTo($mainContainer);
+
+            $mainContainer.append('<br>');
+
             $.bsButton({
                 icon  : 'fa-map',
                 square: true,
-             }).appendTo(main.$mainContainer);
+             }).appendTo($mainContainer);
             $.bsButton({
                 icon  : 'fa-map',
                 square: true,
                 bigIcon: true,
-             }).appendTo(main.$mainContainer);
+             }).appendTo($mainContainer);
             $.bsButton({
                 icon  : 'fa-sync',
                 square: true,
-             }).appendTo(main.$mainContainer);
+             }).appendTo($mainContainer);
 
             $.bsButton({
                 icon  : [['fa-lg fa-grip-lines-vertical', 'fa-lg fa-grip-lines']],
                 square: true,
-             }).appendTo(main.$mainContainer);
+             }).appendTo($mainContainer);
 
             $.bsButton({
                 icon  : fcoo.iconSub('fa-globe', 'fa-clock'),
                 selected: true,
                 square: true,
-             }).appendTo(main.$mainContainer);
+             }).appendTo($mainContainer);
 
             $.bsButton({
                 icon  : 'wi wi-day-fog',
                 square: true,
-             }).appendTo(main.$mainContainer);
+             }).appendTo($mainContainer);
+    }
+    //**************************************************
+            
+        
+        
+        
+        
+        $(function() { 
+
+            window.fcoo.createApplication(applicationOptions, create_main_content);
         });
-
-
-
-
-    $(function() {
-        fcoo.promiseList.options.finally = function(){
-            fcoo.globalSetting.load();
-            fcoo.appSetting.load();
-        };
-
-        fcoo.promiseList_getAll();
-    });
-
     </script>
-    
 </body>
 </html>

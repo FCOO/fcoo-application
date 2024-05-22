@@ -71,7 +71,7 @@ Create and manage the main structure for FCOO web applications
         ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
 
         //Disabling transition, transform, or animation.
-        ['noTransition', 'noTransform', 'noAnimation'].forEach( function(id, index){
+        ['noTransition', 'noTransform', 'noAnimation'].forEach( (id, index) => {
             var value     = options[id],
                 browserVersion = ns.modernizrDevice.browser_version.toLowerCase(),
                 className = ['no-transition', 'no-transform', 'no-animation'][index];
@@ -82,8 +82,8 @@ Create and manage the main structure for FCOO web applications
                 if (!addClass){
                     var valueList = $.isArray(value) ? value : [value],
                         add = true;
-                    valueList.forEach( function(modernizrDeviceProperties){
-                        modernizrDeviceProperties.split(' ').forEach( function( property ){
+                    valueList.forEach( modernizrDeviceProperties => {
+                        modernizrDeviceProperties.split(' ').forEach( property => {
                             if (property)
                                 add = add && ( ns.modernizrDevice[property] || browserVersion.includes(property) );
                         });
@@ -313,7 +313,7 @@ Create and manage the main structure for FCOO web applications
 
                 {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true,  onClick: ns.reset                                         },
                 {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                  onClick: function(){ ns.globalSetting.edit();           } }
-            ].forEach( (defaultButtonOptions) => {
+            ].forEach( defaultButtonOptions => {
                 var nextButtonOptions = options[defaultButtonOptions.id];
                 if (nextButtonOptions){
                     if (buttonList.length && defaultButtonOptions.newGroup){
@@ -405,7 +405,7 @@ Create and manage the main structure for FCOO web applications
             _totalMenuWidth: function(){
                 var result = 0;
                 if (this.options.leftMenu && this.options.rightMenu){
-                    [this.leftMenu, this.rightMenu].forEach((menu) => {
+                    [this.leftMenu, this.rightMenu].forEach(menu => {
                         const width = menu.options.menuDimAndSize.size;
                         result = result + (typeof width == 'number' ? width : menu.$container.width());
                     });

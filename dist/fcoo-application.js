@@ -159,6 +159,404 @@ fcoo-application-color.js
 
 ;
 /****************************************************************************
+fcoo-application-create.js,
+
+Methods to create standard FCC-web-applications
+
+
+****************************************************************************/
+(function ($, moment, window/*, document, undefined*/) {
+    "use strict";
+
+    var ns = window.fcoo = window.fcoo || {};
+
+
+    /****************************************************************************
+    To create an application call window.fcoo.createApplication(options, menuOptions, resolve-methods..)
+    options     = SETUP or FILENAME = filename with SETUP
+    menuOptions = MENUOPTIONS or FILENAME = file with MENUOPTIONS
+
+    FILENAME = Path to file. Two versions:
+        1: Relative path locally e.q. "data/info.json"
+        2: Using ns.dataFilePath (See fcoo-data-files): {subDir, fileName}.
+        E.q. {subDir: "theSubDir", fileName:"theFileName.json"} => "https://app.fcoo.dk/static/theSubDir/theFileName.json"
+
+    createApplication(...) will
+        1: "Load" (*) setup and proccess the options
+        2: "Load" standard setup/options for differnet parts of the application
+        3: "Load" content for left- and/or right-menu
+        4: "Load" standard FCOO-menu
+        5: Create the main structure and the left and/or right menu
+        6: "Load" options.other and options.metaData (if any)
+        7: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
+
+    *) "Load" can be loading from a file or using given or default options
+
+    ****************************************************************************/
+
+    /*************************************************************************
+    options2promiseOptions(fileNameOrData, resolve, wait)
+    Return a promise-options based on fileNameOrData
+    *************************************************************************/
+    ns.options2promiseOptions = function(fileNameOrData, resolve = null, wait = false){
+        var result = {
+                resolve: resolve,
+                wait   : wait
+            };
+        if (window.intervals.isFileName(fileNameOrData))
+            result.fileName = ns.dataFilePath(fileNameOrData);
+        else
+            result.data = fileNameOrData;
+        return result;
+    };
+
+    /*************************************************************************
+    setOptions(options, defaultOptions)
+    If any id:value in options is id:true and a corresponding id:{...} exists
+    in defaultOptions => Replace true with {...}
+    *************************************************************************/
+    function setOptions(options, defaultOptions){
+        if (!defaultOptions || !$.isPlainObject(defaultOptions)  || !$.isPlainObject(options))
+            return options;
+
+        options = $.extend(true, {}, defaultOptions, options);
+        $.each(options, function(indexOrId, value){
+            if ((value === true) && defaultOptions[indexOrId])
+                options[indexOrId] = defaultOptions[indexOrId];
+        });
+        return options;
+    }
+
+    /*************************************************************************
+    createApplication(
+        options,
+        create_main_content
+        menuOptions = {ownerList, finallyFunc, fileNameOrMenuOptions}
+        application_resolve_setup,
+        nsForApplication = ns,
+    }
+    *************************************************************************/
+    let nsApp = ns,
+        appResolveSetup,
+        createMainContent,
+        whenFinish;
+
+    ns.createApplication = function(
+        options,
+        create_main_content,
+        menuOptions,
+        application_resolve_setup,
+        nsForApplication = ns
+    ){
+        //Set namespace for the application
+        nsApp = nsForApplication || nsApp;
+
+        //Save the applications own resolve method (if any)
+        appResolveSetup = application_resolve_setup;
+
+        //Save the method to be called after creation of the main content (if any)
+        createMainContent = create_main_content;
+
+        //Set viewpoint to no-scalable
+        ns.viewport_no_scalable = true;
+
+        //1: "Load" setup and proccess the options
+        nsApp.menuOptions = menuOptions;
+
+        var promiseOptions = ns.options2promiseOptions(options);
+        if (promiseOptions.fileName)
+            Promise.getJSON(promiseOptions.fileName, {}, resolve_setup);
+        else
+            resolve_setup(promiseOptions.data);
+    };
+
+
+    /******************************************************************
+    resolve_setup(options)
+    ******************************************************************/
+    function resolve_setup(options){
+        //Adjust options
+        nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
+
+        nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
+
+        //Adjust path: If path is file-name (in any form) => move it into default format
+        ['help', 'messages', 'warning'].forEach(id => {
+            let topMenuPath = options.topMenu[id];
+            if (topMenuPath && window.intervals.isFileName(topMenuPath))
+                options.topMenu[id] = {url: ns.dataFilePath( topMenuPath )};
+        });
+
+        //Add helpId to modal for globalSetting (if any)
+        if (nsApp.setupOptions.topMenu && nsApp.setupOptions.topMenu.helpId && nsApp.setupOptions.topMenu.helpId.globalSetting){
+            var modalOptions = ns.globalSetting.options.modalOptions = ns.globalSetting.options.modalOptions || {};
+            modalOptions.helpId = nsApp.setupOptions.topMenu.helpId.globalSetting;
+            modalOptions.helpButton = true;
+        }
+
+        //Call the applications own resolve method (if any)
+        if (appResolveSetup)
+            appResolveSetup(nsApp.setupOptions);
+
+        //2: "Load" standard setup/options for differnet parts of the application. Check if there are any resolve-function assigned in nsMap.standard
+        $.each(options.standard, function(id, fileNameOrData){
+            if (nsApp.standard[id])
+                ns.promiseList.append( ns.options2promiseOptions(fileNameOrData, nsApp.standard[id]) );
+        });
+
+        //3: "Load" content for left- and/or right-menu. If the menu isn't the standard-menu its content is loaded last to have the $-container ready
+        ['left', 'right'].forEach(prefix => {
+            var menuId = prefix+'Menu',
+                sideMenuOptions = options[menuId];
+            if (!sideMenuOptions) return;
+
+            if (sideMenuOptions.isStandardMenu){
+                //Set the options for mmenu
+                sideMenuOptions.menuOptions =
+                    $.extend({}, sideMenuOptions.bsMenuOptions || {}, options.layerMenuOptions || {}, {list: []});
+
+                //Set ref to the menu with the standard menu
+                options.standardMenuId = prefix+'Menu';
+            }
+            else
+                if (!sideMenuOptions.$menu){
+                    /*  sideMenuOptions contains:
+                          fileName: FILENAME, or
+                          data    : JSON-OBJECT, or
+                          content : A JSON-OBJECT with content as in fcoo/jquery-bootstrap, or
+                          create or resolve : function( data, $container ) - function to create the menus content in $container. Only if fileName or data is given
+
+                        Create the resolve-function */
+                    var resolve, menuResolve;
+                    if (sideMenuOptions.content)
+                        resolve = function( content ){
+                            nsApp.main[menuId].$menu._bsAddHtml( content );
+                        };
+                    else {
+                        menuResolve = sideMenuOptions.resolve || sideMenuOptions.create;
+                        if (menuResolve)
+                            resolve = function( data ){
+                                menuResolve( data, nsApp.main[menuId].$menu );
+                            };
+                    }
+
+                    if (menuResolve)
+                        ns.promiseList.appendLast({
+                            fileName: sideMenuOptions.fileName,
+                            data    : sideMenuOptions.data || sideMenuOptions.content,
+                            resolve : resolve
+                        });
+                }
+        });
+
+        //4: "Load" standard FCOO-menu - when the menu is loaded
+        if (nsApp.menuOptions){
+            nsApp.menuOptions.appFinallyFunc = nsApp.menuOptions.finallyFunc;
+            nsApp.menuOptions.finallyFunc = standardMenuFinally;
+
+            ns.createFCOOMenu(nsApp.menuOptions);
+        }
+
+        //5: Create the main structure and the left and/or right menu. Is excecuded after the layer-menus and before lft/rigth menu creation
+        ns.promiseList.prependLast({
+            data   : 'none',
+            resolve: createMainStructure
+        });
+
+
+        //6: Load files in options.other and options.metaData (if any)
+        (options.other || []).forEach( otherOptions => ns.promiseList.appendLast(otherOptions) );
+        ns.promiseList.appendLast(options.metadata || options.metaData);
+
+        //7: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
+        ns.promiseList.options.finally = promise_all_finally;
+        whenFinish = options.finally;
+
+        //Load all setup-files
+        Promise.defaultPrefetch();
+        ns.promiseList_getAll();
+    }
+
+    /*************************************************************************
+    standardMenuFinally(menuList, menuOptions)
+    4: Append menu-items in menuList to the list with item for the standard-menu, and
+        call the users finally-method
+    *************************************************************************/
+    function standardMenuFinally(menuList, menuOptions){
+        let standardMenuOptions = nsApp.setupOptions[nsApp.setupOptions.standardMenuId].menuOptions;
+
+        if (standardMenuOptions && standardMenuOptions.list)
+            standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+
+        if (menuOptions.appFinallyFunc)
+            menuOptions.appFinallyFunc(menuList, menuOptions);
+    }
+
+    /*************************************************************************
+    createMainStructure()
+    5: Create the main structure and the left and/or right menu
+    *************************************************************************/
+    function createMainStructure(){
+        var setupOptions = nsApp.setupOptions;
+
+        //Create main structure
+        nsApp.main = ns.createMain({
+            mainContainerAsHandleContainer: true,
+
+            applicationName     : setupOptions.applicationName,
+            applicationHeader   : setupOptions.applicationHeader,
+            header              : setupOptions.header,
+
+            //top-, left-, right-, and bottom-menus
+            topMenu             : setupOptions.topMenu,
+
+            leftMenu            : setupOptions.leftMenu,
+            leftMenuIcon        : setupOptions.leftMenuIcon,
+            keepLeftMenuButton  : setupOptions.keepLeftMenuButton,
+
+            rightMenu           : setupOptions.rightMenu,
+            rightMenuIcon       : setupOptions.rightMenuIcon,
+            keepRightMenuButton : setupOptions.keepRightMenuButton,
+
+            bottomMenu          : setupOptions.bottomMenu,
+
+            onResizeStart       : setupOptions.onResizeStart,
+            onResizeEnd         : setupOptions.onResizeEnd
+        });
+
+        if (createMainContent)
+            createMainContent(nsApp.main.$mainContainer, setupOptions);
+    }
+
+    /******************************************************************
+    promise_all_finally()
+    7: Load settings in fcoo.appSetting and globalSetting
+    ******************************************************************/
+    function promise_all_finally(){
+        //Call ns.globalSetting.load => ns.appSetting.load => whenFinish => Promise.defaultFinally
+        ns.globalSetting.load(null, function(){
+            ns.appSetting.load(null, function(){
+                if (whenFinish)
+                    whenFinish();
+                ns.events.fire(ns.events.CREATEAPPLICATIONFINALLY);
+                Promise.defaultFinally();
+            });
+        });
+        return true;
+    }
+
+}(jQuery, window.moment, this, document));
+
+
+
+
+;
+/****************************************************************************
+fcoo-application-default-options.js
+
+Description and default value of setup-options for OPTIONS and DEFAULT-OPTIONS in
+window.fcoo.createApplication(options: OPTIONS, defaultOptions: DEFAULT-OPTIONS,...)
+See src/fcoo-application-create.js
+
+****************************************************************************/
+(function ($, moment, window/*, document, undefined*/) {
+    "use strict";
+
+    var ns = window.fcoo = window.fcoo || {};
+
+    /****************************************************************************
+    OPTIONS = {
+        applicationName  : {da:STRING, en:STRING},  //applicationName or applicationHeader are used. Two options available for backward combability
+        applicationHeader: {da:STRING, en:STRING},
+
+        topMenu: {
+            See description in fcoo/fcoo-application and in nsMap.default_setup below
+        }
+
+        standardMenuOptions: { //Options for the standard-menu/mmenu created by methods in src/fcoo-application-mmenu
+            inclBar    : BOOLEAN,
+            barCloseAll: BOOLEAN,
+            inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true)
+            barCloseAll: BOOLEAN, if true a top-bar button is added that closes all open submenus
+            favorites  : Nothing or false. Nothing = default saving, false: no favorites
+        }
+
+        leftMenu/rightMenu: true or false or {
+            width: NUMBER,
+            buttons: As leftMenuButtons and rightMenuButtons in fcoo-aapplication = {
+                preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
+                save        = true or onClick or buttonOptions, //Standard save-button
+                load        = true or onClick or buttonOptions, //Standard load-button
+                bookmark    = true or onClick or buttonOptions, //Standard bootmark-button
+                share       = true or onClick or buttonOptions, //Standard share-button
+                user        = true or onClick or buttonOptions, //Standard user-button
+                setting     = true or onClick or buttonOptions, //Standard setting-button
+                postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
+            }
+
+            isStandardMenu: true    //True => the standard menu is created in this side using standardMenuOptions and bsMenuOptions
+            bsMenuOptions : {}      //Only if isStandardMenu: true => options for $.BsMmenu when creating the content of the left/right side
+
+            if isStandardMenu: false:
+            fileName: FILENAME, or
+            data    : JSON-OBJECT, or
+            content : A JSON-OBJECT with content as in fcoo/jquery-bootstrap
+
+            create or resolve : function( data, $container ) - function to create the menus content in $container. Only if fileName or data is given (and isStandardMenu: false)
+
+        },
+
+        keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
+        keepRightMenuButton : false, //Keeps the right menu-button even if rightMenu is null
+
+
+
+
+        ** Standard setup/options in setup-files or as objects **
+        ** The following ids are fixed and the corresponding resolve-methods are given in the default-oin the
+        ** PROMISE_OPTIONS = {
+        **     fileName: FILENAME,
+        **     resolve : function( data ),
+        **     reload  : BOOLEAN or NUMBER. If true the file will be reloaded every hour. If NUMBER the file will be reloaded every reload minutes
+        ** }
+
+
+        standard: {ID: PROMISE_OPTIONS}
+        other   : []PROMISE_OPTIONS
+        metaData: PROMISE_OPTIONS
+
+        finally: FUNCTION - optional. Function to be called when all is ready
+    }
+
+    ****************************************************************************/
+    ns.defaultApplicationOptions = {
+            applicationName    : {da:'Dansk titel', en:'English title'},
+
+            topMenu            : {},
+
+            standardMenuOptions: {},
+
+            leftMenu           : false,
+            leftMenuIcon       : 'fa-layer-group',
+            keepLeftMenuButton : false,
+
+            rightMenu          : false,
+            rightMenuIcon      : 'fa-list',
+            keepRightMenuButton: false,
+
+
+            //Standard setup/options
+            standard: null,
+            other   : null,
+            metaData: null,
+
+            finally: null  //function() that are called when all setup- and menu-files/options are read and processed
+        };
+
+}(jQuery, window.moment, this, document));
+
+;
+/****************************************************************************
 	fcoo-application.js,
 
 	(c) 2016, FCOO
@@ -842,7 +1240,7 @@ Create and manage the main structure for FCOO web applications
         ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
 
         //Disabling transition, transform, or animation.
-        ['noTransition', 'noTransform', 'noAnimation'].forEach( function(id, index){
+        ['noTransition', 'noTransform', 'noAnimation'].forEach( (id, index) => {
             var value     = options[id],
                 browserVersion = ns.modernizrDevice.browser_version.toLowerCase(),
                 className = ['no-transition', 'no-transform', 'no-animation'][index];
@@ -853,8 +1251,8 @@ Create and manage the main structure for FCOO web applications
                 if (!addClass){
                     var valueList = $.isArray(value) ? value : [value],
                         add = true;
-                    valueList.forEach( function(modernizrDeviceProperties){
-                        modernizrDeviceProperties.split(' ').forEach( function( property ){
+                    valueList.forEach( modernizrDeviceProperties => {
+                        modernizrDeviceProperties.split(' ').forEach( property => {
                             if (property)
                                 add = add && ( ns.modernizrDevice[property] || browserVersion.includes(property) );
                         });
@@ -1084,7 +1482,7 @@ Create and manage the main structure for FCOO web applications
 
                 {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true,  onClick: ns.reset                                         },
                 {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                  onClick: function(){ ns.globalSetting.edit();           } }
-            ].forEach( (defaultButtonOptions) => {
+            ].forEach( defaultButtonOptions => {
                 var nextButtonOptions = options[defaultButtonOptions.id];
                 if (nextButtonOptions){
                     if (buttonList.length && defaultButtonOptions.newGroup){
@@ -1176,7 +1574,7 @@ Create and manage the main structure for FCOO web applications
             _totalMenuWidth: function(){
                 var result = 0;
                 if (this.options.leftMenu && this.options.rightMenu){
-                    [this.leftMenu, this.rightMenu].forEach((menu) => {
+                    [this.leftMenu, this.rightMenu].forEach(menu => {
                         const width = menu.options.menuDimAndSize.size;
                         result = result + (typeof width == 'number' ? width : menu.$container.width());
                     });
@@ -2534,6 +2932,275 @@ ns.events.
 
 ;
 /****************************************************************************
+fcoo-application-standard-menu.js
+
+Methods to create the standard FCOO web-application menu with
+different "layers" organized in a menu-structure
+
+If can be used to have a menu with layers to show/hide on a map or
+used in a select-structure to select a group of information
+
+The default menu-structure is saved in a setup-file "fcoo-menu.json" in directory "setup" in
+"static"-data. See https://gitlab.com/FCOO/web-applications/static-data
+
+The data in "fcoo-menu.json" only contains the overall structure.
+The specific contents of the individual menu-items are created by a list of "owner-functions" that are
+set by different packages. Thise methods are given in a owner-list = {id}function(options, addMenu) where
+addMenu = function(listOfMenuItems) allowing the method to add sub-menus to a menu-item.
+Example:
+
+//In fcoo-menu.json:
+    "OBSERVATIONS_MENU": {
+        "ICON": "", "text": { "da": "Målinger og Observationer", "en": "Measurements and Observations"}, "list": [
+        "OBSERVATIONS"
+    ]
+
+let ownerList = {};
+//In some package :
+ownerList['OBSERVATIONS"] = function(options, addMenu){
+    //Adjust the options (if needed)
+    ...
+
+    //Add sub-menus using the provided function addMenu
+    addMenu([
+        {id:"OBS-1", icon:... text:..., onClick:...},
+        {id:"OBS-2", icon:... text:..., onClick:...},
+        {id:"OBS-3", icon:... text:..., onClick:...},
+    ]);
+}
+
+When the menu-structure are being created the id="OBSERVATIONS" have a "create-function" given in the owner-list "ownerList"
+and the menu "OBSERVATIONS_MENU" are being adjustedd and have three sub-menus added
+
+It is possible to use another owner-list when creating another version of the menu-structure to have different adjustments
+
+All menu-items in standard menu-structure that reference to a "owner-function" in the given user-list, are removed.
+In the example:
+If the applicatuion do not include a package that sets a owner-function for "OBSERVATIONS"
+the hole menu-item "OBSERVATIONS_MENU" are removed automatic.
+
+The sub-menus and/or the finally options for a menu-item can also be in a seperate file.
+
+The reading of the setup-file (fcoo-menu.json) or other file or direct options are always do via ns.promiseList.append
+
+METHOD: window.fcoo.createFCOOMenu(ownerList: OWNER_LIST, fileNameOrMenuOptions: FILENAME or MENU_OPTIONS)
+
+OWNER_LIST = {id:MENUITEM_ID} of FUNCTION(options: MENUITEM_OPTIONS, addMenu: function(list: MENUITEM_LIST))
+The function given for ownerList[ID] can also contain info on sub-menuitems and/or include reading a setup-file for the specific menu-item
+
+FILENAME = Path to file. Two versions:
+    1: Relative path locally e.q. "data/info.json"
+    2: Using ns.dataFilePath (See fcoo-data-files): {subDir, fileName}.
+    E.q. {subDir: "theSubDir", fileName:"theFileName.json"} => "https://app.fcoo.dk/static/theSubDir/theFileName.json"
+The content of the file must be MENU_OPTIONS
+
+MENU_OPTIONS = MENUITEM_LIST =[]MENUITEM_OPTIONS
+
+MENUITEM_OPTIONS = {icon, text,..., list:MENU_OPTIONS}  - The options to create the menu-item. list = [] of sub-menus, or
+MENUITEM_OPTIONS = {ID: BOOLEAN}                        - false : Do not include, true: Include with default options (=LAYEROPTIONS) given in the packages that build the layer, or
+MENUITEM_OPTIONS = {ID: FILENAME}                       - Include with the options (=LAYEROPTIONS) given in FILENAME pared with the default options, or
+MENUITEM_OPTIONS = {ID: (=OWNER_ID)} or OWNER_ID        - Include with (=LAYEROPTIONS) pared with the default options, or
+MENUITEM_OPTIONS = MMENUITEMOPTIONS                     = Options for a menu-item without layer-toggle. See fcoo/jquery-bootstrap-mmenu for details.
+
+OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
+
+****************************************************************************/
+(function ($, moment, window/*, document, undefined*/) {
+    "use strict";
+
+    var ns = window.fcoo = window.fcoo || {};
+
+
+    /****************************************************************************
+
+4: "Load" layerMenu and create the layers and the options for the mmenu
+5: "Load" the added layers via there build-method
+
+
+    /*********************************************
+    function convertList(listOrMenus)
+    listOrMenus =
+        list-mode = []MENUITEM. MWENUITEM = "MENU-ID" or {"MENU-ID": true/false/MENU-OPTIONS}
+    or
+        obj-mode  = {MENU-ID: MENU-OPTIONS-2}
+
+    MENU-OPTIONS / MENU-OPTIONs-2 = {
+        id: STRING (Only in MENU-OPTIONS)
+        icon, text,
+        list    : sub-menus in list-mode, or
+        submenus: sub-menus in obj-mode
+    }
+
+    Convert menu-items on the form "MENU_ID" or {"MENU_ID": true/false/options} => {id: "MENU_ID", options: true/false/options}
+    *********************************************/
+    function adjustMenuItem( id, menuItem ){
+        //MENU-ITEM == false or empty
+        if (!menuItem)
+            return false;
+
+        //MENU-ITEM = STRING
+        if ($.type(menuItem) == 'string')
+            return {
+                id         : menuItem,
+                isOwnerMenu: true,
+                options    : true
+            };
+
+        //If the menuItem only contains ONE element its assumed that it is {"MENU_ID": true/false/options}
+        var keys = Object.keys(menuItem);
+        if (keys.length == 1){
+            id = keys[0];
+            return {
+                id         : id,
+                isOwnerMenu: true,
+                options    : menuItem[id]
+            };
+        }
+
+        menuItem.id = menuItem.id || id;
+        //Convert/adjust the items submenus (in list or submenus)
+        menuItem.list = convertList( menuItem.list || menuItem.submenus );
+        delete menuItem.submenus;
+
+        return menuItem;
+    }
+
+    //*************************************************************
+    function convertList(listOrSubmenus){
+        if (!listOrSubmenus)
+            return null;
+
+        var result = [];
+        if ($.isArray(listOrSubmenus))
+            $.each(listOrSubmenus, (index, menuItem) => {
+                var adjustedMenuItem = adjustMenuItem(null, menuItem);
+                if (adjustedMenuItem)
+                    result.push( adjustedMenuItem );
+            });
+
+        if ($.isPlainObject(listOrSubmenus))
+            $.each(listOrSubmenus, (id, menuItem) => {
+                var adjustedMenuItem = adjustMenuItem(id, menuItem);
+                if (adjustedMenuItem)
+                    result.push( adjustedMenuItem );
+            });
+
+        return result;
+    }
+
+
+    /*************************************************************************
+    createFCOOMenu(options = {ownerList, finallyFunc, fileNameOrMenuOptions})
+    *************************************************************************/
+    ns.createFCOOMenu = function(options){
+        options.replaceMenuItems = {};
+        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'fcoo-maps-menu.json'}; //File name rettes til fcoo-menu.json
+
+        ns.promiseList.append( ns.options2promiseOptions( options.fileNameOrMenuOptions, resolveMenu.bind(null, options), true ) );
+    };
+
+    /*********************************************
+
+    *********************************************/
+    function resolveMenu(options, listOrMenus){
+        options.menuList = convertList(listOrMenus);
+        options.mapLayerAdded = false;
+
+        createMenu(options.menuList, {}, options);
+
+        //Add promise to check and finish the creation of the menu
+        ns.promiseList.append({
+            data   : options,
+            resolve: finishMenu,
+            wait   : true
+        });
+    }
+
+    /*********************************************
+
+    *********************************************/
+    function createMenu(menuList, parentMenuOptions, options){
+        $.each(menuList, function(index, menuItem){
+            let ownerFunc = menuItem.isOwnerMenu && !menuItem.ownerFuncCalled ? options.ownerList[menuItem.id] : null;
+
+            if (ownerFunc){
+                ownerFunc(
+                    menuItem.options || {},
+                    function(menuItemOrList)                     { addMenu(menuItemOrList, menuList, menuItem.id, options); },  //addMenu
+                    function(adjustmentsToParentMenuOptions = {}){ $.extend(parentMenuOptions, adjustmentsToParentMenuOptions); }   //adjustParentMenuOptions
+                );
+
+                //Mark the owner-menu as completed
+                menuList[index].ownerFuncCalled = true;
+
+            }
+            if (menuItem.list)
+                createMenu(menuItem.list, menuItem, options);
+        });
+    }
+
+    /*********************************************
+
+    *********************************************/
+    function addMenu(menuItemOrList, parentList, id, options){
+        //Append menuItemOrList to replaceMenuItems to be replaced in updateMenuList
+        options.replaceMenuItems[id] = $.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList];
+    }
+
+    /*********************************************
+
+    *********************************************/
+    function finishMenu(options){
+        //If any owner-function was called => Check again since some owner-functions may have just added new menuItems and owner-functions
+        let createMenuAgain = false;
+        options.menuList.forEach(menuItem => {
+            if (menuItem.isOwnerMenu && !menuItem.ownerFuncCalled)
+                createMenuAgain = true;
+        });
+
+        if (createMenuAgain)
+            createMenu(options.menuList, {}, options);
+
+        //Remove any empty menu-items
+        updateMenuList(options.menuList, options);
+
+        if (options.finallyFunc)
+            options.finallyFunc(options.menuList, options);
+    }
+
+    /*********************************************
+
+    *********************************************/
+    function updateMenuList(menuList, options){
+        var index, menuItem;
+        if (!menuList) return;
+
+        //Replace menu-item from replaceMenuItems
+        for (index=menuList.length-1; index>=0; index--){
+            menuItem = menuList[index];
+            if (menuItem && menuItem.id && options.replaceMenuItems[menuItem.id])
+                menuList.splice(index, 1, ...options.replaceMenuItems[menuItem.id]);
+        }
+
+        for (index=menuList.length-1; index>=0; index--){
+            menuItem = menuList[index];
+
+            if (menuItem && menuItem.list)
+                updateMenuList(menuItem.list, options);
+
+            if (menuItem && !menuItem.isOwnerMenu && ((menuItem.list && menuItem.list.length) || menuItem.type))
+                /* Keep menu-item*/;
+            else
+                menuList.splice(index, 1);
+        }
+    }
+}(jQuery, window.moment, this, document));
+
+
+
+
+;
+/****************************************************************************
 	fcoo-application-top-menu.js
 
 	(c) 2017, FCOO
@@ -2587,9 +3254,7 @@ Create and manage the top-menu for FCOO web applications
         var iconList = [];
         function addIcon( icon, className ){
             icon = $.isArray(icon) ? icon : [icon];
-            icon.forEach( function( iconClass ){
-                iconList.push(iconClass + ' ' + className );
-            });
+            icon.forEach( iconClass => iconList.push(iconClass + ' ' + className ) );
         }
         addIcon(allReadIcon,     'show-for-all-read');
         addIcon(notAllReadIcon , 'hide-for-all-read');
@@ -2883,8 +3548,8 @@ Create and manage the top-menu for FCOO web applications
 
         //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
         var firstRightSideFound = false;
-        $.each( topMenuElementList, function( index, elementOptions ){
-            var menuOptions = options[elementOptions.id];
+        topMenuElementList.forEach( elementOptions => {
+            let menuOptions = options[elementOptions.id];
             if (!menuOptions)
                 return true;
 
@@ -3329,7 +3994,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         _setSizeModernizrTest: function(){
-            this.options.sizeList.forEach( function(sizeOptions, index){
+            this.options.sizeList.forEach( (sizeOptions, index) => {
                 if (sizeOptions.modernizr)
                     window.modernizrToggle(sizeOptions.modernizr, index == this.options.sizeIndex);
             }, this);
@@ -3441,9 +4106,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.isOpen = false;
             this.hideMask();
 
-            this._onClose.forEach((func) =>{
-                func(this);
-            }, this);
+            this._onClose.forEach(func => func(this), this);
 
             window.modernizrOff(this.options.position +'-menu-open');
 

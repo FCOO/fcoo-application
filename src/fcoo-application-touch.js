@@ -415,7 +415,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         _setSizeModernizrTest: function(){
-            this.options.sizeList.forEach( function(sizeOptions, index){
+            this.options.sizeList.forEach( (sizeOptions, index) => {
                 if (sizeOptions.modernizr)
                     window.modernizrToggle(sizeOptions.modernizr, index == this.options.sizeIndex);
             }, this);
@@ -527,9 +527,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.isOpen = false;
             this.hideMask();
 
-            this._onClose.forEach((func) =>{
-                func(this);
-            }, this);
+            this._onClose.forEach(func => func(this), this);
 
             window.modernizrOff(this.options.position +'-menu-open');
 
