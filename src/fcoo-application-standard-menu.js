@@ -161,7 +161,7 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     *************************************************************************/
     ns.createFCOOMenu = function(options){
         options.replaceMenuItems = {};
-        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'XXfcoo-maps-menu.json'}; //File name rettes til fcoo-menu.json
+        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'fcoo-maps-menu.json'}; //File name rettes til fcoo-menu.json
 
         ns.promiseList.append( ns.options2promiseOptions( options.fileNameOrMenuOptions, resolveMenu.bind(null, options), true ) );
     };
