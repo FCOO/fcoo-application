@@ -165,11 +165,14 @@ load setup-files in fcoo.promiseList after checking for test-modes
     Error-message for promise-list
     *************************************************************************/
     ns.promiseList.options.reject = function(){
-        var appName = {da:'applikationen', en: 'the Application'};
-        if (ns.applicationName.da)
-            appName.da = '<em>' + ns.applicationName.da + '</em>';
-        if (ns.applicationName.en)
-            appName.en = '<em>' + ns.applicationName.en + '</em>';
+        let appName = {da:'applikationen', en: 'the Application'};
+        if (ns.applicationHeader){
+            if (ns.applicationHeader.da)
+                appName.da = '<em>' + ns.applicationHeader.da + '</em>';
+            if (ns.applicationHeader.en)
+                appName.en = '<em>' + ns.applicationHeader.en + '</em>';
+        }
+
         $.bsModal({
             header  : {icon: $.bsNotyIcon.error, text: $.bsNotyName.error},
             type    : 'error',
@@ -183,8 +186,10 @@ load setup-files in fcoo.promiseList after checking for test-modes
             buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
             scroll  : false,
             remove  : true,
-            show    : true
+            //show    : true
         });
+
+
         return false;
     };
 

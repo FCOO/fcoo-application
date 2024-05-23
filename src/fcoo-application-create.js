@@ -118,6 +118,9 @@ Methods to create standard FCC-web-applications
         //Adjust options
         nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
 
+        //Set applicationHeader here because it is used in promise-error
+        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
+
         nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
 
         //Adjust path: If path is file-name (in any form) => move it into default format

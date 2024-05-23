@@ -333,6 +333,11 @@
                 },
 
                 rightMenu: {
+                    width: 333,
+                    isStandardMenu: true
+                },
+
+                xxrightMenu: {
                     sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
                     //standardHandler: true,
                     $menu: $('<div style="background-color: green"/>')
@@ -653,7 +658,7 @@ window.intervals.addInterval({
         
         $(function() { 
 
-            window.fcoo.createApplication(applicationOptions, create_main_content);
+            window.fcoo.createApplication(applicationOptions, create_main_content, {});
         });
     </script>
 </body>

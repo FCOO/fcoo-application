@@ -278,6 +278,9 @@ Methods to create standard FCC-web-applications
         //Adjust options
         nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
 
+        //Set applicationHeader here because it is used in promise-error
+        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
+
         nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
 
         //Adjust path: If path is file-name (in any form) => move it into default format
@@ -1237,7 +1240,7 @@ Create and manage the main structure for FCOO web applications
         }, options );
 
         //Sets ns.applicationHeader
-        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
+        ns.applicationHeader = ns.applicationHeader || $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
 
         //Disabling transition, transform, or animation.
         ['noTransition', 'noTransform', 'noAnimation'].forEach( (id, index) => {
@@ -2491,11 +2494,14 @@ load setup-files in fcoo.promiseList after checking for test-modes
     Error-message for promise-list
     *************************************************************************/
     ns.promiseList.options.reject = function(){
-        var appName = {da:'applikationen', en: 'the Application'};
-        if (ns.applicationName.da)
-            appName.da = '<em>' + ns.applicationName.da + '</em>';
-        if (ns.applicationName.en)
-            appName.en = '<em>' + ns.applicationName.en + '</em>';
+        let appName = {da:'applikationen', en: 'the Application'};
+        if (ns.applicationHeader){
+            if (ns.applicationHeader.da)
+                appName.da = '<em>' + ns.applicationHeader.da + '</em>';
+            if (ns.applicationHeader.en)
+                appName.en = '<em>' + ns.applicationHeader.en + '</em>';
+        }
+
         $.bsModal({
             header  : {icon: $.bsNotyIcon.error, text: $.bsNotyName.error},
             type    : 'error',
@@ -2509,8 +2515,10 @@ load setup-files in fcoo.promiseList after checking for test-modes
             buttons : [{id:'fa-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: function(){ window.location.reload(true); }}],
             scroll  : false,
             remove  : true,
-            show    : true
+            //show    : true
         });
+
+
         return false;
     };
 
@@ -3094,7 +3102,7 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     *************************************************************************/
     ns.createFCOOMenu = function(options){
         options.replaceMenuItems = {};
-        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'fcoo-maps-menu.json'}; //File name rettes til fcoo-menu.json
+        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'XXfcoo-maps-menu.json'}; //File name rettes til fcoo-menu.json
 
         ns.promiseList.append( ns.options2promiseOptions( options.fileNameOrMenuOptions, resolveMenu.bind(null, options), true ) );
     };

@@ -68,7 +68,7 @@ Create and manage the main structure for FCOO web applications
         }, options );
 
         //Sets ns.applicationHeader
-        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
+        ns.applicationHeader = ns.applicationHeader || $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
 
         //Disabling transition, transform, or animation.
         ['noTransition', 'noTransform', 'noAnimation'].forEach( (id, index) => {
