@@ -317,7 +317,7 @@ Methods to create standard FCC-web-applications
             if (sideMenuOptions.isStandardMenu){
                 //Set the options for mmenu
                 sideMenuOptions.menuOptions =
-                    $.extend({}, sideMenuOptions.bsMenuOptions || {}, options.layerMenuOptions || {}, {list: []});
+                    $.extend({}, sideMenuOptions.bsMenuOptions || {}, options.standardMenuOptions || {}, {list: []});
 
                 //Set ref to the menu with the standard menu
                 options.standardMenuId = prefix+'Menu';
@@ -484,7 +484,7 @@ See src/fcoo-application-create.js
             barCloseAll: BOOLEAN,
             inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true)
             barCloseAll: BOOLEAN, if true a top-bar button is added that closes all open submenus
-            favorites  : Nothing or false. Nothing = default saving, false: no favorites
+            favorites  : BOOLEAN, true = default saving, false: no favorites
         }
 
         leftMenu/rightMenu: true or false or {
@@ -2014,11 +2014,11 @@ Objects and methods to set up Mmenu via $.bsMmenu
             inclBar    : true,
             barCloseAll: true,
 
-            favorites: {
+            favorites: options.favorites ? {
                 get   : function(id){ return favorite_get(menuId, id); },
                 add   : function(id){ favorite_set(menuId, id, true);  },
                 remove: function(id){ favorite_set(menuId, id, false); },
-            }
+            } : null
         }, options);
 
 
