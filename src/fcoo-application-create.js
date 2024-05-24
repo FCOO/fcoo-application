@@ -157,7 +157,7 @@ Methods to create standard FCC-web-applications
             if (sideMenuOptions.isStandardMenu){
                 //Set the options for mmenu
                 sideMenuOptions.menuOptions =
-                    $.extend({}, sideMenuOptions.bsMenuOptions || {}, options.layerMenuOptions || {}, {list: []});
+                    $.extend({}, sideMenuOptions.bsMenuOptions || {}, options.standardMenuOptions || {}, {list: []});
 
                 //Set ref to the menu with the standard menu
                 options.standardMenuId = prefix+'Menu';

@@ -53,11 +53,11 @@ Objects and methods to set up Mmenu via $.bsMmenu
             inclBar    : true,
             barCloseAll: true,
 
-            favorites: {
+            favorites: options.favorites ? {
                 get   : function(id){ return favorite_get(menuId, id); },
                 add   : function(id){ favorite_set(menuId, id, true);  },
                 remove: function(id){ favorite_set(menuId, id, false); },
-            }
+            } : null
         }, options);
 
 

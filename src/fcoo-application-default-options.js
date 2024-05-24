@@ -25,7 +25,7 @@ See src/fcoo-application-create.js
             barCloseAll: BOOLEAN,
             inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true)
             barCloseAll: BOOLEAN, if true a top-bar button is added that closes all open submenus
-            favorites  : Nothing or false. Nothing = default saving, false: no favorites
+            favorites  : BOOLEAN, true = default saving, false: no favorites
         }
 
         leftMenu/rightMenu: true or false or {
