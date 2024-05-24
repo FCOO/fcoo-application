@@ -652,8 +652,26 @@ window.intervals.addInterval({
         
         
         $(function() { 
+            let menuOptions = {
+                    ownerList: {}, 
+                    keepAll: true,
+                    finallyFunc: (menuList, options) => console.log('menuList=', menuList)
+                }                
+            
+            //1:
+            window.fcoo.createFCOOMenu(menuOptions);            
 
-            window.fcoo.createApplication(applicationOptions, create_main_content);
+            //or 2
+            window.fcoo.createApplication(
+                applicationOptions, 
+                create_main_content, 
+                //2: menuOptions
+            );
+
+            //or 3 When no createApplication is included: 
+            //window.fcoo.createFCOOMenu(menuOptions);            
+            //window.fcoo.promiseList.getAll();            
+            
         });
     </script>
 </body>

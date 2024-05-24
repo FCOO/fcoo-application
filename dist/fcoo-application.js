@@ -387,10 +387,12 @@ Methods to create standard FCC-web-applications
         call the users finally-method
     *************************************************************************/
     function standardMenuFinally(menuList, menuOptions){
-        let standardMenuOptions = nsApp.setupOptions[nsApp.setupOptions.standardMenuId].menuOptions;
+        if (nsApp.setupOptions.standardMenuId){
+            let standardMenuOptions = nsApp.setupOptions[nsApp.setupOptions.standardMenuId].menuOptions;
 
-        if (standardMenuOptions && standardMenuOptions.list)
-            standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+            if (standardMenuOptions && standardMenuOptions.list)
+                standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+        }
 
         if (menuOptions.appFinallyFunc)
             menuOptions.appFinallyFunc(menuList, menuOptions);
@@ -2494,7 +2496,12 @@ load setup-files in fcoo.promiseList after checking for test-modes
     promiseListError
     Error-message for promise-list
     *************************************************************************/
-    ns.promiseList.options.reject = function(){
+    ns.promiseList.options.reject = function(e){
+        /* eslint-disable no-console */
+        if (ns.DEV_VERSION)
+            console.log(e);
+        /* eslint-enable no-console */
+
         let appName = {da:'applikationen', en: 'the Application'};
         if (ns.applicationHeader){
             if (ns.applicationHeader.da)
@@ -3113,7 +3120,6 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     *********************************************/
     function resolveMenu(options, listOrMenus){
         options.menuList = convertList(listOrMenus);
-        options.mapLayerAdded = false;
 
         createMenu(options.menuList, {}, options);
 
@@ -3200,7 +3206,8 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
             if (menuItem && !menuItem.isOwnerMenu && ((menuItem.list && menuItem.list.length) || menuItem.type))
                 /* Keep menu-item*/;
             else
-                menuList.splice(index, 1);
+                if (!options.keepAll)
+                    menuList.splice(index, 1);
         }
     }
 }(jQuery, window.moment, this, document));

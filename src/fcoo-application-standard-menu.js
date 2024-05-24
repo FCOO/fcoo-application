@@ -171,7 +171,6 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     *********************************************/
     function resolveMenu(options, listOrMenus){
         options.menuList = convertList(listOrMenus);
-        options.mapLayerAdded = false;
 
         createMenu(options.menuList, {}, options);
 
@@ -258,7 +257,8 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
             if (menuItem && !menuItem.isOwnerMenu && ((menuItem.list && menuItem.list.length) || menuItem.type))
                 /* Keep menu-item*/;
             else
-                menuList.splice(index, 1);
+                if (!options.keepAll)
+                    menuList.splice(index, 1);
         }
     }
 }(jQuery, window.moment, this, document));

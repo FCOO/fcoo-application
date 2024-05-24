@@ -164,7 +164,12 @@ load setup-files in fcoo.promiseList after checking for test-modes
     promiseListError
     Error-message for promise-list
     *************************************************************************/
-    ns.promiseList.options.reject = function(){
+    ns.promiseList.options.reject = function(e){
+        /* eslint-disable no-console */
+        if (ns.DEV_VERSION)
+            console.log(e);
+        /* eslint-enable no-console */
+
         let appName = {da:'applikationen', en: 'the Application'};
         if (ns.applicationHeader){
             if (ns.applicationHeader.da)

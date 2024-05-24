@@ -227,10 +227,12 @@ Methods to create standard FCC-web-applications
         call the users finally-method
     *************************************************************************/
     function standardMenuFinally(menuList, menuOptions){
-        let standardMenuOptions = nsApp.setupOptions[nsApp.setupOptions.standardMenuId].menuOptions;
+        if (nsApp.setupOptions.standardMenuId){
+            let standardMenuOptions = nsApp.setupOptions[nsApp.setupOptions.standardMenuId].menuOptions;
 
-        if (standardMenuOptions && standardMenuOptions.list)
-            standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+            if (standardMenuOptions && standardMenuOptions.list)
+                standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+        }
 
         if (menuOptions.appFinallyFunc)
             menuOptions.appFinallyFunc(menuList, menuOptions);
