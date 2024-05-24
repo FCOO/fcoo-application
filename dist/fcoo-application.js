@@ -3512,17 +3512,17 @@ Create and manage the top-menu for FCOO web applications
     ******************************************************************/
     ns.createTopMenu = function( options ){
         options = $.extend({}, {
-            leftMenu   : true,
+            leftMenu   : false,
             logo       : true,
             header     : $.extend({}, ns.applicationHeader),
             messages   : null,
             warning    : null,
-            search     : true,
+            search     : false,
             preSetting : false, //or {icon, onClick}
             setting    : true,
             postSetting: false, //or {icon, onClick}
             help       : null,
-            rightMenu  : true
+            rightMenu  : false
         }, options );
 
         //Extend header with ns.applicationBranch (if any)
