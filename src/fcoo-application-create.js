@@ -115,11 +115,12 @@ Methods to create standard FCC-web-applications
     resolve_setup(options)
     ******************************************************************/
     function resolve_setup(options){
-        //Adjust options
-        nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
 
         //Set applicationHeader here because it is used in promise-error
-        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || {da: ''} );
+        ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || ns.defaultApplicationOptions.applicationName );
+
+        //Adjust options
+        nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
 
         nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
 
