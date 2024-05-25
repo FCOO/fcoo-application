@@ -2010,15 +2010,17 @@ Objects and methods to set up Mmenu via $.bsMmenu
             favoriteSetting.load( favoriteSettingId, favoritesSetting_afterLoad );
         }
 
-        options = $.extend(true, {}, {
-            inclBar    : true,
-            barCloseAll: true,
 
-            favorites: options.favorites ? {
+        if (options.favorites === true)
+            options.favorites = {
                 get   : function(id){ return favorite_get(menuId, id); },
                 add   : function(id){ favorite_set(menuId, id, true);  },
                 remove: function(id){ favorite_set(menuId, id, false); },
-            } : null
+            };
+
+        options = $.extend(true, {}, {
+            inclBar    : true,
+            barCloseAll: true,
         }, options);
 
 
