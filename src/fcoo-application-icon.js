@@ -33,6 +33,19 @@ Objects and methods to create icons for buttons etc.
     //Alternative
     ns.icons.spinner = ns.icons.working;
 
+
+    /******************************************************************
+    ns.standardIcon(..)
+    Return the standard icon (round or square) with color given by color-names and colorNamePrefix
+    ******************************************************************/
+    ns.standardIcon = function(colorClassName, round=false, borderColorClassName='text-black', faClassName='', extraClassName=''){
+        return $.bsMarkerAsIcon(
+            colorClassName,
+            borderColorClassName,
+            {'faClassName': faClassName ? faClassName : (round ? 'fa-circle' : 'fa-square-full'), extraClassName: extraClassName}
+        );
+    };
+
 }(jQuery, this, document));
 
 

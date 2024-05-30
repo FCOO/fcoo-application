@@ -161,7 +161,7 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     *************************************************************************/
     ns.createFCOOMenu = function(options){
         options.replaceMenuItems = {};
-        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'fcoo-maps-menu.json'}; //File name rettes til fcoo-menu.json
+        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'fcoo-menu.json'}; //File name rettes til fcoo-menu.json
 
         ns.promiseList.append( ns.options2promiseOptions( options.fileNameOrMenuOptions, resolveMenu.bind(null, options), true ) );
     };
@@ -250,6 +250,23 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
 
         for (index=menuList.length-1; index>=0; index--){
             menuItem = menuList[index];
+
+
+            //Convert icon (if exists and possible)
+            if (menuItem.icon && $.isPlainObject(menuItem.icon)){
+                //Convert icon with colorName(s) to "real" icons
+                let icon = menuItem.icon;
+                if (icon.colorClassName)
+                    menuItem.icon = ns.standardIcon(
+                        icon.colorClassName,
+                        icon.round,
+                        icon.borderColorName,
+                        icon.faClassName,
+                        icon.extraClassName,
+                        icon.colorNamePrefix
+                    );
+            }
+
 
             if (menuItem && menuItem.list)
                 updateMenuList(menuItem.list, options);

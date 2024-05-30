@@ -1,6 +1,6 @@
 {
   "name": "fcoo-application",
-  "version": "18.1.2",
+  "version": "18.2.0",
   "homepage": "https://github.com/FCOO/fcoo-application",
   "authors": [
     "Niels Holt"
@@ -36,6 +36,7 @@
   "dependencies": {
     "jquery": "latest",
     "fcoo-application-logo-and-color": "fcoo/fcoo-application-logo-and-color#latest",
+    "fcoo-maps-colors": "fcoo/fcoo-maps-colors#latest",
     "fcoo-global-events": "fcoo/fcoo-global-events#^1.0.0",
     "fcoo-settings": "fcoo/fcoo-settings#^3.7.1",
     "fcoo-promise-list": "fcoo/fcoo-promise-list#^1.0.0",

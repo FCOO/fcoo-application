@@ -7,6 +7,7 @@
 
     <link  href="bower_components.css" rel="stylesheet">
     <link  href="../src/fcoo-application.css" rel="stylesheet">
+    <link  href="demo.css" rel="stylesheet">
     <style>
         /* Test */
 
@@ -169,6 +170,11 @@
                     },
                 },
                 leftMenu  : {
+                    width: 400, 
+                    isStandardmenu: true,
+                    menuOptions: {keepAll: true}
+                },                    
+                __leftMenu  : {
                     width: 400, 
                     buttons: {
                         //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
@@ -643,6 +649,18 @@ window.intervals.addInterval({
                 icon  : 'wi wi-day-fog',
                 square: true,
              }).appendTo($mainContainer);
+            $.bsButton({
+                icon : fcoo.standardIcon('fa-navigation'),
+                //icon: ['fas fa-shapes  fa-navigation', 'fal fa-shapes  text-black'], 
+                //icon: [['fas fa-square-full  fa-navigation', 'fal fa-square-full  text-black']],
+                
+                text: 'Standard (niord-nw)',
+                //square: true,
+             }).appendTo($mainContainer);
+
+
+
+    
     }
     //**************************************************
             
@@ -654,7 +672,10 @@ window.intervals.addInterval({
             let menuOptions = {
                     ownerList: {}, 
                     keepAll: true,
-                    finallyFunc: (menuList, options) => console.log('menuList=', menuList)
+                    finallyFunc: (menuList, options) => {
+                        console.log('menuList=', menuList);
+                        console.log('options=', options);
+                    }                        
                 }                
             
             //1:
