@@ -18,7 +18,7 @@
 
 ************************************************/
 /***********************************************
-    modernizr-mediaquery.scss,
+    modernizr-mediaquery.scss, 
 
     (c) 2015, FCOO
 
@@ -27,7 +27,7 @@
 
 ************************************************/
 /***********************************************
-    modernizr-mediaquery-variables.scss,
+    modernizr-mediaquery-variables.scss, 
 
     (c) 2015, FCOO
 
@@ -38,7 +38,7 @@
 
 ************************************************/
 /***********************************************
-    _modernizr-mediaquery-orientation_print.scss,
+    _modernizr-mediaquery-orientation_print.scss, 
 
     (c) 2015, FCOO
 
@@ -37020,6 +37020,11 @@ Can be changed by mixin application-base-color( new-color )
 in src/_fcoo-color-mixin.scss
 **********************************************************/
 /**********************************************************
+Environmental colors
+Defines a number of colors and $-variables for different
+parts of the environmental. Eq sky, cloud, sea etc.
+**********************************************************/
+/**********************************************************
     fcoo-colors-mixin.scss
 
 	https://github.com/FCOO/fcoo-colors
@@ -37087,6 +37092,11 @@ create color-classes for bsMarker and bsPolyline
 /*********************************
 Style for search results in fcoo-maps
 *********************************/
+/***********************************************
+_fcoo-maps-colors-search-result.scss
+
+
+************************************************/
 .lbm-type-circle.lbm-color-search-result {
   background-color: #EC640C;
   color: #000;
@@ -37124,6 +37134,10 @@ Style for search results in fcoo-maps
   stroke: #EC640C;
 }
 
+.fa-search-result {
+  color: #EC640C;
+}
+
 /*********************************
 FCOO-MAPS-COLORS-OBSERVATIONS
 Style for fcoo/fcoo-maps-observations
@@ -37159,6 +37173,10 @@ Style for fcoo/fcoo-maps-observations
 }
 
 .fa-lbm-border-color-observations {
+  color: #EFB920;
+}
+
+.fa-observations {
   color: #EFB920;
 }
 
@@ -37325,6 +37343,38 @@ Create the style for the four different domains
   color: #E5238C;
 }
 
+.fa-niord-fa {
+  color: white;
+}
+
+.fa-niord-border-fa {
+  color: #7c0043;
+}
+
+.fa-niord-nm {
+  color: white;
+}
+
+.fa-niord-border-nm {
+  color: #7c0043;
+}
+
+.fa-niord-nw {
+  color: #E2007A;
+}
+
+.fa-niord-border-nw {
+  color: #7c0043;
+}
+
+.fa-niord-fe {
+  color: #E2007A;
+}
+
+.fa-niord-border-fe {
+  color: #7c0043;
+}
+
 :root {
   --jbn-time-past-color: var(--fc-time-past-color);
   --jbn-time-now-color: var(--fc-time-now-color);
@@ -37395,6 +37445,14 @@ Style for fcoo/fcoo-maps-havnelods
 }
 
 .fa-lbm-border-color-harbor-gl {
+  color: #60AA14;
+}
+
+.fa-harbor-dk {
+  color: #7CB82F;
+}
+
+.fa-harbor-gl {
   color: #60AA14;
 }
 
