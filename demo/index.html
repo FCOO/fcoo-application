@@ -203,6 +203,7 @@
                         //postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
                     },
                     menuOptions: {
+                        favorites: true,
                         reset: true,
                         resetText: {da:'Fravælg alle VENSTRE menuer', en:'Reset all LEFT menus'},
                         onChange: function(id, state, item){
@@ -222,7 +223,9 @@
                             list: [{
                                 id: 'HER', text: 'HER Item 2-1', icon:'fa-home',
                                 list: [{
-                                    text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', type:'checkbox', state: true
+                                    text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', 
+                                    favoriteText: 'Item 2-1-1 in en kort version til Favoriter',
+                                    type:'checkbox', state: true
                                 }, {
                                     text: 'Item 2-1-2', type: 'checkbox'
                                 }, {
