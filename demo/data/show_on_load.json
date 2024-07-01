@@ -5,6 +5,16 @@
     },
     "messages": [
         {
+            "id": "unread",
+            "date": "2024-07-01",
+            "title": {"da":"1:Ikke læst?", "en":"1:Not read?"}
+        },
+        {
+            "id": "unread2",
+            "date": "2024-07-01",
+            "title": {"da":"2:Ikke læst?", "en":"2:Not read?"}
+        },
+        {
             "id": "test_always",
             "date": "2021-01-25",
             "title": {"da":"Vises ALTID", "en":"ALWAYS shown"},
@@ -18,7 +28,7 @@
         },
         {
             "id": "test_every_10",
-            "date": "2021-01-25",
+            "date": "2024-07-01",
             "title": {"da":"Vises HVER 10. MINUT", "en":"Shown EVERY 10 MINUTES"},
             "showAfter": "PT10S"
         }

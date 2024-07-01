@@ -12,14 +12,14 @@ Objects and methods to create message-groups
     //messageGroupList = [] of messageGroup that saves status in globalSetting
     var messageGroupList =  [];
 
-    //Add 'messages' to fcoo.globalSetting
-    ns.globalSetting.add({
-        id          : 'messages',
-        validator   : function(){ return true; },
-        applyFunc   : function( messageStatus ){
-            $.each(messageGroupList, function(index, messageGroup){
-                $.each(messageGroup.list, function(index2, message){
-                    var newStatus = messageStatus[message.getFCOOId()];
+    //globalSettingMessageStatus = the status-record for read messages from globalSetting
+    let globalSettingMessageStatus = {};
+
+    let applyGlobalSettingMessageStatus = () => {
+            messageGroupList.forEach( messageGroup => {
+                messageGroup.list.forEach( message => {
+
+                    var newStatus = globalSettingMessageStatus[message.getFCOOId()];
                     if (newStatus)
                         message.setStatus(newStatus);
 
@@ -32,7 +32,7 @@ Objects and methods to create message-groups
                         if ((opt.showOnce || opt.showAfter) && !opt.status)
                             showOnLoad = true;
 
-                        //Check if the the last time the message was shownis more than options.showAfter
+                        //Check if the the last time the message was shown is more than options.showAfter
                         if (!showOnLoad && opt.showAfter){
                             var lastShown = moment(opt.status),
                                 duration  = moment.duration(opt.showAfter);
@@ -47,6 +47,16 @@ Objects and methods to create message-groups
                         message.asBsModal(true, true);
                 });
             });
+        };
+
+
+    //Add 'messages' to fcoo.globalSetting
+    ns.globalSetting.add({
+        id          : 'messages',
+        validator   : function(){ return true; },
+        applyFunc   : function( messageStatus ){
+            globalSettingMessageStatus = messageStatus;
+            applyGlobalSettingMessageStatus();
         },
         defaultValue: {},
         callApply   : true
@@ -106,6 +116,10 @@ Objects and methods to create message-groups
             },
 */
             onFinishLoading: function( messageGroup ){
+
+                //Apply saved saved status from globalSetting
+                applyGlobalSettingMessageStatus();
+
                 //Close all error-noty displayed during loading
                 window.Noty.closeAll(messageGroup.options.id);
 
