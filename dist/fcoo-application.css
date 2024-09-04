@@ -582,6 +582,9 @@ body .outer-container, body .main-container {
   right: 0;
   bottom: 0;
 }
+body .main-container {
+  background-color: white;
+}
 
 /*****************************************************
 Style for top menu
