@@ -584,6 +584,8 @@ body .outer-container, body .main-container {
 }
 body .main-container {
   background-color: white;
+}
+body .main-container.scroll-smooth {
   scroll-behavior: smooth;
 }
 
