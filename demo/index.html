@@ -77,6 +77,7 @@
         window.fcoo = window.fcoo || {};
         window.fcoo.DEMO_VERSION = true;
         window.fcoo.DEV_VERSION = true;
+
 // HER>         window.fcoo.centerConsole = function(text){ console.log('****', text, '****'); }
         
         function toggleH( elem) {
@@ -97,6 +98,7 @@
 
     <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
     <script src="../src/fcoo-application-about.js"></script>
+    <script src="../src/fcoo-application-clipboard.js"></script>
     <script src="../src/fcoo-application-color.js"></script>
     
 <script src="../src/fcoo-application-create.js"></script>
@@ -112,13 +114,20 @@
     <script src="../src/fcoo-application-promise.js"></script>
     <script src="../src/fcoo-application-reset.js"></script>
     
-<script src="../src/fcoo-application-standard-menu.js"></script>
+    <script src="../src/fcoo-application-standard-menu.js"></script>
     
     <script src="../src/fcoo-application-setting.js"></script>
     <script src="../src/fcoo-application-touch.js"></script>
     <script src="../src/fcoo-application-top-menu.js"></script>
 
-	<script>
+
+    <script src="../src/saved-setting-depot.js"></script>
+    <script src="../src/saved-setting-list.js"></script>
+    <script src="../src/saved-setting.js"></script>
+    <script src="../src/sharer.js"></script>
+
+    
+    <script>
         window.bsIsTouch = false;
         window.bsIsTouch = (window.location.search =='?touch');
 
@@ -143,9 +152,18 @@
         $rightMenu.append('SLUT');
         
         let applicationOptions = {
-                header: {da: 'DA: fcoo-application', en: 'EN: fcoo-application'},
+                _header: {da: 'DA:fcoo-application', en: 'EN:fcoo-application'},
+                header: {        
+                    da: "Dette er applikationens lange navn",
+                    en: "This is the long name of the applikation"
+                },                    
+                
                 mainContainerAsHandleContainer: true,
                 minMainWidth: 456,
+                    
+                depotOptions: {
+                    url  : 'https://staging.fcooapp.com/ifm-service/api/'
+                },                    
                     
                 topMenu: {
                     //search: false,
@@ -160,7 +178,7 @@
                     _messages: {
                         url: 'data/show_on_load.json'
                     },
-                    warning: {
+                    _warning: {
                         url: 'data/oceanforecast_warning.json data/oceanforecast_warning2.json',
                         //reloadPeriod: 'PT5S',
                    },
@@ -181,25 +199,10 @@
                         save    :   true, //Standard save-button
                         load    :   true, //Standard load-button
                         bookmark:   true, //Standard bootmark-button
-                        share   :   function(){
-                                        if (navigator.share) {
-                                            navigator.share({
-                                                title: 'WebShare API Demo',
-                                                url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-                                            })
-                                            .then(function(){
-                                                console.log('Thanks for sharing!');
-                                            })
-                                            .catch(console.error);
-                                        }
-                                        else {
-                                            // fallback
-                                            console.log('no share')
-                                        }
-                                    },
-                        user   : true,
-                        reset  : true,
-                        setting: true,
+                        share   :   true, //Standard share-button  
+                        user    : true,
+                        reset   : true,
+                        setting : true,
                         //postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
                     },
                     menuOptions: {
@@ -661,21 +664,74 @@ window.intervals.addInterval({
                 //square: true,
              }).appendTo($mainContainer);
 
+   
 
-
-    
-    }
-    //**************************************************
             
-        
-        
-        
-        
+            let $sel = $.bsSelect({
+                id: 'niels',
+                list: [
+                    {id: 'no-0', text: 'Nummer 0'},
+                    {id: 'no-1', text: 'Nummer 1'},
+                    {id: 'no-2', text: 'Nummer 2'},
+                    {id: 'no-3', text: 'Nummer 3'},
+                    {id: 'no-4', text: 'Nummer 4'},
+                    {id: 'no-5', text: 'Nummer 5'},
+                    {id: 'no-6', text: 'Nummer 6'},
+                    {id: 'no-7', text: 'Nummer 7'},
+                    {id: 'no-8', text: 'Nummer 8'},
+                    {id: 'no-9', text: 'Nummer 9'},
+                ],
+                onChange: function(id){ fcoo.appSetting.set('niels', id); }
+            }).appendTo($mainContainer);               
+
+           
+            fcoo.appSetting.add({
+                id: 'niels',
+               applyFunc: function(value){ 
+                   $sel.get(0).selectedIndex = value.split('-')[1];
+                },
+                defaultValue: 'no-0'
+            });            
+
+            let $sel2 = $.bsSelect({
+                id: 'niels2',
+                list: [
+                    {id: 'no-0', text: 'Dette er nummer 0'},
+                    {id: 'no-1', text: 'Dette er nummer 1'},
+                    {id: 'no-2', text: 'Dette er nummer 2'},
+                    {id: 'no-3', text: 'Dette er nummer 3'},
+                    {id: 'no-4', text: 'Dette er nummer 4'},
+                    {id: 'no-5', text: 'Dette er nummer 5'},
+                    {id: 'no-6', text: 'Dette er nummer 6'},
+                    {id: 'no-7', text: 'Dette er nummer 7'},
+                    {id: 'no-8', text: 'Dette er nummer 8'},
+                    {id: 'no-9', text: 'Dette er nummer 9'},
+
+                ],
+                onChange: function(id){ fcoo.appSetting.set('niels2', id); }
+            }).appendTo($mainContainer);               
+
+           
+            fcoo.appSetting.add({
+                id: 'niels2',
+               applyFunc: function(value){ 
+                   $sel2.get(0).selectedIndex = value.split('-')[1];
+                },
+                defaultValue: 'no-0'
+            });            
+ 
+    }
+
+    //**************************************************
+    window.fcoo.applicationId = 'fcoo-application';
+
+    //**************************************************
         $(function() { 
             let menuOptions = {
                     ownerList: {}, 
                     keepAll: true,
                     finallyFunc: (menuList, options) => {
+                        
                         //console.log('menuList=', menuList);
                         //console.log('options=', options);
                     }                        
@@ -696,6 +752,10 @@ window.intervals.addInterval({
             //window.fcoo.promiseList.getAll();            
             
         });
+
+
+
+       
     </script>
 </body>
 </html>

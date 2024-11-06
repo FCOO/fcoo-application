@@ -10742,7 +10742,7 @@ return jQuery;
 
 ;(function(window, document, undefined){
   var tests = [];
-  
+
 
   /**
    *
@@ -10791,7 +10791,7 @@ return jQuery;
     }
   };
 
-  
+
 
   // Fake some of Object.create so we can force non test results to be non "own" properties.
   var Modernizr = function() {};
@@ -10801,10 +10801,10 @@ return jQuery;
   // Overwrite name so constructor name is nicer :D
   Modernizr = new Modernizr();
 
-  
+
 
   var classes = [];
-  
+
 
   /**
    * is returns a boolean if the typeof an obj is exactly type.
@@ -10900,7 +10900,7 @@ return jQuery;
    */
 
   var docElement = document.documentElement;
-  
+
 
   /**
    * A convenience helper to check if the document we are running in is an SVG document
@@ -10910,7 +10910,7 @@ return jQuery;
    */
 
   var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-  
+
 
   /**
    * setClasses takes an array of class names and adds them to the root element
@@ -10978,7 +10978,7 @@ return jQuery;
     }
   })();
 
-  
+
 
 
    // _l tracks listeners for async tests, as well as tests that execute after the initial run
@@ -11188,7 +11188,7 @@ return jQuery;
     ModernizrProto.addTest = addTest;
   });
 
-  
+
 
 
   /**
@@ -11208,11 +11208,11 @@ return jQuery;
    */
 
   var omPrefixes = 'Moz O ms Webkit';
-  
+
 
   var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
   ModernizrProto._cssomPrefixes = cssomPrefixes;
-  
+
 
   /**
    * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
@@ -11279,7 +11279,7 @@ return jQuery;
 
   ModernizrProto.atRule = atRule;
 
-  
+
 
   /**
    * createElement is a convenience wrapper around document.createElement. Since we
@@ -11380,7 +11380,7 @@ return jQuery;
 
 
   ModernizrProto.hasEvent = hasEvent;
-  
+
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -11553,7 +11553,7 @@ return jQuery;
 
   ModernizrProto.mq = mq;
 
-  
+
 
 
   /**
@@ -11587,7 +11587,7 @@ return jQuery;
     delete modElem.elem;
   });
 
-  
+
 
   var mStyle = {
     style: modElem.elem.style
@@ -11599,7 +11599,7 @@ return jQuery;
     delete mStyle.style;
   });
 
-  
+
 
   /**
    * domToCSS takes a camelCase string and converts it to kebab-case
@@ -11789,7 +11789,7 @@ return jQuery;
 
   var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
   ModernizrProto._domPrefixes = domPrefixes;
-  
+
 
   /**
    * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
@@ -11884,7 +11884,7 @@ return jQuery;
   // Modernizr.testAllProps('boxSizing')
   ModernizrProto.testAllProps = testPropsAll;
 
-  
+
 
   /**
    * prefixed returns the prefixed or nonprefixed property name variant of your input
@@ -11968,7 +11968,7 @@ return jQuery;
     }
   };
 
-  
+
 /*!
 {
   "name": "Fullscreen API",
@@ -12027,7 +12027,7 @@ Detects support for the ability to make the current website take over the user's
   // expose these for the plugin API. Look in the source for how to join() them against your input
   ModernizrProto._prefixes = prefixes;
 
-  
+
 
   /**
    * testStyles injects an element with style element and some CSS rules
@@ -12087,7 +12087,7 @@ Detects support for the ability to make the current website take over the user's
    */
 
   var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
+
 /*!
 {
   "name": "Touch Events",
@@ -12207,7 +12207,7 @@ This test will also return `true` for Firefox 4 Multitouch support.
     return testPropsAll(prop, undefined, undefined, value, skipValueTest);
   }
   ModernizrProto.testAllProps = testAllProps;
-  
+
 /*!
 {
   "name": "Flexbox",
@@ -12559,7 +12559,7 @@ else {
 
 ;
 /****************************************************************************
-	modernizr-javascript.js, 
+	modernizr-javascript.js,
 
 	(c) 2016, FCOO
 
@@ -12570,20 +12570,20 @@ else {
 
 (function ($, window, document, undefined) {
 	"use strict";
-	
+
 	var ns = window;
 
     //Extend the jQuery prototype
     $.fn.extend({
-        modernizrOn : function( test ){ 
-            return this.modernizrToggle( test, true ); 
+        modernizrOn : function( test ){
+            return this.modernizrToggle( test, true );
         },
 
-        modernizrOff: function( test ){ 
-            return this.modernizrToggle( test, false ); 
+        modernizrOff: function( test ){
+            return this.modernizrToggle( test, false );
         },
-        
-        modernizrToggle: function( test, on ){ 
+
+        modernizrToggle: function( test, on ){
 		if ( on === undefined )
             return this.modernizrToggle( test, !this.hasClass( test ) );
 
@@ -12624,13 +12624,13 @@ else {
             for (j=0; j<eventNames.length; j++ ){
                 eventName = eventNames[j];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     var i, lgd = this.events[eventName].length;
                     if (reverse){
                         for (i=lgd-1; i>=0; i-- )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
                                 break;
-                    } 
+                    }
                     else {
                         for (i=0; i<lgd; i++ )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
@@ -12646,11 +12646,11 @@ else {
             for (i=0; i<eventNames.length; i++ ){
                 eventName = eventNames[i];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     this.events[eventName].push( {
                         callback: callback,
                         context : context || null,
-                        options : $.extend( {once:false, first:false, last:false}, options ) 
+                        options : $.extend( {once:false, first:false, last:false}, options )
                     });
                 }
             }
@@ -12667,7 +12667,7 @@ else {
             eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
             _loop_func = function( eventObj, index, list ){
                 if ( (callback == eventObj.callback) &&
-                    (!context || (context == eventObj.context)) ){ 
+                    (!context || (context == eventObj.context)) ){
                     list.splice(index, 1);
                     return true;
                 }
@@ -12682,32 +12682,32 @@ else {
         };
 
 
-        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){ 
+        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){
             var newArguments = [];
             for (var i=1; i < arguments.length; i++) {
                 newArguments.push(arguments[i]);
             }
 
             //Fire the functions marked 'first'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.first)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions not marked 'first' or 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (!eventObj.options.first && !eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions marked 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
-            
+
             //Remove all functions marked 'once'
-            this._loop( eventName, function( eventObj, index, list ){ 
+            this._loop( eventName, function( eventObj, index, list ){
                 if (eventObj.options.once)
                     list.splice(index, 1);
             }, true);
@@ -12718,7 +12718,7 @@ else {
         this.oneFirst = function(){ this.onceFirst( arguments ); };
         this.oneLast  = function(){ this.onceLast( arguments  ); };
     }
-  
+
     // expose access to the constructor
     window.GlobalEvents = GlobalEvents;
 
@@ -22783,7 +22783,7 @@ else {
         deltaHp = abs(deltaHp) <= 180 ? deltaHp : h2p <= h1p ? deltaHp + 360 : deltaHp - 360;
         deltaHp = 2*sqrt(C1p*C2p)*sin(deg2rad(deltaHp)/2);
         var deltaL = L2 - L1;
-        var deltaCp = C2p - C1p;    
+        var deltaCp = C2p - C1p;
         var sl = 1 + (0.015*pow(avgL - 50, 2))/sqrt(20 + pow(avgL - 50, 2));
         var sc = 1 + 0.045*avgCp;
         var sh = 1 + 0.015*avgCp*T;
@@ -30063,7 +30063,7 @@ Methods for creating <meta> in <head> and adding favicons
 
     var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
     var maxValues = [24, 60, 60, 1000];
-    
+
     // Capitalize first letter
     key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
@@ -30110,19 +30110,19 @@ Methods for creating <meta> in <head> and adding favicons
 ;
 /* @preserve
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2013-2018 Petka Antonov
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -30130,7 +30130,7 @@ Methods for creating <meta> in <head> and adding favicons
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
+ *
  */
 /**
  * bluebird build version 3.7.2
@@ -33722,28 +33722,28 @@ _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext,
 _dereq_('./any.js')(Promise);
 _dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./filter.js')(Promise, INTERNAL);
-                                                         
-    util.toFastProperties(Promise);                                          
-    util.toFastProperties(Promise.prototype);                                
-    function fillTypes(value) {                                              
-        var p = new Promise(INTERNAL);                                       
-        p._fulfillmentHandler0 = value;                                      
-        p._rejectionHandler0 = value;                                        
-        p._promise0 = value;                                                 
-        p._receiver0 = value;                                                
-    }                                                                        
-    // Complete slack tracking, opt out of field-type tracking and           
-    // stabilize map                                                         
-    fillTypes({a: 1});                                                       
-    fillTypes({b: 2});                                                       
-    fillTypes({c: 3});                                                       
-    fillTypes(1);                                                            
-    fillTypes(function(){});                                                 
-    fillTypes(undefined);                                                    
-    fillTypes(false);                                                        
-    fillTypes(new Promise(INTERNAL));                                        
-    debug.setBounds(Async.firstLineError, util.lastLineError);               
-    return Promise;                                                          
+
+    util.toFastProperties(Promise);
+    util.toFastProperties(Promise.prototype);
+    function fillTypes(value) {
+        var p = new Promise(INTERNAL);
+        p._fulfillmentHandler0 = value;
+        p._rejectionHandler0 = value;
+        p._promise0 = value;
+        p._receiver0 = value;
+    }
+    // Complete slack tracking, opt out of field-type tracking and
+    // stabilize map
+    fillTypes({a: 1});
+    fillTypes({b: 2});
+    fillTypes({c: 3});
+    fillTypes(1);
+    fillTypes(function(){});
+    fillTypes(undefined);
+    fillTypes(false);
+    fillTypes(new Promise(INTERNAL));
+    debug.setBounds(Async.firstLineError, util.lastLineError);
+    return Promise;
 
 };
 
@@ -38158,18 +38158,19 @@ module.exports = Yaml;
     Promise.defaultErrorHandler = Promise.defaultErrorHandler || function( /* error: {name, status, message, text, statusText}  */ ){};
 
     function createErrorObject( reason, url ){
-        var response = reason.response,
-            text = response ? response.statusText :
-                    reason.message ? reason.message :
-                    reason;
-        return {
+        let response = reason.response || {},
+            text     = response.statusText || reason.statusText || response.message || reason.message,
+            error    = new Error(text, url);
+
+        $.extend(error, {
             name      : 'Error',
-            status    : response ? response.status : null,
+            status    : response.status || reason.status || null,
             url       : url,
             message   : text,
             text      : text,
             statusText: text
-        };
+        });
+        return error;
     }
 
     //Set event handler for unhandled rejections
@@ -38177,7 +38178,7 @@ module.exports = Yaml;
         if (e && e.preventDefault)
             e.preventDefault();
 
-        //Unknown why, but in some browwsers onunhandledrejection is called twice - one time with e.detail
+        //Unknown why, but in some browsers onunhandledrejection is called twice - one time with e.detail
         if (e && e.detail)
             return false;
 
@@ -38252,7 +38253,10 @@ module.exports = Yaml;
                     if (response.ok)
                         resolve(response);
                     else
-                        return Promise.reject(response);
+                        return Promise.reject(createErrorObject(response, options.url));
+                        //return Promise.reject(new Error(response));
+                        //return Promise.reject(response);
+                        //return createErrorObject(response, options.url);
                 })
                 .catch((/*error*/reason) => {
                     if (options.retries > 0){
@@ -38263,8 +38267,6 @@ module.exports = Yaml;
                             .then(()=> Promise.fetch(url, options) );
                     }
                     else {
-
-                        //console.log('HER', error, reject, options);
                         let error =  createErrorObject(reason, options.url);
                         if (options.reject)
                             options.reject(error);
@@ -38910,11 +38912,11 @@ module.exports = Yaml;
 	var minor = parseInt(splitVersion[1]);
 
 	var JQ_LT_17 = (major < 1) || (major == 1 && minor < 7);
-	
+
 	function eventsData($el) {
 		return JQ_LT_17 ? $el.data('events') : $._data($el[0]).events;
 	}
-	
+
 	function moveHandlerToTop($el, eventName, isDelegated) {
 		var data = eventsData($el);
 		var events = data[eventName];
@@ -38932,7 +38934,7 @@ module.exports = Yaml;
 			events.unshift(events.pop());
 		}
 	}
-	
+
 	function moveEventHandlers($elems, eventsString, isDelegate) {
 		var events = eventsString.split(/\s+/);
 		$elems.each(function() {
@@ -38942,7 +38944,7 @@ module.exports = Yaml;
 			}
 		});
 	}
-	
+
 	function makeMethod(methodName) {
 		$.fn[methodName + 'First'] = function() {
 			var args = $.makeArray(arguments);
@@ -38967,7 +38969,7 @@ module.exports = Yaml;
 	$.fn.delegateFirst = function() {
 		var args = $.makeArray(arguments);
 		var eventsString = args[1];
-		
+
 		if (eventsString) {
 			args.splice(0, 2);
 			$.fn.delegate.apply(this, arguments);
@@ -38987,7 +38989,7 @@ module.exports = Yaml;
 
 		return this;
 	};
-	
+
 	// on (jquery >= 1.7)
 	if (!JQ_LT_17) {
 		$.fn.onFirst = function(types, selector) {
@@ -44785,123 +44787,7 @@ module.exports = Yaml;
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.i18next = factory());
 })(this, (function () { 'use strict';
 
-  const consoleLogger = {
-    type: 'logger',
-    log(args) {
-      this.output('log', args);
-    },
-    warn(args) {
-      this.output('warn', args);
-    },
-    error(args) {
-      this.output('error', args);
-    },
-    output(type, args) {
-      if (console && console[type]) console[type].apply(console, args);
-    }
-  };
-  class Logger {
-    constructor(concreteLogger) {
-      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      this.init(concreteLogger, options);
-    }
-    init(concreteLogger) {
-      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      this.prefix = options.prefix || 'i18next:';
-      this.logger = concreteLogger || consoleLogger;
-      this.options = options;
-      this.debug = options.debug;
-    }
-    log() {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-      return this.forward(args, 'log', '', true);
-    }
-    warn() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-      return this.forward(args, 'warn', '', true);
-    }
-    error() {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
-      }
-      return this.forward(args, 'error', '');
-    }
-    deprecate() {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
-      }
-      return this.forward(args, 'warn', 'WARNING DEPRECATED: ', true);
-    }
-    forward(args, lvl, prefix, debugOnly) {
-      if (debugOnly && !this.debug) return null;
-      if (typeof args[0] === 'string') args[0] = `${prefix}${this.prefix} ${args[0]}`;
-      return this.logger[lvl](args);
-    }
-    create(moduleName) {
-      return new Logger(this.logger, {
-        ...{
-          prefix: `${this.prefix}:${moduleName}:`
-        },
-        ...this.options
-      });
-    }
-    clone(options) {
-      options = options || this.options;
-      options.prefix = options.prefix || this.prefix;
-      return new Logger(this.logger, options);
-    }
-  }
-  var baseLogger = new Logger();
-
-  class EventEmitter {
-    constructor() {
-      this.observers = {};
-    }
-    on(events, listener) {
-      events.split(' ').forEach(event => {
-        if (!this.observers[event]) this.observers[event] = new Map();
-        const numListeners = this.observers[event].get(listener) || 0;
-        this.observers[event].set(listener, numListeners + 1);
-      });
-      return this;
-    }
-    off(event, listener) {
-      if (!this.observers[event]) return;
-      if (!listener) {
-        delete this.observers[event];
-        return;
-      }
-      this.observers[event].delete(listener);
-    }
-    emit(event) {
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-      if (this.observers[event]) {
-        const cloned = Array.from(this.observers[event].entries());
-        cloned.forEach(_ref => {
-          let [observer, numTimesAdded] = _ref;
-          for (let i = 0; i < numTimesAdded; i++) {
-            observer(...args);
-          }
-        });
-      }
-      if (this.observers['*']) {
-        const cloned = Array.from(this.observers['*'].entries());
-        cloned.forEach(_ref2 => {
-          let [observer, numTimesAdded] = _ref2;
-          for (let i = 0; i < numTimesAdded; i++) {
-            observer.apply(observer, [event, ...args]);
-          }
-        });
-      }
-    }
-  }
-
+  const isString = obj => typeof obj === 'string';
   const defer = () => {
     let res;
     let rej;
@@ -44924,9 +44810,9 @@ module.exports = Yaml;
   };
   const lastOfPathSeparatorRegExp = /###/g;
   const cleanKey = key => key && key.indexOf('###') > -1 ? key.replace(lastOfPathSeparatorRegExp, '.') : key;
-  const canNotTraverseDeeper = object => !object || typeof object === 'string';
+  const canNotTraverseDeeper = object => !object || isString(object);
   const getLastOfPath = (object, path, Empty) => {
-    const stack = typeof path !== 'string' ? path : path.split('.');
+    const stack = !isString(path) ? path : path.split('.');
     let stackIndex = 0;
     while (stackIndex < stack.length - 1) {
       if (canNotTraverseDeeper(object)) return {};
@@ -44994,7 +44880,7 @@ module.exports = Yaml;
     for (const prop in source) {
       if (prop !== '__proto__' && prop !== 'constructor') {
         if (prop in target) {
-          if (typeof target[prop] === 'string' || target[prop] instanceof String || typeof source[prop] === 'string' || source[prop] instanceof String) {
+          if (isString(target[prop]) || target[prop] instanceof String || isString(source[prop]) || source[prop] instanceof String) {
             if (overwrite) target[prop] = source[prop];
           } else {
             deepExtend(target[prop], source[prop], overwrite);
@@ -45016,7 +44902,7 @@ module.exports = Yaml;
     '/': '&#x2F;'
   };
   const escape = data => {
-    if (typeof data === 'string') {
+    if (isString(data)) {
       return data.replace(/[&<>"'\/]/g, s => _entityMap[s]);
     }
     return data;
@@ -45088,10 +44974,124 @@ module.exports = Yaml;
     }
     return current;
   };
-  const getCleanedCode = code => {
-    if (code && code.indexOf('_') > 0) return code.replace('_', '-');
-    return code;
+  const getCleanedCode = code => code && code.replace('_', '-');
+
+  const consoleLogger = {
+    type: 'logger',
+    log(args) {
+      this.output('log', args);
+    },
+    warn(args) {
+      this.output('warn', args);
+    },
+    error(args) {
+      this.output('error', args);
+    },
+    output(type, args) {
+      if (console && console[type]) console[type].apply(console, args);
+    }
   };
+  class Logger {
+    constructor(concreteLogger) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      this.init(concreteLogger, options);
+    }
+    init(concreteLogger) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      this.prefix = options.prefix || 'i18next:';
+      this.logger = concreteLogger || consoleLogger;
+      this.options = options;
+      this.debug = options.debug;
+    }
+    log() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+      return this.forward(args, 'log', '', true);
+    }
+    warn() {
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+      return this.forward(args, 'warn', '', true);
+    }
+    error() {
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+      return this.forward(args, 'error', '');
+    }
+    deprecate() {
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
+      }
+      return this.forward(args, 'warn', 'WARNING DEPRECATED: ', true);
+    }
+    forward(args, lvl, prefix, debugOnly) {
+      if (debugOnly && !this.debug) return null;
+      if (isString(args[0])) args[0] = `${prefix}${this.prefix} ${args[0]}`;
+      return this.logger[lvl](args);
+    }
+    create(moduleName) {
+      return new Logger(this.logger, {
+        ...{
+          prefix: `${this.prefix}:${moduleName}:`
+        },
+        ...this.options
+      });
+    }
+    clone(options) {
+      options = options || this.options;
+      options.prefix = options.prefix || this.prefix;
+      return new Logger(this.logger, options);
+    }
+  }
+  var baseLogger = new Logger();
+
+  class EventEmitter {
+    constructor() {
+      this.observers = {};
+    }
+    on(events, listener) {
+      events.split(' ').forEach(event => {
+        if (!this.observers[event]) this.observers[event] = new Map();
+        const numListeners = this.observers[event].get(listener) || 0;
+        this.observers[event].set(listener, numListeners + 1);
+      });
+      return this;
+    }
+    off(event, listener) {
+      if (!this.observers[event]) return;
+      if (!listener) {
+        delete this.observers[event];
+        return;
+      }
+      this.observers[event].delete(listener);
+    }
+    emit(event) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+      if (this.observers[event]) {
+        const cloned = Array.from(this.observers[event].entries());
+        cloned.forEach(_ref => {
+          let [observer, numTimesAdded] = _ref;
+          for (let i = 0; i < numTimesAdded; i++) {
+            observer(...args);
+          }
+        });
+      }
+      if (this.observers['*']) {
+        const cloned = Array.from(this.observers['*'].entries());
+        cloned.forEach(_ref2 => {
+          let [observer, numTimesAdded] = _ref2;
+          for (let i = 0; i < numTimesAdded; i++) {
+            observer.apply(observer, [event, ...args]);
+          }
+        });
+      }
+    }
+  }
 
   class ResourceStore extends EventEmitter {
     constructor(data) {
@@ -45132,7 +45132,7 @@ module.exports = Yaml;
         if (key) {
           if (Array.isArray(key)) {
             path.push(...key);
-          } else if (typeof key === 'string' && keySeparator) {
+          } else if (isString(key) && keySeparator) {
             path.push(...key.split(keySeparator));
           } else {
             path.push(key);
@@ -45145,7 +45145,7 @@ module.exports = Yaml;
         ns = path[1];
         key = path.slice(2).join('.');
       }
-      if (result || !ignoreJSONStructure || typeof key !== 'string') return result;
+      if (result || !ignoreJSONStructure || !isString(key)) return result;
       return deepFind(this.data && this.data[lng] && this.data[lng][ns], key, keySeparator);
     }
     addResource(lng, ns, key, value) {
@@ -45169,7 +45169,7 @@ module.exports = Yaml;
         silent: false
       };
       for (const m in resources) {
-        if (typeof resources[m] === 'string' || Array.isArray(resources[m])) this.addResource(lng, ns, m, resources[m], {
+        if (isString(resources[m]) || Array.isArray(resources[m])) this.addResource(lng, ns, m, resources[m], {
           silent: true
         });
       }
@@ -45282,17 +45282,16 @@ module.exports = Yaml;
         if (m && m.length > 0) {
           return {
             key,
-            namespaces
+            namespaces: isString(namespaces) ? [namespaces] : namespaces
           };
         }
         const parts = key.split(nsSeparator);
         if (nsSeparator !== keySeparator || nsSeparator === keySeparator && this.options.ns.indexOf(parts[0]) > -1) namespaces = parts.shift();
         key = parts.join(keySeparator);
       }
-      if (typeof namespaces === 'string') namespaces = [namespaces];
       return {
         key,
-        namespaces
+        namespaces: isString(namespaces) ? [namespaces] : namespaces
       };
     }
     translate(keys, options, lastKey) {
@@ -45349,8 +45348,8 @@ module.exports = Yaml;
       const noObject = ['[object Number]', '[object Function]', '[object RegExp]'];
       const joinArrays = options.joinArrays !== undefined ? options.joinArrays : this.options.joinArrays;
       const handleAsObjectInI18nFormat = !this.i18nFormat || this.i18nFormat.handleAsObject;
-      const handleAsObject = typeof res !== 'string' && typeof res !== 'boolean' && typeof res !== 'number';
-      if (handleAsObjectInI18nFormat && res && handleAsObject && noObject.indexOf(resType) < 0 && !(typeof joinArrays === 'string' && Array.isArray(res))) {
+      const handleAsObject = !isString(res) && typeof res !== 'boolean' && typeof res !== 'number';
+      if (handleAsObjectInI18nFormat && res && handleAsObject && noObject.indexOf(resType) < 0 && !(isString(joinArrays) && Array.isArray(res))) {
         if (!options.returnObjects && !this.options.returnObjects) {
           if (!this.options.returnedObjectHandler) {
             this.logger.warn('accessing an object - but returnObjects options is not enabled!');
@@ -45385,13 +45384,13 @@ module.exports = Yaml;
           }
           res = copy;
         }
-      } else if (handleAsObjectInI18nFormat && typeof joinArrays === 'string' && Array.isArray(res)) {
+      } else if (handleAsObjectInI18nFormat && isString(joinArrays) && Array.isArray(res)) {
         res = res.join(joinArrays);
         if (res) res = this.extendTranslation(res, keys, options, lastKey);
       } else {
         let usedDefault = false;
         let usedKey = false;
-        const needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
+        const needsPluralHandling = options.count !== undefined && !isString(options.count);
         const hasDefaultValue = Translator.hasDefaultValue(options);
         const defaultValueSuffix = needsPluralHandling ? this.pluralResolver.getSuffix(lng, options.count, options) : '';
         const defaultValueSuffixOrdinalFallback = options.ordinal && needsPluralHandling ? this.pluralResolver.getSuffix(lng, options.count, {
@@ -45491,13 +45490,13 @@ module.exports = Yaml;
             }
           }
         });
-        const skipOnVariables = typeof res === 'string' && (options && options.interpolation && options.interpolation.skipOnVariables !== undefined ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables);
+        const skipOnVariables = isString(res) && (options && options.interpolation && options.interpolation.skipOnVariables !== undefined ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables);
         let nestBef;
         if (skipOnVariables) {
           const nb = res.match(this.interpolator.nestingRegexp);
           nestBef = nb && nb.length;
         }
-        let data = options.replace && typeof options.replace !== 'string' ? options.replace : options;
+        let data = options.replace && !isString(options.replace) ? options.replace : options;
         if (this.options.interpolation.defaultVariables) data = {
           ...this.options.interpolation.defaultVariables,
           ...data
@@ -45522,7 +45521,7 @@ module.exports = Yaml;
         if (options.interpolation) this.interpolator.reset();
       }
       const postProcess = options.postProcess || this.options.postProcess;
-      const postProcessorNames = typeof postProcess === 'string' ? [postProcess] : postProcess;
+      const postProcessorNames = isString(postProcess) ? [postProcess] : postProcess;
       if (res !== undefined && res !== null && postProcessorNames && postProcessorNames.length && options.applyPostProcessor !== false) {
         res = postProcessor.handle(postProcessorNames, res, key, this.options && this.options.postProcessPassResolved ? {
           i18nResolved: {
@@ -45541,7 +45540,7 @@ module.exports = Yaml;
       let exactUsedKey;
       let usedLng;
       let usedNS;
-      if (typeof keys === 'string') keys = [keys];
+      if (isString(keys)) keys = [keys];
       keys.forEach(k => {
         if (this.isValidLookup(found)) return;
         const extracted = this.extractFromKey(k, options);
@@ -45549,9 +45548,9 @@ module.exports = Yaml;
         usedKey = key;
         let namespaces = extracted.namespaces;
         if (this.options.fallbackNS) namespaces = namespaces.concat(this.options.fallbackNS);
-        const needsPluralHandling = options.count !== undefined && typeof options.count !== 'string';
+        const needsPluralHandling = options.count !== undefined && !isString(options.count);
         const needsZeroSuffixLookup = needsPluralHandling && !options.ordinal && options.count === 0 && this.pluralResolver.shouldUseIntlApi();
-        const needsContextHandling = options.context !== undefined && (typeof options.context === 'string' || typeof options.context === 'number') && options.context !== '';
+        const needsContextHandling = options.context !== undefined && (isString(options.context) || typeof options.context === 'number') && options.context !== '';
         const codes = options.lngs ? options.lngs : this.languageUtils.toResolveHierarchy(options.lng || this.language, options.fallbackLng);
         namespaces.forEach(ns => {
           if (this.isValidLookup(found)) return;
@@ -45623,7 +45622,7 @@ module.exports = Yaml;
     getUsedParamsDetails() {
       let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       const optionsKeys = ['defaultValue', 'ordinal', 'context', 'replace', 'lng', 'lngs', 'fallbackLng', 'ns', 'keySeparator', 'nsSeparator', 'returnObjects', 'returnDetails', 'joinArrays', 'postProcess', 'interpolation'];
-      const useOptionsReplaceForData = options.replace && typeof options.replace !== 'string';
+      const useOptionsReplaceForData = options.replace && !isString(options.replace);
       let data = useOptionsReplaceForData ? options.replace : options;
       if (useOptionsReplaceForData && typeof options.count !== 'undefined') {
         data.count = options.count;
@@ -45678,7 +45677,16 @@ module.exports = Yaml;
       return this.formatLanguageCode(p[0]);
     }
     formatLanguageCode(code) {
-      if (typeof code === 'string' && code.indexOf('-') > -1) {
+      if (isString(code) && code.indexOf('-') > -1) {
+        if (typeof Intl !== 'undefined' && typeof Intl.getCanonicalLocales !== 'undefined') {
+          try {
+            let formattedCode = Intl.getCanonicalLocales(code)[0];
+            if (formattedCode && this.options.lowerCaseLng) {
+              formattedCode = formattedCode.toLowerCase();
+            }
+            if (formattedCode) return formattedCode;
+          } catch (e) {}
+        }
         const specialCases = ['hans', 'hant', 'latn', 'cyrl', 'cans', 'mong', 'arab'];
         let p = code.split('-');
         if (this.options.lowerCaseLng) {
@@ -45731,7 +45739,7 @@ module.exports = Yaml;
     getFallbackCodes(fallbacks, code) {
       if (!fallbacks) return [];
       if (typeof fallbacks === 'function') fallbacks = fallbacks(code);
-      if (typeof fallbacks === 'string') fallbacks = [fallbacks];
+      if (isString(fallbacks)) fallbacks = [fallbacks];
       if (Array.isArray(fallbacks)) return fallbacks;
       if (!code) return fallbacks.default || [];
       let found = fallbacks[code];
@@ -45752,11 +45760,11 @@ module.exports = Yaml;
           this.logger.warn(`rejecting language code not found in supportedLngs: ${c}`);
         }
       };
-      if (typeof code === 'string' && (code.indexOf('-') > -1 || code.indexOf('_') > -1)) {
+      if (isString(code) && (code.indexOf('-') > -1 || code.indexOf('_') > -1)) {
         if (this.options.load !== 'languageOnly') addCode(this.formatLanguageCode(code));
         if (this.options.load !== 'languageOnly' && this.options.load !== 'currentOnly') addCode(this.getScriptPartFromCode(code));
         if (this.options.load !== 'currentOnly') addCode(this.getLanguagePartFromCode(code));
-      } else if (typeof code === 'string') {
+      } else if (isString(code)) {
         addCode(this.formatLanguageCode(code));
       }
       fallbackCodes.forEach(fc => {
@@ -46014,7 +46022,7 @@ module.exports = Yaml;
     let keySeparator = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '.';
     let ignoreJSONStructure = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
     let path = getPathWithDefaults(data, defaultData, key);
-    if (!path && ignoreJSONStructure && typeof key === 'string') {
+    if (!path && ignoreJSONStructure && isString(key)) {
       path = deepFind(data, key, keySeparator);
       if (path === undefined) path = deepFind(defaultData, key, keySeparator);
     }
@@ -46124,7 +46132,7 @@ module.exports = Yaml;
           if (value === undefined) {
             if (typeof missingInterpolationHandler === 'function') {
               const temp = missingInterpolationHandler(str, match, options);
-              value = typeof temp === 'string' ? temp : '';
+              value = isString(temp) ? temp : '';
             } else if (options && Object.prototype.hasOwnProperty.call(options, matchedVar)) {
               value = '';
             } else if (skipOnVariables) {
@@ -46134,7 +46142,7 @@ module.exports = Yaml;
               this.logger.warn(`missed to pass in variable ${matchedVar} for interpolating ${str}`);
               value = '';
             }
-          } else if (typeof value !== 'string' && !this.useRawValueToEscape) {
+          } else if (!isString(value) && !this.useRawValueToEscape) {
             value = makeString(value);
           }
           const safeValue = todo.safeValue(value);
@@ -46188,7 +46196,7 @@ module.exports = Yaml;
         clonedOptions = {
           ...options
         };
-        clonedOptions = clonedOptions.replace && typeof clonedOptions.replace !== 'string' ? clonedOptions.replace : clonedOptions;
+        clonedOptions = clonedOptions.replace && !isString(clonedOptions.replace) ? clonedOptions.replace : clonedOptions;
         clonedOptions.applyPostProcessor = false;
         delete clonedOptions.defaultValue;
         let doReduce = false;
@@ -46199,8 +46207,8 @@ module.exports = Yaml;
           doReduce = true;
         }
         value = fc(handleHasOptions.call(this, match[1].trim(), clonedOptions), clonedOptions);
-        if (value && match[0] === str && typeof value !== 'string') return value;
-        if (typeof value !== 'string') value = makeString(value);
+        if (value && match[0] === str && !isString(value)) return value;
+        if (!isString(value)) value = makeString(value);
         if (!value) {
           this.logger.warn(`missed to resolve ${match[1]} for nesting ${str}`);
           value = '';
@@ -46312,8 +46320,7 @@ module.exports = Yaml;
       let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
         interpolation: {}
       };
-      const iOpts = options.interpolation;
-      this.formatSeparator = iOpts.formatSeparator ? iOpts.formatSeparator : iOpts.formatSeparator || ',';
+      this.formatSeparator = options.interpolation.formatSeparator || ',';
     }
     add(name, fc) {
       this.formats[name.toLowerCase().trim()] = fc;
@@ -46514,8 +46521,8 @@ module.exports = Yaml;
         this.logger.warn('No backend was added via i18next.use. Will not load resources.');
         return callback && callback();
       }
-      if (typeof languages === 'string') languages = this.languageUtils.toResolveHierarchy(languages);
-      if (typeof namespaces === 'string') namespaces = [namespaces];
+      if (isString(languages)) languages = this.languageUtils.toResolveHierarchy(languages);
+      if (isString(namespaces)) namespaces = [namespaces];
       const toLoad = this.queueLoad(languages, namespaces, options, callback);
       if (!toLoad.toLoad.length) {
         if (!toLoad.pending.length) callback();
@@ -46619,8 +46626,8 @@ module.exports = Yaml;
     overloadTranslationOptionHandler: args => {
       let ret = {};
       if (typeof args[1] === 'object') ret = args[1];
-      if (typeof args[1] === 'string') ret.defaultValue = args[1];
-      if (typeof args[2] === 'string') ret.tDescription = args[2];
+      if (isString(args[1])) ret.defaultValue = args[1];
+      if (isString(args[2])) ret.tDescription = args[2];
       if (typeof args[2] === 'object' || typeof args[3] === 'object') {
         const options = args[3] || args[2];
         Object.keys(options).forEach(key => {
@@ -46644,9 +46651,9 @@ module.exports = Yaml;
     }
   });
   const transformOptions = options => {
-    if (typeof options.ns === 'string') options.ns = [options.ns];
-    if (typeof options.fallbackLng === 'string') options.fallbackLng = [options.fallbackLng];
-    if (typeof options.fallbackNS === 'string') options.fallbackNS = [options.fallbackNS];
+    if (isString(options.ns)) options.ns = [options.ns];
+    if (isString(options.fallbackLng)) options.fallbackLng = [options.fallbackLng];
+    if (isString(options.fallbackNS)) options.fallbackNS = [options.fallbackNS];
     if (options.supportedLngs && options.supportedLngs.indexOf('cimode') < 0) {
       options.supportedLngs = options.supportedLngs.concat(['cimode']);
     }
@@ -46694,7 +46701,7 @@ module.exports = Yaml;
         options = {};
       }
       if (!options.defaultNS && options.defaultNS !== false && options.ns) {
-        if (typeof options.ns === 'string') {
+        if (isString(options.ns)) {
           options.defaultNS = options.ns;
         } else if (options.ns.indexOf('translation') < 0) {
           options.defaultNS = options.ns[0];
@@ -46827,7 +46834,7 @@ module.exports = Yaml;
     loadResources(language) {
       let callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
       let usedCallback = callback;
-      const usedLng = typeof language === 'string' ? language : this.language;
+      const usedLng = isString(language) ? language : this.language;
       if (typeof language === 'function') usedCallback = language;
       if (!this.options.resources || this.options.partialBundledLanguages) {
         if (usedLng && usedLng.toLowerCase() === 'cimode' && (!this.options.preload || this.options.preload.length === 0)) return usedCallback();
@@ -46945,7 +46952,7 @@ module.exports = Yaml;
       };
       const setLng = lngs => {
         if (!lng && !lngs && this.services.languageDetector) lngs = [];
-        const l = typeof lngs === 'string' ? lngs : this.services.languageUtils.getBestMatchFromCodes(lngs);
+        const l = isString(lngs) ? lngs : this.services.languageUtils.getBestMatchFromCodes(lngs);
         if (l) {
           if (!this.language) {
             setLngProps(l);
@@ -46997,7 +47004,7 @@ module.exports = Yaml;
         }
         return _this3.t(resultKey, options);
       };
-      if (typeof lng === 'string') {
+      if (isString(lng)) {
         fixedT.lng = lng;
       } else {
         fixedT.lngs = lng;
@@ -47048,7 +47055,7 @@ module.exports = Yaml;
         if (callback) callback();
         return Promise.resolve();
       }
-      if (typeof ns === 'string') ns = [ns];
+      if (isString(ns)) ns = [ns];
       ns.forEach(n => {
         if (this.options.ns.indexOf(n) < 0) this.options.ns.push(n);
       });
@@ -47060,7 +47067,7 @@ module.exports = Yaml;
     }
     loadLanguages(lngs, callback) {
       const deferred = defer();
-      if (typeof lngs === 'string') lngs = [lngs];
+      if (isString(lngs)) lngs = [lngs];
       const preloaded = this.options.preload || [];
       const newLngs = lngs.filter(lng => preloaded.indexOf(lng) < 0 && this.services.languageUtils.isSupportedCode(lng));
       if (!newLngs.length) {
@@ -47250,8 +47257,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -47345,8 +47352,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, window, undefined) {
@@ -48859,7 +48866,7 @@ module.exports = Yaml;
             function seekPrevious(pos, newBlock) {
                 var position = pos, tests;
                 if (position <= 0) return 0;
-                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position), 
+                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position),
                 tests.length < 2 || tests.length === 2 && tests[1].match.def === ""))) {}
                 return position;
             }
@@ -50096,8 +50103,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($) {
@@ -50126,8 +50133,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -50378,8 +50385,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -50929,8 +50936,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, Inputmask) {
@@ -57540,6 +57547,96 @@ return index;
 }(jQuery, this.i18next, this, document));
 ;
 /****************************************************************************
+jquery-scroll-booster.js
+
+Adding the use of ding ScrollBooster
+https://ilyashubin.github.io/scrollbooster/
+
+
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+    "use strict";
+
+
+    $.fn.extend({
+
+        addScrollBooster: function( options = {} ){
+            let $viewport =
+                    (options.viewport ? $(options.viewport) : null) ||
+                    options.$viewport ||
+                    (options.container ? $(options.container) : null) ||
+                    options.$container ||
+                    this,
+                $content  = (options.content ? $(options.content) : null) || options.$content,
+                direction = (options.direction == 'both' ? 'all' : null) || options.direction || 'all';
+
+            options = $.extend(true, {}, {
+                viewport                        : $viewport.get(0), //DOM Node  null     Content viewport element (required)
+                content                         : $content.get(0),  //DOM Node  viewport child element    Scrollable content element inside viewport
+                scrollMode                      : 'native',         //String    undefined Scroll technique - via CSS transform or natively. Could be 'transform' or 'native'
+                direction                       : direction,        //String    'all'     Scroll direction. Could be 'horizontal', 'vertical' or 'all'
+                bounce                          : false,            //Boolean   true      Enables elastic bounce effect when hitting viewport borders
+
+              //textSelection                   : false,    //Boolean   false     Enables text selection inside viewport
+              //inputsFocus                     : true,     //Boolean   true      Enables focus for elements: 'input', 'textarea', 'button', 'select' and 'label'
+              //pointerMode                     : 'all',    //String    'all'     Specify pointer type. Supported values - 'touch' (scroll only on touch devices), 'mouse' (scroll only on desktop), 'all' (mobile and desktop)
+              //friction                        : 0.05,     //Number    0.05      Scroll friction factor - how fast scrolling stops after pointer release
+              //bounceForce                     : 0.1,      //Number    0.1       Elastic bounce effect factor
+              //emulateScroll                   : false,    //Boolean   false     Enables mouse wheel/trackpad emulation inside viewport
+              //preventDefaultOnEmulateScroll   : false,    //String    false     Prevents horizontal or vertical default when emulateScroll is enabled (eg. useful to prevent horizontal trackpad gestures while enabling vertical scrolling). Could be 'horizontal' or 'vertical'.
+              //lockScrollOnDragDirection       : false,    //String    false     Detect drag direction and either prevent default mousedown/touchstart event or lock content scroll. Could be 'horizontal', 'vertical' or 'all'
+              //dragDirectionTolerance          : 40,       //Number    40        Tolerance for horizontal or vertical drag detection
+              //onUpdate                        : null,     //Function  noop      Handler function to perform actual scrolling. Receives scrolling state object with coordinates
+              //onClick                         : null,     //Function  noop      Click handler function. Here you can, for example, prevent default event for click on links. Receives object with scrolling metrics and event object. Calls after each click in scrollable area
+              //onPointerDown                   : null,     //Function  noop      mousedown/touchstart events handler
+              //onPointerUp                     : null,     //Function  noop      mouseup/touchend events handler
+              //onPointerMove                   : null,     //Function  noop      mousemove/touchmove events handler
+              //onWheel                         : null,     //Function  noop      wheel event handler
+              //shouldScroll                    : null,     //Function  noop      Function to permit or disable scrolling. Receives object with scrolling state and event object. Calls on pointerdown (mousedown, touchstart) in scrollable area. You can return true or false to enable or disable scrolling
+
+            }, options );
+
+            let scrollBooster = new window.ScrollBooster(options);
+            this.data('scrollBooster', scrollBooster);
+
+            $viewport.on('mouseleave', this._sb_mouseleave.bind(this) );
+
+            return scrollBooster;
+        },
+
+        getScrollBooster: function(){
+            return this.data('scrollBooster');
+        },
+
+        sbUpdate: function(){
+            let sb = this.getScrollBooster();
+            if (sb)
+                sb.updateMetrics();
+        },
+
+        sbScrollTo(left, top){
+            let sb = this.getScrollBooster();
+            if (sb){
+                sb.scrollTo({x: left, y: top});
+                sb.updateMetrics();
+            }
+            else
+                this.$container.get(0).scrollTo(left, top);
+
+        },
+
+
+        _sb_mouseleave: function(){
+            let sb = this.getScrollBooster();
+            if (sb && sb.isDragging)
+                sb.events.pointerup();
+        }
+
+    });
+
+}(jQuery, this, document));
+;
+/****************************************************************************
     jquery-scroll-container.js,
 
     (c) 2017, FCOO
@@ -57703,6 +57800,404 @@ return index;
     };
 
 }(jQuery, this, document));
+;
+/****************************************************************************
+scrollbooster-bable.js,
+
+A bable-adjusted version of ScrollBooster
+See https://ilyashubin.github.io/scrollbooster/
+
+****************************************************************************/
+!function (t, e) {
+  "object" == typeof exports && "object" == typeof module ? module.exports = e() : "function" == typeof define && define.amd ? define("ScrollBooster", [], e) : "object" == typeof exports ? exports.ScrollBooster = e() : t.ScrollBooster = e();
+}(this, function () {
+  return function (t) {
+    var e = {};
+    function i(o) {
+      if (e[o]) return e[o].exports;
+      var n = e[o] = {
+        i: o,
+        l: !1,
+        exports: {}
+      };
+      return t[o].call(n.exports, n, n.exports, i), n.l = !0, n.exports;
+    }
+    return i.m = t, i.c = e, i.d = function (t, e, o) {
+      i.o(t, e) || Object.defineProperty(t, e, {
+        enumerable: !0,
+        get: o
+      });
+    }, i.r = function (t) {
+      "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, {
+        value: "Module"
+      }), Object.defineProperty(t, "__esModule", {
+        value: !0
+      });
+    }, i.t = function (t, e) {
+      if (1 & e && (t = i(t)), 8 & e) return t;
+      if (4 & e && "object" == typeof t && t && t.__esModule) return t;
+      var o = Object.create(null);
+      if (i.r(o), Object.defineProperty(o, "default", {
+        enumerable: !0,
+        value: t
+      }), 2 & e && "string" != typeof t) for (var n in t) i.d(o, n, function (e) {
+        return t[e];
+      }.bind(null, n));
+      return o;
+    }, i.n = function (t) {
+      var e = t && t.__esModule ? function () {
+        return t.default;
+      } : function () {
+        return t;
+      };
+      return i.d(e, "a", e), e;
+    }, i.o = function (t, e) {
+      return Object.prototype.hasOwnProperty.call(t, e);
+    }, i.p = "", i(i.s = 0);
+  }([function (t, e, i) {
+    "use strict";
+
+    function o(t, e) {
+      var i = Object.keys(t);
+      if (Object.getOwnPropertySymbols) {
+        var o = Object.getOwnPropertySymbols(t);
+        e && (o = o.filter(function (e) {
+          return Object.getOwnPropertyDescriptor(t, e).enumerable;
+        })), i.push.apply(i, o);
+      }
+      return i;
+    }
+    function n(t) {
+      for (var e = 1; e < arguments.length; e++) {
+        var i = null != arguments[e] ? arguments[e] : {};
+        e % 2 ? o(Object(i), !0).forEach(function (e) {
+          s(t, e, i[e]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(t, Object.getOwnPropertyDescriptors(i)) : o(Object(i)).forEach(function (e) {
+          Object.defineProperty(t, e, Object.getOwnPropertyDescriptor(i, e));
+        });
+      }
+      return t;
+    }
+    function s(t, e, i) {
+      return e in t ? Object.defineProperty(t, e, {
+        value: i,
+        enumerable: !0,
+        configurable: !0,
+        writable: !0
+      }) : t[e] = i, t;
+    }
+    function r(t, e) {
+      if (!(t instanceof e)) throw new TypeError("Cannot call a class as a function");
+    }
+    function a(t, e) {
+      for (var i = 0; i < e.length; i++) {
+        var o = e[i];
+        o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(t, o.key, o);
+      }
+    }
+    i.r(e), i.d(e, "default", function () {
+      return p;
+    });
+    var l = function (t) {
+        return Math.max(t.offsetHeight, t.scrollHeight);
+      },
+      p = function () {
+        function t() {
+          var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+          r(this, t);
+          var i = {
+            content: e.viewport.children[0],
+            direction: "all",
+            pointerMode: "all",
+            scrollMode: void 0,
+            bounce: !0,
+            bounceForce: .1,
+            friction: .05,
+            textSelection: !1,
+            inputsFocus: !0,
+            emulateScroll: !1,
+            preventDefaultOnEmulateScroll: !1,
+            preventPointerMoveDefault: !0,
+            lockScrollOnDragDirection: !1,
+            dragDirectionTolerance: 40,
+            onPointerDown: function () {},
+            onPointerUp: function () {},
+            onPointerMove: function () {},
+            onClick: function () {},
+            onUpdate: function () {},
+            onWheel: function () {},
+            shouldScroll: function () {
+              return !0;
+            }
+          };
+          if (this.props = n(n({}, i), e), this.props.viewport && this.props.viewport instanceof Element) {
+            if (this.props.content) {
+              this.isDragging = !1, this.isTargetScroll = !1, this.isScrolling = !1, this.isRunning = !1;
+              var o = {
+                x: 0,
+                y: 0
+              };
+              this.position = n({}, o), this.velocity = n({}, o), this.dragStartPosition = n({}, o), this.dragOffset = n({}, o), this.clientOffset = n({}, o), this.dragPosition = n({}, o), this.targetPosition = n({}, o), this.scrollOffset = n({}, o), this.rafID = null, this.events = {}, this.updateMetrics(), this.handleEvents();
+            } else console.error("ScrollBooster init error: Viewport does not have any content");
+          } else console.error('ScrollBooster init error: "viewport" config property must be present and must be Element');
+        }
+        var e, i, o;
+        return e = t, (i = [{
+          key: "updateOptions",
+          value: function () {
+            var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+            this.props = n(n({}, this.props), t), this.props.onUpdate(this.getState()), this.startAnimationLoop();
+          }
+        }, {
+          key: "updateMetrics",
+          value: function () {
+            var t;
+            this.viewport = {
+              width: this.props.viewport.clientWidth,
+              height: this.props.viewport.clientHeight
+            }, this.content = {
+              width: (t = this.props.content, Math.max(t.offsetWidth, t.scrollWidth)),
+              height: l(this.props.content)
+            }, this.edgeX = {
+              from: Math.min(-this.content.width + this.viewport.width, 0),
+              to: 0
+            }, this.edgeY = {
+              from: Math.min(-this.content.height + this.viewport.height, 0),
+              to: 0
+            }, this.props.onUpdate(this.getState()), this.startAnimationLoop();
+          }
+        }, {
+          key: "startAnimationLoop",
+          value: function () {
+            var t = this;
+            this.isRunning = !0, cancelAnimationFrame(this.rafID), this.rafID = requestAnimationFrame(function () {
+              return t.animate();
+            });
+          }
+        }, {
+          key: "animate",
+          value: function () {
+            var t = this;
+            if (this.isRunning) {
+              this.updateScrollPosition(), this.isMoving() || (this.isRunning = !1, this.isTargetScroll = !1);
+              var e = this.getState();
+              this.setContentPosition(e), this.props.onUpdate(e), this.rafID = requestAnimationFrame(function () {
+                return t.animate();
+              });
+            }
+          }
+        }, {
+          key: "updateScrollPosition",
+          value: function () {
+            this.applyEdgeForce(), this.applyDragForce(), this.applyScrollForce(), this.applyTargetForce();
+            var t = 1 - this.props.friction;
+            this.velocity.x *= t, this.velocity.y *= t, "vertical" !== this.props.direction && (this.position.x += this.velocity.x), "horizontal" !== this.props.direction && (this.position.y += this.velocity.y), this.props.bounce && !this.isScrolling || this.isTargetScroll || (this.position.x = Math.max(Math.min(this.position.x, this.edgeX.to), this.edgeX.from), this.position.y = Math.max(Math.min(this.position.y, this.edgeY.to), this.edgeY.from));
+          }
+        }, {
+          key: "applyForce",
+          value: function (t) {
+            this.velocity.x += t.x, this.velocity.y += t.y;
+          }
+        }, {
+          key: "applyEdgeForce",
+          value: function () {
+            if (this.props.bounce && !this.isDragging) {
+              var t = this.position.x < this.edgeX.from,
+                e = this.position.x > this.edgeX.to,
+                i = this.position.y < this.edgeY.from,
+                o = this.position.y > this.edgeY.to,
+                n = t || e,
+                s = i || o;
+              if (n || s) {
+                var r = t ? this.edgeX.from : this.edgeX.to,
+                  a = i ? this.edgeY.from : this.edgeY.to,
+                  l = r - this.position.x,
+                  p = a - this.position.y,
+                  c = {
+                    x: l * this.props.bounceForce,
+                    y: p * this.props.bounceForce
+                  },
+                  h = this.position.x + (this.velocity.x + c.x) / this.props.friction,
+                  u = this.position.y + (this.velocity.y + c.y) / this.props.friction;
+                (t && h >= this.edgeX.from || e && h <= this.edgeX.to) && (c.x = l * this.props.bounceForce - this.velocity.x), (i && u >= this.edgeY.from || o && u <= this.edgeY.to) && (c.y = p * this.props.bounceForce - this.velocity.y), this.applyForce({
+                  x: n ? c.x : 0,
+                  y: s ? c.y : 0
+                });
+              }
+            }
+          }
+        }, {
+          key: "applyDragForce",
+          value: function () {
+            if (this.isDragging) {
+              var t = this.dragPosition.x - this.position.x,
+                e = this.dragPosition.y - this.position.y;
+              this.applyForce({
+                x: t - this.velocity.x,
+                y: e - this.velocity.y
+              });
+            }
+          }
+        }, {
+          key: "applyScrollForce",
+          value: function () {
+            this.isScrolling && (this.applyForce({
+              x: this.scrollOffset.x - this.velocity.x,
+              y: this.scrollOffset.y - this.velocity.y
+            }), this.scrollOffset.x = 0, this.scrollOffset.y = 0);
+          }
+        }, {
+          key: "applyTargetForce",
+          value: function () {
+            this.isTargetScroll && this.applyForce({
+              x: .08 * (this.targetPosition.x - this.position.x) - this.velocity.x,
+              y: .08 * (this.targetPosition.y - this.position.y) - this.velocity.y
+            });
+          }
+        }, {
+          key: "isMoving",
+          value: function () {
+            return this.isDragging || this.isScrolling || Math.abs(this.velocity.x) >= .01 || Math.abs(this.velocity.y) >= .01;
+          }
+        }, {
+          key: "scrollTo",
+          value: function () {
+            var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+            this.isTargetScroll = !0, this.targetPosition.x = -t.x || 0, this.targetPosition.y = -t.y || 0, this.startAnimationLoop();
+          }
+        }, {
+          key: "setPosition",
+          value: function () {
+            var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+            this.velocity.x = 0, this.velocity.y = 0, this.position.x = -t.x || 0, this.position.y = -t.y || 0, this.startAnimationLoop();
+          }
+        }, {
+          key: "getState",
+          value: function () {
+            return {
+              isMoving: this.isMoving(),
+              isDragging: !(!this.dragOffset.x && !this.dragOffset.y),
+              position: {
+                x: -this.position.x,
+                y: -this.position.y
+              },
+              dragOffset: this.dragOffset,
+              dragAngle: this.getDragAngle(this.clientOffset.x, this.clientOffset.y),
+              borderCollision: {
+                left: this.position.x >= this.edgeX.to,
+                right: this.position.x <= this.edgeX.from,
+                top: this.position.y >= this.edgeY.to,
+                bottom: this.position.y <= this.edgeY.from
+              }
+            };
+          }
+        }, {
+          key: "getDragAngle",
+          value: function (t, e) {
+            return Math.round(Math.atan2(t, e) * (180 / Math.PI));
+          }
+        }, {
+          key: "getDragDirection",
+          value: function (t, e) {
+            return Math.abs(90 - Math.abs(t)) <= 90 - e ? "horizontal" : "vertical";
+          }
+        }, {
+          key: "setContentPosition",
+          value: function (t) {
+            "transform" === this.props.scrollMode && (this.props.content.style.transform = "translate(".concat(-t.position.x, "px, ").concat(-t.position.y, "px)")), "native" === this.props.scrollMode && (this.props.viewport.scrollTop = t.position.y, this.props.viewport.scrollLeft = t.position.x);
+          }
+        }, {
+          key: "handleEvents",
+          value: function () {
+            var t = this,
+              e = {
+                x: 0,
+                y: 0
+              },
+              i = {
+                x: 0,
+                y: 0
+              },
+              o = null,
+              n = null,
+              s = !1,
+              r = function (n) {
+                if (t.isDragging) {
+                  var r = s ? n.touches[0] : n,
+                    a = r.pageX,
+                    l = r.pageY,
+                    p = r.clientX,
+                    c = r.clientY;
+                  t.dragOffset.x = a - e.x, t.dragOffset.y = l - e.y, t.clientOffset.x = p - i.x, t.clientOffset.y = c - i.y, (Math.abs(t.clientOffset.x) > 5 && !o || Math.abs(t.clientOffset.y) > 5 && !o) && (o = t.getDragDirection(t.getDragAngle(t.clientOffset.x, t.clientOffset.y), t.props.dragDirectionTolerance)), t.props.lockScrollOnDragDirection && "all" !== t.props.lockScrollOnDragDirection ? o === t.props.lockScrollOnDragDirection && s ? (t.dragPosition.x = t.dragStartPosition.x + t.dragOffset.x, t.dragPosition.y = t.dragStartPosition.y + t.dragOffset.y) : s ? (t.dragPosition.x = t.dragStartPosition.x, t.dragPosition.y = t.dragStartPosition.y) : (t.dragPosition.x = t.dragStartPosition.x + t.dragOffset.x, t.dragPosition.y = t.dragStartPosition.y + t.dragOffset.y) : (t.dragPosition.x = t.dragStartPosition.x + t.dragOffset.x, t.dragPosition.y = t.dragStartPosition.y + t.dragOffset.y);
+                }
+              };
+            this.events.pointerdown = function (o) {
+              s = !(!o.touches || !o.touches[0]), t.props.onPointerDown(t.getState(), o, s);
+              var n = s ? o.touches[0] : o,
+                a = n.pageX,
+                l = n.pageY,
+                p = n.clientX,
+                c = n.clientY,
+                h = t.props.viewport,
+                u = h.getBoundingClientRect();
+              if (!(p - u.left >= h.clientLeft + h.clientWidth) && !(c - u.top >= h.clientTop + h.clientHeight) && t.props.shouldScroll(t.getState(), o) && 2 !== o.button && ("mouse" !== t.props.pointerMode || !s) && ("touch" !== t.props.pointerMode || s) && !(t.props.inputsFocus && ["input", "textarea", "button", "select", "label"].indexOf(o.target.nodeName.toLowerCase()) > -1)) {
+                if (t.props.textSelection) {
+                  if (function (t, e, i) {
+                    for (var o = t.childNodes, n = document.createRange(), s = 0; s < o.length; s++) {
+                      var r = o[s];
+                      if (3 === r.nodeType) {
+                        n.selectNodeContents(r);
+                        var a = n.getBoundingClientRect();
+                        if (e >= a.left && i >= a.top && e <= a.right && i <= a.bottom) return r;
+                      }
+                    }
+                    return !1;
+                  }(o.target, p, c)) return;
+                  (f = window.getSelection ? window.getSelection() : document.selection) && (f.removeAllRanges ? f.removeAllRanges() : f.empty && f.empty());
+                }
+                var f;
+                t.isDragging = !0, e.x = a, e.y = l, i.x = p, i.y = c, t.dragStartPosition.x = t.position.x, t.dragStartPosition.y = t.position.y, r(o), t.startAnimationLoop();
+              }
+            }, this.events.pointermove = function (e) {
+              !e.cancelable || "all" !== t.props.lockScrollOnDragDirection && t.props.lockScrollOnDragDirection !== o || e.preventDefault(), r(e), t.props.onPointerMove(t.getState(), e, s);
+            }, this.events.pointerup = function (e) {
+              t.isDragging = !1, o = null, t.props.onPointerUp(t.getState(), e, s);
+            }, this.events.wheel = function (e) {
+              var i = t.getState();
+              t.props.emulateScroll && (t.velocity.x = 0, t.velocity.y = 0, t.isScrolling = !0, t.scrollOffset.x = -e.deltaX, t.scrollOffset.y = -e.deltaY, t.props.onWheel(i, e), t.startAnimationLoop(), clearTimeout(n), n = setTimeout(function () {
+                return t.isScrolling = !1;
+              }, 200/*80*/), t.props.preventDefaultOnEmulateScroll && t.getDragDirection(t.getDragAngle(-e.deltaX, -e.deltaY), t.props.dragDirectionTolerance) === t.props.preventDefaultOnEmulateScroll && e.preventDefault());
+            }, this.events.scroll = function () {
+              var e = t.props.viewport,
+                i = e.scrollLeft,
+                o = e.scrollTop;
+              Math.abs(t.position.x + i) > 3 && (t.position.x = -i, t.velocity.x = 0), Math.abs(t.position.y + o) > 3 && (t.position.y = -o, t.velocity.y = 0);
+            }, this.events.click = function (e) {
+              var i = t.getState(),
+                o = "vertical" !== t.props.direction ? i.dragOffset.x : 0,
+                n = "horizontal" !== t.props.direction ? i.dragOffset.y : 0;
+              Math.max(Math.abs(o), Math.abs(n)) > 5 && (e.preventDefault(), e.stopPropagation()), t.props.onClick(i, e, s);
+            }, this.events.contentLoad = function () {
+              return t.updateMetrics();
+            }, this.events.resize = function () {
+              return t.updateMetrics();
+            }, this.props.viewport.addEventListener("mousedown", this.events.pointerdown), this.props.viewport.addEventListener("touchstart", this.events.pointerdown, {
+              passive: !1
+            }), this.props.viewport.addEventListener("click", this.events.click), this.props.viewport.addEventListener("wheel", this.events.wheel, {
+              passive: !1
+            }), this.props.viewport.addEventListener("scroll", this.events.scroll), this.props.content.addEventListener("load", this.events.contentLoad, !0), window.addEventListener("mousemove", this.events.pointermove), window.addEventListener("touchmove", this.events.pointermove, {
+              passive: !1
+            }), window.addEventListener("mouseup", this.events.pointerup), window.addEventListener("touchend", this.events.pointerup), window.addEventListener("resize", this.events.resize);
+          }
+        }, {
+          key: "destroy",
+          value: function () {
+            this.props.viewport.removeEventListener("mousedown", this.events.pointerdown), this.props.viewport.removeEventListener("touchstart", this.events.pointerdown), this.props.viewport.removeEventListener("click", this.events.click), this.props.viewport.removeEventListener("wheel", this.events.wheel), this.props.viewport.removeEventListener("scroll", this.events.scroll), this.props.content.removeEventListener("load", this.events.contentLoad), window.removeEventListener("mousemove", this.events.pointermove), window.removeEventListener("touchmove", this.events.pointermove), window.removeEventListener("mouseup", this.events.pointerup), window.removeEventListener("touchend", this.events.pointerup), window.removeEventListener("resize", this.events.resize);
+          }
+        }]) && a(e.prototype, i), o && a(e, o), t;
+      }();
+  }]).default;
+});
 ;
 // Stupid jQuery table plugin.
 
@@ -59727,7 +60222,7 @@ return index;
 
 ;
 //! moment-timezone.js
-//! version : 0.5.45
+//! version : 0.5.46
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -59757,7 +60252,7 @@ return index;
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.45",
+	var VERSION = "0.5.46",
 		zones = {},
 		links = {},
 		countries = {},
@@ -60452,7 +60947,7 @@ return index;
 	}
 
 	loadData({
-		"version": "2024a",
+		"version": "2024b",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
 			"Africa/Nairobi|EAT|-30|0||47e5",
@@ -60562,7 +61057,6 @@ return index;
 			"Europe/Moscow|MSK|-30|0||16e6",
 			"Europe/Volgograd|+04 MSK|-40 -30|01|249a0|10e5",
 			"Pacific/Honolulu|HST|a0|0||37e4",
-			"MET|MET MEST|-10 -20|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|",
 			"Pacific/Chatham|+1345 +1245|-dJ -cJ|01010101010101010101010|1XV20 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0|600",
 			"Pacific/Apia|+14 +13|-e0 -d0|010101|1XV20 1a00 1fA0 1a00 1fA0|37e3",
 			"Pacific/Fiji|+13 +12|-d0 -c0|010101|1Xnq0 20o0 pc0 2hc0 bc0|88e4",
@@ -61028,6 +61522,7 @@ return index;
 			"Europe/Paris|Europe/Warsaw",
 			"Europe/Paris|Europe/Zagreb",
 			"Europe/Paris|Europe/Zurich",
+			"Europe/Paris|MET",
 			"Europe/Paris|Poland",
 			"Pacific/Auckland|Antarctica/McMurdo",
 			"Pacific/Auckland|Antarctica/South_Pole",
@@ -61198,7 +61693,7 @@ return index;
 			"MK|Europe/Belgrade Europe/Skopje",
 			"ML|Africa/Abidjan Africa/Bamako",
 			"MM|Asia/Yangon",
-			"MN|Asia/Ulaanbaatar Asia/Hovd Asia/Choibalsan",
+			"MN|Asia/Ulaanbaatar Asia/Hovd",
 			"MO|Asia/Macau",
 			"MP|Pacific/Guam Pacific/Saipan",
 			"MQ|America/Martinique",
@@ -62443,12 +62938,12 @@ options:
 /*! @websanova/url - v2.6.3 - 2020-01-25 */
 !function(){function t(t,r){var a,o={};if("tld?"!==t){if(r=r||window.location.toString(),!t)return r;if(t=t.toString(),a=r.match(/^mailto:([^\/].+)/))o.protocol="mailto",o.email=a[1];else{if((a=r.match(/(.*?)\/#\!(.*)/))&&(r=a[1]+a[2]),(a=r.match(/(.*?)#(.*)/))&&(o.hash=a[2],r=a[1]),o.hash&&t.match(/^#/))return h(t,o.hash);if((a=r.match(/(.*?)\?(.*)/))&&(o.query=a[2],r=a[1]),o.query&&t.match(/^\?/))return h(t,o.query);if((a=r.match(/(.*?)\:?\/\/(.*)/))&&(o.protocol=a[1].toLowerCase(),r=a[2]),(a=r.match(/(.*?)(\/.*)/))&&(o.path=a[2],r=a[1]),o.path=(o.path||"").replace(/^([^\/])/,"/$1"),t.match(/^[\-0-9]+$/)&&(t=t.replace(/^([^\/])/,"/$1")),t.match(/^\//))return e(t,o.path.substring(1));if((a=(a=e("/-1",o.path.substring(1)))&&a.match(/(.*?)\.([^.]+)$/))&&(o.file=a[0],o.filename=a[1],o.fileext=a[2]),(a=r.match(/(.*)\:([0-9]+)$/))&&(o.port=a[2],r=a[1]),(a=r.match(/(.*?)@(.*)/))&&(o.auth=a[1],r=a[2]),o.auth&&(a=o.auth.match(/(.*)\:(.*)/),o.user=a?a[1]:o.auth,o.pass=a?a[2]:void 0),o.hostname=r.toLowerCase(),"."===t.charAt(0))return e(t,o.hostname);o.port=o.port||("https"===o.protocol?"443":"80"),o.protocol=o.protocol||("443"===o.port?"https":"http")}return t in o?o[t]:"{}"===t?o:void 0}}function e(t,r){var a=t.charAt(0),o=r.split(a);return a===t?o:o[(t=parseInt(t.substring(1),10))<0?o.length+t:t-1]}function h(t,r){for(var a,o=t.charAt(0),e=r.split("&"),h=[],n={},c=[],i=t.substring(1),p=0,u=e.length;p<u;p++)if(""!==(h=(h=e[p].match(/(.*?)=(.*)/))||[e[p],e[p],""])[1].replace(/\s/g,"")){if(h[2]=(a=h[2]||"",decodeURIComponent(a.replace(/\+/g," "))),i===h[1])return h[2];(c=h[1].match(/(.*)\[([0-9]+)\]/))?(n[c[1]]=n[c[1]]||[],n[c[1]][c[2]]=h[2]):n[h[1]]=h[2]}return o===t?n:n[i]}window.url=t}();
 ;
-/* 
-  @package NOTY - Dependency-free notification library 
-  @version version: 3.2.0-beta 
-  @contributors https://github.com/needim/noty/graphs/contributors 
-  @documentation Examples and Documentation - https://ned.im/noty 
-  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php 
+/*
+  @package NOTY - Dependency-free notification library
+  @version version: 3.2.0-beta
+  @contributors https://github.com/needim/noty/graphs/contributors
+  @documentation Examples and Documentation - https://ned.im/noty
+  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
 */
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -64481,7 +64976,7 @@ Promise$2.prototype = {
     The primary way of interacting with a promise is through its `then` method,
     which registers callbacks to receive either a promise's eventual value or the
     reason why the promise cannot be fulfilled.
-  
+
     ```js
     findUser().then(function(user){
       // user is available
@@ -64489,14 +64984,14 @@ Promise$2.prototype = {
       // user is unavailable, and you are given the reason why
     });
     ```
-  
+
     Chaining
     --------
-  
+
     The return value of `then` is itself a promise.  This second, 'downstream'
     promise is resolved with the return value of the first promise's fulfillment
     or rejection handler, or rejected if the handler throws an exception.
-  
+
     ```js
     findUser().then(function (user) {
       return user.name;
@@ -64506,7 +65001,7 @@ Promise$2.prototype = {
       // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
       // will be `'default name'`
     });
-  
+
     findUser().then(function (user) {
       throw new Error('Found user, but still unhappy');
     }, function (reason) {
@@ -64519,7 +65014,7 @@ Promise$2.prototype = {
     });
     ```
     If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-  
+
     ```js
     findUser().then(function (user) {
       throw new PedagogicalException('Upstream error');
@@ -64531,15 +65026,15 @@ Promise$2.prototype = {
       // The `PedgagocialException` is propagated all the way down to here
     });
     ```
-  
+
     Assimilation
     ------------
-  
+
     Sometimes the value you want to propagate to a downstream promise can only be
     retrieved asynchronously. This can be achieved by returning a promise in the
     fulfillment or rejection handler. The downstream promise will then be pending
     until the returned promise is settled. This is called *assimilation*.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -64547,9 +65042,9 @@ Promise$2.prototype = {
       // The user's comments are now available
     });
     ```
-  
+
     If the assimliated promise rejects, then the downstream promise will also reject.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -64559,15 +65054,15 @@ Promise$2.prototype = {
       // If `findCommentsByAuthor` rejects, we'll have the reason here
     });
     ```
-  
+
     Simple Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let result;
-  
+
     try {
       result = findResult();
       // success
@@ -64575,9 +65070,9 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
     findResult(function(result, err){
       if (err) {
@@ -64587,9 +65082,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findResult().then(function(result){
       // success
@@ -64597,15 +65092,15 @@ Promise$2.prototype = {
       // failure
     });
     ```
-  
+
     Advanced Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let author, books;
-  
+
     try {
       author = findAuthor();
       books  = findBooksByAuthor(author);
@@ -64614,19 +65109,19 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
-  
+
     function foundBooks(books) {
-  
+
     }
-  
+
     function failure(reason) {
-  
+
     }
-  
+
     findAuthor(function(author, err){
       if (err) {
         failure(err);
@@ -64651,9 +65146,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findAuthor().
       then(findBooksByAuthor).
@@ -64663,7 +65158,7 @@ Promise$2.prototype = {
       // something went wrong
     });
     ```
-  
+
     @method then
     @param {Function} onFulfilled
     @param {Function} onRejected
@@ -64675,25 +65170,25 @@ Promise$2.prototype = {
   /**
     `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
     as the catch block of a try/catch statement.
-  
+
     ```js
     function findAuthor(){
       throw new Error('couldn't find that author');
     }
-  
+
     // synchronous
     try {
       findAuthor();
     } catch(reason) {
       // something went wrong
     }
-  
+
     // async with promises
     findAuthor().catch(function(reason){
       // something went wrong
     });
     ```
-  
+
     @method catch
     @param {Function} onRejection
     Useful for tooling.
@@ -65610,9 +66105,9 @@ module.exports = g;
     let isModernBrowser = function (){
 
         /*
-           userAgent sniffing is not the ideal path, but most browsers revoked the ability to check navigator.mimeTypes 
+           userAgent sniffing is not the ideal path, but most browsers revoked the ability to check navigator.mimeTypes
            for security purposes. As of 2023, browsers have begun implementing navigator.pdfViewerEnabled, but older versions
-           do not have navigator.pdfViewerEnabled or the ability to check navigator.mimeTypes. We're left with basic browser 
+           do not have navigator.pdfViewerEnabled or the ability to check navigator.mimeTypes. We're left with basic browser
            sniffing and assumptions of PDF support based on browser vendor.
         */
 
@@ -65622,21 +66117,21 @@ module.exports = g;
         //Note that MS Edge opts to use a different PDF rendering engine. As of 2024, Edge uses a version of Adobe's Reader
         let isChromium = (win.chrome !== undefined);
 
-        //Safari on macOS has provided native PDF support since 2009. 
+        //Safari on macOS has provided native PDF support since 2009.
         //This code snippet also detects the DuckDuckGo browser, which uses Safari/Webkit under the hood.
         let isSafari = (win.safari !== undefined || (nav.vendor !== undefined && /Apple/.test(nav.vendor) && /Safari/.test(ua)));
 
         //Firefox has provided PDF support via PDFJS since 2013.
         let isFirefox = (win.Mozilla !== undefined || /irefox/.test(ua));
 
-        return isChromium || isSafari || isFirefox;  
+        return isChromium || isSafari || isFirefox;
 
     };
 
     /*
        Special handling for Internet Explorer 11.
        Check for ActiveX support, then whether "AcroPDF.PDF" or "PDF.PdfCtrl" are valid.
-       IE11 uses ActiveX for Adobe Reader and other PDF plugins, but window.ActiveXObject will evaluate to false. 
+       IE11 uses ActiveX for Adobe Reader and other PDF plugins, but window.ActiveXObject will evaluate to false.
        ("ActiveXObject" in window) evaluates to true.
        MS Edge does not support ActiveX so this test will evaluate false for MS Edge.
     */
@@ -65662,7 +66157,7 @@ module.exports = g;
 
         //As of June 2023, no mobile browsers properly support inline PDFs. If mobile, just say no.
         if(isMobileDevice){ return false; }
-        
+
         //Modern browsers began supporting navigator.pdfViewerEnabled in late 2022 and early 2023.
         let supportsPDFVE = (typeof nav.pdfViewerEnabled === "boolean");
 
@@ -65683,20 +66178,20 @@ module.exports = g;
         let prop;
         let paramArray = [];
         let fdf = "";
-        
-        //The comment, viewrect, and highlight parameters require page to be set first. 
+
+        //The comment, viewrect, and highlight parameters require page to be set first.
 
         //Check to ensure page is used if comment, viewrect, or highlight are specified
         if(pdfParams.comment || pdfParams.viewrect || pdfParams.highlight){
 
             if(!pdfParams.page){
-                
+
                 //If page is not set, use the first page
                 pdfParams.page = 1;
-                
+
                 //Inform user that page needs to be set properly
                 embedError("The comment, viewrect, and highlight parameters require a page parameter, but none was specified. Defaulting to page 1.");
-            
+
             }
 
         }
@@ -65712,7 +66207,7 @@ module.exports = g;
             fdf = pdfParams.fdf;
             delete pdfParams.fdf;
         }
-        
+
         //Add all other parameters, as needed
         if(pdfParams){
 
@@ -65795,7 +66290,7 @@ module.exports = g;
             xhr.onload = function() {
 
                 if (xhr.status === 200) {
- 
+
                     var blob = xhr.response;
                     var link = document.createElement('a');
                     link.innerText = "Download PDF";
@@ -65808,7 +66303,7 @@ module.exports = g;
             };
 
             xhr.send();
-            
+
         }
 
     };
@@ -65821,9 +66316,9 @@ module.exports = g;
 
         let source = url;
 
-        if(embedType === "pdfjs"){ 
+        if(embedType === "pdfjs"){
             //If PDFJS_URL already contains a ?, assume querystring is in place, and use an ampersand to append PDFJS's file parameter
-            let connector = (PDFJS_URL.indexOf("?") !== -1) ? "&" : "?"; 
+            let connector = (PDFJS_URL.indexOf("?") !== -1) ? "&" : "?";
             source = PDFJS_URL + connector + "file=" + encodeURIComponent(url) + pdfOpenFragment;
         } else {
             source += pdfOpenFragment;
@@ -65850,7 +66345,7 @@ module.exports = g;
                 style += "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
             }
 
-            el.style.cssText = style; 
+            el.style.cssText = style;
 
         }
 
@@ -65911,22 +66406,22 @@ module.exports = g;
         if(forcePDFJS && PDFJS_URL){
             return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute, PDFJS_URL);
         }
- 
+
         // --== Embed attempt #2 ==--
 
-        //Embed PDF if support is detected, or if this is a relatively modern browser 
+        //Embed PDF if support is detected, or if this is a relatively modern browser
         if(supportsPDFs){
             return generatePDFObjectMarkup("iframe", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute);
         }
-        
+
         // --== Embed attempt #3 ==--
-        
+
         //If everything else has failed and a PDFJS fallback is provided, try to use it
         if(PDFJS_URL){
             return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute, PDFJS_URL);
         }
-        
-        // --== PDF embed not supported! Use fallback ==-- 
+
+        // --== PDF embed not supported! Use fallback ==--
 
         //Display the fallback link if available
         if(fallbackLink){
@@ -65944,7 +66439,7 @@ module.exports = g;
 
                     //Asynchronously append the link to the targetNode
                     convertBase64ToDownloadableLink(url, "file.pdf", targetNode, fallbackHTML_default);
-                
+
                 } else {
 
                     //Use default fallback link
@@ -67312,9 +67807,6 @@ module.exports = g;
         var bsButtonOptions = $.extend({}, options);
         bsButtonOptions.selected = false;
         var $result = $.bsButton( bsButtonOptions ).checkbox( $.extend(options, {className: 'checked'}) );
-
-//        var $result = $.bsButton( bsButtonOptions ).checkbox( options );
-
         return $result;
     };
 
@@ -67391,15 +67883,11 @@ module.exports = g;
 
 
     $.bsBigIconButton = function( options ){
-        return $.bsButton({
-            id          : options.id,
+        return $.bsButton($.extend(true, {}, options, {
             class       : 'w-100 d-flex',
             content     : $._bsBigIconButtonContent( options ),
             allowContent: true,
-            radioGroup  : options.radioGroup,
-            onClick     : options.onClick,
-        });
-
+        }) );
     };
 
 
@@ -67498,7 +67986,7 @@ module.exports = g;
         $.each( options.list, function(index, buttonOptions ){
 
            if ((buttonOptions.spaceBefore || buttonOptions.lineBefore || spaceAfter) && $previousButton){
-                $previousButton.addClass('space-after');
+                $previousButton.addClass('space-zafter');
             }
 
             spaceAfter      = buttonOptions.spaceAfter || buttonOptions.lineAfter;
@@ -68892,8 +69380,11 @@ uri         : {default: "Please enter a valid URI"}
 
     $.BSMODAL_USE_SQUARE_ICONS = $.BSMODAL_USE_SQUARE_ICONS || false;
 
-    let bsHeaderIcons       = {},
-        bsHeaderIconsSquare = {};
+    let bsHeaderIcons       = $.bsHeaderIcons       = {},
+        bsHeaderIconsSquare = $.bsHeaderIconsSquare = {};
+
+    $.getBsHeaderIcons = $.getHeaderIcons = function( SquareIcons ){ return SquareIcons ? bsHeaderIconsSquare : bsHeaderIcons; };
+    $.getModalHeaderIcons = function(){ return $.getBsHeaderIcons( $.BSMODAL_USE_SQUARE_ICONS ); };
 
     function adjustHeaderIcon( headerIcon ){
         if ((typeof headerIcon == 'string') || Array.isArray(headerIcon))
@@ -71335,7 +71826,7 @@ jquery-bootstrap-modal-promise.js
 
 }(jQuery, this.bootstrap, this, document));
 ;
-/****************************************************************************
+/*****************************************************  ***********************
 	jquery-bootstrap-noty.js,
 
 	(c) 2017, FCOO
@@ -71661,6 +72152,13 @@ jquery-bootstrap-modal-promise.js
 
         var classNames = '.modal.noty-container.noty-container-'+options.layout,
             $container = $bsNotyLayerToUse.find(classNames);
+
+        //Adjust width
+        if (options.extraWidth)
+            classNames = classNames +'.noty-extra-width';
+        if (options.megaWidth)
+            classNames = classNames +'.noty-mega-width';
+
         if (!$container.length){
             $container =
                 $('<div/>')
@@ -71701,7 +72199,8 @@ jquery-bootstrap-modal-promise.js
     /********************************************************************
     *********************************************************************
     Create standard variations of bsNoty:
-    notySuccess/notyOk, notyError, notyWarning, notyAlert, notyInfo (and dito $bsNoty[TYPE]
+    notySuccess/notyOk, notyError, notyWarning, notyAlert, noty
+ (and dito $bsNoty[TYPE]
     The following default options is used
     queue: "global" but if != "global" options.killer is set to options.queue
     killer: if options.queue != "global" => killer = queue and the noty will close all noty with same queue.
@@ -72401,9 +72900,13 @@ options
         options.onClick = $.fn._bsSelectButton_onClick;
         options.list    = options.list || options.items;
         options._class  = (options._class || '') + ' text-truncate btn-select';
+
+        //isBB = true => use $.bsBigIconButton
+        options.isBB = options.isBB || options.useBigButtons || options.useBigButton || options.bigButtons || options.bigButton;
+
         delete options.items;
 
-        var $result = $.bsButton( options );
+        var $result = options.isBB ? $.bsBigIconButton( options ) : $.bsButton( options );
 
         options = $result.data('bsButton_options');
         options.context = $result,
@@ -72431,14 +72934,12 @@ options
         });
 
         if (selectedItem){
-            this
-                .empty()
-                ._bsAddHtml(
-                    $.extend(true,
-                        {textClass: 'text-truncate'},
-                        selectedItem
-                    )
-                );
+            this.empty();
+
+            if (options.isBB)
+                this.append( $._bsBigIconButtonContent( selectedItem ) );
+            else
+                this._bsAddHtml( $.extend(true, {textClass: 'text-truncate'}, selectedItem ) );
 
             if (options.onChange)
                 $.proxy(options.onChange, options.context)(value);
@@ -72467,13 +72968,16 @@ options
             clickable   : true,
             transparentBackground: true,
             scroll      : list.length > 5,
+
             content: {
-                type         : 'selectlist',
-                allowReselect: true,
-                list         : list,
-                onChange     : $.fn._bsSelectButton_onChange,
-                context      : this,
-                truncate     : true
+                type             : 'selectlist',
+                allowReselect    : true,
+                list             : list,
+                onChange         : $.fn._bsSelectButton_onChange,
+                context          : this,
+                truncate         : true,
+                center           : options.center,
+                createItemContent: options.isBB ? $.bsBigIconButton : null,
             },
             show: true,
             removeOnClose: true
@@ -72514,7 +73018,8 @@ options
                 id          : '_bsSelectlist'+ selectlistId++,
                 baseClass   : 'select-list',
                 class       : 'form-control dropdown-menu',
-                useTouchSize: true
+                useTouchSize: true,
+                createItemContent: null, //function( itemOptions ) return a $-element
             });
 
         var $result =
@@ -72532,14 +73037,32 @@ options
 
         $result.data('radioGroup', radioGroup);
 
-        $.each( options.list, function( index, itemOptions ){
-            var isItem = (itemOptions.id != undefined ),
-                $item = $(isItem ? '<a/>' : '<div/>')
-                            .addClass( isItem ? 'dropdown-item' : 'dropdown-header' )
-                            .toggleClass( 'text-center',   !!options.center )
-                            .toggleClass( 'text-truncate', !!options.truncate )
-                            ._bsAddHtml( itemOptions, false, false, true )
-                            .appendTo( $result );
+        options.list.forEach( itemOptions => {
+            const isItem = (itemOptions.id != undefined);
+            let $item;
+
+            if (isItem){
+                if (options.createItemContent)
+                    $item = options.createItemContent( itemOptions );
+                else
+                    $item = $('<a/>')
+                        .addClass('dropdown-item')
+                        .toggleClass( 'text-center',   !!options.center )
+                        .toggleClass( 'text-truncate', !!options.truncate )
+                        ._bsAddHtml( itemOptions, false, false, true );
+            }
+            else {
+                if (options.createHeaderContent)
+                    $item = options.createHeaderContent( itemOptions );
+                else
+                    $item = $('<div/>')
+                        .addClass('dropdown-header')
+                        .toggleClass( 'text-center',   !!options.center )
+                        .toggleClass( 'text-truncate', !!options.truncate )
+                        ._bsAddHtml( itemOptions, false, false, true );
+            }
+
+            $item.appendTo( $result );
 
             if (isItem)
                 radioGroup.addElement( $item, itemOptions );
@@ -79359,24 +79882,23 @@ window.location.hash
         defaultValue
         ***********************************************/
         add: function( options ){
-            var _this = this,
-                optionsIsArray = $.isArray(options),
+            var optionsIsArray = $.isArray(options),
                 result = optionsIsArray ? [] : null;
 
             options = optionsIsArray ? options : [options];
-            $.each(options, function(index, settingOptions){
+            options.forEach( settingOptions => {
                 settingOptions = $.extend( {}, { callApply: true }, settingOptions );
                 var setting = new ns.Setting( settingOptions );
-                setting.group = _this;
-                _this.settings[settingOptions.id] = setting;
-                setting.apply( _this.data[setting.options.id], !options.callApply );
-                _this.data[setting.options.id] = setting.getValue();
+                setting.group = this;
+                this.settings[settingOptions.id] = setting;
+                setting.apply( this.data[setting.options.id], !options.callApply );
+                this.data[setting.options.id] = setting.getValue();
 
                 if (optionsIsArray)
                     result.push(setting);
                 else
                     result = setting;
-            });
+            }, this);
             return result;
         },
 
@@ -79427,15 +79949,8 @@ window.location.hash
 
             this.set( data );
 
-            //Save all Value from settings
-            var dataToSave = this.data;
-            $.each( this.settings, function( id, setting ){
-                if (setting.value)
-                    dataToSave[ setting.options.id ] = setting.getValue();
-            });
-
             if (!this.options.dontSave)
-                this.store.setItem(id || 'DEFAULT', dataToSave).then(callback || function(){});
+                this.store.setItem(id || 'DEFAULT', this.getAll()).then(callback || function(){});
         },
 
         saveAs: function( id, callback ){
@@ -79506,6 +80021,19 @@ window.location.hash
             }
         },
 
+        /***********************************************
+        getAll()
+        ***********************************************/
+        getAll: function(){
+            var result = $.extend(true, {}, this.data);
+
+            if (!this.options.simpleMode)
+                $.each( this.settings, function( id, setting ){
+                    if (setting.value)
+                        result[ setting.options.id ] = setting.getValue();
+                });
+            return result;
+        },
 
         /***********************************************
         getDefault( id )
@@ -79575,53 +80103,57 @@ window.location.hash
         /*****************************************************/
         edit: function( id, data, preEdit ){
             //Create the modal
-            if (!this.modalForm){
-                var _this = this,
-                    list  = [];
-                $.each(this.options.accordionList, function(index, accordInfo){
-                    if (_this.modalContent[accordInfo.id] && _this.modalContent[accordInfo.id].length)
-                        list.push({
-                            id: accordInfo.id,
-                            header: accordInfo.header,
-                            content: _this.modalContent[accordInfo.id],
-                            footer : _this.modalFooter[accordInfo.id]
-                        });
+            let list  = [];
+
+            this.options.accordionList.forEach( accordInfo => {
+                let contentList = [],
+                    modalContent = this.modalContent[accordInfo.id] || [];
+
+                modalContent.forEach( content => {
+                    contentList.push(typeof content == 'function' ? content() : content );
                 });
 
+                if (contentList.length)
+                    list.push({
+                        id: accordInfo.id,
+                        header: accordInfo.header,
+                        content: contentList,
+                        footer : this.modalFooter[accordInfo.id]
+                    });
+            }, this);
 
-                //Adjust reset-options
-                if (this.options.reset)
-                    this.options.reset = $.extend({
-                        icon      : ns.icons.reset,
-                        text      : ns.texts.reset,
-                    }, this.options.reset === true ? {} : this.options.reset);
+            //Adjust reset-options
+            if (this.options.reset)
+                this.options.reset = $.extend({
+                    icon      : ns.icons.reset,
+                    text      : ns.texts.reset,
+                }, this.options.reset === true ? {} : this.options.reset);
 
-                this.modalForm = $.bsModalForm(
-                    $.extend(
-                        this.options.modalOptions || {},
-                        {
-                            id        : this.options.storeId,
-                            show      : false,
-                            header    : this.options.modalHeader,
-                            flexWidth : this.options.flexWidth,
+            this.modalForm = $.bsModalForm(
+                $.extend(
+                    this.options.modalOptions || {},
+                    {
+                        id        : this.options.storeId,
+                        show      : false,
+                        remove    : true,
+                        header    : this.options.modalHeader,
+                        flexWidth : this.options.flexWidth,
 
-                            content   : {type: 'accordion', list: list },
+                        content   : {type: 'accordion', list: list },
 
-                            buttons   : this.options.reset && !this.options.simpleMode ? [{
-                                            icon: this.options.reset.icon,
-                                            text: this.options.reset.text,
-                                            onClick: $.proxy(this._resetInForm, this)
-                                        }] : undefined,
+                        buttons   : this.options.reset && !this.options.simpleMode ? [{
+                                        icon: this.options.reset.icon,
+                                        text: this.options.reset.text,
+                                        onClick: $.proxy(this._resetInForm, this)
+                                    }] : undefined,
 
-                            onChanging: $.proxy(this.onChanging, this),
-                            onSubmit  : $.proxy(this.onSubmit,   this),
-                            onCancel  : $.proxy(this.onCancel,   this),
-                            onClose   : $.proxy(this.onClose,    this),
-
-                        }
-                    )
-                );
-            }
+                        onChanging: $.proxy(this.onChanging, this),
+                        onSubmit  : $.proxy(this.onSubmit,   this),
+                        onCancel  : $.proxy(this.onCancel,   this),
+                        onClose   : $.proxy(this.onClose,    this),
+                    }
+                )
+            );
 
             //Get data and save data
             this.originalData = $.extend({}, this.data);
@@ -81408,7 +81940,7 @@ ID:name, ID:abbr, ID:link, ID:email
         }
     });
 
-    
+
 
 (function() {
         numeral.register('format', 'bps', {
@@ -83916,7 +84448,7 @@ Greenland
 }(jQuery, window.moment, window.i18next, this, document));
 ;
 /****************************************************************************
-    kl.js, 
+    kl.js,
 
     Translation of Moment text to Kalaallisut/Greenlandic (language code = kl)
 
@@ -83924,7 +84456,7 @@ Greenland
 
 moment.defineLocale('kl', {
     parentLocale: 'da',
-  
+
     /* TODO */
 
 
@@ -92576,7 +93108,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error;
     }
     return results;
-  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{}, 
+  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{},
   defaultOptions = {
     checks:{
       xhr:{
@@ -92599,22 +93131,22 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     deDupBody:!1
   }, grab = function(obj, key) {
     var cur, i, j, len, part, parts;
-    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i], 
+    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i],
     "object" == typeof (cur = cur[part])); i = ++j) ;
     return i === parts.length - 1 ? cur :void 0;
   }, Offline.getOption = function(key) {
     var ref, val;
-    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key), 
+    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key),
     "function" == typeof val ? val() :val;
   }, "function" == typeof window.addEventListener && window.addEventListener("online", function() {
     return setTimeout(Offline.confirmUp, 100);
   }, !1), "function" == typeof window.addEventListener && window.addEventListener("offline", function() {
     return Offline.confirmDown();
   }, !1), Offline.state = "up", Offline.markUp = function() {
-    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up", 
+    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up",
     Offline.trigger("up");
   }, Offline.markDown = function() {
-    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down", 
+    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down",
     Offline.trigger("down");
   }, handlers = {}, Offline.on = function(event, handler, ctx) {
     var e, events, j, len, results;
@@ -92627,7 +93159,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     var _handler, i, ref, results;
     if (null != handlers[event]) {
       if (handler) {
-        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i], 
+        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i],
         ref[0], _handler = ref[1], _handler === handler ? results.push(handlers[event].splice(i, 1)) :results.push(i++);
         return results;
       }
@@ -92636,7 +93168,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, Offline.trigger = function(event) {
     var ctx, handler, j, len, ref, ref1, results;
     if (null != handlers[event]) {
-      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j], 
+      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j],
       ctx = ref1[0], handler = ref1[1], results.push(handler.call(ctx));
       return results;
     }
@@ -92655,8 +93187,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     });
   }, Offline.checks = {}, Offline.checks.xhr = function() {
     var xhr;
-    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0), 
-    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")), 
+    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0),
+    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")),
     checkXHR(xhr, Offline.markUp, Offline.markDown);
     try {
       xhr.send();
@@ -92666,7 +93198,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     return xhr;
   }, Offline.checks.image = function() {
     var img;
-    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp, 
+    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp,
     img.src = Offline.getOption("checks.image.url");
   }, Offline.checks.down = Offline.markDown, Offline.checks.up = Offline.markUp, Offline.check = function() {
     return Offline.trigger("checking"), Offline.checks[Offline.getOption("checks.active")]();
@@ -92687,13 +93219,13 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       };
     }, _XMLHttpRequest = window.XMLHttpRequest, window.XMLHttpRequest = function(flags) {
       var _overrideMimeType, _setRequestHeader, req;
-      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader, 
+      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader,
       req.headers = {}, req.setRequestHeader = function(name, value) {
         return req.headers[name] = value, _setRequestHeader.call(req, name, value);
       }, _overrideMimeType = req.overrideMimeType, req.overrideMimeType = function(type) {
         return req.mimeType = type, _overrideMimeType.call(req, type);
       }, req;
-    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest, 
+    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest,
     window.XDomainRequest = function() {
       var req;
       return req = new _XDomainRequest(), monitorXHR(req), req;
@@ -92709,37 +93241,37 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   if (!window.Offline) throw new Error("Offline Reconnect brought in without offline.js");
   rc = Offline.reconnect = {}, retryIntv = null, reset = function() {
     var ref;
-    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"), 
+    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"),
     rc.state = "inactive", rc.remaining = rc.delay = null != (ref = Offline.getOption("reconnect.initialDelay")) ? ref :3;
   }, next = function() {
     var delay, ref;
-    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600), 
+    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600),
     rc.remaining = rc.delay = delay;
   }, tick = function() {
-    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"), 
+    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"),
     0 === rc.remaining ? tryNow() :void 0;
   }, tryNow = function() {
-    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting", 
+    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting",
     Offline.check();
   }, down = function() {
-    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"), 
+    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"),
     retryIntv = setInterval(tick, 1e3);
   }, up = function() {
     return null != retryIntv && clearInterval(retryIntv), reset();
   }, nope = function() {
-    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"), 
+    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"),
     rc.state = "waiting", next()) :void 0;
-  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope), 
+  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope),
   Offline.on("up", up);
 }.call(this), function() {
   var clear, flush, held, holdRequest, makeRequest, waitingOnConfirm;
   if (!window.Offline) throw new Error("Requests module brought in without offline.js");
   held = [], waitingOnConfirm = !1, holdRequest = function(req) {
-    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"), 
+    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"),
     "down" !== Offline.state && (waitingOnConfirm = !0), held.push(req);
   }, makeRequest = function(arg) {
     var body, name, password, ref, type, url, user, val, xhr;
-    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password, 
+    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password,
     body = arg.body, !1 !== Offline.getOption("requests")) {
       xhr.abort(), xhr.open(type, url, !0, user, password), ref = xhr.headers;
       for (name in ref) val = ref[name], xhr.setRequestHeader(name, val);
@@ -92750,10 +93282,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, flush = function() {
     var body, i, key, len, request, requests, url;
     if (!1 !== Offline.getOption("requests")) {
-      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i], 
+      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i],
       url = request.url.replace(/(\?|&)_=[0-9]+/, function(match, chr) {
         return "?" === chr ? chr :"";
-      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(), 
+      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(),
       requests[request.type.toUpperCase() + " - " + url + " - " + body] = request) :requests[request.type.toUpperCase() + " - " + url] = request;
       for (key in requests) request = requests[key], makeRequest(request);
       return clear();
@@ -92769,10 +93301,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         return holdRequest(request);
       }, _send = xhr.send, xhr.send = function(body) {
         return request.body = body, _send.apply(xhr, arguments);
-      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1), 
-      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange, 
+      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1),
+      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange,
       xhr.onreadystatechange = function() {
-        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(), 
+        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(),
         "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
       });
     }), Offline.requests = {
@@ -92791,12 +93323,12 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error, simulate = !1;
     }
   }
-  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}), 
+  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}),
   Offline.options.checks.active = state);
 }.call(this), function() {
   var RETRY_TEMPLATE, TEMPLATE, _onreadystatechange, addClass, content, createFromHTML, el, flashClass, flashTimeouts, init, removeClass, render, roundTime;
   if (!window.Offline) throw new Error("Offline UI brought in without offline.js");
-  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>', 
+  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>',
   RETRY_TEMPLATE = '<a href class="offline-ui-retry"></a>', createFromHTML = function(html) {
     var el;
     return el = document.createElement("div"), el.innerHTML = html, el.children[0];
@@ -92805,7 +93337,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, removeClass = function(name) {
     return el.className = el.className.replace(new RegExp("(^| )" + name.split(" ").join("|") + "( |$)", "gi"), " ");
   }, flashTimeouts = {}, flashClass = function(name, time) {
-    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]), 
+    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]),
     flashTimeouts[name] = setTimeout(function() {
       return removeClass(name), delete flashTimeouts[name];
     }, 1e3 * time);
@@ -92817,43 +93349,2407 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       minute:60,
       second:1
     };
-    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult), 
+    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult),
     [ val, unit ];
     return [ "now", "" ];
   }, render = function() {
     var button, handler;
-    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)), 
+    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)),
     button = el.querySelector(".offline-ui-retry"), handler = function(e) {
       return e.preventDefault(), Offline.reconnect.tryNow();
-    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)), 
+    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)),
     addClass("offline-ui-" + Offline.state), content = el.querySelector(".offline-ui-content");
   }, init = function() {
     return render(), Offline.on("up", function() {
-      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2), 
+      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2),
       flashClass("offline-ui-up-5s", 5);
     }), Offline.on("down", function() {
-      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2), 
+      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2),
       flashClass("offline-ui-down-5s", 5);
     }), Offline.on("reconnect:connecting", function() {
       return addClass("offline-ui-connecting"), removeClass("offline-ui-waiting");
     }), Offline.on("reconnect:tick", function() {
       var ref, time, unit;
-      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining), 
-      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time), 
+      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining),
+      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time),
       content.setAttribute("data-retry-in-unit", unit);
     }), Offline.on("reconnect:stopped", function() {
-      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null), 
+      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null),
       content.setAttribute("data-retry-in-unit", null);
     }), Offline.on("reconnect:failure", function() {
       return flashClass("offline-ui-reconnect-failed-2s", 2), flashClass("offline-ui-reconnect-failed-5s", 5);
     }), Offline.on("reconnect:success", function() {
       return flashClass("offline-ui-reconnect-succeeded-2s", 2), flashClass("offline-ui-reconnect-succeeded-5s", 5);
     });
-  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange, 
+  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange,
   document.onreadystatechange = function() {
     return "complete" === document.readyState && init(), "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
   });
 }.call(this);
+;
+/*
+ * QRious v4.0.2
+ * Copyright (C) 2017 Alasdair Mercer
+ * Copyright (C) 2010 Tom Zerucha
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global.QRious = factory());
+}(this, (function () { 'use strict';
+
+  /*
+   * Copyright (C) 2017 Alasdair Mercer, !ninja
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining a copy
+   * of this software and associated documentation files (the "Software"), to deal
+   * in the Software without restriction, including without limitation the rights
+   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   * copies of the Software, and to permit persons to whom the Software is
+   * furnished to do so, subject to the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be included in all
+   * copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   * SOFTWARE.
+   */
+
+  /**
+   * A bare-bones constructor for surrogate prototype swapping.
+   *
+   * @private
+   * @constructor
+   */
+  var Constructor = /* istanbul ignore next */ function() {};
+  /**
+   * A reference to <code>Object.prototype.hasOwnProperty</code>.
+   *
+   * @private
+   * @type {Function}
+   */
+  var hasOwnProperty = Object.prototype.hasOwnProperty;
+  /**
+   * A reference to <code>Array.prototype.slice</code>.
+   *
+   * @private
+   * @type {Function}
+   */
+  var slice = Array.prototype.slice;
+
+  /**
+   * Creates an object which inherits the given <code>prototype</code>.
+   *
+   * Optionally, the created object can be extended further with the specified <code>properties</code>.
+   *
+   * @param {Object} prototype - the prototype to be inherited by the created object
+   * @param {Object} [properties] - the optional properties to be extended by the created object
+   * @return {Object} The newly created object.
+   * @private
+   */
+  function createObject(prototype, properties) {
+    var result;
+    /* istanbul ignore next */
+    if (typeof Object.create === 'function') {
+      result = Object.create(prototype);
+    } else {
+      Constructor.prototype = prototype;
+      result = new Constructor();
+      Constructor.prototype = null;
+    }
+
+    if (properties) {
+      extendObject(true, result, properties);
+    }
+
+    return result;
+  }
+
+  /**
+   * Extends the constructor to which this method is associated with the <code>prototype</code> and/or
+   * <code>statics</code> provided.
+   *
+   * If <code>name</code> is provided, it will be used as the class name and can be accessed via a special
+   * <code>class_</code> property on the child constructor, otherwise the class name of the super constructor will be used
+   * instead. The class name may also be used string representation for instances of the child constructor (via
+   * <code>toString</code>), but this is not applicable to the <i>lite</i> version of Nevis.
+   *
+   * If <code>constructor</code> is provided, it will be used as the constructor for the child, otherwise a simple
+   * constructor which only calls the super constructor will be used instead.
+   *
+   * The super constructor can be accessed via a special <code>super_</code> property on the child constructor.
+   *
+   * @param {string} [name=this.class_] - the class name to be used for the child constructor
+   * @param {Function} [constructor] - the constructor for the child
+   * @param {Object} [prototype] - the prototype properties to be defined for the child
+   * @param {Object} [statics] - the static properties to be defined for the child
+   * @return {Function} The child <code>constructor</code> provided or the one created if none was given.
+   * @public
+   */
+  function extend(name, constructor, prototype, statics) {
+    var superConstructor = this;
+
+    if (typeof name !== 'string') {
+      statics = prototype;
+      prototype = constructor;
+      constructor = name;
+      name = null;
+    }
+
+    if (typeof constructor !== 'function') {
+      statics = prototype;
+      prototype = constructor;
+      constructor = function() {
+        return superConstructor.apply(this, arguments);
+      };
+    }
+
+    extendObject(false, constructor, superConstructor, statics);
+
+    constructor.prototype = createObject(superConstructor.prototype, prototype);
+    constructor.prototype.constructor = constructor;
+
+    constructor.class_ = name || superConstructor.class_;
+    constructor.super_ = superConstructor;
+
+    return constructor;
+  }
+
+  /**
+   * Extends the specified <code>target</code> object with the properties in each of the <code>sources</code> provided.
+   *
+   * if any source is <code>null</code> it will be ignored.
+   *
+   * @param {boolean} own - <code>true</code> to only copy <b>own</b> properties from <code>sources</code> onto
+   * <code>target</code>; otherwise <code>false</code>
+   * @param {Object} target - the target object which should be extended
+   * @param {...Object} [sources] - the source objects whose properties are to be copied onto <code>target</code>
+   * @return {void}
+   * @private
+   */
+  function extendObject(own, target, sources) {
+    sources = slice.call(arguments, 2);
+
+    var property;
+    var source;
+
+    for (var i = 0, length = sources.length; i < length; i++) {
+      source = sources[i];
+
+      for (property in source) {
+        if (!own || hasOwnProperty.call(source, property)) {
+          target[property] = source[property];
+        }
+      }
+    }
+  }
+
+  var extend_1 = extend;
+
+  /**
+   * The base class from which all others should extend.
+   *
+   * @public
+   * @constructor
+   */
+  function Nevis() {}
+  Nevis.class_ = 'Nevis';
+  Nevis.super_ = Object;
+
+  /**
+   * Extends the constructor to which this method is associated with the <code>prototype</code> and/or
+   * <code>statics</code> provided.
+   *
+   * If <code>name</code> is provided, it will be used as the class name and can be accessed via a special
+   * <code>class_</code> property on the child constructor, otherwise the class name of the super constructor will be used
+   * instead. The class name may also be used string representation for instances of the child constructor (via
+   * <code>toString</code>), but this is not applicable to the <i>lite</i> version of Nevis.
+   *
+   * If <code>constructor</code> is provided, it will be used as the constructor for the child, otherwise a simple
+   * constructor which only calls the super constructor will be used instead.
+   *
+   * The super constructor can be accessed via a special <code>super_</code> property on the child constructor.
+   *
+   * @param {string} [name=this.class_] - the class name to be used for the child constructor
+   * @param {Function} [constructor] - the constructor for the child
+   * @param {Object} [prototype] - the prototype properties to be defined for the child
+   * @param {Object} [statics] - the static properties to be defined for the child
+   * @return {Function} The child <code>constructor</code> provided or the one created if none was given.
+   * @public
+   * @static
+   * @memberof Nevis
+   */
+  Nevis.extend = extend_1;
+
+  var nevis = Nevis;
+
+  var lite = nevis;
+
+  /**
+   * Responsible for rendering a QR code {@link Frame} on a specific type of element.
+   *
+   * A renderer may be dependant on the rendering of another element, so the ordering of their execution is important.
+   *
+   * The rendering of a element can be deferred by disabling the renderer initially, however, any attempt get the element
+   * from the renderer will result in it being immediately enabled and the element being rendered.
+   *
+   * @param {QRious} qrious - the {@link QRious} instance to be used
+   * @param {*} element - the element onto which the QR code is to be rendered
+   * @param {boolean} [enabled] - <code>true</code> this {@link Renderer} is enabled; otherwise <code>false</code>.
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Renderer = lite.extend(function(qrious, element, enabled) {
+    /**
+     * The {@link QRious} instance.
+     *
+     * @protected
+     * @type {QRious}
+     * @memberof Renderer#
+     */
+    this.qrious = qrious;
+
+    /**
+     * The element onto which this {@link Renderer} is rendering the QR code.
+     *
+     * @protected
+     * @type {*}
+     * @memberof Renderer#
+     */
+    this.element = element;
+    this.element.qrious = qrious;
+
+    /**
+     * Whether this {@link Renderer} is enabled.
+     *
+     * @protected
+     * @type {boolean}
+     * @memberof Renderer#
+     */
+    this.enabled = Boolean(enabled);
+  }, {
+
+    /**
+     * Draws the specified QR code <code>frame</code> on the underlying element.
+     *
+     * Implementations of {@link Renderer} <b>must</b> override this method with their own specific logic.
+     *
+     * @param {Frame} frame - the {@link Frame} to be drawn
+     * @return {void}
+     * @protected
+     * @abstract
+     * @memberof Renderer#
+     */
+    draw: function(frame) {},
+
+    /**
+     * Returns the element onto which this {@link Renderer} is rendering the QR code.
+     *
+     * If this method is called while this {@link Renderer} is disabled, it will be immediately enabled and rendered
+     * before the element is returned.
+     *
+     * @return {*} The element.
+     * @public
+     * @memberof Renderer#
+     */
+    getElement: function() {
+      if (!this.enabled) {
+        this.enabled = true;
+        this.render();
+      }
+
+      return this.element;
+    },
+
+    /**
+     * Calculates the size (in pixel units) to represent an individual module within the QR code based on the
+     * <code>frame</code> provided.
+     *
+     * Any configured padding will be excluded from the returned size.
+     *
+     * The returned value will be at least one, even in cases where the size of the QR code does not fit its contents.
+     * This is done so that the inevitable clipping is handled more gracefully since this way at least something is
+     * displayed instead of just a blank space filled by the background color.
+     *
+     * @param {Frame} frame - the {@link Frame} from which the module size is to be derived
+     * @return {number} The pixel size for each module in the QR code which will be no less than one.
+     * @protected
+     * @memberof Renderer#
+     */
+    getModuleSize: function(frame) {
+      var qrious = this.qrious;
+      var padding = qrious.padding || 0;
+      var pixels = Math.floor((qrious.size - (padding * 2)) / frame.width);
+
+      return Math.max(1, pixels);
+    },
+
+    /**
+     * Calculates the offset/padding (in pixel units) to be inserted before the QR code based on the <code>frame</code>
+     * provided.
+     *
+     * The returned value will be zero if there is no available offset or if the size of the QR code does not fit its
+     * contents. It will never be a negative value. This is done so that the inevitable clipping appears more naturally
+     * and it is not clipped from all directions.
+     *
+     * @param {Frame} frame - the {@link Frame} from which the offset is to be derived
+     * @return {number} The pixel offset for the QR code which will be no less than zero.
+     * @protected
+     * @memberof Renderer#
+     */
+    getOffset: function(frame) {
+      var qrious = this.qrious;
+      var padding = qrious.padding;
+
+      if (padding != null) {
+        return padding;
+      }
+
+      var moduleSize = this.getModuleSize(frame);
+      var offset = Math.floor((qrious.size - (moduleSize * frame.width)) / 2);
+
+      return Math.max(0, offset);
+    },
+
+    /**
+     * Renders a QR code on the underlying element based on the <code>frame</code> provided.
+     *
+     * @param {Frame} frame - the {@link Frame} to be rendered
+     * @return {void}
+     * @public
+     * @memberof Renderer#
+     */
+    render: function(frame) {
+      if (this.enabled) {
+        this.resize();
+        this.reset();
+        this.draw(frame);
+      }
+    },
+
+    /**
+     * Resets the underlying element, effectively clearing any previously rendered QR code.
+     *
+     * Implementations of {@link Renderer} <b>must</b> override this method with their own specific logic.
+     *
+     * @return {void}
+     * @protected
+     * @abstract
+     * @memberof Renderer#
+     */
+    reset: function() {},
+
+    /**
+     * Ensures that the size of the underlying element matches that defined on the associated {@link QRious} instance.
+     *
+     * Implementations of {@link Renderer} <b>must</b> override this method with their own specific logic.
+     *
+     * @return {void}
+     * @protected
+     * @abstract
+     * @memberof Renderer#
+     */
+    resize: function() {}
+
+  });
+
+  var Renderer_1 = Renderer;
+
+  /**
+   * An implementation of {@link Renderer} for working with <code>canvas</code> elements.
+   *
+   * @public
+   * @class
+   * @extends Renderer
+   */
+  var CanvasRenderer = Renderer_1.extend({
+
+    /**
+     * @override
+     */
+    draw: function(frame) {
+      var i, j;
+      var qrious = this.qrious;
+      var moduleSize = this.getModuleSize(frame);
+      var offset = this.getOffset(frame);
+      var context = this.element.getContext('2d');
+
+      context.fillStyle = qrious.foreground;
+      context.globalAlpha = qrious.foregroundAlpha;
+
+      for (i = 0; i < frame.width; i++) {
+        for (j = 0; j < frame.width; j++) {
+          if (frame.buffer[(j * frame.width) + i]) {
+            context.fillRect((moduleSize * i) + offset, (moduleSize * j) + offset, moduleSize, moduleSize);
+          }
+        }
+      }
+    },
+
+    /**
+     * @override
+     */
+    reset: function() {
+      var qrious = this.qrious;
+      var context = this.element.getContext('2d');
+      var size = qrious.size;
+
+      context.lineWidth = 1;
+      context.clearRect(0, 0, size, size);
+      context.fillStyle = qrious.background;
+      context.globalAlpha = qrious.backgroundAlpha;
+      context.fillRect(0, 0, size, size);
+    },
+
+    /**
+     * @override
+     */
+    resize: function() {
+      var element = this.element;
+
+      element.width = element.height = this.qrious.size;
+    }
+
+  });
+
+  var CanvasRenderer_1 = CanvasRenderer;
+
+  /* eslint no-multi-spaces: "off" */
+
+
+
+  /**
+   * Contains alignment pattern information.
+   *
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Alignment = lite.extend(null, {
+
+    /**
+     * The alignment pattern block.
+     *
+     * @public
+     * @static
+     * @type {number[]}
+     * @memberof Alignment
+     */
+    BLOCK: [
+      0,  11, 15, 19, 23, 27, 31,
+      16, 18, 20, 22, 24, 26, 28, 20, 22, 24, 24, 26, 28, 28, 22, 24, 24,
+      26, 26, 28, 28, 24, 24, 26, 26, 26, 28, 28, 24, 26, 26, 26, 28, 28
+    ]
+
+  });
+
+  var Alignment_1 = Alignment;
+
+  /* eslint no-multi-spaces: "off" */
+
+
+
+  /**
+   * Contains error correction information.
+   *
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var ErrorCorrection = lite.extend(null, {
+
+    /**
+     * The error correction blocks.
+     *
+     * There are four elements per version. The first two indicate the number of blocks, then the data width, and finally
+     * the ECC width.
+     *
+     * @public
+     * @static
+     * @type {number[]}
+     * @memberof ErrorCorrection
+     */
+    BLOCKS: [
+      1,  0,  19,  7,     1,  0,  16,  10,    1,  0,  13,  13,    1,  0,  9,   17,
+      1,  0,  34,  10,    1,  0,  28,  16,    1,  0,  22,  22,    1,  0,  16,  28,
+      1,  0,  55,  15,    1,  0,  44,  26,    2,  0,  17,  18,    2,  0,  13,  22,
+      1,  0,  80,  20,    2,  0,  32,  18,    2,  0,  24,  26,    4,  0,  9,   16,
+      1,  0,  108, 26,    2,  0,  43,  24,    2,  2,  15,  18,    2,  2,  11,  22,
+      2,  0,  68,  18,    4,  0,  27,  16,    4,  0,  19,  24,    4,  0,  15,  28,
+      2,  0,  78,  20,    4,  0,  31,  18,    2,  4,  14,  18,    4,  1,  13,  26,
+      2,  0,  97,  24,    2,  2,  38,  22,    4,  2,  18,  22,    4,  2,  14,  26,
+      2,  0,  116, 30,    3,  2,  36,  22,    4,  4,  16,  20,    4,  4,  12,  24,
+      2,  2,  68,  18,    4,  1,  43,  26,    6,  2,  19,  24,    6,  2,  15,  28,
+      4,  0,  81,  20,    1,  4,  50,  30,    4,  4,  22,  28,    3,  8,  12,  24,
+      2,  2,  92,  24,    6,  2,  36,  22,    4,  6,  20,  26,    7,  4,  14,  28,
+      4,  0,  107, 26,    8,  1,  37,  22,    8,  4,  20,  24,    12, 4,  11,  22,
+      3,  1,  115, 30,    4,  5,  40,  24,    11, 5,  16,  20,    11, 5,  12,  24,
+      5,  1,  87,  22,    5,  5,  41,  24,    5,  7,  24,  30,    11, 7,  12,  24,
+      5,  1,  98,  24,    7,  3,  45,  28,    15, 2,  19,  24,    3,  13, 15,  30,
+      1,  5,  107, 28,    10, 1,  46,  28,    1,  15, 22,  28,    2,  17, 14,  28,
+      5,  1,  120, 30,    9,  4,  43,  26,    17, 1,  22,  28,    2,  19, 14,  28,
+      3,  4,  113, 28,    3,  11, 44,  26,    17, 4,  21,  26,    9,  16, 13,  26,
+      3,  5,  107, 28,    3,  13, 41,  26,    15, 5,  24,  30,    15, 10, 15,  28,
+      4,  4,  116, 28,    17, 0,  42,  26,    17, 6,  22,  28,    19, 6,  16,  30,
+      2,  7,  111, 28,    17, 0,  46,  28,    7,  16, 24,  30,    34, 0,  13,  24,
+      4,  5,  121, 30,    4,  14, 47,  28,    11, 14, 24,  30,    16, 14, 15,  30,
+      6,  4,  117, 30,    6,  14, 45,  28,    11, 16, 24,  30,    30, 2,  16,  30,
+      8,  4,  106, 26,    8,  13, 47,  28,    7,  22, 24,  30,    22, 13, 15,  30,
+      10, 2,  114, 28,    19, 4,  46,  28,    28, 6,  22,  28,    33, 4,  16,  30,
+      8,  4,  122, 30,    22, 3,  45,  28,    8,  26, 23,  30,    12, 28, 15,  30,
+      3,  10, 117, 30,    3,  23, 45,  28,    4,  31, 24,  30,    11, 31, 15,  30,
+      7,  7,  116, 30,    21, 7,  45,  28,    1,  37, 23,  30,    19, 26, 15,  30,
+      5,  10, 115, 30,    19, 10, 47,  28,    15, 25, 24,  30,    23, 25, 15,  30,
+      13, 3,  115, 30,    2,  29, 46,  28,    42, 1,  24,  30,    23, 28, 15,  30,
+      17, 0,  115, 30,    10, 23, 46,  28,    10, 35, 24,  30,    19, 35, 15,  30,
+      17, 1,  115, 30,    14, 21, 46,  28,    29, 19, 24,  30,    11, 46, 15,  30,
+      13, 6,  115, 30,    14, 23, 46,  28,    44, 7,  24,  30,    59, 1,  16,  30,
+      12, 7,  121, 30,    12, 26, 47,  28,    39, 14, 24,  30,    22, 41, 15,  30,
+      6,  14, 121, 30,    6,  34, 47,  28,    46, 10, 24,  30,    2,  64, 15,  30,
+      17, 4,  122, 30,    29, 14, 46,  28,    49, 10, 24,  30,    24, 46, 15,  30,
+      4,  18, 122, 30,    13, 32, 46,  28,    48, 14, 24,  30,    42, 32, 15,  30,
+      20, 4,  117, 30,    40, 7,  47,  28,    43, 22, 24,  30,    10, 67, 15,  30,
+      19, 6,  118, 30,    18, 31, 47,  28,    34, 34, 24,  30,    20, 61, 15,  30
+    ],
+
+    /**
+     * The final format bits with mask (level << 3 | mask).
+     *
+     * @public
+     * @static
+     * @type {number[]}
+     * @memberof ErrorCorrection
+     */
+    FINAL_FORMAT: [
+      // L
+      0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976,
+      // M
+      0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0,
+      // Q
+      0x355f, 0x3068, 0x3f31, 0x3a06, 0x24b4, 0x2183, 0x2eda, 0x2bed,
+      // H
+      0x1689, 0x13be, 0x1ce7, 0x19d0, 0x0762, 0x0255, 0x0d0c, 0x083b
+    ],
+
+    /**
+     * A map of human-readable ECC levels.
+     *
+     * @public
+     * @static
+     * @type {Object.<string, number>}
+     * @memberof ErrorCorrection
+     */
+    LEVELS: {
+      L: 1,
+      M: 2,
+      Q: 3,
+      H: 4
+    }
+
+  });
+
+  var ErrorCorrection_1 = ErrorCorrection;
+
+  /**
+   * Contains Galois field information.
+   *
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Galois = lite.extend(null, {
+
+    /**
+     * The Galois field exponent table.
+     *
+     * @public
+     * @static
+     * @type {number[]}
+     * @memberof Galois
+     */
+    EXPONENT: [
+      0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1d, 0x3a, 0x74, 0xe8, 0xcd, 0x87, 0x13, 0x26,
+      0x4c, 0x98, 0x2d, 0x5a, 0xb4, 0x75, 0xea, 0xc9, 0x8f, 0x03, 0x06, 0x0c, 0x18, 0x30, 0x60, 0xc0,
+      0x9d, 0x27, 0x4e, 0x9c, 0x25, 0x4a, 0x94, 0x35, 0x6a, 0xd4, 0xb5, 0x77, 0xee, 0xc1, 0x9f, 0x23,
+      0x46, 0x8c, 0x05, 0x0a, 0x14, 0x28, 0x50, 0xa0, 0x5d, 0xba, 0x69, 0xd2, 0xb9, 0x6f, 0xde, 0xa1,
+      0x5f, 0xbe, 0x61, 0xc2, 0x99, 0x2f, 0x5e, 0xbc, 0x65, 0xca, 0x89, 0x0f, 0x1e, 0x3c, 0x78, 0xf0,
+      0xfd, 0xe7, 0xd3, 0xbb, 0x6b, 0xd6, 0xb1, 0x7f, 0xfe, 0xe1, 0xdf, 0xa3, 0x5b, 0xb6, 0x71, 0xe2,
+      0xd9, 0xaf, 0x43, 0x86, 0x11, 0x22, 0x44, 0x88, 0x0d, 0x1a, 0x34, 0x68, 0xd0, 0xbd, 0x67, 0xce,
+      0x81, 0x1f, 0x3e, 0x7c, 0xf8, 0xed, 0xc7, 0x93, 0x3b, 0x76, 0xec, 0xc5, 0x97, 0x33, 0x66, 0xcc,
+      0x85, 0x17, 0x2e, 0x5c, 0xb8, 0x6d, 0xda, 0xa9, 0x4f, 0x9e, 0x21, 0x42, 0x84, 0x15, 0x2a, 0x54,
+      0xa8, 0x4d, 0x9a, 0x29, 0x52, 0xa4, 0x55, 0xaa, 0x49, 0x92, 0x39, 0x72, 0xe4, 0xd5, 0xb7, 0x73,
+      0xe6, 0xd1, 0xbf, 0x63, 0xc6, 0x91, 0x3f, 0x7e, 0xfc, 0xe5, 0xd7, 0xb3, 0x7b, 0xf6, 0xf1, 0xff,
+      0xe3, 0xdb, 0xab, 0x4b, 0x96, 0x31, 0x62, 0xc4, 0x95, 0x37, 0x6e, 0xdc, 0xa5, 0x57, 0xae, 0x41,
+      0x82, 0x19, 0x32, 0x64, 0xc8, 0x8d, 0x07, 0x0e, 0x1c, 0x38, 0x70, 0xe0, 0xdd, 0xa7, 0x53, 0xa6,
+      0x51, 0xa2, 0x59, 0xb2, 0x79, 0xf2, 0xf9, 0xef, 0xc3, 0x9b, 0x2b, 0x56, 0xac, 0x45, 0x8a, 0x09,
+      0x12, 0x24, 0x48, 0x90, 0x3d, 0x7a, 0xf4, 0xf5, 0xf7, 0xf3, 0xfb, 0xeb, 0xcb, 0x8b, 0x0b, 0x16,
+      0x2c, 0x58, 0xb0, 0x7d, 0xfa, 0xe9, 0xcf, 0x83, 0x1b, 0x36, 0x6c, 0xd8, 0xad, 0x47, 0x8e, 0x00
+    ],
+
+    /**
+     * The Galois field log table.
+     *
+     * @public
+     * @static
+     * @type {number[]}
+     * @memberof Galois
+     */
+    LOG: [
+      0xff, 0x00, 0x01, 0x19, 0x02, 0x32, 0x1a, 0xc6, 0x03, 0xdf, 0x33, 0xee, 0x1b, 0x68, 0xc7, 0x4b,
+      0x04, 0x64, 0xe0, 0x0e, 0x34, 0x8d, 0xef, 0x81, 0x1c, 0xc1, 0x69, 0xf8, 0xc8, 0x08, 0x4c, 0x71,
+      0x05, 0x8a, 0x65, 0x2f, 0xe1, 0x24, 0x0f, 0x21, 0x35, 0x93, 0x8e, 0xda, 0xf0, 0x12, 0x82, 0x45,
+      0x1d, 0xb5, 0xc2, 0x7d, 0x6a, 0x27, 0xf9, 0xb9, 0xc9, 0x9a, 0x09, 0x78, 0x4d, 0xe4, 0x72, 0xa6,
+      0x06, 0xbf, 0x8b, 0x62, 0x66, 0xdd, 0x30, 0xfd, 0xe2, 0x98, 0x25, 0xb3, 0x10, 0x91, 0x22, 0x88,
+      0x36, 0xd0, 0x94, 0xce, 0x8f, 0x96, 0xdb, 0xbd, 0xf1, 0xd2, 0x13, 0x5c, 0x83, 0x38, 0x46, 0x40,
+      0x1e, 0x42, 0xb6, 0xa3, 0xc3, 0x48, 0x7e, 0x6e, 0x6b, 0x3a, 0x28, 0x54, 0xfa, 0x85, 0xba, 0x3d,
+      0xca, 0x5e, 0x9b, 0x9f, 0x0a, 0x15, 0x79, 0x2b, 0x4e, 0xd4, 0xe5, 0xac, 0x73, 0xf3, 0xa7, 0x57,
+      0x07, 0x70, 0xc0, 0xf7, 0x8c, 0x80, 0x63, 0x0d, 0x67, 0x4a, 0xde, 0xed, 0x31, 0xc5, 0xfe, 0x18,
+      0xe3, 0xa5, 0x99, 0x77, 0x26, 0xb8, 0xb4, 0x7c, 0x11, 0x44, 0x92, 0xd9, 0x23, 0x20, 0x89, 0x2e,
+      0x37, 0x3f, 0xd1, 0x5b, 0x95, 0xbc, 0xcf, 0xcd, 0x90, 0x87, 0x97, 0xb2, 0xdc, 0xfc, 0xbe, 0x61,
+      0xf2, 0x56, 0xd3, 0xab, 0x14, 0x2a, 0x5d, 0x9e, 0x84, 0x3c, 0x39, 0x53, 0x47, 0x6d, 0x41, 0xa2,
+      0x1f, 0x2d, 0x43, 0xd8, 0xb7, 0x7b, 0xa4, 0x76, 0xc4, 0x17, 0x49, 0xec, 0x7f, 0x0c, 0x6f, 0xf6,
+      0x6c, 0xa1, 0x3b, 0x52, 0x29, 0x9d, 0x55, 0xaa, 0xfb, 0x60, 0x86, 0xb1, 0xbb, 0xcc, 0x3e, 0x5a,
+      0xcb, 0x59, 0x5f, 0xb0, 0x9c, 0xa9, 0xa0, 0x51, 0x0b, 0xf5, 0x16, 0xeb, 0x7a, 0x75, 0x2c, 0xd7,
+      0x4f, 0xae, 0xd5, 0xe9, 0xe6, 0xe7, 0xad, 0xe8, 0x74, 0xd6, 0xf4, 0xea, 0xa8, 0x50, 0x58, 0xaf
+    ]
+
+  });
+
+  var Galois_1 = Galois;
+
+  /**
+   * Contains version pattern information.
+   *
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Version = lite.extend(null, {
+
+    /**
+     * The version pattern block.
+     *
+     * @public
+     * @static
+     * @type {number[]}
+     * @memberof Version
+     */
+    BLOCK: [
+      0xc94, 0x5bc, 0xa99, 0x4d3, 0xbf6, 0x762, 0x847, 0x60d, 0x928, 0xb78, 0x45d, 0xa17, 0x532,
+      0x9a6, 0x683, 0x8c9, 0x7ec, 0xec4, 0x1e1, 0xfab, 0x08e, 0xc1a, 0x33f, 0xd75, 0x250, 0x9d5,
+      0x6f0, 0x8ba, 0x79f, 0xb0b, 0x42e, 0xa64, 0x541, 0xc69
+    ]
+
+  });
+
+  var Version_1 = Version;
+
+  /**
+   * Generates information for a QR code frame based on a specific value to be encoded.
+   *
+   * @param {Frame~Options} options - the options to be used
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Frame = lite.extend(function(options) {
+    var dataBlock, eccBlock, index, neccBlock1, neccBlock2;
+    var valueLength = options.value.length;
+
+    this._badness = [];
+    this._level = ErrorCorrection_1.LEVELS[options.level];
+    this._polynomial = [];
+    this._value = options.value;
+    this._version = 0;
+    this._stringBuffer = [];
+
+    while (this._version < 40) {
+      this._version++;
+
+      index = ((this._level - 1) * 4) + ((this._version - 1) * 16);
+
+      neccBlock1 = ErrorCorrection_1.BLOCKS[index++];
+      neccBlock2 = ErrorCorrection_1.BLOCKS[index++];
+      dataBlock = ErrorCorrection_1.BLOCKS[index++];
+      eccBlock = ErrorCorrection_1.BLOCKS[index];
+
+      index = (dataBlock * (neccBlock1 + neccBlock2)) + neccBlock2 - 3 + (this._version <= 9);
+
+      if (valueLength <= index) {
+        break;
+      }
+    }
+
+    this._dataBlock = dataBlock;
+    this._eccBlock = eccBlock;
+    this._neccBlock1 = neccBlock1;
+    this._neccBlock2 = neccBlock2;
+
+    /**
+     * The data width is based on version.
+     *
+     * @public
+     * @type {number}
+     * @memberof Frame#
+     */
+    // FIXME: Ensure that it fits instead of being truncated.
+    var width = this.width = 17 + (4 * this._version);
+
+    /**
+     * The image buffer.
+     *
+     * @public
+     * @type {number[]}
+     * @memberof Frame#
+     */
+    this.buffer = Frame._createArray(width * width);
+
+    this._ecc = Frame._createArray(dataBlock + ((dataBlock + eccBlock) * (neccBlock1 + neccBlock2)) + neccBlock2);
+    this._mask = Frame._createArray(((width * (width + 1)) + 1) / 2);
+
+    this._insertFinders();
+    this._insertAlignments();
+
+    // Insert single foreground cell.
+    this.buffer[8 + (width * (width - 8))] = 1;
+
+    this._insertTimingGap();
+    this._reverseMask();
+    this._insertTimingRowAndColumn();
+    this._insertVersion();
+    this._syncMask();
+    this._convertBitStream(valueLength);
+    this._calculatePolynomial();
+    this._appendEccToData();
+    this._interleaveBlocks();
+    this._pack();
+    this._finish();
+  }, {
+
+    _addAlignment: function(x, y) {
+      var i;
+      var buffer = this.buffer;
+      var width = this.width;
+
+      buffer[x + (width * y)] = 1;
+
+      for (i = -2; i < 2; i++) {
+        buffer[x + i + (width * (y - 2))] = 1;
+        buffer[x - 2 + (width * (y + i + 1))] = 1;
+        buffer[x + 2 + (width * (y + i))] = 1;
+        buffer[x + i + 1 + (width * (y + 2))] = 1;
+      }
+
+      for (i = 0; i < 2; i++) {
+        this._setMask(x - 1, y + i);
+        this._setMask(x + 1, y - i);
+        this._setMask(x - i, y - 1);
+        this._setMask(x + i, y + 1);
+      }
+    },
+
+    _appendData: function(data, dataLength, ecc, eccLength) {
+      var bit, i, j;
+      var polynomial = this._polynomial;
+      var stringBuffer = this._stringBuffer;
+
+      for (i = 0; i < eccLength; i++) {
+        stringBuffer[ecc + i] = 0;
+      }
+
+      for (i = 0; i < dataLength; i++) {
+        bit = Galois_1.LOG[stringBuffer[data + i] ^ stringBuffer[ecc]];
+
+        if (bit !== 255) {
+          for (j = 1; j < eccLength; j++) {
+            stringBuffer[ecc + j - 1] = stringBuffer[ecc + j] ^
+              Galois_1.EXPONENT[Frame._modN(bit + polynomial[eccLength - j])];
+          }
+        } else {
+          for (j = ecc; j < ecc + eccLength; j++) {
+            stringBuffer[j] = stringBuffer[j + 1];
+          }
+        }
+
+        stringBuffer[ecc + eccLength - 1] = bit === 255 ? 0 : Galois_1.EXPONENT[Frame._modN(bit + polynomial[0])];
+      }
+    },
+
+    _appendEccToData: function() {
+      var i;
+      var data = 0;
+      var dataBlock = this._dataBlock;
+      var ecc = this._calculateMaxLength();
+      var eccBlock = this._eccBlock;
+
+      for (i = 0; i < this._neccBlock1; i++) {
+        this._appendData(data, dataBlock, ecc, eccBlock);
+
+        data += dataBlock;
+        ecc += eccBlock;
+      }
+
+      for (i = 0; i < this._neccBlock2; i++) {
+        this._appendData(data, dataBlock + 1, ecc, eccBlock);
+
+        data += dataBlock + 1;
+        ecc += eccBlock;
+      }
+    },
+
+    _applyMask: function(mask) {
+      var r3x, r3y, x, y;
+      var buffer = this.buffer;
+      var width = this.width;
+
+      switch (mask) {
+      case 0:
+        for (y = 0; y < width; y++) {
+          for (x = 0; x < width; x++) {
+            if (!((x + y) & 1) && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 1:
+        for (y = 0; y < width; y++) {
+          for (x = 0; x < width; x++) {
+            if (!(y & 1) && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 2:
+        for (y = 0; y < width; y++) {
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) {
+              r3x = 0;
+            }
+
+            if (!r3x && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 3:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) {
+            r3y = 0;
+          }
+
+          for (r3x = r3y, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) {
+              r3x = 0;
+            }
+
+            if (!r3x && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 4:
+        for (y = 0; y < width; y++) {
+          for (r3x = 0, r3y = (y >> 1) & 1, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) {
+              r3x = 0;
+              r3y = !r3y;
+            }
+
+            if (!r3y && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 5:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) {
+            r3y = 0;
+          }
+
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) {
+              r3x = 0;
+            }
+
+            if (!((x & y & 1) + !(!r3x | !r3y)) && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 6:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) {
+            r3y = 0;
+          }
+
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) {
+              r3x = 0;
+            }
+
+            if (!((x & y & 1) + (r3x && r3x === r3y) & 1) && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 7:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) {
+            r3y = 0;
+          }
+
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) {
+              r3x = 0;
+            }
+
+            if (!((r3x && r3x === r3y) + (x + y & 1) & 1) && !this._isMasked(x, y)) {
+              buffer[x + (y * width)] ^= 1;
+            }
+          }
+        }
+
+        break;
+      }
+    },
+
+    _calculateMaxLength: function() {
+      return (this._dataBlock * (this._neccBlock1 + this._neccBlock2)) + this._neccBlock2;
+    },
+
+    _calculatePolynomial: function() {
+      var i, j;
+      var eccBlock = this._eccBlock;
+      var polynomial = this._polynomial;
+
+      polynomial[0] = 1;
+
+      for (i = 0; i < eccBlock; i++) {
+        polynomial[i + 1] = 1;
+
+        for (j = i; j > 0; j--) {
+          polynomial[j] = polynomial[j] ? polynomial[j - 1] ^
+            Galois_1.EXPONENT[Frame._modN(Galois_1.LOG[polynomial[j]] + i)] : polynomial[j - 1];
+        }
+
+        polynomial[0] = Galois_1.EXPONENT[Frame._modN(Galois_1.LOG[polynomial[0]] + i)];
+      }
+
+      // Use logs for generator polynomial to save calculation step.
+      for (i = 0; i <= eccBlock; i++) {
+        polynomial[i] = Galois_1.LOG[polynomial[i]];
+      }
+    },
+
+    _checkBadness: function() {
+      var b, b1, h, x, y;
+      var bad = 0;
+      var badness = this._badness;
+      var buffer = this.buffer;
+      var width = this.width;
+
+      // Blocks of same colour.
+      for (y = 0; y < width - 1; y++) {
+        for (x = 0; x < width - 1; x++) {
+          // All foreground colour.
+          if ((buffer[x + (width * y)] &&
+            buffer[x + 1 + (width * y)] &&
+            buffer[x + (width * (y + 1))] &&
+            buffer[x + 1 + (width * (y + 1))]) ||
+            // All background colour.
+            !(buffer[x + (width * y)] ||
+            buffer[x + 1 + (width * y)] ||
+            buffer[x + (width * (y + 1))] ||
+            buffer[x + 1 + (width * (y + 1))])) {
+            bad += Frame.N2;
+          }
+        }
+      }
+
+      var bw = 0;
+
+      // X runs.
+      for (y = 0; y < width; y++) {
+        h = 0;
+
+        badness[0] = 0;
+
+        for (b = 0, x = 0; x < width; x++) {
+          b1 = buffer[x + (width * y)];
+
+          if (b === b1) {
+            badness[h]++;
+          } else {
+            badness[++h] = 1;
+          }
+
+          b = b1;
+          bw += b ? 1 : -1;
+        }
+
+        bad += this._getBadness(h);
+      }
+
+      if (bw < 0) {
+        bw = -bw;
+      }
+
+      var count = 0;
+      var big = bw;
+      big += big << 2;
+      big <<= 1;
+
+      while (big > width * width) {
+        big -= width * width;
+        count++;
+      }
+
+      bad += count * Frame.N4;
+
+      // Y runs.
+      for (x = 0; x < width; x++) {
+        h = 0;
+
+        badness[0] = 0;
+
+        for (b = 0, y = 0; y < width; y++) {
+          b1 = buffer[x + (width * y)];
+
+          if (b === b1) {
+            badness[h]++;
+          } else {
+            badness[++h] = 1;
+          }
+
+          b = b1;
+        }
+
+        bad += this._getBadness(h);
+      }
+
+      return bad;
+    },
+
+    _convertBitStream: function(length) {
+      var bit, i;
+      var ecc = this._ecc;
+      var version = this._version;
+
+      // Convert string to bit stream. 8-bit data to QR-coded 8-bit data (numeric, alphanumeric, or kanji not supported).
+      for (i = 0; i < length; i++) {
+        ecc[i] = this._value.charCodeAt(i);
+      }
+
+      var stringBuffer = this._stringBuffer = ecc.slice();
+      var maxLength = this._calculateMaxLength();
+
+      if (length >= maxLength - 2) {
+        length = maxLength - 2;
+
+        if (version > 9) {
+          length--;
+        }
+      }
+
+      // Shift and re-pack to insert length prefix.
+      var index = length;
+
+      if (version > 9) {
+        stringBuffer[index + 2] = 0;
+        stringBuffer[index + 3] = 0;
+
+        while (index--) {
+          bit = stringBuffer[index];
+
+          stringBuffer[index + 3] |= 255 & (bit << 4);
+          stringBuffer[index + 2] = bit >> 4;
+        }
+
+        stringBuffer[2] |= 255 & (length << 4);
+        stringBuffer[1] = length >> 4;
+        stringBuffer[0] = 0x40 | (length >> 12);
+      } else {
+        stringBuffer[index + 1] = 0;
+        stringBuffer[index + 2] = 0;
+
+        while (index--) {
+          bit = stringBuffer[index];
+
+          stringBuffer[index + 2] |= 255 & (bit << 4);
+          stringBuffer[index + 1] = bit >> 4;
+        }
+
+        stringBuffer[1] |= 255 & (length << 4);
+        stringBuffer[0] = 0x40 | (length >> 4);
+      }
+
+      // Fill to end with pad pattern.
+      index = length + 3 - (version < 10);
+
+      while (index < maxLength) {
+        stringBuffer[index++] = 0xec;
+        stringBuffer[index++] = 0x11;
+      }
+    },
+
+    _getBadness: function(length) {
+      var i;
+      var badRuns = 0;
+      var badness = this._badness;
+
+      for (i = 0; i <= length; i++) {
+        if (badness[i] >= 5) {
+          badRuns += Frame.N1 + badness[i] - 5;
+        }
+      }
+
+      // FBFFFBF as in finder.
+      for (i = 3; i < length - 1; i += 2) {
+        if (badness[i - 2] === badness[i + 2] &&
+          badness[i + 2] === badness[i - 1] &&
+          badness[i - 1] === badness[i + 1] &&
+          badness[i - 1] * 3 === badness[i] &&
+          // Background around the foreground pattern? Not part of the specs.
+          (badness[i - 3] === 0 || i + 3 > length ||
+          badness[i - 3] * 3 >= badness[i] * 4 ||
+          badness[i + 3] * 3 >= badness[i] * 4)) {
+          badRuns += Frame.N3;
+        }
+      }
+
+      return badRuns;
+    },
+
+    _finish: function() {
+      // Save pre-mask copy of frame.
+      this._stringBuffer = this.buffer.slice();
+
+      var currentMask, i;
+      var bit = 0;
+      var mask = 30000;
+
+      /*
+       * Using for instead of while since in original Arduino code if an early mask was "good enough" it wouldn't try for
+       * a better one since they get more complex and take longer.
+       */
+      for (i = 0; i < 8; i++) {
+        // Returns foreground-background imbalance.
+        this._applyMask(i);
+
+        currentMask = this._checkBadness();
+
+        // Is current mask better than previous best?
+        if (currentMask < mask) {
+          mask = currentMask;
+          bit = i;
+        }
+
+        // Don't increment "i" to a void redoing mask.
+        if (bit === 7) {
+          break;
+        }
+
+        // Reset for next pass.
+        this.buffer = this._stringBuffer.slice();
+      }
+
+      // Redo best mask as none were "good enough" (i.e. last wasn't bit).
+      if (bit !== i) {
+        this._applyMask(bit);
+      }
+
+      // Add in final mask/ECC level bytes.
+      mask = ErrorCorrection_1.FINAL_FORMAT[bit + (this._level - 1 << 3)];
+
+      var buffer = this.buffer;
+      var width = this.width;
+
+      // Low byte.
+      for (i = 0; i < 8; i++, mask >>= 1) {
+        if (mask & 1) {
+          buffer[width - 1 - i + (width * 8)] = 1;
+
+          if (i < 6) {
+            buffer[8 + (width * i)] = 1;
+          } else {
+            buffer[8 + (width * (i + 1))] = 1;
+          }
+        }
+      }
+
+      // High byte.
+      for (i = 0; i < 7; i++, mask >>= 1) {
+        if (mask & 1) {
+          buffer[8 + (width * (width - 7 + i))] = 1;
+
+          if (i) {
+            buffer[6 - i + (width * 8)] = 1;
+          } else {
+            buffer[7 + (width * 8)] = 1;
+          }
+        }
+      }
+    },
+
+    _interleaveBlocks: function() {
+      var i, j;
+      var dataBlock = this._dataBlock;
+      var ecc = this._ecc;
+      var eccBlock = this._eccBlock;
+      var k = 0;
+      var maxLength = this._calculateMaxLength();
+      var neccBlock1 = this._neccBlock1;
+      var neccBlock2 = this._neccBlock2;
+      var stringBuffer = this._stringBuffer;
+
+      for (i = 0; i < dataBlock; i++) {
+        for (j = 0; j < neccBlock1; j++) {
+          ecc[k++] = stringBuffer[i + (j * dataBlock)];
+        }
+
+        for (j = 0; j < neccBlock2; j++) {
+          ecc[k++] = stringBuffer[(neccBlock1 * dataBlock) + i + (j * (dataBlock + 1))];
+        }
+      }
+
+      for (j = 0; j < neccBlock2; j++) {
+        ecc[k++] = stringBuffer[(neccBlock1 * dataBlock) + i + (j * (dataBlock + 1))];
+      }
+
+      for (i = 0; i < eccBlock; i++) {
+        for (j = 0; j < neccBlock1 + neccBlock2; j++) {
+          ecc[k++] = stringBuffer[maxLength + i + (j * eccBlock)];
+        }
+      }
+
+      this._stringBuffer = ecc;
+    },
+
+    _insertAlignments: function() {
+      var i, x, y;
+      var version = this._version;
+      var width = this.width;
+
+      if (version > 1) {
+        i = Alignment_1.BLOCK[version];
+        y = width - 7;
+
+        for (;;) {
+          x = width - 7;
+
+          while (x > i - 3) {
+            this._addAlignment(x, y);
+
+            if (x < i) {
+              break;
+            }
+
+            x -= i;
+          }
+
+          if (y <= i + 9) {
+            break;
+          }
+
+          y -= i;
+
+          this._addAlignment(6, y);
+          this._addAlignment(y, 6);
+        }
+      }
+    },
+
+    _insertFinders: function() {
+      var i, j, x, y;
+      var buffer = this.buffer;
+      var width = this.width;
+
+      for (i = 0; i < 3; i++) {
+        j = 0;
+        y = 0;
+
+        if (i === 1) {
+          j = width - 7;
+        }
+        if (i === 2) {
+          y = width - 7;
+        }
+
+        buffer[y + 3 + (width * (j + 3))] = 1;
+
+        for (x = 0; x < 6; x++) {
+          buffer[y + x + (width * j)] = 1;
+          buffer[y + (width * (j + x + 1))] = 1;
+          buffer[y + 6 + (width * (j + x))] = 1;
+          buffer[y + x + 1 + (width * (j + 6))] = 1;
+        }
+
+        for (x = 1; x < 5; x++) {
+          this._setMask(y + x, j + 1);
+          this._setMask(y + 1, j + x + 1);
+          this._setMask(y + 5, j + x);
+          this._setMask(y + x + 1, j + 5);
+        }
+
+        for (x = 2; x < 4; x++) {
+          buffer[y + x + (width * (j + 2))] = 1;
+          buffer[y + 2 + (width * (j + x + 1))] = 1;
+          buffer[y + 4 + (width * (j + x))] = 1;
+          buffer[y + x + 1 + (width * (j + 4))] = 1;
+        }
+      }
+    },
+
+    _insertTimingGap: function() {
+      var x, y;
+      var width = this.width;
+
+      for (y = 0; y < 7; y++) {
+        this._setMask(7, y);
+        this._setMask(width - 8, y);
+        this._setMask(7, y + width - 7);
+      }
+
+      for (x = 0; x < 8; x++) {
+        this._setMask(x, 7);
+        this._setMask(x + width - 8, 7);
+        this._setMask(x, width - 8);
+      }
+    },
+
+    _insertTimingRowAndColumn: function() {
+      var x;
+      var buffer = this.buffer;
+      var width = this.width;
+
+      for (x = 0; x < width - 14; x++) {
+        if (x & 1) {
+          this._setMask(8 + x, 6);
+          this._setMask(6, 8 + x);
+        } else {
+          buffer[8 + x + (width * 6)] = 1;
+          buffer[6 + (width * (8 + x))] = 1;
+        }
+      }
+    },
+
+    _insertVersion: function() {
+      var i, j, x, y;
+      var buffer = this.buffer;
+      var version = this._version;
+      var width = this.width;
+
+      if (version > 6) {
+        i = Version_1.BLOCK[version - 7];
+        j = 17;
+
+        for (x = 0; x < 6; x++) {
+          for (y = 0; y < 3; y++, j--) {
+            if (1 & (j > 11 ? version >> j - 12 : i >> j)) {
+              buffer[5 - x + (width * (2 - y + width - 11))] = 1;
+              buffer[2 - y + width - 11 + (width * (5 - x))] = 1;
+            } else {
+              this._setMask(5 - x, 2 - y + width - 11);
+              this._setMask(2 - y + width - 11, 5 - x);
+            }
+          }
+        }
+      }
+    },
+
+    _isMasked: function(x, y) {
+      var bit = Frame._getMaskBit(x, y);
+
+      return this._mask[bit] === 1;
+    },
+
+    _pack: function() {
+      var bit, i, j;
+      var k = 1;
+      var v = 1;
+      var width = this.width;
+      var x = width - 1;
+      var y = width - 1;
+
+      // Interleaved data and ECC codes.
+      var length = ((this._dataBlock + this._eccBlock) * (this._neccBlock1 + this._neccBlock2)) + this._neccBlock2;
+
+      for (i = 0; i < length; i++) {
+        bit = this._stringBuffer[i];
+
+        for (j = 0; j < 8; j++, bit <<= 1) {
+          if (0x80 & bit) {
+            this.buffer[x + (width * y)] = 1;
+          }
+
+          // Find next fill position.
+          do {
+            if (v) {
+              x--;
+            } else {
+              x++;
+
+              if (k) {
+                if (y !== 0) {
+                  y--;
+                } else {
+                  x -= 2;
+                  k = !k;
+
+                  if (x === 6) {
+                    x--;
+                    y = 9;
+                  }
+                }
+              } else if (y !== width - 1) {
+                y++;
+              } else {
+                x -= 2;
+                k = !k;
+
+                if (x === 6) {
+                  x--;
+                  y -= 8;
+                }
+              }
+            }
+
+            v = !v;
+          } while (this._isMasked(x, y));
+        }
+      }
+    },
+
+    _reverseMask: function() {
+      var x, y;
+      var width = this.width;
+
+      for (x = 0; x < 9; x++) {
+        this._setMask(x, 8);
+      }
+
+      for (x = 0; x < 8; x++) {
+        this._setMask(x + width - 8, 8);
+        this._setMask(8, x);
+      }
+
+      for (y = 0; y < 7; y++) {
+        this._setMask(8, y + width - 7);
+      }
+    },
+
+    _setMask: function(x, y) {
+      var bit = Frame._getMaskBit(x, y);
+
+      this._mask[bit] = 1;
+    },
+
+    _syncMask: function() {
+      var x, y;
+      var width = this.width;
+
+      for (y = 0; y < width; y++) {
+        for (x = 0; x <= y; x++) {
+          if (this.buffer[x + (width * y)]) {
+            this._setMask(x, y);
+          }
+        }
+      }
+    }
+
+  }, {
+
+    _createArray: function(length) {
+      var i;
+      var array = [];
+
+      for (i = 0; i < length; i++) {
+        array[i] = 0;
+      }
+
+      return array;
+    },
+
+    _getMaskBit: function(x, y) {
+      var bit;
+
+      if (x > y) {
+        bit = x;
+        x = y;
+        y = bit;
+      }
+
+      bit = y;
+      bit += y * y;
+      bit >>= 1;
+      bit += x;
+
+      return bit;
+    },
+
+    _modN: function(x) {
+      while (x >= 255) {
+        x -= 255;
+        x = (x >> 8) + (x & 255);
+      }
+
+      return x;
+    },
+
+    // *Badness* coefficients.
+    N1: 3,
+    N2: 3,
+    N3: 40,
+    N4: 10
+
+  });
+
+  var Frame_1 = Frame;
+
+  /**
+   * The options used by {@link Frame}.
+   *
+   * @typedef {Object} Frame~Options
+   * @property {string} level - The ECC level to be used.
+   * @property {string} value - The value to be encoded.
+   */
+
+  /**
+   * An implementation of {@link Renderer} for working with <code>img</code> elements.
+   *
+   * This depends on {@link CanvasRenderer} being executed first as this implementation simply applies the data URL from
+   * the rendered <code>canvas</code> element as the <code>src</code> for the <code>img</code> element being rendered.
+   *
+   * @public
+   * @class
+   * @extends Renderer
+   */
+  var ImageRenderer = Renderer_1.extend({
+
+    /**
+     * @override
+     */
+    draw: function() {
+      this.element.src = this.qrious.toDataURL();
+    },
+
+    /**
+     * @override
+     */
+    reset: function() {
+      this.element.src = '';
+    },
+
+    /**
+     * @override
+     */
+    resize: function() {
+      var element = this.element;
+
+      element.width = element.height = this.qrious.size;
+    }
+
+  });
+
+  var ImageRenderer_1 = ImageRenderer;
+
+  /**
+   * Defines an available option while also configuring how values are applied to the target object.
+   *
+   * Optionally, a default value can be specified as well a value transformer for greater control over how the option
+   * value is applied.
+   *
+   * If no value transformer is specified, then any specified option will be applied directly. All values are maintained
+   * on the target object itself as a field using the option name prefixed with a single underscore.
+   *
+   * When an option is specified as modifiable, the {@link OptionManager} will be required to include a setter for the
+   * property that is defined on the target object that uses the option name.
+   *
+   * @param {string} name - the name to be used
+   * @param {boolean} [modifiable] - <code>true</code> if the property defined on target objects should include a setter;
+   * otherwise <code>false</code>
+   * @param {*} [defaultValue] - the default value to be used
+   * @param {Option~ValueTransformer} [valueTransformer] - the value transformer to be used
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Option = lite.extend(function(name, modifiable, defaultValue, valueTransformer) {
+    /**
+     * The name for this {@link Option}.
+     *
+     * @public
+     * @type {string}
+     * @memberof Option#
+     */
+    this.name = name;
+
+    /**
+     * Whether a setter should be included on the property defined on target objects for this {@link Option}.
+     *
+     * @public
+     * @type {boolean}
+     * @memberof Option#
+     */
+    this.modifiable = Boolean(modifiable);
+
+    /**
+     * The default value for this {@link Option}.
+     *
+     * @public
+     * @type {*}
+     * @memberof Option#
+     */
+    this.defaultValue = defaultValue;
+
+    this._valueTransformer = valueTransformer;
+  }, {
+
+    /**
+     * Transforms the specified <code>value</code> so that it can be applied for this {@link Option}.
+     *
+     * If a value transformer has been specified for this {@link Option}, it will be called upon to transform
+     * <code>value</code>. Otherwise, <code>value</code> will be returned directly.
+     *
+     * @param {*} value - the value to be transformed
+     * @return {*} The transformed value or <code>value</code> if no value transformer is specified.
+     * @public
+     * @memberof Option#
+     */
+    transform: function(value) {
+      var transformer = this._valueTransformer;
+      if (typeof transformer === 'function') {
+        return transformer(value, this);
+      }
+
+      return value;
+    }
+
+  });
+
+  var Option_1 = Option;
+
+  /**
+   * Returns a transformed value for the specified <code>value</code> to be applied for the <code>option</code> provided.
+   *
+   * @callback Option~ValueTransformer
+   * @param {*} value - the value to be transformed
+   * @param {Option} option - the {@link Option} for which <code>value</code> is being transformed
+   * @return {*} The transform value.
+   */
+
+  /**
+   * Contains utility methods that are useful throughout the library.
+   *
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Utilities = lite.extend(null, {
+
+    /**
+     * Returns the absolute value of a given number.
+     *
+     * This method is simply a convenient shorthand for <code>Math.abs</code> while ensuring that nulls are returned as
+     * <code>null</code> instead of zero.
+     *
+     * @param {number} value - the number whose absolute value is to be returned
+     * @return {number} The absolute value of <code>value</code> or <code>null</code> if <code>value</code> is
+     * <code>null</code>.
+     * @public
+     * @static
+     * @memberof Utilities
+     */
+    abs: function(value) {
+      return value != null ? Math.abs(value) : null;
+    },
+
+    /**
+     * Returns whether the specified <code>object</code> has a property with the specified <code>name</code> as an own
+     * (not inherited) property.
+     *
+     * @param {Object} object - the object on which the property is to be checked
+     * @param {string} name - the name of the property to be checked
+     * @return {boolean} <code>true</code> if <code>object</code> has an own property with <code>name</code>.
+     * @public
+     * @static
+     * @memberof Utilities
+     */
+    hasOwn: function(object, name) {
+      return Object.prototype.hasOwnProperty.call(object, name);
+    },
+
+    /**
+     * A non-operation method that does absolutely nothing.
+     *
+     * @return {void}
+     * @public
+     * @static
+     * @memberof Utilities
+     */
+    noop: function() {},
+
+    /**
+     * Transforms the specified <code>string</code> to upper case while remaining null-safe.
+     *
+     * @param {string} string - the string to be transformed to upper case
+     * @return {string} <code>string</code> transformed to upper case if <code>string</code> is not <code>null</code>.
+     * @public
+     * @static
+     * @memberof Utilities
+     */
+    toUpperCase: function(string) {
+      return string != null ? string.toUpperCase() : null;
+    }
+
+  });
+
+  var Utilities_1 = Utilities;
+
+  /**
+   * Manages multiple {@link Option} instances that are intended to be used by multiple implementations.
+   *
+   * Although the option definitions are shared between targets, the values are maintained on the targets themselves.
+   *
+   * @param {Option[]} options - the options to be used
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var OptionManager = lite.extend(function(options) {
+    /**
+     * The available options for this {@link OptionManager}.
+     *
+     * @public
+     * @type {Object.<string, Option>}
+     * @memberof OptionManager#
+     */
+    this.options = {};
+
+    options.forEach(function(option) {
+      this.options[option.name] = option;
+    }, this);
+  }, {
+
+    /**
+     * Returns whether an option with the specified <code>name</code> is available.
+     *
+     * @param {string} name - the name of the {@link Option} whose existence is to be checked
+     * @return {boolean} <code>true</code> if an {@link Option} exists with <code>name</code>; otherwise
+     * <code>false</code>.
+     * @public
+     * @memberof OptionManager#
+     */
+    exists: function(name) {
+      return this.options[name] != null;
+    },
+
+    /**
+     * Returns the value of the option with the specified <code>name</code> on the <code>target</code> object provided.
+     *
+     * @param {string} name - the name of the {@link Option} whose value on <code>target</code> is to be returned
+     * @param {Object} target - the object from which the value of the named {@link Option} is to be returned
+     * @return {*} The value of the {@link Option} with <code>name</code> on <code>target</code>.
+     * @public
+     * @memberof OptionManager#
+     */
+    get: function(name, target) {
+      return OptionManager._get(this.options[name], target);
+    },
+
+    /**
+     * Returns a copy of all of the available options on the <code>target</code> object provided.
+     *
+     * @param {Object} target - the object from which the option name/value pairs are to be returned
+     * @return {Object.<string, *>} A hash containing the name/value pairs of all options on <code>target</code>.
+     * @public
+     * @memberof OptionManager#
+     */
+    getAll: function(target) {
+      var name;
+      var options = this.options;
+      var result = {};
+
+      for (name in options) {
+        if (Utilities_1.hasOwn(options, name)) {
+          result[name] = OptionManager._get(options[name], target);
+        }
+      }
+
+      return result;
+    },
+
+    /**
+     * Initializes the available options for the <code>target</code> object provided and then applies the initial values
+     * within the speciifed <code>options</code>.
+     *
+     * This method will throw an error if any of the names within <code>options</code> does not match an available option.
+     *
+     * This involves setting the default values and defining properties for all of the available options on
+     * <code>target</code> before finally calling {@link OptionMananger#setAll} with <code>options</code> and
+     * <code>target</code>. Any options that are configured to be modifiable will have a setter included in their defined
+     * property that will allow its corresponding value to be modified.
+     *
+     * If a change handler is specified, it will be called whenever the value changes on <code>target</code> for a
+     * modifiable option, but only when done so via the defined property's setter.
+     *
+     * @param {Object.<string, *>} options - the name/value pairs of the initial options to be set
+     * @param {Object} target - the object on which the options are to be initialized
+     * @param {Function} [changeHandler] - the function to be called whenever the value of an modifiable option changes on
+     * <code>target</code>
+     * @return {void}
+     * @throws {Error} If <code>options</code> contains an invalid option name.
+     * @public
+     * @memberof OptionManager#
+     */
+    init: function(options, target, changeHandler) {
+      if (typeof changeHandler !== 'function') {
+        changeHandler = Utilities_1.noop;
+      }
+
+      var name, option;
+
+      for (name in this.options) {
+        if (Utilities_1.hasOwn(this.options, name)) {
+          option = this.options[name];
+
+          OptionManager._set(option, option.defaultValue, target);
+          OptionManager._createAccessor(option, target, changeHandler);
+        }
+      }
+
+      this._setAll(options, target, true);
+    },
+
+    /**
+     * Sets the value of the option with the specified <code>name</code> on the <code>target</code> object provided to
+     * <code>value</code>.
+     *
+     * This method will throw an error if <code>name</code> does not match an available option or matches an option that
+     * cannot be modified.
+     *
+     * If <code>value</code> is <code>null</code> and the {@link Option} has a default value configured, then that default
+     * value will be used instead. If the {@link Option} also has a value transformer configured, it will be used to
+     * transform whichever value was determined to be used.
+     *
+     * This method returns whether the value of the underlying field on <code>target</code> was changed as a result.
+     *
+     * @param {string} name - the name of the {@link Option} whose value is to be set
+     * @param {*} value - the value to be set for the named {@link Option} on <code>target</code>
+     * @param {Object} target - the object on which <code>value</code> is to be set for the named {@link Option}
+     * @return {boolean} <code>true</code> if the underlying field on <code>target</code> was changed; otherwise
+     * <code>false</code>.
+     * @throws {Error} If <code>name</code> is invalid or is for an option that cannot be modified.
+     * @public
+     * @memberof OptionManager#
+     */
+    set: function(name, value, target) {
+      return this._set(name, value, target);
+    },
+
+    /**
+     * Sets all of the specified <code>options</code> on the <code>target</code> object provided to their corresponding
+     * values.
+     *
+     * This method will throw an error if any of the names within <code>options</code> does not match an available option
+     * or matches an option that cannot be modified.
+     *
+     * If any value within <code>options</code> is <code>null</code> and the corresponding {@link Option} has a default
+     * value configured, then that default value will be used instead. If an {@link Option} also has a value transformer
+     * configured, it will be used to transform whichever value was determined to be used.
+     *
+     * This method returns whether the value for any of the underlying fields on <code>target</code> were changed as a
+     * result.
+     *
+     * @param {Object.<string, *>} options - the name/value pairs of options to be set
+     * @param {Object} target - the object on which the options are to be set
+     * @return {boolean} <code>true</code> if any of the underlying fields on <code>target</code> were changed; otherwise
+     * <code>false</code>.
+     * @throws {Error} If <code>options</code> contains an invalid option name or an option that cannot be modiifed.
+     * @public
+     * @memberof OptionManager#
+     */
+    setAll: function(options, target) {
+      return this._setAll(options, target);
+    },
+
+    _set: function(name, value, target, allowUnmodifiable) {
+      var option = this.options[name];
+      if (!option) {
+        throw new Error('Invalid option: ' + name);
+      }
+      if (!option.modifiable && !allowUnmodifiable) {
+        throw new Error('Option cannot be modified: ' + name);
+      }
+
+      return OptionManager._set(option, value, target);
+    },
+
+    _setAll: function(options, target, allowUnmodifiable) {
+      if (!options) {
+        return false;
+      }
+
+      var name;
+      var changed = false;
+
+      for (name in options) {
+        if (Utilities_1.hasOwn(options, name) && this._set(name, options[name], target, allowUnmodifiable)) {
+          changed = true;
+        }
+      }
+
+      return changed;
+    }
+
+  }, {
+
+    _createAccessor: function(option, target, changeHandler) {
+      var descriptor = {
+        get: function() {
+          return OptionManager._get(option, target);
+        }
+      };
+
+      if (option.modifiable) {
+        descriptor.set = function(value) {
+          if (OptionManager._set(option, value, target)) {
+            changeHandler(value, option);
+          }
+        };
+      }
+
+      Object.defineProperty(target, option.name, descriptor);
+    },
+
+    _get: function(option, target) {
+      return target['_' + option.name];
+    },
+
+    _set: function(option, value, target) {
+      var fieldName = '_' + option.name;
+      var oldValue = target[fieldName];
+      var newValue = option.transform(value != null ? value : option.defaultValue);
+
+      target[fieldName] = newValue;
+
+      return newValue !== oldValue;
+    }
+
+  });
+
+  var OptionManager_1 = OptionManager;
+
+  /**
+   * Called whenever the value of a modifiable {@link Option} is changed on a target object via the defined property's
+   * setter.
+   *
+   * @callback OptionManager~ChangeHandler
+   * @param {*} value - the new value for <code>option</code> on the target object
+   * @param {Option} option - the modifable {@link Option} whose value has changed on the target object.
+   * @return {void}
+   */
+
+  /**
+   * A basic manager for {@link Service} implementations that are mapped to simple names.
+   *
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var ServiceManager = lite.extend(function() {
+    this._services = {};
+  }, {
+
+    /**
+     * Returns the {@link Service} being managed with the specified <code>name</code>.
+     *
+     * @param {string} name - the name of the {@link Service} to be returned
+     * @return {Service} The {@link Service} is being managed with <code>name</code>.
+     * @throws {Error} If no {@link Service} is being managed with <code>name</code>.
+     * @public
+     * @memberof ServiceManager#
+     */
+    getService: function(name) {
+      var service = this._services[name];
+      if (!service) {
+        throw new Error('Service is not being managed with name: ' + name);
+      }
+
+      return service;
+    },
+
+    /**
+     * Sets the {@link Service} implementation to be managed for the specified <code>name</code> to the
+     * <code>service</code> provided.
+     *
+     * @param {string} name - the name of the {@link Service} to be managed with <code>name</code>
+     * @param {Service} service - the {@link Service} implementation to be managed
+     * @return {void}
+     * @throws {Error} If a {@link Service} is already being managed with the same <code>name</code>.
+     * @public
+     * @memberof ServiceManager#
+     */
+    setService: function(name, service) {
+      if (this._services[name]) {
+        throw new Error('Service is already managed with name: ' + name);
+      }
+
+      if (service) {
+        this._services[name] = service;
+      }
+    }
+
+  });
+
+  var ServiceManager_1 = ServiceManager;
+
+  var optionManager = new OptionManager_1([
+    new Option_1('background', true, 'white'),
+    new Option_1('backgroundAlpha', true, 1, Utilities_1.abs),
+    new Option_1('element'),
+    new Option_1('foreground', true, 'black'),
+    new Option_1('foregroundAlpha', true, 1, Utilities_1.abs),
+    new Option_1('level', true, 'L', Utilities_1.toUpperCase),
+    new Option_1('mime', true, 'image/png'),
+    new Option_1('padding', true, null, Utilities_1.abs),
+    new Option_1('size', true, 100, Utilities_1.abs),
+    new Option_1('value', true, '')
+  ]);
+  var serviceManager = new ServiceManager_1();
+
+  /**
+   * Enables configuration of a QR code generator which uses HTML5 <code>canvas</code> for rendering.
+   *
+   * @param {QRious~Options} [options] - the options to be used
+   * @throws {Error} If any <code>options</code> are invalid.
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var QRious = lite.extend(function(options) {
+    optionManager.init(options, this, this.update.bind(this));
+
+    var element = optionManager.get('element', this);
+    var elementService = serviceManager.getService('element');
+    var canvas = element && elementService.isCanvas(element) ? element : elementService.createCanvas();
+    var image = element && elementService.isImage(element) ? element : elementService.createImage();
+
+    this._canvasRenderer = new CanvasRenderer_1(this, canvas, true);
+    this._imageRenderer = new ImageRenderer_1(this, image, image === element);
+
+    this.update();
+  }, {
+
+    /**
+     * Returns all of the options configured for this {@link QRious}.
+     *
+     * Any changes made to the returned object will not be reflected in the options themselves or their corresponding
+     * underlying fields.
+     *
+     * @return {Object.<string, *>} A copy of the applied options.
+     * @public
+     * @memberof QRious#
+     */
+    get: function() {
+      return optionManager.getAll(this);
+    },
+
+    /**
+     * Sets all of the specified <code>options</code> and automatically updates this {@link QRious} if any of the
+     * underlying fields are changed as a result.
+     *
+     * This is the preferred method for updating multiple options at one time to avoid unnecessary updates between
+     * changes.
+     *
+     * @param {QRious~Options} options - the options to be set
+     * @return {void}
+     * @throws {Error} If any <code>options</code> are invalid or cannot be modified.
+     * @public
+     * @memberof QRious#
+     */
+    set: function(options) {
+      if (optionManager.setAll(options, this)) {
+        this.update();
+      }
+    },
+
+    /**
+     * Returns the image data URI for the generated QR code using the <code>mime</code> provided.
+     *
+     * @param {string} [mime] - the MIME type for the image
+     * @return {string} The image data URI for the QR code.
+     * @public
+     * @memberof QRious#
+     */
+    toDataURL: function(mime) {
+      return this.canvas.toDataURL(mime || this.mime);
+    },
+
+    /**
+     * Updates this {@link QRious} by generating a new {@link Frame} and re-rendering the QR code.
+     *
+     * @return {void}
+     * @protected
+     * @memberof QRious#
+     */
+    update: function() {
+      var frame = new Frame_1({
+        level: this.level,
+        value: this.value
+      });
+
+      this._canvasRenderer.render(frame);
+      this._imageRenderer.render(frame);
+    }
+
+  }, {
+
+    /**
+     * Configures the <code>service</code> provided to be used by all {@link QRious} instances.
+     *
+     * @param {Service} service - the {@link Service} to be configured
+     * @return {void}
+     * @throws {Error} If a {@link Service} has already been configured with the same name.
+     * @public
+     * @static
+     * @memberof QRious
+     */
+    use: function(service) {
+      serviceManager.setService(service.getName(), service);
+    }
+
+  });
+
+  Object.defineProperties(QRious.prototype, {
+
+    canvas: {
+      /**
+       * Returns the <code>canvas</code> element being used to render the QR code for this {@link QRious}.
+       *
+       * @return {*} The <code>canvas</code> element.
+       * @public
+       * @memberof QRious#
+       * @alias canvas
+       */
+      get: function() {
+        return this._canvasRenderer.getElement();
+      }
+    },
+
+    image: {
+      /**
+       * Returns the <code>img</code> element being used to render the QR code for this {@link QRious}.
+       *
+       * @return {*} The <code>img</code> element.
+       * @public
+       * @memberof QRious#
+       * @alias image
+       */
+      get: function() {
+        return this._imageRenderer.getElement();
+      }
+    }
+
+  });
+
+  var QRious_1$2 = QRious;
+
+  /**
+   * The options used by {@link QRious}.
+   *
+   * @typedef {Object} QRious~Options
+   * @property {string} [background="white"] - The background color to be applied to the QR code.
+   * @property {number} [backgroundAlpha=1] - The background alpha to be applied to the QR code.
+   * @property {*} [element] - The element to be used to render the QR code which may either be an <code>canvas</code> or
+   * <code>img</code>. The element(s) will be created if needed.
+   * @property {string} [foreground="black"] - The foreground color to be applied to the QR code.
+   * @property {number} [foregroundAlpha=1] - The foreground alpha to be applied to the QR code.
+   * @property {string} [level="L"] - The error correction level to be applied to the QR code.
+   * @property {string} [mime="image/png"] - The MIME type to be used to render the image for the QR code.
+   * @property {number} [padding] - The padding for the QR code in pixels.
+   * @property {number} [size=100] - The size of the QR code in pixels.
+   * @property {string} [value=""] - The value to be encoded within the QR code.
+   */
+
+  var index = QRious_1$2;
+
+  /**
+   * Defines a service contract that must be met by all implementations.
+   *
+   * @public
+   * @class
+   * @extends Nevis
+   */
+  var Service = lite.extend({
+
+    /**
+     * Returns the name of this {@link Service}.
+     *
+     * @return {string} The service name.
+     * @public
+     * @abstract
+     * @memberof Service#
+     */
+    getName: function() {}
+
+  });
+
+  var Service_1 = Service;
+
+  /**
+   * A service for working with elements.
+   *
+   * @public
+   * @class
+   * @extends Service
+   */
+  var ElementService = Service_1.extend({
+
+    /**
+     * Creates an instance of a canvas element.
+     *
+     * Implementations of {@link ElementService} <b>must</b> override this method with their own specific logic.
+     *
+     * @return {*} The newly created canvas element.
+     * @public
+     * @abstract
+     * @memberof ElementService#
+     */
+    createCanvas: function() {},
+
+    /**
+     * Creates an instance of a image element.
+     *
+     * Implementations of {@link ElementService} <b>must</b> override this method with their own specific logic.
+     *
+     * @return {*} The newly created image element.
+     * @public
+     * @abstract
+     * @memberof ElementService#
+     */
+    createImage: function() {},
+
+    /**
+     * @override
+     */
+    getName: function() {
+      return 'element';
+    },
+
+    /**
+     * Returns whether the specified <code>element</code> is a canvas.
+     *
+     * Implementations of {@link ElementService} <b>must</b> override this method with their own specific logic.
+     *
+     * @param {*} element - the element to be checked
+     * @return {boolean} <code>true</code> if <code>element</code> is a canvas; otherwise <code>false</code>.
+     * @public
+     * @abstract
+     * @memberof ElementService#
+     */
+    isCanvas: function(element) {},
+
+    /**
+     * Returns whether the specified <code>element</code> is an image.
+     *
+     * Implementations of {@link ElementService} <b>must</b> override this method with their own specific logic.
+     *
+     * @param {*} element - the element to be checked
+     * @return {boolean} <code>true</code> if <code>element</code> is an image; otherwise <code>false</code>.
+     * @public
+     * @abstract
+     * @memberof ElementService#
+     */
+    isImage: function(element) {}
+
+  });
+
+  var ElementService_1 = ElementService;
+
+  /**
+   * An implementation of {@link ElementService} intended for use within a browser environment.
+   *
+   * @public
+   * @class
+   * @extends ElementService
+   */
+  var BrowserElementService = ElementService_1.extend({
+
+    /**
+     * @override
+     */
+    createCanvas: function() {
+      return document.createElement('canvas');
+    },
+
+    /**
+     * @override
+     */
+    createImage: function() {
+      return document.createElement('img');
+    },
+
+    /**
+     * @override
+     */
+    isCanvas: function(element) {
+      return element instanceof HTMLCanvasElement;
+    },
+
+    /**
+     * @override
+     */
+    isImage: function(element) {
+      return element instanceof HTMLImageElement;
+    }
+
+  });
+
+  var BrowserElementService_1 = BrowserElementService;
+
+  index.use(new BrowserElementService_1());
+
+  var QRious_1 = index;
+
+  return QRious_1;
+
+})));
+
+//# sourceMappingURL=qrious.js.map
 ;
 /*!
  * swiped-events.js - v@version@

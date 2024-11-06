@@ -124,6 +124,12 @@ Sections:
     //Application header - is set in ns.createMain(options). see src/fcoo-application-main.js
     ns.applicationHeader = {da:'', en:''};
 
+
+    //ns.applicationUrl = port + path (https://app.fcoo.dk/APPNAME/)
+    ns.applicationUrl = window.URI(window.location).search('').toString();
+    ns.applicationUrl = ns.applicationUrl.replace('index.html', '');
+
+
     //ns.applicationBranch = '' for production, 'DEMO'/'BETA' etc for no-production versions
     ns.applicationBranch = '';
     //Test if the path-name contains any of the words defining the version to be none-production
@@ -134,6 +140,7 @@ Sections:
             return false;
         }
     });
+
 
     //Change the title of the document when the language is changed
     ns.events.on( ns.events.LANGUAGECHANGED, function(){

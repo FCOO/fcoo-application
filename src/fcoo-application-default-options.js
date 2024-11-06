@@ -16,10 +16,15 @@ See src/fcoo-application-create.js
         applicationName  : {da:STRING, en:STRING},  //applicationName or applicationHeader are used. Two options available for backward combability
         applicationHeader: {da:STRING, en:STRING},
 
+        depotOptions: { //Options for saving and loading settings using SavedSettingList (src/fcoo-application-load-save-bookmark-share-setting.js
+            url  : STRING. Url to the service
+            token: STRING. Sub-dir with token //Standard "token/"
+            depot: STRING. Sub-dir with data  //Standard "depot/"
+        }
+
         topMenu: {
             See description in fcoo/fcoo-application and in nsMap.default_setup below
         }
-
         standardMenuOptions: { //Options for the standard-menu/mmenu created by methods in src/fcoo-application-mmenu
             inclBar    : BOOLEAN,
             barCloseAll: BOOLEAN,
@@ -78,6 +83,12 @@ See src/fcoo-application-create.js
     ****************************************************************************/
     ns.defaultApplicationOptions = {
             applicationName    : {da:'Dansk titel', en:'English title'},
+
+            depotOptions       : {
+                url  : 'https://staging.fcooapp.com/ifm-service/api/', //MANGLER
+                token: 'token/',
+                depot: 'depot/'
+            },
 
             topMenu            : {},
 

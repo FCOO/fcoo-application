@@ -28,6 +28,12 @@ load setup-files in fcoo.promiseList after checking for test-modes
 
     //Create a default error-handle. Can be overwritten
     Promise.defaultErrorHandler = function( error ){
+
+        /* eslint-disable no-console */
+        if (ns.DEV_VERSION)
+            console.log('DEFAULT ERROR', error);
+         /* eslint-enable no-console */
+
         //Create the content of the error-noty like
         //"Error"
         //"Error-message (error-code)"

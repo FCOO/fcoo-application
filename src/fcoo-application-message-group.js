@@ -150,7 +150,6 @@ Objects and methods to create message-groups
                 return false;
             },
 
-
             shakeWhenUnread: false,
 
             onChange: function( messageGroup ){

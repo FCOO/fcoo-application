@@ -212,7 +212,16 @@ Methods to create standard FCC-web-applications
         (options.other || []).forEach( otherOptions => ns.promiseList.appendLast(otherOptions) );
         ns.promiseList.appendLast(options.metadata || options.metaData);
 
-        //7: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
+
+        //7: Create savedSettingList and load saved settings
+        ns.promiseList.appendLast({
+            data: 'none',
+            resolve: () => {
+                ns.savedSettingList = new ns.SavedSettingList({}, 'loadApplicationSetting');
+            }
+        });
+
+        //8: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
         ns.promiseList.options.finally = promise_all_finally;
         whenFinish = options.finally;
 
@@ -276,11 +285,24 @@ Methods to create standard FCC-web-applications
 
     /******************************************************************
     promise_all_finally()
-    7: Load settings in fcoo.appSetting and globalSetting
+    7: Load settings in globalSetting
     ******************************************************************/
+    function promise_all_finally(){
+        //Call ns.globalSetting.load => whenFinish => Promise.defaultFinally
+        ns.globalSetting.load(null, function(){
+                if (whenFinish)
+                    whenFinish();
+                ns.events.fire(ns.events.CREATEAPPLICATIONFINALLY);
+                Promise.defaultFinally();
+        });
+        return true;
+    }
+
+/* ORIGINAL
     function promise_all_finally(){
         //Call ns.globalSetting.load => ns.appSetting.load => whenFinish => Promise.defaultFinally
         ns.globalSetting.load(null, function(){
+
             ns.appSetting.load(null, function(){
                 if (whenFinish)
                     whenFinish();
@@ -290,6 +312,7 @@ Methods to create standard FCC-web-applications
         });
         return true;
     }
+*/
 
 }(jQuery, window.moment, this, document));
 

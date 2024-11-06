@@ -95,6 +95,107 @@ Create and display "About FCOO" info and modal-box
 
 ;
 /****************************************************************************
+fcoo-application-clipboard.js
+Methods to copy text and images to the clipboard
+Based on https://blog.saeloun.com/2022/06/09/copying-texts-to-clipboard-using-javascript/
+****************************************************************************/
+(function ($, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+    var ns = window.fcoo = window.fcoo || {},
+        nsClipboard = ns.clipboard = ns.clipboard || {};
+
+
+    /**************************************************************
+    nsClipboard.copyText = function( textOrElem, options)
+    ***************************************************************/
+    function getEvents( options = {}, what ){
+        what = options.what || what;
+        let result = {
+                succesText: options.succesText || {da:'Kopieret!', en:'Copied!'},
+                errorText : options.errorText  || [what, {da:'blev <b>ikke</b> kopieret til udklipsholder', en:'was <b>not</b> copied to the Clipboard'}]
+            };
+        result.onSucces = options.onSucces || function(){ window.notySuccess(result.succesText, {timeout: 500}                           ); };
+        result.onError  = options.onError  || function(){ window.notyError  (result.errorText,  {layout: 'center', defaultHeader: false} ); };
+
+        return result;
+    }
+
+    nsClipboard.copyText = function( textOrElem, options ){
+        let text = textOrElem;
+        if (textOrElem instanceof jQuery)
+            text = textOrElem.text();
+        else
+            if (typeof textOrElem == 'function')
+                text = textOrElem();
+
+        let events = getEvents(options, '"'+text+'"<br>');
+
+        return navigator.clipboard.writeText(text)
+                    .then(()     => { events.onSucces(text); })
+                    .catch(error => { events.onError(error); });
+    };
+
+
+    /**************************************************************
+    nsClipboard.copyImage = function( imageElem, onSucces, onError )
+    ***************************************************************/
+    nsClipboard.copyImage = function( imageElem, options ){
+        //Get image as a blob
+        let img = imageElem instanceof jQuery ? imageElem.get(0) : imageElem;
+
+        // Craete <canvas> of the same size
+        let canvas = document.createElement('canvas');
+        canvas.width = img.clientWidth;
+        canvas.height = img.clientHeight;
+
+        let context = canvas.getContext('2d');
+
+        // Copy image to it (this method allows to cut image)
+        context.drawImage(img, 0, 0);
+
+        let events = getEvents(options, {da:'Billedet ', en:'The image '});
+
+        // toBlob is async operation, callback is called when done
+        canvas.toBlob( function(blob) {
+            //The blob is resdy to be copied
+            navigator.clipboard.write([ new window.ClipboardItem({[blob.type]: blob}) ])
+                .then(()     => { events.onSucces(img); })
+                .catch(error => { events.onError(error); });
+        }, 'image/png');
+    };
+
+
+    /**************************************************************
+    nsClipboard.bsButton_copyToClipboard = function(textOrElem, options = {})
+    ***************************************************************/
+    nsClipboard.bsButton_copyToClipboard = function(textOrElem, options = {}){
+        return $.bsButton( $.extend(true, {
+            id  : 'btn_copy_to_clipboard',
+            icon: 'fa-copy',
+            text: {da:'Kopier til udklipsholder', en:'Copy to Clipboard'},
+            onClick: () => {nsClipboard.copyText(textOrElem, options); }
+        }, options ));
+    };
+
+    /**************************************************************
+    nsClipboard.bsButton_copyImageToClipboard = function(imageElem, options = {})
+    ***************************************************************/
+    nsClipboard.bsButton_copyImageToClipboard = function(imageElem, options = {}){
+        return $.bsButton( $.extend(true, {
+            id  : 'btn_copy_to_clipboard',
+            icon: 'fa-copy',
+            text: {da:'Kopier til udklipsholder', en:'Copy to Clipboard'},
+            onClick: () => {nsClipboard.copyImage(imageElem, options); }
+        }, options ));
+    };
+
+}(jQuery, this, document));
+
+
+;
+/****************************************************************************
 fcoo-application-color.js
 
 ****************************************************************************/
@@ -372,7 +473,16 @@ Methods to create standard FCC-web-applications
         (options.other || []).forEach( otherOptions => ns.promiseList.appendLast(otherOptions) );
         ns.promiseList.appendLast(options.metadata || options.metaData);
 
-        //7: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
+
+        //7: Create savedSettingList and load saved settings
+        ns.promiseList.appendLast({
+            data: 'none',
+            resolve: () => {
+                ns.savedSettingList = new ns.SavedSettingList({}, 'loadApplicationSetting');
+            }
+        });
+
+        //8: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
         ns.promiseList.options.finally = promise_all_finally;
         whenFinish = options.finally;
 
@@ -436,11 +546,24 @@ Methods to create standard FCC-web-applications
 
     /******************************************************************
     promise_all_finally()
-    7: Load settings in fcoo.appSetting and globalSetting
+    7: Load settings in globalSetting
     ******************************************************************/
+    function promise_all_finally(){
+        //Call ns.globalSetting.load => whenFinish => Promise.defaultFinally
+        ns.globalSetting.load(null, function(){
+                if (whenFinish)
+                    whenFinish();
+                ns.events.fire(ns.events.CREATEAPPLICATIONFINALLY);
+                Promise.defaultFinally();
+        });
+        return true;
+    }
+
+/* ORIGINAL
     function promise_all_finally(){
         //Call ns.globalSetting.load => ns.appSetting.load => whenFinish => Promise.defaultFinally
         ns.globalSetting.load(null, function(){
+
             ns.appSetting.load(null, function(){
                 if (whenFinish)
                     whenFinish();
@@ -450,6 +573,7 @@ Methods to create standard FCC-web-applications
         });
         return true;
     }
+*/
 
 }(jQuery, window.moment, this, document));
 
@@ -475,10 +599,15 @@ See src/fcoo-application-create.js
         applicationName  : {da:STRING, en:STRING},  //applicationName or applicationHeader are used. Two options available for backward combability
         applicationHeader: {da:STRING, en:STRING},
 
+        depotOptions: { //Options for saving and loading settings using SavedSettingList (src/fcoo-application-load-save-bookmark-share-setting.js
+            url  : STRING. Url to the service
+            token: STRING. Sub-dir with token //Standard "token/"
+            depot: STRING. Sub-dir with data  //Standard "depot/"
+        }
+
         topMenu: {
             See description in fcoo/fcoo-application and in nsMap.default_setup below
         }
-
         standardMenuOptions: { //Options for the standard-menu/mmenu created by methods in src/fcoo-application-mmenu
             inclBar    : BOOLEAN,
             barCloseAll: BOOLEAN,
@@ -537,6 +666,12 @@ See src/fcoo-application-create.js
     ****************************************************************************/
     ns.defaultApplicationOptions = {
             applicationName    : {da:'Dansk titel', en:'English title'},
+
+            depotOptions       : {
+                url  : 'https://staging.fcooapp.com/ifm-service/api/', //MANGLER
+                token: 'token/',
+                depot: 'depot/'
+            },
 
             topMenu            : {},
 
@@ -688,6 +823,12 @@ Sections:
     //Application header - is set in ns.createMain(options). see src/fcoo-application-main.js
     ns.applicationHeader = {da:'', en:''};
 
+
+    //ns.applicationUrl = port + path (https://app.fcoo.dk/APPNAME/)
+    ns.applicationUrl = window.URI(window.location).search('').toString();
+    ns.applicationUrl = ns.applicationUrl.replace('index.html', '');
+
+
     //ns.applicationBranch = '' for production, 'DEMO'/'BETA' etc for no-production versions
     ns.applicationBranch = '';
     //Test if the path-name contains any of the words defining the version to be none-production
@@ -698,6 +839,7 @@ Sections:
             return false;
         }
     });
+
 
     //Change the title of the document when the language is changed
     ns.events.on( ns.events.LANGUAGECHANGED, function(){
@@ -1483,24 +1625,30 @@ Create and manage the main structure for FCOO web applications
             //Add standard buttons
             var shareIcon = 'fa-share-alt'; //TODO check os for different icons
             var buttonList = [];
+/*
+ns.application_load_settings
+ns.application_save_settings
+ns.application_bookmark_settings
+ns.application_share_settings
+*/
 
             [
-                {id:'new',      icon: 'fa-square-plus',       title: {da: 'Ny',              en: 'New'          }, newGroup: true,  onClick: function(){ alert('New not implemented');      } },
-                {id:'edit',     icon: 'fa-pen-to-square',     title: {da: 'Rediger',         en: 'Edit'         }, newGroup: true,  onClick: function(){ alert('Edit not implemented');     } },
-                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: function(){ alert('Save not implemented');     } },
-                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                  onClick: function(){ alert('Load not implemented');     } },
-                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true,  onClick: function(){ alert('Bookmark not implemented'); } },
-                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                  onClick: function(){ alert('Share not implemented');    } },
-                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true,  onClick: function(){ alert('User not implemented');     } },
+                {id:'new',      icon: 'fa-square-plus',       title: {da: 'Ny',              en: 'New'          }, newGroup: true,  onClick: function(){ alert('New not implemented');   } },
+                {id:'edit',     icon: 'fa-pen-to-square',     title: {da: 'Rediger',         en: 'Edit'         }, newGroup: true,  onClick: function(){ alert('Edit not implemented');  } },
+                {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: ns.application_save_settings                  },
+                {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                  onClick: ns.application_load_settings                  },
+                {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true,  onClick: null/*ns.application_bookmark_settings */             },
+                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                  onClick: ns.application_share_settings                 },
+                {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true,  onClick: function(){ alert('User not implemented');  } },
 
-                {id:'cancel',   icon: 'fa-times',             title: {da: 'Annullér',        en: 'Cancel'       }, newGroup: true,  onClick: function(){ alert('Cancel not implemented');   } },
-                {id:'ok',       icon: 'fa-check',             title: {da: 'Ok',              en: 'Ok'           },                  onClick: function(){ alert('Ok not implemented');       } },
+                {id:'cancel',   icon: 'fa-times',             title: {da: 'Annullér',        en: 'Cancel'       }, newGroup: true,  onClick: function(){ alert('Cancel not implemented');} },
+                {id:'ok',       icon: 'fa-check',             title: {da: 'Ok',              en: 'Ok'           },                  onClick: function(){ alert('Ok not implemented');    } },
 
-                {id:'save2',    icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: function(){ alert('Save not implemented');     } },
-                {id:'reset2',   icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        },                  onClick: function(){ alert('Reset2 not implemented');   } },
+                {id:'save2',    icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: function(){ alert('Save not implemented');  } },
+                {id:'reset2',   icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        },                  onClick: function(){ alert('Reset2 not implemented');} },
 
-                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true,  onClick: ns.reset                                         },
-                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                  onClick: function(){ ns.globalSetting.edit();           } }
+                {id:'reset',    icon: 'fa-arrow-rotate-left', title: {da: 'Nulstil',         en: 'Reset'        }, newGroup: true,  onClick: ns.reset                                       },
+                {id:'setting',  icon: 'fa-cog',               title: {da: 'Indstillinger',   en: 'Settings'     },                  onClick: function(){ ns.globalSetting.edit();         } }
             ].forEach( defaultButtonOptions => {
                 var nextButtonOptions = options[defaultButtonOptions.id];
                 if (nextButtonOptions){
@@ -1849,7 +1997,6 @@ Objects and methods to create message-groups
 
                 return false;
             },
-
 
             shakeWhenUnread: false,
 
@@ -2389,6 +2536,12 @@ load setup-files in fcoo.promiseList after checking for test-modes
 
     //Create a default error-handle. Can be overwritten
     Promise.defaultErrorHandler = function( error ){
+
+        /* eslint-disable no-console */
+        if (ns.DEV_VERSION)
+            console.log('DEFAULT ERROR', error);
+         /* eslint-enable no-console */
+
         //Create the content of the error-noty like
         //"Error"
         //"Error-message (error-code)"
@@ -4198,3 +4351,2070 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     };
 
 }(jQuery, this, document));
+;
+/****************************************************************************
+saved-setting-depot.js
+
+Methods for loading and saving settings for the application
+
+****************************************************************************/
+(function ($, moment, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+    let ns = window.fcoo = window.fcoo || {};
+
+    /**************************************************************
+    Depot - Load and save settings in FCOO Depot API
+    **************************************************************/
+    let Depot = ns.Depot = function( options ){
+        this.options = {};
+        this.setOptions( options );
+        this.token = '';
+    };
+
+    Depot.prototype = {
+        setOptions: function(options = {}){
+            this.options = $.extend(true, {}, {
+                url  : 'https://staging.fcooapp.com/ifm-service/api/', //HER skal nok fjernes her fra
+                token: 'token/',
+                depot: 'depot/',
+                applicationId: ns.applicationId,
+                promiseOptions: {
+                    method      : 'POST',       // *GET, POST, PUT, DELETE, etc.
+                    mode        : 'cors',       // no-cors, *cors, same-origin
+                    cache       : 'no-cache',   // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials : 'omit',       // include, *same-origin, omit
+                    headers     : {
+                        'Content-Type': 'application/json',
+                        'Authorization': ''
+                    },
+                    redirect      : 'follow',       // manual, *follow, error
+                    referrerPolicy: 'no-referrer',  // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+
+                    noDefaultPrefetch     : true,
+                    useDefaultErrorHandler: false,
+                }
+            }, this.options, options);
+
+            //TEST to force error: this.options.url = 'https://staging.fcooapp.kom/ifm-service/api/';
+
+            this.tokenUrl = this.options.url + this.options.token;
+            this.depotUrl = this.options.url + this.options.depot;
+        },
+
+        /*************************************************
+        getPromiseOptions
+        *************************************************/
+        getPromiseOptions: function( method,  data, resolve, reject){
+            return  $.extend(true, {}, this.options.promiseOptions, {
+                        method  : method,
+                        body    : data ? JSON.stringify( data ) : null,
+                        headers : { Authorization: this.token },
+                        resolve : resolve,
+                        reject  : reject
+                    });
+        },
+
+        /*************************************************
+        promise
+        *************************************************/
+        promise: function(url = '', method = 'POST', data = {}, resolve, reject ){
+            let promise      = function()    { return window.Promise.getJSON(url, this.getPromiseOptions( method, data, resolve, reject)); }.bind(this),
+                resolveToken = function(data){ this.token = data.token; }.bind(this);
+             return this.token ?
+                    promise() :
+                    window.Promise.getJSON(
+                       this.tokenUrl,
+                       this.getPromiseOptions('POST', {}, resolveToken, reject)
+                   ).then( promise );
+        },
+
+        /*************************************************
+        getSettings - Loads settings
+        *************************************************/
+        getSettings: function(code, resolve, reject) {
+            return this.promise(this.depotUrl + code, 'GET', null, resolve, reject);
+        },
+
+        /*************************************************
+        saveSettings
+        *************************************************/
+        saveSettings: function (settings, resolve, reject) {
+            return this.promise(
+                this.depotUrl,
+                'POST', {
+                    settings    : settings,
+                    application : this.options.applicationId },
+                resolve,
+                reject
+            );
+        },
+
+        /*************************************************
+        updateSettings: function(edit_code, setting, resolve, reject){
+        *************************************************/
+        updateSettings: function(edit_code, settings, resolve, reject){
+            return this.promise(
+                this.depotUrl + edit_code, // + '/?edit_code=true',
+                'PATCH', {
+                    edit_code   : edit_code,
+                    settings    : settings,
+                    application : this.options.applicationId
+                },
+                resolve,
+                reject
+            );
+        }
+    }; //End of Depot.prototype
+
+}(jQuery, window.moment, this, document));
+;
+/****************************************************************************
+fcoo-application-load-save-bookmark-share-setting.js
+
+Methods for loading and saving settings for the application
+
+****************************************************************************/
+(function ($, moment, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+    let ns = window.fcoo = window.fcoo || {};
+
+
+    //ns.application_setting_error_wrong_format = The error-status used when a id is the wrong format
+    ns.application_setting_error_wrong_format = 888;
+
+
+    //ns.application_setting_error_wrong_app = The error-status used when a loaded or saved settings do not apply to the application
+    ns.application_setting_error_wrong_app = 999;
+
+
+    ns.standardSettingHeader = {icon: 'fa-rocket-launch', text: {da: 'Standard Opsætning', en: 'Standard Setting'}};
+
+
+    //standardSettingId = The id used to save the standard setting in SavedSettingList.settingGroup (and temporate in globalSetting)
+    const standardSettingId = ns.standardSettingId = 'standardSetting';
+
+
+    /**************************************************************
+    ***************************************************************
+    SavedSettingList = Object to load, save and display list of saved settings
+    ***************************************************************
+    **************************************************************/
+    ns.SavedSettingList = function(options = {}, onPostLoad){
+
+        this.options = $.extend(true, {}, {
+            //Default options
+            applicationId: ns.applicationId
+        }, options);
+
+        //Create a SettingGroup named "SAVED" to hold a list of meta-data for saved settings and options for standard settings
+        this.settingGroup = new ns.SettingGroup({});
+
+        this.settingGroup.add({id: 'list',            defaultValue: []});
+        this.settingGroup.add({id: standardSettingId, defaultValue: 'DEFAULT' });
+
+        this.depot = new ns.Depot($.extend(true, {}, ns.setupOptions.depotOptions, options.depotOptions) );
+
+        this.lastLoadedSavedSetting = null;
+        this.list = [];
+
+        this.settingGroup.load('SAVED', this.onLoad.bind(this, onPostLoad));
+    };
+
+    ns.SavedSettingList.prototype = {
+        /****************************************************
+        onLoad: function(){
+        ****************************************************/
+        onLoad: function(onPostLoad/*, settingGroup*/){
+
+            //Create the list of previous used settings
+            this.list = [];
+
+            this.settingGroup.data.list.forEach( options => {
+                this.list.push( new ns.SavedSetting(options, this) );
+            }, this);
+
+            this.sortList();
+
+
+            /*
+            To be able to edit the standard setting in the modal for global settings, a Setting is added to global setting.
+
+            */
+
+
+            //Append content to global setting with "standard setting"
+            ns.globalSetting.add({
+                id            : standardSettingId,
+                validator     : function(/*data*/){ return true; },
+                applyFunc     : function(code){
+                                    //When the value are changed in globalsetting => save the value in this.settingGroup
+                                    this.settingGroup.set(standardSettingId, code);
+                                    this.settingGroup.saveAs('SAVED');
+                                }.bind(this),
+                defaultValue  : 'DEFAULT',
+                callApply     : false,
+            });
+
+            //"Copy" the value into globalsetting
+            ns.globalSetting.set(standardSettingId, this.settingGroup.get(standardSettingId));
+
+
+            ns.globalSetting.options.accordionList.push({ id: standardSettingId, header: ns.standardSettingHeader });
+            ns.globalSetting.addModalContent(standardSettingId, this.editStandardSettingContent.bind(this) );
+
+
+            if (onPostLoad){
+                let func = typeof onPostLoad == 'string' ? this[onPostLoad] : onPostLoad;
+                func.bind(this)();
+            }
+        },
+
+        /*************************************************
+        loadApplicationSetting
+        Load settings when the application is loaded:
+        1: From url ?id=SETTING-ID, or
+        2: If standard setting = "SAVED" => Try to load standard setting id, or
+        3: If standard setting = "DEFAULT" => load previous settings (Load 'DEFAULT' from appSetting)
+        4: Use default setting
+        *************************************************/
+        loadApplicationSetting: function(){
+            //Check if it is a reload and set it for the next reload
+            let lastLoaded_share_code = sessionStorage.getItem(ns.applicationId);
+            sessionStorage.removeItem(ns.applicationId);
+
+            //***************************************
+            function json2string( json ){
+                return JSON.stringify( window.serializeJSON( json ).sort( (rec1, rec2) => { return rec1.name.localeCompare( rec2.name); } ) );
+            }
+            //***************************************
+            //use resolve to check if it is a reload and decide what to do
+            let resolve = function(data){
+                if (lastLoaded_share_code == data.share_code){
+                    //It is a reload with the same share_code => Check if the saved setting in appSetting is differet
+                    this.ss_json2string = json2string(data.settings);
+                    this.ss_settings = data.settings;
+
+                    //Load saved setting from appSetting
+                    ns.appSetting.load('DEFAULT', function(settingGroup){
+                        let default_json2string = json2string(settingGroup.data),
+                            different = default_json2string.localeCompare(this.ss_json2string);
+
+                        //If the saved DEFAULT are differnt from the saved setting => SELECT BETWEEN THEM /(TODO)
+                        let useDefault = true;
+                        if (different){
+                            //TODO $.bsNotyInfo('Det er en reload, så skal man bruge id eller seneste opsætning?');
+                        }
+
+                        ns.appSetting.set(useDefault ? settingGroup.data : this.ss_settings);
+
+                        delete this.ss_json2string;
+                        delete this.ss_settings;
+                    }.bind(this) );
+                }
+                else
+                    //Load the saved setting into appSetting
+                    ns.appSetting.set(data.settings || {});
+
+                //Saved info on the last used saved setting
+                sessionStorage.setItem(ns.applicationId, data.share_code);
+
+                return data;
+            }.bind(this);
+            //***************************************
+
+            //1:  From url ?id=SETTING-ID:
+            let settingId = window.Url.queryString('id');
+            if (settingId && (typeof settingId == 'string')){
+
+                //Adjust settingId
+                if ((settingId.toLowerCase().slice(0,5) == 'edit-') || (settingId.toLowerCase().slice(0,6) == 'share-')){
+                    //Look like a display-id
+                    let idArray = settingId.toUpperCase().split('-');
+                    idArray[0] = idArray[0].toLowerCase();
+                    settingId = idArray.join('-');
+                }
+                else
+                    if ((settingId[0] == 'w') || (settingId[0] == 'r'))
+                        settingId = settingId.toLowerCase();
+
+                window.Url.updateSearchParam('id', settingId, false);
+
+                //Check if settingId is correct format. Eighter db-format or display-format
+                if (ns.ss_isValidDisplayFormat( settingId ))
+                    settingId = ns.ss_display2dbFormat(settingId);
+
+                if (!ns.ss_isValidDbFormat(settingId)){
+                    (new ns.SavedSetting({share_code: settingId}, this)).showError({
+                        status      : ns.application_setting_error_wrong_format,
+                        errorOptions: {
+                            action      : 'LOAD',
+                            settingsCode: settingId
+                        }
+                    });
+
+                    return;
+                }
+
+                //If the savedSetting with settingId already exists in the list => use it
+                let reject = function(error){
+                        //Remove id from url
+                        window.Url.removeQuery(true);
+                        return error;
+                    }.bind(this);
+
+                let postError = function(/*error*/){
+                        //Load standard settings
+                        this.loadApplicationSetting();
+                    }.bind(this);
+
+                let preError = function(error){
+                        $.extend(error, {
+                            errorOptions: {
+                                inModal : true,
+                                noRetry : true,
+                                reload  : true,
+                                onOk    : postError,
+                                text    : {
+                                    da: 'I stedet bruges Standard Opsætning',
+                                    en: 'Instead the Standard Setting are used'
+                                }
+                            }
+                        });
+                        return error;
+                    };
+
+                    settingId = settingId.toLowerCase();
+                    this.getByCode(settingId, true).get(settingId, resolve, reject, preError);
+
+            } //end of settingId exists
+            else  {
+                let postError_standard = function(error){
+                        ns.appSetting.load();
+                        return error;
+                    };
+
+                let preError_standard = function(error){
+                        $.extend(error, {
+                            errorOptions: {
+                                inModal     : true,
+                                noRetry     : true,
+                                reload      : true,
+                                settingText : {da: 'Standard Opsætning', en: 'Standard Setting'},
+                                onOk        : postError_standard,
+                                text        : {
+                                    da: 'I stedet bruges forrige opsætning',
+                                    en: 'Instead the previous setting are used'
+                                }
+                            }
+                        });
+                        return error;
+                    };
+
+                let standard = this.settingGroup.get(standardSettingId);
+                //let standardSavedSetting;
+                switch (standard){
+                    case 'EMPTY'  : /*Nothing*/ break;
+                    case 'DEFAULT': ns.appSetting.load(); break;
+                    default       : this.getByCode(standard, true).get(standard, resolve, null, preError_standard);
+                }
+            }
+        },
+
+        /****************************************************
+        add
+        ****************************************************/
+        add: function(savedSetting, dontSave){
+            let o = savedSetting.options;
+            if (!this.getByCode(o.edit_code || o.share_code))
+                this.list.push( savedSetting );
+            this.updateList( savedSetting, dontSave );
+        },
+
+        /****************************************************
+        getByCode
+        Finde a SavedSetting in the list
+        ****************************************************/
+        getByCode: function(code, createIfNotFound){
+            var result = null;
+            this.list.forEach( savedSetting => {
+                let o = savedSetting.options;
+                if ((o.edit_code == code) || (o.share_code == code))
+                    result = savedSetting;
+            });
+
+            if (!result && createIfNotFound){
+                result = new ns.SavedSetting({}, this);
+                if (code[0] == 'w')
+                    result.options.edit_code = code;
+                else
+                    result.options.share_code = code;
+                this.list.unshift( result );
+            }
+            return result;
+        },
+
+        /****************************************************
+        updateList
+        Update the list putting last_saved_savedSetting on top
+        ****************************************************/
+        updateList: function(last_saved_savedSetting, dontSave){
+            this.list.forEach( (savedSetting, index ) => savedSetting.options.index = index );
+            if (last_saved_savedSetting)
+                last_saved_savedSetting.options.index = -1;
+
+            this.sortList();
+
+            if (!dontSave)
+                this.saveList();
+        },
+
+        /*************************************************
+        sortList
+        *************************************************/
+        sortList: function(){
+            this.list.sort( (ss1, ss2) => {
+                return ss1.options.index - ss2.options.index;
+            } );
+            this.list.forEach( (savedSetting, index ) => savedSetting.options.index = index );
+        },
+
+        /****************************************************
+        saveList
+        ****************************************************/
+        saveList: function(callback){
+            //Create a list of options to save
+            let list = [];
+
+            this.list.forEach( saveSettings => {
+                let o = saveSettings.options;
+                list.push({
+                    index       : o.index,
+                    desc        : o.desc,
+                    edit_code   : o.edit_code,
+                    share_code  : o.share_code,
+                    created     : moment( o.created ).toISOString(),
+                    updated     : o.updated ? moment( o.updated ).toISOString() : null,
+                });
+            });
+
+            //Save only last 10 used settings
+            this.settingGroup.set('list', list.slice(0, 10));
+            this.settingGroup.saveAs('SAVED', callback);
+
+            return this;
+        },
+
+        /****************************************************
+        asButtonList
+        ****************************************************/
+        asButtonList: function(onlyWithEditCode, methodName){
+            let result = [];
+
+            this.list.forEach( (savedSetting, index) => {
+                if (!onlyWithEditCode || savedSetting.options.edit_code){
+                    let item = savedSetting.listContent();
+
+                    if (methodName)
+                        item.onClick = () => {
+                            this._sssModal_close();
+                            this.list[index][methodName]();
+                        };
+                    result.push(item);
+                }
+            }, this);
+            return result;
+        },
+
+        /****************************************************
+        selectSavedSetting: function(options){
+        Create a modal with 1-3 buttons:
+        1: Use current settings
+        2: use last loaded settings (if it has edit_code)
+        3: use one of previous saved settings
+
+        The selected SavedSetting are called with method
+        methodName / methodNameNew
+        ****************************************************/
+        selectSavedSetting: function(options){
+            let buttonList = [];
+
+            //Use current settings
+            if (options.currentText)
+                buttonList.push({
+                    id      : 'CURRENT',
+                    icon    : 'fa-file',
+                    text    : options.currentText,
+                    primary : true,
+                    //subtext : '&nbsp;',
+                    onClick : function(){
+                        this._sssModal_close();
+                        var newSavedSetting = new ns.SavedSetting({}, ns.savedSettingList);
+                        newSavedSetting[options.methodNameNew || options.methodName]();
+                    }.bind(this)
+                });
+
+            //Last used setting
+            if (this.lastLoadedSavedSetting && options.inclLast && options.inclLast(this.lastLoadedSavedSetting, options))
+                buttonList.push({
+                    id      : 'LAST',
+                    icon    : 'fal fa-browser',
+                    text    : options.lastText,
+                    subtext : 'id ' + ns.ss_db2displayFormat(this.lastLoadedSavedSetting.options.edit_code),
+                    onClick : function(){
+                        this._sssModal_close();
+                        this.lastLoadedSavedSetting[options.methodName]();
+                    }.bind(this)
+                });
+
+            //List of aved setttings
+            if (this.list.length)
+                buttonList.push({
+                    id      : 'OTHER',
+                    icon    : 'fa-table-list',
+                    text    : options.otherText,
+                    subtext : {da: '(En anden tidligere gemt opsætning)', en:'(Another previous saved setting)'},
+                    onClick : this.selectSavedSettingFromList.bind(this, options)
+                });
+
+            buttonList.forEach( opt => {
+                $.extend(opt, {type: 'bigiconbutton', big: true, closeOnClick: false});
+
+            });
+
+            this.$sssModal = $.bsModal({
+                    show       : true,
+                    remove     : true,
+                    header     : options.header,
+                    closeButton: false,
+                    content    : options.text ? [{type: 'text', center: true, noBorder: true, text: options.text}, buttonList] : buttonList,
+                });
+        },
+
+        _sssModal_close: function(){
+            if (this.$sssModal){
+                this.$sssModal.close();
+                this.$sssModal = null;
+            }
+            return this;
+        },
+
+        /****************************************************
+        selectSavedSettingFromList
+        ****************************************************/
+        selectSavedSettingFromList: function(options){
+            this._sssModal_close();
+
+            let buttonList = this.asButtonList(options.onlyWithEditCode, options.methodName);
+
+            this.$sssModal = $.bsModal({
+                show       : true,
+                remove     : true,
+                header     : options.header,
+                buttons:[{
+                    icon    : 'fa-pen-to-square', text: {da:'Redigér', en: 'Edit'},
+                    onClick : this.editSavedSettingList.bind(this, options)
+                }],
+                closeButton: false,
+                content    : options.text ? [{type: 'text', center: true, noBorder: true, text: options.text}, buttonList] : buttonList,
+            });
+        },
+
+        /****************************************************
+        editSavedSettingList
+        options = options for selectSavedSettingFromList after edit
+        ****************************************************/
+        onSubmit: function(data){
+            let newList = [];
+            this.list.forEach( savedSetting => {
+                savedSetting.originalDesc = savedSetting.options.desc;
+                let o = savedSetting.options;
+                if (!data[o.edit_code || 'not'] && !data[o.share_code || 'not'])
+                    newList.push(savedSetting);
+            });
+            this.list = newList;
+            this.saveList();
+
+        },
+
+        onClose: function(){
+            this.list.forEach( savedSetting => {
+                savedSetting.options.desc = savedSetting.originalDesc;
+            });
+            if (this.list.length)
+                this.selectSavedSettingFromList( this.selectFromList_options );
+            return true;
+        },
+
+        _info_delete_standard_setting: function( code, id, dummy, $button ){
+            if ($button.hasClass('selected')) //class "selected" are set AFTER onClick....
+                return;
+
+            let standardSavedSetting = this.getStandardSavedSetting(),
+                o = standardSavedSetting ? standardSavedSetting.options || {} : {};
+
+            if ((o.edit_code == code) || (o.share_code == code)){
+                if (this.notyOnDeleteStandard)
+                    this.notyOnDeleteStandard.flash();
+                else
+                    this.notyOnDeleteStandard =
+                        window.notyInfo({
+                            da: 'Opsætning med id <em>'+code+'</em> er er angivet som Standard Opsætning<br>Selv om den slettes fra listen vil den fortsat blive brugt som Standard Opsætning',
+                            en: 'TODO'
+                        },{
+                            textAlign: 'center',
+                            callbacks: { onClose: function(){ this.notyOnDeleteStandard = null; }.bind(this) },
+                        });
+            }
+        },
+
+        editSavedSettingList: function(options){
+            this.selectFromList_options = options;
+            this._sssModal_close();
+
+            let buttonList = this.asButtonList(options.onlyWithEditCode, 'editDescription');
+
+            this.list.forEach( savedSetting => {
+                savedSetting.originalDesc = savedSetting.options.desc;
+            });
+
+            //Crreate the edit-button and a delete checkbox-button
+            let modalContent = [];
+            buttonList.forEach( buttonOptions => {
+                modalContent.push({
+                    id      : buttonOptions.id+'_editdesc',
+                    type    : 'bigiconbutton',
+                    text    : buttonOptions.text,
+                    subtext : buttonOptions.subtext,
+                    class   : 'flex-grow-1',
+                    insideFormGroup  : true,
+                    noVerticalPadding: true,
+                    noPadding        : true,
+                    onClick: function(id, selected, $button){
+                        let ss_id = id.split('_')[0],
+                            ss = this.getByCode( ss_id ),
+                            $text = $button.find('span').first();
+
+                        if (ss)
+                            ss.editDescription(() => $text.text( ss.options.desc )  );
+                    }.bind(this),
+
+                    //Delete-button
+                    after: {id: buttonOptions.id, type: 'checkboxbutton', icon: 'fa-trash-can fa-fw', onClick: this._info_delete_standard_setting.bind(this, buttonOptions.id) }
+                });
+            });
+
+            $.bsModalForm({
+                show    : true,
+                remove  : true,
+                header  : {icon : 'fa-pen-to-square', text: {da:'Redigér', en: 'Edit'}},
+                onSubmit: this.onSubmit.bind(this),
+                onClose : this.onClose.bind(this),
+                content : modalContent,
+                footer  : {icon : 'fa-trash-can', text: {da:': Vil ikke slette den gemte opsætning MANGLER', en: ': Will not delete the saved setting TODO'}},
+                closeWithoutWarning: true,
+            }).edit({});
+        },
+
+        /****************************************************
+        getStandardSavedSetting
+        ****************************************************/
+        getStandardSavedSetting: function(create){
+            let standard = this.settingGroup ? this.settingGroup.get(standardSettingId) : '';
+            if (!['EMPTY', 'DEFAULT'].includes(standard))
+                return this.getByCode(standard, create);
+        },
+
+        /****************************************************
+        editStandardSettingContent
+        ****************************************************/
+        editStandardSettingContent: function(){
+            //If standard setting is a saved setting and it is not in the list => Add it
+            this.getStandardSavedSetting(true);
+
+            //Get list of local saved SavedSetting
+            let list = this.asButtonList();
+
+            if (list.length)
+                list.unshift({_icon: 'fa-list', text: {da: 'eller vælg en gemt opsætning...', en: 'or select saved setting...'}});
+
+            list.unshift(
+                {id:'EMPTY',   icon: 'fa-rectangle fa-lg',                            text: {da: 'Ingen (TEKST MANGLER)',             en: 'Nothing (TEXT MISSING)'},          subtext: {da: '(TEKST MANGLER)', en: '(TEXT MISSING)'} },  //MANGLER
+                {id:'DEFAULT', icon: 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/, text: {da: 'Forrige opsætning (TEKST MANGLER)', en: 'Previous setting (TEXT MISSING)'}, subtext: {da: '(TEKST MANGLER)', en: '(TEXT MISSING)'} }   //MANGLER
+            );
+
+            return [{
+                type    : 'text',
+                noBorder: true,
+                center  : true,
+                text: {
+                    da: 'Vælg den opsætning, der bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter',
+                    en: 'Select the setting used as default when '+ ns.ss_getAppName('en', true) +' starts'
+                },
+            },{
+                id           : standardSettingId,
+                type         : 'selectbutton',
+                useBigButtons: true,
+                big          : true,
+                items        : list,
+                center       : true
+            }];
+        },
+
+        /****************************************************
+        editStandardSetting
+        **************************************************** /
+        editStandardSetting: function(data){
+
+            $.bsModalForm({
+                id      : standardSettingId,
+                show    : true,
+                remove  : true,
+                closeWithoutWarning: true,
+                header  : {icon: 'fa-rocket-launch', text: {da: 'Standard Opsætning', en: 'Standard Setting'}},
+                content : this.editStandardSettingContent(),
+
+                onSubmit: function( data ){
+                    this.settingGroup.set(standardSettingId, data);
+                    this.settingGroup.saveAs('SAVED');
+                }.bind(this)
+
+            }).edit(data || this.settingGroup.get(standardSettingId));
+        }
+        */
+    }; //end of ns.SavedSettingList.prototype
+
+    /**************************************************************
+
+    **************************************************************/
+    ns.application_save_settings = function(){
+        ns.savedSettingList.selectSavedSetting({
+            header      : {icon: 'fa-save', text: {da: 'Gem', en: 'Save'}},
+            text        : {
+                da:'Gem nuværende opsætning af '+ns.ss_getAppName('da', true),
+                en:'Save the current setting of '+ns.ss_getAppName('en', true)
+            },
+            currentText : {da: 'Gem som nye opsætning', en: 'Save as new setting'},
+            lastText    : {da: 'Overskriv seneste opsætning', en: 'Overwrite last setting'},
+            inclLast    : (savedSetting) => { return !!savedSetting.options.edit_code; },
+            otherText   : {da: 'Overskriv...', en: 'Overwrite...'},
+
+            onlyWithEditCode: true,
+            methodNameNew   : 'save',
+            methodName      : 'update'
+        });
+    },
+
+
+    ns.application_load_settings = function(){
+        if (ns.savedSettingList.list.length)
+            ns.savedSettingList.selectSavedSettingFromList({
+                //onlyWithEditCode
+                text: {
+                    da:'Hent en gemt opsætning af '+ns.ss_getAppName('da', true),
+                    en:'Load a saved setting of '+ns.ss_getAppName('en', true)
+                },
+                methodName: '_load'
+            });
+        else
+            window.notyInfo({
+                da: 'Der er ingen info om gemte opsætninger.<br>Prøv evt. at se under dine gemte bogmærker/favoritter',
+                en: 'There are no info regarding saved settings.<br>If possible check your saved bookmarks/favorits'
+                },{
+                layout   : 'center',
+                textAlign: 'center',
+                modal    : true,
+                header: {
+                    icon: 'fa-folder-open',
+                    text: {da: 'Hent opsætning', en:'Load setting'}
+                }
+            });
+    },
+
+
+    ns.application_bookmark_settings = function(){
+
+    },
+
+    ns.application_share_settings = function(){
+        ns.savedSettingList.selectSavedSetting({
+            header      : {icon: 'fa-share-alt', text: {da: 'Del', en: 'Share'}},
+            text        : {
+                da:'Del en opsætning af '+ns.ss_getAppName('da', true),
+                en:'Share a setting of '+ns.ss_getAppName('en', true)
+            },
+            currentText : {da: 'Del  nuværende opsætning', en: 'Share current setting'},
+            lastText    : {da: 'Del seneste opsætning', en: 'Share last setting'},
+            inclLast    : (/*savedSetting*/) => { return true; },
+            otherText   : {da: 'Del...', en: 'Share...'},
+
+            onlyWithEditCode: true,
+            methodNameNew   : 'share_new',
+            methodName      : 'share'
+        });
+    };
+
+}(jQuery, window.moment, this, document));
+
+;
+/****************************************************************************
+fcoo-application-load-save-bookmark-share-setting.js
+
+Methods for loading and saving settings for the application
+
+****************************************************************************/
+(function ($, i18next, moment, window/*, document, undefined*/) {
+	"use strict";
+
+    //Create fcoo-namespace
+    let ns = window.fcoo = window.fcoo || {};
+
+
+    ns.ss_getAppHeader = function(){
+        let appHeader = {
+                da: 'applikationen',
+                en: 'the Application'
+        };
+        if (ns.applicationHeader){
+            if (ns.applicationHeader.da)
+                appHeader.da = ns.applicationHeader.da;
+            if (ns.applicationHeader.en)
+                appHeader.en = ns.applicationHeader.en;
+        }
+        return appHeader;
+    };
+
+    ns.ss_getAppName = function(lang, emphasized){
+        let appHeader = ns.ss_getAppHeader(),
+            appName_da = appHeader.da.replace(' ', '&nbsp;'),
+            appName_en = appHeader.en.replace(' ', '&nbsp;');
+
+        return  (emphasized ? '<em class="text-nowrap">' : '<span class="text-nowrap">') +
+                (lang == 'da' ?  appName_da : appName_en) +
+                (emphasized ? '</em>' : '</span>');
+        //OR return '<span class="text-nowrap">'+(emphasized ? '<em>' : '') + (lang == 'da' ?  appName_da : appName_en) + (emphasized ? '</em>' : '')+'</span>';
+    };
+
+/*
+Når du gemmer din opsætning, får du to forskellige koder:
+<b>Redigeringskode (starter med 'w')</b>
+<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>
+<b>Delingskode (starter med 'r')</b>
+<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>
+<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>
+*/
+
+    let description = {
+        da: [
+            'Når du gemmer din opsætning, får du to forskellige koder:<br>',
+            '<b>Redigeringskode (starter med "edit-")</b>',
+            '<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>',
+            '<b>Delingskode (starter med "share-")</b>',
+            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul><br>',
+            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
+        ].join(''),
+        en: [
+            'TODO',
+        ].join('<br>'),
+    };
+
+
+    //Methods to convert ids between the two formats: dbFormat = [w | e]+ 16 HEX (w766abf05b7f6b8ff) and displayFormat = [edit- | share- ] + 4 groups of 3/4 base 36 (eq. share-ABF-G43-KMO-12DP)
+    const displayBase = 36;
+
+    ns.ss_db2displayFormat = function(dbFormat) {
+        let firstChar = dbFormat[0].toLowerCase(),
+            result    = firstChar == 'w' ? 'edit' : 'share',
+
+            finish = false,
+            index  = 1;
+
+        while (!finish){
+            let subStr = dbFormat.substring(index, index + 4);
+            if (subStr.length){
+                index = index + 4;
+                result = result + '-' + parseInt(subStr, 16).toString(displayBase).toUpperCase();
+            }
+            else
+                finish = true;
+        }
+        return result;
+    };
+
+    ns.ss_display2dbFormat = function(displayFormat) {
+        let strArray = displayFormat.toLowerCase().split('-'),
+            result = null;
+
+        if (strArray.length && ((strArray[0] == 'edit') || (strArray[0] == 'share')) ) {
+            result = strArray[0] == 'edit' ? 'w' : 'r';
+
+            for (var i=1; i<strArray.length; i++){
+                let str = parseInt(strArray[i].toUpperCase(), displayBase).toString(16);
+                while (str.length < 4)
+                    str = '0' + str;
+                result = result + str;
+            }
+        }
+        return result;
+    };
+
+    ns.ss_isValidDbFormat = function( dbFormat ){
+        return  (typeof dbFormat == 'string') &&
+                (dbFormat.length == 17) &&
+                ((dbFormat[0] == 'r') || (dbFormat[0] == 'w')) &&
+                !isNaN( parseInt(dbFormat.substring(1, 17), 16) );
+    };
+
+    ns.ss_isValidDisplayFormat = function( displayFormat ){
+        let dbFormat = ns.ss_display2dbFormat( displayFormat );
+        return !!dbFormat && ns.ss_isValidDbFormat( dbFormat ) && (ns.ss_db2displayFormat(dbFormat) == displayFormat);
+    };
+
+
+    /**************************************************************
+    ***************************************************************
+    SavedSetting = Object representing a saved settings
+    options = {edit_code, share_code, created, updated}
+    ***************************************************************
+    **************************************************************/
+    ns.SavedSetting = function( options = {}, savedSettingList ){
+        this.options = $.extend(true, {
+            application : savedSettingList.options.applicationId,
+            desc        : ''
+        }, options);
+        this.savedSettingList = savedSettingList;
+        this.depot = savedSettingList.depot;
+        this.setSettings( this.options.settings );
+    };
+
+    ns.SavedSetting.prototype = {
+        /*************************************************
+        setSettings: function( settings ){
+        *************************************************/
+        setSettings: function( settings ){
+            this.options.settings = settings === true ? ns.appSetting.getAll() : settings;
+        },
+
+
+        _execFuncList: function(list, param){
+            list = Array.isArray(list) ? list : [list];
+            list.forEach( func => {
+                if (func){
+                    if (typeof func == 'string')
+                        func = this[func].bind(this);
+                    param = func( param );
+                }
+            }, this);
+            return param;
+        },
+
+        /*************************************************
+        resolve
+        All request get checked for correct application-id
+        *************************************************/
+        resolve: function(resolveList, rejectList, data){
+            if (data.application == this.savedSettingList.options.applicationId)
+                return this._execFuncList(resolveList, data);
+            else
+                return this._execFuncList(rejectList, {status: ns.application_setting_error_wrong_app});
+        },
+
+        /*************************************************
+        reject
+        *************************************************/
+        reject: function(rejectList, error){
+            return this._execFuncList(rejectList, error);
+        },
+
+        /*************************************************
+        showError
+        *************************************************/
+        showError: function(error = {}){
+            /* eslint-disable no-console */
+            if (ns.DEV_VERSION)
+                console.log('ERROR', error);
+            /* eslint-enable no-console */
+
+            let options = error.errorOptions || {},
+                action = options.action || 'LOAD',
+                code = options.settingsCode || ns.ss_db2displayFormat( this.options.edit_code || this.options.share_code ),
+                addRetry = false,
+                addReload = false,
+                errorText = {da: '', en: ''},
+                buttons  = [];
+
+            function addText(daText, enText){ errorText.da = errorText.da + daText; errorText.en = errorText.en + enText; }
+
+        /* Test: Display all error types
+        [ns.application_setting_error_wrong_format, ns.application_setting_error_wrong_app, 404, 0].forEach( (errcode) => {
+            errorText = {da: '', en: ''};
+            buttons = [];
+            error.status = errcode;
+        */
+            //If errorOptions.settingText is given => use if else use Opsætningen/The setting
+            let settingText_da = options.settingText ? options.settingText.da : 'Opsætningen',
+                settingText_en = options.settingText ? options.settingText.en : 'The setting';
+
+            if (code)
+                addText(settingText_da + ' med id <em>'+code+'</em><br>kunne ikke ', settingText_en + ' with id <em>'+code+'</em><br>could not be ');
+            else
+                addText(settingText_da + ' kunne ikke ', settingText_en + ' could not be ');
+
+            switch (action){
+                case 'LOAD'  : addText('indlæses',  'loaded' ); break;
+                case 'SAVE'  : addText('gemmes',    'saved'  ); break;
+                case 'UPDATE': addText('opdateres', 'updated'); break;
+            }
+
+            switch (error.status){
+                case ns.application_setting_error_wrong_format:
+                    addText(
+                        ', da id har ugyldig format',
+                        ' since the id is in a wronge format'
+                    );
+                    break;
+
+                case ns.application_setting_error_wrong_app:
+                    code ? addText(', ', ' ') : addText(',<br>', '<br>');
+                    addText(
+                        'da den ikke passer ikke til '+ns.ss_getAppName('da', true),
+                        'since it' + (code ? '<br>' : ' ') + 'does not apply to '+ns.ss_getAppName('en', true)
+                    );
+                    break;
+
+                case 404:
+                    code ? addText(', ', ' ') : addText(',<br>', '<br>');
+                    addText(
+                        'da den ikke findes (mere)',
+                        'since it' + (code ? '<br>' : ' ') + 'does not exists (anymore)'
+                    );
+                    break;
+
+                default:
+                    addRetry  = !options.noRetry;
+                    addReload = options.reload;
+            }
+
+            if (addRetry)
+                buttons.push({id:'bnt-retry', icon: options.retryIcon || 'fa-save', text:{da:'Prøv igen', en:'Retry'}, class:'min-width', onClick: this.retry.bind(this) });
+
+            if (addReload){
+                addText('<br>Prøv evt. at genindlæse siden', '<br>If possible, try to reload the page');
+                buttons.push({id:'bnt-reload', icon: 'fa-redo', text:{da:'Genindlæs', en:'Reload'}, onClick: () => window.location.reload(true) } );
+            }
+
+            if (options.text){
+                addText('.<br>', '.<br>');
+                addText(options.text.da, options.text.en);
+            }
+
+            if (options.inModal){
+
+
+                //Add default ok-button
+                if (options.onOk){
+                    let onClick = typeof options.onOk == 'string' ? this[options.onOk] : options.onOk;
+                    buttons.push({
+                        icon:'fa-check',
+                        text: {da:'Ok', en:'Ok'},
+                        class:'primary min-width',
+                        closeOnClick: true,
+                        onClick: onClick.bind(this, options)
+                    });
+                }
+
+                $.bsModal(
+                    $.extend({
+                        header  : {icon: $.bsNotyIcon.error, text: $.bsNotyName.error},
+                        type    : 'error',
+                        width   : 325,
+                        content : $('<div/>')
+                                      .addClass('text-center')
+                                      ._bsAddHtml(errorText),
+                        buttons : buttons,
+                        scroll  : false,
+                        remove  : true,
+                        show    : true,
+                    },
+                    options.onOk ? {
+                        noCloseIconOnHeader: true,
+                        closeButton        : false
+                    } : {})
+                );
+            }
+            else
+                $.bsNotyError(
+                    errorText, {
+                    layout   : 'center',
+                    textAlign: 'center',
+                    modal    : !!buttons.length,
+                    buttons  : buttons
+                });
+
+        /* Test: Display all error types
+        }, this);
+        */
+            return error;
+        },
+
+        /*************************************************
+        get
+        resolve = true => load data/setting in appSetting
+        *************************************************/
+        get: function(code, resolve = true, reject, preError, setUrl){
+            this._setRetry('get', arguments);
+            let setData = resolve === true,
+                rejectList = ['reject_get', preError, 'showError', reject];
+            this.depot.getSettings(
+                code,
+                this.resolve.bind(this, [this.resolve_get.bind(this, code, setData, setUrl), setData ? null : resolve], rejectList),
+                this.reject.bind(this, rejectList)
+            );
+        },
+
+        resolve_get: function(code, setData, setUrl, data){
+            //Update share_code and edit_code. Add to list if edit_code is given
+            this.options.share_code = this.options.share_code || data.share_code;
+            this.options.edit_code  = this.options.edit_code  || (code != this.options.share_code ? code : null);
+
+            //Set this as last loaded settings but only if the edit_code was used to load it
+            this.savedSettingList.lastLoadedSavedSetting = code == this.options.edit_code ? this : null;
+
+            if (this.options.edit_code)
+                this.savedSettingList.add(this);
+
+            if (setData)
+                ns.appSetting.set(data.settings || {});
+
+            if (setUrl)
+                window.Url.updateSearchParam('id', ns.ss_db2displayFormat(code), true);
+
+            return data;
+        },
+
+        reject_get: function(error = {}){
+            $.extend(error, {
+                errorOptions: {
+                    action   : 'LOAD',
+                    retryIcon: 'fa-folder-open'
+                }
+            });
+            return error;
+        },
+
+        _load: function(){
+            return this.get(this.options.edit_code || this.options.share_code, true, null, null, true);
+        },
+
+        /*************************************************
+        save - save settings (first time)
+        *************************************************/
+        save: function(settings = true, resolve, reject, preError ){
+            this._setRetry('save', arguments);
+
+            this.editDescription( function(){
+                this.setSettings(settings);
+                let rejectList = ['reject_save', preError, 'showError', reject];
+                this.depot.saveSettings(
+                    this.options.settings,
+                    this.resolve.bind(this, ['resolve_save', resolve], rejectList),
+                    this.reject.bind(this, rejectList)
+                );
+            }.bind(this) );
+        },
+
+        resolve_save: function(data){
+            //Set url ?=new edit_code
+            window.Url.updateSearchParam('id', ns.ss_db2displayFormat(data.edit_code), true);
+
+            this.options.edit_code  = data.edit_code;
+            this.options.share_code = data.share_code;
+            this.options.created = moment();
+            this.savedSettingList.add( this );
+
+            //Show modal with info
+/*
+
+Når du gemmer din opsætning, får du to forskellige koder:
+<b>Redigeringskode (starter med 'w')</b>
+<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>
+<b>Delingskode (starter med 'r')</b>
+<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>
+<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>
+*/
+            let appNameAsText = ns.ss_getAppHeader(),
+                appName = i18next.sentence( ns.ss_getAppHeader() ),
+                displayEditCode = ns.ss_db2displayFormat(this.options.edit_code),
+                displayShareCode = ns.ss_db2displayFormat(this.options.share_code);
+
+            let url = ns.applicationUrl + '?id=' + displayEditCode; //displayShareCode;
+            let accordionList = [{
+                icon: 'fa-home',
+                text: {da:'Redigerings- og Delingskode', en: 'Edit and Share code'},
+                content: {
+                    type: 'textbox',
+                    center: true,
+                    noBorder: true,
+                    text: {
+                        da: 'Aktuel opsætning af <em>'+ appNameAsText.da +'</em> er blevet gemt med<br>&nbsp;<br><b>Redigeringskode = ' +
+                            displayEditCode + '</b><br>&nbsp;<br><b>Delingskode = ' + displayShareCode + '</b>',
+                        en: 'Current setting of <em>'+ appNameAsText.da +'</em> has been saved with<br><b>editing code = ' + displayEditCode+'</b>'
+                    }
+                }
+
+            }, {
+
+                icon: 'fa-link',
+                text: {da:'Link', en:'Link'},
+                content: {
+                    type: 'text',
+                    center: true,
+                    noBorder: true,
+                    _text: '<b>' + appName + '</b><br>' + url,
+                    text: url
+                },
+                footer: ns.clipboard.bsButton_copyToClipboard(url, {_fullWidth: true, text: {da:'Kopier link', en: 'Copy link'}, what : {da:'Linket', en: 'The link'} })
+
+            }, {
+
+                icon: $.bsNotyIcon['info'],
+                text: {da: 'Info', en: 'Info'},
+                content: {
+                    type : 'textbox',
+                    text: description
+                }
+            }];
+
+
+            $.bsModal({
+                header  : {icon: 'fa-save',  text: this.options.desc},
+                content : {
+                    type     : 'accordion',
+                    multiOpen: true,
+                    allOpen  : true,
+                    list     : accordionList
+                },
+                buttons : this.buttonList(),
+                show    : true,
+                remove  : true,
+
+            });
+
+            return data;
+        },
+
+        reject_save: function(error = {}){
+            $.extend(error, {errorOptions: {action: 'SAVE'}});
+            return error;
+        },
+
+        /*************************************************
+        update - updates existing settings
+        *************************************************/
+        update: function(settings = true, resolve, reject ){
+            this._setRetry('update', arguments);
+
+            this.editDescription( function(){
+                this.setSettings(settings);
+                let rejectList = ['reject_update', 'showError', reject];
+
+                this.depot.updateSettings(
+                    this.options.edit_code,
+                    this.options.settings,
+                    this.resolve.bind(this, ['resolve_update', resolve], rejectList),
+                    this.reject.bind(this, rejectList)
+                );
+            }.bind(this) );
+        },
+
+        resolve_update: function(data){
+            this.options.updated = moment();
+            this.savedSettingList.updateList( this );
+
+            let displayEditCode = ns.ss_db2displayFormat(this.options.edit_code);
+
+            window.notySuccess({
+                da: 'Opsætning med id<br><b>' + displayEditCode + '</b><br>er blevet opdateret',
+                en: 'Setting with id<br><b>' + displayEditCode + '</b><br>has been updated'
+            },{
+                header   : this.options.desc,
+                textAlign: 'center',
+                buttons  : this.buttonList()
+            });
+            return data;
+        },
+
+        reject_update: function(error = {}){
+            $.extend(error, {errorOptions: {action: 'UPDATE'}});
+            return error;
+        },
+
+        /*************************************************
+        retry
+        *************************************************/
+        _setRetry: function( method, arg){
+            this.retryOptions = {method: method, arg: arg};
+        },
+
+        retry: function(){
+            if (this.retryOptions){
+                this[this.retryOptions.method].apply(this, this.retryOptions.arg);
+            }
+        },
+
+        /*************************************************
+        buttonList
+        *************************************************/
+        buttonList: function(/*options*/){
+            let result = [],
+                standard = this.savedSettingList.settingGroup.get(ns.standardSettingId);
+
+            //Add "use-as-standard-button
+            if ( (standard != this.options.edit_code) && (standard != this.options.share_code) )
+                result.push( {icon: 'fa-rocket-launch', text: {da: 'Benyt som standard', en: 'Use as standard'}, closeOnClick: false, onClick: this.setAsStandard.bind(this)} );
+
+            result.push( {icon: 'fa-share-alt', text: {da: 'Del', en: 'Share'}, class:'min-width', closeOnClick: false, onClick: this.share.bind(this)} );
+
+            return result;
+        },
+
+        /*************************************************
+        showInfo
+        *************************************************/
+        showInfo: function(){
+            window.notyInfo(
+                description, {
+                header: {
+                    icon: $.bsNotyIcon['info'],
+                    text: {da: 'Info', en: 'Info'}
+                },
+                layout      : 'center',
+                force     : true,
+                modal     : true,
+                extraWidth: true
+            });
+        },
+
+
+        /*************************************************
+        listContent
+        *************************************************/
+        listContent: function(){
+            let o = this.options,
+                id = o.edit_code || o.share_code,
+                result = {
+                    id      : id,
+                    text    : o.desc || '&nbsp;',
+                    subtext : 'id ' + ns.ss_db2displayFormat(id),
+                    type    : 'bigiconbutton',
+                    //big     : true
+                };
+            if (o.created && $.valueFormat && $.valueFormat.formats && $.valueFormat.formats['datetime'])
+                result.subtext = result.subtext +' / ' + $.valueFormat.formats['datetime'].format( moment(o.updated || o.created) );
+
+            return result;
+        },
+
+        /*************************************************
+        editDescription
+        *************************************************/
+        editDescription: function(onSubmit){
+            $.bsModalForm({
+                remove    : true,
+                header    : {icon: 'fa-pen-to-square', text: this.options.edit_code ? 'id='+this.options.edit_code : {da: 'Ny Opsætning', en: 'New Setting'}},
+                content   : [{id:'desc', type: 'input', validators: {type: 'length', min:3, max:30}, label: {da:'Din beskrivelse (min 3 tegn)', en:'Your description (min 3 characters)'}}],
+                closeWithoutWarning: true,
+                onSubmit  : this._onSubmit_desc.bind(this, onSubmit),
+            }).edit({desc: this.options.desc});
+        },
+
+        _onSubmit_desc: function( after, data ){
+            this.options.desc = data.desc;
+            if (typeof after == 'function')
+                after(this);
+        },
+
+
+        /*************************************************
+        setAsStandard
+        *************************************************/
+        setAsStandard: function(){
+            let code = this.options.edit_code || this.options.share_code;
+
+            ns.globalSetting.set(ns.standardSettingId, code);
+
+            let settingMenuDiv_da = '<div><i class="fal fa-cog"></i>&nbsp;Indstillinger&nbsp;' + '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.da+'</div>',
+                settingMenuDiv_en = '<div><i class="fal fa-cog"></i>&nbsp;Settingsr&nbsp;'+      '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.en+'</div>';
+
+            let noty = window.notyInfo({
+                da: 'Opsætning med id <em>'+code+'</em> er angivet som Standard Opsætning, og den bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter<br>&nbsp;<br>Standard Opsætning kan ændres under<br>' + settingMenuDiv_da,
+                en: 'Setting with <em>'+code+'</em> is set as Standard Setting and will be used as default when '+ ns.ss_getAppName('en', true) +' starts<br>&nbsp;<br>Standard Setting can be set under<br>' + settingMenuDiv_en,
+            },{
+                layout   : 'center',
+                textAlign: 'center',
+                closeWith: ['button', 'click'],
+                header   : ns.standardSettingHeader,
+                modal    : true,
+                buttons  : [{
+                    icon: ns.standardSettingHeader.icon,
+                    text: ns.standardSettingHeader.text,
+                    onClick: function(){
+                        noty.close();
+                        ns.globalSetting.edit('standardSetting');
+                }}]
+            });
+        },
+
+        /*************************************************
+        share
+        *************************************************/
+        socialMedia: [
+            {id: 'facebook',  sharerId:'', icon: 'fa-facebook',  name: 'Facebook',    color: '#1877f2'},
+            //{id: 'instagram', sharerId:'', icon: 'fa-instagram', name: 'Instagram',   color: '#c32aa3'},
+            //{id: 'snapchat',  sharerId:'', icon: 'fa-snapchat',  name: 'Snapchat',    color: '#fffc00', textColor: 'black'},
+            {id: 'linkedin',  sharerId:'', icon: 'fa-linkedin',  name: 'LinkedIn',    color: '#0a66c2'},
+            {id: 'whatsapp',  sharerId:'', icon: 'fa-whatsapp',  name: 'WhatsApp',    color: '#25d366'},
+            {id: 'pinterest', sharerId:'', icon: 'fa-pinterest', name: 'Pinterest',   color: '#bd081c'},
+            {id: 'twitter',   sharerId:'', icon: 'fa-twitter',   name: 'Twitter / X', color: '#1da1f2'},
+        ],
+
+
+        share: function(/*options*/){
+            let appName = i18next.sentence( ns.ss_getAppHeader() ),
+                displayShareCode = ns.ss_db2displayFormat(this.options.share_code),
+                url = ns.applicationUrl + '?id='+displayShareCode;
+
+            let accordionList = [{
+                    icon    : 'fa-link',
+                    text    : {da : 'Link', en: 'Link'},
+                    content : {
+                        type  : 'textbox',
+                        center: true,
+                        text  : '<b>' + appName + '</b><br>' + url
+                    },
+                    footer  : [
+                        ns.clipboard.bsButton_copyToClipboard( url,                {text: {da:'Kopier link',          en: 'Copy link'},          what : {da:'Linket',        en: 'The link'}          }),
+                        ns.clipboard.bsButton_copyToClipboard( appName+'\n' + url, {text: {da:'Kopier tekst og link', en: 'Copy text and link'}, what : {da:'Tekst og link', en: 'The text and link'} }),
+                    ]
+                }];
+
+            //QR-code
+            let $img = $('<img/>').css({display: 'block', margin: 'auto'});
+
+            new window.QRious({
+                element : $img.get(0),
+                size    : 2*76,
+                value   : url
+            });
+            accordionList.push({
+                icon    :   'fa-qrcode',
+                text    :   {da: 'QR-kode', en:'QR-code'},
+                content :   $img,
+                footer  :   ns.clipboard.bsButton_copyImageToClipboard($img, {text: {da:'Kopier QR-kode', en: 'Copy QR-code'}, what : {da:'QR-koden', en: 'The QR-code'} })
+            });
+
+
+            //************************************************
+            function createSMButton( smOptions ){
+                let $btn = $.bsButton({
+                        tagName  : 'button',
+                        id       : smOptions.id,
+                        icon     : (smOptions.faFamily || 'fab') + ' ' + smOptions.icon,
+                        text     : smOptions.name,
+                        center   : true,
+                        fullWidth: true
+                    });
+
+                if (smOptions.color)
+                    $btn.css({
+                        'background-color': smOptions.color,
+                        'color'           : smOptions.textColor || 'white'
+                    });
+
+                $btn.attr({
+                    'data-sharer': smOptions.sharerId || smOptions.id,
+                    'data-title' : appName,
+                    'data-url'   : url
+                });
+
+                return $btn;
+            }
+            //************************************************
+
+
+            //Share by mail
+            accordionList.push({
+                icon    :   'fa-envelope',
+                text    :   {da: 'Del via e-mail', en:'Share by e-mail'},
+                content :   createSMButton({
+                    id  : 'email',
+                    faFamily: 'fal',
+                    icon: 'fa-at',
+                    name: {da: 'E-mail', en: 'E-mail'},
+                    color: '#03a5f0'
+                })
+            });
+
+            //Share by...
+            let list = [];
+            this.socialMedia.forEach( smOptions => { list.push( createSMButton(smOptions) ); });
+
+            accordionList.push({
+                icon    :   'fa-share-alt',
+                text    :   {da: 'Del via...', en:'Share by...'},
+                content :   list
+            });
+
+
+            $.bsModal({
+                header  : {icon: 'fa-share-alt',  text: {da: 'Del', en: 'Share'}},
+                onInfo  : this.showInfo.bind(this),
+                content : {
+                    type     : 'accordion',
+                    multiOpen: true,
+                    allOpen  : true,
+                    list     : accordionList
+                },
+                show    : true,
+                remove  : true
+            });
+
+            window.Sharer.init();
+        },
+
+
+        share_new: function(){
+            this.setSettings(true);
+            this.depot.saveSettings(
+                this.options.settings,
+                function(data){
+                    this.options.share_code = data.share_code;
+                    this.share();
+                    return data;
+                }.bind(this),
+                function(error){
+                    $.bsNotyError({
+                        da: 'Opsætningen kunne ikke gemmes',
+                        en: 'The setting could not be saved'
+                    },{
+                        layout   : 'center',
+                        textAlign: 'center'
+                    });
+                    return error;
+                }.bind(this)
+            );
+        }
+
+    }; //end of ns.SavedSetting.prototype
+
+}(jQuery, window.i18next, window.moment, this, document));
+
+
+
+
+
+
+
+;
+/**
+ * @preserve
+ * Sharer.js
+ *
+ * @description Create your own social share buttons
+ * @version 0.5.1
+ * @author Ellison Leao <ellisonleao@gmail.com>
+ * @license MIT
+ *
+ */
+
+(function(window, document) {
+  'use strict';
+  /**
+   * @constructor
+   */
+  var Sharer = function(elem) {
+    this.elem = elem;
+  };
+
+  /**
+   *  @function init
+   *  @description bind the events for multiple sharer elements
+   *  @returns {Empty}
+   */
+  Sharer.init = function() {
+    var elems = document.querySelectorAll('[data-sharer]'),
+      i,
+      l = elems.length;
+
+    for (i = 0; i < l; i++) {
+      elems[i].addEventListener('click', Sharer.add);
+    }
+  };
+
+  /**
+   *  @function add
+   *  @description bind the share event for a single dom element
+   *  @returns {Empty}
+   */
+  Sharer.add = function(elem) {
+    var target = elem.currentTarget || elem.srcElement;
+    var sharer = new Sharer(target);
+    sharer.share();
+  };
+
+  // instance methods
+  Sharer.prototype = {
+    constructor: Sharer,
+    /**
+     *  @function getValue
+     *  @description Helper to get the attribute of a DOM element
+     *  @param {String} attr DOM element attribute
+     *  @returns {String|Empty} returns the attr value or empty string
+     */
+    getValue: function(attr) {
+      var val = this.elem.getAttribute('data-' + attr);
+      // handing facebook hashtag attribute
+      if (val && attr === 'hashtag') {
+        if (!val.startsWith('#')) {
+          val = '#' + val;
+        }
+      }
+      return val === null ? '' : val;
+    },
+
+    /**
+     * @event share
+     * @description Main share event. Will pop a window or redirect to a link
+     * based on the data-sharer attribute.
+     */
+    share: function() {
+      var sharer = this.getValue('sharer').toLowerCase(),
+        sharers = {
+          facebook: {
+            shareUrl: 'https://www.facebook.com/sharer/sharer.php',
+            params: {
+              u: this.getValue('url'),
+              hashtag: this.getValue('hashtag'),
+              quote: this.getValue('quote'),
+            },
+          },
+          linkedin: {
+            shareUrl: 'https://www.linkedin.com/shareArticle',
+            params: {
+              url: this.getValue('url'),
+              mini: true,
+            },
+          },
+          twitter: {
+            shareUrl: 'https://twitter.com/intent/tweet',
+            params: {
+              text: this.getValue('title'),
+              url: this.getValue('url'),
+              hashtags: this.getValue('hashtags'),
+              via: this.getValue('via'),
+              related: this.getValue('related'),
+              in_reply_to: this.getValue('in_reply_to'),
+            },
+          },
+          x: {
+            shareUrl: 'https://x.com/intent/tweet',
+            params: {
+              text: this.getValue('title'),
+              url: this.getValue('url'),
+              hashtags: this.getValue('hashtags'),
+              via: this.getValue('via'),
+              related: this.getValue('related'),
+              in_reply_to: this.getValue('in_reply_to'),
+            },
+          },
+          threads: {
+            shareUrl: 'https://threads.net/intent/post',
+            params: {
+              text: this.getValue('title') + ' ' + this.getValue('url'),
+            },
+          },
+          email: {
+            shareUrl: 'mailto:' + this.getValue('to'),
+            params: {
+              subject: this.getValue('subject'),
+              body: this.getValue('title') + '\n' + this.getValue('url'),
+            },
+          },
+          whatsapp: {
+            shareUrl: this.getValue('web') === 'true' ? 'https://web.whatsapp.com/send' : 'https://wa.me/',
+            params: {
+              phone: this.getValue('to'),
+              text: this.getValue('title') + ' ' + this.getValue('url'),
+            },
+          },
+          telegram: {
+            shareUrl: 'https://t.me/share',
+            params: {
+              text: this.getValue('title'),
+              url: this.getValue('url'),
+            },
+          },
+          viber: {
+            shareUrl: 'viber://forward',
+            params: {
+              text: this.getValue('title') + ' ' + this.getValue('url'),
+            },
+          },
+          line: {
+            shareUrl:
+              'http://line.me/R/msg/text/?' + encodeURIComponent(this.getValue('title') + ' ' + this.getValue('url')),
+          },
+          pinterest: {
+            shareUrl: 'https://www.pinterest.com/pin/create/button/',
+            params: {
+              url: this.getValue('url'),
+              media: this.getValue('image'),
+              description: this.getValue('description'),
+            },
+          },
+          tumblr: {
+            shareUrl: 'http://tumblr.com/widgets/share/tool',
+            params: {
+              canonicalUrl: this.getValue('url'),
+              content: this.getValue('url'),
+              posttype: 'link',
+              title: this.getValue('title'),
+              caption: this.getValue('caption'),
+              tags: this.getValue('tags'),
+            },
+          },
+          hackernews: {
+            shareUrl: 'https://news.ycombinator.com/submitlink',
+            params: {
+              u: this.getValue('url'),
+              t: this.getValue('title'),
+            },
+          },
+          reddit: {
+            shareUrl: 'https://www.reddit.com/submit',
+            params: { url: this.getValue('url'), title: this.getValue('title') },
+          },
+          vk: {
+            shareUrl: 'http://vk.com/share.php',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+              description: this.getValue('caption'),
+              image: this.getValue('image'),
+            },
+          },
+          xing: {
+            shareUrl: 'https://www.xing.com/social/share/spi',
+            params: {
+              url: this.getValue('url'),
+            },
+          },
+          buffer: {
+            shareUrl: 'https://buffer.com/add',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+              via: this.getValue('via'),
+              picture: this.getValue('picture'),
+            },
+          },
+          instapaper: {
+            shareUrl: 'http://www.instapaper.com/edit',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+              description: this.getValue('description'),
+            },
+          },
+          pocket: {
+            shareUrl: 'https://getpocket.com/save',
+            params: {
+              url: this.getValue('url'),
+            },
+          },
+          mashable: {
+            shareUrl: 'https://mashable.com/submit',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+            },
+          },
+          mix: {
+            shareUrl: 'https://mix.com/add',
+            params: {
+              url: this.getValue('url'),
+            },
+          },
+          flipboard: {
+            shareUrl: 'https://share.flipboard.com/bookmarklet/popout',
+            params: {
+              v: 2,
+              title: this.getValue('title'),
+              url: this.getValue('url'),
+              t: Date.now(),
+            },
+          },
+          weibo: {
+            shareUrl: 'http://service.weibo.com/share/share.php',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+              pic: this.getValue('image'),
+              appkey: this.getValue('appkey'),
+              ralateUid: this.getValue('ralateuid'),
+              language: 'zh_cn',
+            },
+          },
+          blogger: {
+            shareUrl: 'https://www.blogger.com/blog-this.g',
+            params: {
+              u: this.getValue('url'),
+              n: this.getValue('title'),
+              t: this.getValue('description'),
+            },
+          },
+          baidu: {
+            shareUrl: 'http://cang.baidu.com/do/add',
+            params: {
+              it: this.getValue('title'),
+              iu: this.getValue('url'),
+            },
+          },
+          douban: {
+            shareUrl: 'https://www.douban.com/share/service',
+            params: {
+              name: this.getValue('name'),
+              href: this.getValue('url'),
+              image: this.getValue('image'),
+              comment: this.getValue('description'),
+            },
+          },
+          okru: {
+            shareUrl: 'https://connect.ok.ru/dk',
+            params: {
+              'st.cmd': 'WidgetSharePreview',
+              'st.shareUrl': this.getValue('url'),
+              title: this.getValue('title'),
+            },
+          },
+          mailru: {
+            shareUrl: 'http://connect.mail.ru/share',
+            params: {
+              share_url: this.getValue('url'),
+              linkname: this.getValue('title'),
+              linknote: this.getValue('description'),
+              type: 'page',
+            },
+          },
+          evernote: {
+            shareUrl: 'https://www.evernote.com/clip.action',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+            },
+          },
+          skype: {
+            shareUrl: 'https://web.skype.com/share',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+            },
+          },
+          delicious: {
+            shareUrl: 'https://del.icio.us/post',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+            },
+          },
+          sms: {
+            shareUrl: 'sms://',
+            params: {
+              body: this.getValue('body'),
+            },
+          },
+          trello: {
+            shareUrl: 'https://trello.com/add-card',
+            params: {
+              url: this.getValue('url'),
+              name: this.getValue('title'),
+              desc: this.getValue('description'),
+              mode: 'popup',
+            },
+          },
+          messenger: {
+            shareUrl: 'fb-messenger://share',
+            params: {
+              link: this.getValue('url'),
+            },
+          },
+          odnoklassniki: {
+            shareUrl: 'https://connect.ok.ru/dk',
+            params: {
+              st: {
+                cmd: 'WidgetSharePreview',
+                deprecated: 1,
+                shareUrl: this.getValue('url'),
+              },
+            },
+          },
+          meneame: {
+            shareUrl: 'https://www.meneame.net/submit',
+            params: {
+              url: this.getValue('url'),
+            },
+          },
+          diaspora: {
+            shareUrl: 'https://share.diasporafoundation.org',
+            params: {
+              title: this.getValue('title'),
+              url: this.getValue('url'),
+            },
+          },
+          googlebookmarks: {
+            shareUrl: 'https://www.google.com/bookmarks/mark',
+            params: {
+              op: 'edit',
+              bkmk: this.getValue('url'),
+              title: this.getValue('title'),
+            },
+          },
+          qzone: {
+            shareUrl: 'https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey',
+            params: {
+              url: this.getValue('url'),
+            },
+          },
+          refind: {
+            shareUrl: 'https://refind.com',
+            params: {
+              url: this.getValue('url'),
+            },
+          },
+          surfingbird: {
+            shareUrl: 'https://surfingbird.ru/share',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+              description: this.getValue('description'),
+            },
+          },
+          yahoomail: {
+            shareUrl: 'http://compose.mail.yahoo.com',
+            params: {
+              to: this.getValue('to'),
+              subject: this.getValue('subject'),
+              body: this.getValue('body'),
+            },
+          },
+          wordpress: {
+            shareUrl: 'https://wordpress.com/wp-admin/press-this.php',
+            params: {
+              u: this.getValue('url'),
+              t: this.getValue('title'),
+              s: this.getValue('title'),
+            },
+          },
+          amazon: {
+            shareUrl: 'https://www.amazon.com/gp/wishlist/static-add',
+            params: {
+              u: this.getValue('url'),
+              t: this.getValue('title'),
+            },
+          },
+          pinboard: {
+            shareUrl: 'https://pinboard.in/add',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+              description: this.getValue('description'),
+            },
+          },
+          threema: {
+            shareUrl: 'threema://compose',
+            params: {
+              text: this.getValue('text'),
+              id: this.getValue('id'),
+            },
+          },
+          kakaostory: {
+            shareUrl: 'https://story.kakao.com/share',
+            params: {
+              url: this.getValue('url'),
+            },
+          },
+          yummly: {
+            shareUrl: 'http://www.yummly.com/urb/verify',
+            params: {
+              url: this.getValue('url'),
+              title: this.getValue('title'),
+              yumtype: 'button',
+            },
+          },
+        },
+        s = sharers[sharer];
+
+      // custom popups sizes
+      if (s) {
+        s.width = this.getValue('width');
+        s.height = this.getValue('height');
+      }
+      return s !== undefined ? this.urlSharer(s) : false;
+    },
+    /**
+     * @event urlSharer
+     * @param {Object} sharer
+     */
+    urlSharer: function(sharer) {
+      var p = sharer.params || {},
+        keys = Object.keys(p),
+        i,
+        str = keys.length > 0 ? '?' : '';
+      for (i = 0; i < keys.length; i++) {
+        if (str !== '?') {
+          str += '&';
+        }
+        if (p[keys[i]]) {
+          str += keys[i] + '=' + encodeURIComponent(p[keys[i]]);
+        }
+      }
+      sharer.shareUrl += str;
+
+      var isLink = this.getValue('link') === 'true';
+      var isBlank = this.getValue('blank') === 'true';
+
+      if (isLink) {
+        if (isBlank) {
+          window.open(sharer.shareUrl, '_blank');
+        } else {
+          window.location.href = sharer.shareUrl;
+        }
+      } else {
+        // defaults to popup if no data-link is provided
+        var popWidth = sharer.width || 600,
+          popHeight = sharer.height || 480,
+          left = window.innerWidth / 2 - popWidth / 2 + window.screenX,
+          top = window.innerHeight / 2 - popHeight / 2 + window.screenY,
+          popParams = 'scrollbars=no, width=' + popWidth + ', height=' + popHeight + ', top=' + top + ', left=' + left,
+          newWindow = window.open(sharer.shareUrl, '', popParams);
+
+        if (window.focus) {
+          newWindow.focus();
+        }
+      }
+    },
+  };
+
+  // adding sharer events on domcontentload
+  if (document.readyState === 'complete' || document.readyState !== 'loading') {
+    Sharer.init();
+  } else {
+    document.addEventListener('DOMContentLoaded', Sharer.init);
+  }
+
+  // exporting sharer for external usage
+  window.Sharer = Sharer;
+})(window, document);
