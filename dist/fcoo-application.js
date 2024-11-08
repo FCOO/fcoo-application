@@ -4914,6 +4914,7 @@ Methods for loading and saving settings for the application
                 show       : true,
                 remove     : true,
                 header     : options.header,
+                width      : 370,
                 buttons:[{
                     icon    : 'fa-pen-to-square', text: {da:'Redigér', en: 'Edit'},
                     onClick : this.editSavedSettingList.bind(this, options)
@@ -4953,29 +4954,31 @@ Methods for loading and saving settings for the application
             if ($button.hasClass('selected')) //class "selected" are set AFTER onClick....
                 return;
 
-            let standardSavedSetting = this.getStandardSavedSetting(),
-                o = standardSavedSetting ? standardSavedSetting.options || {} : {};
-
-            if ((o.edit_code == code) || (o.share_code == code)){
                 if (this.notyOnDeleteStandard)
                     this.notyOnDeleteStandard.flash();
                 else
                     this.notyOnDeleteStandard =
                         window.notyInfo({
                             da: 'Opsætning med id <em>'+code+'</em> er er angivet som Standard Opsætning<br>Selv om den slettes fra listen vil den fortsat blive brugt som Standard Opsætning',
-                            en: 'TODO'
+                            en: 'Setting with id <em>'+code+'</em> is set as Standard Setting<br>Even though it is removed from the list it will still be used as Standard Setting',
                         },{
                             textAlign: 'center',
                             callbacks: { onClose: function(){ this.notyOnDeleteStandard = null; }.bind(this) },
                         });
-            }
         },
 
         editSavedSettingList: function(options){
             this.selectFromList_options = options;
             this._sssModal_close();
+            this.notyOnDeleteStandard = null;
 
             let buttonList = this.asButtonList(options.onlyWithEditCode, 'editDescription');
+
+            //Marks all saved items with save- og standard setting-icon
+            let sss         = this.getStandardSavedSetting(),
+                sssOptions  = sss ? sss.options || {} : {},
+                sssCode     = sssOptions.edit_code || sssOptions.share_code,
+                displayCode = sssCode ? ns.ss_db2displayFormat(sssCode) : '';
 
             this.list.forEach( savedSetting => {
                 savedSetting.originalDesc = savedSetting.options.desc;
@@ -4984,9 +4987,11 @@ Methods for loading and saving settings for the application
             //Crreate the edit-button and a delete checkbox-button
             let modalContent = [];
             buttonList.forEach( buttonOptions => {
+                const isStandard = buttonOptions.id == sssCode;
                 modalContent.push({
                     id      : buttonOptions.id+'_editdesc',
                     type    : 'bigiconbutton',
+                    icon    : isStandard ? ns.standardSettingHeader.icon : 'fa-save',
                     text    : buttonOptions.text,
                     subtext : buttonOptions.subtext,
                     class   : 'flex-grow-1',
@@ -4997,13 +5002,17 @@ Methods for loading and saving settings for the application
                         let ss_id = id.split('_')[0],
                             ss = this.getByCode( ss_id ),
                             $text = $button.find('span').first();
-
                         if (ss)
                             ss.editDescription(() => $text.text( ss.options.desc )  );
                     }.bind(this),
 
                     //Delete-button
-                    after: {id: buttonOptions.id, type: 'checkboxbutton', icon: 'fa-trash-can fa-fw', onClick: this._info_delete_standard_setting.bind(this, buttonOptions.id) }
+                    after: {
+                        id      : buttonOptions.id,
+                        type    : 'checkboxbutton',
+                        icon    : 'fa-trash-can fa-fw',
+                        onClick : isStandard ? this._info_delete_standard_setting.bind(this, displayCode) : null
+                    }
                 });
             });
 
@@ -5011,6 +5020,7 @@ Methods for loading and saving settings for the application
                 show    : true,
                 remove  : true,
                 header  : {icon : 'fa-pen-to-square', text: {da:'Redigér', en: 'Edit'}},
+                width   : 370,
                 onSubmit: this.onSubmit.bind(this),
                 onClose : this.onClose.bind(this),
                 content : modalContent,
@@ -5746,12 +5756,13 @@ Når du gemmer din opsætning, får du to forskellige koder:
 
             ns.globalSetting.set(ns.standardSettingId, code);
 
-            let settingMenuDiv_da = '<div><i class="fal fa-cog"></i>&nbsp;Indstillinger&nbsp;' + '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.da+'</div>',
+            let displatEditCode = ns.ss_db2displayFormat(code),
+                settingMenuDiv_da = '<div><i class="fal fa-cog"></i>&nbsp;Indstillinger&nbsp;' + '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.da+'</div>',
                 settingMenuDiv_en = '<div><i class="fal fa-cog"></i>&nbsp;Settingsr&nbsp;'+      '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.en+'</div>';
 
             let noty = window.notyInfo({
-                da: 'Opsætning med id <em>'+code+'</em> er angivet som Standard Opsætning, og den bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter<br>&nbsp;<br>Standard Opsætning kan ændres under<br>' + settingMenuDiv_da,
-                en: 'Setting with <em>'+code+'</em> is set as Standard Setting and will be used as default when '+ ns.ss_getAppName('en', true) +' starts<br>&nbsp;<br>Standard Setting can be set under<br>' + settingMenuDiv_en,
+                da: 'Opsætning med id <em>'+displatEditCode+'</em> er angivet som Standard Opsætning, og den bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter<br>&nbsp;<br>Standard Opsætning kan ændres under<br>' + settingMenuDiv_da,
+                en: 'Setting with <em>'+displatEditCode+'</em> is set as Standard Setting and will be used as default when '+ ns.ss_getAppName('en', true) +' starts<br>&nbsp;<br>Standard Setting can be set under<br>' + settingMenuDiv_en,
             },{
                 layout   : 'center',
                 textAlign: 'center',
