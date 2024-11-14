@@ -245,7 +245,7 @@ Methods for loading and saving settings for the application
                 let standard = this.settingGroup.get(standardSettingId);
                 //let standardSavedSetting;
                 switch (standard){
-                    case 'EMPTY'  : /*Nothing*/ break;
+                    case 'EMPTY'  : ns.appSetting.reset(); break;
                     case 'DEFAULT': ns.appSetting.load(); break;
                     default       : this.getByCode(standard, true).get(standard, resolve, null, preError_standard);
                 }
