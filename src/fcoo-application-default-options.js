@@ -90,6 +90,8 @@ See src/fcoo-application-create.js
                 depot: 'depot/'
             },
 
+            saveLoadShare: '', //STRING or []STRING. "leftMenu", "rightMenu", "topMenu": Defines where the load-, save and share-buttons are shown
+
             topMenu            : {
                 save : false, //If true a save-button is added (see SavedSettingList)
                 load : false, //If true a load-button is added (see SavedSettingList)

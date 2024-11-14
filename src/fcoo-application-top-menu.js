@@ -95,7 +95,7 @@ Create and manage the top-menu for FCOO web applications
                             .on('click', ns.aboutOwner);
                 */
             },
-            priority : 5,
+            priority : 7, //5,
             exclude: true
         },
 
@@ -146,7 +146,7 @@ Create and manage the top-menu for FCOO web applications
                            .addClass('text-nowrap top-menu-item top-menu-header')
                            .i18n( menuOptions );
             },
-            priority: 7,
+            priority: 8,
             minWidth: 200,
             exclude : true
         },

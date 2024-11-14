@@ -163,14 +163,10 @@ let nsTest = window.fcoo.test = {};
                 depotOptions: {
                     url  : 'https://staging.fcooapp.com/ifm-service/api/'
                 },                    
-                    
-                topMenu: {
-                    //search: false,
+                saveLoadShare: 'topMenu leftMenu rightMenu',                    
 
-                   save: true,
-                   load: true,
-                   share: true,
-                   
+                topMenu: {
+                   search: true,
                    
                    preSetting: {
                        icon   : window.fcoo.settingIcon('fa-map'),
@@ -197,10 +193,6 @@ let nsTest = window.fcoo.test = {};
                     width: 375, 
                     buttons: {
                         //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-                        save    :   true, //Standard save-button
-                        load    :   true, //Standard load-button
-                        bookmark:   true, //Standard bootmark-button
-                        share   :   true, //Standard share-button  
                         user    : true,
                         reset   : true,
                         setting : true,

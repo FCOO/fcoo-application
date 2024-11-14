@@ -383,7 +383,7 @@ Methods to create standard FCC-web-applications
         //Adjust options - both in ns and nsApp
         ns.setupOptions = nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
 
-
+        //Set bottom-menu options
         nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
 
         //Adjust path: If path is file-name (in any form) => move it into default format
@@ -399,6 +399,37 @@ Methods to create standard FCC-web-applications
             modalOptions.helpId = nsApp.setupOptions.topMenu.helpId.globalSetting;
             modalOptions.helpButton = true;
         }
+
+        //Adjust and add options for load, save, and share button
+        let addTo = ns.setupOptions.saveLoadShare || '', buttons;
+        addTo = Array.isArray(addTo) ? addTo : addTo.split(' ');
+        addTo.forEach( where => {
+            switch (where.toUpperCase()){
+                case 'TOPMENU'  :
+                    options.topMenu = options.topMenu || {};
+                    options.topMenu.save  = options.topMenu.save  || true;
+                    options.topMenu.load  = options.topMenu.load  || true;
+                    options.topMenu.share = options.topMenu.share || true;
+                    break;
+
+                case 'LEFTMENU' :
+                    options.leftMenu = options.leftMenu || {};
+                    buttons = options.leftMenu.buttons = options.leftMenu.buttons || {};
+                    buttons.save  = buttons.save  || true;
+                    buttons.load  = buttons.load  || true;
+                    buttons.share = buttons.share || true;
+                    break;
+
+                case 'RIGHTMENU':
+                    options.rightMenu = options.righttMenu || {};
+                    buttons = options.rightMenu.buttons = options.rightMenu.buttons || {};
+                    buttons.save  = buttons.save  || true;
+                    buttons.load  = buttons.load  || true;
+                    buttons.share = buttons.share || true;
+                    break;
+            }
+        });
+
 
         //Call the applications own resolve method (if any)
         if (appResolveSetup)
@@ -673,6 +704,8 @@ See src/fcoo-application-create.js
                 token: 'token/',
                 depot: 'depot/'
             },
+
+            saveLoadShare: '', //STRING or []STRING. "leftMenu", "rightMenu", "topMenu": Defines where the load-, save and share-buttons are shown
 
             topMenu            : {
                 save : false, //If true a save-button is added (see SavedSettingList)
@@ -3509,7 +3542,7 @@ Create and manage the top-menu for FCOO web applications
                             .on('click', ns.aboutOwner);
                 */
             },
-            priority : 5,
+            priority : 7, //5,
             exclude: true
         },
 
@@ -3560,7 +3593,7 @@ Create and manage the top-menu for FCOO web applications
                            .addClass('text-nowrap top-menu-item top-menu-header')
                            .i18n( menuOptions );
             },
-            priority: 7,
+            priority: 8,
             minWidth: 200,
             exclude : true
         },
@@ -4753,7 +4786,7 @@ Methods for loading and saving settings for the application
                 let standard = this.settingGroup.get(standardSettingId);
                 //let standardSavedSetting;
                 switch (standard){
-                    case 'EMPTY'  : /*Nothing*/ break;
+                    case 'EMPTY'  : ns.appSetting.reset(); break;
                     case 'DEFAULT': ns.appSetting.load(); break;
                     default       : this.getByCode(standard, true).get(standard, resolve, null, preError_standard);
                 }
