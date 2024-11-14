@@ -64,7 +64,7 @@ Create and manage the top-menu for FCOO web applications
     buttonInfo = options for a button in the top-menu
         id       : id from options passed to createTopMenu
         rightSide: true/false. - true => the button is placed to the right
-        exclude  : true/false - if true the button is not included in claculation of the total width
+        exclude  : true/false - if true the button is not included in calculation of the total width
         title    : null - title for the button
         icon     : null - icon-class for the button
         create   : function($menu, elementOptions, menuOptions, topMenu) create and return $element. - function to create the button
@@ -97,6 +97,45 @@ Create and manage the top-menu for FCOO web applications
             },
             priority : 5,
             exclude: true
+        },
+
+        //***************************************************************
+        //Save, load and share
+        {
+            id      :'save',
+            create  : function( $menu/*, elementOptions, menuOptions*/ ){
+                return defaultTopMenuButton($menu, {
+                    icon    : 'fa-save',
+                    title   : {da: 'Gem', en: 'Save'},
+                    newGroup: true,
+                    onClick : ns.application_save_settings
+                });
+            },
+            priority : 2
+        },
+        {
+            id:'load',
+            create  : function( $menu/*, elementOptions, menuOptions*/ ){
+                return defaultTopMenuButton($menu, {
+                    icon    : 'fa-folder-open',
+                    title   : {da: 'Hent', en: 'Load' },
+                    newGroup: true,
+                    onClick : ns.application_load_settings
+                });
+            },
+            priority : 2
+        },
+        {
+            id:'share',
+            create  : function( $menu/*, elementOptions, menuOptions*/ ){
+                return defaultTopMenuButton($menu, {
+                    icon    : 'fa-share-alt',
+                    title   : {da: 'Del', en: 'Share' },
+                    newGroup: true,
+                    onClick : ns.application_share_settings
+                });
+            },
+            priority : 2
         },
 
         //***************************************************************

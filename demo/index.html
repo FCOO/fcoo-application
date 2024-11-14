@@ -93,16 +93,13 @@
 
 
     <script src="bower_components.js"></script>
-
-    <!-- <script src="../src/fcoo-application-loading.js"></script> -->
-
-    <!-- <script src="../src/fcoo-application-global-events.js"></script> -->
+    
     <script src="../src/fcoo-application-about.js"></script>
     <script src="../src/fcoo-application-clipboard.js"></script>
     <script src="../src/fcoo-application-color.js"></script>
     
-<script src="../src/fcoo-application-create.js"></script>
-<script src="../src/fcoo-application-default-options.js"></script>
+    <script src="../src/fcoo-application-create.js"></script>
+    <script src="../src/fcoo-application-default-options.js"></script>
 
     <script src="../src/fcoo-application-general.js"></script>
     <script src="../src/fcoo-application-help.js"></script>
@@ -125,7 +122,6 @@
     <script src="../src/saved-setting-list.js"></script>
     <script src="../src/saved-setting.js"></script>
     <script src="../src/sharer.js"></script>
-
     
     <script>
         window.bsIsTouch = false;
@@ -133,6 +129,9 @@
 
         //TEMP: No access to data-files on AWS. Read from old location instead 
         window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
+
+
+let nsTest = window.fcoo.test = {};
 
         i18next.init();
         i18next.changeLanguage('en');
@@ -167,9 +166,15 @@
                     
                 topMenu: {
                     //search: false,
-                    preSetting: {
-                        icon: 'far fa-map',
-                        onClick: function(){alert('godt');  }
+
+                   save: true,
+                   load: true,
+                   share: true,
+                   
+                   
+                   preSetting: {
+                       icon   : window.fcoo.settingIcon('fa-map'),
+                       onClick: function(){ console.log('Click on preSetting'); }
                     },
                     help: {
                         //url: ['data/help.json', 'data/about_fcoo.json', {fileName: "fcoo-maps-help_NY.json", subDir: "help"}]
@@ -182,10 +187,6 @@
                         url: 'data/oceanforecast_warning.json data/oceanforecast_warning2.json',
                         //reloadPeriod: 'PT5S',
                    },
-                   preSetting: {
-                       icon   : window.fcoo.settingIcon('fa-map'),
-                       onClick: function(){ console.log('Click on preSetting'); }
-                    },
                 },
                 _leftMenu  : {
                     width: 400, 
@@ -193,7 +194,7 @@
                     menuOptions: {keepAll: true}
                 },                    
                 leftMenu  : {
-                    width: 400, 
+                    width: 375, 
                     buttons: {
                         //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
                         save    :   true, //Standard save-button
@@ -742,9 +743,11 @@ window.intervals.addInterval({
 
             //or 2
             window.fcoo.createApplication(
-                applicationOptions, 
-                create_main_content, 
-                //2: menuOptions
+                applicationOptions,     //options,
+                create_main_content,    //create_main_content
+                null,                   //2: menuOptions,
+                null,                   //application_resolve_setup,
+                nsTest                  //nsForApplication
             );
 
             //or 3 When no createApplication is included: 

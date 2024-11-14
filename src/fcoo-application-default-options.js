@@ -23,7 +23,7 @@ See src/fcoo-application-create.js
         }
 
         topMenu: {
-            See description in fcoo/fcoo-application and in nsMap.default_setup below
+            See description in fcoo/fcoo-application and in nsMap.defaultApplicationOptions below
         }
         standardMenuOptions: { //Options for the standard-menu/mmenu created by methods in src/fcoo-application-mmenu
             inclBar    : BOOLEAN,
@@ -90,7 +90,11 @@ See src/fcoo-application-create.js
                 depot: 'depot/'
             },
 
-            topMenu            : {},
+            topMenu            : {
+                save : false, //If true a save-button is added (see SavedSettingList)
+                load : false, //If true a load-button is added (see SavedSettingList)
+                share: false, //If true a share-button is added (see SavedSettingList)
+            },
 
             standardMenuOptions: {},
 

@@ -380,8 +380,9 @@ Methods to create standard FCC-web-applications
         //Set applicationHeader here because it is used in promise-error
         ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || ns.defaultApplicationOptions.applicationName );
 
-        //Adjust options
-        nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
+        //Adjust options - both in ns and nsApp
+        ns.setupOptions = nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
+
 
         nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
 
@@ -606,7 +607,7 @@ See src/fcoo-application-create.js
         }
 
         topMenu: {
-            See description in fcoo/fcoo-application and in nsMap.default_setup below
+            See description in fcoo/fcoo-application and in nsMap.defaultApplicationOptions below
         }
         standardMenuOptions: { //Options for the standard-menu/mmenu created by methods in src/fcoo-application-mmenu
             inclBar    : BOOLEAN,
@@ -673,7 +674,11 @@ See src/fcoo-application-create.js
                 depot: 'depot/'
             },
 
-            topMenu            : {},
+            topMenu            : {
+                save : false, //If true a save-button is added (see SavedSettingList)
+                load : false, //If true a load-button is added (see SavedSettingList)
+                share: false, //If true a share-button is added (see SavedSettingList)
+            },
 
             standardMenuOptions: {},
 
@@ -1623,22 +1628,14 @@ Create and manage the main structure for FCOO web applications
                 buttonGroups.push( $.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
 
             //Add standard buttons
-            var shareIcon = 'fa-share-alt'; //TODO check os for different icons
             var buttonList = [];
-/*
-ns.application_load_settings
-ns.application_save_settings
-ns.application_bookmark_settings
-ns.application_share_settings
-*/
-
             [
                 {id:'new',      icon: 'fa-square-plus',       title: {da: 'Ny',              en: 'New'          }, newGroup: true,  onClick: function(){ alert('New not implemented');   } },
                 {id:'edit',     icon: 'fa-pen-to-square',     title: {da: 'Rediger',         en: 'Edit'         }, newGroup: true,  onClick: function(){ alert('Edit not implemented');  } },
                 {id:'save',     icon: 'fa-save',              title: {da: 'Gem',             en: 'Save'         }, newGroup: true,  onClick: ns.application_save_settings                  },
                 {id:'load',     icon: 'fa-folder-open',       title: {da: 'Hent',            en: 'Load'         },                  onClick: ns.application_load_settings                  },
                 {id:'bookmark', icon: 'fa-star',              title: {da: 'Tilføj bogmærke', en: 'Add bookmark' }, newGroup: true,  onClick: null/*ns.application_bookmark_settings */             },
-                {id:'share',    icon: shareIcon,              title: {da: 'Del',             en: 'Share'        },                  onClick: ns.application_share_settings                 },
+                {id:'share',    icon: 'fa-share-alt',         title: {da: 'Del',             en: 'Share'        },                  onClick: ns.application_share_settings                 },
                 {id:'user',     icon: 'fa-user',              title: {da: 'Bruger',          en: 'User'         }, newGroup: true,  onClick: function(){ alert('User not implemented');  } },
 
                 {id:'cancel',   icon: 'fa-times',             title: {da: 'Annullér',        en: 'Cancel'       }, newGroup: true,  onClick: function(){ alert('Cancel not implemented');} },
@@ -3481,7 +3478,7 @@ Create and manage the top-menu for FCOO web applications
     buttonInfo = options for a button in the top-menu
         id       : id from options passed to createTopMenu
         rightSide: true/false. - true => the button is placed to the right
-        exclude  : true/false - if true the button is not included in claculation of the total width
+        exclude  : true/false - if true the button is not included in calculation of the total width
         title    : null - title for the button
         icon     : null - icon-class for the button
         create   : function($menu, elementOptions, menuOptions, topMenu) create and return $element. - function to create the button
@@ -3514,6 +3511,45 @@ Create and manage the top-menu for FCOO web applications
             },
             priority : 5,
             exclude: true
+        },
+
+        //***************************************************************
+        //Save, load and share
+        {
+            id      :'save',
+            create  : function( $menu/*, elementOptions, menuOptions*/ ){
+                return defaultTopMenuButton($menu, {
+                    icon    : 'fa-save',
+                    title   : {da: 'Gem', en: 'Save'},
+                    newGroup: true,
+                    onClick : ns.application_save_settings
+                });
+            },
+            priority : 2
+        },
+        {
+            id:'load',
+            create  : function( $menu/*, elementOptions, menuOptions*/ ){
+                return defaultTopMenuButton($menu, {
+                    icon    : 'fa-folder-open',
+                    title   : {da: 'Hent', en: 'Load' },
+                    newGroup: true,
+                    onClick : ns.application_load_settings
+                });
+            },
+            priority : 2
+        },
+        {
+            id:'share',
+            create  : function( $menu/*, elementOptions, menuOptions*/ ){
+                return defaultTopMenuButton($menu, {
+                    icon    : 'fa-share-alt',
+                    title   : {da: 'Del', en: 'Share' },
+                    newGroup: true,
+                    onClick : ns.application_share_settings
+                });
+            },
+            priority : 2
         },
 
         //***************************************************************
