@@ -4783,12 +4783,23 @@ Methods for loading and saving settings for the application
                         return error;
                     };
 
-                let standard = this.settingGroup.get(standardSettingId);
-                //let standardSavedSetting;
+
+                //Reset setting to have a clear setup
+                ns.appSetting.reset();
+
+                let standard = null;
                 switch (standard){
-                    case 'EMPTY'  : ns.appSetting.reset(); break;
-                    case 'DEFAULT': ns.appSetting.load(); break;
-                    default       : this.getByCode(standard, true).get(standard, resolve, null, preError_standard);
+                    case 'EMPTY'  :
+                        //Nothing - already reset
+                        break;
+
+                    case 'DEFAULT':
+                        ns.appSetting.load();
+                        break;
+
+                    default:
+                        standard = this.settingGroup.get(standardSettingId);
+                        this.getByCode(standard, true).get(standard, resolve, null, preError_standard);
                 }
             }
         },
@@ -5130,7 +5141,7 @@ Methods for loading and saving settings for the application
                 noBorder: true,
                 center  : true,
                 text: {
-                    da: 'Vælg den opsætning, der bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter',
+                    da: 'Vælg den opsætning, der bruges om udgangspunkt,<br>når '+ ns.ss_getAppName('da', true)+ ' starter',
                     en: 'Select the setting used as default when '+ ns.ss_getAppName('en', true) +' starts'
                 },
             },{
