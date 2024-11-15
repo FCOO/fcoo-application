@@ -4787,19 +4787,11 @@ Methods for loading and saving settings for the application
                 //Reset setting to have a clear setup
                 ns.appSetting.reset();
 
-                let standard = null;
+                let standard = this.settingGroup.get(standardSettingId);
                 switch (standard){
-                    case 'EMPTY'  :
-                        //Nothing - already reset
-                        break;
-
-                    case 'DEFAULT':
-                        ns.appSetting.load();
-                        break;
-
-                    default:
-                        standard = this.settingGroup.get(standardSettingId);
-                        this.getByCode(standard, true).get(standard, resolve, null, preError_standard);
+                    case 'EMPTY'    : /*Nothing - already reset*/ break;
+                    case 'DEFAULT'  : ns.appSetting.load();       break;
+                    default         : this.getByCode(standard, true).get(standard, resolve, null, preError_standard);
                 }
             }
         },
