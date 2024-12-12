@@ -22,7 +22,7 @@ Methods for loading and saving settings for the application
     Depot.prototype = {
         setOptions: function(options = {}){
             this.options = $.extend(true, {}, {
-                url  : 'https://staging.fcooapp.com/ifm-service/api/', //HER skal nok fjernes her fra
+                url  : 'https://services.fcooapp.com/api/',
                 token: 'token/',
                 depot: 'depot/',
                 applicationId: ns.applicationId,

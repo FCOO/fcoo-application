@@ -85,7 +85,7 @@ See src/fcoo-application-create.js
             applicationName    : {da:'Dansk titel', en:'English title'},
 
             depotOptions       : {
-                url  : 'https://staging.fcooapp.com/ifm-service/api/', //MANGLER
+                url  : 'https://services.fcooapp.com/api/',
                 token: 'token/',
                 depot: 'depot/'
             },
