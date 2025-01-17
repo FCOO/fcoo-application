@@ -700,7 +700,7 @@ See src/fcoo-application-create.js
             applicationName    : {da:'Dansk titel', en:'English title'},
 
             depotOptions       : {
-                url  : 'https://staging.fcooapp.com/ifm-service/api/', //MANGLER
+                url  : 'https://services.fcooapp.com/api/',
                 token: 'token/',
                 depot: 'depot/'
             },
@@ -2171,7 +2171,6 @@ Objects and methods to set up Mmenu via $.bsMmenu
 	"use strict";
 
     var ns = window.fcoo = window.fcoo || {};
-
 
     var favoriteSetting = null, //SettingGroup to hold the favorites in the menus
         favoriteSettingId = '__FAVORITES__',
@@ -4445,7 +4444,7 @@ Methods for loading and saving settings for the application
     Depot.prototype = {
         setOptions: function(options = {}){
             this.options = $.extend(true, {}, {
-                url  : 'https://staging.fcooapp.com/ifm-service/api/', //HER skal nok fjernes her fra
+                url  : 'https://services.fcooapp.com/api/',
                 token: 'token/',
                 depot: 'depot/',
                 applicationId: ns.applicationId,

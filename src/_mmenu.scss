@@ -1,0 +1,18 @@
+/*****************************************************
+MMENU
+
+Adjustments to the style for mmenu
+*****************************************************/
+
+//Hover on closed menu
+.mm-menu .mm-listitem:not(.mm-listitem_opened) > .mm-listitem__btn:hover {
+    color           : var(--mm-item-closed-hover-color, var(--mm-item-closed-color));
+    background-color: var(--mm-item-closed-hover-bg,    var(--mm-item-closed-bg)   );
+}
+
+
+//Hover on open menu
+.mm-menu .mm-listitem.mm-listitem_opened > .mm-listitem__btn:hover {
+    color           : var(--mm-item-opened-hover-color, var(--mm-item-opened-color));
+    background-color: var(--mm-item-opened-hover-bg,    var(--mm-item-opened-bg   ));
+}

@@ -17,8 +17,14 @@ This can be done in two ways:
 2: Dynamically via javascript by calling window.fcoo.setApplicationColors( NEW_APPLICATION_COLOR ); (see src/fcoo-application-color.js)
 *****************************************************/
 
+
 //Default = DALO color in "Forsvarsministeriets koncernfælles Designmanual 2018"
 @include _application-color(#3f5b58, "default-");
+
+
+.niels {
+    color: #{$bg-color-25};
+}
 
 @function get-var-id( $type:'bg', $percent:'0' ){
     @if $percent == '0' {
@@ -47,6 +53,7 @@ This can be done in two ways:
     #{get-var-id('bg')}         : #{get-var-value('bg')};
     #{get-var-id('hover-bg')}   : #{get-var-value('hover-bg')};
     #{get-var-id('active-bg')}  : #{get-var-value('active-bg')};
+    #{get-var-id('darken-bg')}: #{get-var-value('darken-bg')};
 
     #{get-var-id('text')}       : #{get-var-value('text')};
     #{get-var-id('hover-text')} : #{get-var-value('hover-text')};
@@ -57,6 +64,7 @@ This can be done in two ways:
     #{get-var-id('bg',          25)}: #{get-var-value('bg',           25)};
     #{get-var-id('hover-bg',    25)}: #{get-var-value('hover-bg',     25)};
     #{get-var-id('active-bg',   25)}: #{get-var-value('active-bg',    25)};
+    #{get-var-id('darken-bg',   25)}: #{get-var-value('darken-bg',    25)};
     #{get-var-id('text',        25)}: #{get-var-value('text',         25)};
     #{get-var-id('hover-text',  25)}: #{get-var-value('hover-text',   25)};
     #{get-var-id('active-text', 25)}: #{get-var-value('active-text',  25)};
@@ -64,6 +72,7 @@ This can be done in two ways:
     #{get-var-id('bg',          50)}: #{get-var-value('bg',           50)};
     #{get-var-id('hover-bg',    50)}: #{get-var-value('hover-bg',     50)};
     #{get-var-id('active-bg',   50)}: #{get-var-value('active-bg',    50)};
+    #{get-var-id('darken-bg',   50)}: #{get-var-value('darken-bg',    50)};
     #{get-var-id('text',        50)}: #{get-var-value('text',         50)};
     #{get-var-id('hover-text',  50)}: #{get-var-value('hover-text',   50)};
     #{get-var-id('active-text', 50)}: #{get-var-value('active-text',  50)};
@@ -71,6 +80,7 @@ This can be done in two ways:
     #{get-var-id('bg',          63)}: #{get-var-value('bg',           63)};
     #{get-var-id('hover-bg',    63)}: #{get-var-value('hover-bg',     63)};
     #{get-var-id('active-bg',   63)}: #{get-var-value('active-bg',    63)};
+    #{get-var-id('darken-bg',   63)}: #{get-var-value('darken-bg',    63)};
     #{get-var-id('text',        63)}: #{get-var-value('text',         63)};
     #{get-var-id('hover-text',  63)}: #{get-var-value('hover-text',   63)};
     #{get-var-id('active-text', 63)}: #{get-var-value('active-text',  63)};
@@ -136,22 +146,59 @@ Adjust different parts in jquery-bootstrap and fcoo-application
     --jb-inner-header-bg    : #{get-var('bg',   50)};
 }
 
-//Bootstrap: Aaccordion header when open = 50%-color
+//Bootstrap: Accordion header when open = 50%-color
 .accordion {
     --bs-accordion-btn-color: #{get-var('text', 63)};
     --bs-accordion-btn-bg   : #{get-var('bg',   63)};
 
+    --bs-accordion-btn-hover-color: #{get-var('active-text', 63)};
+    --bs-accordion-btn-hover-bg   : #{get-var('darken-bg',   63)};
+
 
     --bs-accordion-active-color: #{get-var('text', 50)};
     --bs-accordion-active-bg   : #{get-var('bg',   50)};
+
+    --bs-accordion-active-btn-hover-color: #{get-var('active-text', 50)};
+    --bs-accordion-active-btn-hover-bg   : #{get-var('darken-bg',   50)};
 }
+
 
 //mmenu: Open item = 50%-color
 .mm-menu {
     --mm-item-closed-color: #{get-var('text', 63)};
     --mm-item-closed-bg   : #{get-var('bg',   63)};
 
+    --mm-item-closed-hover-color: #{get-var('active-text', 63)};
+    --mm-item-closed-hover-bg   : #{get-var('darken-bg',   63)};
+
+
     --mm-item-opened-color: #{get-var('text', 50)};
     --mm-item-opened-bg   : #{get-var('bg',   50)};
+
+    --mm-item-opened-hover-color: #{get-var('active-text', 50)};
+    --mm-item-opened-hover-bg   : #{get-var('darken-bg',   50)};
 }
+
+
+/*****************************************************************
+Table
+Defines the color-values for
+header                      : Table header
+selected                    : Selected row
+fixed-first-column          : First column when it is fixed
+fixed-first-column-selected : First column when it is fixed and selected
+*****************************************************************/
+:root {
+    //Default colors for header
+    @include create-table-variant(header, $bg-color-50);
+
+    //Default colors for selected row
+    @include create-table-variant(selected, $form-check-input-checked-bg-color, false, $form-check-input-checked-color);
+
+    //First column when it is fixed and selected
+    @include create-table-variant(fixed-first-column, $bg-color-63);
+    @include create-table-variant(fixed-first-column-selected, darken($form-check-input-checked-bg-color, $btn-bg-darken-amount), false, $form-check-input-checked-color);
+
+}
+
 

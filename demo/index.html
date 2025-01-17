@@ -130,6 +130,187 @@
         //TEMP: No access to data-files on AWS. Read from old location instead 
         window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
 
+        //*******************************************************************
+        let testContent =
+                "<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch.</p>" +
+                "<p>Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica.</p>" +
+                "<p>Craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>",
+            testContent2 = testContent + testContent,
+            accor_children =  [
+                {
+                    id: 'ACCOR1',
+                    header: {icon: 'fa-home', text: {da:'Overskrift#1', en:'Header#1'}},
+                    children:[
+                        {
+                            header: {icon: 'fa-home', text: {da:'Overskrift#1-1', en:'Header#1-1'}},
+                            noVerticalPadding: true,
+                            noHorizontalPadding: true,
+                            content: {
+                                text:'No padding: Dette er en test 1-1<br>'+testContent,
+                            }
+                        },
+                        {
+                            header: {icon: 'fa-home', text: {da:'Overskrift#1-2', en:'Header#1-2'}},
+                            content: 'Dette er en test 1-2<br>'+testContent2
+                            
+                        },
+                        {
+                            header: {icon: 'fa-home', text: {da:'Overskrift#1-3', en:'Header#1-3'}},
+                            content: 'Dette er en test 1-3<br>'+testContent,
+                            children: [
+                                {
+                                    header: {icon: 'fa-home', text: {da:'Overskrift#1-3-1', en:'Header#1-3-1'}},
+                                    content: 'Dette er en test 1-3-1<br>'+testContent
+                                },
+                                {
+                                    header: {icon: 'fa-home', text: {da:'Overskrift#1-3-2', en:'Header#1-3-2'}},
+                                    content: 'Dette er en test 1-3-2<br>'+testContent
+                                },
+                            ]
+                        },
+                    ]
+                },
+                {
+                    id: 'ACCOR2',
+                    header: {icon: 'fa-home', text: {da:'Overskrift#2 (default Åben)', en:'Header#2 (default Open)'}},
+                    selected: true,
+                    children:[
+                        {header:{icon: 'fa-home', text: {da:'Overskrift#2-1', en:'Header#2-1'}}, content: 'Dette er en test 2-1<br>'+testContent },
+                        {header:{icon: 'fa-home', text: {da:'Overskrift#2-2', en:'Header#2-2'}}, content: 'Dette er en test 2-2<br>'+testContent },
+                    ]
+                },
+                {
+                    id: 'ACCOR3',
+                    header: { icon: 'fa-home', text: {da:'Overskrift#3', en:'Header#3'} },
+                    content: 'Dette er en test 3<br>'+testContent,
+                },
+                {
+                    header: 'En tabel',
+                    content: 'Missing :-)'
+                }
+
+            ]; //accor_children
+
+            let myAccordionModal = $.bsAccordion({children: accor_children}).asModal({flexWidth: false, header:{icon: 'fa-home', text: 'Accordion'}, show: false});
+
+        
+        //*******************************************************************
+        $.valueFormat.add({
+            id: 'myNumberFormat',
+            format: function( value, options ){
+                var result = parseFloat(Math.round(value)) + '<<';
+                while (result.length < 8)
+                    result = '0' + result;
+                return Math.random() + '>>' + result;
+            },
+        });
+
+        $.valueFormat.add({
+            id: 'myMomentFormat',
+            format: function( value, options ){
+                return moment(value).format('DD-MM-YYYY ddd HH-MM')+'<br>('+moment(value).format('YYYY-MM-DD-HH-MM')+')';
+            },
+            convert: function( momentOrStr ){
+                return $.type( momentOrStr ) == "string" ? momentOrStr : momentOrStr.format();
+            },
+            convertBack: function( str ){
+                return moment(str);
+            }
+
+        });
+        
+        var tableContent = [{
+                id: 'first',
+                "name": {da:'Dansk!!!', en:'English!!!'},
+                "stargazers_count": 1205.26,
+                "forks_count": null,
+                "description": "An extended Bootstrap table with radio, checkbox, sort, pagination, and other added features. (supports twitter bootstrap v2 and v3) "
+            },{
+                id: 'no2',
+//                "name": { type:'button', icon:'fa-home', text:{da:'NIELS-da', en:'NIELS-en'}},
+                "name": {da:'NIELS-da', en:'NIELS-en'},
+                "stargazers_count": 123,
+                "forks_count": "19650130",
+                "description": "A jQuery plugin to select multiple elements with checkboxes"
+            },{
+                id: 'no3',
+                "name": "bootstrap-show-password",
+                "stargazers_count": 32.0001,
+                "forks_count": "20130101",
+                "description": {className:'text-uppercase text-monospace', icon: 'fa-home',text:{da:"Vis/Skjul adgangskode", en:"Show/hide password plugin for twitter bootstrap"}}
+            },{
+                id: 'no4',
+                "name": "blog",
+                "stargazers_count": 13.99,
+                "forks_count": "01-01-2014",
+                "description": "my blog"
+            },{
+                id: 'no5',
+                "name": "scutech-redmine",
+                "stargazers_count": 54,
+                "forks_count": null,
+                "description": "Redmine notification tools for chrome extension."
+            }];
+        
+        let longTableContent = [];
+        for (var i=0; i<10; i++ )
+            for (var j=0; j<tableContent.length; j++ ){
+                var next = $.extend({}, tableContent[j]);
+                next.id = next.id+'_'+i;
+                longTableContent.push( next );
+            }
+        var now = moment();
+        for (var i=0; i<longTableContent.length; i++ ){
+            longTableContent[i].stargazers_count = Math.round(1000000*Math.random())/100;
+            longTableContent[i].date = moment(now).add( Math.round(100*Math.random()), 'd');//.add( Math.round(1000*Math.random()), 'm');
+
+            longTableContent[i].stargazers_count = i;
+        }
+
+        let myTable = $.bsTable({
+            verticalBorder: true,//false,
+            selectable: true,
+            noBorder: false,
+            noPadding: false,
+
+            saveState: true,
+
+            selectedId: 'no4_0',
+            onChange: function( id, selected, tr ){
+                console.log( 'Table id =' , id,' selected=',selected);
+            },
+
+            allowZeroSelected: true,
+            allowReselect: true,
+            fullWidth: true,
+            firstColumnFixed: true,
+            columns: [
+                { id: 'name',             align: 'left',   header: {icon:'fa-home', text:{da:'Navn', en:'Name'}},  sortable: true, sortHeader: true, sortIndex:1000, _sortDefault: true},
+                { id: 'stargazers_count', align: 'center', header: 'Stars', vfFormat:"myNumberFormat",             sortable: true, sortBy: function(e1,e2){return e1-e2;}, 
+                    sortHeader: true,
+                    getHeaderContent: function(content){ return Math.floor(content/10); },
+                    createHeaderContent(content, $td){ var start = content*10; $td.text(start+'-'+(start+9)); },
+
+                },
+                { id: 'date',        align: 'center', header: 'Date<br>ny linje',  vfFormat:"myMomentFormat",             sortable: true, sortBy:'moment', _sortDefault: true/*'desc'*/},
+                { id: 'forks_count', align: 'center', header: 'Forks'},
+                { id: 'description',                  header:{icon: 'fa-home', text: 'Description'}, minimizable: true, minimized: true}
+            ],
+            content: longTableContent,
+            
+            rowIsDanger: function(rowIndex, data){
+                return data.name == 'blog' ? 'dette-er-en-blog' : '';
+            }                
+        });
+
+        let myTableModal = myTable.asModal({extraWidth: true, header:{icon: 'fa-table', text: 'Table'}, show: false});
+        
+        
+        //*******************************************************************
+        
+        
+        
+
 
 let nsTest = window.fcoo.test = {};
 
@@ -616,6 +797,19 @@ window.intervals.addInterval({
                 square: true,
                 bigIcon: true,
              }).appendTo($mainContainer);
+             
+            $.bsButton({
+                icon  : 'fa-map',
+                text: 'Accordion',
+                onClick: ()=>{ myAccordionModal.show() }
+             }).appendTo($mainContainer);
+             
+            $.bsButton({
+                icon  : 'fa-table',
+                text: 'Table',
+                onClick: ()=>{ myTableModal.show() }
+             }).appendTo($mainContainer);
+
 
             $mainContainer.append('<br>');
 

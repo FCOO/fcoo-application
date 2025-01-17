@@ -7,7 +7,6 @@ Objects and methods to set up Mmenu via $.bsMmenu
 
     var ns = window.fcoo = window.fcoo || {};
 
-
     var favoriteSetting = null, //SettingGroup to hold the favorites in the menus
         favoriteSettingId = '__FAVORITES__',
 
