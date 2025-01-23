@@ -67476,6 +67476,7 @@ module.exports = g;
                         });
 
         //Adding the children {icon, text, content}
+        options.list = options.list || [];
         options.list.forEach( ( opt, index ) => {
             //Create the header
             opt = $._bsAdjustOptions( opt );
@@ -67997,30 +67998,32 @@ module.exports = g;
 
         var $previousButton = null,
             spaceAfter     = false;
-        options.list.forEach( buttonOptions => {
 
-           if ((buttonOptions.spaceBefore || buttonOptions.lineBefore || spaceAfter) && $previousButton){
-                $previousButton.addClass('space-zafter');
-            }
+        if (options.list)
+            options.list.forEach( buttonOptions => {
 
-            spaceAfter      = buttonOptions.spaceAfter || buttonOptions.lineAfter;
-            $previousButton = null;
+               if ((buttonOptions.spaceBefore || buttonOptions.lineBefore || spaceAfter) && $previousButton){
+                    $previousButton.addClass('space-zafter');
+                }
 
-            if (buttonOptions.id || buttonOptions.onClick  || buttonOptions.onChange)
-                $previousButton =
-                    $._anyBsButton( $.extend(true, {}, options.buttonOptions, buttonOptions ) )
-                        .appendTo( result );
-            else
-                if (options.inclHeader)
-                    //Create content as header
-                    $('<div/>')
-                        .addClass('btn header-content')
-                        .toggleClass('header-main', !!buttonOptions.mainHeader)
+                spaceAfter      = buttonOptions.spaceAfter || buttonOptions.lineAfter;
+                $previousButton = null;
 
-                        .addClass( buttonOptions.class )
-                        ._bsHeaderAndIcons( {header: buttonOptions} )
-                        .appendTo( result );
-        });
+                if (buttonOptions.id || buttonOptions.onClick  || buttonOptions.onChange)
+                    $previousButton =
+                        $._anyBsButton( $.extend(true, {}, options.buttonOptions, buttonOptions ) )
+                            .appendTo( result );
+                else
+                    if (options.inclHeader)
+                        //Create content as header
+                        $('<div/>')
+                            .addClass('btn header-content')
+                            .toggleClass('header-main', !!buttonOptions.mainHeader)
+
+                            .addClass( buttonOptions.class )
+                            ._bsHeaderAndIcons( {header: buttonOptions} )
+                            .appendTo( result );
+            });
         return result;
     };
 
@@ -69257,7 +69260,7 @@ https://getbootstrap.com/docs/5.2/forms/validation/
                     max === undefined ? minText :
                     min == max ? exactlyText :
                     minMaxText;
-                i18next.languages.forEach(function(lang){
+                i18next.languages.forEach( lang => {
                     nextError[lang] = nextError[lang] ? nextError[lang].replace('%min', min).replace('%max', max) : '';
                 });
 
@@ -69270,7 +69273,7 @@ https://getbootstrap.com/docs/5.2/forms/validation/
                     attr['max'+postfix] = max;
             }
 
-            validatorList.forEach(function(validator){
+            validatorList.forEach( validator => {
                 validator = typeof validator == 'string' ? {type: validator} : validator;
                 nextError = '';
                 switch (validator.type.toUpperCase()){
@@ -69308,8 +69311,8 @@ https://getbootstrap.com/docs/5.2/forms/validation/
             if (firstError)
                 errorList.unshift(firstError);
             var errorText = {};
-            errorList.forEach(function(error){
-                i18next.languages.forEach(function(lang){
+            errorList.forEach(error => {
+                i18next.languages.forEach( lang => {
                     var langText = errorText[lang] || '';
                     if (error[lang])
                         langText = langText + (langText.length ? '&nbsp;- ' : '') + error[lang];
@@ -72846,7 +72849,7 @@ options
     $.bsSelect = $.bsSelectBox = $.bsSelectbox = function( options ){
 
         //options.items = options.items || options.list;
-        options.list = options.list || options.items;
+        options.list = options.list || options.items || [];
 
         options =
             $._bsAdjustOptions( options, {
@@ -72945,10 +72948,11 @@ options
         options.selectedId = value;
         this.data('bsButton_options', options);
 
-        options.list.forEach( function(item){
-            if (item.id == value)
-                selectedItem = item;
-        });
+        if (options.list)
+            options.list.forEach( item => {
+                if (item.id == value)
+                    selectedItem = item;
+            });
 
         if (selectedItem){
             this.empty();
@@ -72975,9 +72979,10 @@ options
             selectedId = options.selectedId,
             list       = $.extend(true, {}, options).list;
 
-        list.forEach(function(item){
-            item.selected = item.id ? item.id == selectedId : false;
-        });
+        if (list)
+            list.forEach( item => {
+                item.selected = item.id ? item.id == selectedId : false;
+            });
 
         $selectButton_Modal = $.bsModal({
             noHeader    : true,
@@ -73054,6 +73059,7 @@ options
 
         $result.data('radioGroup', radioGroup);
 
+        options.list = options.list || [];
         options.list.forEach( itemOptions => {
             const isItem = (itemOptions.id != undefined);
             let $item;
@@ -73566,15 +73572,16 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
 
         setState: function( columnState ){
-            columnState.forEach( stateOptions => {
-                let col = this._getColumn( stateOptions.id );
-                if (col){
-                    ['hidden', 'minimizable', 'minimized', 'sortable'].forEach( id => col[id] = stateOptions[id] );
+            if (columnState)
+                columnState.forEach( stateOptions => {
+                    let col = this._getColumn( stateOptions.id );
+                    if (col){
+                        ['hidden', 'minimizable', 'minimized', 'sortable'].forEach( id => col[id] = stateOptions[id] );
 
-                    if (stateOptions.sortBy)
-                        this.sortBy(col.index, stateOptions.sortBy);
-                }
-            }, this);
+                        if (stateOptions.sortBy)
+                            this.sortBy(col.index, stateOptions.sortBy);
+                    }
+                }, this);
 
             this._toggleAllColumns();
 
@@ -73820,27 +73827,33 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             }
 
             if (titlePost){
-                let title = {};
-                if (columnOptions.header){
-                    /*
-                    header = STRING
-                    header = {text: STRING}
-                    header = {text: {da:, en:STRING}
-                    */
+                let title = {},
+                    titleFound = false;
 
-
-                    if (typeof columnOptions.header == 'string')
-                        title.da = columnOptions.header;
-                    else
-                        if (columnOptions.header.text){
-                            if (typeof columnOptions.header.text == 'string')
-                                title.da = columnOptions.header.text;
+                [columnOptions.title, columnOptions.header].forEach( newTitle => {
+                    if (newTitle && !titleFound){
+                        /*
+                        newTitle = STRING
+                        newTitle = {da:, en:STRING}
+                        newTitle = {text: STRING}
+                        newTitle = {text: {da:, en:STRING}}
+                        */
+                        titleFound = true;
+                        if (typeof newTitle == 'string')
+                            title.da = newTitle;
+                        else
+                            if (newTitle.text){
+                                if (typeof newTitle.text == 'string')
+                                    title.da = newTitle.text;
+                                else
+                                    title = $.extend({}, newTitle.text);
+                            }
                             else
-                                title = $.extend({}, columnOptions.header.text);
-                        }
+                                title = $.extend({}, newTitle);
 
-                    title = $._bsAdjustText(title);
-                }
+                        title = $._bsAdjustText(title);
+                    }
+                });
 
                 $.each( titlePost, (lang, text) => {
                     title[lang] = (title[lang] || '') + ' ' + text;
@@ -73871,7 +73884,6 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         $table.columns = options.columns;
         $table.columnIds = columnIds;
 
-//HER           $table.bsTable = this;
         $table.bsTableOptions = options;
 
         //Create colgroup
@@ -74073,7 +74085,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         if (options.height)
             $contents.height( options.height );
 
-
+        options.list = options.list || [];
         options.list.forEach( ( opt, index ) => {
             opt = $._bsAdjustOptions( opt );
             var tabId = options.id || id + 'tab' + index,
