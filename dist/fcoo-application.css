@@ -1410,6 +1410,25 @@ Special class for buttons in reset-list
 }
 
 /*****************************************************
+Info on Saved Settings
+*****************************************************/
+table.saved-setting {
+  margin-top: 0.5em !important;
+  margin: auto;
+}
+table.saved-setting tr:first-child td {
+  padding-bottom: 0.5em;
+}
+table.saved-setting td:first-child {
+  text-align: right;
+  padding-right: 0.5em;
+}
+table.saved-setting td:last-child {
+  text-align: left;
+  font-weight: bold;
+}
+
+/*****************************************************
 Special adjustments and bug fix
 *****************************************************/
 /* Both jquery-bootstrap and fcoo-fontawesome has

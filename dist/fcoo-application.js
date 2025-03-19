@@ -4882,17 +4882,17 @@ Methods for loading and saving settings for the application
         /****************************************************
         asButtonList
         ****************************************************/
-        asButtonList: function(onlyWithEditCode, methodName){
+        asButtonList: function(options = {}/*{onlyWithEditCode, showShareCode, methodName}*/ ){
             let result = [];
 
             this.list.forEach( (savedSetting, index) => {
-                if (!onlyWithEditCode || savedSetting.options.edit_code){
-                    let item = savedSetting.listContent();
+                if (!options.onlyWithEditCode || savedSetting.options.edit_code){
+                    let item = savedSetting.listContent(options.showShareCode);
 
-                    if (methodName)
+                    if (options.methodName)
                         item.onClick = () => {
                             this._sssModal_close();
-                            this.list[index][methodName]();
+                            this.list[index][options.methodName]();
                         };
                     result.push(item);
                 }
@@ -4913,6 +4913,7 @@ Methods for loading and saving settings for the application
         selectSavedSetting: function(options){
             let buttonList = [];
 
+
             //Use current settings
             if (options.currentText)
                 buttonList.push({
@@ -4920,7 +4921,7 @@ Methods for loading and saving settings for the application
                     icon    : 'fa-file',
                     text    : options.currentText,
                     primary : true,
-                    //subtext : '&nbsp;',
+                    small   : true,
                     onClick : function(){
                         this._sssModal_close();
                         var newSavedSetting = new ns.SavedSetting({}, ns.savedSettingList);
@@ -4929,17 +4930,21 @@ Methods for loading and saving settings for the application
                 });
 
             //Last used setting
-            if (this.lastLoadedSavedSetting && options.inclLast && options.inclLast(this.lastLoadedSavedSetting, options))
+            if (this.lastLoadedSavedSetting && options.inclLast && options.inclLast(this.lastLoadedSavedSetting, options)){
+                let content = this.lastLoadedSavedSetting.listContent(options.showShareCode),
+                    text    = content.text.trim();
                 buttonList.push({
                     id      : 'LAST',
                     icon    : 'fal fa-browser',
                     text    : options.lastText,
-                    subtext : 'id ' + ns.ss_db2displayFormat(this.lastLoadedSavedSetting.options.edit_code),
+                    subtext : (text ? text + '<br>' : '') + (window.bsIsTouch ? '<span style="font-size:smaller">' : '') + content.subtext + (window.bsIsTouch ? '</span>' : ''),
+                    small   : true,
                     onClick : function(){
                         this._sssModal_close();
                         this.lastLoadedSavedSetting[options.methodName]();
                     }.bind(this)
                 });
+            }
 
             //List of aved setttings
             if (this.list.length)
@@ -4948,11 +4953,12 @@ Methods for loading and saving settings for the application
                     icon    : 'fa-table-list',
                     text    : options.otherText,
                     subtext : {da: '(En anden tidligere gemt opsætning)', en:'(Another previous saved setting)'},
+                    small   : true,
                     onClick : this.selectSavedSettingFromList.bind(this, options)
                 });
 
             buttonList.forEach( opt => {
-                $.extend(opt, {type: 'bigiconbutton', big: true, closeOnClick: false});
+                $.extend(opt, {type: 'bigiconbutton', big: true, bold: false, closeOnClick: false});
 
             });
 
@@ -4979,7 +4985,7 @@ Methods for loading and saving settings for the application
         selectSavedSettingFromList: function(options){
             this._sssModal_close();
 
-            let buttonList = this.asButtonList(options.onlyWithEditCode, options.methodName);
+            let buttonList = this.asButtonList(options);
 
             this.$sssModal = $.bsModal({
                 show       : true,
@@ -5043,7 +5049,7 @@ Methods for loading and saving settings for the application
             this._sssModal_close();
             this.notyOnDeleteStandard = null;
 
-            let buttonList = this.asButtonList(options.onlyWithEditCode, 'editDescription');
+            let buttonList = this.asButtonList({onlyWithEditCode: options.onlyWithEditCode, methodName:'editDescription'});
 
             //Marks all saved items with save- og standard setting-icon
             let sss         = this.getStandardSavedSetting(),
@@ -5123,8 +5129,8 @@ Methods for loading and saving settings for the application
                 list.unshift({_icon: 'fa-list', text: {da: 'eller vælg en gemt opsætning...', en: 'or select saved setting...'}});
 
             list.unshift(
-                {id:'EMPTY',   icon: 'fa-rectangle fa-lg',                            text: {da: 'Ingen (TEKST MANGLER)',             en: 'Nothing (TEXT MISSING)'},          subtext: {da: '(TEKST MANGLER)', en: '(TEXT MISSING)'} },  //MANGLER
-                {id:'DEFAULT', icon: 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/, text: {da: 'Forrige opsætning (TEKST MANGLER)', en: 'Previous setting (TEXT MISSING)'}, subtext: {da: '(TEKST MANGLER)', en: '(TEXT MISSING)'} }   //MANGLER
+                {id:'EMPTY',   icon: 'fa-rectangle fa-lg',                            text: {da: '*** Ingen (TEKST MANGLER) ***',             en: '*** Nothing (TEXT MISSING) ***'},          subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ****'} },  //MANGLER
+                {id:'DEFAULT', icon: 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/, text: {da: '*** Forrige opsætning (TEKST MANGLER) ***', en: '*** Previous setting (TEXT MISSING) ***'}, subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ***'} }   //MANGLER
             );
 
             return [{
@@ -5233,6 +5239,7 @@ Methods for loading and saving settings for the application
             otherText   : {da: 'Del...', en: 'Share...'},
 
             onlyWithEditCode: true,
+            showShareCode   : true,
             methodNameNew   : 'share_new',
             methodName      : 'share'
         });
@@ -5298,7 +5305,13 @@ Når du gemmer din opsætning, får du to forskellige koder:
             '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
         ].join(''),
         en: [
-            'TODO',
+            '*** MANGLER ENGELSK VERSION ***',
+            'Når du gemmer din opsætning, får du to forskellige koder:<br>',
+            '<b>Redigeringskode (starter med "edit-")</b>',
+            '<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>',
+            '<b>Delingskode (starter med "share-")</b>',
+            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul><br>',
+            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
         ].join('<br>'),
     };
 
@@ -5617,21 +5630,13 @@ Når du gemmer din opsætning, får du to forskellige koder:
             this.savedSettingList.add( this );
 
             //Show modal with info
-/*
-
-Når du gemmer din opsætning, får du to forskellige koder:
-<b>Redigeringskode (starter med 'w')</b>
-<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>
-<b>Delingskode (starter med 'r')</b>
-<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>
-<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>
-*/
             let appNameAsText = ns.ss_getAppHeader(),
                 appName = i18next.sentence( ns.ss_getAppHeader() ),
                 displayEditCode = ns.ss_db2displayFormat(this.options.edit_code),
                 displayShareCode = ns.ss_db2displayFormat(this.options.share_code);
 
-            let url = ns.applicationUrl + '?id=' + displayEditCode; //displayShareCode;
+            let url = ns.applicationUrl + '?id=' + displayEditCode;
+
             let accordionList = [{
                 icon: 'fa-home',
                 text: {da:'Redigerings- og Delingskode', en: 'Edit and Share code'},
@@ -5640,16 +5645,24 @@ Når du gemmer din opsætning, får du to forskellige koder:
                     center: true,
                     noBorder: true,
                     text: {
-                        da: 'Aktuel opsætning af <em>'+ appNameAsText.da +'</em> er blevet gemt med<br>&nbsp;<br><b>Redigeringskode = ' +
-                            displayEditCode + '</b><br>&nbsp;<br><b>Delingskode = ' + displayShareCode + '</b>',
-                        en: 'Current setting of <em>'+ appNameAsText.da +'</em> has been saved with<br><b>editing code = ' + displayEditCode+'</b>'
+                        da: `Aktuel opsætning af <em>${appNameAsText.da}</em> er blevet gemt med<br>
+                            <table class="saved-setting">
+                                <tr><td>Redigeringskode =</td><td>${displayEditCode}</td></tr>
+                                <tr><td>Delingskode =</td><td>${displayShareCode}</td></tr>
+                            </table>`,
+
+                        en: `Current setting of <em>${appNameAsText.en}</em> has been saved with<br>
+                            <table class="saved-setting">
+                                <tr><td>Edit code =</td><td>${displayEditCode}</td></tr>
+                                <tr><td>Share code =</td><td>${displayShareCode}</td></tr>
+                            </table>`
                     }
                 }
 
             }, {
 
                 icon: 'fa-link',
-                text: {da:'Link', en:'Link'},
+                text: {da:'Link (Redigeringskode)', en:'Link (Edit code)'},
                 content: {
                     type: 'text',
                     center: true,
@@ -5783,13 +5796,14 @@ Når du gemmer din opsætning, får du to forskellige koder:
         /*************************************************
         listContent
         *************************************************/
-        listContent: function(){
-            let o = this.options,
-                id = o.edit_code || o.share_code,
+        listContent: function(showShareCode){
+            let o   = this.options,
+                id  = o.edit_code || o.share_code,
+                dId = showShareCode ? o.share_code : id,
                 result = {
                     id      : id,
                     text    : o.desc || '&nbsp;',
-                    subtext : 'id ' + ns.ss_db2displayFormat(id),
+                    subtext : 'id ' + ns.ss_db2displayFormat(dId),
                     type    : 'bigiconbutton',
                     //big     : true
                 };
@@ -5853,6 +5867,34 @@ Når du gemmer din opsætning, får du to forskellige koder:
         /*************************************************
         share
         *************************************************/
+        share: function(/*options*/){
+            let appName = i18next.sentence( ns.ss_getAppHeader() ),
+                displayShareCode = ns.ss_db2displayFormat(this.options.share_code),
+                url = ns.applicationUrl + '?id='+displayShareCode,
+                desc = this.options.desc.trim();
+            desc = desc ? ' "' + desc + '"' : '';
+
+            $.bsModal({
+                header  : {icon: 'fa-share-alt',  text: {da: 'Del'+desc, en: 'Share'+desc}},
+                onInfo  : this.showInfo.bind(this),
+                content : {
+                    type  : 'box',
+                    center: true,
+                    text  : '<b>' + appName + '</b><br>' + url
+                },
+                buttons  : [
+//HER                       ns.clipboard.bsButton_copyToClipboard( url,                {text: {da:'Kopier link',          en: 'Copy link'},          what : {da:'Linket',        en: 'The link'}          }),
+//HER                       ns.clipboard.bsButton_copyToClipboard( appName+'\n' + url, {text: {da:'Kopier tekst og link', en: 'Copy text and link'}, what : {da:'Tekst og link', en: 'The text and link'} }),
+                    ns.clipboard.bsButton_copyToClipboard( url,                {text: {da:'Link',          en: 'Link'},          what : {da:'Linket',        en: 'The link'}          }),
+                    ns.clipboard.bsButton_copyToClipboard( appName+'\n' + url, {text: {da:'Tekst og link', en: 'Text and link'}, what : {da:'Tekst og link', en: 'The text and link'} }),
+                ],
+                show    : true,
+                remove  : true
+            });
+
+        },
+
+        /* SM removed
         socialMedia: [
             {id: 'facebook',  sharerId:'', icon: 'fa-facebook',  name: 'Facebook',    color: '#1877f2'},
             //{id: 'instagram', sharerId:'', icon: 'fa-instagram', name: 'Instagram',   color: '#c32aa3'},
@@ -5863,8 +5905,7 @@ Når du gemmer din opsætning, får du to forskellige koder:
             {id: 'twitter',   sharerId:'', icon: 'fa-twitter',   name: 'Twitter / X', color: '#1da1f2'},
         ],
 
-
-        share: function(/*options*/){
+        share: function(){
             let appName = i18next.sentence( ns.ss_getAppHeader() ),
                 displayShareCode = ns.ss_db2displayFormat(this.options.share_code),
                 url = ns.applicationUrl + '?id='+displayShareCode;
@@ -5926,7 +5967,6 @@ Når du gemmer din opsætning, får du to forskellige koder:
             }
             //************************************************
 
-
             //Share by mail
             accordionList.push({
                 icon    :   'fa-envelope',
@@ -5966,7 +6006,7 @@ Når du gemmer din opsætning, får du to forskellige koder:
 
             window.Sharer.init();
         },
-
+        */
 
         share_new: function(){
             this.setSettings(true);

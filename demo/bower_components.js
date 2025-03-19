@@ -54037,78 +54037,85 @@ if (typeof define === 'function' && define.amd) {
 }(jQuery, window.Hammer));
 ;
 /*!
- * jQuery Mousewheel 3.1.13
- *
- * Copyright jQuery Foundation and other contributors
- * Released under the MIT license
- * http://jquery.org/license
+ * jQuery Mousewheel 3.2.2
+ * Copyright OpenJS Foundation and other contributors
  */
 
-(function (factory) {
-    if ( typeof define === 'function' && define.amd ) {
+( function( factory ) {
+    "use strict";
+
+    if ( typeof define === "function" && define.amd ) {
+
         // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof exports === 'object') {
+        define( [ "jquery" ], factory );
+    } else if ( typeof exports === "object" ) {
+
         // Node/CommonJS style for Browserify
         module.exports = factory;
     } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
 
-    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
-        toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
-                    ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
-        slice  = Array.prototype.slice,
-        nullLowestDeltaTimeout, lowestDelta;
+        // Browser globals
+        factory( jQuery );
+    }
+} )( function( $ ) {
+    "use strict";
+
+    var nullLowestDeltaTimeout, lowestDelta,
+        modernEvents = !!$.fn.on,
+        toFix  = [ "wheel", "mousewheel", "DOMMouseScroll", "MozMousePixelScroll" ],
+        toBind = ( "onwheel" in window.document || window.document.documentMode >= 9 ) ?
+            [ "wheel" ] : [ "mousewheel", "DomMouseScroll", "MozMousePixelScroll" ],
+        slice  = Array.prototype.slice;
 
     if ( $.event.fixHooks ) {
         for ( var i = toFix.length; i; ) {
-            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
+            $.event.fixHooks[ toFix[ --i ] ] = $.event.mouseHooks;
         }
     }
 
     var special = $.event.special.mousewheel = {
-        version: '3.1.12',
+        version: "3.2.2",
 
         setup: function() {
             if ( this.addEventListener ) {
                 for ( var i = toBind.length; i; ) {
-                    this.addEventListener( toBind[--i], handler, false );
+                    this.addEventListener( toBind[ --i ], handler, false );
                 }
             } else {
                 this.onmousewheel = handler;
             }
+
             // Store the line height and page height for this particular element
-            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
-            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
+            $.data( this, "mousewheel-line-height", special.getLineHeight( this ) );
+            $.data( this, "mousewheel-page-height", special.getPageHeight( this ) );
         },
 
         teardown: function() {
             if ( this.removeEventListener ) {
                 for ( var i = toBind.length; i; ) {
-                    this.removeEventListener( toBind[--i], handler, false );
+                    this.removeEventListener( toBind[ --i ], handler, false );
                 }
             } else {
                 this.onmousewheel = null;
             }
+
             // Clean up the data we added to the element
-            $.removeData(this, 'mousewheel-line-height');
-            $.removeData(this, 'mousewheel-page-height');
+            $.removeData( this, "mousewheel-line-height" );
+            $.removeData( this, "mousewheel-page-height" );
         },
 
-        getLineHeight: function(elem) {
-            var $elem = $(elem),
-                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
-            if (!$parent.length) {
-                $parent = $('body');
+        getLineHeight: function( elem ) {
+            var $elem = $( elem ),
+                $parent = $elem[ "offsetParent" in $.fn ? "offsetParent" : "parent" ]();
+            if ( !$parent.length ) {
+                $parent = $( "body" );
             }
-            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
+            return parseInt( $parent.css( "fontSize" ), 10 ) ||
+                parseInt( $elem.css( "fontSize" ), 10 ) || 16;
         },
 
-        getPageHeight: function(elem) {
-            return $(elem).height();
+        getPageHeight: function( elem ) {
+            return $( elem ).height();
         },
 
         settings: {
@@ -54117,56 +54124,68 @@ if (typeof define === 'function' && define.amd) {
         }
     };
 
-    $.fn.extend({
-        mousewheel: function(fn) {
-            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
+    $.fn.extend( {
+        mousewheel: function( fn ) {
+            return fn ?
+                this[ modernEvents ? "on" : "bind" ]( "mousewheel", fn ) :
+                this.trigger( "mousewheel" );
         },
 
-        unmousewheel: function(fn) {
-            return this.unbind('mousewheel', fn);
+        unmousewheel: function( fn ) {
+            return this[ modernEvents ? "off" : "unbind" ]( "mousewheel", fn );
         }
-    });
+    } );
 
 
-    function handler(event) {
+    function handler( event ) {
         var orgEvent   = event || window.event,
-            args       = slice.call(arguments, 1),
+            args       = slice.call( arguments, 1 ),
             delta      = 0,
             deltaX     = 0,
             deltaY     = 0,
-            absDelta   = 0,
-            offsetX    = 0,
-            offsetY    = 0;
-        event = $.event.fix(orgEvent);
-        event.type = 'mousewheel';
+            absDelta   = 0;
+        event = $.event.fix( orgEvent );
+        event.type = "mousewheel";
 
         // Old school scrollwheel delta
-        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
-        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
-        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
-        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
+        if ( "detail" in orgEvent ) {
+            deltaY = orgEvent.detail * -1;
+        }
+        if ( "wheelDelta" in orgEvent ) {
+            deltaY = orgEvent.wheelDelta;
+        }
+        if ( "wheelDeltaY" in orgEvent ) {
+            deltaY = orgEvent.wheelDeltaY;
+        }
+        if ( "wheelDeltaX" in orgEvent ) {
+            deltaX = orgEvent.wheelDeltaX * -1;
+        }
 
         // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
-        if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
+        if ( "axis" in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
             deltaX = deltaY * -1;
             deltaY = 0;
         }
 
-        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
+        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatability
         delta = deltaY === 0 ? deltaX : deltaY;
 
         // New school wheel delta (wheel event)
-        if ( 'deltaY' in orgEvent ) {
+        if ( "deltaY" in orgEvent ) {
             deltaY = orgEvent.deltaY * -1;
             delta  = deltaY;
         }
-        if ( 'deltaX' in orgEvent ) {
+        if ( "deltaX" in orgEvent ) {
             deltaX = orgEvent.deltaX;
-            if ( deltaY === 0 ) { delta  = deltaX * -1; }
+            if ( deltaY === 0 ) {
+                delta  = deltaX * -1;
+            }
         }
 
         // No change actually happened, no reason to go any further
-        if ( deltaY === 0 && deltaX === 0 ) { return; }
+        if ( deltaY === 0 && deltaX === 0 ) {
+            return;
+        }
 
         // Need to convert lines and pages to pixels if we aren't already in pixels
         // There are three delta modes:
@@ -54174,31 +54193,32 @@ if (typeof define === 'function' && define.amd) {
         //   * deltaMode 1 is by lines
         //   * deltaMode 2 is by pages
         if ( orgEvent.deltaMode === 1 ) {
-            var lineHeight = $.data(this, 'mousewheel-line-height');
+            var lineHeight = $.data( this, "mousewheel-line-height" );
             delta  *= lineHeight;
             deltaY *= lineHeight;
             deltaX *= lineHeight;
         } else if ( orgEvent.deltaMode === 2 ) {
-            var pageHeight = $.data(this, 'mousewheel-page-height');
+            var pageHeight = $.data( this, "mousewheel-page-height" );
             delta  *= pageHeight;
             deltaY *= pageHeight;
             deltaX *= pageHeight;
         }
 
         // Store lowest absolute delta to normalize the delta values
-        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
+        absDelta = Math.max( Math.abs( deltaY ), Math.abs( deltaX ) );
 
         if ( !lowestDelta || absDelta < lowestDelta ) {
             lowestDelta = absDelta;
 
             // Adjust older deltas if necessary
-            if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+            if ( shouldAdjustOldDeltas( orgEvent, absDelta ) ) {
                 lowestDelta /= 40;
             }
         }
 
         // Adjust older deltas if necessary
-        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+        if ( shouldAdjustOldDeltas( orgEvent, absDelta ) ) {
+
             // Divide all the things by 40!
             delta  /= 40;
             deltaX /= 40;
@@ -54206,57 +54226,58 @@ if (typeof define === 'function' && define.amd) {
         }
 
         // Get a whole, normalized value for the deltas
-        delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
-        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
-        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
+        delta  = Math[ delta  >= 1 ? "floor" : "ceil" ]( delta  / lowestDelta );
+        deltaX = Math[ deltaX >= 1 ? "floor" : "ceil" ]( deltaX / lowestDelta );
+        deltaY = Math[ deltaY >= 1 ? "floor" : "ceil" ]( deltaY / lowestDelta );
 
         // Normalise offsetX and offsetY properties
         if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
             var boundingRect = this.getBoundingClientRect();
-            offsetX = event.clientX - boundingRect.left;
-            offsetY = event.clientY - boundingRect.top;
+            event.offsetX = event.clientX - boundingRect.left;
+            event.offsetY = event.clientY - boundingRect.top;
         }
 
         // Add information to the event object
         event.deltaX = deltaX;
         event.deltaY = deltaY;
         event.deltaFactor = lowestDelta;
-        event.offsetX = offsetX;
-        event.offsetY = offsetY;
+
         // Go ahead and set deltaMode to 0 since we converted to pixels
         // Although this is a little odd since we overwrite the deltaX/Y
         // properties with normalized deltas.
         event.deltaMode = 0;
 
         // Add event and delta to the front of the arguments
-        args.unshift(event, delta, deltaX, deltaY);
+        args.unshift( event, delta, deltaX, deltaY );
 
-        // Clearout lowestDelta after sometime to better
+        // Clear out lowestDelta after sometime to better
         // handle multiple device types that give different
         // a different lowestDelta
         // Ex: trackpad = 3 and mouse wheel = 120
-        if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
-        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
+        if ( nullLowestDeltaTimeout ) {
+            window.clearTimeout( nullLowestDeltaTimeout );
+        }
+        nullLowestDeltaTimeout = window.setTimeout( function() {
+            lowestDelta = null;
+        }, 200 );
 
-        return ($.event.dispatch || $.event.handle).apply(this, args);
+        return ( $.event.dispatch || $.event.handle ).apply( this, args );
     }
 
-    function nullLowestDelta() {
-        lowestDelta = null;
-    }
+    function shouldAdjustOldDeltas( orgEvent, absDelta ) {
 
-    function shouldAdjustOldDeltas(orgEvent, absDelta) {
-        // If this is an older event and the delta is divisable by 120,
+        // If this is an older event and the delta is divisible by 120,
         // then we are assuming that the browser is treating this as an
         // older mouse wheel event and that we should divide the deltas
         // by 40 to try and get a more usable deltaFactor.
         // Side note, this actually impacts the reported scroll distance
         // in older browsers and can cause scrolling to be slower than native.
         // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
-        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+        return special.settings.adjustOldDeltas && orgEvent.type === "mousewheel" &&
+            absDelta % 120 === 0;
     }
 
-}));
+} );
 
 ;
 /****************************************************************************
@@ -60246,7 +60267,7 @@ See https://ilyashubin.github.io/scrollbooster/
 
 ;
 //! moment-timezone.js
-//! version : 0.5.46
+//! version : 0.5.47
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -60276,7 +60297,7 @@ See https://ilyashubin.github.io/scrollbooster/
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.46",
+	var VERSION = "0.5.47",
 		zones = {},
 		links = {},
 		countries = {},
@@ -60971,78 +60992,74 @@ See https://ilyashubin.github.io/scrollbooster/
 	}
 
 	loadData({
-		"version": "2024b",
+		"version": "2025a",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
 			"Africa/Nairobi|EAT|-30|0||47e5",
 			"Africa/Algiers|CET|-10|0||26e5",
 			"Africa/Lagos|WAT|-10|0||17e6",
 			"Africa/Khartoum|CAT|-20|0||51e5",
-			"Africa/Cairo|EET EEST|-20 -30|010101010101010|29NW0 1cL0 1cN0 1fz0 1a10 1fz0 1a10 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0|15e6",
-			"Africa/Casablanca|+01 +00|-10 0|010101010101010101010101|208q0 e00 2600 gM0 2600 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0 2600 e00 2600|32e5",
-			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|11e6",
+			"Africa/Cairo|EET EEST|-20 -30|01010101010101010|29NW0 1cL0 1cN0 1fz0 1a10 1fz0 1a10 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1fz0|15e6",
+			"Africa/Casablanca|+01 +00|-10 0|010101010101010101010101|22sq0 gM0 2600 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0 2600 e00 28M0 e00 2600 gM0 2600 e00 2600 gM0 2600|32e5",
+			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|11e6",
 			"Africa/Johannesburg|SAST|-20|0||84e5",
 			"Africa/Juba|EAT CAT|-30 -20|01|24nx0|",
-			"Africa/Sao_Tome|WAT GMT|-10 0|01|1XiN0|",
 			"Africa/Tripoli|EET|-20|0||11e5",
-			"America/Adak|HST HDT|a0 90|01010101010101010101010|1XKc0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|326",
-			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1XKb0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|30e4",
+			"America/Adak|HST HDT|a0 90|01010101010101010101010|22bM0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|326",
+			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|22bL0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|30e4",
 			"America/Santo_Domingo|AST|40|0||29e5",
-			"America/Fortaleza|-03|30|0||34e5",
-			"America/Asuncion|-03 -04|30 40|01010101010101010101010|1XPD0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1fB0 19X0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1ip0|28e5",
+			"America/Sao_Paulo|-03|30|0||20e6",
+			"America/Asuncion|-03 -04|30 40|01010101010|22hf0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1fB0 19X0 1ip0|28e5",
 			"America/Panama|EST|50|0||15e5",
-			"America/Mexico_City|CST CDT|60 50|010101010|1XVk0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|20e6",
+			"America/Mexico_City|CST CDT|60 50|0101010|22mU0 1lb0 14p0 1nX0 11B0 1nX0|20e6",
 			"America/Managua|CST|60|0||22e5",
 			"America/Caracas|-04|40|0||29e5",
 			"America/Lima|-05|50|0||11e6",
-			"America/Denver|MST MDT|70 60|01010101010101010101010|1XK90 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|26e5",
-			"America/Campo_Grande|-03 -04|30 40|01|1XBD0|77e4",
-			"America/Chicago|CST CDT|60 50|01010101010101010101010|1XK80 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|92e5",
-			"America/Chihuahua|MST MDT CST|70 60 60|010101012|1XVl0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|81e4",
-			"America/Ciudad_Juarez|MST MDT CST|70 60 60|010101012010101010101010|1XK90 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 cm0 EP0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|",
+			"America/Denver|MST MDT|70 60|01010101010101010101010|22bJ0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|26e5",
+			"America/Chicago|CST CDT|60 50|01010101010101010101010|22bI0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|92e5",
+			"America/Chihuahua|MST MDT CST|70 60 60|0101012|22mV0 1lb0 14p0 1nX0 11B0 1nX0|81e4",
+			"America/Ciudad_Juarez|MST MDT CST|70 60 60|010101201010101010101010|22bJ0 1zb0 Rd0 1zb0 Op0 1wn0 cm0 EP0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|",
 			"America/Phoenix|MST|70|0||42e5",
-			"America/Whitehorse|PST PDT MST|80 70 70|01012|1XKa0 1zb0 Op0 1z90|23e3",
-			"America/New_York|EST EDT|50 40|01010101010101010101010|1XK70 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|21e6",
-			"America/Los_Angeles|PST PDT|80 70|01010101010101010101010|1XKa0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|15e6",
-			"America/Halifax|AST ADT|40 30|01010101010101010101010|1XK60 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|39e4",
-			"America/Godthab|-03 -02 -01|30 20 10|0101010101212121212121|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 2so0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|17e3",
-			"America/Havana|CST CDT|50 40|01010101010101010101010|1XK50 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0|21e5",
-			"America/Mazatlan|MST MDT|70 60|010101010|1XVl0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0|44e4",
-			"America/Metlakatla|PST AKST AKDT|80 90 80|012121212121212121212121|1Xqy0 jB0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|14e2",
-			"America/Miquelon|-03 -02|30 20|01010101010101010101010|1XK50 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|61e2",
+			"America/Whitehorse|PST PDT MST|80 70 70|012|22bK0 1z90|23e3",
+			"America/New_York|EST EDT|50 40|01010101010101010101010|22bH0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|21e6",
+			"America/Los_Angeles|PST PDT|80 70|01010101010101010101010|22bK0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|15e6",
+			"America/Halifax|AST ADT|40 30|01010101010101010101010|22bG0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|39e4",
+			"America/Godthab|-03 -02 -01|30 20 10|0101010121212121212121|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 2so0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|17e3",
+			"America/Havana|CST CDT|50 40|01010101010101010101010|22bF0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0|21e5",
+			"America/Mazatlan|MST MDT|70 60|0101010|22mV0 1lb0 14p0 1nX0 11B0 1nX0|44e4",
+			"America/Miquelon|-03 -02|30 20|01010101010101010101010|22bF0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|61e2",
 			"America/Noronha|-02|20|0||30e2",
-			"America/Ojinaga|MST MDT CST CDT|70 60 60 50|01010101232323232323232|1XK90 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1wn0 Rc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|23e3",
-			"America/Santiago|-03 -04|30 40|01010101010101010101010|1XVf0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0|62e5",
-			"America/Sao_Paulo|-02 -03|20 30|01|1XBC0|20e6",
-			"America/Scoresbysund|-01 +00 -02|10 0 20|0101010101020202020202|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 2pA0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|452",
-			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1XK5u 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0|11e4",
-			"Antarctica/Casey|+11 +08|-b0 -80|0101010101|1XME0 1kr0 12l0 1o01 14kX 1lf1 14kX 1lf1 13bX|10",
+			"America/Ojinaga|MST MDT CST CDT|70 60 60 50|01010123232323232323232|22bJ0 1zb0 Rd0 1zb0 Op0 1wn0 Rc0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|23e3",
+			"America/Santiago|-03 -04|30 40|01010101010101010101010|22mP0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0|62e5",
+			"America/Scoresbysund|-01 +00 -02|10 0 20|0101010102020202020202|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 2pA0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|452",
+			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|22bFu 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|11e4",
+			"Antarctica/Casey|+11 +08|-b0 -80|01010101|22bs0 1o01 14kX 1lf1 14kX 1lf1 13bX|10",
 			"Asia/Bangkok|+07|-70|0||15e6",
 			"Asia/Vladivostok|+10|-a0|0||60e4",
-			"Australia/Sydney|AEDT AEST|-b0 -a0|01010101010101010101010|1XV40 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0|40e5",
+			"Australia/Sydney|AEDT AEST|-b0 -a0|01010101010101010101010|22mE0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0|40e5",
 			"Asia/Tashkent|+05|-50|0||23e5",
-			"Pacific/Auckland|NZDT NZST|-d0 -c0|01010101010101010101010|1XV20 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0|14e5",
+			"Pacific/Auckland|NZDT NZST|-d0 -c0|01010101010101010101010|22mC0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00|14e5",
 			"Europe/Istanbul|+03|-30|0||13e6",
-			"Antarctica/Troll|+00 +02|0 -20|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|40",
+			"Antarctica/Troll|+00 +02|0 -20|01010101010101010101010|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|40",
 			"Antarctica/Vostok|+07 +05|-70 -50|01|2bnv0|25",
 			"Asia/Almaty|+06 +05|-60 -50|01|2bR60|15e5",
-			"Asia/Amman|EET EEST +03|-20 -30 -30|010101012|1XRy0 1o00 11A0 1qM0 WM0 1qM0 LA0 1C00|25e5",
+			"Asia/Amman|EET EEST +03|-20 -30 -30|0101012|22ja0 1qM0 WM0 1qM0 LA0 1C00|25e5",
 			"Asia/Kamchatka|+12|-c0|0||18e4",
 			"Asia/Dubai|+04|-40|0||39e5",
-			"Asia/Beirut|EET EEST|-20 -30|01010101010101010101010|1XSm0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|22e5",
+			"Asia/Beirut|EET EEST|-20 -30|01010101010101010101010|22jW0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0|22e5",
 			"Asia/Dhaka|+06|-60|0||16e6",
 			"Asia/Kuala_Lumpur|+08|-80|0||71e5",
 			"Asia/Kolkata|IST|-5u|0||15e6",
 			"Asia/Chita|+09|-90|0||33e4",
 			"Asia/Shanghai|CST|-80|0||23e6",
 			"Asia/Colombo|+0530|-5u|0||22e5",
-			"Asia/Damascus|EET EEST +03|-20 -30 -30|010101012|1XRy0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|26e5",
-			"Europe/Athens|EET EEST|-20 -30|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|35e5",
-			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1XRy0 1on0 11B0 1o00 11A0 1qo0 XA0 1qp0 1cN0 1cL0 1a10 1fz0 17d0 1in0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0|18e5",
+			"Asia/Damascus|EET EEST +03|-20 -30 -30|0101012|22ja0 1qL0 WN0 1qL0 WN0 1qL0|26e5",
+			"Europe/Athens|EET EEST|-20 -30|01010101010101010101010|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|35e5",
+			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|22jy0 1o00 11A0 1qo0 XA0 1qp0 1cN0 1cL0 1a10 1fz0 17d0 1in0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0|18e5",
 			"Asia/Hong_Kong|HKT|-80|0||73e5",
 			"Asia/Jakarta|WIB|-70|0||31e6",
 			"Asia/Jayapura|WIT|-90|0||26e4",
-			"Asia/Jerusalem|IST IDT|-20 -30|01010101010101010101010|1XRA0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0|81e4",
+			"Asia/Jerusalem|IST IDT|-20 -30|01010101010101010101010|22jc0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0|81e4",
 			"Asia/Kabul|+0430|-4u|0||46e5",
 			"Asia/Karachi|PKT|-50|0||24e6",
 			"Asia/Kathmandu|+0545|-5J|0||12e5",
@@ -61051,19 +61068,19 @@ See https://ilyashubin.github.io/scrollbooster/
 			"Asia/Manila|PST|-80|0||24e6",
 			"Asia/Seoul|KST|-90|0||23e6",
 			"Asia/Rangoon|+0630|-6u|0||48e5",
-			"Asia/Tehran|+0330 +0430|-3u -4u|010101010|1XOIu 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0|14e6",
+			"Asia/Tehran|+0330 +0430|-3u -4u|0101010|22gIu 1dz0 1cN0 1dz0 1cp0 1dz0|14e6",
 			"Asia/Tokyo|JST|-90|0||38e6",
-			"Atlantic/Azores|-01 +00|10 0|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|25e4",
-			"Europe/Lisbon|WET WEST|0 -10|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|27e5",
+			"Atlantic/Azores|-01 +00|10 0|01010101010101010101010|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|25e4",
+			"Europe/Lisbon|WET WEST|0 -10|01010101010101010101010|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|27e5",
 			"Atlantic/Cape_Verde|-01|10|0||50e4",
-			"Australia/Adelaide|ACDT ACST|-au -9u|01010101010101010101010|1XV4u 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0|11e5",
+			"Australia/Adelaide|ACDT ACST|-au -9u|01010101010101010101010|22mEu 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0|11e5",
 			"Australia/Brisbane|AEST|-a0|0||20e5",
 			"Australia/Darwin|ACST|-9u|0||12e4",
 			"Australia/Eucla|+0845|-8J|0||368",
-			"Australia/Lord_Howe|+11 +1030|-b0 -au|01010101010101010101010|1XV30 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1fzu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1fAu|347",
+			"Australia/Lord_Howe|+11 +1030|-b0 -au|01010101010101010101010|22mD0 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1fzu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu|347",
 			"Australia/Perth|AWST|-80|0||18e5",
-			"Pacific/Easter|-05 -06|50 60|01010101010101010101010|1XVf0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0|30e2",
-			"Europe/Dublin|GMT IST|0 -10|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|12e5",
+			"Pacific/Easter|-05 -06|50 60|01010101010101010101010|22mP0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0|30e2",
+			"Europe/Dublin|GMT IST|0 -10|01010101010101010101010|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|12e5",
 			"Etc/GMT-1|+01|-10|0||",
 			"Pacific/Tongatapu|+13|-d0|0||75e3",
 			"Pacific/Kiritimati|+14|-e0|0||51e2",
@@ -61076,18 +61093,18 @@ See https://ilyashubin.github.io/scrollbooster/
 			"Pacific/Pitcairn|-08|80|0||56",
 			"Pacific/Gambier|-09|90|0||125",
 			"Etc/UTC|UTC|0|0||",
-			"Europe/London|GMT BST|0 -10|01010101010101010101010|1XSp0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|10e6",
-			"Europe/Chisinau|EET EEST|-20 -30|01010101010101010101010|1XSo0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0|67e4",
+			"Europe/London|GMT BST|0 -10|01010101010101010101010|22k10 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|10e6",
+			"Europe/Chisinau|EET EEST|-20 -30|01010101010101010101010|22k00 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00|67e4",
 			"Europe/Moscow|MSK|-30|0||16e6",
 			"Europe/Volgograd|+04 MSK|-40 -30|01|249a0|10e5",
 			"Pacific/Honolulu|HST|a0|0||37e4",
-			"Pacific/Chatham|+1345 +1245|-dJ -cJ|01010101010101010101010|1XV20 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0|600",
-			"Pacific/Apia|+14 +13|-e0 -d0|010101|1XV20 1a00 1fA0 1a00 1fA0|37e3",
-			"Pacific/Fiji|+13 +12|-d0 -c0|010101|1Xnq0 20o0 pc0 2hc0 bc0|88e4",
+			"Pacific/Chatham|+1345 +1245|-dJ -cJ|01010101010101010101010|22mC0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1io0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00|600",
+			"Pacific/Apia|+14 +13|-e0 -d0|0101|22mC0 1a00 1fA0|37e3",
+			"Pacific/Fiji|+13 +12|-d0 -c0|0101|21N20 2hc0 bc0|88e4",
 			"Pacific/Guam|ChST|-a0|0||17e4",
 			"Pacific/Marquesas|-0930|9u|0||86e2",
 			"Pacific/Pago_Pago|SST|b0|0||37e2",
-			"Pacific/Norfolk|+11 +12|-b0 -c0|0101010101010101010101|219P0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0|25e4"
+			"Pacific/Norfolk|+12 +11|-c0 -b0|01010101010101010101010|22mD0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0|25e4"
 		],
 		"links": [
 			"Africa/Abidjan|Africa/Accra",
@@ -61101,6 +61118,7 @@ See https://ilyashubin.github.io/scrollbooster/
 			"Africa/Abidjan|Africa/Monrovia",
 			"Africa/Abidjan|Africa/Nouakchott",
 			"Africa/Abidjan|Africa/Ouagadougou",
+			"Africa/Abidjan|Africa/Sao_Tome",
 			"Africa/Abidjan|Africa/Timbuktu",
 			"Africa/Abidjan|America/Danmarkshavn",
 			"Africa/Abidjan|Atlantic/Reykjavik",
@@ -61155,12 +61173,14 @@ See https://ilyashubin.github.io/scrollbooster/
 			"America/Adak|America/Atka",
 			"America/Adak|US/Aleutian",
 			"America/Anchorage|America/Juneau",
+			"America/Anchorage|America/Metlakatla",
 			"America/Anchorage|America/Nome",
 			"America/Anchorage|America/Sitka",
 			"America/Anchorage|America/Yakutat",
 			"America/Anchorage|US/Alaska",
-			"America/Campo_Grande|America/Cuiaba",
 			"America/Caracas|America/Boa_Vista",
+			"America/Caracas|America/Campo_Grande",
+			"America/Caracas|America/Cuiaba",
 			"America/Caracas|America/Guyana",
 			"America/Caracas|America/La_Paz",
 			"America/Caracas|America/Manaus",
@@ -61193,39 +61213,6 @@ See https://ilyashubin.github.io/scrollbooster/
 			"America/Denver|MST7MDT",
 			"America/Denver|Navajo",
 			"America/Denver|US/Mountain",
-			"America/Fortaleza|America/Araguaina",
-			"America/Fortaleza|America/Argentina/Buenos_Aires",
-			"America/Fortaleza|America/Argentina/Catamarca",
-			"America/Fortaleza|America/Argentina/ComodRivadavia",
-			"America/Fortaleza|America/Argentina/Cordoba",
-			"America/Fortaleza|America/Argentina/Jujuy",
-			"America/Fortaleza|America/Argentina/La_Rioja",
-			"America/Fortaleza|America/Argentina/Mendoza",
-			"America/Fortaleza|America/Argentina/Rio_Gallegos",
-			"America/Fortaleza|America/Argentina/Salta",
-			"America/Fortaleza|America/Argentina/San_Juan",
-			"America/Fortaleza|America/Argentina/San_Luis",
-			"America/Fortaleza|America/Argentina/Tucuman",
-			"America/Fortaleza|America/Argentina/Ushuaia",
-			"America/Fortaleza|America/Bahia",
-			"America/Fortaleza|America/Belem",
-			"America/Fortaleza|America/Buenos_Aires",
-			"America/Fortaleza|America/Catamarca",
-			"America/Fortaleza|America/Cayenne",
-			"America/Fortaleza|America/Cordoba",
-			"America/Fortaleza|America/Jujuy",
-			"America/Fortaleza|America/Maceio",
-			"America/Fortaleza|America/Mendoza",
-			"America/Fortaleza|America/Montevideo",
-			"America/Fortaleza|America/Paramaribo",
-			"America/Fortaleza|America/Punta_Arenas",
-			"America/Fortaleza|America/Recife",
-			"America/Fortaleza|America/Rosario",
-			"America/Fortaleza|America/Santarem",
-			"America/Fortaleza|Antarctica/Palmer",
-			"America/Fortaleza|Antarctica/Rothera",
-			"America/Fortaleza|Atlantic/Stanley",
-			"America/Fortaleza|Etc/GMT+3",
 			"America/Godthab|America/Nuuk",
 			"America/Halifax|America/Glace_Bay",
 			"America/Halifax|America/Goose_Bay",
@@ -61328,7 +61315,41 @@ See https://ilyashubin.github.io/scrollbooster/
 			"America/Santo_Domingo|America/St_Vincent",
 			"America/Santo_Domingo|America/Tortola",
 			"America/Santo_Domingo|America/Virgin",
+			"America/Sao_Paulo|America/Araguaina",
+			"America/Sao_Paulo|America/Argentina/Buenos_Aires",
+			"America/Sao_Paulo|America/Argentina/Catamarca",
+			"America/Sao_Paulo|America/Argentina/ComodRivadavia",
+			"America/Sao_Paulo|America/Argentina/Cordoba",
+			"America/Sao_Paulo|America/Argentina/Jujuy",
+			"America/Sao_Paulo|America/Argentina/La_Rioja",
+			"America/Sao_Paulo|America/Argentina/Mendoza",
+			"America/Sao_Paulo|America/Argentina/Rio_Gallegos",
+			"America/Sao_Paulo|America/Argentina/Salta",
+			"America/Sao_Paulo|America/Argentina/San_Juan",
+			"America/Sao_Paulo|America/Argentina/San_Luis",
+			"America/Sao_Paulo|America/Argentina/Tucuman",
+			"America/Sao_Paulo|America/Argentina/Ushuaia",
+			"America/Sao_Paulo|America/Bahia",
+			"America/Sao_Paulo|America/Belem",
+			"America/Sao_Paulo|America/Buenos_Aires",
+			"America/Sao_Paulo|America/Catamarca",
+			"America/Sao_Paulo|America/Cayenne",
+			"America/Sao_Paulo|America/Cordoba",
+			"America/Sao_Paulo|America/Fortaleza",
+			"America/Sao_Paulo|America/Jujuy",
+			"America/Sao_Paulo|America/Maceio",
+			"America/Sao_Paulo|America/Mendoza",
+			"America/Sao_Paulo|America/Montevideo",
+			"America/Sao_Paulo|America/Paramaribo",
+			"America/Sao_Paulo|America/Punta_Arenas",
+			"America/Sao_Paulo|America/Recife",
+			"America/Sao_Paulo|America/Rosario",
+			"America/Sao_Paulo|America/Santarem",
+			"America/Sao_Paulo|Antarctica/Palmer",
+			"America/Sao_Paulo|Antarctica/Rothera",
+			"America/Sao_Paulo|Atlantic/Stanley",
 			"America/Sao_Paulo|Brazil/East",
+			"America/Sao_Paulo|Etc/GMT+3",
 			"America/St_Johns|Canada/Newfoundland",
 			"America/Whitehorse|America/Dawson",
 			"America/Whitehorse|Canada/Yukon",
@@ -61581,11 +61602,11 @@ See https://ilyashubin.github.io/scrollbooster/
 			"AL|Europe/Tirane",
 			"AM|Asia/Yerevan",
 			"AO|Africa/Lagos Africa/Luanda",
-			"AQ|Antarctica/Casey Antarctica/Davis Antarctica/Mawson Antarctica/Palmer Antarctica/Rothera Antarctica/Troll Antarctica/Vostok Pacific/Auckland Pacific/Port_Moresby Asia/Riyadh Antarctica/McMurdo Antarctica/DumontDUrville Antarctica/Syowa",
+			"AQ|Antarctica/Casey Antarctica/Davis Antarctica/Mawson Antarctica/Palmer Antarctica/Rothera Antarctica/Troll Antarctica/Vostok Pacific/Auckland Pacific/Port_Moresby Asia/Riyadh Asia/Singapore Antarctica/McMurdo Antarctica/DumontDUrville Antarctica/Syowa",
 			"AR|America/Argentina/Buenos_Aires America/Argentina/Cordoba America/Argentina/Salta America/Argentina/Jujuy America/Argentina/Tucuman America/Argentina/Catamarca America/Argentina/La_Rioja America/Argentina/San_Juan America/Argentina/Mendoza America/Argentina/San_Luis America/Argentina/Rio_Gallegos America/Argentina/Ushuaia",
 			"AS|Pacific/Pago_Pago",
 			"AT|Europe/Vienna",
-			"AU|Australia/Lord_Howe Antarctica/Macquarie Australia/Hobart Australia/Melbourne Australia/Sydney Australia/Broken_Hill Australia/Brisbane Australia/Lindeman Australia/Adelaide Australia/Darwin Australia/Perth Australia/Eucla",
+			"AU|Australia/Lord_Howe Antarctica/Macquarie Australia/Hobart Australia/Melbourne Australia/Sydney Australia/Broken_Hill Australia/Brisbane Australia/Lindeman Australia/Adelaide Australia/Darwin Australia/Perth Australia/Eucla Asia/Tokyo",
 			"AW|America/Puerto_Rico America/Aruba",
 			"AX|Europe/Helsinki Europe/Mariehamn",
 			"AZ|Asia/Baku",
@@ -66088,10 +66109,10 @@ module.exports = g;
 //# sourceMappingURL=noty.js.map
 ;
 /**
- *  PDFObject v2.3.0
+ *  PDFObject v2.3.1
  *  https://github.com/pipwerks/PDFObject
  *  @license
- *  Copyright (c) 2008-2024 Philip Hutchison
+ *  Copyright (c) 2008-2025 Philip Hutchison
  *  MIT-style license: http://pipwerks.mit-license.org/
  *  UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
  */
@@ -66119,7 +66140,7 @@ module.exports = g;
 
     if(typeof window === "undefined" || window.navigator === undefined || window.navigator.userAgent === undefined){ return false; }
 
-    let pdfobjectversion = "2.3.0";
+    let pdfobjectversion = "2.3.1";
     let win = window;
     let nav = win.navigator;
     let ua = nav.userAgent;
@@ -66129,9 +66150,9 @@ module.exports = g;
     let isModernBrowser = function (){
 
         /*
-           userAgent sniffing is not the ideal path, but most browsers revoked the ability to check navigator.mimeTypes 
+           userAgent sniffing is not the ideal path, but most browsers revoked the ability to check navigator.mimeTypes
            for security purposes. As of 2023, browsers have begun implementing navigator.pdfViewerEnabled, but older versions
-           do not have navigator.pdfViewerEnabled or the ability to check navigator.mimeTypes. We're left with basic browser 
+           do not have navigator.pdfViewerEnabled or the ability to check navigator.mimeTypes. We're left with basic browser
            sniffing and assumptions of PDF support based on browser vendor.
         */
 
@@ -66141,21 +66162,21 @@ module.exports = g;
         //Note that MS Edge opts to use a different PDF rendering engine. As of 2024, Edge uses a version of Adobe's Reader
         let isChromium = (win.chrome !== undefined);
 
-        //Safari on macOS has provided native PDF support since 2009. 
+        //Safari on macOS has provided native PDF support since 2009.
         //This code snippet also detects the DuckDuckGo browser, which uses Safari/Webkit under the hood.
         let isSafari = (win.safari !== undefined || (nav.vendor !== undefined && /Apple/.test(nav.vendor) && /Safari/.test(ua)));
 
         //Firefox has provided PDF support via PDFJS since 2013.
         let isFirefox = (win.Mozilla !== undefined || /irefox/.test(ua));
 
-        return isChromium || isSafari || isFirefox;  
+        return isChromium || isSafari || isFirefox;
 
     };
 
     /*
        Special handling for Internet Explorer 11.
        Check for ActiveX support, then whether "AcroPDF.PDF" or "PDF.PdfCtrl" are valid.
-       IE11 uses ActiveX for Adobe Reader and other PDF plugins, but window.ActiveXObject will evaluate to false. 
+       IE11 uses ActiveX for Adobe Reader and other PDF plugins, but window.ActiveXObject will evaluate to false.
        ("ActiveXObject" in window) evaluates to true.
        MS Edge does not support ActiveX so this test will evaluate false for MS Edge.
     */
@@ -66181,7 +66202,7 @@ module.exports = g;
 
         //As of June 2023, no mobile browsers properly support inline PDFs. If mobile, just say no.
         if(isMobileDevice){ return false; }
-        
+
         //Modern browsers began supporting navigator.pdfViewerEnabled in late 2022 and early 2023.
         let supportsPDFVE = (typeof nav.pdfViewerEnabled === "boolean");
 
@@ -66202,20 +66223,20 @@ module.exports = g;
         let prop;
         let paramArray = [];
         let fdf = "";
-        
-        //The comment, viewrect, and highlight parameters require page to be set first. 
+
+        //The comment, viewrect, and highlight parameters require page to be set first.
 
         //Check to ensure page is used if comment, viewrect, or highlight are specified
         if(pdfParams.comment || pdfParams.viewrect || pdfParams.highlight){
 
             if(!pdfParams.page){
-                
+
                 //If page is not set, use the first page
                 pdfParams.page = 1;
-                
+
                 //Inform user that page needs to be set properly
                 embedError("The comment, viewrect, and highlight parameters require a page parameter, but none was specified. Defaulting to page 1.");
-            
+
             }
 
         }
@@ -66231,7 +66252,7 @@ module.exports = g;
             fdf = pdfParams.fdf;
             delete pdfParams.fdf;
         }
-        
+
         //Add all other parameters, as needed
         if(pdfParams){
 
@@ -66314,7 +66335,7 @@ module.exports = g;
             xhr.onload = function() {
 
                 if (xhr.status === 200) {
- 
+
                     var blob = xhr.response;
                     var link = document.createElement('a');
                     link.innerText = "Download PDF";
@@ -66327,7 +66348,7 @@ module.exports = g;
             };
 
             xhr.send();
-            
+
         }
 
     };
@@ -66340,9 +66361,9 @@ module.exports = g;
 
         let source = url;
 
-        if(embedType === "pdfjs"){ 
+        if(embedType === "pdfjs"){
             //If PDFJS_URL already contains a ?, assume querystring is in place, and use an ampersand to append PDFJS's file parameter
-            let connector = (PDFJS_URL.indexOf("?") !== -1) ? "&" : "?"; 
+            let connector = (PDFJS_URL.indexOf("?") !== -1) ? "&" : "?";
             source = PDFJS_URL + connector + "file=" + encodeURIComponent(url) + pdfOpenFragment;
         } else {
             source += pdfOpenFragment;
@@ -66369,7 +66390,7 @@ module.exports = g;
                 style += "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
             }
 
-            el.style.cssText = style; 
+            el.style.cssText = style;
 
         }
 
@@ -66409,6 +66430,7 @@ module.exports = g;
         let targetNode = getTargetElement(selector);
         let pdfOpenFragment = "";
         let customAttribute = opt.customAttribute || {};
+        let fallbackFileNameForBase64 = opt.fallbackFileNameForBase64;
         let fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: [pdflink]</p>";
 
         //Ensure URL is available. If not, exit now.
@@ -66430,22 +66452,22 @@ module.exports = g;
         if(forcePDFJS && PDFJS_URL){
             return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute, PDFJS_URL);
         }
- 
+
         // --== Embed attempt #2 ==--
 
-        //Embed PDF if support is detected, or if this is a relatively modern browser 
+        //Embed PDF if support is detected, or if this is a relatively modern browser
         if(supportsPDFs){
             return generatePDFObjectMarkup("iframe", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute);
         }
-        
+
         // --== Embed attempt #3 ==--
-        
+
         //If everything else has failed and a PDFJS fallback is provided, try to use it
         if(PDFJS_URL){
             return generatePDFObjectMarkup("pdfjs", targetNode, url, pdfOpenFragment, width, height, id, title, omitInlineStyles, customAttribute, PDFJS_URL);
         }
-        
-        // --== PDF embed not supported! Use fallback ==-- 
+
+        // --== PDF embed not supported! Use fallback ==--
 
         //Display the fallback link if available
         if(fallbackLink){
@@ -66459,11 +66481,17 @@ module.exports = g;
             } else {
 
                 //If the PDF is a base64 string, convert it to a downloadable link
-                if(url.indexOf("data:application/pdf;base64") !== -1){
+                const match = url.match(/data:application\/pdf;(?:.*filename=([^;]+);)?.*base64,/i);
+                if(match){
+
+                    fallbackFileNameForBase64 =
+                        fallbackFileNameForBase64 // from options
+                        || match[1] // from data URI metadata
+                        || "file.pdf"; // default
 
                     //Asynchronously append the link to the targetNode
-                    convertBase64ToDownloadableLink(url, "file.pdf", targetNode, fallbackHTML_default);
-                
+                    convertBase64ToDownloadableLink(url, fallbackFileNameForBase64, targetNode, fallbackHTML_default);
+
                 } else {
 
                     //Use default fallback link
@@ -68224,67 +68252,65 @@ options
                 .appendTo($result);
         }
 
-        this.options.list.forEach( (item, index) => {
-            var active = index == 0;
+        if (this.options.list)
+            this.options.list.forEach( (item, index) => {
+                var active = index == 0;
 
-            item.index = index;
+                item.index = index;
 
-            if (multiItems)
-                $('<button type="button" data-bs-target="#' + id + '" data-bs-slide-to="' + index + '"></button>')
-                    .toggleClass('active', !!active)
-                        .appendTo($indicators);
+                if (multiItems)
+                    $('<button type="button" data-bs-target="#' + id + '" data-bs-slide-to="' + index + '"></button>')
+                        .toggleClass('active', !!active)
+                            .appendTo($indicators);
 
-            var $item = $('<div/>')
-                    .addClass('carousel-item')
-                    .toggleClass('active', !!active)
-                    .appendTo($inner),
+                var $item = $('<div/>')
+                        .addClass('carousel-item')
+                        .toggleClass('active', !!active)
+                        .appendTo($inner),
 
-                //The image
-                $img = $('<img src="' + item.url + '"/>')
-                    .addClass('d-block w-100')
-                    .appendTo($item);
-                if (options.innerHeight && options.fitHeight)
-                    $img.css('max-height', options.innerHeight);
-
-                //Find onClick (if any)
-                item.onClick =
-                    item.onClick ? item.onClick :
-                    item.defaultOnClick ? defaultOnClick :
-                    options.onClick ? options.onClick :
-                    options.defaultOnClick ? defaultOnClick : null;
-                if (item.onClick)
-                    $img
-                        .data('bsc-item-options', item)
-                        .attr('role', 'button')
-                        .on('click', item_onClick);
-
-
-
-            //Caption
-            if (item.icon || item.text || item.subIcon || item.subText){
-                var $caption = $('<div />')
-                        .addClass('carousel-caption _d-none')
-                        .addClass('_d-md-block')     //<= set when the capition is visible. MANGLER skal justeres!!!
+                    //The image
+                    $img = $('<img src="' + item.url + '"/>')
+                        .addClass('d-block w-100')
                         .appendTo($item);
+                    if (options.innerHeight && options.fitHeight)
+                        $img.css('max-height', options.innerHeight);
 
-                var $innerCation = $('<div/>')
-                        .addClass('carousel-caption-inner w-100 d-flex flex-column align-items-center')
-                        .appendTo($caption);
+                    //Find onClick (if any)
+                    item.onClick =
+                        item.onClick ? item.onClick :
+                        item.defaultOnClick ? defaultOnClick :
+                        options.onClick ? options.onClick :
+                        options.defaultOnClick ? defaultOnClick : null;
+                    if (item.onClick)
+                        $img
+                            .data('bsc-item-options', item)
+                            .attr('role', 'button')
+                            .on('click', item_onClick);
 
+                //Caption
+                if (item.icon || item.text || item.subIcon || item.subText){
+                    var $caption = $('<div />')
+                            .addClass('carousel-caption _d-none')
+                            .addClass('_d-md-block')     //<= set when the capition is visible. MANGLER skal justeres!!!
+                            .appendTo($item);
 
-                    if (item.icon || item.text)
-                        $('<div/>')
-                            .addClass('caption')
-                            ._bsAddHtml({icon: item.icon, text: item.text})
-                            .appendTo($innerCation);
+                    var $innerCation = $('<div/>')
+                            .addClass('carousel-caption-inner w-100 d-flex flex-column align-items-center')
+                            .appendTo($caption);
 
-                    if (item.subIcon || item.subText)
-                        $('<div/>')
-                            .addClass('caption caption-sm')
-                            ._bsAddHtml({icon: item.subIcon, text: item.subText})
-                            .appendTo($innerCation);
-            }
-        });
+                        if (item.icon || item.text)
+                            $('<div/>')
+                                .addClass('caption')
+                                ._bsAddHtml({icon: item.icon, text: item.text})
+                                .appendTo($innerCation);
+
+                        if (item.subIcon || item.subText)
+                            $('<div/>')
+                                .addClass('caption caption-sm')
+                                ._bsAddHtml({icon: item.subIcon, text: item.subText})
+                                .appendTo($innerCation);
+                }
+            });
 
         return $result;
     };
@@ -69766,19 +69792,20 @@ options
 
         //Update all items
         var $firstItem, $lastItem;
-        options.list.forEach( itemOptions => {
-            var $item  = itemOptions.$item,
-                hidden = !!itemOptions.hidden();
+        if (options.list)
+            options.list.forEach( itemOptions => {
+                var $item  = itemOptions.$item,
+                    hidden = !!itemOptions.hidden();
 
-            $item.removeClass('first last');
-            hidden ? $item.hide() : $item.show();
-            $item.toggleClass('disabled', !!itemOptions.disabled() );
+                $item.removeClass('first last');
+                hidden ? $item.hide() : $item.show();
+                $item.toggleClass('disabled', !!itemOptions.disabled() );
 
-            if (!hidden){
-                $firstItem = $firstItem || $item;
-                $lastItem = $item;
-            }
-        });
+                if (!hidden){
+                    $firstItem = $firstItem || $item;
+                    $lastItem = $item;
+                }
+            });
 
         if ($firstItem)
             $firstItem.addClass('first');
@@ -73250,7 +73277,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             useTouchSize        : true,
             defaultColumnOptions: {},
             rowClassName        : [],
-
+            columns             : [],
             stupidtable         : {}
         },
 
@@ -73770,7 +73797,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
         options.class =
             'jb-table ' +
-            (options.verticalBorder && !options.noBorder ? 'table-bordered ' : '' ) +
+            (options.verticalBorder && !options.noBorder ? 'table-bordered border-black ' : '' ) +
             (options.noBorder ? 'table-borderless ' : '' ) +
             (options.hoverRow ? 'table-hover ' : '' ) +
             (options.noPadding ? 'table-no-padding ' : '' ) +
@@ -73977,7 +74004,8 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         //Create tbody and all rows
         $table.append( $('<tbody/>') );
 
-        options.content.forEach( rowContent => $table.addRow( rowContent ) );
+        if (options.content)
+            options.content.forEach( rowContent => $table.addRow( rowContent ) );
 
         if (sortableTable){
             $table.stupidtable( options.stupidtable )

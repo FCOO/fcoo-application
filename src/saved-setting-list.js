@@ -342,17 +342,17 @@ Methods for loading and saving settings for the application
         /****************************************************
         asButtonList
         ****************************************************/
-        asButtonList: function(onlyWithEditCode, methodName){
+        asButtonList: function(options = {}/*{onlyWithEditCode, showShareCode, methodName}*/ ){
             let result = [];
 
             this.list.forEach( (savedSetting, index) => {
-                if (!onlyWithEditCode || savedSetting.options.edit_code){
-                    let item = savedSetting.listContent();
+                if (!options.onlyWithEditCode || savedSetting.options.edit_code){
+                    let item = savedSetting.listContent(options.showShareCode);
 
-                    if (methodName)
+                    if (options.methodName)
                         item.onClick = () => {
                             this._sssModal_close();
-                            this.list[index][methodName]();
+                            this.list[index][options.methodName]();
                         };
                     result.push(item);
                 }
@@ -373,6 +373,7 @@ Methods for loading and saving settings for the application
         selectSavedSetting: function(options){
             let buttonList = [];
 
+
             //Use current settings
             if (options.currentText)
                 buttonList.push({
@@ -380,7 +381,7 @@ Methods for loading and saving settings for the application
                     icon    : 'fa-file',
                     text    : options.currentText,
                     primary : true,
-                    //subtext : '&nbsp;',
+                    small   : true,
                     onClick : function(){
                         this._sssModal_close();
                         var newSavedSetting = new ns.SavedSetting({}, ns.savedSettingList);
@@ -389,17 +390,21 @@ Methods for loading and saving settings for the application
                 });
 
             //Last used setting
-            if (this.lastLoadedSavedSetting && options.inclLast && options.inclLast(this.lastLoadedSavedSetting, options))
+            if (this.lastLoadedSavedSetting && options.inclLast && options.inclLast(this.lastLoadedSavedSetting, options)){
+                let content = this.lastLoadedSavedSetting.listContent(options.showShareCode),
+                    text    = content.text.trim();
                 buttonList.push({
                     id      : 'LAST',
                     icon    : 'fal fa-browser',
                     text    : options.lastText,
-                    subtext : 'id ' + ns.ss_db2displayFormat(this.lastLoadedSavedSetting.options.edit_code),
+                    subtext : (text ? text + '<br>' : '') + (window.bsIsTouch ? '<span style="font-size:smaller">' : '') + content.subtext + (window.bsIsTouch ? '</span>' : ''),
+                    small   : true,
                     onClick : function(){
                         this._sssModal_close();
                         this.lastLoadedSavedSetting[options.methodName]();
                     }.bind(this)
                 });
+            }
 
             //List of aved setttings
             if (this.list.length)
@@ -408,11 +413,12 @@ Methods for loading and saving settings for the application
                     icon    : 'fa-table-list',
                     text    : options.otherText,
                     subtext : {da: '(En anden tidligere gemt opsætning)', en:'(Another previous saved setting)'},
+                    small   : true,
                     onClick : this.selectSavedSettingFromList.bind(this, options)
                 });
 
             buttonList.forEach( opt => {
-                $.extend(opt, {type: 'bigiconbutton', big: true, closeOnClick: false});
+                $.extend(opt, {type: 'bigiconbutton', big: true, bold: false, closeOnClick: false});
 
             });
 
@@ -439,7 +445,7 @@ Methods for loading and saving settings for the application
         selectSavedSettingFromList: function(options){
             this._sssModal_close();
 
-            let buttonList = this.asButtonList(options.onlyWithEditCode, options.methodName);
+            let buttonList = this.asButtonList(options);
 
             this.$sssModal = $.bsModal({
                 show       : true,
@@ -503,7 +509,7 @@ Methods for loading and saving settings for the application
             this._sssModal_close();
             this.notyOnDeleteStandard = null;
 
-            let buttonList = this.asButtonList(options.onlyWithEditCode, 'editDescription');
+            let buttonList = this.asButtonList({onlyWithEditCode: options.onlyWithEditCode, methodName:'editDescription'});
 
             //Marks all saved items with save- og standard setting-icon
             let sss         = this.getStandardSavedSetting(),
@@ -583,8 +589,8 @@ Methods for loading and saving settings for the application
                 list.unshift({_icon: 'fa-list', text: {da: 'eller vælg en gemt opsætning...', en: 'or select saved setting...'}});
 
             list.unshift(
-                {id:'EMPTY',   icon: 'fa-rectangle fa-lg',                            text: {da: 'Ingen (TEKST MANGLER)',             en: 'Nothing (TEXT MISSING)'},          subtext: {da: '(TEKST MANGLER)', en: '(TEXT MISSING)'} },  //MANGLER
-                {id:'DEFAULT', icon: 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/, text: {da: 'Forrige opsætning (TEKST MANGLER)', en: 'Previous setting (TEXT MISSING)'}, subtext: {da: '(TEKST MANGLER)', en: '(TEXT MISSING)'} }   //MANGLER
+                {id:'EMPTY',   icon: 'fa-rectangle fa-lg',                            text: {da: '*** Ingen (TEKST MANGLER) ***',             en: '*** Nothing (TEXT MISSING) ***'},          subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ****'} },  //MANGLER
+                {id:'DEFAULT', icon: 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/, text: {da: '*** Forrige opsætning (TEKST MANGLER) ***', en: '*** Previous setting (TEXT MISSING) ***'}, subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ***'} }   //MANGLER
             );
 
             return [{
@@ -693,6 +699,7 @@ Methods for loading and saving settings for the application
             otherText   : {da: 'Del...', en: 'Share...'},
 
             onlyWithEditCode: true,
+            showShareCode   : true,
             methodNameNew   : 'share_new',
             methodName      : 'share'
         });

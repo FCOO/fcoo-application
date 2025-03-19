@@ -123,6 +123,25 @@ Special class for buttons in reset-list
 }
 
 
+
+/*****************************************************
+Info on Saved Settings
+*****************************************************/
+table.saved-setting {
+    margin-top  : .5em !important;
+    margin      : auto;
+    tr:first-child td { padding-bottom: .5em}
+
+    td:first-child {
+        text-align   : right;
+        padding-right: .5em;
+    }
+    td:last-child {
+        text-align   : left;
+        font-weight  : bold;
+    }
+}
+
 /*****************************************************
 Special adjustments and bug fix
 *****************************************************/

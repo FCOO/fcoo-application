@@ -55,7 +55,13 @@ Når du gemmer din opsætning, får du to forskellige koder:
             '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
         ].join(''),
         en: [
-            'TODO',
+            '*** MANGLER ENGELSK VERSION ***',
+            'Når du gemmer din opsætning, får du to forskellige koder:<br>',
+            '<b>Redigeringskode (starter med "edit-")</b>',
+            '<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>',
+            '<b>Delingskode (starter med "share-")</b>',
+            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul><br>',
+            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
         ].join('<br>'),
     };
 
@@ -374,21 +380,13 @@ Når du gemmer din opsætning, får du to forskellige koder:
             this.savedSettingList.add( this );
 
             //Show modal with info
-/*
-
-Når du gemmer din opsætning, får du to forskellige koder:
-<b>Redigeringskode (starter med 'w')</b>
-<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>
-<b>Delingskode (starter med 'r')</b>
-<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>
-<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>
-*/
             let appNameAsText = ns.ss_getAppHeader(),
                 appName = i18next.sentence( ns.ss_getAppHeader() ),
                 displayEditCode = ns.ss_db2displayFormat(this.options.edit_code),
                 displayShareCode = ns.ss_db2displayFormat(this.options.share_code);
 
-            let url = ns.applicationUrl + '?id=' + displayEditCode; //displayShareCode;
+            let url = ns.applicationUrl + '?id=' + displayEditCode;
+
             let accordionList = [{
                 icon: 'fa-home',
                 text: {da:'Redigerings- og Delingskode', en: 'Edit and Share code'},
@@ -397,16 +395,24 @@ Når du gemmer din opsætning, får du to forskellige koder:
                     center: true,
                     noBorder: true,
                     text: {
-                        da: 'Aktuel opsætning af <em>'+ appNameAsText.da +'</em> er blevet gemt med<br>&nbsp;<br><b>Redigeringskode = ' +
-                            displayEditCode + '</b><br>&nbsp;<br><b>Delingskode = ' + displayShareCode + '</b>',
-                        en: 'Current setting of <em>'+ appNameAsText.da +'</em> has been saved with<br><b>editing code = ' + displayEditCode+'</b>'
+                        da: `Aktuel opsætning af <em>${appNameAsText.da}</em> er blevet gemt med<br>
+                            <table class="saved-setting">
+                                <tr><td>Redigeringskode =</td><td>${displayEditCode}</td></tr>
+                                <tr><td>Delingskode =</td><td>${displayShareCode}</td></tr>
+                            </table>`,
+
+                        en: `Current setting of <em>${appNameAsText.en}</em> has been saved with<br>
+                            <table class="saved-setting">
+                                <tr><td>Edit code =</td><td>${displayEditCode}</td></tr>
+                                <tr><td>Share code =</td><td>${displayShareCode}</td></tr>
+                            </table>`
                     }
                 }
 
             }, {
 
                 icon: 'fa-link',
-                text: {da:'Link', en:'Link'},
+                text: {da:'Link (Redigeringskode)', en:'Link (Edit code)'},
                 content: {
                     type: 'text',
                     center: true,
@@ -540,13 +546,14 @@ Når du gemmer din opsætning, får du to forskellige koder:
         /*************************************************
         listContent
         *************************************************/
-        listContent: function(){
-            let o = this.options,
-                id = o.edit_code || o.share_code,
+        listContent: function(showShareCode){
+            let o   = this.options,
+                id  = o.edit_code || o.share_code,
+                dId = showShareCode ? o.share_code : id,
                 result = {
                     id      : id,
                     text    : o.desc || '&nbsp;',
-                    subtext : 'id ' + ns.ss_db2displayFormat(id),
+                    subtext : 'id ' + ns.ss_db2displayFormat(dId),
                     type    : 'bigiconbutton',
                     //big     : true
                 };
@@ -610,6 +617,34 @@ Når du gemmer din opsætning, får du to forskellige koder:
         /*************************************************
         share
         *************************************************/
+        share: function(/*options*/){
+            let appName = i18next.sentence( ns.ss_getAppHeader() ),
+                displayShareCode = ns.ss_db2displayFormat(this.options.share_code),
+                url = ns.applicationUrl + '?id='+displayShareCode,
+                desc = this.options.desc.trim();
+            desc = desc ? ' "' + desc + '"' : '';
+
+            $.bsModal({
+                header  : {icon: 'fa-share-alt',  text: {da: 'Del'+desc, en: 'Share'+desc}},
+                onInfo  : this.showInfo.bind(this),
+                content : {
+                    type  : 'box',
+                    center: true,
+                    text  : '<b>' + appName + '</b><br>' + url
+                },
+                buttons  : [
+//HER                       ns.clipboard.bsButton_copyToClipboard( url,                {text: {da:'Kopier link',          en: 'Copy link'},          what : {da:'Linket',        en: 'The link'}          }),
+//HER                       ns.clipboard.bsButton_copyToClipboard( appName+'\n' + url, {text: {da:'Kopier tekst og link', en: 'Copy text and link'}, what : {da:'Tekst og link', en: 'The text and link'} }),
+                    ns.clipboard.bsButton_copyToClipboard( url,                {text: {da:'Link',          en: 'Link'},          what : {da:'Linket',        en: 'The link'}          }),
+                    ns.clipboard.bsButton_copyToClipboard( appName+'\n' + url, {text: {da:'Tekst og link', en: 'Text and link'}, what : {da:'Tekst og link', en: 'The text and link'} }),
+                ],
+                show    : true,
+                remove  : true
+            });
+
+        },
+
+        /* SM removed
         socialMedia: [
             {id: 'facebook',  sharerId:'', icon: 'fa-facebook',  name: 'Facebook',    color: '#1877f2'},
             //{id: 'instagram', sharerId:'', icon: 'fa-instagram', name: 'Instagram',   color: '#c32aa3'},
@@ -620,8 +655,7 @@ Når du gemmer din opsætning, får du to forskellige koder:
             {id: 'twitter',   sharerId:'', icon: 'fa-twitter',   name: 'Twitter / X', color: '#1da1f2'},
         ],
 
-
-        share: function(/*options*/){
+        share: function(){
             let appName = i18next.sentence( ns.ss_getAppHeader() ),
                 displayShareCode = ns.ss_db2displayFormat(this.options.share_code),
                 url = ns.applicationUrl + '?id='+displayShareCode;
@@ -683,7 +717,6 @@ Når du gemmer din opsætning, får du to forskellige koder:
             }
             //************************************************
 
-
             //Share by mail
             accordionList.push({
                 icon    :   'fa-envelope',
@@ -723,7 +756,7 @@ Når du gemmer din opsætning, får du to forskellige koder:
 
             window.Sharer.init();
         },
-
+        */
 
         share_new: function(){
             this.setSettings(true);

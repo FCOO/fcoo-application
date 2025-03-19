@@ -18,7 +18,7 @@
 
 ************************************************/
 /***********************************************
-    modernizr-mediaquery.scss, 
+    modernizr-mediaquery.scss,
 
     (c) 2015, FCOO
 
@@ -27,7 +27,7 @@
 
 ************************************************/
 /***********************************************
-    modernizr-mediaquery-variables.scss, 
+    modernizr-mediaquery-variables.scss,
 
     (c) 2015, FCOO
 
@@ -38,7 +38,7 @@
 
 ************************************************/
 /***********************************************
-    _modernizr-mediaquery-orientation_print.scss, 
+    _modernizr-mediaquery-orientation_print.scss,
 
     (c) 2015, FCOO
 
@@ -37500,6 +37500,10 @@ fixed-first-column-selected : First column when it is fixed and selected
 .table.jb-table.table-not-full-width {
   width: inherit !important;
 }
+.table.jb-table.table-bordered td, .table.jb-table.table-bordered th {
+  border-width: 1px !important;
+  border-color: black !important;
+}
 .table.jb-table thead tr {
   position: sticky;
   top: 0px;
@@ -38135,6 +38139,9 @@ Using Bootstrap Collapse to create accordion
 .accordion .accordion-button:not(.collapsed):not(.accordion-never-close):hover {
   color: var(--bs-accordion-active-btn-hover-color, var(--bs-accordion-active-btn-color));
   background-color: var(--bs-accordion-active-btn-hover-bg, var(--bs-accordion-active-btn-bg));
+}
+.accordion .accordion-button.collapsed:focus {
+  box-shadow: none;
 }
 .accordion .accordion-button span,
 .accordion .accordion-footer span {
