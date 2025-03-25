@@ -719,7 +719,7 @@ window.intervals.addInterval({
 
         var modals = [];
         [{
-                header: 'Flex-width (500px)', flexWidth: true, extraWidth: false
+                header: 'Flex-width (500px) + full-screen ', flexWidth: true, extraWidth: false, allowFullScreen: true,
             }, {
                 header: 'Extra-width (800px)', flexWidth: true, extraWidth: true
             }, {
@@ -745,6 +745,7 @@ window.intervals.addInterval({
                             megaWidth: options.megaWidth,
                             fullWidth: options.fullWidth,
                             maxWidth: options.maxWidth,
+                            allowFullScreen: options.allowFullScreen,
                             fullScreen: options.fullScreen,
                             fullScreenWithBorder: options.fullScreenWithBorder
                         })

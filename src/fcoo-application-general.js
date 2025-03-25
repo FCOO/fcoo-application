@@ -305,17 +305,19 @@ if (ns.DEV_VERSION)
         pin     : ['far fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
         unpin   : ['fas fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
     }, {
-        back    : icon_fa_prefix + 'arrow-left',
-        forward : icon_fa_prefix + 'arrow-right',
-        pin     : icon_fa_prefix + 'thumbtack fa-sm',
-        unpin   : icon_fa_prefix + 'thumbtack fa-sm',
-        extend  : icon_fa_prefix + 'square-plus',
-        diminish: icon_fa_prefix + 'square-minus',
-        new     : icon_fa_prefix + 'window-maximize',
-        warning : icon_fa_prefix + 'exclamation fa-size-15',
-        info    : icon_fa_prefix + 'info fa-sm',
-        help    : icon_fa_prefix + 'question fa-sm',
-        close   : icon_fa_prefix + 'xmark'
+        back            : icon_fa_prefix + 'arrow-left',
+        forward         : icon_fa_prefix + 'arrow-right',
+        pin             : icon_fa_prefix + 'thumbtack fa-sm',
+        unpin           : icon_fa_prefix + 'thumbtack fa-sm',
+        fullScreenOn    : icon_fa_prefix + 'expand',
+        fullScreenOff   : icon_fa_prefix + 'compress',
+        extend          : icon_fa_prefix + 'square-plus',
+        diminish        : icon_fa_prefix + 'square-minus',
+        new             : icon_fa_prefix + 'window-maximize',
+        warning         : icon_fa_prefix + 'exclamation fa-size-15',
+        info            : icon_fa_prefix + 'info fa-sm',
+        help            : icon_fa_prefix + 'question fa-sm',
+        close           : icon_fa_prefix + 'xmark'
     });
 
     //Set icon and name for different message type

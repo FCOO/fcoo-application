@@ -36,14 +36,6 @@ Methods for loading and saving settings for the application
         //OR return '<span class="text-nowrap">'+(emphasized ? '<em>' : '') + (lang == 'da' ?  appName_da : appName_en) + (emphasized ? '</em>' : '')+'</span>';
     };
 
-/*
-Når du gemmer din opsætning, får du to forskellige koder:
-<b>Redigeringskode (starter med 'w')</b>
-<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>
-<b>Delingskode (starter med 'r')</b>
-<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>
-<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>
-*/
 
     let description = {
         da: [
@@ -51,19 +43,19 @@ Når du gemmer din opsætning, får du to forskellige koder:
             '<b>Redigeringskode (starter med "edit-")</b>',
             '<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>',
             '<b>Delingskode (starter med "share-")</b>',
-            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul><br>',
-            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
-        ].join(''),
+            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>',
+            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere</em>'
+        ].join('<br>'),
         en: [
-            '*** MANGLER ENGELSK VERSION ***',
-            'Når du gemmer din opsætning, får du to forskellige koder:<br>',
-            '<b>Redigeringskode (starter med "edit-")</b>',
-            '<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>',
-            '<b>Delingskode (starter med "share-")</b>',
-            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul><br>',
-            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
+            'When you save your settings, you will receive two different codes:<br>',
+            '<b>Editing code (starts with "edit-")</b>',
+            '<ul><li>You can use this to open and modify the setting</li><li>Use this when you want to continue working with the setting</li></ul>',
+            '<b>Sharing code (starts with "share-")</b>',
+            '<ul><li>This code can be shared with others</li><li>Others can view and copy the setting, but they cannot make changes to it</li></ul>',
+            '<em>Tip: Store your editing code in a safe place if you want to be able to change the setting later</em>'
         ].join('<br>'),
     };
+
 
 
     //Methods to convert ids between the two formats: dbFormat = [w | e]+ 16 HEX (w766abf05b7f6b8ff) and displayFormat = [edit- | share- ] + 4 groups of 3/4 base 36 (eq. share-ABF-G43-KMO-12DP)

@@ -1042,17 +1042,19 @@ if (ns.DEV_VERSION)
         pin     : ['far fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
         unpin   : ['fas fa-thumbtack fa-inside-circle', $.FONTAWESOME_PREFIX + ' fa-circle'],
     }, {
-        back    : icon_fa_prefix + 'arrow-left',
-        forward : icon_fa_prefix + 'arrow-right',
-        pin     : icon_fa_prefix + 'thumbtack fa-sm',
-        unpin   : icon_fa_prefix + 'thumbtack fa-sm',
-        extend  : icon_fa_prefix + 'square-plus',
-        diminish: icon_fa_prefix + 'square-minus',
-        new     : icon_fa_prefix + 'window-maximize',
-        warning : icon_fa_prefix + 'exclamation fa-size-15',
-        info    : icon_fa_prefix + 'info fa-sm',
-        help    : icon_fa_prefix + 'question fa-sm',
-        close   : icon_fa_prefix + 'xmark'
+        back            : icon_fa_prefix + 'arrow-left',
+        forward         : icon_fa_prefix + 'arrow-right',
+        pin             : icon_fa_prefix + 'thumbtack fa-sm',
+        unpin           : icon_fa_prefix + 'thumbtack fa-sm',
+        fullScreenOn    : icon_fa_prefix + 'expand',
+        fullScreenOff   : icon_fa_prefix + 'compress',
+        extend          : icon_fa_prefix + 'square-plus',
+        diminish        : icon_fa_prefix + 'square-minus',
+        new             : icon_fa_prefix + 'window-maximize',
+        warning         : icon_fa_prefix + 'exclamation fa-size-15',
+        info            : icon_fa_prefix + 'info fa-sm',
+        help            : icon_fa_prefix + 'question fa-sm',
+        close           : icon_fa_prefix + 'xmark'
     });
 
     //Set icon and name for different message type
@@ -5101,7 +5103,7 @@ Methods for loading and saving settings for the application
                 onSubmit: this.onSubmit.bind(this),
                 onClose : this.onClose.bind(this),
                 content : modalContent,
-                footer  : {icon : 'fa-trash-can', text: {da:': Vil ikke slette den gemte opsætning MANGLER', en: ': Will not delete the saved setting TODO'}},
+                footer  : {icon : 'fa-trash-can', text: {da:': Vil ikke slette den gemte opsætning', en: ': Will not delete the saved setting'}},
                 closeWithoutWarning: true,
             }).edit({});
         },
@@ -5128,10 +5130,17 @@ Methods for loading and saving settings for the application
             if (list.length)
                 list.unshift({_icon: 'fa-list', text: {da: 'eller vælg en gemt opsætning...', en: 'or select saved setting...'}});
 
-            list.unshift(
-                {id:'EMPTY',   icon: 'fa-rectangle fa-lg',                            text: {da: '*** Ingen (TEKST MANGLER) ***',             en: '*** Nothing (TEXT MISSING) ***'},          subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ****'} },  //MANGLER
-                {id:'DEFAULT', icon: 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/, text: {da: '*** Forrige opsætning (TEKST MANGLER) ***', en: '*** Previous setting (TEXT MISSING) ***'}, subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ***'} }   //MANGLER
-            );
+            list.unshift({
+                id      :'EMPTY',
+                icon    : 'fa-rectangle fa-lg',
+                text    : {da: 'Applikationens standard opsætning', en: 'The default setting of the application'},
+              //subtext : {da: '*** (TEKST MANGLER) ***',           en: '*** (TEXT MISSING) ****'}
+            },{
+                id      :'DEFAULT',
+                icon    : 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/,
+                text    : {da: 'Senest brugte opsætning',   en: 'Last used setting'},
+              //subtext : {da: '*** (TEKST MANGLER) ***',   en: '*** (TEXT MISSING) ***'}
+            });
 
             return [{
                 type    : 'text',
@@ -5286,14 +5295,6 @@ Methods for loading and saving settings for the application
         //OR return '<span class="text-nowrap">'+(emphasized ? '<em>' : '') + (lang == 'da' ?  appName_da : appName_en) + (emphasized ? '</em>' : '')+'</span>';
     };
 
-/*
-Når du gemmer din opsætning, får du to forskellige koder:
-<b>Redigeringskode (starter med 'w')</b>
-<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>
-<b>Delingskode (starter med 'r')</b>
-<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>
-<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>
-*/
 
     let description = {
         da: [
@@ -5301,19 +5302,19 @@ Når du gemmer din opsætning, får du to forskellige koder:
             '<b>Redigeringskode (starter med "edit-")</b>',
             '<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>',
             '<b>Delingskode (starter med "share-")</b>',
-            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul><br>',
-            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
-        ].join(''),
+            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul>',
+            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere</em>'
+        ].join('<br>'),
         en: [
-            '*** MANGLER ENGELSK VERSION ***',
-            'Når du gemmer din opsætning, får du to forskellige koder:<br>',
-            '<b>Redigeringskode (starter med "edit-")</b>',
-            '<ul><li>Med denne kan du åbne og ændre i opsætningen</li><li>Brug denne når du vil arbejde videre med opsætningen</li></ul>',
-            '<b>Delingskode (starter med "share-")</b>',
-            '<ul><li>Denne kode kan du dele med andre</li><li>Andre kan se og kopiere opsætningen, men de kan ikke ændre i den</li></ul><br>',
-            '<em>Tip: Gem din redigeringskode et sikkert sted, hvis du vil kunne ændre opsætningen senere.</em>'
+            'When you save your settings, you will receive two different codes:<br>',
+            '<b>Editing code (starts with "edit-")</b>',
+            '<ul><li>You can use this to open and modify the setting</li><li>Use this when you want to continue working with the setting</li></ul>',
+            '<b>Sharing code (starts with "share-")</b>',
+            '<ul><li>This code can be shared with others</li><li>Others can view and copy the setting, but they cannot make changes to it</li></ul>',
+            '<em>Tip: Store your editing code in a safe place if you want to be able to change the setting later</em>'
         ].join('<br>'),
     };
+
 
 
     //Methods to convert ids between the two formats: dbFormat = [w | e]+ 16 HEX (w766abf05b7f6b8ff) and displayFormat = [edit- | share- ] + 4 groups of 3/4 base 36 (eq. share-ABF-G43-KMO-12DP)

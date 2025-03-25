@@ -561,7 +561,7 @@ Methods for loading and saving settings for the application
                 onSubmit: this.onSubmit.bind(this),
                 onClose : this.onClose.bind(this),
                 content : modalContent,
-                footer  : {icon : 'fa-trash-can', text: {da:': Vil ikke slette den gemte opsætning MANGLER', en: ': Will not delete the saved setting TODO'}},
+                footer  : {icon : 'fa-trash-can', text: {da:': Vil ikke slette den gemte opsætning', en: ': Will not delete the saved setting'}},
                 closeWithoutWarning: true,
             }).edit({});
         },
@@ -588,10 +588,17 @@ Methods for loading and saving settings for the application
             if (list.length)
                 list.unshift({_icon: 'fa-list', text: {da: 'eller vælg en gemt opsætning...', en: 'or select saved setting...'}});
 
-            list.unshift(
-                {id:'EMPTY',   icon: 'fa-rectangle fa-lg',                            text: {da: '*** Ingen (TEKST MANGLER) ***',             en: '*** Nothing (TEXT MISSING) ***'},          subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ****'} },  //MANGLER
-                {id:'DEFAULT', icon: 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/, text: {da: '*** Forrige opsætning (TEKST MANGLER) ***', en: '*** Previous setting (TEXT MISSING) ***'}, subtext: {da: '*** (TEKST MANGLER) ***', en: '*** (TEXT MISSING) ***'} }   //MANGLER
-            );
+            list.unshift({
+                id      :'EMPTY',
+                icon    : 'fa-rectangle fa-lg',
+                text    : {da: 'Applikationens standard opsætning', en: 'The default setting of the application'},
+              //subtext : {da: '*** (TEKST MANGLER) ***',           en: '*** (TEXT MISSING) ****'}
+            },{
+                id      :'DEFAULT',
+                icon    : 'fa-recycle fa-lg'/*or 'fa-clock-rotate-left'*/,
+                text    : {da: 'Senest brugte opsætning',   en: 'Last used setting'},
+              //subtext : {da: '*** (TEKST MANGLER) ***',   en: '*** (TEXT MISSING) ***'}
+            });
 
             return [{
                 type    : 'text',

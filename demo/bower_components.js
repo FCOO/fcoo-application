@@ -10742,7 +10742,7 @@ return jQuery;
 
 ;(function(window, document, undefined){
   var tests = [];
-  
+
 
   /**
    *
@@ -10791,7 +10791,7 @@ return jQuery;
     }
   };
 
-  
+
 
   // Fake some of Object.create so we can force non test results to be non "own" properties.
   var Modernizr = function() {};
@@ -10801,10 +10801,10 @@ return jQuery;
   // Overwrite name so constructor name is nicer :D
   Modernizr = new Modernizr();
 
-  
+
 
   var classes = [];
-  
+
 
   /**
    * is returns a boolean if the typeof an obj is exactly type.
@@ -10900,7 +10900,7 @@ return jQuery;
    */
 
   var docElement = document.documentElement;
-  
+
 
   /**
    * A convenience helper to check if the document we are running in is an SVG document
@@ -10910,7 +10910,7 @@ return jQuery;
    */
 
   var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-  
+
 
   /**
    * setClasses takes an array of class names and adds them to the root element
@@ -10978,7 +10978,7 @@ return jQuery;
     }
   })();
 
-  
+
 
 
    // _l tracks listeners for async tests, as well as tests that execute after the initial run
@@ -11188,7 +11188,7 @@ return jQuery;
     ModernizrProto.addTest = addTest;
   });
 
-  
+
 
 
   /**
@@ -11208,11 +11208,11 @@ return jQuery;
    */
 
   var omPrefixes = 'Moz O ms Webkit';
-  
+
 
   var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
   ModernizrProto._cssomPrefixes = cssomPrefixes;
-  
+
 
   /**
    * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
@@ -11279,7 +11279,7 @@ return jQuery;
 
   ModernizrProto.atRule = atRule;
 
-  
+
 
   /**
    * createElement is a convenience wrapper around document.createElement. Since we
@@ -11380,7 +11380,7 @@ return jQuery;
 
 
   ModernizrProto.hasEvent = hasEvent;
-  
+
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -11553,7 +11553,7 @@ return jQuery;
 
   ModernizrProto.mq = mq;
 
-  
+
 
 
   /**
@@ -11587,7 +11587,7 @@ return jQuery;
     delete modElem.elem;
   });
 
-  
+
 
   var mStyle = {
     style: modElem.elem.style
@@ -11599,7 +11599,7 @@ return jQuery;
     delete mStyle.style;
   });
 
-  
+
 
   /**
    * domToCSS takes a camelCase string and converts it to kebab-case
@@ -11789,7 +11789,7 @@ return jQuery;
 
   var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
   ModernizrProto._domPrefixes = domPrefixes;
-  
+
 
   /**
    * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
@@ -11884,7 +11884,7 @@ return jQuery;
   // Modernizr.testAllProps('boxSizing')
   ModernizrProto.testAllProps = testPropsAll;
 
-  
+
 
   /**
    * prefixed returns the prefixed or nonprefixed property name variant of your input
@@ -11968,7 +11968,7 @@ return jQuery;
     }
   };
 
-  
+
 /*!
 {
   "name": "Fullscreen API",
@@ -12027,7 +12027,7 @@ Detects support for the ability to make the current website take over the user's
   // expose these for the plugin API. Look in the source for how to join() them against your input
   ModernizrProto._prefixes = prefixes;
 
-  
+
 
   /**
    * testStyles injects an element with style element and some CSS rules
@@ -12087,7 +12087,7 @@ Detects support for the ability to make the current website take over the user's
    */
 
   var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
+
 /*!
 {
   "name": "Touch Events",
@@ -12207,7 +12207,7 @@ This test will also return `true` for Firefox 4 Multitouch support.
     return testPropsAll(prop, undefined, undefined, value, skipValueTest);
   }
   ModernizrProto.testAllProps = testAllProps;
-  
+
 /*!
 {
   "name": "Flexbox",
@@ -12559,7 +12559,7 @@ else {
 
 ;
 /****************************************************************************
-	modernizr-javascript.js, 
+	modernizr-javascript.js,
 
 	(c) 2016, FCOO
 
@@ -12570,20 +12570,20 @@ else {
 
 (function ($, window, document, undefined) {
 	"use strict";
-	
+
 	var ns = window;
 
     //Extend the jQuery prototype
     $.fn.extend({
-        modernizrOn : function( test ){ 
-            return this.modernizrToggle( test, true ); 
+        modernizrOn : function( test ){
+            return this.modernizrToggle( test, true );
         },
 
-        modernizrOff: function( test ){ 
-            return this.modernizrToggle( test, false ); 
+        modernizrOff: function( test ){
+            return this.modernizrToggle( test, false );
         },
-        
-        modernizrToggle: function( test, on ){ 
+
+        modernizrToggle: function( test, on ){
 		if ( on === undefined )
             return this.modernizrToggle( test, !this.hasClass( test ) );
 
@@ -12624,13 +12624,13 @@ else {
             for (j=0; j<eventNames.length; j++ ){
                 eventName = eventNames[j];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     var i, lgd = this.events[eventName].length;
                     if (reverse){
                         for (i=lgd-1; i>=0; i-- )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
                                 break;
-                    } 
+                    }
                     else {
                         for (i=0; i<lgd; i++ )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
@@ -12646,11 +12646,11 @@ else {
             for (i=0; i<eventNames.length; i++ ){
                 eventName = eventNames[i];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     this.events[eventName].push( {
                         callback: callback,
                         context : context || null,
-                        options : $.extend( {once:false, first:false, last:false}, options ) 
+                        options : $.extend( {once:false, first:false, last:false}, options )
                     });
                 }
             }
@@ -12667,7 +12667,7 @@ else {
             eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
             _loop_func = function( eventObj, index, list ){
                 if ( (callback == eventObj.callback) &&
-                    (!context || (context == eventObj.context)) ){ 
+                    (!context || (context == eventObj.context)) ){
                     list.splice(index, 1);
                     return true;
                 }
@@ -12682,32 +12682,32 @@ else {
         };
 
 
-        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){ 
+        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){
             var newArguments = [];
             for (var i=1; i < arguments.length; i++) {
                 newArguments.push(arguments[i]);
             }
 
             //Fire the functions marked 'first'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.first)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions not marked 'first' or 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (!eventObj.options.first && !eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions marked 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
-            
+
             //Remove all functions marked 'once'
-            this._loop( eventName, function( eventObj, index, list ){ 
+            this._loop( eventName, function( eventObj, index, list ){
                 if (eventObj.options.once)
                     list.splice(index, 1);
             }, true);
@@ -12718,7 +12718,7 @@ else {
         this.oneFirst = function(){ this.onceFirst( arguments ); };
         this.oneLast  = function(){ this.onceLast( arguments  ); };
     }
-  
+
     // expose access to the constructor
     window.GlobalEvents = GlobalEvents;
 
@@ -22783,7 +22783,7 @@ else {
         deltaHp = abs(deltaHp) <= 180 ? deltaHp : h2p <= h1p ? deltaHp + 360 : deltaHp - 360;
         deltaHp = 2*sqrt(C1p*C2p)*sin(deg2rad(deltaHp)/2);
         var deltaL = L2 - L1;
-        var deltaCp = C2p - C1p;    
+        var deltaCp = C2p - C1p;
         var sl = 1 + (0.015*pow(avgL - 50, 2))/sqrt(20 + pow(avgL - 50, 2));
         var sc = 1 + 0.045*avgCp;
         var sh = 1 + 0.015*avgCp*T;
@@ -30063,7 +30063,7 @@ Methods for creating <meta> in <head> and adding favicons
 
     var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
     var maxValues = [24, 60, 60, 1000];
-    
+
     // Capitalize first letter
     key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
@@ -30110,19 +30110,19 @@ Methods for creating <meta> in <head> and adding favicons
 ;
 /* @preserve
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2013-2018 Petka Antonov
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -30130,7 +30130,7 @@ Methods for creating <meta> in <head> and adding favicons
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
+ *
  */
 /**
  * bluebird build version 3.7.2
@@ -33722,28 +33722,28 @@ _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext,
 _dereq_('./any.js')(Promise);
 _dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./filter.js')(Promise, INTERNAL);
-                                                         
-    util.toFastProperties(Promise);                                          
-    util.toFastProperties(Promise.prototype);                                
-    function fillTypes(value) {                                              
-        var p = new Promise(INTERNAL);                                       
-        p._fulfillmentHandler0 = value;                                      
-        p._rejectionHandler0 = value;                                        
-        p._promise0 = value;                                                 
-        p._receiver0 = value;                                                
-    }                                                                        
-    // Complete slack tracking, opt out of field-type tracking and           
-    // stabilize map                                                         
-    fillTypes({a: 1});                                                       
-    fillTypes({b: 2});                                                       
-    fillTypes({c: 3});                                                       
-    fillTypes(1);                                                            
-    fillTypes(function(){});                                                 
-    fillTypes(undefined);                                                    
-    fillTypes(false);                                                        
-    fillTypes(new Promise(INTERNAL));                                        
-    debug.setBounds(Async.firstLineError, util.lastLineError);               
-    return Promise;                                                          
+
+    util.toFastProperties(Promise);
+    util.toFastProperties(Promise.prototype);
+    function fillTypes(value) {
+        var p = new Promise(INTERNAL);
+        p._fulfillmentHandler0 = value;
+        p._rejectionHandler0 = value;
+        p._promise0 = value;
+        p._receiver0 = value;
+    }
+    // Complete slack tracking, opt out of field-type tracking and
+    // stabilize map
+    fillTypes({a: 1});
+    fillTypes({b: 2});
+    fillTypes({c: 3});
+    fillTypes(1);
+    fillTypes(function(){});
+    fillTypes(undefined);
+    fillTypes(false);
+    fillTypes(new Promise(INTERNAL));
+    debug.setBounds(Async.firstLineError, util.lastLineError);
+    return Promise;
 
 };
 
@@ -38934,11 +38934,11 @@ module.exports = Yaml;
 	var minor = parseInt(splitVersion[1]);
 
 	var JQ_LT_17 = (major < 1) || (major == 1 && minor < 7);
-	
+
 	function eventsData($el) {
 		return JQ_LT_17 ? $el.data('events') : $._data($el[0]).events;
 	}
-	
+
 	function moveHandlerToTop($el, eventName, isDelegated) {
 		var data = eventsData($el);
 		var events = data[eventName];
@@ -38956,7 +38956,7 @@ module.exports = Yaml;
 			events.unshift(events.pop());
 		}
 	}
-	
+
 	function moveEventHandlers($elems, eventsString, isDelegate) {
 		var events = eventsString.split(/\s+/);
 		$elems.each(function() {
@@ -38966,7 +38966,7 @@ module.exports = Yaml;
 			}
 		});
 	}
-	
+
 	function makeMethod(methodName) {
 		$.fn[methodName + 'First'] = function() {
 			var args = $.makeArray(arguments);
@@ -38991,7 +38991,7 @@ module.exports = Yaml;
 	$.fn.delegateFirst = function() {
 		var args = $.makeArray(arguments);
 		var eventsString = args[1];
-		
+
 		if (eventsString) {
 			args.splice(0, 2);
 			$.fn.delegate.apply(this, arguments);
@@ -39011,7 +39011,7 @@ module.exports = Yaml;
 
 		return this;
 	};
-	
+
 	// on (jquery >= 1.7)
 	if (!JQ_LT_17) {
 		$.fn.onFirst = function(types, selector) {
@@ -47281,8 +47281,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -47376,8 +47376,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, window, undefined) {
@@ -48890,7 +48890,7 @@ module.exports = Yaml;
             function seekPrevious(pos, newBlock) {
                 var position = pos, tests;
                 if (position <= 0) return 0;
-                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position), 
+                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position),
                 tests.length < 2 || tests.length === 2 && tests[1].match.def === ""))) {}
                 return position;
             }
@@ -50127,8 +50127,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($) {
@@ -50157,8 +50157,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -50409,8 +50409,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -50960,8 +50960,8 @@ module.exports = Yaml;
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, Inputmask) {
@@ -60267,7 +60267,7 @@ See https://ilyashubin.github.io/scrollbooster/
 
 ;
 //! moment-timezone.js
-//! version : 0.5.47
+//! version : 0.5.48
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -60297,7 +60297,7 @@ See https://ilyashubin.github.io/scrollbooster/
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.47",
+	var VERSION = "0.5.48",
 		zones = {},
 		links = {},
 		countries = {},
@@ -60992,7 +60992,7 @@ See https://ilyashubin.github.io/scrollbooster/
 	}
 
 	loadData({
-		"version": "2025a",
+		"version": "2025b",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0||48e5",
 			"Africa/Nairobi|EAT|-30|0||47e5",
@@ -61019,6 +61019,7 @@ See https://ilyashubin.github.io/scrollbooster/
 			"America/Chicago|CST CDT|60 50|01010101010101010101010|22bI0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|92e5",
 			"America/Chihuahua|MST MDT CST|70 60 60|0101012|22mV0 1lb0 14p0 1nX0 11B0 1nX0|81e4",
 			"America/Ciudad_Juarez|MST MDT CST|70 60 60|010101201010101010101010|22bJ0 1zb0 Rd0 1zb0 Op0 1wn0 cm0 EP0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|",
+			"America/Coyhaique|-03 -04|30 40|01010101010|22mP0 11B0 1nX0 11B0 1nX0 14p0 1lb0 11B0 1qL0 11B0|",
 			"America/Phoenix|MST|70|0||42e5",
 			"America/Whitehorse|PST PDT MST|80 70 70|012|22bK0 1z90|23e3",
 			"America/New_York|EST EDT|50 40|01010101010101010101010|22bH0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|21e6",
@@ -61638,7 +61639,7 @@ See https://ilyashubin.github.io/scrollbooster/
 			"CH|Europe/Zurich",
 			"CI|Africa/Abidjan",
 			"CK|Pacific/Rarotonga",
-			"CL|America/Santiago America/Punta_Arenas Pacific/Easter",
+			"CL|America/Santiago America/Coyhaique America/Punta_Arenas Pacific/Easter",
 			"CM|Africa/Lagos Africa/Douala",
 			"CN|Asia/Shanghai Asia/Urumqi",
 			"CO|America/Bogota",
@@ -62983,12 +62984,12 @@ options:
 /*! @websanova/url - v2.6.3 - 2020-01-25 */
 !function(){function t(t,r){var a,o={};if("tld?"!==t){if(r=r||window.location.toString(),!t)return r;if(t=t.toString(),a=r.match(/^mailto:([^\/].+)/))o.protocol="mailto",o.email=a[1];else{if((a=r.match(/(.*?)\/#\!(.*)/))&&(r=a[1]+a[2]),(a=r.match(/(.*?)#(.*)/))&&(o.hash=a[2],r=a[1]),o.hash&&t.match(/^#/))return h(t,o.hash);if((a=r.match(/(.*?)\?(.*)/))&&(o.query=a[2],r=a[1]),o.query&&t.match(/^\?/))return h(t,o.query);if((a=r.match(/(.*?)\:?\/\/(.*)/))&&(o.protocol=a[1].toLowerCase(),r=a[2]),(a=r.match(/(.*?)(\/.*)/))&&(o.path=a[2],r=a[1]),o.path=(o.path||"").replace(/^([^\/])/,"/$1"),t.match(/^[\-0-9]+$/)&&(t=t.replace(/^([^\/])/,"/$1")),t.match(/^\//))return e(t,o.path.substring(1));if((a=(a=e("/-1",o.path.substring(1)))&&a.match(/(.*?)\.([^.]+)$/))&&(o.file=a[0],o.filename=a[1],o.fileext=a[2]),(a=r.match(/(.*)\:([0-9]+)$/))&&(o.port=a[2],r=a[1]),(a=r.match(/(.*?)@(.*)/))&&(o.auth=a[1],r=a[2]),o.auth&&(a=o.auth.match(/(.*)\:(.*)/),o.user=a?a[1]:o.auth,o.pass=a?a[2]:void 0),o.hostname=r.toLowerCase(),"."===t.charAt(0))return e(t,o.hostname);o.port=o.port||("https"===o.protocol?"443":"80"),o.protocol=o.protocol||("443"===o.port?"https":"http")}return t in o?o[t]:"{}"===t?o:void 0}}function e(t,r){var a=t.charAt(0),o=r.split(a);return a===t?o:o[(t=parseInt(t.substring(1),10))<0?o.length+t:t-1]}function h(t,r){for(var a,o=t.charAt(0),e=r.split("&"),h=[],n={},c=[],i=t.substring(1),p=0,u=e.length;p<u;p++)if(""!==(h=(h=e[p].match(/(.*?)=(.*)/))||[e[p],e[p],""])[1].replace(/\s/g,"")){if(h[2]=(a=h[2]||"",decodeURIComponent(a.replace(/\+/g," "))),i===h[1])return h[2];(c=h[1].match(/(.*)\[([0-9]+)\]/))?(n[c[1]]=n[c[1]]||[],n[c[1]][c[2]]=h[2]):n[h[1]]=h[2]}return o===t?n:n[i]}window.url=t}();
 ;
-/* 
-  @package NOTY - Dependency-free notification library 
-  @version version: 3.2.0-beta 
-  @contributors https://github.com/needim/noty/graphs/contributors 
-  @documentation Examples and Documentation - https://ned.im/noty 
-  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php 
+/*
+  @package NOTY - Dependency-free notification library
+  @version version: 3.2.0-beta
+  @contributors https://github.com/needim/noty/graphs/contributors
+  @documentation Examples and Documentation - https://ned.im/noty
+  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
 */
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -65021,7 +65022,7 @@ Promise$2.prototype = {
     The primary way of interacting with a promise is through its `then` method,
     which registers callbacks to receive either a promise's eventual value or the
     reason why the promise cannot be fulfilled.
-  
+
     ```js
     findUser().then(function(user){
       // user is available
@@ -65029,14 +65030,14 @@ Promise$2.prototype = {
       // user is unavailable, and you are given the reason why
     });
     ```
-  
+
     Chaining
     --------
-  
+
     The return value of `then` is itself a promise.  This second, 'downstream'
     promise is resolved with the return value of the first promise's fulfillment
     or rejection handler, or rejected if the handler throws an exception.
-  
+
     ```js
     findUser().then(function (user) {
       return user.name;
@@ -65046,7 +65047,7 @@ Promise$2.prototype = {
       // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
       // will be `'default name'`
     });
-  
+
     findUser().then(function (user) {
       throw new Error('Found user, but still unhappy');
     }, function (reason) {
@@ -65059,7 +65060,7 @@ Promise$2.prototype = {
     });
     ```
     If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-  
+
     ```js
     findUser().then(function (user) {
       throw new PedagogicalException('Upstream error');
@@ -65071,15 +65072,15 @@ Promise$2.prototype = {
       // The `PedgagocialException` is propagated all the way down to here
     });
     ```
-  
+
     Assimilation
     ------------
-  
+
     Sometimes the value you want to propagate to a downstream promise can only be
     retrieved asynchronously. This can be achieved by returning a promise in the
     fulfillment or rejection handler. The downstream promise will then be pending
     until the returned promise is settled. This is called *assimilation*.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -65087,9 +65088,9 @@ Promise$2.prototype = {
       // The user's comments are now available
     });
     ```
-  
+
     If the assimliated promise rejects, then the downstream promise will also reject.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -65099,15 +65100,15 @@ Promise$2.prototype = {
       // If `findCommentsByAuthor` rejects, we'll have the reason here
     });
     ```
-  
+
     Simple Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let result;
-  
+
     try {
       result = findResult();
       // success
@@ -65115,9 +65116,9 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
     findResult(function(result, err){
       if (err) {
@@ -65127,9 +65128,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findResult().then(function(result){
       // success
@@ -65137,15 +65138,15 @@ Promise$2.prototype = {
       // failure
     });
     ```
-  
+
     Advanced Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let author, books;
-  
+
     try {
       author = findAuthor();
       books  = findBooksByAuthor(author);
@@ -65154,19 +65155,19 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
-  
+
     function foundBooks(books) {
-  
+
     }
-  
+
     function failure(reason) {
-  
+
     }
-  
+
     findAuthor(function(author, err){
       if (err) {
         failure(err);
@@ -65191,9 +65192,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findAuthor().
       then(findBooksByAuthor).
@@ -65203,7 +65204,7 @@ Promise$2.prototype = {
       // something went wrong
     });
     ```
-  
+
     @method then
     @param {Function} onFulfilled
     @param {Function} onRejected
@@ -65215,25 +65216,25 @@ Promise$2.prototype = {
   /**
     `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
     as the catch block of a try/catch statement.
-  
+
     ```js
     function findAuthor(){
       throw new Error('couldn't find that author');
     }
-  
+
     // synchronous
     try {
       findAuthor();
     } catch(reason) {
       // something went wrong
     }
-  
+
     // async with promises
     findAuthor().catch(function(reason){
       // something went wrong
     });
     ```
-  
+
     @method catch
     @param {Function} onRejection
     Useful for tooling.
@@ -69400,6 +69401,8 @@ uri         : {default: "Please enter a valid URI"}
     A header can contain any of the following icons:
     back (<)
     forward (>)
+    fullScreenOn
+    fullScreenOff
     extend (^)
     diminish
     pin
@@ -69456,8 +69459,11 @@ uri         : {default: "Please enter a valid URI"}
                 class: square ? 'header-icon-selected' : null
             },
 
-            extend  : square ? 'fa-square-plus' : 'fa-chevron-circle-up',
+            extend  : square ? 'fa-square-plus'  : 'fa-chevron-circle-up',
             diminish: square ? 'fa-square-minus' : 'fa-chevron-circle-down',
+
+            fullScreenOn : square ? 'fa-expand'   : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-expand fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
+            fullScreenOff: square ? 'fa-compress' : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-compress fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
 
 
             new     : square ? 'fa-window-maximize' : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-window-maximize fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
@@ -69531,7 +69537,7 @@ uri         : {default: "Please enter a valid URI"}
 
             //Add icons
             let headerIcons = useSquareIcons ? bsHeaderIconsSquare : bsHeaderIcons;
-            ['back', 'forward', 'pin', 'unpin', 'extend', 'diminish', 'new', 'warning', 'info', 'help', 'close'].forEach( (id) => {
+            ['back', 'forward', 'pin', 'unpin', 'diminish', 'extend', 'fullScreenOn', 'fullScreenOff', 'new', 'warning', 'info', 'help', 'close'].forEach( (id) => {
                 let iconOptions = options.icons[id];
                 if (iconOptions && (iconOptions.onClick || (typeof iconOptions == 'function'))){
                     if (typeof iconOptions == 'function')
@@ -70743,6 +70749,7 @@ jquery-bootstrap-modal-promise.js
     By default it return the original options but they can be overwriten by applications/packages
     **********************************************************/
     $.MODAL_ADJUST_OPTIONS = function(modalOptions/*, modal*/){
+
         return modalOptions;
     };
     $.MODAL_NO_VERTICAL_MARGIN = false;
@@ -70759,10 +70766,10 @@ jquery-bootstrap-modal-promise.js
     function adjustModalMaxHeight( $modalContent ){
         var $modalContents = $modalContent || $('.modal-content.modal-flex-height');
 
-
         //For each $modalContent: Get the current data with options on relative size and set the height and max-height
         $modalContents.each(function(index, elem){
             var $modalContent = $(elem);
+
             $.each(modalSizeClassName, function(size, className){
                 if ($modalContent.hasClass(className)){
                     //The current percent/offset info is in .data('relativeHeightOptions')[size];
@@ -70779,7 +70786,8 @@ jquery-bootstrap-modal-promise.js
                         relativeOptions[id] = $.isFunction(value) ? value($modalContent) : value;
                     });
 
-                    var maxHeight = relativeOptions.relativeHeight * relativeOptions.parentContainerHeight - relativeOptions.relativeHeightOffset;
+                    const maxHeight = relativeOptions.relativeHeight * relativeOptions.parentContainerHeight - relativeOptions.relativeHeightOffset;
+
                     $modalContent.css({
                         'max-height': maxHeight+'px',
                         'height'    : maxHeight+'px'
@@ -70902,6 +70910,10 @@ jquery-bootstrap-modal-promise.js
     //hide_bs_modal - called when a modal is closing
     function hide_bs_modal() {
         currentModal = this.previousModal;
+
+        //If in full.screen mode => reset back
+        if (this.bsModal.isFullScreenMode)
+            this._bsModalFullScreenOff();
 
         //Close elements
         this._bsModalCloseElements();
@@ -71308,6 +71320,7 @@ jquery-bootstrap-modal-promise.js
                     .addClass(options.modalContentClassName)
                     .toggleClass('no-shadow', !!options.noShadow)
                     .modernizrOff('modal-pinned')
+                    .modernizrOff('modal-set-to-full-screen')
                     .appendTo( this );
 
         //Set modal-[SIZE]-[STATE] class
@@ -71337,19 +71350,19 @@ jquery-bootstrap-modal-promise.js
         this._bsModalSetSizeClass(initSize);
         this._bsModalSetHeightAndWidth();
 
-        var modalExtend       = $.proxy( this._bsModalExtend,       this),
-            modalDiminish     = $.proxy( this._bsModalDiminish,     this),
-            modalToggleHeight = $.proxy( this._bsModalToggleHeight, this),
-            modalPin          = $.proxy( this._bsModalPin,          this),
-            modalUnpin        = $.proxy( this._bsModalUnpin,        this),
+        var modalExtend       = this._bsModalExtend.bind(this),
+            modalDiminish     = this._bsModalDiminish.bind(this),
+            modalToggleHeight = this._bsModalToggleHeight.bind(this),
+            modalPin          = this._bsModalPin.bind(this),
+            modalUnpin        = this._bsModalUnpin.bind(this),
             iconExtendClassName   = '',
             iconDiminishClassName = '',
             multiSize = this.bsModal.sizes > MODAL_SIZE_NORMAL;
 
         //If multi size: Set the class-name for the extend and diminish icons.
         if (multiSize){
-            iconExtendClassName   = this.bsModal.sizes & MODAL_SIZE_EXTENDED  ? 'hide-for-modal-extended'  : 'hide-for-modal-normal';
-            iconDiminishClassName = this.bsModal.sizes & MODAL_SIZE_MINIMIZED ? 'hide-for-modal-minimized' : 'hide-for-modal-normal';
+            iconExtendClassName   = 'hide-for-modal-set-to-full-screen ' + (this.bsModal.sizes & MODAL_SIZE_EXTENDED  ? 'hide-for-modal-extended'  : 'hide-for-modal-normal');
+            iconDiminishClassName = 'hide-for-modal-set-to-full-screen ' + (this.bsModal.sizes & MODAL_SIZE_MINIMIZED ? 'hide-for-modal-minimized' : 'hide-for-modal-normal');
         }
 
         this.bsModal.onPin = options.onPin;
@@ -71366,14 +71379,18 @@ jquery-bootstrap-modal-promise.js
 
             //Icons
             icons    : {
-                pin     : { className: 'hide-for-modal-pinned', onClick: options.onPin ? modalPin      : null },
-                unpin   : { className: 'show-for-modal-pinned', onClick: options.onPin ? modalUnpin    : null },
-                extend  : { className: iconExtendClassName,     onClick: multiSize ? modalExtend   : null, altEvents:'swipeup'   },
-                diminish: { className: iconDiminishClassName,   onClick: multiSize ? modalDiminish : null, altEvents:'swipedown' },
-                new     : {                                     onClick: options.onNew ? $.proxy(options.onNew, this) : null },
-                info    : {                                     onClick: options.onInfo ? $.proxy(options.onInfo, this) : null },
-                warning : {                                     onClick: options.onWarning ? $.proxy(options.onWarning, this) : null },
-                help    : {                                     onClick: options.onHelp ? $.proxy(options.onHelp, this) : null },
+                pin             : { className: 'hide-for-modal-pinned', onClick: options.onPin ? modalPin   : null },
+                unpin           : { className: 'show-for-modal-pinned', onClick: options.onPin ? modalUnpin : null },
+
+                fullScreenOn    : { className: 'modal-header-icon-full-screen-on hide-for-modal-set-to-full-screen',  onClick: options.allowFullScreen ? this._bsModalFullScreenOn.bind(this)  : null, altEvents:'swipeup'   },
+                fullScreenOff   : { className: 'modal-header-icon-full-screen-off show-for-modal-set-to-full-screen', onClick: options.allowFullScreen ? this._bsModalFullScreenOff.bind(this) : null, altEvents:'swipedown' },
+
+                extend          : { className: iconExtendClassName,     onClick: multiSize ? modalExtend   : null,                        altEvents:'swipeup'   },
+                diminish        : { className: iconDiminishClassName,   onClick: multiSize ? modalDiminish : null,                        altEvents:'swipedown' },
+                new             : {                                     onClick: options.onNew     ? options.onNew.bind(this)     : null                        },
+                info            : {                                     onClick: options.onInfo    ? options.onInfo.bind(this)    : null                        },
+                warning         : {                                     onClick: options.onWarning ? options.onWarning.bind(this) : null                        },
+                help            : {                                     onClick: options.onHelp    ? options.onHelp.bind(this)    : null                        },
             }
         }, options );
 
@@ -71627,7 +71644,8 @@ jquery-bootstrap-modal-promise.js
 
     /******************************************************
     _bsModalExtend, _bsModalDiminish, _bsModalToggleHeight,
-    _bsModalSetSize, _bsModalToggleMinimizedHeader
+    _bsModalSetSize, _bsModalToggleMinimizedHeader,
+    _bsModalFullScreenOn, _bsModalFullScreenOff
     Methods to change extended-mode
     ******************************************************/
     $.fn._bsModalExtend = function(){
@@ -71662,15 +71680,6 @@ jquery-bootstrap-modal-promise.js
 
         this._bsModalSetSizeClass(size);
         this._bsModalSetHeightAndWidth();
-
-        /*
-        NOTE: 2021-04-16
-        Original this methods returns false to prevent onclick-event on the header.
-        That prevented other more general events to be fired. Eg. in fcoo/leaflet-bootstrap
-        where the focus of a popup window was set when the window was clicked
-        It appear not to have any other effect when removed.
-        */
-        //return false; //Prevent onclick-event on header
     };
 
     //hid/show header for size = minimized
@@ -71678,6 +71687,87 @@ jquery-bootstrap-modal-promise.js
         if (this._bsModalGetSize() == MODAL_SIZE_MINIMIZED)
             get$modalContent(this).toggleClass('modal-minimized-hide-header');
     };
+
+    //Toggle full screen
+    $.fn._bsModalFullScreenOn = function(){
+        let bsModal       = this.bsModal,
+            $modalDialog  = bsModal.$modalDialog,
+            isExtended    = $modalDialog.hasClass('modal-full-screen-at-extended'),
+            $modalContent = bsModal.$modalContent,
+            $modalBody    = isExtended ? bsModal.extended.$body : bsModal.$body;
+
+        //Save and remove width and height set direct in css and
+        bsModal.saveWidth  = $modalDialog.css('width');
+        $modalDialog.css('width', '');
+        bsModal.saveHeight = $modalContent.css('height');
+        $modalContent.css('height', '');
+
+        //Save and remove any 'size'-classes
+        bsModal.saveDialogContentClass = $modalDialog.get(0).className;
+        bsModal.saveModalContentClass  = $modalContent.get(0).className;
+        bsModal.saveBodyClass          = $modalBody.get(0).className;
+
+        let classNames = [
+                'modal-fixed-height',
+                'modal-flex-height',
+                'modal-flex-width',
+                'modal-extra-width',
+                'modal-mega-width',
+                'modal-full-width',
+            ].join(' ');
+
+        $modalDialog.removeClass(classNames);
+        $modalContent.removeClass(classNames);
+        $modalBody.removeClass(classNames);
+
+        //Set new classes to make size = full screen
+        $modalDialog.addClass ('modal-max-width modal-full-screen modal-full-screen-with-border');
+        $modalContent.addClass('modal-flex-height');
+        $modalContent.addClass('modal-' + (isExtended ? 'extended' : 'normal') + '-always-max-height');
+
+        $modalBody.addClass   ('modal-body-always-max-height');
+
+        //Save data-relativeHeightOptions from modal-content and set new with no margin
+        bsModal.save_relativeHeightOptions = $modalContent.data('relativeHeightOptions') || {};
+
+        let newData = {};
+        newData[MODAL_SIZE_NORMAL] = newData[MODAL_SIZE_EXTENDED] = {  relativeHeightOffset: 0 };
+        $modalContent.data('relativeHeightOptions', newData);
+        adjustModalMaxHeight( $modalContent );
+
+        $modalContent.modernizrOn('modal-set-to-full-screen');
+
+        bsModal.isFullScreenMode = true;
+    };
+
+
+    $.fn._bsModalFullScreenOff = function(){
+        let bsModal       = this.bsModal,
+            $modalDialog  = bsModal.$modalDialog,
+            isExtended    = $modalDialog.hasClass('modal-full-screen-at-extended'),
+            $modalContent = bsModal.$modalContent,
+            $modalBody    = isExtended ? bsModal.extended.$body : bsModal.$body;
+
+        //Reset original size-classes
+        $modalDialog.get(0).className   = bsModal.saveDialogContentClass;
+        $modalContent.get(0).className  = bsModal.saveModalContentClass;
+        $modalBody.get(0).className     = bsModal.saveBodyClass;
+
+        //Reset data-relativeHeightOptions
+        $modalContent.data('relativeHeightOptions', bsModal.save_relativeHeightOptions);
+        adjustModalMaxHeight( $modalContent );
+
+        //Reset original width and height set direct in css
+        $modalDialog.css('width',   bsModal.saveWidth || '');
+        $modalContent.css('height', bsModal.saveHeight || '');
+
+        $modalContent.modernizrOff('modal-set-to-full-screen');
+
+        bsModal.isFullScreenMode = false;
+    };
+
+
+
 
 /* TODO: animate changes in height and width - Use Bootstrtap 5 collaps
        var $this = this.bsModal.$container,
@@ -71759,6 +71849,10 @@ jquery-bootstrap-modal-promise.js
              (options.removeOnClose === undefined) )
             options.remove = !!options.defaultRemoveOnClose || !!options.defaultRemove;
 
+        //Prevent allow-full-screen if already set
+        if (options.fullScreen || options.fullScreenWithBorder)
+            options.allowFullScreen = false;
+
         //Set options for full screen with border
         if (options.fullScreenWithBorder)
             options.fullScreen = true;
@@ -71792,6 +71886,9 @@ jquery-bootstrap-modal-promise.js
             }
         }
 
+        //If allowFullScreen: Find the largest size-mode and set the differnet class-names etc.
+        if (options.allowFullScreen)
+            options.sizeWithFullScreen = options.extended ? MODAL_SIZE_EXTENDED : MODAL_SIZE_NORMAL;
 
         //Create the modal
         $result =
@@ -71809,6 +71906,10 @@ jquery-bootstrap-modal-promise.js
                 ._bsAddBaseClassAndSize( options )
                 .attr( 'role', 'document')
                 .appendTo( $result );
+
+        if (options.allowFullScreen)
+            $modalDialog.addClass('modal-full-screen-at-' + (options.extended ? 'extended' : 'normal') );
+
 
         //Extend with prototype
         $result.extend( bsModal_prototype );
@@ -71841,6 +71942,8 @@ jquery-bootstrap-modal-promise.js
            show	    :   false                               //  boolean	            true	Shows the modal when initialized.
         });
         $result.bsModal = $modalDialog.bsModal;
+
+        $result.bsModal.$modalDialog = $modalDialog;
 
         $result.removeOnClose = options.remove || options.removeOnClose;
 
@@ -73553,8 +73656,20 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         maximizeColumn: function(index){ return this.toggleMinimizedColumn(index, true); },
         minimizeColumn: function(index){ return this.toggleMinimizedColumn(index, false); },
         toggleMinimizedColumn: function(index, show){
+            this.columns[index].minimizeTimeoutId = null;
             return this._toggleColumn('minimized', index, show);
         },
+
+        maximizeAllColumns: function(){ return this.toggleMinimizedAllColumns(false); },
+        minimizeAllColumns: function(){ return this.toggleMinimizedAllColumns(true); },
+        toggleMinimizedAllColumns: function(minimize){
+            this.columns.forEach( (columnOptions, index) => {
+                if (columnOptions.minimizable)
+                    this.toggleMinimizedColumn(index, minimize);
+            });
+        },
+
+
 
 
         _toggleColumn: function(id, index, show){
@@ -73941,17 +74056,28 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         multiSortList.sort(function( c1, c2){ return c1.sortIndex - c2.sortIndex; });
 
         //Create headers
-        if (options.showHeader)
+        if (options.showHeader){
+            let anyColumnMinimizable = false;
+
+
             $table.columns.forEach( (columnOptions, columnIndex) => {
+                if (columnOptions.minimizable)
+                    anyColumnMinimizable = true;
+
+
                 let $th = columnOptions.$th = $('<th/>').appendTo( $tr );
 
-                if (columnOptions.minimizable){
+                if (columnOptions.minimizable)
                     $th
                         .addClass('minimizable clickable')
                         ._bsAddHtml( {icon: columnOptions.minimizedIcon, iconClass: 'show-for-minimized'} )
-                        .on('click', $table.toggleMinimizedColumn.bind($table, columnIndex) );
-                }
-
+                        .on('click', function(columnIndex){
+                            //Delay toggle minimize to allow dbl-click to take over
+                            let column = this.columns[columnIndex];
+                            if (!column.minimizeTimeoutId)
+                                column.minimizeTimeoutId = window.setTimeout(
+                                    this.toggleMinimizedColumn.bind(this, columnIndex), 200 );
+                        }.bind($table, columnIndex) );
 
                 if (columnOptions.sortable){
                     $th
@@ -73991,6 +74117,29 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
                 $th._bsAddHtml( columnOptions.header );
             }, this);
+
+
+            if (anyColumnMinimizable)
+                $tr.on('dblclick', function(){
+                    let minimize = true;
+                    this.columns.forEach( columnOptions => {
+                        if (columnOptions.minimized)
+                            minimize = false;
+
+                        if (columnOptions.minimizeTimeoutId){
+                            window.clearTimeout(columnOptions.minimizeTimeoutId);
+                            columnOptions.minimizeTimeoutId = null;
+                        }
+                    });
+                    this.toggleMinimizedAllColumns( minimize );
+
+                }.bind($table) );
+
+
+
+
+        }
+
 
         if (options.selectable){
             var radioGroupOptions = $.extend( true, {}, options );
@@ -82116,7 +82265,7 @@ ID:name, ID:abbr, ID:link, ID:email
         }
     });
 
-    
+
 
 (function() {
         numeral.register('format', 'bps', {
@@ -84624,7 +84773,7 @@ Greenland
 }(jQuery, window.moment, window.i18next, this, document));
 ;
 /****************************************************************************
-    kl.js, 
+    kl.js,
 
     Translation of Moment text to Kalaallisut/Greenlandic (language code = kl)
 
@@ -84632,7 +84781,7 @@ Greenland
 
 moment.defineLocale('kl', {
     parentLocale: 'da',
-  
+
     /* TODO */
 
 
@@ -93284,7 +93433,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error;
     }
     return results;
-  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{}, 
+  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{},
   defaultOptions = {
     checks:{
       xhr:{
@@ -93307,22 +93456,22 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     deDupBody:!1
   }, grab = function(obj, key) {
     var cur, i, j, len, part, parts;
-    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i], 
+    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i],
     "object" == typeof (cur = cur[part])); i = ++j) ;
     return i === parts.length - 1 ? cur :void 0;
   }, Offline.getOption = function(key) {
     var ref, val;
-    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key), 
+    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key),
     "function" == typeof val ? val() :val;
   }, "function" == typeof window.addEventListener && window.addEventListener("online", function() {
     return setTimeout(Offline.confirmUp, 100);
   }, !1), "function" == typeof window.addEventListener && window.addEventListener("offline", function() {
     return Offline.confirmDown();
   }, !1), Offline.state = "up", Offline.markUp = function() {
-    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up", 
+    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up",
     Offline.trigger("up");
   }, Offline.markDown = function() {
-    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down", 
+    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down",
     Offline.trigger("down");
   }, handlers = {}, Offline.on = function(event, handler, ctx) {
     var e, events, j, len, results;
@@ -93335,7 +93484,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     var _handler, i, ref, results;
     if (null != handlers[event]) {
       if (handler) {
-        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i], 
+        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i],
         ref[0], _handler = ref[1], _handler === handler ? results.push(handlers[event].splice(i, 1)) :results.push(i++);
         return results;
       }
@@ -93344,7 +93493,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, Offline.trigger = function(event) {
     var ctx, handler, j, len, ref, ref1, results;
     if (null != handlers[event]) {
-      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j], 
+      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j],
       ctx = ref1[0], handler = ref1[1], results.push(handler.call(ctx));
       return results;
     }
@@ -93363,8 +93512,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     });
   }, Offline.checks = {}, Offline.checks.xhr = function() {
     var xhr;
-    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0), 
-    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")), 
+    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0),
+    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")),
     checkXHR(xhr, Offline.markUp, Offline.markDown);
     try {
       xhr.send();
@@ -93374,7 +93523,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     return xhr;
   }, Offline.checks.image = function() {
     var img;
-    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp, 
+    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp,
     img.src = Offline.getOption("checks.image.url");
   }, Offline.checks.down = Offline.markDown, Offline.checks.up = Offline.markUp, Offline.check = function() {
     return Offline.trigger("checking"), Offline.checks[Offline.getOption("checks.active")]();
@@ -93395,13 +93544,13 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       };
     }, _XMLHttpRequest = window.XMLHttpRequest, window.XMLHttpRequest = function(flags) {
       var _overrideMimeType, _setRequestHeader, req;
-      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader, 
+      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader,
       req.headers = {}, req.setRequestHeader = function(name, value) {
         return req.headers[name] = value, _setRequestHeader.call(req, name, value);
       }, _overrideMimeType = req.overrideMimeType, req.overrideMimeType = function(type) {
         return req.mimeType = type, _overrideMimeType.call(req, type);
       }, req;
-    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest, 
+    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest,
     window.XDomainRequest = function() {
       var req;
       return req = new _XDomainRequest(), monitorXHR(req), req;
@@ -93417,37 +93566,37 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   if (!window.Offline) throw new Error("Offline Reconnect brought in without offline.js");
   rc = Offline.reconnect = {}, retryIntv = null, reset = function() {
     var ref;
-    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"), 
+    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"),
     rc.state = "inactive", rc.remaining = rc.delay = null != (ref = Offline.getOption("reconnect.initialDelay")) ? ref :3;
   }, next = function() {
     var delay, ref;
-    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600), 
+    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600),
     rc.remaining = rc.delay = delay;
   }, tick = function() {
-    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"), 
+    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"),
     0 === rc.remaining ? tryNow() :void 0;
   }, tryNow = function() {
-    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting", 
+    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting",
     Offline.check();
   }, down = function() {
-    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"), 
+    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"),
     retryIntv = setInterval(tick, 1e3);
   }, up = function() {
     return null != retryIntv && clearInterval(retryIntv), reset();
   }, nope = function() {
-    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"), 
+    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"),
     rc.state = "waiting", next()) :void 0;
-  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope), 
+  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope),
   Offline.on("up", up);
 }.call(this), function() {
   var clear, flush, held, holdRequest, makeRequest, waitingOnConfirm;
   if (!window.Offline) throw new Error("Requests module brought in without offline.js");
   held = [], waitingOnConfirm = !1, holdRequest = function(req) {
-    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"), 
+    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"),
     "down" !== Offline.state && (waitingOnConfirm = !0), held.push(req);
   }, makeRequest = function(arg) {
     var body, name, password, ref, type, url, user, val, xhr;
-    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password, 
+    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password,
     body = arg.body, !1 !== Offline.getOption("requests")) {
       xhr.abort(), xhr.open(type, url, !0, user, password), ref = xhr.headers;
       for (name in ref) val = ref[name], xhr.setRequestHeader(name, val);
@@ -93458,10 +93607,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, flush = function() {
     var body, i, key, len, request, requests, url;
     if (!1 !== Offline.getOption("requests")) {
-      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i], 
+      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i],
       url = request.url.replace(/(\?|&)_=[0-9]+/, function(match, chr) {
         return "?" === chr ? chr :"";
-      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(), 
+      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(),
       requests[request.type.toUpperCase() + " - " + url + " - " + body] = request) :requests[request.type.toUpperCase() + " - " + url] = request;
       for (key in requests) request = requests[key], makeRequest(request);
       return clear();
@@ -93477,10 +93626,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         return holdRequest(request);
       }, _send = xhr.send, xhr.send = function(body) {
         return request.body = body, _send.apply(xhr, arguments);
-      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1), 
-      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange, 
+      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1),
+      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange,
       xhr.onreadystatechange = function() {
-        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(), 
+        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(),
         "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
       });
     }), Offline.requests = {
@@ -93499,12 +93648,12 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error, simulate = !1;
     }
   }
-  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}), 
+  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}),
   Offline.options.checks.active = state);
 }.call(this), function() {
   var RETRY_TEMPLATE, TEMPLATE, _onreadystatechange, addClass, content, createFromHTML, el, flashClass, flashTimeouts, init, removeClass, render, roundTime;
   if (!window.Offline) throw new Error("Offline UI brought in without offline.js");
-  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>', 
+  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>',
   RETRY_TEMPLATE = '<a href class="offline-ui-retry"></a>', createFromHTML = function(html) {
     var el;
     return el = document.createElement("div"), el.innerHTML = html, el.children[0];
@@ -93513,7 +93662,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, removeClass = function(name) {
     return el.className = el.className.replace(new RegExp("(^| )" + name.split(" ").join("|") + "( |$)", "gi"), " ");
   }, flashTimeouts = {}, flashClass = function(name, time) {
-    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]), 
+    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]),
     flashTimeouts[name] = setTimeout(function() {
       return removeClass(name), delete flashTimeouts[name];
     }, 1e3 * time);
@@ -93525,39 +93674,39 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       minute:60,
       second:1
     };
-    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult), 
+    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult),
     [ val, unit ];
     return [ "now", "" ];
   }, render = function() {
     var button, handler;
-    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)), 
+    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)),
     button = el.querySelector(".offline-ui-retry"), handler = function(e) {
       return e.preventDefault(), Offline.reconnect.tryNow();
-    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)), 
+    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)),
     addClass("offline-ui-" + Offline.state), content = el.querySelector(".offline-ui-content");
   }, init = function() {
     return render(), Offline.on("up", function() {
-      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2), 
+      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2),
       flashClass("offline-ui-up-5s", 5);
     }), Offline.on("down", function() {
-      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2), 
+      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2),
       flashClass("offline-ui-down-5s", 5);
     }), Offline.on("reconnect:connecting", function() {
       return addClass("offline-ui-connecting"), removeClass("offline-ui-waiting");
     }), Offline.on("reconnect:tick", function() {
       var ref, time, unit;
-      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining), 
-      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time), 
+      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining),
+      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time),
       content.setAttribute("data-retry-in-unit", unit);
     }), Offline.on("reconnect:stopped", function() {
-      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null), 
+      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null),
       content.setAttribute("data-retry-in-unit", null);
     }), Offline.on("reconnect:failure", function() {
       return flashClass("offline-ui-reconnect-failed-2s", 2), flashClass("offline-ui-reconnect-failed-5s", 5);
     }), Offline.on("reconnect:success", function() {
       return flashClass("offline-ui-reconnect-succeeded-2s", 2), flashClass("offline-ui-reconnect-succeeded-5s", 5);
     });
-  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange, 
+  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange,
   document.onreadystatechange = function() {
     return "complete" === document.readyState && init(), "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
   });
