@@ -185,9 +185,26 @@
                     content: 'Dette er en test 3<br>'+testContent,
                 },
                 {
-                    header: 'En tabel',
+                    header: {text:'En tabel'},
                     content: 'Missing :-)'
-                }
+                },
+				{
+					header: {text:'Selectlist'},
+					content: {
+						type: 'selectlist',
+						list: [
+							{               icon: 'fa-home'  , text:{da:'En overskrift', en: 'A Header'} },
+			                {id: 'slow',    icon: 'fa-bicycle'  , text:{da:'Meget langsomt', en: 'Slow'} },
+						    {id: 'medium',  icon: 'fa-car', text:{da:'Normal fart', en: 'Normal speed'} },
+			                {id: 'fast',    content:[{icon: 'fa-fighter-jet',   text:'Very fast!' },{icon: 'fa-fighter-jet',   text:'Very very fast!' }]},
+			                {               icon: 'fa-home',   text:{da:'En anden overskrift',en:'Another header'} },
+			                {id: 'slow2',   icon: 'fa-bicycle'  , text:{da:'Meget langsomt', en: 'Slow'} },
+			                {id: 'medium2', icon: 'fa-car', text:{da:'NORMAL (DA)', en: 'NORMAL (EN)'}},
+						    {id: 'fast2',   icon: 'fa-fighter-jet',   text:{da:'Meget hurtigt', en:'Very fast!'}}
+						]
+					}						
+				}					
+					
 
             ]; //accor_children
 

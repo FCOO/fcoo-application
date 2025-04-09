@@ -21,11 +21,6 @@ This can be done in two ways:
 //Default = DALO color in "Forsvarsministeriets koncernfælles Designmanual 2018"
 @include _application-color(#3f5b58, "default-");
 
-
-.niels {
-    color: #{$bg-color-25};
-}
-
 @function get-var-id( $type:'bg', $percent:'0' ){
     @if $percent == '0' {
         $percent: "";
@@ -177,6 +172,13 @@ Adjust different parts in jquery-bootstrap and fcoo-application
 
     --mm-item-opened-hover-color: #{get-var('active-text', 50)};
     --mm-item-opened-hover-bg   : #{get-var('darken-bg',   50)};
+}
+
+
+//Header in selectlist
+.dropdown-menu {
+    //--bs-dropdown-header-color           : #{get-var('text', 63)}; NOTE: Keeping standard Bootstrp text-color for header
+    --bs-dropdown-header-background-color: #{get-var('darken-bg',   63)};
 }
 
 

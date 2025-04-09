@@ -354,10 +354,6 @@ This can be done in two ways:
   --_fcoo-default-app-active-text-color-63: #1a1a1a;
 }
 
-.niels {
-  color: #78a29d;
-}
-
 :root {
   --fcoo-app-bg-color: var(--_fcoo-app-bg-color-0, var(--_fcoo-default-app-bg-color-0));
   --fcoo-app-hover-bg-color: var(--_fcoo-app-hover-bg-color-0, var(--_fcoo-default-app-hover-bg-color-0));
@@ -502,6 +498,10 @@ Adjust different parts in jquery-bootstrap and fcoo-application
   --mm-item-opened-bg: var(--fcoo-app-bg-color-50);
   --mm-item-opened-hover-color: var(--fcoo-app-active-text-color-50);
   --mm-item-opened-hover-bg: var(--fcoo-app-darken-bg-color-50);
+}
+
+.dropdown-menu {
+  --bs-dropdown-header-background-color: var(--fcoo-app-darken-bg-color-63);
 }
 
 /*****************************************************************
