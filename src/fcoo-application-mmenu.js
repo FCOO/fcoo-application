@@ -10,6 +10,9 @@ Objects and methods to set up Mmenu via $.bsMmenu
     var favoriteSetting = null, //SettingGroup to hold the favorites in the menus
         favoriteSettingId = '__FAVORITES__',
 
+menuSetting = null, //SettingGroup to hold the state of the menu (open/closed)
+menuSettingId = '__MENU__',
+
         bsMenus = {}; //{id:BsMenu}
 
 
@@ -22,11 +25,9 @@ Objects and methods to set up Mmenu via $.bsMmenu
     }
 
     function favoritesSetting_afterLoad(){
-        $.each(bsMenus, function(id, bsMenu){
-            setFavorites(bsMenu);
-        });
+        $.each(bsMenus, (id, bsMenu) => setFavorites(bsMenu) );
     }
-
+    
     function favorite_get(menuId, itemId){
         if (favoriteSetting && favoriteSetting.data && favoriteSetting.data[menuId])
             return favoriteSetting.data[menuId][itemId];
@@ -42,11 +43,43 @@ Objects and methods to set up Mmenu via $.bsMmenu
         }
     }
 
+
+
+    function menusSetting_afterLoad(){
+        if (menuSetting && menuSetting.data)
+            $.each(bsMenus, (id, bsMenu) => {
+                (menuSetting.data[id] || '').split(' ').forEach( menuItemId => {
+                    let menuItem = bsMenu.getItem(menuItemId);                 
+                    if (menuItem)
+                        menuItem.open();
+                });
+            });
+    }
+
+
+    function menu_onOpenOrClose(menuItem, open, bsMenu){
+        //Save a list of all open menu-item-ids
+        let data = [];
+        $.each(bsMenu.openItemIdList || {}, (id, open) => { if (open) data.push(id); });       
+
+        if (menuSetting && menuSetting.data){
+            menuSetting.data = menuSetting.data || {};
+            menuSetting.data[bsMenu.id] = data.join(' ');
+            menuSetting.saveAs(menuSettingId);
+        }
+    }        
+    
     ns.createMmenu = function( menuId, options, $container ){
         if (!favoriteSetting){
             favoriteSetting = new ns.SettingGroup({simpleMode: true});
             favoriteSetting.load( favoriteSettingId, favoritesSetting_afterLoad );
         }
+
+        if (!menuSetting){
+            menuSetting = new ns.SettingGroup({simpleMode: true});
+            menuSetting.load( menuSettingId, menusSetting_afterLoad );
+        }
+
 
 
         if (options.favorites === true)
@@ -71,6 +104,12 @@ Objects and methods to set up Mmenu via $.bsMmenu
             options.reset.title = ns.texts.reset;
 
         }
+        
+        //Set default save open/close
+        if (!options.onOpenOrClose)
+            options.onOpenOrClose = menu_onOpenOrClose;
+
+        
         //Create the menu
         var bsMenu =
                 $.bsMmenu(
