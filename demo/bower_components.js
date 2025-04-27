@@ -70710,10 +70710,13 @@ jquery-bootstrap-modal-promise.js
 
         alwaysMaxHeight: BOOLEAN - If true the modal is always the full height of it parent
 
+        allowFullScreen: BOOLEAN - if true the largest size (normal or extended) gets the possibility to be displayed in full-screen
+        noReopenFullScreen: BOOLEAN - if false and allowFullScreen = true and the modal was in full-screen when closed => It will reopen in full-screen. If true the modal will reopen in prevoius size (minimized, normal or extended)
 
         innerHeight     : The fixed height of the content
         innerMaxHeight  : The fixed max-height of the content
 
+        fitWidth
         flexWidth
         extraWidth
         megaWidth
@@ -70749,6 +70752,10 @@ jquery-bootstrap-modal-promise.js
         closeText
         noCloseIconOnHeader
         historyList         - The modal gets backward and forward icons in header to go backward and forward in the historyList. See demo and https://github.com/fcoo/history.js
+
+        keepScrollWhenReopen: false, - if true the scrolling of the content is reused. If false all content starts at scroll 0,0 when shown
+
+
 
     **********************************************************/
     var modalId = 0,
@@ -70846,6 +70853,7 @@ jquery-bootstrap-modal-promise.js
     3: fixed height. options.height
 
     The width of a modal is by default 300px.
+    options.fitWidth  : If true the width of the modal is set by the with of the content
     options.flexWidth : If true the width of the modal will adjust to the width of the browser up to 500px
     options.extraWidth: Only when flexWidth is set: If true the width of the modal will adjust to the width of the browser up to 800px
     options.megaWidth : Only when flexWidth is set: If true the width of the modal will adjust to the width of the browser up to 1200px
@@ -70864,6 +70872,7 @@ jquery-bootstrap-modal-promise.js
 
     function getWidthFromOptions( options ){
         return {
+            fitWidth            : !!options.fitWidth,
             flexWidth           : !!options.flexWidth,
             extraWidth          : !!options.extraWidth,
             megaWidth           : !!options.megaWidth,
@@ -70907,7 +70916,6 @@ jquery-bootstrap-modal-promise.js
         if (currentModal)
             currentModal._bsModalCloseElements();
 
-
         openModals++;
         this.previousModal = currentModal;
         currentModal = this;
@@ -70950,8 +70958,8 @@ jquery-bootstrap-modal-promise.js
     function hide_bs_modal() {
         currentModal = this.previousModal;
 
-        //If in full.screen mode => reset back
-        if (this.bsModal.isFullScreenMode)
+        //If in full-screen mode and dont reopen in full-screen => reset back
+        if (this.bsModal.isFullScreenMode && this.bsModal.noReopenFullScreen)
             this._bsModalFullScreenOff();
 
         //Close elements
@@ -71021,13 +71029,23 @@ jquery-bootstrap-modal-promise.js
     ******************************************************/
     var bsModal_prototype = {
         show  : function(){
-                    this.modal('show');
+            this.modal('show');
 
-                    this.data('bsModalDialog')._bsModalSetHeightAndWidth();
+            this.data('bsModalDialog')._bsModalSetHeightAndWidth();
 
-                    if (this.bsModal.onChange)
-                        this.bsModal.onChange( this.bsModal );
-                },
+            if (this.bsModal.onChange)
+                this.bsModal.onChange( this.bsModal );
+
+            //Scroll all "body" back if keepScrollWhenReopen = false is set
+            if (!this.keepScrollWhenReopen)
+                ['', 'extended', 'minimized'].forEach( size => {
+                    let obj = size ? this.bsModal[size] : this.bsModal;
+                    if (obj && obj.$body){
+                        obj.$body.scrollTop(0);
+                        obj.$body.scrollLeft(0);
+                    }
+                }, this);
+        },
 
         _close: function(){
             this.modal('hide');
@@ -71086,7 +71104,6 @@ jquery-bootstrap-modal-promise.js
                 }
             }
             //***********************************************************
-
             //Update header
             var $iconContainer = this.bsModal.$header.find('.header-icon-container').detach();
             updateElement(this.bsModal.$header, options, '_bsHeaderAndIcons', $.BSMODAL_USE_SQUARE_ICONS);
@@ -71105,6 +71122,8 @@ jquery-bootstrap-modal-promise.js
                     updateElement(containers.$footer,       contentOptions.footer,       '_bsAddHtml' );
                 }
             }, this);
+            
+            
             return this;
         },
 
@@ -71333,7 +71352,8 @@ jquery-bootstrap-modal-promise.js
 
         function useNormalWidth(options = {}){
             return (options.width == true) ||
-                    (   (options.flexWidth == undefined) &&
+                    (   (options.fitWidth == undefined) &&
+                        (options.flexWidth == undefined) &&
                         (options.extraWidth == undefined) &&
                         (options.megaWidth == undefined) &&
                         (options.maxWidth == undefined) &&
@@ -71657,8 +71677,6 @@ jquery-bootstrap-modal-promise.js
             return;
         }
 
-
-
         //Set height
         $modalContent
             .toggleClass('modal-fixed-height', !!cssHeight)
@@ -71669,6 +71687,7 @@ jquery-bootstrap-modal-promise.js
 
         //Set width
         $modalDialog
+            .toggleClass('modal-fit-width'              , cssWidth.fitWidth             )
             .toggleClass('modal-flex-width'             , cssWidth.flexWidth            )
             .toggleClass('modal-extra-width'            , cssWidth.extraWidth           )
             .toggleClass('modal-mega-width'             , cssWidth.megaWidth            )
@@ -71677,6 +71696,12 @@ jquery-bootstrap-modal-promise.js
             .toggleClass('modal-full-screen'            , cssWidth.fullScreen           )
             .toggleClass('modal-full-screen-with-border', cssWidth.fullScreenWithBorder )
             .css('width', cssWidth.width ? cssWidth.width : '' );
+
+
+        if (this.bsModal.isFullScreenMode){
+            this._bsModalFullScreenOff();
+            this._bsModalFullScreenOn();
+        }            
 
         //Call onChange (if any)
         if (bsModal.onChange)
@@ -71894,17 +71919,30 @@ jquery-bootstrap-modal-promise.js
         if (options.fullScreen || options.fullScreenWithBorder)
             options.allowFullScreen = false;
 
-        //Set options for full screen with border
-        if (options.fullScreenWithBorder)
-            options.fullScreen = true;
 
-        //Set options for full screen
-        if (options.fullScreen){
-            options.maxWidth             = true;
-            options.alwaysMaxHeight      = true;
-            options.relativeHeightOffset = 0;
+
+        function adjustFullScreenOptions( opt, defaultOpt={} ){
+            if (!opt) return;
+            ['fullScreenWithBorder', 'fullScreen'].forEach( id => {
+                if (opt[id] === undefined)
+                    opt[id] = defaultOpt[id] || false;
+            });
+            if (opt.fullScreenWithBorder)
+                opt.fullScreen = true;
+
+            //Set options for full screen
+            if (opt.fullScreen){
+                opt.maxWidth             = true;
+                opt.alwaysMaxHeight      = true;
+                opt.relativeHeightOffset = 0;
+            }
         }
 
+        //Set options for full screen with border
+        adjustFullScreenOptions(options);
+        adjustFullScreenOptions(options.minimized, options);
+        adjustFullScreenOptions(options.extended, options);
+        
         //Check $.MODAL_NO_VERTICAL_MARGIN
         if ($.MODAL_NO_VERTICAL_MARGIN){
             options.relativeHeightOffset = 0;
@@ -71930,6 +71968,10 @@ jquery-bootstrap-modal-promise.js
         //If allowFullScreen: Find the largest size-mode and set the differnet class-names etc.
         if (options.allowFullScreen)
             options.sizeWithFullScreen = options.extended ? MODAL_SIZE_EXTENDED : MODAL_SIZE_NORMAL;
+
+
+        //Set keepScrollWhenReopen to allow the content to be scrolled back to 0,0 when reopen a modal
+        this.keepScrollWhenReopen = options.keepScrollWhenReopen;
 
         //Create the modal
         $result =
@@ -72011,6 +72053,10 @@ jquery-bootstrap-modal-promise.js
                 $result.show();
         }
 
+        //Save some options in bsModal
+        ['noReopenFullScreen'].forEach( id => {
+            $result.bsModal[id] = options[id];
+        }); 
 
         return $result;
     };
@@ -73842,7 +73888,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
                             );
                         }
                     }.bind(this));
-                });
+                }.bind(this));
 
             var column = this._getColumn( sortInfo.column );
 
@@ -73946,6 +73992,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         sortId     = 0;
 
     $.bsTable = function( options ){
+        
         options = $._bsAdjustOptions( options, defaultOptions );
 
         //Fixed first column only needed when horizontal scrolling ( = full width)
@@ -74090,14 +74137,17 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
 
             multiSortList = []{columnIndex, sortIndex} sorted by sortIndex. Is used be each th to define alternative sort-order
         */
+        let anyColumnSortable = false;
         options.columns.forEach( ( columnOptions, index ) => {
-            if (columnOptions.sortable)
+            if (columnOptions.sortable){
                 multiSortList.push( {columnId: columnOptions.id, columnIndex: ''+index, sortIndex: columnOptions.sortIndex });
+                anyColumnSortable = true;
+            }                
         });
         multiSortList.sort(function( c1, c2){ return c1.sortIndex - c2.sortIndex; });
 
         //Create headers
-        if (options.showHeader){
+        if (options.showHeader || anyColumnSortable){
             let anyColumnMinimizable = false;
 
 
@@ -74160,7 +74210,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             }, this);
 
 
-            if (anyColumnMinimizable)
+            if (anyColumnMinimizable && options.showHeader)
                 $tr.on('dblclick', function(){
                     let minimize = true;
                     this.columns.forEach( columnOptions => {
@@ -92392,7 +92442,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     //clone( elem ) return a cloned copy of elem
     function clone(elem){
         var result;
-        if ($.isArray(elem)){
+        if (Array.isArray(elem)){
             result = [];
             $.each(elem, function(index, subElem){
                 result.push( clone(subElem) );
@@ -92453,7 +92503,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         nextLiId = 0;
 
     $.BsMmenuItem = function(options, parent, owner){
-        var _this = this;
+
         owner = owner || this;
         this.options = options;
 
@@ -92485,6 +92535,12 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         this.parent = parent;
         this.menu = parent.menu;
 
+        //Use forced events if given
+        if (options.onChange && this.menu.options.forceOnChange)
+            options.onChange = this.menu.options.forceOnChange;
+        if (options.onClick && this.menu.options.forceOnClick)
+            options.onClick = this.menu.options.forceOnClick;
+
         //Using global events (if any) if non is given
         if (!options.onChange && !options.onClick){
             options.onChange = this.menu.options.onChange || null;
@@ -92500,10 +92556,13 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                 this.state = 'semi';
         }
 
+        options.getState = options.getState || this.menu.options.getState || null;
+
         //Set element ids
         nextLiId++;
-        this.liId = 'bsmm_li_'+nextLiId;
-        this.ulId = 'bsmm_ul_'+nextLiId;
+        this.liId       = 'bsmm_li_'+nextLiId;
+        this.checkboxId = 'bsmm_cb_'+nextLiId;
+        this.ulId       = 'bsmm_ul_'+nextLiId;
 
         //Create the DOM-element
         this.createLi(owner);
@@ -92516,9 +92575,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         var list = this.options.list || this.options.items || this.options.itemList || [];
         if (list.length)
             this._createUl();
-        $.each(list, function(index, opt){
-            _this.append($.bsMmenuItem(opt, _this));
-        });
+
+        list.forEach( opt => this.append($.bsMmenuItem(opt, this)), this );
     };
 
     $.bsMmenuItem = function(options, parent, owner){
@@ -92559,6 +92617,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                         .i18n(this.options.link, 'href')
                         .prop('target', '_blank');
 
+                if (this.options.simpleFullWidth)
+                    this.$content.addClass('simple-full-width');
 
                 var originalContent = this.options.content || this.options,
                     adjustIcon = this.menu.options.adjustIcon;
@@ -92566,11 +92626,16 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                 if (originalContent && originalContent.icon && adjustIcon)
                     originalContent.icon = adjustIcon(originalContent.icon);
 
+                let onClick = owner._onClick.bind(owner);
+
                 content = clone(originalContent);
-                content = $.isArray(content) ? content : [content];
+                content = Array.isArray(content) ? content : [content];
 
                 //If first content-item is the text => make it full-width inside a div. Adjust the icon if menu.options.adjustIcon = function(icon) is given
                 var firstContent = content[0];
+
+                if (firstContent.onClick)
+                    firstContent.onClick = onClick;
 
                 if ( $.isPlainObject(firstContent) && (!firstContent.type || (firstContent.type == 'text')) )
                     content[0] = $('<div/>')._bsAddHtml(firstContent);
@@ -92587,13 +92652,13 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                 }
                 else {
                     this.checkbox = $.bsCheckbox({
-                        id          : this.id,
+                        id          : this.checkboxId,
                         type        : this.type,
                         multiLines  : true,
                         icon        : this.options.icon,
                         text        : this.options.text,
                         content     : content,
-                        onClick     : $.proxy(owner._onClick, owner)
+                        onClick     : onClick
                     })
                     .appendTo( this.$content );
 
@@ -92621,7 +92686,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                                 noBorder    : true,
                                 class       :'flex-shrink-0 mm-favorite-icons',
                                 selected    : inFavorites,
-                                onChange    : $.proxy(this._toggleFavorite, this)
+                                onChange    : this._toggleFavorite.bind(this)
                             }).appendTo(this.$outer);
 
                         this.$outer.addClass('pe-0');
@@ -92640,7 +92705,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                             square      : true,
                             noBorder    : true,
                             class       :'flex-shrink-0 mm-favorite-icons',
-                            onClick     : $.proxy(owner._toggleFavorite, owner)
+                            onClick     : owner._toggleFavorite.bind(owner)
                         }).appendTo(this.$outer);
                         this.$outer.addClass('pe-0');
                     }
@@ -92658,11 +92723,11 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             if (this.$favoriteButton || this.options.removeFavoriteButton || this.buttonPaddingRight)
                 paddingClass = paddingClass + ' padding-right';
 
-            if (buttonList){
+            if (buttonList && !this.menu.options.noButtons){
                 //Buttons added inside button-bar. If button-options have first: true => new 'line' = new bsButtonGroup
                 var currentList = [];
 
-                buttonList.forEach( function(buttonOptions){
+                buttonList.forEach( buttonOptions => {
                     if (buttonOptions.isFirstButton && currentList.length){
                         groupList.push( currentList );
                         currentList = [];
@@ -92677,6 +92742,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                 });
                 if (currentList.length)
                     groupList.push( currentList );
+
 
                 groupList.forEach( function( list ){
                     $.bsButtonBar({
@@ -92860,7 +92926,6 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         Insert this.$li in DOM
         ***********************************/
         _updateElement: function(){
-
             this.parent._createUl();
 
             if (this.$li){
@@ -92878,7 +92943,6 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                     this._getApi().initPanel( this.menu.panel );
                 }
             }
-
             this.menu._updateFavorites();
 
             return this;
@@ -92949,20 +93013,104 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             this.menu._updateFavorites();
         },
 
+
+        /***********************************
+        _getChildIndex
+        Get the index of childItem
+        ***********************************/
+        _getChildIndex: function( childItem ){
+            let index = 0,
+                nextItem = this.first;
+            while (nextItem){
+                if (nextItem === childItem)
+                    return index;
+                else {
+                    nextItem = nextItem.next;
+                    index++;
+                }
+            }
+            return -1;
+        },
+
+        /***********************************
+        _getPlacement
+        Return a array with the index of this in it parents for this and all is parent elements
+        ***********************************/
+        _getPlacement: function(){
+            let getChildIndex = function( childItem, placement = [] ){
+                let parent = childItem.parent;
+                if (parent){
+                    let index = 0,
+                        nextItem = parent.last;
+                    while (nextItem){
+                        if (nextItem === childItem){
+                            placement.push(index);
+                            return getChildIndex( parent, placement );
+                        }
+                        else {
+                            nextItem = nextItem.prev;
+                            index++;
+                        }
+                    }
+                }
+                return placement;
+            };
+
+            return getChildIndex( this );
+        },
+
+
+        /***********************************
+        getSiblingItem( menu )
+        Returns the equal item in a cloned or original menu
+        ***********************************/
+        getSiblingItem: function( menu ){
+            return menu._getItemByPlacment( this._getPlacement() );
+        },
+
         /***********************************
         open
         ***********************************/
         open: function(closeAllOther){
             if (closeAllOther)
                 this.menu.closeAll();
+
             if (this.$ul)
                 this._getApi().openPanel(this.$ul.get(0));
+
+            //For unknown reasons this is also needed.....
+            if (this.$li && this.$ul){
+                this.$li.addClass('mm-listitem_opened');
+                this.$ul.parent().removeClass('mm-hidden');
+            }
+
         },
 
+        /***********************************
+        close
+        ***********************************/
+        close: function(){
+            if (this.$ul)
+                this._getApi().closePanel(this.$ul.get(0));
+
+            //For unknown reasons this is also needed.....
+            if (this.$li && this.$ul){
+                this.$li.removeClass('mm-listitem_opened');
+                this.$ul.parent().addClass('mm-hidden');
+            }
+        },
         /***********************************
         _onClick
         ***********************************/
         _onClick: function(/*id, state*/){
+            //If the menu is a full clone => use the original menu to handle events
+            if (this.menu.cloneOf && this.menu.options.isFullClone){
+                let siblingItem = this.getSiblingItem( this.menu.cloneOf );
+                if (siblingItem)
+                    siblingItem._onClick.bind(siblingItem).apply(arguments);
+                return;
+            }
+
             //There are two ways to change the state:
             //options.onChange => simple true/false state
             //options.onClick(id, state, item) => onClick will do all setting
@@ -92973,7 +93121,6 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             else
                 if (this.options.onClick)
                     this.options.onClick(this.id, this.state, this);
-
         },
 
         /***********************************
@@ -93008,15 +93155,27 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         setState
         ***********************************/
         setState: function(state, callOnChange){
-            this.state = state;
+            this.state = this.options.getState ? this.options.getState(this, state) : state;
             if (this.checkbox)
-                this.checkbox.cbxSetState(state);
+                this.checkbox.cbxSetState(this.state);
 
             if (this.favoriteCheckbox)
-                this.favoriteCheckbox.cbxSetState(state);
+                this.favoriteCheckbox.cbxSetState(this.state);
 
             if (callOnChange && this.options.onChange)
                 this.options.onChange(this.id, this.state, this);
+
+            //If the menu has any cloned menus => update the items
+            if (this.menu.clones){
+                let state = this.state;
+                $.each(this.menu.clones, function(id, menu){
+                    let menuItem = this.getSiblingItem( menu );
+                    if (menuItem && menuItem.setState)
+                        menuItem.setState( state, false );
+                }.bind(this));
+            }
+
+
 
             return this;
         },
@@ -93047,7 +93206,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             //(*)slidingSubmenus: false,   //Whether or not submenus should come sliding in from the right.
                                            //If false, submenus expand below their parent. To expand a single submenu below its parent item, add the class "Vertical" to it.
 
-            offCanvas      : true,   //https://mmenujs.com/docs/core/off-canvas.html
+            offCanvas      : false, //https://mmenujs.com/docs/core/off-canvas.html
 
             preventDefault : true,
             extensions: [
@@ -93073,7 +93232,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
             //Events
             onOpenOrClose: null, //function(menuItem, open, menu)
-
+            forceOnChange: null, //function(menuItem, state, menu) Overwrites any onChange given. Normally used in cloned menues
+            forceOnClick : null, //function(menuItem, state, menu) Overwrites any onClick given. Normally used in cloned menues
             /*
             navbar - see https://mmenujs.com/docs/addons/navbars.html
             */
@@ -93104,6 +93264,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         }
     };
 
+
     /************************************************
     BsMmenu
     options = {
@@ -93114,6 +93275,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         }
         inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true) and reset (if options.reset is given)
         barCloseAll: BOOLEAN, if true a top-bar button is added that closes all open submenus
+
+        noButtons   : BOOLEAN, if true no buttons are added to menu-items
 
         adjustIcon  : function(icon): retur icon (optional). Adjust the icon of each menu-items
 
@@ -93128,8 +93291,6 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
     ************************************************/
     $.BsMmenu = function(options = {}, mmenuOptions = {}, configuration = {}){
-        var _this = this;
-
         this.prev = null;
         this.next = null;
         this.first = null;
@@ -93139,6 +93300,12 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         this.removeFavoriteIcon = [[$.FONTAWESOME_PREFIX_STANDARD + ' fa-star fa-fw', $.FONTAWESOME_STANDARD + " fa-slash fa-fw"]];
 
         this.ulId = 'bsmm_ul_0';
+
+        this.options = options;
+
+        //Save mmenuOptions and configuration in options. Needed for clone
+        this.options.mmenuOptions = mmenuOptions;
+        this.options.configuration = configuration;
 
         //Setting and adjusting mmenuOptions = the options for Mmenu
         //Using sliding submenus and navbar with title if it is a touch device
@@ -93150,7 +93317,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                     add   : !!window.bsIsTouch || !!options.title,
                     title : options.title || ' ',
                 },
-/* mangler
+/* @todo
                 backButton: {
                     // back button options
                 }
@@ -93202,23 +93369,23 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         }
 
         //Create and add sub-items
-        var list = $.isArray(options) ? options : (options.list || options.items || options.itemList || []);
-        $.each(list, function(index, opt){
-           _this.append($.bsMmenuItem(opt, _this));
-        });
+        var list = Array.isArray(options) ? options : (options.list || options.items || options.itemList || []);
+        list.forEach( opt => this.append($.bsMmenuItem(opt, this)), this );
+
+        this.list = list;
 
     };
 
 
-    $.bsMmenu = function(options, mmenuOptions){
-        return new $.BsMmenu(options, mmenuOptions);
+    $.bsMmenu = function(options, mmenuOptions, configuration){
+        return new $.BsMmenu(options, mmenuOptions, configuration);
     };
 
     //bsMMenu as jQuery prototype
-    $.fn.bsMmenu = function(options, mmenuOptions){
+    $.fn.bsMmenu = function(options, mmenuOptions, configuration){
         return this.each(function() {
             if (!$.data(this, "bsMmenu"))
-                new $.BsMmenu(options, mmenuOptions);
+                new $.BsMmenu(options, mmenuOptions, configuration);
             $.data(this, "bsMmenu").create($(this));
         });
     };
@@ -93255,7 +93422,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             this._createUl();
             this.$ul.appendTo($elem);
 
-            $elem.addClass( $._bsGetSizeClass({baseClass: 'mm-menu', useTouchSize: true}) );
+            $elem
+                .addClass( $._bsGetSizeClass({baseClass: 'mm-menu', useTouchSize: true}) )
+                .toggleClass('mm-menu-no-button', !!this.options.noButtons);
+
 
             if (this.options.inclBar){
                 buttonList = [];
@@ -93265,7 +93435,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                         title: {da:'Luk alle', en:'Close all'},
                         square : true,
                         tagName: 'div',
-                        onClick: $.proxy(this.closeAll, this)}
+                        onClick: this.closeAll.bind(this)}
                     ).get(0) );
 
                 var item = this.first;
@@ -93277,7 +93447,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                                 title   : item.options.text || null,
                                 square  : true,
                                 tagName : 'div',
-                                onClick : $.proxy(item.open, item, true)
+                                onClick : item.open.bind(item, true)
                             }).get(0)
                         );
                     item = item.next;
@@ -93290,7 +93460,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                         //bottom: []ELEMENT
                     };
             }
-
+            else
+                this.mmenuOptions.iconbar = false;
 
             //Add button to reset all selected menu-items (if any)
             if (this.options.reset){
@@ -93312,7 +93483,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                         title   : resetOptions.title,
                         square  : true,
                         tagName : 'div',
-                        onClick : $.proxy(this.reset, this)
+                        onClick : this.reset.bind(this)
                     }).get(0)
                 );
             }
@@ -93323,15 +93494,40 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
             this.panel = $elem.find('#'+this.ulId).get(0);
             this.api = this.mmenu.API;
 
-
-
             //Add event for open/close menus. Other events: 'closePanel:before', 'closePanel:after', 'openPanel:before', 'openPanel:after', 'setSelected:before', 'setSelected:after'
-            this.api.bind('openPanel:after',  this._onOpen.bind(this) );                
-            this.api.bind('closePanel:after', this._onClose.bind(this) );                
-            
+            this.api.bind('openPanel:after',  this._onOpen.bind(this) );
+            this.api.bind('closePanel:after', this._onClose.bind(this) );
+
             $elem.data('bsMmenu', this.mmenu);
 
+
+            this.setOpenAndClosedItems();
+
             return this;
+        },
+
+        /**********************************
+        setOpenAndClosedItems
+        Open/close items according to the setting in this.openItemIdList
+        **********************************/
+        setOpenAndClosedItems: function(){
+            this.openItemIdList = this.openItemIdList || {};
+
+            let save_openItemIdList = $.extend({}, this.openItemIdList);
+            $.each(this.openItemIdList, function(id, isOpen){
+                let item = this.getItem(id);
+                if (item && isOpen)
+                    item.open();
+            }.bind(this));
+
+            //Need to re-close other items
+            this.openItemIdList = save_openItemIdList;
+
+            this.visitAllItems( function(menuItem){
+                if (!this.openItemIdList || !this.openItemIdList[menuItem.id])
+                    menuItem.close();
+            }.bind(this));
+
         },
 
         /**********************************
@@ -93352,6 +93548,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
                 else
                     item = item.next;
             }
+
             return result;
         },
 
@@ -93360,6 +93557,48 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         **********************************/
         getItem: function(id, findByLiId){
             return this._getItem(id, this, findByLiId);
+        },
+
+        /**********************************
+        _getItemByPlacment
+        **********************************/
+        _getItemByPlacment( placement ){
+            let getChildByIndex = function( parent, placement ){
+                if (!placement.length || !parent)
+                    return parent;
+
+                let nextIndex = placement.pop(),
+                    index = 0,
+                    nextItem = parent.last;
+                while (nextItem){
+                    if (index == nextIndex)
+                        return getChildByIndex( nextItem, placement );
+                    else {
+                        nextItem = nextItem.prev;
+                        index++;
+                    }
+                }
+                return null;
+            };
+
+            return getChildByIndex( this, placement );
+        },
+
+        /**********************************
+        visitAllItems
+        func = function(menuItem)
+        **********************************/
+        visitAllItems: function( func ){
+            function visitAll( menuItem ){
+                let nextChild = menuItem.first;
+                while (nextChild){
+                    func(nextChild);
+                    visitAll(nextChild);
+                    nextChild = nextChild.next;
+                }
+            }
+            visitAll( this );
+
         },
 
         /**********************************
@@ -93377,7 +93616,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         **********************************/
         reset: function(){
             if (this.options.reset.promise)
-                this.options.reset.promise( $.proxy(this._reset_resolve, this) );
+                this.options.reset.promise( this._reset_resolve.bind(this) );
         },
 
         _reset_resolve: function( closeAll ){
@@ -93400,21 +93639,21 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         _onClose: function(panel){ return this._onOpenOrClose(panel, false); },
 
         _onOpenOrClose( panel, isOpen=false){
-            let liId      = panel.parentElement ? $(panel.parentElement).attr('id') : null,
-                mmenuItem = liId ? this.getItem(liId, true) : null;
+            let liId     = panel.parentElement ? $(panel.parentElement).attr('id') : null,
+                menuItem = liId ? this.getItem(liId, true) : null;
 
-            if (mmenuItem){
+            if (menuItem){
                 //Update openItemIdList
                 this.openItemIdList = this.openItemIdList || {};
-                this.openItemIdList[mmenuItem.id] = isOpen;
+                this.openItemIdList[menuItem.id] = isOpen;
 
                 if (this.options.onOpenOrClose)
-                    this.options.onOpenOrClose(mmenuItem, isOpen, this);
+                    this.options.onOpenOrClose(menuItem, isOpen, this);
             }
 
-            return this;            
-        },            
-        
+            return this;
+        },
+
         /**********************************
         closeAll
         **********************************/
@@ -93481,7 +93720,198 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
 
                 });
             }
+        },
+
+        /**********************************
+        clone
+        Create a cloned version of the menu
+        ***********************************/
+        clone: function( options = {}, mmenuOptions = {}, configuration = {}  ){
+
+            options = $.extend({
+                inclFavorites: false,
+                noButtons    : true,
+                inclBar      : false,
+                reset        : false,
+                favorites    : false,
+                isFullClone  : true     //true => All items are an exact copy
+            }, options);
+
+            let c_options       = $.extend(true, {}, this.options,               options      ),
+                c_mmenuOptions  = $.extend(true, {}, this.options.mmenuOptions,  mmenuOptions ),
+                c_configuration = $.extend(true, {}, this.options.configuration, configuration);
+
+            let c_menu = $.bsMmenu(c_options, c_mmenuOptions, c_configuration);
+
+            this.nrOfClones = this.nrOfClones || 0;
+            this.clones = this.clones || {};
+
+            c_menu.cId = 'clone'+this.nrOfClones;
+            c_menu.cloneOf = this;
+            this.nrOfClones++;
+            this.clones[c_menu.cId] = c_menu;
+
+            //Copy the open/close state from the original menu
+            c_menu.openItemIdList = {};
+            $.each(this.openItemIdList, function(id, isOpen){
+                let origialItem = this.getItem(id),
+                    cloneItem = origialItem ? origialItem.getSiblingItem( c_menu ) : null;
+                if (cloneItem)
+                    c_menu.openItemIdList[cloneItem.id] = isOpen;
+            }.bind(this));
+
+            return c_menu;
+        },
+
+        /**********************************
+        destroy
+        Destroy the menu and clean up
+        ***********************************/
+        destroy: function(){
+            if (this.cloneOf)
+                delete this.cloneOf.clones[this.cId];
+            $(this.mmenu.node.menu).empty();
+        },
+
+        /**********************************
+        showInModal
+        Show the menu in a modal
+        ***********************************/
+        showInModal: function(modalOptions = {}, destroyOnClose){
+
+            let width = null;
+
+            //If the menu is a clone and modalOptions.sameWidthAsCloneOf = true => the modal inner-wisth gets the same as the original menu
+            if (this.cloneOf && modalOptions.sameWidthAsCloneOf && !modalOptions.width)
+                width = this.cloneOf.$ul.width();
+            else
+                width = modalOptions.width;
+
+            let offCanvas = this.mmenuOptions.offCanvas;
+            this.mmenuOptions.offCanvas = false;
+
+            if (destroyOnClose){
+                modalOptions.show   = false;
+                modalOptions.remove = true;
+            }
+
+            this.bsModal = $.bsModal(
+                $.extend( modalOptions, {
+                    scroll   : true,
+                    fitWidth : !!width,
+                    flexWidth: !width,
+
+                    content: function(modalOptions, $container){
+                        let $outerContent =
+                                $('<div></div>')
+                                    .addClass('mm-menu-modal-content')
+                                    .appendTo($container);
+
+                        if (modalOptions.minHeight)
+                            $outerContent.css('minHeight', modalOptions.minHeight);
+
+                        if (width)
+                            $outerContent.width(width);
+
+                        let $content = $('<div></div>')
+                                .appendTo($outerContent);
+
+                        this.create($content);
+                    }.bind(this, modalOptions),
+                })
+            );
+
+            this.mmenuOptions.offCanvas = offCanvas;
+
+            if (destroyOnClose)
+                //Destroy the cloned menu on close + show it!
+                this.bsModal
+                    .on('hidden.bs.modal', this.destroy.bind(this) )
+                    .show();
+        },
+
+        /**********************************
+        asSimpleMenu
+        Special method to return the menu as a new simple bsMenu
+        The returned menu do not only contain any pure text or buttons or checkbox/radio
+        Instead eaach menu-item is just a click-item calling onClick
+        Optional: include(menuItem) return true/false
+        Optional: adjust(menuItem) return menuItem adjusted (icon, text etc)
+        ***********************************/
+        asSimpleMenu: function(
+            onClick = (/*menuItem*/) => {/* Do sometning with item*/},
+            include = (  menuItem  ) => {return !!menuItem.onClick || !!menuItem.onChange;},
+            adjust  = (  menuItem  ) => {return menuItem; }){
+
+
+            let onClickSimple = function(id, state, menuItem){
+                onClick(menuItem);
+            };
+
+
+            let getIcon = function( opt ){
+                let icon = opt.icon;
+                if (icon && this.options.adjustIcon)
+                    icon = this.options.adjustIcon(icon);
+                return icon;
+            }.bind(this);
+
+
+            let getSimpleOptions = function( menuList = []){
+                let result = [];
+
+                menuList.forEach( menuItem => {
+                    menuItem = adjust(menuItem);
+
+                    let simpleOptions = null;
+                    let list = getSimpleOptions( menuItem.list);
+
+                    if (list.length)
+                        simpleOptions = {
+                            id  : menuItem.id,
+                            icon: getIcon(menuItem),
+                            text: menuItem.text,
+                            list: list
+                        };
+                    else
+                        //Menu-item has no children => Add it if it is included (default = has a onClick/onChange )
+                        if (include(menuItem))
+                            simpleOptions = {
+                                id      : menuItem.id,
+                                icon    : getIcon(menuItem),
+                                text    : menuItem.text || {da:'Mangler', en:'Missing'},
+                                onClick : onClickSimple,
+                                simpleFullWidth: true
+                            };
+
+                    if (simpleOptions)
+                        result.push( simpleOptions );
+                }, this);
+
+                return result;
+
+            }.bind(this);
+
+
+            let bsMenu = $.bsMmenu(
+                    {list: getSimpleOptions( this.list ) },
+                    this.options.mmenuOptions,
+                    this.options.configuration
+                );
+
+            //Copy the open/close state from the original menu
+            bsMenu.openItemIdList = {};
+            $.each(this.openItemIdList, function(id, isOpen){
+                let origialItem = this.getItem(id),
+                    cloneItem = origialItem ? origialItem.getSiblingItem( bsMenu ) : null;
+                if (cloneItem)
+                    bsMenu.openItemIdList[cloneItem.id] = isOpen;
+            }.bind(this));
+
+            return bsMenu;
+
         }
+
     };
 
     /******************************************
