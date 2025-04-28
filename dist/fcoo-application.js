@@ -2285,7 +2285,7 @@ Objects and methods to set up Mmenu via $.bsMmenu
                 $.bsMmenu(
                     options, {
                         offCanvas      : false,
-                        slidingSubmenus: ns.modernizrDevice.isPhone
+                        slidingSubmenus: false,//ns.modernizrDevice.isPhone
                     }).create( $container );
 
         bsMenu.id = bsMenu.options.id || menuId;
