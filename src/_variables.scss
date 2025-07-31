@@ -3,21 +3,21 @@ WARIABLES
 Global scss-variables for fcoo-application
 *****************************************************/
 :root {
-    //padding for top and touch menus
-    --fcoo-app-menu-padding: #{$jb-padding-x};
+    //padding for top and touch panels
+    --fcoo-app-panel-padding: #{$jb-padding-x};
 
 }
 
 //Adjust left-side icon-button in mmenu
 .mm-menu {
     --mm-iconbar-button-dim: #{$button-square-dimension};
-    --mm-iconbar-size: calc( 2 * var(--fcoo-app-menu-padding) + var(--mm-iconbar-button-dim) );
+    --mm-iconbar-size: calc( 2 * var(--fcoo-app-panel-padding) + var(--mm-iconbar-button-dim) );
 }
 
 
-.touch-menu-container-sm, top-menu-container-sm, .mm-menu-sm {
+.touch-panel-container-sm, top-panel-container-sm, .mm-menu-sm {
     --mm-iconbar-button-dim: #{$button-square-dimension-sm};
-    --fcoo-app-menu-padding: #{$jb-padding-x-sm};
+    --fcoo-app-panel-padding: #{$jb-padding-x-sm};
 }
 
 

@@ -1,7 +1,7 @@
 /*****************************************************
-TOP-MENU-BTN-SHAKE
+TOP-PANEL-BTN-SHAKE
 
-Style for shaking icon in buttons in top menu
+Style for shaking icon in buttons in top panel
 *****************************************************/
 
 /*****************************************************
@@ -11,13 +11,13 @@ animations and to apply to button even when no-hover
 *****************************************************/
 
 
-.top-menu .btn {
+.top-panel .btn {
     i.far, i.fas {
         //transform-origin: center center;
     }
 }
 
-.top-menu .btn.shake-constant {
+.top-panel .btn.shake-constant {
     i.far, i.fas {
         animation-name    : shake-little;
 //        animation-name    : shake-rotate;

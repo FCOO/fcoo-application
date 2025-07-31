@@ -66,16 +66,6 @@ For standalone apps we use localStorage for persisting state.
 Contains the data and methods to get and set settings for the user.
 See [fcoo/fcoo-settings](https://github.com/FCOO/fcoo-settings) for details
 
-#### `window.fcoo.parseAll [function( validatorObj, defaultObj, options )]`
-Return an object with all parameter and hash-tags.
-If `window.fcoo.standalone` is set the parameters are read from localStorage and a temporary copy is saved under id = `window.fcoo.localStorageTempKey`
-
-See [fcoo/url.js-extensions](https://github.com/FCOO/url.js-extensions) for description of `validatorObj`, `defaultObj`, and `options`
-
-#### `window.fcoo.saveLocalStorage [function()]`
-Saves all temporary parameters in `localStorage[fcoo.localStorageTempKey]` to `localStorage[fcoo.localStorageKey]` => Will be reloaded next time
-
-
 ### Application colors, logos and CSS-Classes
 
 #### Application-color
@@ -243,7 +233,7 @@ Classes `show-for-connected` `hide-for-connected` `show-for-no-connected` `hide-
 Used to test if any images was attended to be loaded during the disconnection
 If so try to reload the images by reloading it with a `dummy` parameter named '`_X_`'.
 If this fails: reload it with the original src
-
+<!--
 ---
 ### [raven-js](https://github.com/getsentry/raven-js)
 
@@ -262,6 +252,7 @@ If a application need to report uncaught exceptions to [Sentry](https://sentry.i
 The following options are set in Raven
 `release`: Set to current version of the application tags to assign to each event.
 `whitelistUrls`: `"/https?:\/\/(.*\.)?fcoo\.dk/"`
+-->
 
 ## Development of packages or applications using fcoo-application
 When fcoo-application is included in a software-package or web-application the following global variables is available to control where setup-files etc. are located.

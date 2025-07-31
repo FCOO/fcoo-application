@@ -1,16 +1,16 @@
 /*****************************************************
 TOP-MENU
 
-Style for top menu and items (logo, buttons etc)
+Style for top panel and items (logo, buttons etc)
 *****************************************************/
 
 /***************************************************
-top-menu is like Bootstrap navbar but to avoid
+top-panel is like Bootstrap navbar but to avoid
 confussions another name is used
 ***************************************************/
 
-.top-menu-container {
-    //All elements inside .top-menu-container get same position and opacity
+.top-panel-container {
+    //All elements inside .top-panel-container get same position and opacity
     > * {
         position  : fixed;
         top       : 0;
@@ -22,12 +22,12 @@ confussions another name is used
         cursor: default;
     }
 
-    .top-menu {
+    .top-panel {
         margin-top: 0px;
-        padding   : var(--fcoo-app-menu-padding);
+        padding   : var(--fcoo-app-panel-padding);
 
         font-size: $jb-font-size-sm;
-        .top-menu-header {
+        .top-panel-header {
             @include text-shadow();
         }
 
@@ -35,15 +35,15 @@ confussions another name is used
             font-size: $jb-font-size;
         }
 
-        .top-menu-element-hide { display: none; }
+        .top-panel-element-hide { display: none; }
 
-        > .top-menu-item {
+        > .top-panel-item {
             flex-shrink: 0;
             flex-grow  : 0;
         }
 
-        > .top-menu-item:not(:first-child) {
-            margin-left: var(--fcoo-app-menu-padding) !important;
+        > .top-panel-item:not(:first-child) {
+            margin-left: var(--fcoo-app-panel-padding) !important;
         }
 
         .left-side {
@@ -53,7 +53,7 @@ confussions another name is used
             margin-left: auto !important;
         }
 
-        //FCOO-logo inside top menu get fixed size and hover effect
+        //FCOO-logo inside top panel get fixed size and hover effect
         .icon-fcoo-logo-contrast {
             padding             : 0;
             margin              : 0;
@@ -68,7 +68,7 @@ confussions another name is used
         }
 
         //The header is the only element that shrink and grow on resize
-        .top-menu-header {
+        .top-panel-header {
             flex-shrink: 1;
             flex-grow  : 1;
             text-align : center;
@@ -77,7 +77,7 @@ confussions another name is used
             line-height: 1.5;
             @include text-truncate();
 
-            &.top-menu-element-hide {
+            &.top-panel-element-hide {
                 display   : block;
                 visibility: hidden;
             }
@@ -96,15 +96,15 @@ confussions another name is used
                     width: 10rem;
                 }
 
-                &.top-menu-element-show + .btn {
+                &.top-panel-element-show + .btn {
                     border-left: none;
                     border-bottom-left-radius: 0;
                     border-top-left-radius   : 0;
                 }
             }
         }
-    } //end of .top-menu
-}//end of .top-menu-content
+    } //end of .top-panel
+}//end of .top-panel-content
 
 //Create display-style for modernizr test all-read used in buttons for message-groups
 a.all-read    .hide-for-all-read,

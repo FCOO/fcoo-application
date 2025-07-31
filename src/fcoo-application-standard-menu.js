@@ -41,7 +41,7 @@ and the menu "OBSERVATIONS_MENU" are being adjustedd and have three sub-menus ad
 
 It is possible to use another owner-list when creating another version of the menu-structure to have different adjustments
 
-All menu-items in standard menu-structure that reference to a "owner-function" in the given user-list, are removed.
+All menu-items in standard menu-structure that do not reference to a "owner-function" in the given user-list, are removed.
 In the example:
 If the applicatuion do not include a package that sets a owner-function for "OBSERVATIONS"
 the hole menu-item "OBSERVATIONS_MENU" are removed automatic.
@@ -50,26 +50,35 @@ The sub-menus and/or the finally options for a menu-item can also be in a sepera
 
 The reading of the setup-file (fcoo-menu.json) or other file or direct options are always do via ns.promiseList.append
 
-METHOD: window.fcoo.createFCOOMenu(ownerList: OWNER_LIST, fileNameOrMenuOptions: FILENAME or MENU_OPTIONS)
+Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
 
-OWNER_LIST = {id:MENUITEM_ID} of FUNCTION(options: MENUITEM_OPTIONS, addMenu: function(list: MENUITEM_LIST))
-The function given for ownerList[ID] can also contain info on sub-menuitems and/or include reading a setup-file for the specific menu-item
+    MENU_OPTIONS = {
+fileName: FILENAME,
+menuList or list: MENU_ITEM_LIST
+        ownerList            : OWNER_LIST
+        finallyFunc          : FUNCTION,
+fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+    }
 
-FILENAME = Path to file. Two versions:
-    1: Relative path locally e.q. "data/info.json"
-    2: Using ns.dataFilePath (See fcoo-data-files): {subDir, fileName}.
-    E.q. {subDir: "theSubDir", fileName:"theFileName.json"} => "https://app.fcoo.dk/static/theSubDir/theFileName.json"
-The content of the file must be MENU_OPTIONS
+    FILENAME = Path to file. Two versions:
+        1: Relative path locally e.q. "data/info.json"
+        2: Using ns.dataFilePath (See fcoo-data-files): {subDir, fileName}.
+        E.q. {subDir: "theSubDir", fileName:"theFileName.json"} => "https://app.fcoo.dk/static/theSubDir/theFileName.json"
+    The content of the file must be MENU_ITEM_LIST
 
-MENU_OPTIONS = MENUITEM_LIST =[]MENUITEM_OPTIONS
+    MENU_ITEM_LIST = []MENU_ITEM
 
-MENUITEM_OPTIONS = {icon, text,..., list:MENU_OPTIONS}  - The options to create the menu-item. list = [] of sub-menus, or
-MENUITEM_OPTIONS = {ID: BOOLEAN}                        - false : Do not include, true: Include with default options (=LAYEROPTIONS) given in the packages that build the layer, or
-MENUITEM_OPTIONS = {ID: FILENAME}                       - Include with the options (=LAYEROPTIONS) given in FILENAME pared with the default options, or
-MENUITEM_OPTIONS = {ID: (=OWNER_ID)} or OWNER_ID        - Include with (=LAYEROPTIONS) pared with the default options, or
-MENUITEM_OPTIONS = MMENUITEMOPTIONS                     = Options for a menu-item without layer-toggle. See fcoo/jquery-bootstrap-mmenu for details.
+    MENU_ITEM = {icon, text,..., list:MENU_ITEM_LIST} - The options to create the menu-item. list = [] of sub-menus, or
+    MENU_ITEM = {ID: BOOLEAN}                         - false : Do not include, true: Include with default options (=LAYEROPTIONS) given in the packages that build the layer, or
+    MENU_ITEM = {ID: FILENAME}                        - Include with the options (=LAYEROPTIONS) given in FILENAME pared with the default options, or
+    MENU_ITEM = {ID: (=OWNER_ID)} or OWNER_ID         - Include with (=LAYEROPTIONS) pared with the default options, or
+    MENU_ITEM = MMENUITEMOPTIONS                      - Options for a menu-item without layer-toggle. See fcoo/jquery-bootstrap-mmenu for details.
 
-OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
+    OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
+
+    OWNER_LIST = {MENU_ITEM_ID: FUNCTION(options: MENU_ITEM, addMenu: function(list: MENU_ITEM_LIST))}
+
+
 
 ****************************************************************************/
 (function ($, moment, window/*, document, undefined*/) {
@@ -157,21 +166,40 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
 
 
     /*************************************************************************
-    createFCOOMenu(options = {ownerList, finallyFunc, fileNameOrMenuOptions})
+    createFCOOMenu(options)
+    options = {
+        fileName             : FILENAME,
+        menuList or list     : MENU_ITEM_LIST
+        ownerList            : OWNER_LIST
+        finallyFunc          : FUNCTION,
+        fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+    }
     *************************************************************************/
-    ns.createFCOOMenu = function(options){
+    ns.createFCOOMenu = function( options ){
         options.replaceMenuItems = {};
-        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'fcoo-menu.json'}; //File name rettes til fcoo-menu.json
+        options.fileNameOrMenuOptions =
+            options.fileNameOrMenuOptions ||
+            options.fileName ||
+            options.menuList ||
+            options.list ||
+            options.fileNameOrMenuOptions ||
+            //{subDir: 'setup', fileName:'fcoo-menu.json'};
+            'data/fcoo-menu.json'; //HER
 
-        ns.promiseList.append( ns.options2promiseOptions( options.fileNameOrMenuOptions, resolveMenu.bind(null, options), true ) );
+        ns.promiseList.append(
+            ns.options2promiseOptions(
+                options.fileNameOrMenuOptions,
+                resolveMenu.bind(null, options),
+                true
+            )
+        );
     };
 
     /*********************************************
-
+    resolveMenu(options, listOrMenus)
     *********************************************/
     function resolveMenu(options, listOrMenus){
         options.menuList = convertList(listOrMenus);
-
         createMenu(options.menuList, {}, options);
 
         //Add promise to check and finish the creation of the menu
@@ -183,16 +211,15 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     }
 
     /*********************************************
-
+    createMenu(menuList, parentMenuOptions, options)
     *********************************************/
     function createMenu(menuList, parentMenuOptions, options){
         $.each(menuList, function(index, menuItem){
             let ownerFunc = menuItem.isOwnerMenu && !menuItem.ownerFuncCalled ? options.ownerList[menuItem.id] : null;
-
             if (ownerFunc){
                 ownerFunc(
                     menuItem.options || {},
-                    function(menuItemOrList)                     { addMenu(menuItemOrList, menuList, menuItem.id, options); },  //addMenu
+                    function(menuItemOrList)                     { addMenu(menuItemOrList, menuList, menuItem.id, options); },      //addMenu
                     function(adjustmentsToParentMenuOptions = {}){ $.extend(parentMenuOptions, adjustmentsToParentMenuOptions); }   //adjustParentMenuOptions
                 );
 
@@ -200,6 +227,7 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
                 menuList[index].ownerFuncCalled = true;
 
             }
+
             if (menuItem.list)
                 createMenu(menuItem.list, menuItem, options);
         });
@@ -250,8 +278,6 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
 
         for (index=menuList.length-1; index>=0; index--){
             menuItem = menuList[index];
-
-
             //Convert icon (if exists and possible)
             if (menuItem.icon && $.isPlainObject(menuItem.icon)){
                 //Convert icon with colorName(s) to "real" icons
@@ -266,7 +292,6 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
                         icon.colorNamePrefix
                     );
             }
-
 
             if (menuItem && menuItem.list)
                 updateMenuList(menuItem.list, options);

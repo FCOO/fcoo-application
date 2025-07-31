@@ -584,12 +584,12 @@ Methods for loading and saving settings for the application
             ns.globalSetting.set(ns.standardSettingId, code);
 
             let displatEditCode = ns.ss_db2displayFormat(code),
-                settingMenuDiv_da = '<div><i class="fal fa-cog"></i>&nbsp;Indstillinger&nbsp;' + '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.da+'</div>',
-                settingMenuDiv_en = '<div><i class="fal fa-cog"></i>&nbsp;Settingsr&nbsp;'+      '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.en+'</div>';
+                settingPanelDiv_da = '<div><i class="fal fa-cog"></i>&nbsp;Indstillinger&nbsp;' + '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.da+'</div>',
+                settingPanelDiv_en = '<div><i class="fal fa-cog"></i>&nbsp;Settingsr&nbsp;'+      '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.en+'</div>';
 
             let noty = window.notyInfo({
-                da: 'Opsætning med id <em>'+displatEditCode+'</em> er angivet som Standard Opsætning, og den bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter<br>&nbsp;<br>Standard Opsætning kan ændres under<br>' + settingMenuDiv_da,
-                en: 'Setting with <em>'+displatEditCode+'</em> is set as Standard Setting and will be used as default when '+ ns.ss_getAppName('en', true) +' starts<br>&nbsp;<br>Standard Setting can be set under<br>' + settingMenuDiv_en,
+                da: 'Opsætning med id <em>'+displatEditCode+'</em> er angivet som Standard Opsætning, og den bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter<br>&nbsp;<br>Standard Opsætning kan ændres under<br>' + settingPanelDiv_da,
+                en: 'Setting with <em>'+displatEditCode+'</em> is set as Standard Setting and will be used as default when '+ ns.ss_getAppName('en', true) +' starts<br>&nbsp;<br>Standard Setting can be set under<br>' + settingPanelDiv_en,
             },{
                 layout   : 'center',
                 textAlign: 'center',

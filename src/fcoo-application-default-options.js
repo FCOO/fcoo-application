@@ -24,13 +24,13 @@ See src/fcoo-application-create.js
             depot: STRING. Sub-dir with data  //Standard "depot/"
         }
 
-        topMenu: {
+        topPanel: {
             See description in fcoo/fcoo-application and in nsMap.defaultApplicationOptions below
         }
 
-        leftMenu/rightMenu: true or false or {
+        leftPanel/rightPanel: true or false or {
             width: NUMBER,
-            buttons: As leftMenuButtons and rightMenuButtons = {
+            buttons: As leftPanelButtons and rightPanelButtons = {
                 preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
                 new         = true or onClick or buttonOptions, //Standard new "something"
                 edit        = true or onClick or buttonOptions, //Standard edit settings
@@ -51,20 +51,20 @@ See src/fcoo-application-create.js
                 postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
             }
 
-            isStandardMenu: false    //True => the standard menu is created in this side using standardMenuOptions and bsMenuOptions
-            bsMenuOptions : {}      //Only if isStandardMenu: true => options for $.BsMmenu when creating the content of the left/right side
+            isStandardMenu: false    //True => the standard menu is created in this side using standardMenuOptions and menuOptions
+            menuOptions   : {}      //Only if isStandardMenu: true => options for $.BsMmenu when creating the content of the left/right side
 
             if isStandardMenu: false:
             fileName: FILENAME, or
             data    : JSON-OBJECT, or
             content : A JSON-OBJECT with content as in fcoo/jquery-bootstrap
 
-            create or resolve : function( data, $container ) - function to create the menus content in $container. Only if fileName or data is given (and isStandardMenu: false)
+            create or resolve : function( data, $container ) - function to create the content of the panels in $container. Only if fileName or data is given (and isStandardMenu: false)
 
         },
 
-        keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
-        keepRightMenuButton : false, //Keeps the right menu-button even if rightMenu is null
+        keepLeftPanelButton  : false, //Keeps the left panel-button even if leftPanel is null
+        keepRightPanelButton : false, //Keeps the right panel-button even if rightPanel is null
 
         //Options for the standard-menu/mmenu created by methods in fcoo-application-mmenu
         standardMenuOptions: {
@@ -104,9 +104,9 @@ See src/fcoo-application-create.js
                 depot: 'depot/'
             },
 
-            saveLoadShare: '', //STRING or []STRING. "leftMenu", "rightMenu", "topMenu": Defines where the load-, save and share-buttons are shown
+            saveLoadShare: '', //STRING or []STRING. "leftPanel", "rightPanel", "topPanel": Defines where the load-, save and share-buttons are shown
 
-            topMenu            : {
+            topPanel            : {
                 save : false, //If true a save-button is added (see SavedSettingList)
                 load : false, //If true a load-button is added (see SavedSettingList)
                 share: false, //If true a share-button is added (see SavedSettingList)
@@ -114,13 +114,13 @@ See src/fcoo-application-create.js
 
             standardMenuOptions: {},
 
-            leftMenu           : false,
-            leftMenuIcon       : 'fa-layer-group',
-            keepLeftMenuButton : false,
+            leftPanel           : false,
+            leftPanelIcon       : 'fa-layer-group',
+            keepLeftPanelButton : false,
 
-            rightMenu          : false,
-            rightMenuIcon      : 'fa-list',
-            keepRightMenuButton: false,
+            rightPanel          : false,
+            rightPanelIcon      : 'fa-list',
+            keepRightPanelButton: false,
 
 
             //Standard setup/options

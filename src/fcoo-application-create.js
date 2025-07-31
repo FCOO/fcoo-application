@@ -5,7 +5,7 @@ Methods to create standard FCC-web-applications
 
 
 ****************************************************************************/
-(function ($, moment, window/*, document, undefined*/) {
+(function ($, moment, window, document, undefined) {
     "use strict";
 
     var ns = window.fcoo = window.fcoo || {};
@@ -23,14 +23,27 @@ Methods to create standard FCC-web-applications
 
     createApplication(...) will
         1: "Load" (*) setup and proccess the options
-        2: "Load" standard setup/options for differnet parts of the application
-        3: "Load" content for left- and/or right-menu
+        2: "Load" standard setup/options for different parts of the application
+        3: "Load" content for left- and/or right-panel
         4: "Load" standard FCOO-menu
-        5: Create the main structure and the left and/or right menu
+        5: Create the main structure and the left and/or right panel
         6: "Load" options.other and options.metaData (if any)
         7: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
 
     *) "Load" can be loading from a file or using given or default options
+
+
+    Regarding loading and creation of menu-structure in left or right panel (#3 and #4):
+    There are three way to set a menu structure (see fcoo-application-standard-menu.js):
+    1: Set a list = MENU_ITEM_LIST or {list: MENU_ITEM_LIST}
+    2: Set name of a file containing the menu-structure
+    3: Mark to use the default FCOO-menu
+
+    A menu-item can initial just be at id (STRING) and other code-packages can add functions to create the content of the menu-item
+    The application must provide a "owner-list" = {MENU_ID: function(options, addMenu)}, where addMenu = function to add new (sub-)menu-items
+
+
+
 
     ****************************************************************************/
 
@@ -68,10 +81,32 @@ Methods to create standard FCC-web-applications
     }
 
     /*************************************************************************
+    __FCOO_APPLICATION_ADJUT_OPTIONS
+    Convert options from previous version to current version
+    *************************************************************************/
+    ns.__FCOO_APPLICATION_ADJUT_OPTIONS = function(options){
+        ['leftMenu', 'leftMenuIcon', 'leftMenuButtons', 'keepLeftMenuButton', 'rightMenu', 'rightMenuIcon', 'keepRightMenuButton', 'rightMenuButtons', 'topMenu', 'bottomMenu'].forEach( id => {
+            let newId = id.replace('Menu', 'Panel');
+
+            if ((options[newId] === undefined) && (options[id] !== undefined)){
+                options[newId] =options[id];
+                delete options[id];
+            }
+        });
+    };
+
+
+    /*************************************************************************
     createApplication(
         options,
         create_main_content
-        menuOptions = {ownerList, finallyFunc, fileNameOrMenuOptions}
+        menuOptions = {
+            fileName             : FILENAME,
+            menuList or list     : MENU_ITEM_LIST
+            ownerList            : OWNER_LIST
+            finallyFunc          : FUNCTION,
+            fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+        }
         application_resolve_setup,
         nsForApplication = ns,
     }
@@ -88,6 +123,7 @@ Methods to create standard FCC-web-applications
         application_resolve_setup,
         nsForApplication = ns
     ){
+
         //Set namespace for the application
         nsApp = nsForApplication || nsApp;
 
@@ -116,59 +152,71 @@ Methods to create standard FCC-web-applications
     ******************************************************************/
     function resolve_setup(options){
 
+        //For backward compatibility a number of ids are converted
+        ns.__FCOO_APPLICATION_ADJUT_OPTIONS(options);
+
         //Set applicationHeader here because it is used in promise-error
         ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || ns.defaultApplicationOptions.applicationName );
 
         //Adjust options - both in ns and nsApp
         ns.setupOptions = nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
 
-        //Set bottom-menu options
-        nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
+        //Set bottom-panel options
+        nsApp.setupOptions.bottomPanel = nsApp.setupOptions.bottomPanel || nsApp.BOTTOM_PANEL || nsApp.BOTTOM_MENU;
 
         //Adjust path: If path is file-name (in any form) => move it into default format
         ['help', 'messages', 'warning'].forEach(id => {
-            let topMenuPath = options.topMenu[id];
-            if (topMenuPath && window.intervals.isFileName(topMenuPath))
-                options.topMenu[id] = {url: ns.dataFilePath( topMenuPath )};
+            let topPanelPath = options.topPanel[id];
+            if (topPanelPath && window.intervals.isFileName(topPanelPath))
+                options.topPanel[id] = {url: ns.dataFilePath( topPanelPath )};
         });
 
         //Add helpId to modal for globalSetting (if any)
-        if (nsApp.setupOptions.topMenu && nsApp.setupOptions.topMenu.helpId && nsApp.setupOptions.topMenu.helpId.globalSetting){
+        if (nsApp.setupOptions.topPanel && nsApp.setupOptions.topPanel.helpId && nsApp.setupOptions.topPanel.helpId.globalSetting){
             var modalOptions = ns.globalSetting.options.modalOptions = ns.globalSetting.options.modalOptions || {};
-            modalOptions.helpId = nsApp.setupOptions.topMenu.helpId.globalSetting;
+            modalOptions.helpId = nsApp.setupOptions.topPanel.helpId.globalSetting;
             modalOptions.helpButton = true;
         }
 
         //Adjust and add options for load, save, and share button
         let addTo = ns.setupOptions.saveLoadShare || '', buttons;
         addTo = Array.isArray(addTo) ? addTo : addTo.split(' ');
+
+        //Convert "Menu" to "Panel"
+        addTo = addTo.join(' ').replace('Menu', 'Panel').split(' ');
+
+        ['leftPanel', 'rightPanel', 'topPanel'].forEach( id => {
+            if (options[id] === true)
+                options[id] = {};
+        });
+
         addTo.forEach( where => {
             switch (where.toUpperCase()){
-                case 'TOPMENU'  :
-                    options.topMenu = options.topMenu || {};
-                    options.topMenu.save  = options.topMenu.save  || true;
-                    options.topMenu.load  = options.topMenu.load  || true;
-                    options.topMenu.share = options.topMenu.share || true;
+                case 'TOPPANEL'  :
+                    options.topPanel.save  = options.topPanel.save  || true;
+                    options.topPanel.load  = options.topPanel.load  || true;
+                    options.topPanel.share = options.topPanel.share || true;
                     break;
 
-                case 'LEFTMENU' :
-                    options.leftMenu = options.leftMenu || {};
-                    buttons = options.leftMenu.buttons = options.leftMenu.buttons || {};
-                    buttons.save  = buttons.save  || true;
-                    buttons.load  = buttons.load  || true;
-                    buttons.share = buttons.share || true;
+                case 'LEFTPANEL' :
+                    if (options.leftPanel){
+                        buttons = options.leftPanel.buttons = options.leftPanel.buttons || {};
+                        buttons.save  = buttons.save  || true;
+                        buttons.load  = buttons.load  || true;
+                        buttons.share = buttons.share || true;
+                    }
                     break;
 
-                case 'RIGHTMENU':
-                    options.rightMenu = options.righttMenu || {};
-                    buttons = options.rightMenu.buttons = options.rightMenu.buttons || {};
-                    buttons.save  = buttons.save  || true;
-                    buttons.load  = buttons.load  || true;
-                    buttons.share = buttons.share || true;
+                case 'RIGHTPANEL':
+                    if (options.rightPanel){
+                        buttons = options.rightPanel.buttons = options.rightPanel.buttons || {};
+                        buttons.save  = buttons.save  || true;
+                        buttons.load  = buttons.load  || true;
+                        buttons.share = buttons.share || true;
+                    }
                     break;
             }
         });
-
 
         //Call the applications own resolve method (if any)
         if (appResolveSetup)
@@ -180,60 +228,81 @@ Methods to create standard FCC-web-applications
                 ns.promiseList.append( ns.options2promiseOptions(fileNameOrData, nsApp.standard[id]) );
         });
 
-        //3: "Load" content for left- and/or right-menu. If the menu isn't the standard-menu its content is loaded last to have the $-container ready
+        //3: "Load" content for left- and/or right-panel. If the panel is a menu or the standard-menu its content is loaded last to have the $-container ready
+        let menuOptions = options.menuOptions;
         ['left', 'right'].forEach(prefix => {
-            var menuId = prefix+'Menu',
-                sideMenuOptions = options[menuId];
-            if (!sideMenuOptions) return;
+            var panelId = prefix+'Panel',
+                sidePanelOptions = options[panelId];
+            if (!sidePanelOptions) return;
 
-            if (sideMenuOptions.isStandardMenu){
-                //Set the options for mmenu
-                sideMenuOptions.menuOptions =
-                    $.extend({}, sideMenuOptions.bsMenuOptions || {}, options.standardMenuOptions || {}, {list: []});
 
-                //Set ref to the menu with the standard menu
-                options.standardMenuId = prefix+'Menu';
+            //1: The panel contains a menu
+            if (sidePanelOptions.isStandardMenu || (options.menuOptions && sidePanelOptions.isMenu) || sidePanelOptions.menuOptions || sidePanelOptions.bsMenuOptions){
+
+                //sidePanelOptions.menuOptions can just be a file-name with menu-items
+                if (sidePanelOptions.menuOptions && window.intervals.isFileName(sidePanelOptions.menuOptions))
+                    sidePanelOptions.menuOptions = {
+                        fileName: sidePanelOptions.menuOptions
+                    };
+
+                //Set the options for menu
+                menuOptions = sidePanelOptions.menuOptions =
+                    $.extend({},
+                        sidePanelOptions.isStandardMenu ? options.standardMenuOptions : {} || {},
+                        menuOptions || {},
+                        sidePanelOptions.menuOptions   || {},    //Include both menuOptions
+                        sidePanelOptions.bsMenuOptions || {}     //and bsMenuOptions for backward combability
+                    );
+
+                //Set ref to the panel with the standard menu
+                options.menuPanelId = prefix+'Panel';
             }
             else
-                if (!sideMenuOptions.$menu){
-                    /*  sideMenuOptions contains:
+                //2: Content is given in $panel or $content
+                if (sidePanelOptions.$panel || sidePanelOptions.$content)
+                    sidePanelOptions.$panel = sidePanelOptions.$panel || sidePanelOptions.$content;
+                else {
+                    /*
+                    3: sidePanelOptions contains:
                           fileName: FILENAME, or
                           data    : JSON-OBJECT, or
                           content : A JSON-OBJECT with content as in fcoo/jquery-bootstrap, or
-                          create or resolve : function( data, $container ) - function to create the menus content in $container. Only if fileName or data is given
-
-                        Create the resolve-function */
-                    var resolve, menuResolve;
-                    if (sideMenuOptions.content)
+                          create or resolve : function( data, $container ) - function to create the content of the panel in $container. Only if fileName or data is given
+                        Create the resolve-function
+                    */
+                    var resolve, panelResolve;
+                    if (sidePanelOptions.content)
                         resolve = function( content ){
-                            nsApp.main[menuId].$menu._bsAddHtml( content );
+                            nsApp.main[panelId].$panel._bsAddHtml( content );
                         };
                     else {
-                        menuResolve = sideMenuOptions.resolve || sideMenuOptions.create;
-                        if (menuResolve)
+                        panelResolve = sidePanelOptions.resolve || sidePanelOptions.create;
+                        if (panelResolve)
                             resolve = function( data ){
-                                menuResolve( data, nsApp.main[menuId].$menu );
+                                panelResolve( data, nsApp.main[panelId].$panel );
                             };
                     }
 
-                    if (menuResolve)
+                    if (panelResolve)
                         ns.promiseList.appendLast({
-                            fileName: sideMenuOptions.fileName,
-                            data    : sideMenuOptions.data || sideMenuOptions.content,
+                            fileName: sidePanelOptions.fileName,
+                            data    : sidePanelOptions.data || sidePanelOptions.content,
                             resolve : resolve
                         });
                 }
         });
 
-        //4: "Load" standard FCOO-menu - when the menu is loaded
-        if (nsApp.menuOptions){
+
+        //4: "Load" menu (standard or individuel) - when the menu is loaded
+        if (menuOptions){
+            nsApp.menuOptions = menuOptions;
             nsApp.menuOptions.appFinallyFunc = nsApp.menuOptions.finallyFunc;
-            nsApp.menuOptions.finallyFunc = standardMenuFinally;
+            nsApp.menuOptions.finallyFunc = appMenuFinally;
 
             ns.createFCOOMenu(nsApp.menuOptions);
         }
 
-        //5: Create the main structure and the left and/or right menu. Is excecuded after the layer-menus and before lft/rigth menu creation
+        //5: Create the main structure and the left and/or right panel. Is excecuded after the layer-menus and before lft/right menu creation
         ns.promiseList.prependLast({
             data   : 'none',
             resolve: createMainStructure
@@ -263,16 +332,20 @@ Methods to create standard FCC-web-applications
     }
 
     /*************************************************************************
-    standardMenuFinally(menuList, menuOptions)
-    4: Append menu-items in menuList to the list with item for the standard-menu, and
+    appMenuFinally(menuList, menuOptions)
+    4:  Set loaded or created menu-items in menuList to the list with item for the panel holding the menu (if any), and
         call the users finally-method
     *************************************************************************/
-    function standardMenuFinally(menuList, menuOptions){
-        if (nsApp.setupOptions.standardMenuId){
-            let standardMenuOptions = nsApp.setupOptions[nsApp.setupOptions.standardMenuId].menuOptions;
-
-            if (standardMenuOptions && standardMenuOptions.list)
-                standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+    function appMenuFinally(menuList, menuOptions){
+        if (nsApp.setupOptions.menuPanelId){
+            let panelMenuOptions = nsApp.setupOptions[nsApp.setupOptions.menuPanelId].menuOptions;
+            if (panelMenuOptions)
+                panelMenuOptions.list = menuList;
+//HER               if (menuOptions){
+//HER                   menuOptions.list = menuOptions.list || [];
+//HER   //        if (standardMenuOptions && standardMenuOptions.list)
+//HER                   standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+//HER               }
         }
 
         if (menuOptions.appFinallyFunc)
@@ -281,7 +354,7 @@ Methods to create standard FCC-web-applications
 
     /*************************************************************************
     createMainStructure()
-    5: Create the main structure and the left and/or right menu
+    5: Create the main structure and the left and/or right panel
     *************************************************************************/
     function createMainStructure(){
         var setupOptions = nsApp.setupOptions;
@@ -294,18 +367,18 @@ Methods to create standard FCC-web-applications
             applicationHeader   : setupOptions.applicationHeader,
             header              : setupOptions.header,
 
-            //top-, left-, right-, and bottom-menus
-            topMenu             : setupOptions.topMenu,
+            //top-, left-, right-, and bottom-panels
+            topPanel             : setupOptions.topPanel,
 
-            leftMenu            : setupOptions.leftMenu,
-            leftMenuIcon        : setupOptions.leftMenuIcon,
-            keepLeftMenuButton  : setupOptions.keepLeftMenuButton,
+            leftPanel            : setupOptions.leftPanel,
+            leftPanelIcon        : setupOptions.leftPanelIcon,
+            keepLeftPanelButton  : setupOptions.keepLeftPanelButton,
 
-            rightMenu           : setupOptions.rightMenu,
-            rightMenuIcon       : setupOptions.rightMenuIcon,
-            keepRightMenuButton : setupOptions.keepRightMenuButton,
+            rightPanel           : setupOptions.rightPanel,
+            rightPanelIcon       : setupOptions.rightPanelIcon,
+            keepRightPanelButton : setupOptions.keepRightPanelButton,
 
-            bottomMenu          : setupOptions.bottomMenu,
+            bottomPanel          : setupOptions.bottomPanel,
 
             onResizeStart       : setupOptions.onResizeStart,
             onResizeEnd         : setupOptions.onResizeEnd

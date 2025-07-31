@@ -13,7 +13,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
     var maxMaskOpacity = 0.5; //Equal $modal-backdrop-opacity in \bower_components\bootstrap\scss\_variables.scss
 
-    ns.TouchMenu = function (options) {
+    ns.TouchPanel = ns.TouchMenu = function (options) {
         this._onOpen = [];
         this._onClose = [];
         this.isOpen = false;
@@ -25,15 +25,15 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             scrollOptions: null,   //Individuel options for jquery-scroll-container
             modeOver     : false,
             multiMode    : false,
-            menuClassName: '',
+            panelClassName: '',
 
             isOpen       : false,
             sizeList     : [], //List of different size' of content = []SIZEOPTIONS SIZEOPTIONS = {width:NUMBER, modernizr: STRING} modernizr = name of a monernizr-test to be set when the size is set. OR []NUMBER (height/width) OR []STRING (modernizr-test)
             sizeIndex    : -1,
-            onSetSize    : function( /* sizeIndex, menu */ ){},
+            onSetSize    : function( /* sizeIndex, panel */ ){},
 
-            //$menu        : $-element with content (must be inside a <div>), or
-            //content      : object with options to create content using $.fn._bsAddHtml
+            //$content     : $-element with content (must be inside a <div>), or
+            //content      : object with options to create content using $.fn._bsAddHtml, or
             //createContent: function($container) = function to create the content in $container
 
             handleClassName    : '',
@@ -42,17 +42,17 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             toggleOnHandleClick: false,
             hideHandleWhenOpen : false,
 
-            $neighbourContainer: null,  //$-container that gets resized when the touch-menu is opened/closed
+            $neighbourContainer: null,  //$-container that gets resized when the touch-panel is opened/closed
 
         }, options || {} );
 
         this.main = this.options.main;
 
-        this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
-        this.options.scroll          = this.options.scroll || (this.options.verticalMenu && !this.options.menuOptions);
+        this.options.verticalPanel    = (this.options.position == 'left') || (this.options.position == 'right');
+        this.options.scroll          = this.options.scroll || (this.options.verticalPanel && !this.options.menuOptions);
         this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
 
-        if (this.options.verticalMenu){
+        if (this.options.verticalPanel){
             this.options.openDirection  = this.options.position == 'left' ? 'right' : 'left';
             this.options.closeDirection = this.options.position;
         }
@@ -64,13 +64,13 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         if (this.options.$neighbourContainer)
             this.options.$neighbourContainer.addClass('neighbour-container');
 
-        //Initialize the menu
+        //Initialize the panel
         this.$container = this.options.$container ? this.options.$container : $('<div/>');
         this.$container
-            .addClass('touch-menu-container')
-            .addClass( $._bsGetSizeClass({baseClass: 'touch-menu-container', useTouchSize: true}) )
+            .addClass('touch-panel-container')
+            .addClass( $._bsGetSizeClass({baseClass: 'touch-panel-container', useTouchSize: true}) )
             .addClass(this.options.position)
-            .addClass(this.options.menuClassName);
+            .addClass(this.options.panelClassName);
 
         //Adjust sizeList (if any)
         if (this.options.sizeList.length){
@@ -85,63 +85,63 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                     }
                 sizeOptions.dimention = sizeOptions.dimention || sizeOptions.width || sizeOptions.height || ' ';
             });
-            this.options[ this.options.verticalMenu ? 'width' : 'height' ] = defaultSize;
+            this.options[ this.options.verticalPanel ? 'width' : 'height' ] = defaultSize;
         }
 
         //If the dimention is 'auto' add on-resize event to update width/height
-        if (this.options[ this.options.verticalMenu ? 'width' : 'height' ] == 'auto'){
+        if (this.options[ this.options.verticalPanel ? 'width' : 'height' ] == 'auto'){
             this.$container
-                .addClass(this.options.verticalMenu ? 'vertical-auto-width' : 'horizontal-auto-height')
+                .addClass(this.options.verticalPanel ? 'vertical-auto-width' : 'horizontal-auto-height')
                 .resize( $.proxy( this.onResize, this) );
         }
 
         this.setMode( this.options.modeOver );
 
         //Create container for the contents
-        if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName || this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
+        if (this.options.$prePanel || this.options.inclPrePanel || this.options.prePanelClassName || this.options.$postPanel || this.options.inclPostPanel || this.options.postPanelClassName){
 
             //Change container to flex-display
             this.$container.addClass('d-flex');
-            this.$container.addClass(this.options.verticalMenu ? 'flex-column' : 'flex-row');
+            this.$container.addClass(this.options.verticalPanel ? 'flex-column' : 'flex-row');
 
-            if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName){
-                this.$preMenu = this.options.$preMenu ? this.options.$preMenu : $('<div/>');
-                this.$preMenu
-                    .addClass('touch-pre-menu flex-shrink-0')
-                    .addClass(this.options.preMenuClassName)
+            if (this.options.$prePanel || this.options.inclPrePanel || this.options.prePanelClassName){
+                this.$prePanel = this.options.$prePanel ? this.options.$prePanel : $('<div/>');
+                this.$prePanel
+                    .addClass('touch-pre-panel flex-shrink-0')
+                    .addClass(this.options.prePanelClassName)
                     .appendTo(this.$container);
             }
 
-            var $menuContainer = $('<div/>')
-                .addClass('touch-menu flex-grow-1 flex-shrink-1')
+            var $panelContainer = $('<div/>')
+                .addClass('touch-panel flex-grow-1 flex-shrink-1')
                 .appendTo(this.$container);
 
                 if (this.options.scroll)
-                    this.$menu = $menuContainer.addScrollbar( this.options.scrollOptions );
+                    this.$content = $panelContainer.addScrollbar( this.options.scrollOptions );
                 else
-                    this.$menu = $menuContainer;
+                    this.$content = $panelContainer;
 
             //Create the bottom/right part
-            if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
-                this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
-                this.$postMenu
-                    .addClass('touch-post-menu flex-shrink-0')
-                    .addClass(this.options.postMenuClassName)
+            if (this.options.$postPanel || this.options.inclPostPanel || this.options.postPanelClassName){
+                this.$postPanel = this.options.$postPanel ? this.options.$postPanel : $('<div/>');
+                this.$postPanel
+                    .addClass('touch-post-panel flex-shrink-0')
+                    .addClass(this.options.postPanelClassName)
                     .appendTo(this.$container);
             }
         }
         else
-            this.$menu = this.$container;
+            this.$content = this.$container;
 
-        //Move or create any content into the menu
-        if (this.options.$menu)
-            this.options.$menu.contents().detach().appendTo(this.$menu);
+        //Move or create any content into the panel
+        if (this.options.$content || this.options.$menu) //$menu for backward combability
+            (this.options.$content || this.options.$menu).contents().detach().appendTo(this.$content);
         else
             if (this.options.content)
-                this.$menu._bsAddHtml(this.options.content);
+                this.$content._bsAddHtml(this.options.content);
             else
                 if (this.options.createContent)
-                    this.options.createContent(this.$menu);
+                    this.options.createContent(this.$content);
 
 
         if (window.bsIsTouch)
@@ -162,7 +162,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         if (window.bsIsTouch || this.options.allwaysHandle || this.options.toggleOnHandleClick){
             this.$handle = this.options.$handle ? this.options.$handle : $('<div/>');
             this.$handle
-                .addClass('touch-menu-handle')
+                .addClass('touch-panel-handle')
                 .toggleClass(this.options.position, !!this.options.$handleContainer)
                 .addClass(this.options.handleClassName)
                 .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
@@ -170,21 +170,21 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
 
             if (this.options.$handleContainer)
-                //Add events on handle outside the menu
+                //Add events on handle outside the panel
                 this._add_swiped(this.$handle);
 
             if (this.options.toggleOnHandleClick)
                 this.$handle.on('click', $.proxy(this.toggle, this));
         }
 
-        //Update dimention and size of the menu and handle
+        //Update dimention and size of the panel and handle
         this.updateDimentionAndSize();
 
         //Create the mask
         if (this.options.modeOver || this.options.multiMode) {
             this.$mask =
                 $('<div/>')
-                .addClass('touch-menu-mask')
+                .addClass('touch-panel-mask')
                 .appendTo('body');
 
             if (window.bsIsTouch)
@@ -199,11 +199,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         //Create the $.bsMenu if menuOptions are given
         if (this.options.menuOptions){
             this.options.menuOptions.resetListPrepend = this.options.resetListPrepend || this.options.menuOptions.resetListPrepend;
-            this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
+            this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$content);
         }
 
         //Add the open/close status to appSetting
-        this.settingId = this.options.position + '-menu-open';
+        this.settingId = this.options.position + '-panel-open';
         ns.appSetting.add({
             id          : this.settingId,
             applyFunc   : this._setOpenCloseFromSetting.bind(this),
@@ -212,7 +212,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         });
 
         //Add the size state to appSetting
-        this.sizeId = this.options.position + '-menu-size';
+        this.sizeId = this.options.position + '-panel-size';
         ns.appSetting.add({
             id          : this.sizeId,
             applyFunc   : this._setSizeIndex.bind(this),
@@ -230,7 +230,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     /******************************************
     Extend the prototype
     ******************************************/
-    ns.TouchMenu.prototype = {
+    ns.TouchPanel.prototype = ns.TouchMenu.prototype = {
         _add_swiped: function($element){
             this._this_incSize = this._this_incSize || $.proxy(this.incSize,  this);
             this._this_decSize = this._this_decSize || $.proxy(this.decSize, this);
@@ -245,8 +245,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             if (this.doNotCallOnResize) return;
 
-            var dim = this.options.verticalMenu ? this.$container.outerWidth() : this.$container.outerHeight();
-            this.options[this.options.verticalMenu ? 'width' : 'height'] = dim;
+            var dim = this.options.verticalPanel ? this.$container.outerWidth() : this.$container.outerHeight();
+            this.options[this.options.verticalPanel ? 'width' : 'height'] = dim;
 
             this.updateDimentionAndSize();
 
@@ -257,8 +257,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
         updateDimentionAndSize: function(){
             var _this = this,
-                cssDimensionId = this.options.verticalMenu ? 'height' : 'width',
-                cssPosId       = this.options.verticalMenu ? 'top'    : 'left',
+                cssDimensionId = this.options.verticalPanel ? 'height' : 'width',
+                cssPosId       = this.options.verticalPanel ? 'top'    : 'left',
                 cssPositionId;
             switch (this.options.position){
                 case 'left'  : cssPositionId = 'right';  break;
@@ -270,7 +270,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             //*********************************************************************
             function getDimensionAndSize( width, height, defaultSize ){
                 var result =
-                    _this.options.verticalMenu ? {
+                    _this.options.verticalPanel ? {
                         dimension: height || 0,
                         size     : width  || defaultSize
                     } : {
@@ -282,35 +282,35 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             }
             //*********************************************************************
             function setElementDimensionAndSize( $elem, options ){
-                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                //Set width (top/bottom) or height (left/right) of panel and center if not 100%
                 if (options.dimension)
                     $elem
                         .css(cssDimensionId, options.dimension + 'px')
                         .css(cssPosId, '50%')
-                        .css(_this.options.verticalMenu ? 'margin-top' : 'margin-left', -1*options.halfDimension);
+                        .css(_this.options.verticalPanel ? 'margin-top' : 'margin-left', -1*options.halfDimension);
                 else
                     $elem
                         .css(cssDimensionId, '100%')
                         .css(cssPosId,   '0px');
 
-                $elem.css(_this.options.verticalMenu ? 'width' : 'height', options.size);
+                $elem.css(_this.options.verticalPanel ? 'width' : 'height', options.size);
                 return $elem;
             }
             //*********************************************************************
 
-            this.options.menuDimAndSize   = getDimensionAndSize( this.options.width,       this.options.height,       280 );
+            this.options.panelDimAndSize   = getDimensionAndSize( this.options.width,       this.options.height,       280 );
             this.options.handleDimAndSize = getDimensionAndSize( this.options.handleWidth, this.options.handleHeight,  20 );
 
-            //Update the menu-element
-            this.$container.css(this.options.position, -1*this.options.menuDimAndSize.size + 'px');
+            //Update the panel-element
+            this.$container.css(this.options.position, -1*this.options.panelDimAndSize.size + 'px');
 
-            //Set width (top/bottom) or height (left/right) of menu and center if not 100%
-            setElementDimensionAndSize(this.$container, this.options.menuDimAndSize);
+            //Set width (top/bottom) or height (left/right) of panel and center if not 100%
+            setElementDimensionAndSize(this.$container, this.options.panelDimAndSize);
             if (this.$handle){
                 if (!this.options.$handleContainer)
                     this.$handle.css(cssPositionId, -1 * (this.options.handleOffsetFactor || 1) * this.options.handleDimAndSize.size + 'px');
 
-                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                //Set width (top/bottom) or height (left/right) of panel and center if not 100%
                 setElementDimensionAndSize(this.$handle, this.options.handleDimAndSize);
             }
         },
@@ -344,7 +344,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         animateToPosition: function (pos, animateMain, noAnimation) {
             this.$container.toggleClass('no-animation', !!noAnimation);
 
-            if (this.options.verticalMenu)
+            if (this.options.verticalPanel)
                 this.$container.css('transform', 'translate3d(' + this.options.directionFactor*pos + 'px, 0, 0)');
             else
                 this.$container.css('transform', 'translate3d(0, ' + this.options.directionFactor*pos + 'px, 0)');
@@ -359,8 +359,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                     .css('margin-'+this.options.position, Math.max(0,pos)+'px');
         },
 
-        setMaskOpacity: function (newMenuPos) {
-            this._setMaskOpacity( parseFloat((newMenuPos / this.options.menuDimAndSize.size) * maxMaskOpacity) );
+        setMaskOpacity: function (newPanelPos) {
+            this._setMaskOpacity( parseFloat((newPanelPos / this.options.panelDimAndSize.size) * maxMaskOpacity) );
         },
 
         _setMaskOpacity: function (opacity) {
@@ -430,10 +430,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             if ((sizeIndex < 0) || (sizeIndex >= this.options.sizeList.length))
                 return this;
 
-            const vertical = this.options.verticalMenu;
+            const vertical = this.options.verticalPanel;
             let originalDim,
                 sizeOptions = this.options.sizeList[sizeIndex],
-                //animateByJS = true if the different sizes of the menu is given by the content instead of direct dimention
+                //animateByJS = true if the different sizes of the panel is given by the content instead of direct dimention
                 animateByJS = (sizeIndex != this.options.sizeIndex) && (sizeOptions.dimention == 'auto') && this.isOpen && false;
 
             this.options.sizeIndex = sizeIndex;
@@ -496,7 +496,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.$container.addClass('opened').removeClass('opening closing closed');
             this._copyClassName();
 
-            this.animateToPosition(this.options.menuDimAndSize.size, true, noAnimation);
+            this.animateToPosition(this.options.panelDimAndSize.size, true, noAnimation);
 
             this.isOpen = true;
 
@@ -507,7 +507,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
-            window.modernizrOn(this.options.position +'-menu-open');
+            window.modernizrOn(this.options.position +'-panel-open');
 
             this._invoke(this.options.onOpen);
 
@@ -529,7 +529,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             this._onClose.forEach(func => func(this), this);
 
-            window.modernizrOff(this.options.position +'-menu-open');
+            window.modernizrOff(this.options.position +'-panel-open');
 
             this._invoke(this.options.onClose);
 
@@ -552,8 +552,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         }
     };
 
-    ns.touchMenu = function(options){
-        return new ns.TouchMenu(options);
+    ns.touchPanel = ns.touchMenu = function(options){
+        return new ns.TouchPanel(options);
     };
 
 }(jQuery, this, document));

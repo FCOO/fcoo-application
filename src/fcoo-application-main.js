@@ -22,11 +22,14 @@ Create and manage the main structure for FCOO web applications
     Create the main structure return a object with the created element
     ******************************************************************/
     ns.createMain = function( options ){
+
+        ns.__FCOO_APPLICATION_ADJUT_OPTIONS(options);
+
         options = $.extend({}, {
             $mainContainer      : null,
             mainContainerAsHandleContainer: false,
-            maxMenuWidthPercent : 0.5, //Max total width of open menus when change to mode over
-            minMainWidth        : 0,   //Min width of main-container when menu(s) are open
+            maxPanelWidthPercent : 0.5, //Max total width of open panels when change to mode over
+            minMainWidth        : 0,   //Min width of main-container when panel(s) are open
             globalModeOver      : false,
 
             /*
@@ -35,18 +38,18 @@ Create and manage the main structure for FCOO web applications
             header
             */
 
-            topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
+            topPanel            : null,  //Options for top-panel. See src/fcoo-application-top-panel.js
 
-            leftMenu            : null,      //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
-            leftMenuIcon        : 'fa-bars', //Icon for button that opens left-menu
-            leftMenuButtons     : null,      //Options for buttons in the header of the left-menu. See format below
-            keepLeftMenuButton  : false,     //Keeps the left menu-button even if leftMenu is null
+            leftPanel           : null,      //Options for left-panel. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
+            leftPanelIcon       : 'fa-bars', //Icon for button that opens left-panel
+            leftPanelButtons    : null,      //Options for buttons in the header of the left-panel. See format below
+            keepLeftPanelButton : false,     //Keeps the left panel-button even if leftPanel is null
 
-            rightMenu           : null,      //Options for right-menu. See src/fcoo-application-touch.js
-            rightMenuIcon       : 'fa-list', //Icon for button that opens right-menu
-            keepRightMenuButton : false,     //Keeps the right menu-button even if rightMenu is null
-            rightMenuButtons    : null,      //Options for buttons in the header of the right-menu. See format below
-            bottomMenu          : null,      //Options for bottom-menu. See src/fcoo-application-touch.js
+            rightPanel          : null,      //Options for right-panel. See src/fcoo-application-touch.js
+            rightPanelIcon      : 'fa-list', //Icon for button that opens right-panel
+            keepRightPanelButton: false,     //Keeps the right panel-button even if rightPanel is null
+            rightPanelButtons   : null,      //Options for buttons in the header of the right-panel. See format below
+            bottomPanel         : null,      //Options for bottom-panel. See src/fcoo-application-touch.js
 
             onResizeStart       : null,  //function(main) to be called when the main-container starts resizing
             onResizing          : null,  //function(main) to be called when the main-container is being resized
@@ -97,7 +100,7 @@ Create and manage the main structure for FCOO web applications
 
 
         /*
-        leftMenuButtons or leftMenu.buttons, and rightMenuButtons rightMenu.buttons = {
+        leftPanelButtons or leftPanel.buttons, and rightPanelButtons rightPanel.buttons = {
             preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
 
             //Standard buttons = onClick or buttonOptions or true for default onClick
@@ -117,10 +120,10 @@ Create and manage the main structure for FCOO web applications
         */
 
         var result = {
-                menus  : [],
+                panels  : [],
                 options: options
             },
-            //Container for all elements used in top-menu
+            //Container for all elements used in top-panel
             $outerContainer = result.$outerContainer =
                 $('<div/>')
                     .addClass("outer-container"),
@@ -135,106 +138,106 @@ Create and manage the main structure for FCOO web applications
 
         $mainContainer.addClass("main-container");
 
-        //Append left-menu (if any)
-        if (result.options.leftMenu){
-            result.leftMenu = ns.touchMenu( $.extend({}, result.options.leftMenu, {
+        //Append left-panel (if any)
+        if (result.options.leftPanel){
+            result.leftPanel = ns.touchPanel( $.extend({}, result.options.leftPanel, {
                 position           : 'left',
                 $neighbourContainer: $outerContainer,
-                preMenuClassName   : 'vertical-pre-menu',
+                prePanelClassName   : 'vertical-pre-panel',
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
                 resetListPrepend   : true,
                 main               : result
             }));
-            $body.append( result.leftMenu.$container );
-            result.menus.push(result.leftMenu);
+            $body.append( result.leftPanel.$container );
+            result.panels.push(result.leftPanel);
         }
 
         //Append the outer container
         $outerContainer.appendTo( $body );
 
-        //Create and append top-menu (if any).
-        //Add left-menu if leftMenu: true or keepLeftMenuButton = true. Use leftMenuicon as icon. Same for right-menu
-        if (result.options.topMenu){
-            var topMenuOptions = $.extend({}, result.options.topMenu, {
-                    leftMenu : result.options.leftMenu  || result.options.keepLeftMenuButton  ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' + result.options.leftMenuIcon} : false,
-                    rightMenu: result.options.rightMenu || result.options.keepRightMenuButton ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' +result.options.rightMenuIcon} : false
+        //Create and append top-panel (if any).
+        //Add left-panel if leftPanel: true or keepLeftPanelButton = true. Use leftPanelIcon as icon. Same for right-panel
+        if (result.options.topPanel){
+            var topPanelOptions = $.extend({}, result.options.topPanel, {
+                    leftPanel : result.options.leftPanel  || result.options.keepLeftPanelButton  ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' + result.options.leftPanelIcon} : false,
+                    rightPanel: result.options.rightPanel || result.options.keepRightPanelButton ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' +result.options.rightPanelIcon} : false
                 });
 
-            result.topMenuObject = ns.createTopMenu( topMenuOptions );
-            $outerContainer.append( result.topMenuObject.$container );
+            result.topPanelObject = ns.createTopPanel( topPanelOptions );
+            $outerContainer.append( result.topPanelObject.$container );
 
 
-            result.topMenu = ns.touchMenu({
+            result.topPanel = ns.touchPanel({
                 position           : 'top',
-                height             : result.topMenuObject.$menu.outerHeight() + 1,  //+ 1 = bottom-border
+                height             : result.topPanelObject.$panel.outerHeight() + 1,  //+ 1 = bottom-border
                 $neighbourContainer: $mainContainer,
-                $container         : result.topMenuObject.$menu,
-                $menu              : false,
+                $container         : result.topPanelObject.$panel,
+                $panel              : false,
 
                 isOpen             : true,
                 standardHandler    : true,
-                main: result
+                main               : result
             });
-            result.menus.push(result.topMenu);
+            result.panels.push(result.topPanel);
         }
 
         //Append main-container to outer-container
         $outerContainer.append( $mainContainer );
 
-        //Create and append bottom-menu (if any)
-        if (result.options.bottomMenu){
-            result.bottomMenu = ns.touchMenu( $.extend({}, result.options.bottomMenu, {
+        //Create and append bottom-panel (if any)
+        if (result.options.bottomPanel){
+            result.bottomPanel = ns.touchPanel( $.extend({}, result.options.bottomPanel, {
                 position           : 'bottom',
                 $neighbourContainer: $mainContainer,
                 main: result
             }));
-            $outerContainer.append( result.bottomMenu.$container );
-            result.menus.push(result.bottomMenu);
+            $outerContainer.append( result.bottomPanel.$container );
+            result.panels.push(result.bottomPanel);
         }
 
-        //Create and append right-menu (if any). It appear as a box
-        if (result.options.rightMenu){
-            result.rightMenu = ns.touchMenu( $.extend({}, result.options.rightMenu, {
+        //Create and append right-panel (if any). It appear as a box
+        if (result.options.rightPanel){
+            result.rightPanel = ns.touchPanel( $.extend({}, result.options.rightPanel, {
                 position           : 'right',
                 $neighbourContainer: $outerContainer,
-                preMenuClassName   : 'vertical-pre-menu',
+                prePanelClassName   : 'vertical-pre-panel',
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
-                main: result
+                main               : result
             }));
-            $body.append( result.rightMenu.$container );
-            result.menus.push(result.rightMenu);
+            $body.append( result.rightPanel.$container );
+            result.panels.push(result.rightPanel);
         }
 
-        //Create close-button in left and right pre-menu
+        //Create close-button in left and right pre-panel
         var iconPrefix = 'fa-chevron-';
         //OR var iconPrefix = 'fa-chevron-circle-';
         //OR var iconPrefix = 'fa-arrow-';
 
-        //Toggle left and right-menu on click
-        if (result.options.leftMenu)
-            result.topMenuObject.leftMenu.on('click', $.proxy(result.leftMenu.toggle, result.leftMenu));
+        //Toggle left and right-panel on click
+        if (result.options.leftPanel)
+            result.topPanelObject.leftPanel.on('click', $.proxy(result.leftPanel.toggle, result.leftPanel));
 
-        if (result.options.rightMenu)
-            result.topMenuObject.rightMenu.on('click', $.proxy(result.rightMenu.toggle, result.rightMenu));
+        if (result.options.rightPanel)
+            result.topPanelObject.rightPanel.on('click', $.proxy(result.rightPanel.toggle, result.rightPanel));
 
 
-        //If application has left-menu and/or right-menu: Set up event to change between mode=side and mode=over
-        if (result.options.leftMenu || result.options.rightMenu){
+        //If application has left-panel and/or right-panel: Set up event to change between mode=side and mode=over
+        if (result.options.leftPanel || result.options.rightPanel){
             //Left and right points to each other
-            if (result.options.leftMenu && result.options.rightMenu){
-                var _onOpen  = result._left_right_menu_onOpen.bind(result),
-                    _onClose = result._left_right_menu_onClose.bind(result);
-                result.leftMenu._onOpen.push(_onOpen);
-                result.leftMenu._onClose.push(_onClose);
-                result.leftMenu.theOtherMenu = result.rightMenu;
+            if (result.options.leftPanel && result.options.rightPanel){
+                var _onOpen  = result._left_right_panel_onOpen.bind(result),
+                    _onClose = result._left_right_panel_onClose.bind(result);
+                result.leftPanel._onOpen.push(_onOpen);
+                result.leftPanel._onClose.push(_onClose);
+                result.leftPanel.theOtherPanel = result.rightPanel;
 
-                result.rightMenu._onOpen.push(_onOpen);
-                result.rightMenu._onClose.push(_onClose);
-                result.rightMenu.theOtherMenu = result.leftMenu;
+                result.rightPanel._onOpen.push(_onOpen);
+                result.rightPanel._onClose.push(_onClose);
+                result.rightPanel.theOtherPanel = result.leftPanel;
             }
 
             $body.resize( result._onBodyResize.bind(result) );
@@ -242,15 +245,15 @@ Create and manage the main structure for FCOO web applications
         }
 
         //**************************************************
-        //Add menu-buttons to left and right menu. button-options can be in options.[left/right]MenuButtons or options.[left/right]Menu.buttons
-        function createMenuButtons(side){
-            var menuOptions = result.options[side+'Menu'],
-                options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || {} : {},
-                menu        = result[side+'Menu'],
+        //Add panel-buttons to left and right panel. button-options can be in options.[left/right]PanelButtons or options.[left/right]Panel.buttons
+        function createPanelButtons(side){
+            var panelOptions = result.options[side+'Panel'],
+                options     = panelOptions ? panelOptions.buttons || result.options[side+'PanelButtons'] || {} : {},
+                panel        = result[side+'Panel'],
                 sideIsLeft  = side == 'left',
                 sideIsRight = side == 'right',
-                multiSize   = menu ? menu.options.sizeList.length > 1 : false,
-                $container  = menu ? menu.$preMenu : null;
+                multiSize   = panel ? panel.options.sizeList.length > 1 : false,
+                $container  = panel ? panel.$prePanel : null;
 
             if (!$container) return;
 
@@ -263,28 +266,28 @@ Create and manage the main structure for FCOO web applications
                     .toggleClass('flex-grow-1', sideIsLeft)
                     .toggleClass('btn-group', multiSize);
 
-            menu.btnDecSize =
+            panel.btnDecSize =
                 $.bsButton({
                     bigIcon: true,
                     square : true,
                     icon   : iconPrefix + side,
-                    onClick: menu.decSize,
-                    context: menu
+                    onClick: panel.decSize,
+                    context: panel
                 }).appendTo($closeButtonDiv);
 
             if (multiSize){
-                menu.btnIncSize =
+                panel.btnIncSize =
                     $.bsButton({
                         bigIcon: true,
                         square : true,
                         icon   : iconPrefix + (sideIsLeft ? 'right' : 'left'),
-                        onClick: menu.incSize,
-                        context: menu
+                        onClick: panel.incSize,
+                        context: panel
                     });
                 if (sideIsLeft)
-                    $closeButtonDiv.append( menu.btnIncSize );
+                    $closeButtonDiv.append( panel.btnIncSize );
                 else
-                    $closeButtonDiv.prepend( menu.btnIncSize );
+                    $closeButtonDiv.prepend( panel.btnIncSize );
             }
 
 
@@ -353,27 +356,27 @@ Create and manage the main structure for FCOO web applications
                 $closeButtonDiv.appendTo($container);
         }
         //****************************************************
-        createMenuButtons('left');
-        createMenuButtons('right');
+        createPanelButtons('left');
+        createPanelButtons('right');
 
 
         /*
         Set up for detecting resize-start and resize-end of main-container
         */
 
-        //Detect when any of the touch-menus are opened/closed using touch
+        //Detect when any of the touch-panels are opened/closed using touch
         result.options.onResizeStart = result.options.onResizeStart || result.options.onResize;
 
         $mainContainer.resize( result._main_onResize.bind(result) );
 
-        $.each(['leftMenu', 'rightMenu', 'topMenu', 'bottomMenu'], function(index, menuId){
-            var menu = result[menuId];
-            if (menu){
-                menu.onTouchStart = result._mainResize_onTouchStart.bind(result);
-                menu.onTouchEnd   = result._mainResize_onTouchEnd.bind(result);
+        $.each(['leftPanel', 'rightPanel', 'topPanel', 'bottomPanel'], function(index, id){
+            var panel = result[id];
+            if (panel){
+                panel.onTouchStart = result._mainResize_onTouchStart.bind(result);
+                panel.onTouchEnd   = result._mainResize_onTouchEnd.bind(result);
 
-                menu._onOpen.push( result._mainResize_onOpenOrClose.bind(result) );
-                menu._onClose.push( result._mainResize_onOpenOrClose.bind(result) );
+                panel._onOpen.push( result._mainResize_onOpenOrClose.bind(result) );
+                panel._onClose.push( result._mainResize_onOpenOrClose.bind(result) );
             }
         });
 
@@ -387,25 +390,25 @@ Create and manage the main structure for FCOO web applications
     var main_prototype = {
             wasForcedToClose: null,
 
-            _maxSingleMenuWidth: function(){
+            _maxSinglePanelWidth: function(){
                 var result = 0;
 
-                if (this.leftMenu)
-                    result = Math.max(result, this.leftMenu.options.menuDimAndSize.size);
+                if (this.leftPanel)
+                    result = Math.max(result, this.leftPanel.options.panelDimAndSize.size);
 
-                if (this.rightMenu)
-                    result = Math.max(result, this.rightMenu.options.menuDimAndSize.size);
+                if (this.rightPanel)
+                    result = Math.max(result, this.rightPanel.options.panelDimAndSize.size);
 
                 return result;
             },
 
 
-            _totalMenuWidth: function(){
+            _totalPanelWidth: function(){
                 var result = 0;
-                if (this.options.leftMenu && this.options.rightMenu){
-                    [this.leftMenu, this.rightMenu].forEach(menu => {
-                        const width = menu.options.menuDimAndSize.size;
-                        result = result + (typeof width == 'number' ? width : menu.$container.width());
+                if (this.options.leftPanel && this.options.rightPanel){
+                    [this.leftPanel, this.rightPanel].forEach(panel => {
+                        const width = panel.options.panelDimAndSize.size;
+                        result = result + (typeof width == 'number' ? width : panel.$container.width());
                     });
                 }
                 return result;
@@ -414,16 +417,16 @@ Create and manage the main structure for FCOO web applications
 
 
             /******************************************************
-            Functions to manage the automatic closing of the menu
-            on the other side when a left or right menu is opened
+            Functions to manage the automatic closing of the panel
+            on the other side when a left or right panel is opened
             ******************************************************/
-            _left_right_menu_onOpen: function(menu){
-                this.lastOpenedMenu = menu;
+            _left_right_panel_onOpen: function(panel){
+                this.lastOpenedPanel = panel;
                 this._onBodyResize();
             },
 
-            _left_right_menu_onClose: function(menu){
-                if (this.wasForcedToClose && (this.wasForcedToClose !== menu))
+            _left_right_panel_onClose: function(panel){
+                if (this.wasForcedToClose && (this.wasForcedToClose !== panel))
                     this.wasForcedToClose.open();
                 this.wasForcedToClose = null;
             },
@@ -433,23 +436,23 @@ Create and manage the main structure for FCOO web applications
                 this.wasForcedToClose = null;
 
                 var bodyWidth = $body.width(),
-                    maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
-                    newModeIsOver = this._maxSingleMenuWidth() >=  maxTotalMenuWidthAllowed,
-                    totalMenuWidth = this._totalMenuWidth(),
-                    //Find last opened menu if there are two oen menus
-                    firstOpenedMenu = totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
+                    maxTotalPanelWidthAllowed = Math.min(this.options.maxPanelWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
+                    newModeIsOver = this._maxSinglePanelWidth() >=  maxTotalPanelWidthAllowed,
+                    totalPanelWidth = this._totalPanelWidth(),
+                    //Find last opened panel if there are two open panels
+                    firstOpenedPanel = totalPanelWidth && this.leftPanel.isOpen && this.rightPanel.isOpen ? (this.lastOpenedPanel ? this.lastOpenedPanel.theOtherPanel : null) : null;
 
                 this.isResizing = true;
                 this.options.globalModeOver = newModeIsOver;
-                if (this.leftMenu)  this.leftMenu.setMode ( newModeIsOver );
-                if (this.rightMenu) this.rightMenu.setMode( newModeIsOver );
+                if (this.leftPanel)  this.leftPanel.setMode ( newModeIsOver );
+                if (this.rightPanel) this.rightPanel.setMode( newModeIsOver );
                 this.isResizing = false;
 
-                //If both menus are open and mode == over or not space for both => close the menu first opened
-                if (firstOpenedMenu && (newModeIsOver || (totalMenuWidth > maxTotalMenuWidthAllowed))){
-                    firstOpenedMenu.close();
+                //If both panels are open and mode == over or not space for both => close the panel first opened
+                if (firstOpenedPanel && (newModeIsOver || (totalPanelWidth > maxTotalPanelWidthAllowed))){
+                    firstOpenedPanel.close();
                     if (!newModeIsOver)
-                        this.wasForcedToClose = firstOpenedMenu;
+                        this.wasForcedToClose = firstOpenedPanel;
                 }
             },
 

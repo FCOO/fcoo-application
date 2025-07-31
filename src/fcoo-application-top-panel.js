@@ -1,12 +1,12 @@
 /****************************************************************************
-	fcoo-application-top-menu.js
+	fcoo-application-top-panel.js
 
 	(c) 2017, FCOO
 
 	https://gitlab.com/fcoo/fcoo-application
 	https://gitlab.com/fcoo
 
-Create and manage the top-menu for FCOO web applications
+Create and manage the top-panel for FCOO web applications
 
 ****************************************************************************/
 
@@ -17,20 +17,20 @@ Create and manage the top-menu for FCOO web applications
     var ns = window.fcoo = window.fcoo || {};
 
     /**************************************************
-    defaultTopMenuButton
-    Create standard button for the top-menu
+    defaultTopPanelButton
+    Create standard button for the top-panel
     **************************************************/
-    function defaultTopMenuButton( $menu, options ){
+    function defaultTopPanelButton( $panel, options ){
         options = $.extend({bigIcon: true, square: true}, options);
         var $result = $.bsButton( options );
         if (options.title)
             $result.i18n(options.title, 'title');
-        $result.addClass('top-menu-item');
+        $result.addClass('top-panel-item');
         return $result;
     }
 
-    function createOpenMenuButton( $menu, elementOptions, menuOptions/*, topMenu */){
-        return defaultTopMenuButton($menu, menuOptions);
+    function createOpenPanelButton( $panel, elementOptions, panelOptions/*, topPanel */){
+        return defaultTopPanelButton($panel, panelOptions);
     }
 
     function defaultAddToElementList( $element, elementList, priority, minWidth ){
@@ -42,13 +42,13 @@ Create and manage the top-menu for FCOO web applications
     }
 
     /**************************************************
-    messageGroupTopMenuButton( $menu, allReadIcon, notAllReadIcon )
+    messageGroupTopPanelButton( $panel, allReadIcon, notAllReadIcon )
     Create a button used for message-groups
     The button contains two icons:
         allReadIcon   : displayed when all messages are read
         notAllReadIcon: displayed when one or more message is unread
     **************************************************/
-    function messageGroupTopMenuButton( $menu, allReadIcon, notAllReadIcon ){
+    function messageGroupTopPanelButton( $panel, allReadIcon, notAllReadIcon ){
         var iconList = [];
         function addIcon( icon, className ){
             icon = $.isArray(icon) ? icon : [icon];
@@ -56,32 +56,32 @@ Create and manage the top-menu for FCOO web applications
         }
         addIcon(allReadIcon,     'show-for-all-read');
         addIcon(notAllReadIcon , 'hide-for-all-read');
-        return defaultTopMenuButton($menu, {icon: [iconList]} ).addClass('all-read'); //all-read: Default no new message
+        return defaultTopPanelButton($panel, {icon: [iconList]} ).addClass('all-read'); //all-read: Default no new message
     }
 
     /**********************************************
-    topMenuElementList = list of options for elements in the top menu
-    buttonInfo = options for a button in the top-menu
-        id       : id from options passed to createTopMenu
+    topPanelElementList = list of options for elements in the top panel
+    buttonInfo = options for a button in the top-panel
+        id       : id from options passed to createTopPanel
         rightSide: true/false. - true => the button is placed to the right
         exclude  : true/false - if true the button is not included in calculation of the total width
         title    : null - title for the button
         icon     : null - icon-class for the button
-        create   : function($menu, elementOptions, menuOptions, topMenu) create and return $element. - function to create the button
+        create   : function($panel, elementOptions, panelOptions, topPanel) create and return $element. - function to create the button
     **********************************************/
-    var topMenuElementList = [
+    var topPanelElementList = [
         {
-            id      : 'leftMenu',
+            id      : 'leftPanel',
             priority: 0,
-            create  : createOpenMenuButton
+            create  : createOpenPanelButton
         },
 
         //***************************************************************
         {
             id: 'logo',
-            create: function( $menu/*, elementOptions, menuOptions, topMenu*/ ){
+            create: function( $panel/*, elementOptions, panelOptions, topPanel*/ ){
                 //Owners abbreviation with click to show "About OWNER"
-                return defaultTopMenuButton( $menu, {
+                return defaultTopPanelButton( $panel, {
                         square : false,
                         title  : 'about:owner',
                         onClick: ns.aboutOwner
@@ -89,7 +89,7 @@ Create and manage the top-menu for FCOO web applications
 
                 /* With FCOO-logo
                 return $('<a/>')
-                            .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-menu-item' )
+                            .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-panel-item' )
                             .i18n('about:owner', 'title')
 
                             .on('click', ns.aboutOwner);
@@ -103,8 +103,8 @@ Create and manage the top-menu for FCOO web applications
         //Save, load and share
         {
             id      :'save',
-            create  : function( $menu/*, elementOptions, menuOptions*/ ){
-                return defaultTopMenuButton($menu, {
+            create  : function( $panel/*, elementOptions, panelOptions*/ ){
+                return defaultTopPanelButton($panel, {
                     icon    : 'fa-save',
                     title   : {da: 'Gem', en: 'Save'},
                     newGroup: true,
@@ -115,8 +115,8 @@ Create and manage the top-menu for FCOO web applications
         },
         {
             id:'load',
-            create  : function( $menu/*, elementOptions, menuOptions*/ ){
-                return defaultTopMenuButton($menu, {
+            create  : function( $panel/*, elementOptions, panelOptions*/ ){
+                return defaultTopPanelButton($panel, {
                     icon    : 'fa-folder-open',
                     title   : {da: 'Hent', en: 'Load' },
                     newGroup: true,
@@ -127,8 +127,8 @@ Create and manage the top-menu for FCOO web applications
         },
         {
             id:'share',
-            create  : function( $menu/*, elementOptions, menuOptions*/ ){
-                return defaultTopMenuButton($menu, {
+            create  : function( $panel/*, elementOptions, panelOptions*/ ){
+                return defaultTopPanelButton($panel, {
                     icon    : 'fa-share-alt',
                     title   : {da: 'Del', en: 'Share' },
                     newGroup: true,
@@ -141,10 +141,10 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'header',
-            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
+            create: function( $panel, elementOptions, panelOptions/*, topPanel*/ ){
                 return $('<div/>')
-                           .addClass('text-nowrap top-menu-item top-menu-header')
-                           .i18n( menuOptions );
+                           .addClass('text-nowrap top-panel-item top-panel-header')
+                           .i18n( panelOptions );
             },
             priority: 8,
             minWidth: 200,
@@ -154,25 +154,25 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'search',
-            create: function( $menu, elementOptions, menuOptions, topMenu ){
+            create: function( $panel, elementOptions, panelOptions, topPanel ){
                 var $element =
                     $('<form onsubmit="return false;"/>')
-                        .addClass('form-inline top-menu-item')
-                        .appendTo($menu),
+                        .addClass('form-inline top-panel-item')
+                        .appendTo($panel),
                     $inputGroup =
                         $('<div/>')
                             .addClass('input-group p-0')
                             .appendTo($element);
 
-                topMenu.searchInput =
+                topPanel.searchInput =
 
                     $('<input type="text" class="form-control"></div>')
                         .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
                         .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
                         .appendTo( $inputGroup );
 
-                topMenu.searchButton =
-                    defaultTopMenuButton($menu, { icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-search' })
+                topPanel.searchButton =
+                    defaultTopPanelButton($panel, { icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-search' })
                         .appendTo( $inputGroup );
 
                 return $element;
@@ -187,13 +187,13 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'warning',
-            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
+            create: function( $panel, elementOptions, panelOptions/*, topPanel*/ ){
                 //Create yellow warning square by overlaying two icons
                 var iconClass = 'fa-exclamation-square';
-                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
+                var $result = messageGroupTopPanelButton($panel, $.FONTAWESOME_PREFIX_STANDARD + ' ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
 
                 //Create message-group with warnings
-                ns.createFCOOMessageGroup( 'warning', menuOptions, $result );
+                ns.createFCOOMessageGroup( 'warning', panelOptions, $result );
                 return $result;
             },
             priority : 1,
@@ -203,10 +203,10 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'messages',
-            create: function( $menu, elementOptions, menuOptions ){
-                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' fa-envelope', 'fas fa-envelope');
+            create: function( $panel, elementOptions, panelOptions ){
+                var $result = messageGroupTopPanelButton($panel, $.FONTAWESOME_PREFIX_STANDARD + ' fa-envelope', 'fas fa-envelope');
                 //Create message-group with info
-                ns.createFCOOMessageGroup( 'info', menuOptions, $result );
+                ns.createFCOOMessageGroup( 'info', panelOptions, $result );
                 return $result;
             },
             priority : 2,
@@ -216,8 +216,8 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'preSetting',
-            create: function( $menu, elementOptions, menuOptions ){
-                return defaultTopMenuButton($menu, menuOptions);
+            create: function( $panel, elementOptions, panelOptions ){
+                return defaultTopPanelButton($panel, panelOptions);
             },
             priority : 2,
             rightSide: true
@@ -225,8 +225,8 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'setting',
-            create: function( $menu/*, elementOptions, menuOptions */){
-                var $result = defaultTopMenuButton($menu, {
+            create: function( $panel/*, elementOptions, panelOptions */){
+                var $result = defaultTopPanelButton($panel, {
                         icon   : $.FONTAWESOME_PREFIX_STANDARD + ' fa-cog',
                         onClick: function(){ ns.globalSetting.edit(); }
                     });
@@ -238,8 +238,8 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'postSetting',
-            create: function( $menu, elementOptions, menuOptions ){
-                return defaultTopMenuButton($menu, menuOptions);
+            create: function( $panel, elementOptions, panelOptions ){
+                return defaultTopPanelButton($panel, panelOptions);
             },
             priority : 2,
             rightSide: true
@@ -247,11 +247,11 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'help',
-            create: function( $menu, elementOptions, menuOptions ){
-                var $result = defaultTopMenuButton($menu, {icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-question-circle'});
+            create: function( $panel, elementOptions, panelOptions ){
+                var $result = defaultTopPanelButton($panel, {icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-question-circle'});
 
                 //Create message-group with help
-                ns.createFCOOMessageGroup( 'help', menuOptions, $result );
+                ns.createFCOOMessageGroup( 'help', panelOptions, $result );
                 return $result;
             },
             priority : 4,
@@ -260,22 +260,22 @@ Create and manage the top-menu for FCOO web applications
 
         //***************************************************************
         {
-            id       : 'rightMenu',
+            id       : 'rightPanel',
             priority : 0,
             rightSide: true,
-            create   : createOpenMenuButton
+            create   : createOpenPanelButton
         }
 
     ].map( function( options ){
         return $.extend({}, {
             //Default options
-            create          : defaultTopMenuButton,
+            create          : defaultTopPanelButton,
             addToElementList: defaultAddToElementList,
             priority        : 0,
         } ,options);
     });
 
-    var topMenuPrototype = {
+    var topPanelPrototype = {
         /*****************************************************************
         calculateElementSize = function()
         Calculate the total width of the elements for each of the priority
@@ -311,7 +311,7 @@ Create and manage the top-menu for FCOO web applications
 
         /*****************************************************************
         onResize = function()
-        Called on topMenu-object when the size of the container is changed
+        Called on topPanel-object when the size of the container is changed
         Recalculate and adjust the number of visible elements
         ******************************************************************/
         onResize: function(){
@@ -328,19 +328,19 @@ Create and manage the top-menu for FCOO web applications
             $.each( this.elementList, function(index, elementInfo){
                 var show = (elementInfo.priority <= maxPriority);
                 elementInfo.$element
-                    .toggleClass('top-menu-element-show', show)
-                    .toggleClass('top-menu-element-hide', !show);
+                    .toggleClass('top-panel-element-show', show)
+                    .toggleClass('top-panel-element-hide', !show);
             });
         }
     };
 
     /*****************************************************************
-    createTopMenu = function( options )
-    Create the top menu and return a object with the created element
+    createTopPanel = function( options )
+    Create the top panel and return a object with the created element
     ******************************************************************/
-    ns.createTopMenu = function( options ){
+    ns.createTopPanel = function( options ){
         options = $.extend({}, {
-            leftMenu   : false,
+            leftPanel   : false,
             logo       : true,
             header     : $.extend({}, ns.applicationHeader),
             messages   : null,
@@ -350,7 +350,7 @@ Create and manage the top-menu for FCOO web applications
             setting    : true,
             postSetting: false, //or {icon, onClick}
             help       : null,
-            rightMenu  : false
+            rightPanel  : false
         }, options );
 
         //Extend header with ns.applicationBranch (if any)
@@ -362,7 +362,7 @@ Create and manage the top-menu for FCOO web applications
         var result = {
                 elementsWidthFound: false
             };
-        $.extend(result, topMenuPrototype);
+        $.extend(result, topPanelPrototype);
 
         /*
         elementList = []{$element, width, priority}
@@ -372,28 +372,28 @@ Create and manage the top-menu for FCOO web applications
         */
         var elementList = result.elementList = [];
 
-        //Container for all elements used in top-menu
+        //Container for all elements used in top-panel
         var $container = result.$container =
                 $('<div/>')
-                    .addClass("top-menu-container")
-                    .addClass( $._bsGetSizeClass({baseClass: 'top-menu-container', useTouchSize: true}) );
+                    .addClass("top-panel-container")
+                    .addClass( $._bsGetSizeClass({baseClass: 'top-panel-container', useTouchSize: true}) );
 
-        //Create the menu-bar
-        var $menu = result.$menu = $('<nav/>')
-                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu fcoo-app-bg-color fcoo-app-text-color btn-fcoo-app-color")
+        //Create the panel-bar
+        var $panel = result.$panel = $('<nav/>')
+                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-panel fcoo-app-bg-color fcoo-app-text-color btn-fcoo-app-color")
                 .prependTo( $container );
 
-        //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
+        //Adding buttons etc to the top-panel - Order of buttons/logo are given by topPanelElementList
         var firstRightSideFound = false;
-        topMenuElementList.forEach( elementOptions => {
-            let menuOptions = options[elementOptions.id];
-            if (!menuOptions)
+        topPanelElementList.forEach( elementOptions => {
+            let panelOptions = options[elementOptions.id];
+            if (!panelOptions)
                 return true;
 
-            var $element = elementOptions.create( $menu, elementOptions, menuOptions, result );
+            var $element = elementOptions.create( $panel, elementOptions, panelOptions, result );
             if ($element){
                 result[elementOptions.id] = $element;
-                $element.appendTo( $menu );
+                $element.appendTo( $panel );
                 if ((!firstRightSideFound) && elementOptions.rightSide){
                     $element.addClass('right-side');
                     firstRightSideFound = true;
@@ -411,5 +411,5 @@ Create and manage the top-menu for FCOO web applications
         onResizeFunc();
 
         return result;
-    }; //end of createTopMenu
+    }; //end of createTopPanel
 }(jQuery, this, document));

@@ -1,13 +1,13 @@
 ﻿/*****************************************************
 TOUCH-MENU
 
-Style for touch-menus at the left, right, top and bottom edge
+Style for touch-panels at the left, right, top and bottom edge
 *****************************************************/
 
 //Bug fix. Chrome bug => problem with pan AND scroll. See https://github.com/hammerjs/hammer.js/issues/1050
-//.touch-menu-container, .touch-menu-container * { touch-action: none; }
+//.touch-panel-container, .touch-panel-container * { touch-action: none; }
 
-.touch-menu {
+.touch-panel {
 //VIRKER IKKE    touch-action: pan-down; //pan-up pan-down do not seem to be supported
 }
 
@@ -17,20 +17,20 @@ $border: $modal-content-border-width solid var(--fcoo-app-bg-color);
 
 /*
 Two modes:
-    side: Touch menu side-by-side with content
-    over: Touch menu over content
+    side: Touch panel side-by-side with content
+    over: Touch panel over content
 */
 
-    $zindex-touch-menu-mode-side: $zindex-modal-backdrop - 2;
-    $zindex-touch-menu-mode-over: $zindex-modal-backdrop + 4;
-    $zindex-mask-mode-over      : $zindex-touch-menu-mode-over - 1;
+    $zindex-touch-panel-mode-side: $zindex-modal-backdrop - 2;
+    $zindex-touch-panel-mode-over: $zindex-modal-backdrop + 4;
+    $zindex-mask-mode-over      : $zindex-touch-panel-mode-over - 1;
 
-    $transition-property-menu   : all;
+    $transition-property-panel   : all;
     $transition-property-main   : all;
     $transition-duration        : .3s;
     $transition-timing-function : ease-out;
 
-.touch-menu-container {
+.touch-panel-container {
     position        : absolute;
     background-color: $modal-content-bg;
 
@@ -41,10 +41,10 @@ Two modes:
     &.bottom { border-top   : $border; }
 
     &.mode-over {
-        z-index: $zindex-touch-menu-mode-over;
+        z-index: $zindex-touch-panel-mode-over;
         //When closed: zindex == side-mode to have mask under other
         &.closed {
-           z-index: $zindex-touch-menu-mode-side;
+           z-index: $zindex-touch-panel-mode-side;
         }
         &:not(.closed) {
             @include box-shadow($modal-content-box-shadow-sm-up);
@@ -52,11 +52,11 @@ Two modes:
     }
 
     &.mode-side {
-        z-index: $zindex-touch-menu-mode-side;
+        z-index: $zindex-touch-panel-mode-side;
     }
 
     &.opened {
-        transition-property       : $transition-property-menu;
+        transition-property       : $transition-property-panel;
         transition-duration       : $transition-duration;
         transition-timing-function: $transition-timing-function;
 
@@ -68,7 +68,7 @@ Two modes:
     }
 
     &.closed {
-        transition-property       : $transition-property-menu;
+        transition-property       : $transition-property-panel;
         transition-duration       : $transition-duration;
         transition-timing-function: $transition-timing-function;
 
@@ -80,11 +80,11 @@ Two modes:
         transform : none !important;
     }
 
-    .touch-menu {
+    .touch-panel {
         position: relative;
     }
-    .touch-pre-menu {}
-    .touch-post-menu {}
+    .touch-pre-panel {}
+    .touch-post-panel {}
 
     //Set dimention = 'auto' if the content have width/height = 'auto'
     &.vertical-auto-width {
@@ -95,7 +95,7 @@ Two modes:
     }
 }
 
-.touch-menu-handle {
+.touch-panel-handle {
     position: absolute;
 
     &.left   { left  : 0; }
@@ -110,7 +110,7 @@ Two modes:
     }
 }
 
-.touch-menu-mask {
+.touch-panel-mask {
     position: absolute;
     opacity : 0.0;
     z-index : -1;
@@ -130,7 +130,7 @@ Two modes:
     }
 }
 
-//.horizontal-bar = the bar to drag down the top-or bottom-menu when it is hidden
+//.horizontal-bar = the bar to drag down the top-or bottom-panel when it is hidden
 .horizontal-bar {
     font-size  : 2rem;
     text-align : center;
@@ -141,11 +141,11 @@ Two modes:
     background-color: transparent;
 }
 
-//Left and right menu preMenu
-.vertical-pre-menu {
+//Left and right panel prePanel
+.vertical-pre-panel {
     border-bottom   : $border;
     background-color: var(--bs-gray-200);
-    padding         : var(--fcoo-app-menu-padding);
+    padding         : var(--fcoo-app-panel-padding);
 }
 
 
@@ -165,11 +165,11 @@ Two modes:
 
 
 
-//monernizr-classes for menu open/close
-$menu-positions: top, bottom, left, right;
-@each $menu-position in $menu-positions {
+//monernizr-classes for panel open/close
+$panel-positions: top, bottom, left, right;
+@each $panel-position in $panel-positions {
     @include show-and-hide-for-modernizr-test(
-        $modernizr-test      : #{$menu-position}-menu-open,
+        $modernizr-test      : #{$panel-position}-panel-open,
         $parent-element-type : 'html',
         $incl-no-selector    : false, //true,
         $display-value       : '',

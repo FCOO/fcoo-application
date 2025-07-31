@@ -24,7 +24,7 @@
         .touch-menu-handle {
 //            background-color: green;
         }
-        
+
         .show-for-tm-size-0,
         .show-for-tm-size-1,
 
@@ -47,10 +47,10 @@
         html.bm-size-0 .show-for-bm-size-0 { display: block; }
         html.bm-size-1 .show-for-bm-size-1 { display: block; }
         html.bm-size-2 .show-for-bm-size-2 { display: block; }
-        
+
 // HER>         :root {
 // HER>             --fcoo-app-text-color-63: red;
-// HER>         }            
+// HER>         }
 
 // HER>         .bgColor   { background-color: #3f5b58; }
 // HER>         .bgColor25 { background-color: #78a29d; }
@@ -61,8 +61,8 @@
   width: 0;
   height: 0;
 }
-    
-    
+
+
     </style>
 
 </head>
@@ -79,25 +79,25 @@
         window.fcoo.DEV_VERSION = true;
 
 // HER>         window.fcoo.centerConsole = function(text){ console.log('****', text, '****'); }
-        
+
         function toggleH( elem) {
             const $elem = $(elem);
             $elem.height( $elem.height() == 100 ? 150 : 100);
-        }            
+        }
         function toggleW(elem) {
             const $elem = $(elem);
             $elem.width( $elem.width() == 100 ? 150 : 100);
-        }            
-        
+        }
+
     </script>
 
 
     <script src="bower_components.js"></script>
-    
+
     <script src="../src/fcoo-application-about.js"></script>
     <script src="../src/fcoo-application-clipboard.js"></script>
     <script src="../src/fcoo-application-color.js"></script>
-    
+
     <script src="../src/fcoo-application-create.js"></script>
     <script src="../src/fcoo-application-default-options.js"></script>
 
@@ -110,24 +110,24 @@
     <script src="../src/fcoo-application-offline.js"></script>
     <script src="../src/fcoo-application-promise.js"></script>
     <script src="../src/fcoo-application-reset.js"></script>
-    
+
     <script src="../src/fcoo-application-standard-menu.js"></script>
-    
+
     <script src="../src/fcoo-application-setting.js"></script>
     <script src="../src/fcoo-application-touch.js"></script>
-    <script src="../src/fcoo-application-top-menu.js"></script>
+    <script src="../src/fcoo-application-top-panel.js"></script>
 
 
     <script src="../src/saved-setting-depot.js"></script>
     <script src="../src/saved-setting-list.js"></script>
     <script src="../src/saved-setting.js"></script>
     <script src="../src/sharer.js"></script>
-    
+
     <script>
         window.bsIsTouch = false;
         window.bsIsTouch = (window.location.search =='?touch');
 
-        //TEMP: No access to data-files on AWS. Read from old location instead 
+        //TEMP: No access to data-files on AWS. Read from old location instead
         window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
 
         //*******************************************************************
@@ -152,7 +152,7 @@
                         {
                             header: {icon: 'fa-home', text: {da:'Overskrift#1-2', en:'Header#1-2'}},
                             content: 'Dette er en test 1-2<br>'+testContent2
-                            
+
                         },
                         {
                             header: {icon: 'fa-home', text: {da:'Overskrift#1-3', en:'Header#1-3'}},
@@ -202,15 +202,15 @@
 			                {id: 'medium2', icon: 'fa-car', text:{da:'NORMAL (DA)', en: 'NORMAL (EN)'}},
 						    {id: 'fast2',   icon: 'fa-fighter-jet',   text:{da:'Meget hurtigt', en:'Very fast!'}}
 						]
-					}						
-				}					
-					
+					}
+				}
+
 
             ]; //accor_children
 
             let myAccordionModal = $.bsAccordion({children: accor_children}).asModal({flexWidth: false, header:{icon: 'fa-home', text: 'Accordion'}, show: false});
 
-        
+
         //*******************************************************************
         $.valueFormat.add({
             id: 'myNumberFormat',
@@ -235,7 +235,7 @@
             }
 
         });
-        
+
         var tableContent = [{
                 id: 'first',
                 "name": {da:'Dansk!!!', en:'English!!!'},
@@ -268,7 +268,7 @@
                 "forks_count": null,
                 "description": "Redmine notification tools for chrome extension."
             }];
-        
+
         let longTableContent = [];
         for (var i=0; i<10; i++ )
             for (var j=0; j<tableContent.length; j++ ){
@@ -303,7 +303,7 @@
             firstColumnFixed: true,
             columns: [
                 { id: 'name',             align: 'left',   header: {icon:'fa-home', text:{da:'Navn', en:'Name'}},  sortable: true, sortHeader: true, sortIndex:1000, _sortDefault: true},
-                { id: 'stargazers_count', align: 'center', header: 'Stars', vfFormat:"myNumberFormat",             sortable: true, sortBy: function(e1,e2){return e1-e2;}, 
+                { id: 'stargazers_count', align: 'center', header: 'Stars', vfFormat:"myNumberFormat",             sortable: true, sortBy: function(e1,e2){return e1-e2;},
                     sortHeader: true,
                     getHeaderContent: function(content){ return Math.floor(content/10); },
                     createHeaderContent(content, $td){ var start = content*10; $td.text(start+'-'+(start+9)); },
@@ -314,26 +314,26 @@
                 { id: 'description',                  header:{icon: 'fa-home', text: 'Description'}, minimizable: true, minimized: true, title:{da:'Hej'}}
             ],
             content: longTableContent,
-            
+
             rowIsDanger: function(rowIndex, data){
                 return data.name == 'blog' ? 'dette-er-en-blog' : '';
-            }                
+            }
         });
 
         let myTableModal = myTable.asModal({extraWidth: true, header:{icon: 'fa-table', text: 'Table'}, show: false});
-        
-        
+
+
         //*******************************************************************
-        
-        
-        
+
+
+
 
 
 let nsTest = window.fcoo.test = {};
 
         i18next.init();
         i18next.changeLanguage('en');
-        
+
         //****************************************************
         let $rightMenu = $('<div/>');
         $rightMenu.append('Start');
@@ -347,25 +347,25 @@ let nsTest = window.fcoo.test = {};
                 .appendTo($rightMenu);
         }
         $rightMenu.append('SLUT');
-        
+
         let applicationOptions = {
                 _header: {da: 'DA:fcoo-application', en: 'EN:fcoo-application'},
-                header: {        
+                header: {
                     da: "Dette er applikationens lange navn",
                     en: "This is the long name of the applikation"
-                },                    
-                
+                },
+
                 mainContainerAsHandleContainer: true,
                 minMainWidth: 456,
-                    
+
                 depotOptions: {
                     url  : 'https://staging.fcooapp.com/ifm-service/api/'
-                },                    
-                saveLoadShare: 'topMenu leftMenu rightMenu',                    
+                },
+                saveLoadShare: 'topMenu leftMenu rightMenu',
 
                 topMenu: {
                    search: true,
-                   
+
                    preSetting: {
                        icon   : window.fcoo.settingIcon('fa-map'),
                        onClick: function(){ console.log('Click on preSetting'); }
@@ -382,13 +382,29 @@ let nsTest = window.fcoo.test = {};
                         //reloadPeriod: 'PT5S',
                    },
                 },
-                _leftMenu  : {
-                    width: 400, 
-                    isStandardmenu: true,
-                    menuOptions: {keepAll: true}
-                },                    
                 leftMenu  : {
-                    width: 375, 
+                    width: 400,
+                    isStandardMenu: true,
+                    menuOptions: {
+                        keepAll: true,
+                        ownerList: {
+                            'FORECAST_WIND': function(options, addMenu){
+                                console.log('FORECAST_WIND');
+                                addMenu({id:'NIELS', icon:'fa-map', text:'Hej med dig'});
+                            },
+                            'CHARTS_AND_ENC': function(options, addMenu, parent){
+                                console.log('CHARTS_AND_ENC', parent);
+                                addMenu([
+                                    {id:'NIELS2', icon:'fa-map', text:'Søkort'},
+                                    {id:'NIELS2', icon:'fa-map', text:'ENC'}
+                                ]);
+                                parent({icon:'fas fa-home'});
+                            },
+                        }
+                    }
+                },
+                _leftMenu  : {
+                    width: 375,
                     buttons: {
                         //preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
                         user    : true,
@@ -397,9 +413,10 @@ let nsTest = window.fcoo.test = {};
                         //postButtons: {icon: fcoo.settingIcon('fa-map')} // = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
                     },
                     menuOptions: {
-                        favorites: true,
-                        reset: true,
-                        resetText: {da:'Fravælg alle VENSTRE menuer', en:'Reset all LEFT menus'},
+                        keepAll: true,
+                        //favorites: true,
+                        //reset: true,
+                        //resetText: {da:'Fravælg alle VENSTRE menuer', en:'Reset all LEFT menus'},
                         onChange: function(id, state, item){
                             console.log('GLOBAL onChange', id, state, item);
                         },
@@ -408,16 +425,16 @@ let nsTest = window.fcoo.test = {};
                             text: {da:'Første', en:'First'},
                             addToBar: true,
                             list: [{
-                                text: 'Item 1-1'
+                                text: 'Item 1-1', hvad_som_helst: true
                             }, {
-                                type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier', 
+                                type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier',
                             }]
                         }, {
                             text: {da:'Overflade', en:'Surface'},
                             list: [{
                                 id: 'HER', text: 'HER Item 2-1', icon:'fa-home',
                                 list: [{
-                                    text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', 
+                                    text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home',
                                     favoriteText: 'Item 2-1-1 in en kort version til Favoriter',
                                     type:'checkbox', state: true
                                 }, {
@@ -431,7 +448,7 @@ let nsTest = window.fcoo.test = {};
                                 id:'SEALVL', text: {da: 'Vandstand', en:'Sea Level'},
                                 list: [{
                                     id: 'sealvl1',
-                                    type:'radio', 
+                                    type:'radio',
                                     content: [
                                         {text: {da: '1: Indre Danske Farvande', en:'1: Inner Danish Waters'}},
                                         $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>'),
@@ -439,14 +456,14 @@ let nsTest = window.fcoo.test = {};
                                     ]
                                     }, {
                                         id: 'sealvl2',
-                                        type:'radio', 
+                                        type:'radio',
                                         content: [
                                             {text: {da: '2: Navigation', en:'2: Navigation'}},
                                             $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
                                         ]
                                     }, {
                                         id: 'sealvl3',
-                                        type:'radio', 
+                                        type:'radio',
                                         content: [
                                             {text: {da: '3: Noget andet', en:'3: Something else'}},
                                             $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
@@ -457,19 +474,19 @@ let nsTest = window.fcoo.test = {};
                     },
                 },
 
-                __rightMenu  : {
+                _rightMenu  : {
                     sizeList: [
-                        {width: 300, modernizr: 'rm-size-0'}, 
-                        {width: 400, modernizr: 'rm-size-1'}, 
+                        {width: 300, modernizr: 'rm-size-0'},
+                        {width: 400, modernizr: 'rm-size-1'},
                         {width: 600, modernizr: 'rm-size-2'}
                     ],
                     isOpen: true,
                     buttons: {
-                        new   : true,                
+                        new   : true,
                         edit  : true,
                         cancel: {groupClass:'class-save2-reset2', onClick: () => {console.log('CANCEL')  }},
                         ok    : {                                 onClick: () => {console.log('OK') }},
-                    },                            
+                    },
                     $menu: $('<div style="background-color: green"/>')
                         .append( $('<div style="width:200px; background-color:red;"    class="show-for-rm-size-0">show-for-rm-size-0<br>2<br>3<br>4<br>5</div>') )
                         .append( $('<div style="width:100%; background-color:yellow;" class="show-for-rm-size-1">show-for-rm-size-1<br>2<br>3<br>4<br>5</div>') )
@@ -488,7 +505,7 @@ let nsTest = window.fcoo.test = {};
                             list: [{
                                 text: 'Item 1-1'
                             }, {
-                                type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier', 
+                                type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier',
                             }]
                         }, {
                             text: {da:'Overflade', en:'Surface'},
@@ -507,7 +524,7 @@ let nsTest = window.fcoo.test = {};
                                 id:'SEALVL', text: {da: 'Vandstand', en:'Sea Level'},
                                 list: [{
                                     id: 'sealvl1',
-                                        type:'radio', 
+                                        type:'radio',
                                         content: [
                                             {text: {da: '1: Indre Danske Farvande', en:'1: Inner Danish Waters'}},
                                             $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>'),
@@ -515,14 +532,14 @@ let nsTest = window.fcoo.test = {};
                                         ]
                                     }, {
                                         id: 'sealvl2',
-                                        type:'radio', 
+                                        type:'radio',
                                         content: [
                                             {text: {da: '2: Navigation', en:'2: Navigation'}},
                                             $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
                                         ]
                                     }, {
                                         id: 'sealvl3',
-                                        type:'radio', 
+                                        type:'radio',
                                         content: [
                                             {text: {da: '3: Noget andet', en:'3: Something else'}},
                                             $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
@@ -534,7 +551,7 @@ let nsTest = window.fcoo.test = {};
                     keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
                 },
 
-                rightMenu: {
+                __rightMenu: {
                     sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
                     //standardHandler: true,
                     $menu: $('<div style="background-color: green"/>')
@@ -569,18 +586,18 @@ let nsTest = window.fcoo.test = {};
                     //console.log('>>resize END', $mainContainer.width());
                 }
             }
-            
-                    
-        
-        
-/*       
+
+
+
+
+/*
 window.intervals.options.durationUnit = 'seconds';
 window.intervals.addInterval({
     fileName: 'https://bal.fcoo.dk/static/name-address-link/name-address-link-owner.json',
     resolve: function( data ){ console.log('Resolve 10-1', data); },
     reject: function( error ){ console.log('Reject 10-1', error); },
     duration: 10
-});    
+});
 window.intervals.addInterval({
     fileName: 'https://bal.fcoo.dk/static/name-address-link/name-address-link-owner.json',
     resolve: function( data ){ console.log('Resolve 10-2', data); },
@@ -593,8 +610,8 @@ window.intervals.addInterval({
     resolve: function( data ){ console.log('Resolve 60', data); },
     reject: function( error ){ console.log('Reject 60', error); },
     duration: 60
-});    
-*/    
+});
+*/
 
         function modalDemo(){
             $.bsModal({
@@ -634,7 +651,7 @@ window.intervals.addInterval({
             });
 
         }
-        
+
         function notyDemo(){
             var layout = ['topLeft', 'topCenter', 'topRight', 'centerRight', 'bottomCenter', 'center'];
             var type   = ['alert',   'success',   'warning',  'error',        'info',        'help' ];
@@ -686,7 +703,7 @@ window.intervals.addInterval({
                     scroll : false
                 },
                 extended: {
-                    content: 'Maksimeret<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30',                    
+                    content: 'Maksimeret<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30',
                     footer: false,
                     scroll : true
                 },
@@ -695,22 +712,22 @@ window.intervals.addInterval({
                 show: true,
                 remove: true
             });
-        }                
+        }
 
-        
+
     //**************************************************
     function create_main_content($mainContainer){
         $('<button>Alle ikoner</button>')
             .appendTo($mainContainer)
             .on('click', modalWithAllIcons );
-            
+
         $('<button>Alle ikoner (old)</button>')
             .appendTo( $mainContainer)
             .on('click', function(){
                 $.BSMODAL_USE_SQUARE_ICONS = false;
                 modalWithAllIcons();
                 $.BSMODAL_USE_SQUARE_ICONS = true;
-                
+
             });
 
         var fileViewModal;
@@ -815,13 +832,13 @@ window.intervals.addInterval({
                 square: true,
                 bigIcon: true,
              }).appendTo($mainContainer);
-             
+
             $.bsButton({
                 icon  : 'fa-map',
                 text: 'Accordion',
                 onClick: ()=>{ myAccordionModal.show() }
              }).appendTo($mainContainer);
-             
+
             $.bsButton({
                 icon  : 'fa-table',
                 text: 'Table',
@@ -862,16 +879,16 @@ window.intervals.addInterval({
              }).appendTo($mainContainer);
             $.bsButton({
                 icon : fcoo.standardIcon('fa-navigation'),
-                //icon: ['fas fa-shapes  fa-navigation', 'fal fa-shapes  text-black'], 
+                //icon: ['fas fa-shapes  fa-navigation', 'fal fa-shapes  text-black'],
                 //icon: [['fas fa-square-full  fa-navigation', 'fal fa-square-full  text-black']],
-                
+
                 text: 'Standard (niord-nw)',
                 //square: true,
              }).appendTo($mainContainer);
 
-   
 
-            
+
+
             let $sel = $.bsSelect({
                 id: 'niels',
                 list: [
@@ -887,16 +904,16 @@ window.intervals.addInterval({
                     {id: 'no-9', text: 'Nummer 9'},
                 ],
                 onChange: function(id){ fcoo.appSetting.set('niels', id); }
-            }).appendTo($mainContainer);               
+            }).appendTo($mainContainer);
 
-           
+
             fcoo.appSetting.add({
                 id: 'niels',
-               applyFunc: function(value){ 
+               applyFunc: function(value){
                    $sel.get(0).selectedIndex = value.split('-')[1];
                 },
                 defaultValue: 'no-0'
-            });            
+            });
 
             let $sel2 = $.bsSelect({
                 id: 'niels2',
@@ -914,55 +931,56 @@ window.intervals.addInterval({
 
                 ],
                 onChange: function(id){ fcoo.appSetting.set('niels2', id); }
-            }).appendTo($mainContainer);               
+            }).appendTo($mainContainer);
 
-           
+
             fcoo.appSetting.add({
                 id: 'niels2',
-               applyFunc: function(value){ 
+               applyFunc: function(value){
                    $sel2.get(0).selectedIndex = value.split('-')[1];
                 },
                 defaultValue: 'no-0'
-            });            
- 
+            });
+
     }
 
     //**************************************************
     window.fcoo.applicationId = 'fcoo-application';
 
     //**************************************************
-        $(function() { 
+        $(function() {
             let menuOptions = {
-                    ownerList: {}, 
+                    ownerList: {},
                     keepAll: true,
                     finallyFunc: (menuList, options) => {
-                        
-                        //console.log('menuList=', menuList);
-                        //console.log('options=', options);
-                    }                        
-                }                
-            
+
+                        console.log('menuList=', menuList);
+                        console.log('options=', options);
+                    }
+                }
+
             //1:
-            window.fcoo.createFCOOMenu(menuOptions);            
+
+            //window.fcoo.createFCOOMenu(menuOptions);
 
             //or 2
             window.fcoo.createApplication(
                 applicationOptions,     //options,
                 create_main_content,    //create_main_content
-                null,                   //2: menuOptions,
+                {},                     //2: menuOptions,
                 null,                   //application_resolve_setup,
                 nsTest                  //nsForApplication
             );
 
-            //or 3 When no createApplication is included: 
-            //window.fcoo.createFCOOMenu(menuOptions);            
-            //window.fcoo.promiseList.getAll();            
-            
+            //or 3 When no createApplication is included:
+            //window.fcoo.createFCOOMenu(menuOptions);
+            //window.fcoo.promiseList.getAll();
+
         });
 
 
 
-       
+
     </script>
 </body>
 </html>
