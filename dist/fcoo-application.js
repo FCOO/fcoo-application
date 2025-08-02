@@ -3477,8 +3477,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
             options.menuList ||
             options.list ||
             options.fileNameOrMenuOptions ||
-            //{subDir: 'setup', fileName:'fcoo-menu.json'};
-            'data/fcoo-menu.json'; //HER
+            {subDir: 'setup', fileName:'fcoo-menu.json'};
 
         ns.promiseList.append(
             ns.options2promiseOptions(
