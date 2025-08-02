@@ -215,7 +215,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
     *********************************************/
     function createMenu(menuList, parentMenuOptions, options){
         $.each(menuList, function(index, menuItem){
-            let ownerFunc = menuItem.isOwnerMenu && !menuItem.ownerFuncCalled ? options.ownerList[menuItem.id] : null;
+            let ownerFunc = menuItem.isOwnerMenu && options.ownerList && !menuItem.ownerFuncCalled ? options.ownerList[menuItem.id] : null;
             if (ownerFunc){
                 ownerFunc(
                     menuItem.options || {},
