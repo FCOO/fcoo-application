@@ -392,13 +392,11 @@ let nsTest = window.fcoo.test = {};
                                 console.log('FORECAST_WIND');
                                 addMenu({id:'NIELS', icon:'fa-map', text:'Hej med dig'});
                             },
-                            'CHARTS_AND_ENC': function(options, addMenu, parent){
-                                console.log('CHARTS_AND_ENC', parent);
+                            '_CHARTS_AND_ENC': function(options, addMenu, parent){
                                 addMenu([
                                     {id:'NIELS2', icon:'fa-map', text:'Søkort'},
                                     {id:'NIELS2', icon:'fa-map', text:'ENC'}
                                 ]);
-                                parent({icon:'fas fa-home'});
                             },
                         }
                     }

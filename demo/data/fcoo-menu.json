@@ -205,24 +205,12 @@
 		    },
             
             "NAVIGATION_CHARTS_AND_ENC_MENU": {
-                "icon": [
-                    [
-                        "far fa-period fa-move-x-25 fa-navigation",
-                        "far fa-slash-forward fa-navigation",
-                        "fa-dash fa-navigation"
-                    ]
-                ],
+                "icon": "far fa-table-cells-large",
                 "text": {
-                    "da": "Søkort og ENC (DK/GL)",
-                    "en": "Nautical Charts and ENC (DK/GL)"
+                    "da": "Søkort og ENC",
+                    "en": "Nautical Charts and ENC"
                 },
-                "list": [
-                    "CHARTS_AND_ENC",{
-                    "icon": "fal fa-list-check", 
-                    "text": {"da": "Søkortrettelser", "en": "Chart Corrections"},
-                    "list": "CHART_CORRECTIONS"
-                    }
-                ]
+                "list": "NAVIGATION_CHARTS_AND_ENC"
             }
         }
     },
