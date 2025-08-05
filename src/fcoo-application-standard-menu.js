@@ -53,11 +53,11 @@ The reading of the setup-file (fcoo-menu.json) or other file or direct options a
 Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
 
     MENU_OPTIONS = {
-fileName: FILENAME,
-menuList or list: MENU_ITEM_LIST
-        ownerList            : OWNER_LIST
-        finallyFunc          : FUNCTION,
-fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+        fileName: FILENAME,
+        menuList or list: MENU_ITEM_LIST
+        ownerList       : OWNER_LIST
+        finallyFunc     : FUNCTION,
+        fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
     }
 
     FILENAME = Path to file. Two versions:
@@ -88,9 +88,31 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
 
 
     /****************************************************************************
+    4: "Load" layerMenu and create the layers and the options for the mmenu
+    5: "Load" the added layers via there build-method
+   /****************************************************************************/
 
-4: "Load" layerMenu and create the layers and the options for the mmenu
-5: "Load" the added layers via there build-method
+    //adjustMenuOptions( menuOptions ) adjust menuOptions to allow simple list/object with menu-items
+    ns.adjustMenuOptions = function( menuOptions ){
+        if (!menuOptions)
+            return null;
+
+        //If menuOptions isn't a array and contain "fileName", "menuList", "list", or "fileNameOrMenuOptions" it is a "full" menuOptions.
+        if (!Array.isArray(menuOptions)){
+            if (window.intervals.isFileName(menuOptions))
+                return {fileName: menuOptions};
+
+            let returnIt = false;
+            ['fileName', 'menuList', 'list', 'fileNameOrMenuOptions'].forEach( id => {
+                if (menuOptions[id] !== undefined)
+                    returnIt = true;
+            });
+
+            if (returnIt)
+                return menuOptions;
+        }
+        return {list: menuOptions};
+    };
 
 
     /*********************************************
@@ -134,8 +156,10 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
         }
 
         menuItem.id = menuItem.id || id;
+
         //Convert/adjust the items submenus (in list or submenus)
-        menuItem.list = convertList( menuItem.list || menuItem.submenus );
+        if (menuItem.list || menuItem.submenus)
+            menuItem.list = convertList( menuItem.list || menuItem.submenus );
         delete menuItem.submenus;
 
         return menuItem;
@@ -147,7 +171,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
             return null;
 
         var result = [];
-        if ($.isArray(listOrSubmenus))
+        if (Array.isArray(listOrSubmenus))
             $.each(listOrSubmenus, (index, menuItem) => {
                 var adjustedMenuItem = adjustMenuItem(null, menuItem);
                 if (adjustedMenuItem)
@@ -182,8 +206,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
             options.fileName ||
             options.menuList ||
             options.list ||
-            options.fileNameOrMenuOptions ||
-            {subDir: 'setup', fileName:'fcoo-menu.json'};
+            {subDir: 'setup', fileName: 'fcoo-menu.json'};
 
         ns.promiseList.append(
             ns.options2promiseOptions(
@@ -199,6 +222,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
     *********************************************/
     function resolveMenu(options, listOrMenus){
         options.menuList = convertList(listOrMenus);
+
         createMenu(options.menuList, {}, options);
 
         //Add promise to check and finish the creation of the menu
@@ -237,7 +261,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
     *********************************************/
     function addMenu(menuItemOrList, parentList, id, options){
         //Append menuItemOrList to replaceMenuItems to be replaced in updateMenuList
-        options.replaceMenuItems[id] = $.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList];
+        options.replaceMenuItems[id] = Array.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList];
     }
 
     /*********************************************
@@ -298,7 +322,11 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
             if (menuItem && !menuItem.isOwnerMenu && ((menuItem.list && menuItem.list.length) || menuItem.type))
                 /* Keep menu-item*/;
             else
-                if (!options.keepAll)
+                if (options.keepAll){
+                    menuItem.icon = menuItem.icon || 'far fa-question';
+                    menuItem.text = menuItem.text || {da: 'MANGLER', en:'MISSING'};
+                }
+                else
                     menuList.splice(index, 1);
         }
     }

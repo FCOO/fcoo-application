@@ -137,7 +137,7 @@ Methods to create standard FCC-web-applications
         ns.viewport_no_scalable = true;
 
         //1: "Load" setup and proccess the options
-        nsApp.menuOptions = menuOptions;
+        nsApp.menuOptions = ns.adjustMenuOptions(menuOptions);
 
         var promiseOptions = ns.options2promiseOptions(options);
         if (promiseOptions.fileName)
@@ -229,29 +229,26 @@ Methods to create standard FCC-web-applications
         });
 
         //3: "Load" content for left- and/or right-panel. If the panel is a menu or the standard-menu its content is loaded last to have the $-container ready
-        let menuOptions = options.menuOptions;
+        let menuOptions = $.extend({}, nsApp.menuOptions || {}, options.menuOptions || {});
+
         ['left', 'right'].forEach(prefix => {
             var panelId = prefix+'Panel',
                 sidePanelOptions = options[panelId];
             if (!sidePanelOptions) return;
 
-
             //1: The panel contains a menu
-            if (sidePanelOptions.isStandardMenu || (options.menuOptions && sidePanelOptions.isMenu) || sidePanelOptions.menuOptions || sidePanelOptions.bsMenuOptions){
+            if (sidePanelOptions.isStandardMenu || (menuOptions && sidePanelOptions.isMenu) || sidePanelOptions.menuOptions){
 
                 //sidePanelOptions.menuOptions can just be a file-name with menu-items
                 if (sidePanelOptions.menuOptions && window.intervals.isFileName(sidePanelOptions.menuOptions))
-                    sidePanelOptions.menuOptions = {
-                        fileName: sidePanelOptions.menuOptions
-                    };
+                    sidePanelOptions.menuOptions = {fileName: sidePanelOptions.menuOptions};
 
                 //Set the options for menu
                 menuOptions = sidePanelOptions.menuOptions =
                     $.extend({},
                         sidePanelOptions.isStandardMenu ? options.standardMenuOptions : {} || {},
                         menuOptions || {},
-                        sidePanelOptions.menuOptions   || {},    //Include both menuOptions
-                        sidePanelOptions.bsMenuOptions || {}     //and bsMenuOptions for backward combability
+                        sidePanelOptions.menuOptions || {}
                     );
 
                 //Set ref to the panel with the standard menu
@@ -298,7 +295,6 @@ Methods to create standard FCC-web-applications
             nsApp.menuOptions = menuOptions;
             nsApp.menuOptions.appFinallyFunc = nsApp.menuOptions.finallyFunc;
             nsApp.menuOptions.finallyFunc = appMenuFinally;
-
             ns.createFCOOMenu(nsApp.menuOptions);
         }
 
@@ -341,11 +337,6 @@ Methods to create standard FCC-web-applications
             let panelMenuOptions = nsApp.setupOptions[nsApp.setupOptions.menuPanelId].menuOptions;
             if (panelMenuOptions)
                 panelMenuOptions.list = menuList;
-//HER               if (menuOptions){
-//HER                   menuOptions.list = menuOptions.list || [];
-//HER   //        if (standardMenuOptions && standardMenuOptions.list)
-//HER                   standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
-//HER               }
         }
 
         if (menuOptions.appFinallyFunc)

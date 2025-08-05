@@ -14,7 +14,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
     //Adjust options for ns.promiseList
     ['prePromiseAll', 'finally', 'finish'].forEach( function(optionsId){
         var opt = ns.promiseList.options[optionsId];
-        ns.promiseList.options[optionsId] = opt ? ($.isArray(opt) ? opt : [opt]) : [];
+        ns.promiseList.options[optionsId] = opt ? (Array.isArray(opt) ? opt : [opt]) : [];
     });
 
     /***********************************************************************
@@ -280,7 +280,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
 
         //*******************************************
         function adjustFileName(fileNameOrList, testRec){
-            if ($.isArray(fileNameOrList)){
+            if (Array.isArray(fileNameOrList)){
                 $.each(fileNameOrList, function(index, fileName){
                     fileNameOrList[index] = adjustFileName(fileName, testRec);
                 });
@@ -336,7 +336,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
         //Check all files in allList and adjust the file(s) to load
         var fileNameVersions = promiseList.options.fileNameVersions;
         allList.forEach( function( promiseOptions ){
-            var onlyFileName = promiseOptions.fileName && !$.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
+            var onlyFileName = promiseOptions.fileName && !Array.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
                 fileVersion = fileNameVersions[onlyFileName];
 
             if (fileVersion){

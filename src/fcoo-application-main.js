@@ -83,7 +83,7 @@ Create and manage the main structure for FCOO web applications
                 var addClass = (value === true);
 
                 if (!addClass){
-                    var valueList = $.isArray(value) ? value : [value],
+                    var valueList = Array.isArray(value) ? value : [value],
                         add = true;
                     valueList.forEach( modernizrDeviceProperties => {
                         modernizrDeviceProperties.split(' ').forEach( property => {
@@ -293,7 +293,7 @@ Create and manage the main structure for FCOO web applications
 
             var buttonGroups = [];
             if (options.preButtons)
-                buttonGroups.push( $.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
+                buttonGroups.push( Array.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
 
             //Add standard buttons
             var buttonList = [];
@@ -331,7 +331,7 @@ Create and manage the main structure for FCOO web applications
                 buttonGroups.push(buttonList);
 
             if (options.postButtons)
-                buttonGroups.push( $.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
+                buttonGroups.push( Array.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
 
             //Create the buttons
             $.each(buttonGroups, function(index, buttonList){

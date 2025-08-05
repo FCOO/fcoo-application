@@ -51,7 +51,7 @@ Create and manage the top-panel for FCOO web applications
     function messageGroupTopPanelButton( $panel, allReadIcon, notAllReadIcon ){
         var iconList = [];
         function addIcon( icon, className ){
-            icon = $.isArray(icon) ? icon : [icon];
+            icon = Array.isArray(icon) ? icon : [icon];
             icon.forEach( iconClass => iconList.push(iconClass + ' ' + className ) );
         }
         addIcon(allReadIcon,     'show-for-all-read');

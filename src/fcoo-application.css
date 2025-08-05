@@ -507,6 +507,7 @@ Adjust different parts in jquery-bootstrap and fcoo-application
   --mm-item-closed-hover-bg: var(--fcoo-app-darken-bg-color-63);
   --mm-item-opened-color: var(--fcoo-app-text-color-50);
   --mm-item-opened-bg: var(--fcoo-app-bg-color-50);
+  --mm-sub-item-left-border: var(--fcoo-app-bg-color-50);
   --mm-item-opened-hover-color: var(--fcoo-app-active-text-color-50);
   --mm-item-opened-hover-bg: var(--fcoo-app-darken-bg-color-50);
 }
