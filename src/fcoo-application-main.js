@@ -271,6 +271,7 @@ Create and manage the main structure for FCOO web applications
                     bigIcon: true,
                     square : true,
                     icon   : iconPrefix + side,
+                    class  : 'flex-grow-0',
                     onClick: panel.decSize,
                     context: panel
                 }).appendTo($closeButtonDiv);
@@ -280,6 +281,7 @@ Create and manage the main structure for FCOO web applications
                     $.bsButton({
                         bigIcon: true,
                         square : true,
+                        class  :'flex-grow-0',
                         icon   : iconPrefix + (sideIsLeft ? 'right' : 'left'),
                         onClick: panel.incSize,
                         context: panel

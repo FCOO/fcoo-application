@@ -28,6 +28,10 @@
         .show-for-tm-size-0,
         .show-for-tm-size-1,
 
+        .show-for-lm-size-0,
+        .show-for-lm-size-1,
+        .show-for-lm-size-2,
+
         .show-for-rm-size-0,
         .show-for-rm-size-1,
         .show-for-rm-size-2,
@@ -39,6 +43,10 @@
         }
         html.tm-size-0 .show-for-tm-size-0 { display: block; }
         html.tm-size-1 .show-for-tm-size-1 { display: block; }
+
+        html.lm-size-0 .show-for-lm-size-0 { display: block; }
+        html.lm-size-1 .show-for-lm-size-1 { display: block; }
+        html.lm-size-2 .show-for-lm-size-2 { display: block; }
 
         html.rm-size-0 .show-for-rm-size-0 { display: block; }
         html.rm-size-1 .show-for-rm-size-1 { display: block; }
@@ -385,14 +393,14 @@ let nsTest = window.fcoo.test = {};
 
                 menuOptions: {
                     keepAll: true,
-                    NIELS: 'HOLT'
+                    favorites: true
                 },
 
                 _leftMenu  : {
                     width: 400,
                     isMenu: true,
                 },
-                leftMenu  : {
+                __leftMenu  : {
                     width: 400,
                     isStandardMenu: true,
                     menuOptions: {
@@ -482,6 +490,26 @@ let nsTest = window.fcoo.test = {};
                     },
                 },
 
+                leftMenu  : {
+                    sizeList: [
+                        {width: 300, modernizr: 'lm-size-0'},
+                        {width: 400, modernizr: 'lm-size-1'},
+                        {width: 600, modernizr: 'lm-size-2'}
+                    ],
+                    isOpen: true,
+                    buttons: {
+                        new   : true,
+                        edit  : true,
+                        cancel: {groupClass:'class-save2-reset2', onClick: () => {console.log('CANCEL')  }},
+                        ok    : {                                 onClick: () => {console.log('OK') }},
+                    },
+                    $menu: $('<div style="background-color: green"/>')
+                        .append( $('<div style="width:200px; background-color:red;"    class="show-for-lm-size-0">show-for-lm-size-0<br>2<br>3<br>4<br>5</div>') )
+                        .append( $('<div style="width:100%; background-color:yellow;"  class="show-for-lm-size-1">show-for-lm-size-1<br>2<br>3<br>4<br>5</div>') )
+                        .append( $('<div style="width:600px; background-color:green;"  class="show-for-lm-size-2">show-for-lm-size-2<br>2<br>3<br>4<br>5</div>') ),
+
+                },
+
                 _rightMenu  : {
                     sizeList: [
                         {width: 300, modernizr: 'rm-size-0'},
@@ -500,67 +528,9 @@ let nsTest = window.fcoo.test = {};
                         .append( $('<div style="width:100%; background-color:yellow;" class="show-for-rm-size-1">show-for-rm-size-1<br>2<br>3<br>4<br>5</div>') )
                         .append( $('<div style="width:600px; background-color:green;"  class="show-for-rm-size-2">show-for-rm-size-2<br>2<br>3<br>4<br>5</div>') ),
 
-                    _menuOptions: {
-                        reset: true,
-                        resetText: 'Fravælg alle HØJRE menuer',
-                        _favorites: false,
-                        onChange: function(id, state, item){
-                            console.log('GLOBAL onChange', id, state, item);
-                        },
-                        list: [{
-                            icon: 'fa-map',
-                            text: {da:'Første', en:'First'},
-                            addToBar: true,
-                            list: [{
-                                text: 'Item 1-1'
-                            }, {
-                                type: "text", text: 'Item 1-2 der er meget lang med en masse tekst der gerne skal vises over flere linier',
-                            }]
-                        }, {
-                            text: {da:'Overflade', en:'Surface'},
-                            list: [{
-                                id: 'HER', text: 'HER Item 2-1', icon:'fa-home',
-                                list: [{
-                                    text: 'Item 2-1-1 der er meget lang med en masse tekst der gerne skal vises over flere linier', icon:'fa-home', type:'checkbox', state: true
-                                }, {
-                                    text: 'Item 2-1-2', type: 'checkbox'
-                                }, {
-                                    text: 'Item 2-1-3', type: 'radio', state:123, icon:['fa-home', 'fa-map'],
-                                }, {
-                                    text: 'Item 2-1-4', type: 'radio', state: true
-                                }]
-                            }, {
-                                id:'SEALVL', text: {da: 'Vandstand', en:'Sea Level'},
-                                list: [{
-                                    id: 'sealvl1',
-                                        type:'radio',
-                                        content: [
-                                            {text: {da: '1: Indre Danske Farvande', en:'1: Inner Danish Waters'}},
-                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>'),
-                                            //$('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                        ]
-                                    }, {
-                                        id: 'sealvl2',
-                                        type:'radio',
-                                        content: [
-                                            {text: {da: '2: Navigation', en:'2: Navigation'}},
-                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                        ]
-                                    }, {
-                                        id: 'sealvl3',
-                                        type:'radio',
-                                        content: [
-                                            {text: {da: '3: Noget andet', en:'3: Something else'}},
-                                            $('<img height="30px" src="https://wms01.fcoo.dk/webmap/v2/data/DMI/HARMONIE/DMI_NEA_MAPS_v005C.nc.wms?request=GetColorbar&styles=horizontal%2Cnolabel&cmap=Wind_ms_BGYRP_11colors"/>')
-                                       ],
-                                }]
-                            }]
-                        }]
-                    },
-                    keepMenuButton: true, //Keeps the left menu-button even if leftMenu is null
                 },
 
-                __rightMenu: {
+                rightMenu: {
                     sizeList: ['rm-size-0', 'rm-size-1', 'rm-size-2'],
                     //standardHandler: true,
                     $menu: $('<div style="background-color: green"/>')
@@ -579,14 +549,29 @@ let nsTest = window.fcoo.test = {};
                 },
                 _keepRightMenuButton: true, //Keeps the right menu-button even if leftMenu is null
 
-                bottomMenu: {
+                _bottomMenu: {
                     sizeList: ['bm-size-0', 'bm-size-1', 'bm-size-2'],
                     standardHandler: true,
                     $menu: $('<div style="background-color: green"/>')
-                        .append( $('<div style="height:100px; width:100%; background-color: green;"  class="show-for-bm-size-0" onClick="javascript:toggleH(this)">100 show-for-bm-size-0</div>') )
-                        .append( $('<div style="height:200px; width:100%; background-color: orange;" class="show-for-bm-size-1">200 show-for-bm-size-1</div>') )
-                        .append( $('<div style="height:350px; width:100%; background-color: red;"    class="show-for-bm-size-2">350 show-for-bm-size-2</div>') )
+                        .append( $('<div style="height:100px; width:50%; background-color: green;"  onClick="javascript:changeBottomHeight()" class="show-for-bm-size-0">100 show-for-bm-size-0</div>') )
+                        .append( $('<div style="height:200px; width:70%; background-color: orange;" onClick="javascript:changeBottomHeight()" class="show-for-bm-size-1">200 show-for-bm-size-1</div>') )
+                        .append( $('<div style="height:350px; width:80%; background-color: red;"    onClick="javascript:changeBottomHeight()" class="show-for-bm-size-2">350 show-for-bm-size-2</div>') )
                 },
+
+                bottomMenu: {
+                    sizeList: [
+                        {height: 100, modernizr: 'bm-size-0'},
+                        {height: 300, modernizr: 'bm-size-1'},
+                        {height: 500, modernizr: 'bm-size-2'}
+                    ],
+
+                    standardHandler: true,
+                    $menu: $('<div style="background-color: green"/>')
+                        .append( $('<div style="height:100%; width:50%; background-color: green;"  onClick="javascript:changeBottomHeight()" class="show-for-bm-size-0">100 show-for-bm-size-0</div>') )
+                        .append( $('<div style="height:100%; width:70%; background-color: orange;" onClick="javascript:changeBottomHeight()" class="show-for-bm-size-1">300 show-for-bm-size-1</div>') )
+                        .append( $('<div style="height:100%; width:80%; background-color: red;"    onClick="javascript:changeBottomHeight()" class="show-for-bm-size-2">500 show-for-bm-size-2</div>') )
+                },
+
 
                 onResizeStart: function(main){
                     //console.log('>>resize START', $mainContainer.width());
@@ -596,7 +581,15 @@ let nsTest = window.fcoo.test = {};
                 }
             }
 
-
+            function changeBottomHeight(){
+                let bp = fcoo.test.main.bottomPanel;
+                console.log(bp);
+                if (bp.options.sizeIndex == bp.options.sizeList.length-1){
+                    bp.setMinSize().close();
+                }
+                else
+                    bp.incSize();
+            }
 
 
 /*

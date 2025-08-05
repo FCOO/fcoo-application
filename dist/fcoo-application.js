@@ -398,7 +398,7 @@ Methods to create standard FCC-web-applications
         ns.viewport_no_scalable = true;
 
         //1: "Load" setup and proccess the options
-        nsApp.menuOptions = menuOptions;
+        nsApp.menuOptions = ns.adjustMenuOptions(menuOptions);
 
         var promiseOptions = ns.options2promiseOptions(options);
         if (promiseOptions.fileName)
@@ -490,29 +490,26 @@ Methods to create standard FCC-web-applications
         });
 
         //3: "Load" content for left- and/or right-panel. If the panel is a menu or the standard-menu its content is loaded last to have the $-container ready
-        let menuOptions = options.menuOptions;
+        let menuOptions = $.extend({}, nsApp.menuOptions || {}, options.menuOptions || {});
+
         ['left', 'right'].forEach(prefix => {
             var panelId = prefix+'Panel',
                 sidePanelOptions = options[panelId];
             if (!sidePanelOptions) return;
 
-
             //1: The panel contains a menu
-            if (sidePanelOptions.isStandardMenu || (options.menuOptions && sidePanelOptions.isMenu) || sidePanelOptions.menuOptions || sidePanelOptions.bsMenuOptions){
+            if (sidePanelOptions.isStandardMenu || (menuOptions && sidePanelOptions.isMenu) || sidePanelOptions.menuOptions){
 
                 //sidePanelOptions.menuOptions can just be a file-name with menu-items
                 if (sidePanelOptions.menuOptions && window.intervals.isFileName(sidePanelOptions.menuOptions))
-                    sidePanelOptions.menuOptions = {
-                        fileName: sidePanelOptions.menuOptions
-                    };
+                    sidePanelOptions.menuOptions = {fileName: sidePanelOptions.menuOptions};
 
                 //Set the options for menu
                 menuOptions = sidePanelOptions.menuOptions =
                     $.extend({},
                         sidePanelOptions.isStandardMenu ? options.standardMenuOptions : {} || {},
                         menuOptions || {},
-                        sidePanelOptions.menuOptions   || {},    //Include both menuOptions
-                        sidePanelOptions.bsMenuOptions || {}     //and bsMenuOptions for backward combability
+                        sidePanelOptions.menuOptions || {}
                     );
 
                 //Set ref to the panel with the standard menu
@@ -559,7 +556,6 @@ Methods to create standard FCC-web-applications
             nsApp.menuOptions = menuOptions;
             nsApp.menuOptions.appFinallyFunc = nsApp.menuOptions.finallyFunc;
             nsApp.menuOptions.finallyFunc = appMenuFinally;
-
             ns.createFCOOMenu(nsApp.menuOptions);
         }
 
@@ -602,11 +598,6 @@ Methods to create standard FCC-web-applications
             let panelMenuOptions = nsApp.setupOptions[nsApp.setupOptions.menuPanelId].menuOptions;
             if (panelMenuOptions)
                 panelMenuOptions.list = menuList;
-//HER               if (menuOptions){
-//HER                   menuOptions.list = menuOptions.list || [];
-//HER   //        if (standardMenuOptions && standardMenuOptions.list)
-//HER                   standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
-//HER               }
         }
 
         if (menuOptions.appFinallyFunc)
@@ -1540,7 +1531,7 @@ Create and manage the main structure for FCOO web applications
                 var addClass = (value === true);
 
                 if (!addClass){
-                    var valueList = $.isArray(value) ? value : [value],
+                    var valueList = Array.isArray(value) ? value : [value],
                         add = true;
                     valueList.forEach( modernizrDeviceProperties => {
                         modernizrDeviceProperties.split(' ').forEach( property => {
@@ -1728,6 +1719,7 @@ Create and manage the main structure for FCOO web applications
                     bigIcon: true,
                     square : true,
                     icon   : iconPrefix + side,
+                    class  : 'flex-grow-0',
                     onClick: panel.decSize,
                     context: panel
                 }).appendTo($closeButtonDiv);
@@ -1737,6 +1729,7 @@ Create and manage the main structure for FCOO web applications
                     $.bsButton({
                         bigIcon: true,
                         square : true,
+                        class  :'flex-grow-0',
                         icon   : iconPrefix + (sideIsLeft ? 'right' : 'left'),
                         onClick: panel.incSize,
                         context: panel
@@ -1750,7 +1743,7 @@ Create and manage the main structure for FCOO web applications
 
             var buttonGroups = [];
             if (options.preButtons)
-                buttonGroups.push( $.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
+                buttonGroups.push( Array.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
 
             //Add standard buttons
             var buttonList = [];
@@ -1788,7 +1781,7 @@ Create and manage the main structure for FCOO web applications
                 buttonGroups.push(buttonList);
 
             if (options.postButtons)
-                buttonGroups.push( $.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
+                buttonGroups.push( Array.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
 
             //Create the buttons
             $.each(buttonGroups, function(index, buttonList){
@@ -2685,7 +2678,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
     //Adjust options for ns.promiseList
     ['prePromiseAll', 'finally', 'finish'].forEach( function(optionsId){
         var opt = ns.promiseList.options[optionsId];
-        ns.promiseList.options[optionsId] = opt ? ($.isArray(opt) ? opt : [opt]) : [];
+        ns.promiseList.options[optionsId] = opt ? (Array.isArray(opt) ? opt : [opt]) : [];
     });
 
     /***********************************************************************
@@ -2951,7 +2944,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
 
         //*******************************************
         function adjustFileName(fileNameOrList, testRec){
-            if ($.isArray(fileNameOrList)){
+            if (Array.isArray(fileNameOrList)){
                 $.each(fileNameOrList, function(index, fileName){
                     fileNameOrList[index] = adjustFileName(fileName, testRec);
                 });
@@ -3007,7 +3000,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
         //Check all files in allList and adjust the file(s) to load
         var fileNameVersions = promiseList.options.fileNameVersions;
         allList.forEach( function( promiseOptions ){
-            var onlyFileName = promiseOptions.fileName && !$.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
+            var onlyFileName = promiseOptions.fileName && !Array.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
                 fileVersion = fileNameVersions[onlyFileName];
 
             if (fileVersion){
@@ -3347,11 +3340,11 @@ The reading of the setup-file (fcoo-menu.json) or other file or direct options a
 Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
 
     MENU_OPTIONS = {
-fileName: FILENAME,
-menuList or list: MENU_ITEM_LIST
-        ownerList            : OWNER_LIST
-        finallyFunc          : FUNCTION,
-fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+        fileName: FILENAME,
+        menuList or list: MENU_ITEM_LIST
+        ownerList       : OWNER_LIST
+        finallyFunc     : FUNCTION,
+        fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
     }
 
     FILENAME = Path to file. Two versions:
@@ -3382,9 +3375,31 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
 
 
     /****************************************************************************
+    4: "Load" layerMenu and create the layers and the options for the mmenu
+    5: "Load" the added layers via there build-method
+   /****************************************************************************/
 
-4: "Load" layerMenu and create the layers and the options for the mmenu
-5: "Load" the added layers via there build-method
+    //adjustMenuOptions( menuOptions ) adjust menuOptions to allow simple list/object with menu-items
+    ns.adjustMenuOptions = function( menuOptions ){
+        if (!menuOptions)
+            return null;
+
+        //If menuOptions isn't a array and contain "fileName", "menuList", "list", or "fileNameOrMenuOptions" it is a "full" menuOptions.
+        if (!Array.isArray(menuOptions)){
+            if (window.intervals.isFileName(menuOptions))
+                return {fileName: menuOptions};
+
+            let returnIt = false;
+            ['fileName', 'menuList', 'list', 'fileNameOrMenuOptions'].forEach( id => {
+                if (menuOptions[id] !== undefined)
+                    returnIt = true;
+            });
+
+            if (returnIt)
+                return menuOptions;
+        }
+        return {list: menuOptions};
+    };
 
 
     /*********************************************
@@ -3428,8 +3443,10 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
         }
 
         menuItem.id = menuItem.id || id;
+
         //Convert/adjust the items submenus (in list or submenus)
-        menuItem.list = convertList( menuItem.list || menuItem.submenus );
+        if (menuItem.list || menuItem.submenus)
+            menuItem.list = convertList( menuItem.list || menuItem.submenus );
         delete menuItem.submenus;
 
         return menuItem;
@@ -3441,7 +3458,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
             return null;
 
         var result = [];
-        if ($.isArray(listOrSubmenus))
+        if (Array.isArray(listOrSubmenus))
             $.each(listOrSubmenus, (index, menuItem) => {
                 var adjustedMenuItem = adjustMenuItem(null, menuItem);
                 if (adjustedMenuItem)
@@ -3476,8 +3493,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
             options.fileName ||
             options.menuList ||
             options.list ||
-            options.fileNameOrMenuOptions ||
-            {subDir: 'setup', fileName:'fcoo-menu.json'};
+            {subDir: 'setup', fileName: 'fcoo-menu.json'};
 
         ns.promiseList.append(
             ns.options2promiseOptions(
@@ -3493,6 +3509,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
     *********************************************/
     function resolveMenu(options, listOrMenus){
         options.menuList = convertList(listOrMenus);
+
         createMenu(options.menuList, {}, options);
 
         //Add promise to check and finish the creation of the menu
@@ -3531,7 +3548,7 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
     *********************************************/
     function addMenu(menuItemOrList, parentList, id, options){
         //Append menuItemOrList to replaceMenuItems to be replaced in updateMenuList
-        options.replaceMenuItems[id] = $.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList];
+        options.replaceMenuItems[id] = Array.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList];
     }
 
     /*********************************************
@@ -3592,7 +3609,11 @@ fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
             if (menuItem && !menuItem.isOwnerMenu && ((menuItem.list && menuItem.list.length) || menuItem.type))
                 /* Keep menu-item*/;
             else
-                if (!options.keepAll)
+                if (options.keepAll){
+                    menuItem.icon = menuItem.icon || 'far fa-question';
+                    menuItem.text = menuItem.text || {da: 'MANGLER', en:'MISSING'};
+                }
+                else
                     menuList.splice(index, 1);
         }
     }
@@ -3655,7 +3676,7 @@ Create and manage the top-panel for FCOO web applications
     function messageGroupTopPanelButton( $panel, allReadIcon, notAllReadIcon ){
         var iconList = [];
         function addIcon( icon, className ){
-            icon = $.isArray(icon) ? icon : [icon];
+            icon = Array.isArray(icon) ? icon : [icon];
             icon.forEach( iconClass => iconList.push(iconClass + ' ' + className ) );
         }
         addIcon(allReadIcon,     'show-for-all-read');
@@ -4318,7 +4339,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             }
             //*********************************************************************
 
-            this.options.panelDimAndSize   = getDimensionAndSize( this.options.width,       this.options.height,       280 );
+            this.options.panelDimAndSize  = getDimensionAndSize( this.options.width,       this.options.height,       282 );
             this.options.handleDimAndSize = getDimensionAndSize( this.options.handleWidth, this.options.handleHeight,  20 );
 
             //Update the panel-element
@@ -4362,12 +4383,20 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         animateToPosition: function (pos, animateMain, noAnimation) {
+
             this.$container.toggleClass('no-animation', !!noAnimation);
 
-            if (this.options.verticalPanel)
-                this.$container.css('transform', 'translate3d(' + this.options.directionFactor*pos + 'px, 0, 0)');
-            else
-                this.$container.css('transform', 'translate3d(0, ' + this.options.directionFactor*pos + 'px, 0)');
+            let truePos = this.options.directionFactor*pos;
+            if (this.options.verticalPanel){
+                this.$container.css('transform', 'translate3d(' + truePos + 'px, 0, 0)');
+                this.$container.css('width', pos + 'px');
+                this.$container.css(this.options.position, -pos + 'px');
+            }
+            else {
+                this.$container.css('transform', 'translate3d(0, ' + truePos + 'px, 0)');
+                this.$container.css('height', pos + 'px');
+                this.$container.css(this.options.position, -pos + 'px');
+            }
 
             this.changeNeighbourContainerPos(pos, animateMain && !noAnimation);
         },

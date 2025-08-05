@@ -298,7 +298,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             }
             //*********************************************************************
 
-            this.options.panelDimAndSize   = getDimensionAndSize( this.options.width,       this.options.height,       280 );
+            this.options.panelDimAndSize  = getDimensionAndSize( this.options.width,       this.options.height,       282 );
             this.options.handleDimAndSize = getDimensionAndSize( this.options.handleWidth, this.options.handleHeight,  20 );
 
             //Update the panel-element
@@ -342,12 +342,20 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         animateToPosition: function (pos, animateMain, noAnimation) {
+
             this.$container.toggleClass('no-animation', !!noAnimation);
 
-            if (this.options.verticalPanel)
-                this.$container.css('transform', 'translate3d(' + this.options.directionFactor*pos + 'px, 0, 0)');
-            else
-                this.$container.css('transform', 'translate3d(0, ' + this.options.directionFactor*pos + 'px, 0)');
+            let truePos = this.options.directionFactor*pos;
+            if (this.options.verticalPanel){
+                this.$container.css('transform', 'translate3d(' + truePos + 'px, 0, 0)');
+                this.$container.css('width', pos + 'px');
+                this.$container.css(this.options.position, -pos + 'px');
+            }
+            else {
+                this.$container.css('transform', 'translate3d(0, ' + truePos + 'px, 0)');
+                this.$container.css('height', pos + 'px');
+                this.$container.css(this.options.position, -pos + 'px');
+            }
 
             this.changeNeighbourContainerPos(pos, animateMain && !noAnimation);
         },
