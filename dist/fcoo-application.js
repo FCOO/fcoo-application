@@ -3390,7 +3390,7 @@ Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
                 return {fileName: menuOptions};
 
             let returnIt = false;
-            ['fileName', 'menuList', 'list', 'fileNameOrMenuOptions'].forEach( id => {
+            ['fileName', 'menuList', 'list', 'fileNameOrMenuOptions', 'ownerList', 'finallyFunc'].forEach( id => {
                 if (menuOptions[id] !== undefined)
                     returnIt = true;
             });
