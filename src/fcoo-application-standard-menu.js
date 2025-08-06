@@ -24,7 +24,7 @@ Example:
 
 let ownerList = {};
 //In some package :
-ownerList['OBSERVATIONS"] = function(options, addMenu){
+ownerList['OBSERVATIONS"] = function(options, addMenu, adjustParentMenuOptions, menuOptions)
     //Adjust the options (if needed)
     ...
 
@@ -243,7 +243,8 @@ Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
                 ownerFunc(
                     menuItem.options || {},
                     function(menuItemOrList)                     { addMenu(menuItemOrList, menuList, menuItem.id, options); },      //addMenu
-                    function(adjustmentsToParentMenuOptions = {}){ $.extend(parentMenuOptions, adjustmentsToParentMenuOptions); }   //adjustParentMenuOptions
+                    function(adjustmentsToParentMenuOptions = {}){ $.extend(parentMenuOptions, adjustmentsToParentMenuOptions); },  //adjustParentMenuOptions
+                    options                                                                                                         //menuOptions
                 );
 
                 //Mark the owner-menu as completed
