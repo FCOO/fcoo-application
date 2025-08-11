@@ -262,7 +262,8 @@ Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
     *********************************************/
     function addMenu(menuItemOrList, parentList, id, options){
         //Append menuItemOrList to replaceMenuItems to be replaced in updateMenuList
-        options.replaceMenuItems[id] = Array.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList];
+        options.replaceMenuItems[id] = options.replaceMenuItems[id] || [];
+        options.replaceMenuItems[id] = options.replaceMenuItems[id].concat( Array.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList] );
     }
 
     /*********************************************
