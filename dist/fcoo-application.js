@@ -3595,8 +3595,10 @@ Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
         //Replace menu-item from replaceMenuItems
         for (index=menuList.length-1; index>=0; index--){
             menuItem = menuList[index];
-            if (menuItem && menuItem.id && options.replaceMenuItems[menuItem.id])
+            if (menuItem && menuItem.id && options.replaceMenuItems[menuItem.id]){
                 menuList.splice(index, 1, ...options.replaceMenuItems[menuItem.id]);
+                options.replaceMenuItems[menuItem.id] = null; //Clean up to prevent repeating
+            }
         }
 
         for (index=menuList.length-1; index>=0; index--){
