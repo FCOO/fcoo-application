@@ -3513,7 +3513,7 @@ Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
         createMenu(options.menuList, {}, options);
 
         //Add promise to check and finish the creation of the menu
-        ns.promiseList.append({
+        ns.promiseList.prependLast({
             data   : options,
             resolve: finishMenu,
             wait   : true
