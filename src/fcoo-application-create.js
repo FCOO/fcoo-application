@@ -299,8 +299,9 @@ Methods to create standard FCC-web-applications
         }
 
         //5: Create the main structure and the left and/or right panel. Is excecuded after the layer-menus and before lft/right menu creation
-        ns.promiseList.prependLast({
-            data   : 'none',
+        //ns.promiseList.prependLast({
+        ns.promiseList.prependFinally({
+            data   : 'createMainStructure',
             resolve: createMainStructure
         });
 
@@ -311,8 +312,9 @@ Methods to create standard FCC-web-applications
 
 
         //7: Create savedSettingList and load saved settings
+        //ns.promiseList.appendLast({
         ns.promiseList.appendLast({
-            data: 'none',
+            data: 'loadApplicationSetting',
             resolve: () => {
                 ns.savedSettingList = new ns.SavedSettingList({}, 'loadApplicationSetting');
             }

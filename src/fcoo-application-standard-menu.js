@@ -226,7 +226,8 @@ Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
         createMenu(options.menuList, {}, options);
 
         //Add promise to check and finish the creation of the menu
-        ns.promiseList.prependLast({
+        //ns.promiseList.prependLast({
+        ns.promiseList.prependFinally({
             data   : options,
             resolve: finishMenu,
             wait   : true
