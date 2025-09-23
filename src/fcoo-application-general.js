@@ -314,7 +314,11 @@ if (ns.DEV_VERSION)
         extend          : icon_fa_prefix + 'square-plus',
         diminish        : icon_fa_prefix + 'square-minus',
         new             : icon_fa_prefix + 'window-maximize',
-        warning         : icon_fa_prefix + 'exclamation fa-size-15',
+
+        error           : icon_fa_prefix + 'triangle-exclamation',
+        alert           : icon_fa_prefix + 'diamond-exclamation',
+        warning         : icon_fa_prefix + 'circle-exclamation',
+
         info            : icon_fa_prefix + 'info fa-sm',
         help            : icon_fa_prefix + 'question fa-sm',
         close           : icon_fa_prefix + 'xmark'
@@ -324,32 +328,32 @@ if (ns.DEV_VERSION)
     $.bsNotyIcon = {
         info        : 'fa-info-circle',
         information : 'fa-info-circle',
-        alert       : 'fa-exclamation-circle',
         success     : 'fa-check-circle',
-        error       : 'fa-ban',
-        warning     : 'fa-exclamation-square', //'fa-exclamation-triangle',
+        error       : 'fa-triangle-exclamation',
+        alert       : 'fa-diamond-exclamation',
+        warning     : 'fa-circle-exclamation',
         help        : 'fa-question-circle'
     };
 
     $.bsNotyName = {
-        info        : {da:'Besked', en:'Message'},
-        information : {da:'Besked', en:'Message'},
-        alert       : {da:'Bemærkning', en:'Note'},
-        success     : {da:'Succes', en:'Success'},
-        error       : {da:'Fejl', en:'Error'},
-        warning     : {da:'Advarsel', en:'Warning'},
-        help        : {da:'Hjælp', en:'Help'}
+        info        : {da: 'Besked',   en: 'Message'},
+        information : {da: 'Besked',   en: 'Message'},
+        success     : {da: 'Succes',   en: 'Success'},
+        error       : {da: 'Fejl',     en: 'Error'  },
+        alert       : {da: 'Advarsel', en: 'Alert'  },
+        warning     : {da: 'Advarsel', en: 'Warning'},
+        help        : {da: 'Hjælp',    en: 'Help'   }
     };
 
     //Add plural name
     $.bsNotyNames = {
-        info        : {da:'Beskeder', en:'Messages'},
-        information : {da:'Beskeder', en:'Messages'},
-        alert       : {da:'Bemærkninger', en:'Notes'},
-        success     : {da:'Succes', en:'Success'},
-        error       : {da:'Fejl', en:'Errors'},
-        warning     : {da:'Advarsler', en:'Warnings'},
-        help        : {da:'Hjælp', en:'Help'}
+        info        : {da:'Beskeder',   en:'Messages'},
+        information : {da:'Beskeder',   en:'Messages'},
+        success     : {da:'Succes',     en:'Success' },
+        error       : {da:'Fejl',       en:'Errors'  },
+        alert       : {da:'Advarsler',  en:'Alerts'  },
+        warning     : {da:'Advarsler',  en:'Warnings'},
+        help        : {da:'Hjælp',      en:'Help'    }
     };
 
 

@@ -693,6 +693,8 @@ window.intervals.addInterval({
                 onPin    : function(){ console.log('PIN: Close header'); return true},
                 onInfo   : function(){ console.log('INFO: DONT Close header'); return false},
                 onWarning: function(){ console.log('WARNING: DONT Close header'); return false},
+                onAlert  : function(){ console.log('ALERT: DONT Close header'); return false},
+                onError  : function(){ console.log('ERROR: DONT Close header'); return false},
                 onHelp   : function(){ console.log('HELP: DONT Close header'); return false},
                 icons: {
                     back    : {onClick: function(){ console.log('BACK: DONT close header'); return false}},
@@ -729,7 +731,32 @@ window.intervals.addInterval({
                 $.BSMODAL_USE_SQUARE_ICONS = false;
                 modalWithAllIcons();
                 $.BSMODAL_USE_SQUARE_ICONS = true;
+            });
 
+        $('<button>ALL Noty</button>')
+            .appendTo( $mainContainer)
+            .on('click', function(){
+                const types  = ['help',    'warning',   'alert',    'success', 'info',       'error',  ],
+                      layout = ['topLeft', 'topCenter', 'topRight', 'center',  'centerLeft', 'centerRight'];
+                types.forEach(( type, index) =>{
+                    $.bsNoty({
+                        type         : type,
+                        layout       : layout[index],
+                        defaultHeader: true,
+                        closeWith    : ['button'],
+                        footer       : {icon: 'fa-home',text: 'footer text'},
+                        content      : [
+                            layout[index]+'<br>',
+                            "<p>Dette er en test</p>",
+                            "<ol><li>Første på dansk Og engelsk</li><li>Anden på dansk og engelsk</li></ol>",
+                            {da: "<ol><li>Første på dansk</li><li>Anden på dansk</li></ol>", en:"<ol><li>#1 in English</li><li>#2 in English</li></ol>"},
+                            {text: {da: 'Noget tekst ', en: 'Some text '}},
+                            {da: 'Noget mre tekst ', en: 'Some more text '},
+                            Math.random()
+                        ],
+                        show: true
+                    });
+                });
             });
 
         var fileViewModal;

@@ -13097,7 +13097,7 @@ else {
 }(jQuery, this, document));
 ;
 /*!
-  * Bootstrap v5.3.7 (https://getbootstrap.com/)
+  * Bootstrap v5.3.8 (https://getbootstrap.com/)
   * Copyright 2011-2025 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
@@ -13745,7 +13745,7 @@ else {
    * Constants
    */
 
-  const VERSION = '5.3.7';
+  const VERSION = '5.3.8';
 
   /**
    * Class definition
@@ -16788,9 +16788,6 @@ else {
       this._element.setAttribute('aria-expanded', 'false');
       Manipulator.removeDataAttribute(this._menu, 'popper');
       EventHandler.trigger(this._element, EVENT_HIDDEN$5, relatedTarget);
-
-      // Explicitly return focus to the trigger element
-      this._element.focus();
     }
     _getConfig(config) {
       config = super._getConfig(config);
@@ -55047,7 +55044,7 @@ if (typeof define === 'function' && define.amd) {
             *******************************************************************/
             this.cache.$container =
                 $('<div/>')
-                    .addClass('base-slider-container ' + this.options.handle + ' js-base-slider-' + this.pluginCount );
+                    .addClass(['base-slider-container', this.options.handle, 'js-base-slider-' + this.pluginCount ]);
 
 
             this.cache.$input.before(this.cache.$container);
@@ -55058,11 +55055,7 @@ if (typeof define === 'function' && define.amd) {
             //if options.handleFixed: Remove margin for the handle and put inside outer-container
             if (this.options.handleFixed){
                 this.cache.$container
-                    .css({
-                        'width'       : '100%',
-                        'margin-left' : 0,
-                        'margin-right': 0
-                    })
+                    .addClass('handle-is-fixed')
                     .wrap('<div/>');
                 this.cache.$fullWidthContainer = this.cache.$container.parent();
                 this.cache.$fullWidthContainer.addClass('base-slider-container-full-width');
@@ -69634,7 +69627,7 @@ stringLength: {default: "Please enter a value with valid length", less: "Please 
 uri         : {default: "Please enter a valid URI"}
 */
 ;
-/****************************************************************************
+-/****************************************************************************
 	jquery-bootstrap-header.js,
 
 	(c) 2017, FCOO
@@ -69658,6 +69651,7 @@ uri         : {default: "Please enter a valid URI"}
     pin
     unpin
     new
+    error
     warning
     info
     help
@@ -69717,6 +69711,16 @@ uri         : {default: "Please enter a valid URI"}
 
 
             new     : square ? 'fa-window-maximize' : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-window-maximize fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
+
+            error : {
+                icon : square ? 'fa-exclamation' : [ 'fas fa-circle back text-danger', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle', 'fas fa-exclamation fa-inside-circle-xmark'],
+                class: square ? 'header-icon-error' : null
+            },
+
+            alert : {
+                icon : square ? 'fa-exclamation' : [ 'fas fa-circle back text-alert', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle', 'fas fa-exclamation fa-inside-circle-xmark'],
+                class: square ? 'header-icon-alert' : null
+            },
 
             warning : {
                 icon : square ? 'fa-exclamation' : [ 'fas fa-circle back text-warning', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle', 'fas fa-exclamation fa-inside-circle-xmark'],
@@ -69787,7 +69791,7 @@ uri         : {default: "Please enter a valid URI"}
 
             //Add icons
             let headerIcons = useSquareIcons ? bsHeaderIconsSquare : bsHeaderIcons;
-            ['back', 'forward', 'pin', 'unpin', 'diminish', 'extend', 'fullScreenOn', 'fullScreenOff', 'new', 'warning', 'info', 'help', 'close'].forEach( (id) => {
+            ['back', 'forward', 'pin', 'unpin', 'diminish', 'extend', 'fullScreenOn', 'fullScreenOff', 'new', 'error', 'alert', 'warning', 'info', 'help', 'close'].forEach( (id) => {
                 let iconOptions = options.icons[id];
                 if (iconOptions && (iconOptions.onClick || (typeof iconOptions == 'function'))){
                     if (typeof iconOptions == 'function')
@@ -71664,10 +71668,11 @@ jquery-bootstrap-modal-promise.js
                 new             : {                                     onClick: options.onNew     ? options.onNew.bind(this)     : null                        },
                 info            : {                                     onClick: options.onInfo    ? options.onInfo.bind(this)    : null                        },
                 warning         : {                                     onClick: options.onWarning ? options.onWarning.bind(this) : null                        },
+                alert           : {                                     onClick: options.onAlert   ? options.onAlert.bind(this)   : null                        },
+                error           : {                                     onClick: options.onError   ? options.onError.bind(this)   : null                        },
                 help            : {                                     onClick: options.onHelp    ? options.onHelp.bind(this)    : null                        },
             }
         }, options );
-
 
         //Save parentOptions for dynamic update
         var parentOptions = this.bsModal.parentOptions = {};
@@ -72669,24 +72674,23 @@ jquery-bootstrap-modal-promise.js
     $.bsNotyIcon = {
         info        : 'fa-info-circle',
         information : 'fa-info-circle',
-        alert       : '',
         success     : 'fa-check',
-        error       : 'fa-ban',
-        warning     : 'fa-exclamation-triangle',
+        error       : 'fa-exclamation', //'fa-exclamation-triangle',
+        alert       : 'fa-exclamation', //'fa-exclamation-diamond',
+        warning     : 'fa-exclamation', //'fa-exclamation-circle',
         help        : 'fa-question-circle'
     };
 
     //$.bsNotyName = Name for different noty-type
     $.bsNotyName = {
-        info        : {da:'Information', en:'Information'},
-        information : {da:'Information', en:'Information'},
-        alert       : {da:'Bemærk', en:'Note'},
-        success     : {da:'Succes', en:'Success'},
-        error       : {da:'Fejl', en:'Error'},
-        warning     : {da:'Advarsel', en:'Warning'},
-        help        : {da:'Hjælp', en:'Help'}
+        info        : {da: 'Information', en: 'Information' },
+        information : {da: 'Information', en: 'Information' },
+        success     : {da: 'Succes',      en: 'Success'     },
+        error       : {da: 'Fejl',        en: 'Error'       },
+        alert       : {da: 'Advarsel',    en: 'Alert'       },
+        warning     : {da: 'Advarsel',    en: 'Warning'     },
+        help        : {da: 'Hjælp',       en: 'Help'        }
     };
-
 
 
     /***************************************************************
