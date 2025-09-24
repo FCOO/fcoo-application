@@ -1172,6 +1172,11 @@ if (ns.DEV_VERSION)
     };
 
 
+    //ns.bsIcon = colored icons using Bootstrap alert colors
+    ns.bsIcon = {};
+    $.each($.bsNotyIcon, (type, icon) => ns.bsIcon[type] = $.bsIcon(icon, type) );
+
+
     //Icon for external link
     $.bsExternalLinkIcon = 'fa-external-link';
 

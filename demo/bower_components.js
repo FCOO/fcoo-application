@@ -67550,8 +67550,12 @@ module.exports = g;
             if (insideFormGroup){
                 //Create outer input-group-container
                 insideInputGroup = true;
+                let alertName = options.colorName || options.alert || options.alertName;
                 $parent =
                     $divXXGroup('input-group-container', options)
+
+                        .addClass(alertName ? 'has-alert-background alert-'+alertName : '')
+
                         .toggleClass('small-bottom-padding', !!options.smallBottomPadding)
                         .toggleClass('py-0',                 !!options.noVerticalPadding)
                         .toggleClass('line-before',          !!options.lineBefore)
@@ -67560,6 +67564,9 @@ module.exports = g;
                         .toggleClass('no-validation',        !!(noValidation || options.noValidation))  //HER skal den bruges hvis der bruges tooltips til validation errors?
 
                         .appendTo( $parent );
+
+
+
             }
 
             if (insideInputGroup || hasPreOrPost){
@@ -69818,6 +69825,26 @@ uri         : {default: "Please enter a valid URI"}
         }
         return this;
     };
+
+}(jQuery, this, document));
+;
+/****************************************************************************
+jquery-bootstrap-icon.js
+****************************************************************************/
+
+(function ($ /*, window, document, undefined*/) {
+	"use strict";
+
+    $.extend({
+        /******************************************************
+        $.bsIcon( icon, colorName )
+        Return a [] with classes for a icon in color = Bootstrap alert colorName ('success', 'warning', 'alert', 'error', 'ingo', 'help'...)
+        ******************************************************/
+        bsIcon: function( icon, colorName ){
+            return [['fas '+icon+' bs-icon-back-color-'+colorName, $.FONTAWESOME_PREFIX +' '+icon+' bs-icon-front-color-'+colorName]];
+        },
+    });
+
 
 }(jQuery, this, document));
 ;

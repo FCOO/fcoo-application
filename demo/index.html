@@ -759,6 +759,11 @@ window.intervals.addInterval({
                 });
             });
 
+
+        ['help',    'warning',   'alert',    'success', 'info',       'error'].forEach( type => {
+            $.bsButton({icon: fcoo.bsIcon[type], text: type}).appendTo( $mainContainer);
+        });
+
         var fileViewModal;
         $('<button>4xFile-view</button>')
             .appendTo( $mainContainer)
