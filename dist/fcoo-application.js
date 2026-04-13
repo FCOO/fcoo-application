@@ -1124,11 +1124,6 @@ if (ns.DEV_VERSION)
         forward         : icon_fa_prefix + 'arrow-right',
         pin             : icon_fa_prefix + 'thumbtack fa-sm',
         unpin           : icon_fa_prefix + 'thumbtack fa-sm',
-        fullScreenOn    : icon_fa_prefix + 'expand',
-        fullScreenOff   : icon_fa_prefix + 'compress',
-        extend          : icon_fa_prefix + 'square-plus',
-        diminish        : icon_fa_prefix + 'square-minus',
-        new             : icon_fa_prefix + 'window-maximize',
 
         error           : icon_fa_prefix + 'triangle-exclamation',
         alert           : icon_fa_prefix + 'diamond-exclamation',
@@ -1136,6 +1131,18 @@ if (ns.DEV_VERSION)
 
         info            : icon_fa_prefix + 'info fa-sm',
         help            : icon_fa_prefix + 'question fa-sm',
+
+        down            : icon_fa_prefix + 'square-arrow-down',
+        up              : icon_fa_prefix + 'square-arrow-up',
+
+        extend          : icon_fa_prefix + 'square-plus',
+        diminish        : icon_fa_prefix + 'square-minus',
+
+        fullScreenOn    : icon_fa_prefix + 'expand',
+        fullScreenOff   : icon_fa_prefix + 'compress',
+
+        new             : icon_fa_prefix + 'window-maximize',
+
         close           : icon_fa_prefix + 'xmark'
     });
 
