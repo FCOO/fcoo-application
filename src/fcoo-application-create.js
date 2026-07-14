@@ -354,6 +354,8 @@ Methods to create standard FCC-web-applications
         nsApp.main = ns.createMain({
             mainContainerAsHandleContainer: true,
 
+            bodyScroll          : setupOptions.bodyScroll,
+
             applicationName     : setupOptions.applicationName,
             applicationHeader   : setupOptions.applicationHeader,
             header              : setupOptions.header,

@@ -615,6 +615,8 @@ Methods to create standard FCC-web-applications
         nsApp.main = ns.createMain({
             mainContainerAsHandleContainer: true,
 
+            bodyScroll          : setupOptions.bodyScroll,
+
             applicationName     : setupOptions.applicationName,
             applicationHeader   : setupOptions.applicationHeader,
             header              : setupOptions.header,
@@ -1502,6 +1504,8 @@ Create and manage the main structure for FCOO web applications
             header
             */
 
+            bodyScroll          : false, //If true the main-contebnts get vertical scroll
+
             topPanel            : null,  //Options for top-panel. See src/fcoo-application-top-panel.js
 
             leftPanel           : null,      //Options for left-panel. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
@@ -1600,7 +1604,9 @@ Create and manage the main structure for FCOO web applications
 
         $.extend(result, main_prototype );
 
-        $mainContainer.addClass("main-container");
+        $mainContainer
+            .addClass("main-container")
+            .toggleClass('scroll', !!options.bodyScroll);
 
         //Append left-panel (if any)
         if (result.options.leftPanel){

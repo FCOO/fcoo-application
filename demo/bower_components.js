@@ -42225,7 +42225,7 @@ Adjusted ES5 version by Niel sHolt
         var json;
 
         try{
-            json = window.jsyaml.load(response);
+            json = window.jsyaml.load(response, {schema: window.jsyaml.JSON_SCHEMA});
         }
         catch (e){
             json = undefined;
@@ -85394,7 +85394,7 @@ return index;
     ***********************************************************/
     ns.ajdustLangName = function(name){
         var result = typeof name == 'string' ? {en: name} : name,
-            defaultName = result['en'] || result['da'];
+            defaultName = result['en'] || result['da'] || '';
 
         languages.forEach( lang => result[lang] = result[lang] || defaultName );
         return result;
